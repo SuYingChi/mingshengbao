@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+        <ImageView
+            android:id="@+id/id_function_img"
+            android:layout_width="@dimen/margin_width32"
+            android:layout_height="@dimen/margin_width32"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/home_appliance_clean_xh" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/id_function_name"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_weight="1"
+        android:text="家电清洗"
+        android:textSize="@dimen/text_14"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="#FF535353"/>
+</LinearLayout>

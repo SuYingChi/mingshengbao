@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">民生宝</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_tab_my">我的</string>
+    <string name="home_tab_mail">商城</string>
+    <string name="home_tab_home">首页</string>
+    <string name="home_tab_order">订单</string>
+    <!-- 我的模块  -->
+    <string name="my_nick_name">昵称</string>
+    <string name="my_sex">性别</string>
+    <string name="my_phonenumber">手机</string>
+    <string name="my_login">登录</string>
+    <string name="my_register">注册</string>
+    <string name="my_dialog_title">民生宝</string>
+    <string name="gas_payfee">燃气缴费</string>
+    <string name="gas_introduce">燃气介绍</string>
+    <string name="gas_company_profile">公司概况</string>
+    <string name="gas_service_guide">服务指南</string>
+    <string name="gas_Tool_Use">燃气具使用</string>
+    <string name="gas_safety">燃气安全</string>
+    <string name="gas_need_know">燃气须知</string>
+    <string name="yingye_wangdian">营业网点</string>
+    <string name="gas_baoxiu_yewu">居民燃气报装业务</string>
+    <string name="gas_price_jiaona">气费缴纳</string>
+    <string name="gas_service_promise">服务承诺</string>
+    <string name="NOT_OPEN_condition">常见未能正常开通情况</string>
+    <string name="input_customerNo">请输入燃气用户号</string>
+
+    <string name="load_more_text">正在加载...</string>
+    <string name="xlistview_header_hint_normal">下拉刷新</string>
+    <string name="xlistview_header_hint_ready">松开刷新数据</string>
+    <string name="xlistview_header_hint_loading">正在加载...</string>
+    <string name="xlistview_header_last_time">上次更新时间：</string>
+    <string name="xlistview_footer_hint_normal">查看更多</string>
+    <string name="xlistview_footer_hint_ready">松开载入更多</string>
+    <string name="xlistview_header_hint_success">刷新成功</string>
+    <string name="xlistview_header_hint_failt">刷新失败</string>
+    <string name="not_updated_yet">暂未更新过</string>
+    <string name="updated_at">上次更新于%1$s前</string>
+    <string name="updated_just_now">刚刚更新</string>
+    <string name="time_error">时间有问题</string>
+
+</resources>

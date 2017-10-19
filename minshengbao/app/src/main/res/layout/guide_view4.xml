@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/guide_four">
+    <Button
+        android:id="@+id/btn_enter"
+        android:layout_width="@dimen/margin_width126"
+        android:layout_height="@dimen/margin_width35"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/margin_width40"
+        android:background="@drawable/selector_touch_button_change"
+        android:text="立即使用"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/text_width18"
+        android:visibility="visible" />
+
+</FrameLayout>

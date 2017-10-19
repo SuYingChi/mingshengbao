@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="RoundImageViews">
+        <attr name="borderWidths" format="reference|dimension">
+        </attr>
+        <attr name="borderRadius" format="reference|dimension">
+        </attr>
+        <attr name="borderColor" format="reference|color">
+        </attr>
+        <attr name="hoverColor" format="reference|color">
+        </attr>
+    </declare-styleable>
+
+    <!--RatingBar        -->
+    <declare-styleable name="RatingBar" tools:ignore="ResourceName">
+        <attr name="starImageSize" format="dimension"/>
+        <attr name="starImageWidth" format="dimension"/>
+        <attr name="starImageHeight" format="dimension"/>
+        <attr name="starImagePadding" format="dimension"/>
+        <attr name="starCount" format="integer"/>
+        <attr name="starEmpty" format="reference"/>
+        <attr name="starFill" format="reference"/>
+        <attr name="starHalf" format="reference"/>
+        <attr name="clickable" format="boolean"/>
+        <attr name="halfstart" format="boolean"/>
+    </declare-styleable>
+
+    <!--   订单发布问题描述  -->
+    <declare-styleable name="MultiLineChooseItemTags">
+        <attr name="item_backgroundColor" format="reference|color" />
+        <attr name="item_selectedBackgroundColor" format="reference|color" />
+        <attr name="item_horizontalSpacing" format="dimension" />
+        <attr name="item_verticalSpacing" format="dimension" />
+        <attr name="item_horizontalPadding" format="dimension" />
+        <attr name="item_verticalPadding" format="dimension" />
+        <attr name="item_textColor" format="color" />
+        <attr name="item_selectedTextColor" format="reference|color" />
+        <attr name="item_textSize" format="dimension" />
+        <!-- 边框圆角半径-->
+        <attr name="item_radius" format="dimension" />
+        <attr name="item_bottomLeftRadius" format="dimension" />
+        <attr name="item_bottomRightRadius" format="dimension" />
+        <attr name="item_topLeftRadius" format="dimension" />
+        <attr name="item_topRightRadius" format="dimension" />
+        <!-- 边框颜色-->
+        <attr name="item_strokeColor" format="reference|color" />
+        <attr name="item_selectedStrokeColor" format="reference|color" />
+        <!-- 边框宽度-->
+        <attr name="item_strokeWidth" format="dimension" />
+        <!-- 是否多选-->
+        <attr name="item_multiChooseable" format="boolean" />
+        <attr name="item_singleLine" format="boolean" />
+        <!--单位dp,为了适应wrap_content用integer-->
+        <attr name="item_width" format="integer|enum">
+            <enum name="wrap_content" value="-2"/>
+            <enum name="match_parent" value="-1"/>
+        </attr>
+        <attr name="item_height" format="integer|enum">
+            <enum name="wrap_content" value="-2"/>
+            <enum name="match_parent" value="-1"/>
+        </attr>
+        <attr name="item_maxEms" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="Themes">
+        <attr name="MultiLineChooseLayoutTagsStyle" format="reference" />
+    </declare-styleable>
+    <!--自动换行布局属性  -->
+    <declare-styleable name="SwitchView">
+        <attr name="hasShadow" format="boolean"/>
+        <attr name="primaryColor" format="color"/>
+        <attr name="primaryColorDark" format="color"/>
+        <attr name="isOpened" format="boolean"/>
+    </declare-styleable>
+    <item type="id" name="tag_position"></item>
+    <item type="id" name="id_tab_txt">888</item>
+
+
+</resources>

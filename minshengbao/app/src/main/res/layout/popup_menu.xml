@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/margin_width150"
+    android:layout_height="wrap_content"
+    android:background="@drawable/trm_popup_bg"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+    <RelativeLayout
+        android:id="@+id/ly_item1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_40"
+        android:orientation="horizontal"
+        android:background="@drawable/selector_touch_background">
+        <ImageView
+            android:id="@+id/id_img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:src="@mipmap/scan_pic" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_toRightOf="@+id/id_img1"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_16"
+            android:layout_marginLeft="@dimen/margin_width20"
+            android:textColor="#595d5f"
+            android:id="@+id/tv_check_update"
+            android:text="扫一扫" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/ly_item2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_40"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin_width6"
+        android:background="@drawable/selector_touch_background" >
+        <ImageView
+            android:id="@+id/id_img2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:src="@mipmap/bell" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_toRightOf="@+id/id_img2"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_16"
+            android:layout_marginLeft="@dimen/margin_width20"
+            android:textColor="#595d5f"
+            android:id="@+id/tv_feedback"
+            android:text="消息" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.msht.minshengbao.FunctionView.fragmeht.RechargeFrag">
+
+    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        android:id="@+id/id_payrecord_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:footerDividersEnabled="true">
+    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    <include layout="@layout/layout_nodata_view"
+        android:id="@+id/id_nodata_view"
+        android:visibility="gone"/>
+
+</FrameLayout>

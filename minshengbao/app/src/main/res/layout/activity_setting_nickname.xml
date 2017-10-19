@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_setting_nickname"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionView.Myview.SettingNickname">
+    <include layout="@layout/layout_header"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+        <TextView
+            android:paddingLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="昵称："
+            android:layout_centerVertical="true" />
+        <EditText
+            android:id="@+id/id_et_nickname"
+            android:layout_width="250dp"
+            android:background="@null"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+</LinearLayout>

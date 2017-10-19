@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_address_manage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionView.Myview.AddressManage">
+    <include layout="@layout/layout_header"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+                android:id="@+id/id_address_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            <include layout="@layout/layout_line_gray"/>
+            <RelativeLayout
+                android:id="@+id/id_re_nodata"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" >
+                <TextView
+                    android:id="@+id/id_nodata"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="当前没有添加地址"
+                    android:textSize="@dimen/text_18"
+                    android:textColor="@color/colorOrange"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/id_btn_newaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_45"
+                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:layout_marginBottom="@dimen/margin_15"
+                    android:text="新增地址"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_18"
+                    android:background="@drawable/selector_touch_button_change"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

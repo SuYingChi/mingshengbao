@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/activity_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+            android:id="@+id/id_order_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        <RelativeLayout
+            android:id="@+id/id_re_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/id_img_wufuwu"
+                android:layout_width="135dp"
+                android:layout_height="135dp"
+                android:layout_marginTop="@dimen/margin_30"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/order_data_xh"/>
+            <TextView
+                android:id="@+id/id_tv_wufuwu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/id_img_wufuwu"
+                android:layout_marginTop="@dimen/margin_20"
+                android:textSize="@dimen/text_20"
+                android:text="无服务工单" />
+        </RelativeLayout>
+    </FrameLayout>
+</LinearLayout>

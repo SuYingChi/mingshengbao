@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.msht.minshengbao.FunctionView.fragmeht.IcCard">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/id_img_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_width50"
+        android:layout_marginLeft="@dimen/margin_width30"
+        android:layout_marginRight="@dimen/margin_width30"
+        android:background="@mipmap/brief_introducction_xh"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/id_btn_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:layout_marginLeft="@dimen/margin_width30"
+        android:layout_marginRight="@dimen/margin_width30"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selector_touch_button_change"
+        android:text="扫一扫"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_width18"/>
+
+</RelativeLayout>

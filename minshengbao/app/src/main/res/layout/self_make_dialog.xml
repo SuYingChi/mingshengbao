@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:background="@drawable/shape_white_corner_layout" >
+   <RelativeLayout
+       android:id="@+id/id_query_layout"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@drawable/selector_touch_background">
+       <TextView
+           android:id="@id/id_text1"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="@dimen/margin_15"
+           android:paddingTop="@dimen/margin_15"
+           android:paddingBottom="@dimen/margin_15"
+           android:text="删除消息"
+           android:textSize="@dimen/text_18"
+           android:textColor="#444444" />
+   </RelativeLayout>
+</LinearLayout>
