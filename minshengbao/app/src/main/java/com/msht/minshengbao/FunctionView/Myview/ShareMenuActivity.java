@@ -36,14 +36,20 @@ import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ShareMenuActivity extends BaseActivity {
-    private Button appshare;
-    private String   userId,password;
+    private Button     appshare;
+    private String     userId,password;
     private final int  SUCCESS = 1;
     private final int  FAILURE = 0;
+    private int num=63912;
+    private byte[] numbyte=new byte[1];
     private ShareAction mShareAction;
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -110,8 +116,21 @@ public class ShareMenuActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initPlatforms();
         initView();
+       // initDATA();
+    }
+    private void initDATA() {
+        String string=IntToBinary(128);
+        String X=string.substring(0,1);
+        char  y=string.charAt(0);
+        Toast.makeText(context,"x="+X+",y="+String.valueOf(y),Toast.LENGTH_SHORT).show();
     }
 
+    //十进制转八位二进制
+    public static String IntToBinary(int input) {
+        String binaryString = Integer.toBinaryString(input);//1111
+        int binaryInt = Integer.parseInt(binaryString);//1111
+        return String.format("%08d",binaryInt);
+    }
     private void initPlatforms() {
         mShareAction=new ShareAction(ShareMenuActivity.this).setDisplayList(SHARE_MEDIA.SINA,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN_FAVORITE)
                 .setShareboardclickCallback(new ShareBoardlistener() {

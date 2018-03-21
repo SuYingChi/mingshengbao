@@ -38,7 +38,7 @@
         android:background="@color/white"
         android:baselineAligned="true"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="@dimen/margin_width56">
         <RadioButton
             android:id="@+id/radio_home"
             android:layout_width="0dp"
@@ -50,7 +50,7 @@
             android:checked="true"
             android:drawableTop="@drawable/radio_home_button"
             android:text="首页"
-            android:layout_height="@dimen/margin_50"/>
+            android:layout_height="@dimen/margin_width50"/>
         <RadioButton
             android:id="@+id/radio_mall"
             android:layout_width="0dp"
@@ -61,7 +61,7 @@
             android:textColor="@drawable/radio_home_textcolor"
             android:drawableTop="@drawable/radio_mall_button"
             android:text="商城"
-            android:layout_height="@dimen/margin_50"/>
+            android:layout_height="@dimen/margin_width50"/>
         <RadioButton
             android:id="@+id/radio_order"
             android:layout_width="0dp"
@@ -74,7 +74,7 @@
             android:drawableTop="@drawable/radio_order_button"
             android:drawablePadding="3dp"
             android:text="订单"
-            android:layout_height="50dp"/>
+            android:layout_height="@dimen/margin_width50"/>
         <RadioButton
             android:id="@+id/radio_me"
             android:layout_width="0dp"
@@ -86,7 +86,7 @@
             android:drawablePadding="@dimen/margin_3"
             android:drawableTop="@drawable/radio_my_button"
             android:text="我的"
-            android:layout_height="@dimen/margin_50"/>
+            android:layout_height="@dimen/margin_width50"/>
     </RadioGroup>
     </RelativeLayout>
 </LinearLayout>

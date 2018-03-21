@@ -56,6 +56,9 @@ public class Register extends BaseActivity implements View.OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
+                    if(customDialog.isShowing()&&customDialog!=null) {
+                        customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
@@ -76,6 +79,9 @@ public class Register extends BaseActivity implements View.OnClickListener {
                     }
                     break;
                 case FAILURE:
+                    if(customDialog.isShowing()&&customDialog!=null) {
+                        customDialog.dismiss();
+                    }
                     Toast.makeText(context, msg.obj.toString(),
                             Toast.LENGTH_SHORT).show();
                     break;

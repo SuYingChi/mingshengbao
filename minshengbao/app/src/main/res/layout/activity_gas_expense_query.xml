@@ -208,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_centerVertical="true"
-                        android:text="预存款明细"
+                        android:text="燃气预存款余额"
                         android:textSize="@dimen/text_width16"/>
                     <ImageView
                         android:layout_width="wrap_content"

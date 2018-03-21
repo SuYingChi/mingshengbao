@@ -17,15 +17,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:minHeight="@dimen/margin_width150"
+                android:background="@drawable/shape_change_background">
                 <TextView
                     android:id="@+id/id_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_30"
+                    android:layout_marginTop="@dimen/margin_width20"
                     android:layout_centerHorizontal="true"
-                    android:text="账户余额"
-                    android:textSize="@dimen/text_18"
+                    android:textColor="@color/white"
+                    android:text="余额 (元)"
+                    android:textSize="@dimen/text_width16"
                     />
                 <TextView
                     android:id="@+id/id_balance"
@@ -33,64 +35,162 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/id_text1"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:layout_marginBottom="@dimen/margin_15"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_25"
-                    android:textStyle="bold"/>
-            </RelativeLayout>
-            <include layout="@layout/layout_line_gray"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-                <ImageView
-                    android:id="@+id/id_card_img"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:src="@drawable/card_arch_xh"/>
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_width50"
+                    android:text="@string/default_value0"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/id_card_img"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:layout_marginBottom="@dimen/margin_10"
-                    android:text="卡券包"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_16"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/id_btn_recharge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/margin_45"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:layout_marginLeft="@dimen/margin_15"
-                    android:layout_marginRight="@dimen/margin_15"
-                    android:text="充值"
-                    android:textSize="@dimen/text_16"
+                    android:layout_below="@+id/id_balance"
+                    android:layout_marginTop="@dimen/margin_width3"
+                    android:layout_marginBottom="@dimen/margin_width35"
+                    android:textSize="@dimen/text_width14"
                     android:textColor="@color/white"
-                    android:background="@drawable/selector_textback_change"/>
-                <Button
-                    android:id="@+id/id_btn_autopay"
-                    android:layout_width="match_parent"
+                    android:text="@string/balance_explain"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
+            <RelativeLayout
+                android:id="@+id/id_layout_recharge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width60"
+                android:background="@color/white">
+                <ImageView
+                    android:id="@+id/id_recharge_img"
+                    android:layout_width="@dimen/margin_width40"
+                    android:layout_height="@dimen/margin_width40"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
+                    android:src="@drawable/mywallet_recharge_xh"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_25"
-                    android:minHeight="@dimen/margin_45"
-                    android:layout_below="@+id/id_btn_recharge"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:background="@drawable/selector_touch_background"
-                    android:layout_marginLeft="@dimen/margin_15"
-                    android:layout_marginRight="@dimen/margin_15"
-                    android:text="自动缴燃气费"
-                    android:textSize="@dimen/text_16"
-                    android:textColor="@color/title_tv"/>
+                    android:layout_toRightOf="@+id/id_recharge_img"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/id_text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_recharge"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_width18"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id_text4"
+                        android:layout_marginTop="@dimen/margin_width6"
+                        android:text="@string/recharge_hint"/>
+                </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/forward_2x"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width10"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="@color/background_gray"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginLeft="@dimen/margin_width10"/>
+            <RelativeLayout
+                android:id="@+id/id_layout_gaspayfee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width60"
+                android:background="@color/white">
+                <ImageView
+                    android:id="@+id/id_gaspayfee_img"
+                    android:layout_width="@dimen/margin_width40"
+                    android:layout_height="@dimen/margin_width40"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
+                    android:src="@drawable/mywallet_payfee_xh"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/id_gaspayfee_img"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/id_text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/self_payfee"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_width18"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id_text5"
+                        android:layout_marginTop="@dimen/margin_width6"
+                        android:text="@string/autopay_hint"/>
+                </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/forward_2x"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width10"/>
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="@color/background_gray"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginLeft="@dimen/margin_width10"/>
+            <RelativeLayout
+                android:id="@+id/id_layout_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width60"
+                android:background="@color/white">
+                <ImageView
+                    android:id="@+id/id_place_order"
+                    android:layout_width="@dimen/margin_width40"
+                    android:layout_height="@dimen/margin_width40"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
+                    android:src="@drawable/mywallet_cardarch_xh"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/id_place_order"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/id_text6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/card_arch"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_width18"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/id_text6"
+                        android:layout_marginTop="@dimen/margin_width6"
+                        android:text="@string/card_hint"/>
+                </RelativeLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/forward_2x"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width10"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

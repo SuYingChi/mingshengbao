@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -29,12 +28,12 @@ import android.widget.Toast;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.UiSettings;
-import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
@@ -48,7 +47,6 @@ import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchTask;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
-import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -106,7 +104,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         }
     }
     private void initViews(Bundle savedInstanceState) {
-        mMapView = (MapView) findViewById(R.id.mapView);
+        mMapView = (MapView) findViewById(R.id.id_mapView);
         mMapView.onCreate(savedInstanceState); // 此方法必须重写
         aMap = mMapView.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
@@ -146,6 +144,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
     public void onCameraChange(CameraPosition cameraPosition) {}
     @Override
     public void onCameraChangeFinish(final CameraPosition cameraPosition) {
+
 
         LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
         //地理反编码工具类，代码在后面
@@ -249,7 +248,6 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
 
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
-    //    dismissLoadingDialog();
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
             //移动地图中心到当前的定位位置
             aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), 40));

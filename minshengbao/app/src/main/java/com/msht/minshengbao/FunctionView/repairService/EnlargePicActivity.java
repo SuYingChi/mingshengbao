@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.msht.minshengbao.R;
 
 import java.util.ArrayList;
@@ -42,7 +44,16 @@ public class EnlargePicActivity extends AppCompatActivity {
         ivPic=(ImageView)findViewById(R.id.iv_pic);
         attacher = new PhotoViewAttacher(ivPic);
         tv_num.setText((position+1)+"/"+imgPaths.size());
-        Glide.with(this).load(imgPaths.get(position)).asBitmap().into(new SimpleTarget<Bitmap>() {
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.error(R.drawable.icon_stub);
+        Glide.with(this).asBitmap().load(imgPaths.get(position)).apply(requestOptions).into(new SimpleTarget<Bitmap>(){
+            @Override
+            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                ivPic.setImageBitmap(resource);
+                attacher.update();
+            }
+        });
+        /*Glide.with(this).load(imgPaths.get(position)).asBitmap().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 ivPic.setImageBitmap(resource);
@@ -52,7 +63,7 @@ public class EnlargePicActivity extends AppCompatActivity {
             public void onLoadFailed(Exception e, Drawable errorDrawable) {
                 ivPic.setImageDrawable(errorDrawable);
             }
-        });
+        });*/
         attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {

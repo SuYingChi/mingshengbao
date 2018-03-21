@@ -37,9 +37,9 @@
                 android:layout_width="20dp"
                 android:layout_height="21dp"
                 android:src="@drawable/customer_xh"
-                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginTop="@dimen/margin_6"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_width10"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/id_customerView" />
             <TextView
@@ -57,7 +57,7 @@
                 android:layout_width="20dp"
                 android:layout_height="21dp"
                 android:layout_marginTop="@dimen/margin_15"
-                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/id_customerView"
                 android:src="@drawable/address_xh"
@@ -70,8 +70,8 @@
                 android:layout_marginLeft="@dimen/margin_15"
                 android:textSize="@dimen/text_18"
                 android:layout_below="@+id/id_customerView"
-                android:layout_marginTop="@dimen/margin_10"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:layout_marginBottom="@dimen/margin_width10"
                 android:textColor="#000000"
                 />
         </RelativeLayout>

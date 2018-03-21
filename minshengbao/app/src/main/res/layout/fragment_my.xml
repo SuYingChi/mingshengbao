@@ -75,7 +75,7 @@
                     android:id="@+id/id_function_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numColumns="3"
+                    android:numColumns="4"
                     android:verticalSpacing="@dimen/margin_20">
                 </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
             </RelativeLayout>

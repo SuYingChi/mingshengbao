@@ -17,8 +17,8 @@
                 android:id="@+id/id_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginTop="@dimen/margin_width10"
                 android:text="应缴金额"
                 android:textSize="@dimen/text_16"
                 android:textColor="@color/black1"/>
@@ -27,8 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginTop="@dimen/margin_width10"
                 android:textColor="@color/black1"
                 android:textSize="@dimen/text_16"
                 />
@@ -52,7 +52,7 @@
                 android:textSize="@dimen/text_16"
                 android:layout_below="@+id/id_debts"
                 android:layout_marginTop="@dimen/margin_5"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_width10"
                 android:layout_centerHorizontal="true"
                 />
         </RelativeLayout>
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_20"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:textColor="@color/black1"
                 android:textSize="@dimen/text_18"/>
             <TextView
@@ -103,7 +103,7 @@
                 android:textSize="@dimen/text_18"
                 android:layout_below="@+id/id_text2"
                 android:layout_marginTop="@dimen/margin_12"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:layout_alignParentRight="true"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                 android:layout_marginLeft="@dimen/margin_20"
                 android:layout_below="@+id/id_text3"
                 android:layout_marginTop="@dimen/margin_12"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_width10"
                 android:text="扣除燃气预存款："
                 android:textSize="@dimen/text_18"/>
             <TextView
@@ -121,7 +121,7 @@
                 android:layout_below="@+id/id_text3"
                 android:layout_marginTop="@dimen/margin_12"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:textSize="@dimen/text_18"
                 android:text="1212"/>
         </RelativeLayout>

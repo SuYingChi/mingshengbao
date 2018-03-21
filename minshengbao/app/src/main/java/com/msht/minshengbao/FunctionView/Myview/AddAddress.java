@@ -34,17 +34,22 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddAddress extends BaseActivity implements View.OnClickListener {
     private View     Rcity,Raddress;
     private TextView tv_city;
     private TextView tv_address;
+    private EditText  et_name;
+    private EditText  et_phone;
     private EditText et_doorplate;
-    private Button   btn_ensure;
     private String userId;
     private String password;
     private String mCity,cityId;
     private String mAddress;
+    private String    mName;
+    private String    mPhone;
     private String longitude;
     private String latitude;
     private static final int SUCCESS=1;
@@ -144,23 +149,26 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
         Raddress=findViewById(R.id.id_re_address);
         tv_city=(TextView)findViewById(R.id.id_tv_city);
         tv_address=(TextView)findViewById(R.id.id_address);
+        et_name=(EditText)findViewById(R.id.id_et_name);
+        et_phone=(EditText)findViewById(R.id.id_et_phone);
         et_doorplate=(EditText)findViewById(R.id.id_et_doorplate);
-        btn_ensure=(Button)findViewById(R.id.id_btn_ensure);
+        findViewById(R.id.id_re_newaddress).setOnClickListener(this);
     }
     private void initEvent() {
         Rcity.setOnClickListener(this);
         Raddress.setOnClickListener(this);
-        btn_ensure.setOnClickListener(this);
-
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.id_btn_ensure:
+            case R.id.id_re_newaddress:
                 String address=tv_address.getText().toString().trim();
                 String doorplate=et_doorplate.getText().toString().trim();
                 mAddress=address+doorplate;
-                if (matchcity(tv_city.getText().toString())&&matchaddress(tv_address.getText().toString())){
+                mName=et_name.getText().toString().trim();
+                mPhone=et_phone.getText().toString().trim();
+                if (matchcity(tv_city.getText().toString())&&matchaddress(tv_address.getText().toString())
+                        &&matchName(mName)&&matchphone(mPhone)&&isPhone(mPhone)){
                     requestService();
                 }
                 break;
@@ -182,6 +190,24 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+    private boolean matchphone(String s) {
+        if (TextUtils.isEmpty(s)){
+            Toast.makeText(context, "请填写您的联系电话", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }else {
+            return true;
+        }
+    }
+    private boolean matchName(String s) {
+        if (TextUtils.isEmpty(s)){
+            Toast.makeText(context, "请填写您的收货人名", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }else {
+            return true;
+        }
+    }
     private boolean matchaddress(String s) {
         if (TextUtils.isEmpty(s)){
             Toast.makeText(context, "请填写您的地址", Toast.LENGTH_SHORT)
@@ -200,10 +226,21 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
             return true;
         }
     }
+    private boolean isPhone(String phoneNo) {     //判断电话号码个格式
+        Pattern pattern=Pattern.compile("1[0-9]{10}");
+        Matcher matcher=pattern.matcher(phoneNo);
+        if (matcher.matches()){
+            return true;
+        }else {
+            Toast.makeText(context, "电话号码格式不正确", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }
+    }
     private void requestService() {
         customDialog.show();
         requestCode=0;
-        String validateURL = UrlUtil.AddAddress_Url;
+        String validateURL = UrlUtil.NewAddAddress_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
@@ -211,6 +248,8 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
         textParams.put("address",mAddress);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
+        textParams.put("name",mName);
+        textParams.put("phone",mPhone);
         HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
             @Override
             public void onResultSuccess(String success) {

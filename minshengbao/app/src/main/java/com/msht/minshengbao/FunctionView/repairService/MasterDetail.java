@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.Adapter.MasterEvaluteAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
@@ -184,13 +185,20 @@ public class MasterDetail extends BaseActivity {
         String phone=jsonbject.optString("phone");
         String skill=jsonbject.optString("skill");
         tv_mastername.setText(name);
-        Glide
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.error(R.drawable.potrait);
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);//deactivate the disk cache for a request.
+        requestOptions.skipMemoryCache(true);
+        Glide.with(this)
+                .load(avatar)
+                .apply(requestOptions).into(masterimg);
+        /*Glide
                 .with(this)
                 .load(avatar)
                 .error(R.drawable.potrait)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//deactivate the disk cache for a request.
                 .skipMemoryCache(true)//glide will not put image in the memory cache
-                .into(masterimg);
+                .into(masterimg);*/
         tv_workno.setText(workno);
         tv_serve_times.setText(serve_times+"次");
         tv_experience_year.setText(experience_year);

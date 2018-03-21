@@ -7,19 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionView.GasService.ServerSuccess;
 import com.msht.minshengbao.R;
 import com.umeng.analytics.MobclickAgent;
 
-public class PublishSuccess extends AppCompatActivity {
+public class PublishSuccess extends BaseActivity {
     private final String mPageName="提交订单";
-    private Context mContext;
     private final int SPLASH_DISPLAY_LENGHT=4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_success);
-        initHeader();
+        context=this;
+        setCommonHeader("提交订单");
         initEvent();
     }
     private void initEvent() {
@@ -31,26 +32,16 @@ public class PublishSuccess extends AppCompatActivity {
             }
         }, SPLASH_DISPLAY_LENGHT);
     }
-    private void initHeader() {
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        ((TextView)findViewById(R.id.tv_navigation)).setText(mPageName);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
           MobclickAgent.onPageStart(mPageName);
-         MobclickAgent.onResume(mContext);
+         MobclickAgent.onResume(context);
     }
     @Override
     protected void onPause() {
         super.onPause();
          MobclickAgent.onPageEnd(mPageName);
-         MobclickAgent.onPause(mContext);
+         MobclickAgent.onPause(context);
     }
 }

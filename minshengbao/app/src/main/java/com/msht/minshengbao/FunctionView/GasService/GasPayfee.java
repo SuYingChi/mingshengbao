@@ -72,7 +72,7 @@ public class GasPayfee extends AppCompatActivity implements View.OnClickListener
         indicator.setViewPager(mviewPager,0);
     }
     @Override
-    public void onClick(View v) {  //导航栏返回
+    public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_goback:
                 finish();

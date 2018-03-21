@@ -54,8 +54,8 @@ public class InsuranceDetail extends BaseActivity {
         tv_consult.setText("咨询");
     }
     private void showview() {
-        if (id.equals("823029")){
-            tv_type.setText("保险套餐D");
+        if (id.equals("1537980")){
+            tv_type.setText("保险套餐四");
             tv_buyamount.setText("¥30元");
             tv_insurance_amount.setText("¥303600元");
             tv_deadline.setText("1年");
@@ -68,8 +68,8 @@ public class InsuranceDetail extends BaseActivity {
             tv_xian2.setText("限5人以内");
             Li_view.setVisibility(View.INVISIBLE);
             lineimg.setVisibility(View.INVISIBLE);
-        }else if (id.equals("823030")){
-            tv_type.setText("保险套餐C");
+        }else if (id.equals("1533994")){
+            tv_type.setText("保险套餐三");
             tv_buyamount.setText("¥100元");
             tv_insurance_amount.setText("¥1156000元");
             tv_deadline.setText("1年");
@@ -84,8 +84,8 @@ public class InsuranceDetail extends BaseActivity {
             Li_view.setVisibility(View.VISIBLE);
             lineimg.setVisibility(View.VISIBLE);
 
-        }else if (id.equals("829072")){
-            tv_type.setText("保险套餐B");
+        }else if (id.equals("1534041")){
+            tv_type.setText("保险套餐二");
             tv_buyamount.setText("¥200元");
             tv_insurance_amount.setText("¥856000元");
             tv_deadline.setText("3年");
@@ -100,8 +100,8 @@ public class InsuranceDetail extends BaseActivity {
             Li_view.setVisibility(View.VISIBLE);
             lineimg.setVisibility(View.VISIBLE);
 
-        }else if (id.equals("829073")){
-            tv_type.setText("保险套餐A");
+        }else if (id.equals("1537981")){
+            tv_type.setText("保险套餐一");
             tv_buyamount.setText("¥300元");
             tv_insurance_amount.setText("¥942000元");
             tv_deadline.setText("5年");

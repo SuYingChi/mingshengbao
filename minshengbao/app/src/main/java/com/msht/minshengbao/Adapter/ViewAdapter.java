@@ -15,15 +15,11 @@ import com.msht.minshengbao.FunctionView.fragmeht.SelfhelpPay;
  * Created by hong on 2016/3/25.
  */
 public class ViewAdapter extends FragmentPagerAdapter {
-    private String fragments[] = {"自助缴费","缴费记录","IC卡缴费","充值记录"};
+    private String fragments[] = {"自助缴费","缴费记录"};
     private String id;
     private String password;
-
     private SelfhelpPay mSelfpay;
     private PayRecord mPayrecord;
-    private IcCard    mIcCard;
-    private RechargeFrag rechargeFrag;
-
     public ViewAdapter(FragmentManager fm, Context applicationContext, String userId, String passwords) {
         super(fm);
         this.id=userId;
@@ -43,14 +39,6 @@ public class ViewAdapter extends FragmentPagerAdapter {
                 mPayrecord=new PayRecord();
                 mPayrecord.setArguments(bundle);
                 return  mPayrecord;
-            case 2:
-                mIcCard=new IcCard();
-                mIcCard.setArguments(bundle);
-                return mIcCard;
-            case 3:
-                rechargeFrag=new RechargeFrag();
-                rechargeFrag.setArguments(bundle);
-                return rechargeFrag;
             default:
                 return null;
         }

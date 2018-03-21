@@ -4,20 +4,50 @@ package com.msht.minshengbao.Utils;
  * Created by hong on 2016/11/15.
  */
 public class UrlUtil {
-  //  public static final String URL_HEADS ="https://test.msbapp.cn";
-   // public static final String URL_HEAD="http://test.msbapp.cn";
+   // public static final String URL_HEADS ="http://test.msbapp.cn";
+   // public static final String URL_HEADS="http://test.msbapp.cn:8080";
+    //public static final String URL_HEAD="http://test.msbapp.cn";
     public static final String URL_SHOP="http://shop.msbapp.cn:8090";
     public static final String URL_HEADS="https://msbapp.cn";
-   // public static final String URL_HTTP="http://msbapp.cn";
+   // public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
+    public static final String URL_MSSB="http://sb-api.msbapp.cn";
+    public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
 
+    //启动页
+    public static final  String Launcher_ImgUrl=URL_HEADS+"/api/app/app_start_page?type=2";
+    //支付确认
+    public static final String PayResult_Notarize=URL_HEADS+"/Gas/payment/queryOrder";
+    //电动车
+    public static final String ElectricList_Url=URL_Repair+"/repairshop/shop/searchByLocate";
+    public static final String Store_Detail=URL_Repair+"/repairshop/shop/get";
+    public static final String Search_History=URL_Repair+"/repairshop/searchHistory/list";
+    public static final String Clear_History=URL_Repair+"/repairshop/searchHistory/clear";
+    //水宝
+    public static final String ScanCode_Buy=URL_MSSB+"/order/appScanNotice";
+    public static final String WaterAccount_Url=URL_MSSB+"/member/get";
+    public static final String WaterCard_Recharge=URL_MSSB+"/order/recharge";
+    public static final String WaterCard_PayUrl=URL_MSSB+"/order/payNotice";
+    public static final String WaterOrder_ListUrl=URL_MSSB+"/order/list";
+    public static final String WaterRecharge_Meal=URL_MSSB+"/pack/list";
+
+
+    public static final String Paymethod_Url=URL_HEADS+"/api/app/pay_method";
 
     //商城
     public static final String Shop_LoginHtml=URL_SHOP+"/wap/tmpl/member/login.html";
     public static final String Shop_HomeUrl= URL_SHOP +"/wap/index.html";
     public static final String Shop_Login= URL_SHOP +"/mobile/index.php?act=login&op=appindex";
+    public static final String Shop_Redwine=URL_SHOP +"/wap/tmpl/class_list.html?gc_id=1246";
+    public static final String Shop_Disinfectioncabinet=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1059";
+    public static final String Shop_Heatercalorifier=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1060";
+    public static final String Shop_Lampblack=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1063";
+    public static final String Shop_Gasstove=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
+    public static final String Shop_GasHeater=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
     /*首页功能 */
     public static final String App_versionUrl= URL_HEADS +"/Gas/app/version";
+    public static final String AllServeCatalog_Url=URL_HEADS+"/api/serve_city/user_app_all_serve";
     public static final String Function_Url= URL_HEADS +"/api/serve_city/user_app_serve";
+    public static final String HomeFunction_Url=URL_HEADS+"/api/serve_city/user_app_homepage";
     public static final String Weather_QueryUrl= URL_HEADS +"/pis/weather/query";
     public static final String Inform_Url= URL_HEADS +"/Gas/message/list";
     public static final String Inform_delect= URL_HEADS +"/Gas/message/delete";
@@ -27,6 +57,8 @@ public class UrlUtil {
     public static final String Userinfo_GasUrl= URL_HEADS +"/Gas/user/info";
     public static final String Read_searchUserhouse= URL_HEADS +"/Gas/usedHouse/search";
     public static final String Pre_deposit_history= URL_HEADS +"/Gas/payment/pre_deposit_history";
+    public static final String SpecialTopic_Url=URL_HEADS+"/api/app/specail_topic_activity";
+
     /*燃气服务模块 */
     //自助抄表
     public static final String InstallServer_Url= URL_HEADS +"/Gas/workOrder/add";
@@ -43,6 +75,9 @@ public class UrlUtil {
     //抢险
     public static final String GasQiangxian_Url= URL_HEADS +"/Gas/app/rescue";
     /*HTML5Web*/
+    //智慧农贸
+    public static final String Intelligent_FarmUrl="http://msbapp.cn/wyh/index.html";
+
     //燃气须知
     public static final String Companyprofile_Url= URL_HEADS +"/Gas/xuzhi/company";
     public static final String GasJiaoNa_Url= URL_HEADS +"/Gas/xuzhi/gas_payment";
@@ -98,13 +133,16 @@ public class UrlUtil {
     public static final String Servirce_detailUrl= URL_HEADS +"/Gas/workOrder/view";
     public static final String GasCancel_workUrl= URL_HEADS +"/Gas/workOrder/cancel";
     public static final String GasmodifyInfo_Url= URL_HEADS +"/Gas/user/modifyInfo";
-    public static final String Register_Url= URL_HEADS +"/Gas/user/register";
-    public static final String Shara_appUrl= URL_HEADS +"/Gas/coupon/share_add";
+    public static final String Register_Url=URL_HEADS +"/Gas/user/register";
+    public static final String Shara_appUrl=URL_HEADS +"/Gas/coupon/share_add";
     public static final String BoundCustomerNo_URL= URL_HEADS +"/Gas/usedHouse/bind";
     public static final String AddressManage_Url= URL_HEADS +"/Gas/address/list";
-    public static final String AddAddress_Url= URL_HEADS +"/Gas/address/add";
-    public static final String ModifyAddress_Url= URL_HEADS +"/Gas/address/modify";
-    public static final String DelectAddress_Url= URL_HEADS +"/Gas/address/delete";
+    public static final String AddAddress_Url=URL_HEADS +"/Gas/address/add";
+    public static final String ModifyAddress_Url=URL_HEADS+"/Gas/address/modify";
+    public static final String NewAddAddress_Url=URL_HEADS+"/Gas/address/add_with_user_info";
+    public static final String NewModifyAddress_Url=URL_HEADS+"/Gas/address/modify_with_user_info";
+    public static final String DelectAddress_Url=URL_HEADS +"/Gas/address/delete";
+    public static final String SetDefaultAddr_Url=URL_HEADS +"/Gas/address/set_default_address";
     /*发票*/
     public static final String Invoice_explain= URL_HEADS +"/repair_h5/invoice_note.html";
     public static final String Invoice_applyUrl= URL_HEADS +"/Gas/invoice/apply";
@@ -119,12 +157,14 @@ public class UrlUtil {
     public static final String RepairOrder_EvalUrl= URL_HEADS +"/Gas/repairOrder/eval";
     public static final String RepairOrder_QuestionUrl= URL_HEADS +"/Gas/repairCategoryProblem/problem_list";
     public static final String RepairMater_countUrl= URL_HEADS +"/Gas/repairman/evaluate_status_count";
-    public static final String SecondService_Url= URL_HEADS +"/api/serve_city/sub_serve";
+    public static final String SecondService_Url= URL_HEADS +"/api/serve_city/user_app_sub_serve";
     public static final String LookEvalute_Url= URL_HEADS +"/Gas/repairOrder/eval_info";
     public static final String RefundApply_Url= URL_HEADS +"/Gas/repairOrder/refund";
     public static final String RefundImg_Url= URL_HEADS +"/Gas/repairOrder/refund_img";
     /*热门维修 */
     public static final String HotRepair_Url= URL_HEADS +"/api/serve_city/hot_repair";
     //HTML5页面
+    public static final String Recharge_BackAgree=URL_HEADS+"/water_h5/chongfanxieyi.html";
     public static final String Replacepay_agreeUrl= URL_HEADS +"/gas_h5/daikouxieyi.html";
+    public static final String Vegetable_Url="http://jsxss.net/app/index.php?i=5&c=entry&m=ewei_shopv2&do=mobile";
 }

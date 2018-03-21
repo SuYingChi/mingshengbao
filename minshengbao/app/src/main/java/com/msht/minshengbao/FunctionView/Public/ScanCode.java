@@ -9,11 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DatePicker.Utils.DataUtils;
 import com.msht.minshengbao.FunctionView.GasService.IcCardExpense;
+import com.msht.minshengbao.FunctionView.WaterApp.ScanCodeResult;
+import com.msht.minshengbao.FunctionView.WaterApp.WaterPaymethod;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 
@@ -25,8 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zxing.QRCodeDecoder;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
+
 
 public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
     private static final int REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY = 666;
@@ -40,7 +43,6 @@ public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
         mQRCodeView = (ZXingView) findViewById(R.id.zxingview);
         mQRCodeView.setDelegate(this);
     }
-
     @Override
     public void onScanQRCodeSuccess(String result) {
         vibrate();
@@ -48,18 +50,41 @@ public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
         ResultAction(result);
     }
     private void ResultAction(String result) {
-        if (result.contains("payType")){
+        String download_url="http://msbapp.cn/download/success.html?QRCodeJson=";
+        String reverse_result=result.replace(download_url,"");
+        if (reverse_result.contains("QrcodeType")){
+            try{
+                JSONObject object = new JSONObject(reverse_result);
+                String QrcodeType=object.optString("QrcodeType");
+                JSONObject jsonObject=object.optJSONObject("data");
+                if (QrcodeType.equals("1")){
+                    String equipmentNo=jsonObject.optString("equipmentNo");
+                    Intent intent=new Intent(context, ScanCodeResult.class);
+                    intent.putExtra("equipmentNo",equipmentNo);
+                    startActivity(intent);
+                    finish();
+                }else if (QrcodeType.equals("2")){
+                    /*String account=jsonObject.optString("account");
+                    String payFee=jsonObject.optString("payFee");
+                    String giveFee=jsonObject.optString("giveFee");
+                    Intent intent=new Intent(context, WaterPaymethod.class);
+                    intent.putExtra("payFee",payFee);
+                    intent.putExtra("account",account);
+                    intent.putExtra("giveFee",giveFee);
+                    startActivity(intent);
+                    finish();*/
+                    MakeMistakes("0");
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }else if(reverse_result.contains("payType")){
             try {
-                JSONObject object = new JSONObject(result);
+                JSONObject object = new JSONObject(reverse_result);
                 String payType =object.getString("payType");
                 String payId  = object.getString("payId");
                 String payTime=object.getString("payTime");
                 if (payType.equals("1")){
-                    String pattern="yyyyMMddHHmmss";
-                    long time1= DateUtils.getCurTimeLong();
-                    long time2=DateUtils.getStringToDate(payTime,pattern);
-                    long time=time1-time2;
-                    long second=time/1000;
                     Intent intent=new Intent(ScanCode.this, IcCardExpense.class);
                     intent.putExtra("payId",payId);
                     intent.putExtra("payTime",payTime);
@@ -84,7 +109,6 @@ public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(200);
     }
-
     @Override
     public void onScanQRCodeOpenCameraError() {}
     @Override
@@ -95,7 +119,6 @@ public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
         mQRCodeView.showScanRect();
         mQRCodeView.startSpot();//开始扫描
     }
-
     @Override
     protected void onStop() {
         mQRCodeView.stopCamera();
@@ -107,5 +130,4 @@ public class ScanCode extends BaseActivity implements QRCodeView.Delegate {
         mQRCodeView.onDestroy();
         super.onDestroy();
     }
-
 }

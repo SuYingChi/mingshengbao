@@ -16,6 +16,7 @@ import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends AppCompatActivity {
     protected ImageView backimg;
+    protected ImageView right_img;
     protected TextView  tv_navigaTile;
     protected Context   context;
     protected String    mPageName;
@@ -25,10 +26,10 @@ public class BaseActivity extends AppCompatActivity {
         StatusBarCompat.setStatusBar(this);
     }
     protected void setCommonHeader(String title) {
+        mPageName=title;
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_status_view).setVisibility(View.GONE);//状态栏View
         }
-        mPageName=title;
         backimg = (ImageView) findViewById(R.id.id_goback);
         tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
         backimg.setOnClickListener(new View.OnClickListener() {

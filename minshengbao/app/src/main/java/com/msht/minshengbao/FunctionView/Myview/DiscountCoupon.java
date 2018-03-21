@@ -8,30 +8,24 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Adapter.CouponFragmentAdapter;
+import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-public class DiscountCoupon extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class DiscountCoupon extends BaseActivity implements ViewPager.OnPageChangeListener {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
-    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discount_coupon);
-        mContext=this;
+        context=this;
+        setCommonHeader("代金券");
         findViews();
         init();
     }
     private void findViews(){
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        ((TextView)findViewById(R.id.tv_navigation)).setText("代金券");
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
     }
@@ -49,14 +43,14 @@ public class DiscountCoupon extends AppCompatActivity implements ViewPager.OnPag
     public void onPageScrollStateChanged(int state) {}
     public void onResume() {
         super.onResume();
-        MobclickAgent.onResume(mContext);
+        MobclickAgent.onResume(context);
        // ZhugeSDK.getInstance().init(getApplicationContext());
 
     }
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(mContext);
+        MobclickAgent.onPause(context);
     }
 
 }

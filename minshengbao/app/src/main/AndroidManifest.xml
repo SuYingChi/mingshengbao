@@ -72,6 +72,7 @@
         <activity android:name=".FunctionView.Public.SelectVoucher" />
         <activity android:name=".FunctionView.Public.PayfeeWay" />
         <activity android:name=".FunctionView.GasService.BillDetail" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -83,6 +84,7 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource" />
         </provider>
+
         <service
             android:name=".DownloadVersion.DownloadService"
             android:enabled="true"
@@ -233,7 +235,28 @@
         <activity android:name=".FunctionView.GasService.PreexistenceDetail" />
         <activity android:name=".FunctionView.GasService.IcCardExpense" />
         <activity android:name=".FunctionView.HtmlWeb.IcbcHtml" />
-        <activity android:name=".FunctionView.Public.QrCodeError"></activity>
+        <activity android:name=".FunctionView.Public.QrCodeError" />
+        <activity android:name=".FunctionView.GasService.GasIccard" />
+        <activity android:name=".FunctionView.Public.AllService" />
+        <activity android:name=".FunctionView.Electricvehicle.ElectricHome" />
+        <activity android:name=".FunctionView.Electricvehicle.ElectricMap" />
+        <activity android:name=".FunctionView.WaterApp.WaterPaymethod" />
+        <activity android:name=".FunctionView.Electricvehicle.ElectricsStoreDetail" />
+        <activity android:name=".FunctionView.Electricvehicle.StoreMap" />
+        <activity android:name=".FunctionView.Electricvehicle.SearchStore" />
+        <activity android:name=".FunctionView.Electricvehicle.ReplaceAddress" />
+        <activity android:name=".FunctionView.Electricvehicle.ElectricPicture" />
+        <activity android:name=".FunctionView.WaterApp.ScanCodeResult" />
+        <activity android:name=".FunctionView.WaterApp.WaterHome" />
+        <activity android:name=".FunctionView.WaterApp.OnlinePlaceOrder" />
+        <activity android:name=".FunctionView.WaterApp.WaterRecharge" />
+        <activity android:name=".FunctionView.WaterApp.WaterBalanceDetail" />
+        <activity android:name=".FunctionView.WaterApp.WaterSuccess" />
+        <activity
+            android:name=".FunctionView.HtmlWeb.VegetableGentlemen"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".FunctionView.HtmlWeb.IntelligentFarmHml" />
+        <activity android:name=".FunctionView.insurance.InsuranceHome"></activity>
     </application>
 
 </manifest>

@@ -6,11 +6,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_10"
-        android:background="@color/background_gray"  />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/line_gray" />
+        android:background="@color/background_gray"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -26,7 +22,7 @@
             android:layout_marginLeft="@dimen/margin_10"
             android:text="选择支付方式："
             android:textColor="@color/black1"
-            android:textSize="@dimen/text_20"
+            android:textSize="@dimen/text_width16"
             />
     </RelativeLayout>
     <View
@@ -255,9 +251,5 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/margin_15"/>
         </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/line_gray" />
     </RadioGroup>
 </LinearLayout>

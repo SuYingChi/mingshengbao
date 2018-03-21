@@ -15,30 +15,38 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Adapter.PaywayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.FunctionView.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PayfeeWay extends BaseActivity implements View.OnClickListener {
-    private RadioButton Ryiwangtong,Raalipay,Rawechat;
-    private RadioButton Rayinlian,Rbalance;
+
     private Button btn_send;
     private TextView tv_realamount;
     private TextView tv_balance;
 
+    private ListViewForScrollView forScrollView;
+    private PaywayAdapter mAdapter;
     private String userId,id,voucherId;
     private String password;
     private String charge;   //
@@ -46,12 +54,16 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
     private String type;
     private String CustomerNo;
     private String amount;
+    private String source="";
+    private JSONArray jsonArray;
     private int requestCode=0;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
+    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
+
     private JSONObject jsonObject;
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    Handler balanceHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
@@ -83,6 +95,103 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
             }
         }
     };
+    Handler requestHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    customDialog.dismiss();
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String Results=object.optString("result");
+                        String Error = object.optString("error");
+                        if(Results.equals("success")) {
+                            if (requestCode==0){
+                                jsonArray =object.getJSONArray("data");
+                                Paywayshow();
+                            }else if (requestCode==2){
+                                JSONObject json=object.getJSONObject("data");
+                                payresult(json);
+                            }
+                        }else {
+                            showfaiture(Error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case FAILURE:
+                    customDialog.dismiss();
+                    showfaiture(msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private void payresult(JSONObject json) {
+        String status=json.optString("status");
+        String chargeId=json.optString("chargeId");
+        String lottery=json.optString("lottery");
+        if (status.equals("0")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                showdialogs("新订单");
+            }
+
+        }else if (status.equals("1")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                Intent success=new Intent(context,PaySuccess.class);
+                success.putExtra("type","0");
+                startActivity(success);
+                finish();
+            }
+        }else if (status.equals("2")){
+            showdialogs("缴费失败");
+        }else if (status.equals("3")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                showdialogs("正在支付");
+            }
+        }
+    }
+    private void Paywayshow() {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                String tips = json.getString("tips");
+                String name=json.getString("name");
+                String code=json.getString("code");
+                String channel=json.getString("channel");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("tips", tips);
+                map.put("name",name);
+                map.put("code",code);
+                map.put("channel",channel);
+                List.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (List.size()!=0){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     private void showfaiture(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("缴费提示")
@@ -101,15 +210,11 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         double doublebalance=jsonObject.optDouble("balance");
         double doubleamount=Double.valueOf(amount);
         if (doubleamount<=doublebalance){
-            Rbalance.setEnabled(true);
-            String balance=jsonObject.optString("balance");
-            tv_balance.setText(balance+"元");
+            VariableUtil.balance="余额充足";
         }else {
-            tv_balance.setText("余额不足");
-            tv_balance.setTextColor(0xfff96331);
-            Rbalance.setEnabled(false);
+            VariableUtil.balance="余额不足";
         }
-
+        initpayway();
     }
     private void showcharge() {
         try {
@@ -145,25 +250,26 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         voucherId=getdata.getStringExtra("voucherid");
         type="1";
         initView();
+        mAdapter=new PaywayAdapter(context,List);
+        forScrollView.setAdapter(mAdapter);
         initData();
+        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+            @Override
+            public void ItemClick(View view, int thisPosition) {
+                btn_send.setEnabled(true);
+                VariableUtil.paypos=thisPosition;
+                mAdapter.notifyDataSetChanged();
+                channels=List.get(thisPosition).get("channel");
+            }
+        });
     }
     private void initView() {
-        Ryiwangtong=(RadioButton)findViewById(R.id.id_radio_wangtong);
-        Raalipay=(RadioButton)findViewById(R.id.id_radio_alipay);
-        Rawechat=(RadioButton)findViewById(R.id.id_radio_wechat);
-        Rayinlian=(RadioButton)findViewById(R.id.id_radio_yinlian);
-        Rbalance=(RadioButton)findViewById(R.id.id_radio_balance);
+        forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         tv_balance=(TextView)findViewById(R.id.id_tv_balance);
         tv_realamount=(TextView)findViewById(R.id.id_real_fee);
         btn_send=(Button)findViewById(R.id.id_btn_pay) ;
         tv_realamount.setText("¥"+amount);
         btn_send.setEnabled(false);       //初始未选择支付方式不可点击
-        btn_send.setBackgroundResource(R.drawable.shape_gray_corner_button);
-        Raalipay.setOnClickListener(this);
-        Rawechat.setOnClickListener(this);
-        Rayinlian.setOnClickListener(this);
-        Ryiwangtong.setOnClickListener(this);
-        Rbalance.setOnClickListener(this);
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,6 +284,30 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
+        HttpUrlconnectionUtil.executepost(validateURL, textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                balanceHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                balanceHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    private void initpayway() {
+        customDialog.show();
+        String validateURL= UrlUtil.Paymethod_Url;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("source",source);
         HttpUrlconnectionUtil.executepost(validateURL, textParams, new ResultListener() {
             @Override
             public void onResultSuccess(String success) {
@@ -199,56 +329,6 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.id_radio_alipay:
-                channels = "1";
-                Raalipay.setChecked(true);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);    //设置可点击
-                btn_send.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_wechat:
-                channels = "5";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(true);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                btn_send.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_yinlian:
-                channels = "3";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(true);
-                Ryiwangtong.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                btn_send.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_wangtong:
-                channels = "7";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(true);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                btn_send.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_balance:
-                channels = "8";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(false);
-                Rbalance.setChecked(true);
-                btn_send.setEnabled(true);
-                btn_send.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
             case R.id.id_goback:
                 finish();
                 break;
@@ -296,14 +376,14 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                 Message msg = new Message();
                 msg.obj = success;
                 msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
+                balanceHandler.sendMessage(msg);
             }
             @Override
             public void onResultFail(String fail) {
                 Message msg = new Message();
                 msg.obj = fail;
                 msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
+                balanceHandler.sendMessage(msg);
             }
         });
     }
@@ -324,10 +404,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         }
         if (str.equals("缴费成功")){
             setResult(0x002);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","0");
-            startActivity(success);
-            finish();
+            requestResult();
         }else {
             showdialogs(str);
         }
@@ -361,5 +438,30 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                 showMsg(result, errorMsg, extraMsg);
             }
         }
+    }
+    private void requestResult() {
+        requestCode=2;
+        String validateURL= UrlUtil.PayResult_Notarize;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        textParams.put("id",id);
+        HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                requestHandler.sendMessage(msg);
+            }
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                requestHandler.sendMessage(msg);
+            }
+        });
+
     }
 }

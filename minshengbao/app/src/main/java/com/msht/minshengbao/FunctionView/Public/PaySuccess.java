@@ -13,13 +13,13 @@ import com.msht.minshengbao.R;
 import com.umeng.analytics.MobclickAgent;
 
 public class PaySuccess extends BaseActivity {
-    private final String mPageName="支付成功";
     private final int SPLASH_DISPLAY_LENGHT=4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_success);
         context=this;
+        mPageName="支付成功";
         String type=getIntent().getStringExtra("type");
         TextView tv_notice=(TextView)findViewById(R.id.id_text);
         TextView tv_naviga=(TextView)findViewById(R.id.tv_navigation);
@@ -40,7 +40,6 @@ public class PaySuccess extends BaseActivity {
         }
         initEvent();
     }
-
     private void initEvent() {
         new Handler().postDelayed(new Runnable(){
 

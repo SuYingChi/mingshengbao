@@ -454,7 +454,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_img_forward4"
                         android:layout_marginRight="@dimen/margin_10"
-                        android:text="个月"
+                        android:text="天"
                         android:textSize="@dimen/text_18"/>
                     <TextView
                         android:id="@+id/id_tv_date"

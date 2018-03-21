@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:background="@android:color/transparent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/margin_50">
+    android:minHeight="@dimen/margin_width70">
     <View
         android:id="@+id/id_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_20" />
+        android:layout_height="@dimen/margin_width20" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_50">
+        android:minHeight="@dimen/margin_width50">
         <ImageView
             android:id="@+id/id_goback"
             android:padding="@dimen/margin_5"
@@ -46,17 +46,17 @@
             android:visibility="gone"/>
         <RelativeLayout
             android:id="@+id/id_right_massage"
-            android:layout_width="@dimen/margin_width40"
+            android:layout_width="@dimen/margin_width35"
             android:layout_height="@dimen/margin_width35"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:background="@drawable/shape_transparent_circle"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true">
             <ImageView
                 android:id="@+id/id_massage_img"
-                android:layout_width="@dimen/margin_25"
-                android:layout_height="@dimen/margin_25"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_width12"
+                android:layout_width="@dimen/margin_width20"
+                android:layout_height="@dimen/margin_width20"
+                android:layout_centerInParent="true"
                 android:src="@drawable/scancode_3x"
                 />
         </RelativeLayout>

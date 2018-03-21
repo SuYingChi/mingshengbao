@@ -33,6 +33,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModifyAddress extends BaseActivity implements View.OnClickListener {
     private View Rcity,Raddress;
@@ -40,11 +42,14 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
     private TextView  tv_city;
     private TextView  tv_address;
     private EditText  et_doorplate;
-    private Button    btn_ensure;
+    private EditText  et_name;
+    private EditText  et_phone;
     private String    userId,id;
     private String    password;
     private String    mCity,cityId;
     private String    mAddress;
+    private String    mName;
+    private String    mPhone;
     private String    longitude;
     private String    latitude;
     private static final int SUCCESS=1;
@@ -110,14 +115,22 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
-        String detailAddr=data.getStringExtra("address");
+        mAddress=data.getStringExtra("address");
         id=data.getStringExtra("id");
         latitude=data.getStringExtra("latitude");
         longitude=data.getStringExtra("longitude");
         cityId=data.getStringExtra("city_id");
+        mCity=data.getStringExtra("city_name");
+        mName=data.getStringExtra("name");
+        mPhone=data.getStringExtra("phone");
+       /* Toast.makeText(context, latitude+","+longitude, Toast.LENGTH_SHORT)
+                .show();*/
         initView();
         initEvent();
-        tv_address.setText(detailAddr);
+        tv_city.setText(mCity);
+        tv_address.setText(mAddress);
+        et_name.setText(mName);
+        et_phone.setText(mPhone);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -153,23 +166,27 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
         tv_city=(TextView)findViewById(R.id.id_tv_city);
         tv_address=(TextView)findViewById(R.id.id_address);
         et_doorplate=(EditText)findViewById(R.id.id_et_doorplate);
-        btn_ensure=(Button)findViewById(R.id.id_btn_ensure);
+        et_name=(EditText)findViewById(R.id.id_et_name);
+        et_phone=(EditText)findViewById(R.id.id_et_phone);
+        findViewById(R.id.id_re_newaddress).setOnClickListener(this);
     }
     private void initEvent() {
         right_img.setOnClickListener(this);
         Rcity.setOnClickListener(this);
         Raddress.setOnClickListener(this);
-        btn_ensure.setOnClickListener(this);
 
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.id_btn_ensure:
+            case R.id.id_re_newaddress:
                 String address=tv_address.getText().toString().trim();
                 String doorplate=et_doorplate.getText().toString().trim();
                 mAddress=address+doorplate;
-                if (matchcity(tv_city.getText().toString())&&matchaddress(tv_address.getText().toString())){
+                mName=et_name.getText().toString().trim();
+                mPhone=et_phone.getText().toString().trim();
+                if (matchcity(tv_city.getText().toString())&&matchaddress(tv_address.getText().toString())
+                        &&matchName(mName)&&matchphone(mPhone)&&isPhone(mPhone)){
                     requestCode=0;
                     requestService();
                 }
@@ -217,6 +234,24 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
                 })
                 .show();
     }
+    private boolean matchphone(String s) {
+        if (TextUtils.isEmpty(s)){
+            Toast.makeText(context, "请填写您的联系电话", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }else {
+            return true;
+        }
+    }
+    private boolean matchName(String s) {
+        if (TextUtils.isEmpty(s)){
+            Toast.makeText(context, "请填写您的收货人名", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }else {
+            return true;
+        }
+    }
     private boolean matchaddress(String s) {
         if (TextUtils.isEmpty(s)){
             Toast.makeText(context, "请填写您的地址", Toast.LENGTH_SHORT)
@@ -235,6 +270,17 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
             return true;
         }
     }
+    private boolean isPhone(String phoneNo) {     //判断电话号码个格式
+        Pattern pattern=Pattern.compile("1[0-9]{10}");
+        Matcher matcher=pattern.matcher(phoneNo);
+        if (matcher.matches()){
+            return true;
+        }else {
+            Toast.makeText(context, "电话号码格式不正确", Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }
+    }
     private void requestService() {
         customDialog.show();
         String validateURL="";
@@ -243,11 +289,13 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
         textParams.put("password",password);
         textParams.put("id",id);
         if (requestCode==0){
-            validateURL = UrlUtil.ModifyAddress_Url;
+            validateURL = UrlUtil.NewModifyAddress_Url;
             textParams.put("city_id",cityId);
             textParams.put("address",mAddress);
-            textParams.put("longitude",longitude);
-            textParams.put("latitude",latitude);
+            /*textParams.put("longitude",longitude);
+            textParams.put("latitude",latitude);*/
+            textParams.put("name",mName);
+            textParams.put("phone",mPhone);
         }else if (requestCode==1){
             validateURL = UrlUtil.DelectAddress_Url;
         }

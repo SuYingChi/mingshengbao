@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
+    tools:context="com.msht.minshengbao.FunctionView.Electricvehicle.ElectricPicture">
+    <include layout="@layout/layout_header" />
+    <com.msht.minshengbao.ViewUI.widget.BannerLayout
+        android:id="@+id/id_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_width50"
+        app:autoPlayDuration="5000"
+        app:indicatorMargin="15dp"
+        app:indicatorPosition="centerBottom"
+        app:indicatorShape="oval"
+        app:indicatorSpace="5dp"
+        app:isAutoPlay="false"
+        app:scrollDuration="900"
+        app:selectedIndicatorColor="@color/color_red"
+        app:selectedIndicatorHeight="8dp"
+        app:selectedIndicatorWidth="8dp"
+        app:unSelectedIndicatorColor="#99ffffff"
+        app:unSelectedIndicatorHeight="8dp"
+        app:unSelectedIndicatorWidth="8dp">
+
+    </com.msht.minshengbao.ViewUI.widget.BannerLayout>
+</LinearLayout>

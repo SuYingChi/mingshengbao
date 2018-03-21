@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -58,6 +59,7 @@ public class AddressManage extends BaseActivity {
                         String Results=object.optString("result");
                         String Error = object.optString("error");
                         if (requestCodes==0){
+                            Log.d("地址",msg.obj.toString());
                             jsonArray =object.optJSONArray("data");
                         }
                         if(Results.equals("success")) {
@@ -68,8 +70,9 @@ public class AddressManage extends BaseActivity {
                                     initShow();
                                     Rview.setVisibility(View.GONE);
                                 }
-                            }else if (requestCodes==1){
+                            }else if (requestCodes==1||requestCodes==2){
                                 requestCodes=0;
+                                setResult(1);
                                 addrList.clear();
                                 mAdapter.notifyDataSetChanged();
                                 initData();
@@ -109,15 +112,23 @@ public class AddressManage extends BaseActivity {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
                 String city_id=jsonObject.getString("city_id");
+                String cityName=jsonObject.optString("city_name");
+                String flag=jsonObject.optString("flag");
                 String address=jsonObject.getString("address");
+                String name=jsonObject.optString("name");
+                String phone=jsonObject.optString("phone");
                 String longitude = jsonObject.getString("longitude");
                 String latitude = jsonObject.getString("latitude");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
-                map.put("city_id", city_id);
-                map.put("address", address);
-                map.put("longitude", longitude);
-                map.put("latitude", latitude);
+                map.put("city_id",city_id);
+                map.put("city_name",cityName);
+                map.put("flag",flag);
+                map.put("address",address);
+                map.put("name",name);
+                map.put("phone",phone);
+                map.put("longitude",longitude);
+                map.put("latitude",latitude);
                 addrList.add(map);
             }
         }catch (JSONException e){
@@ -140,18 +151,26 @@ public class AddressManage extends BaseActivity {
         mListView.setAdapter(mAdapter);
         initData();
         initEvent();
-        mAdapter.SetOnItemSelectListener(new MyWorkOrderAdapter.OnItemSelectListener() {
+        mAdapter.setOnItemSelectListener(new AddrManageAdapter.OnItemSelectListener() {
             @Override
             public void ItemSelectClick(View view, int thisposition) {
                 String address=addrList.get(thisposition).get("address");
                 String id = addrList.get(thisposition).get("id");
                 String city_id=addrList.get(thisposition).get("city_id");
+                String city_name=addrList.get(thisposition).get("city_name");
+                String name=addrList.get(thisposition).get("name");
+                String phone=addrList.get(thisposition).get("phone");
                 String longitude = addrList.get(thisposition).get("longitude");
                 String latitude =addrList.get(thisposition).get("latitude");
+                Toast.makeText(context, latitude+","+longitude, Toast.LENGTH_SHORT)
+                        .show();
                 Intent intent=new Intent(context,ModifyAddress.class);
                 intent.putExtra("id",id);
                 intent.putExtra("address",address);
                 intent.putExtra("city_id",city_id);
+                intent.putExtra("city_name",city_name);
+                intent.putExtra("name",name);
+                intent.putExtra("phone",phone);
                 intent.putExtra("longitude",longitude);
                 intent.putExtra("latitude",latitude);
                 startActivityForResult(intent,1);
@@ -163,6 +182,21 @@ public class AddressManage extends BaseActivity {
                 Id=addrList.get(position).get("id");
                 delectAddres();
                 return true;
+            }
+        });
+        mAdapter.setOnDelectListener(new AddrManageAdapter.OnSelectDelectListener() {
+            @Override
+            public void ItemDelectClick(View view, int thisposition) {
+                Id=addrList.get(thisposition).get("id");
+                delectAddres();
+            }
+        });
+        mAdapter.setOnItemCheckedListener(new AddrManageAdapter.OnItemCheckedListener() {
+            @Override
+            public void ItemCheckedClick(View view, int thisposition) {
+                Id=addrList.get(thisposition).get("id");
+                requestCodes=2;
+                initData();
             }
         });
     }
@@ -197,6 +231,7 @@ public class AddressManage extends BaseActivity {
                     requestCodes=0;
                     addrList.clear();
                     mAdapter.notifyDataSetChanged();
+                    setResult(1);
                     initData();
                 }
                 break;
@@ -205,7 +240,7 @@ public class AddressManage extends BaseActivity {
         }
     }
     private void initEvent() {
-        findViewById(R.id.id_btn_newaddress).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_re_newaddress).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,AddAddress.class);
@@ -227,6 +262,9 @@ public class AddressManage extends BaseActivity {
             validateURL = UrlUtil.AddressManage_Url;
         }else if (requestCodes==1){
             validateURL = UrlUtil.DelectAddress_Url;
+            textParams.put("id",Id);
+        }else if (requestCodes==2){
+            validateURL = UrlUtil.SetDefaultAddr_Url;
             textParams.put("id",Id);
         }
         HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {

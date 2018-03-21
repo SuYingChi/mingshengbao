@@ -7,9 +7,14 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.FunctionView.HtmlWeb.HtmlPage">
     <include layout="@layout/layout_header"/>
-    <WebView
+    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
+        android:id="@+id/id_vertical_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/id_web_html"
-        />
+        android:layout_height="match_parent">
+        <WebView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/id_web_html"
+            />
+    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
 </LinearLayout>

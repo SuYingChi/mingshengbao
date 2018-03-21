@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.FunctionView.Public.ScanCode">
+
                 <cn.bingoogolapple.qrcode.zxing.ZXingView
                     android:id="@+id/zxingview"
                     style="@style/MatchMatch"
@@ -37,5 +38,7 @@
                     app:qrcv_tipTextMargin="@dimen/margin_20"
                     app:qrcv_toolbarHeight="56dp"
                     app:qrcv_topOffset="90dp"/>
-                <include layout="@layout/layout_header"/>
+
+
+    <include layout="@layout/layout_header"/>
 </RelativeLayout>

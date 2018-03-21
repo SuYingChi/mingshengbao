@@ -122,7 +122,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
                     break;
                 case FAILURE:
                     customDialog.dismiss();
-                    Toast.makeText(getActivity(), msg.obj.toString(),
+                    Toast.makeText(mContext, msg.obj.toString(),
                             Toast.LENGTH_SHORT).show();
                     break;
                 default:
@@ -165,6 +165,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         requestType=1;
         validateURL = UrlUtil.Searchbill_GasUrl;
         VariableUtil.detailList.clear();//清除账单明细数据
+        customDialog.show();
         requesSevice();
     }
     private void showfaiture(String error) {
@@ -256,7 +257,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_self_write_frage, container, false);
         mContext=getActivity();
-        customDialog=new CustomDialog(mContext, "正在加载");
+        customDialog=new CustomDialog(mContext, "正在加载...");
         userId= SharedPreferencesUtil.getUserId(mContext, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(mContext, SharedPreferencesUtil.Password,"");
         initView(view);

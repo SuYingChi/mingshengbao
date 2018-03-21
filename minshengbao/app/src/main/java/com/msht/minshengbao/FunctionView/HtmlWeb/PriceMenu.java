@@ -1,6 +1,7 @@
 package com.msht.minshengbao.FunctionView.HtmlWeb;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -102,7 +103,11 @@ public class PriceMenu extends BaseActivity {
         priceview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.toString());
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+                    view.loadUrl(request.getUrl().toString());
+                }else {
+                    view.loadUrl(request.toString());
+                }
                 return super.shouldOverrideUrlLoading(view, request);
             }
         });

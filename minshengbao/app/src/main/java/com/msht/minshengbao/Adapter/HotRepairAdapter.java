@@ -71,7 +71,7 @@ public class HotRepairAdapter extends BaseAdapter {
         }else if (code.equals("washing_machine_repair")){
             holder.img_function.setImageResource(R.drawable.home_hot_washing_2xh);
         }else if (code.equals("refrigerator_repair")){
-            holder.img_function.setImageResource(R.drawable.refrigerator_repair_xh);
+            holder.img_function.setImageResource(R.drawable.home_refrigerator_repair_xh);
         }else if (code.equals("heater_repair")){
             holder.img_function.setImageResource(R.drawable.heater_repair_xh);
         }else if (code.equals("gas_stove_clean")){

@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -20,7 +21,7 @@ import java.util.TimerTask;
 /**
  * Created by limxing on 16/1/7.
  */
-public class LoadView extends ImageView {
+public class LoadView extends AppCompatImageView {
     private MyRunable runnable;
     private int width;
     private int height;

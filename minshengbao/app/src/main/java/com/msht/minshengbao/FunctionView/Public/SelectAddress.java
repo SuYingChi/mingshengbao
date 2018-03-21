@@ -17,10 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.AddrManageAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionView.Myview.AddAddress;
+import com.msht.minshengbao.FunctionView.Myview.AddressManage;
 import com.msht.minshengbao.FunctionView.Myview.ModifyAddress;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
@@ -109,12 +109,16 @@ public class SelectAddress extends BaseActivity {
                 String id = jsonObject.getString("id");
                 String city_id=jsonObject.getString("city_id");
                 String address=jsonObject.getString("address");
+                String name=jsonObject.optString("name");
+                String phone=jsonObject.optString("phone");
                 String longitude = jsonObject.getString("longitude");
                 String latitude = jsonObject.getString("latitude");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("city_id", city_id);
                 map.put("address", address);
+                map.put("name",name);
+                map.put("phone",phone);
                 map.put("longitude", longitude);
                 map.put("latitude", latitude);
                 addrList.add(map);
@@ -150,8 +154,12 @@ public class SelectAddress extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String mAddress=addrList.get(position).get("address");
+                String name=addrList.get(position).get("name");
+                String phone=addrList.get(position).get("phone");
                 Intent intent=new Intent();
                 intent.putExtra("mAddress",mAddress);
+                intent.putExtra("name",name);
+                intent.putExtra("phone",phone);
                 setResult(1,intent);
                 finish();
             }
@@ -175,27 +183,11 @@ public class SelectAddress extends BaseActivity {
         }
     }
     private void initEvent() {
-        tv_rightText.setTag(0);
         tv_rightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int tag=(Integer)v.getTag();
-                switch (tag){
-                    case 0:
-                        boolAction=true;
-                        Rbtnnew.setVisibility(View.VISIBLE);
-                        mAdapter.notifyDataSetChanged();
-                        v.setTag(1);
-                        tv_rightText.setText("撤销");
-                        break;
-                    case 1:
-                        boolAction=false;
-                        Rbtnnew.setVisibility(View.GONE);
-                        mAdapter.notifyDataSetChanged();
-                        v.setTag(0);
-                        tv_rightText.setText("管理");
-                        break;
-                }
+                Intent intent=new Intent(context, AddressManage.class);
+                startActivityForResult(intent,1);
             }
         });
         Rbtnnew.setOnClickListener(new View.OnClickListener() {
@@ -273,18 +265,19 @@ public class SelectAddress extends BaseActivity {
             if(convertView==null){
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address_manage, null);
+                holder.cn_name=(TextView)convertView.findViewById(R.id.id_tv_name);
+                holder.cn_phone=(TextView)convertView.findViewById(R.id.id_tv_phone);
                 holder.cn_addre = (TextView) convertView.findViewById(R.id.id_tv_address);
                 holder.img_edit=(ImageView)convertView.findViewById(R.id.id_edit_img);
+                holder.edit_layout=convertView.findViewById(R.id.id_edit_layout);
                 convertView.setTag(holder);
             }else{
                 holder = (Holder) convertView.getTag();
             }
+            holder.cn_phone.setText(addrList.get(position).get("phone"));
+            holder.cn_name.setText(addrList.get(position).get("name"));
             holder.cn_addre.setText(addrList.get(position).get("address"));
-            if (boolAction){
-                holder.img_edit.setVisibility(View.VISIBLE);
-            }else {
-                holder.img_edit.setVisibility(View.GONE);
-            }
+            holder.edit_layout.setVisibility(View.GONE);
             holder.img_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -305,8 +298,11 @@ public class SelectAddress extends BaseActivity {
             return convertView;
         }
         class Holder{
+            View     edit_layout;
             ImageView   img_edit;
             TextView    cn_addre;
+            TextView cn_name;
+            TextView cn_phone;
         }
     }
 }

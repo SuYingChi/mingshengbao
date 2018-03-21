@@ -7,7 +7,7 @@
         android:startColor="@color/light_Orange"
         android:endColor="@color/deep_Orange"
         android:centerColor="@color/highlight_Orange"
-        android:angle="270"/>
+        android:angle="0"/>
     <!-- 边框的颜色 ：不能和窗口背景色一样-->
 
     <!-- 设置按钮的四个角为弧形 -->

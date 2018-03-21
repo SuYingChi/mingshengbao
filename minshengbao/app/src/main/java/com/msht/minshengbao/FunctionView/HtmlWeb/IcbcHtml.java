@@ -1,6 +1,7 @@
 package com.msht.minshengbao.FunctionView.HtmlWeb;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -43,9 +44,15 @@ public class IcbcHtml extends BaseActivity {
         mWebview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-
-                view.loadUrl(request.toString());
-                if (request.toString().contains(ICBC_Url)){
+                String UrlString="";
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+                    view.loadUrl(request.getUrl().toString());
+                    UrlString=request.getUrl().toString();
+                }else {
+                    view.loadUrl(request.toString());
+                    UrlString=request.toString();
+                }
+                if (UrlString.contains(ICBC_Url)){
                     Head_layout.setVisibility(View.VISIBLE);
                 }else {
                     Head_layout.setVisibility(View.GONE);

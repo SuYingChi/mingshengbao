@@ -73,14 +73,24 @@ public class HomeFunctionAdapter extends BaseAdapter {
             holder.img_function.setImageResource(R.drawable.home_sanitary_xh);
         }else if (code.equals("lamp_circuit")){
             holder.img_function.setImageResource(R.drawable.home_lanterns_xh);
-
         }else if (code.equals("other_repair")){
             holder.img_function.setImageResource(R.drawable.home_otherfix_xh);
-
         }else if (code.equals("gas_serve")){
             holder.img_function.setImageResource(R.drawable.home_gassever_xh);
         }else if (code.equals("insurance")){
             holder.img_function.setImageResource(R.drawable.home_insurance_xh);
+        }else if (code.equals("electric_vehicle_repair")){
+            holder.img_function.setImageResource(R.drawable.electric_vehicle_xh);
+        }else if (code.equals("all_service")){
+            holder.img_function.setImageResource(R.drawable.all_service_xh);
+        }else if (code.equals("intelligent_farm")){
+            holder.img_function.setImageResource(R.drawable.intelligent_farm_xh);
+        }else if (code.equals("drinking_water")){
+            holder.img_function.setImageResource(R.drawable.water_app_xh);
+        }else if (code.equals("vegetables_scxs")){
+            holder.img_function.setImageResource(R.drawable.vegetable_gentalmen_xh);
+        } else {
+            holder.img_function.setImageResource(R.drawable.home_default_xh);
         }
         return convertView;
     }

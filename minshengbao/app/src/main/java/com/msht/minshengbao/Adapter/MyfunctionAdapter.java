@@ -64,7 +64,7 @@ public class MyfunctionAdapter extends BaseAdapter {
         int integer=mList.get(position).get("code");
         if (integer==0){
             holder.img_function.setImageResource(R.drawable.mywallet_xh);
-            holder.tv_name.setText("我的钱包");
+            holder.tv_name.setText("我的账号");
         }else if (integer==1){
             holder.img_function.setImageResource(R.drawable.gas_server_xh);
             holder.tv_name.setText("燃气工单");

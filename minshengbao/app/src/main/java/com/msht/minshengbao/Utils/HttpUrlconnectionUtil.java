@@ -23,6 +23,38 @@ public class HttpUrlconnectionUtil  {
     private static final String ERROR_NETWORK = "服务器连接失败，请稍后再试";
     private static final String ERROR_SERVICE = "服务器异常，请稍后再试";
     private static final String ERROR_OVER_TIME = "网络连接超时，请检查您的网络";
+    public static void ShortTimeGet(final String  url,final ResultListener resultListener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                DataInputStream dis = null;
+                try {
+                    URL mUrl = new URL(url);
+                    conn=(HttpURLConnection)mUrl.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(4000);
+                    conn.setReadTimeout(4000);
+                    conn.setRequestProperty("accept","*/*");
+                    conn.setRequestProperty("connection","Keep-Alive");
+                    if (conn.getResponseCode() == 200) {
+                        InputStream is = conn.getInputStream();
+                        String resultStr = NetUtil.readString(is);
+                        resultListener.onResultSuccess(resultStr);
+                    }else {
+                        resultListener.onResultFail(ERROR_SERVICE);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    resultListener.onResultFail(ERROR_NETWORK);
+                }finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
     public static void executeGet(final String  url,final ResultListener resultListener) {
         new Thread(new Runnable() {
             @Override
@@ -56,6 +88,38 @@ public class HttpUrlconnectionUtil  {
         }).start();
     }
     public static void executeGetTwo(final String  url,final ResultListener resultListener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                DataInputStream dis = null;
+                try {
+                    URL mUrl = new URL(url);
+                    conn=(HttpURLConnection)mUrl.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(8000);
+                    conn.setReadTimeout(8000);
+                    conn.setRequestProperty("accept","*/*");
+                    conn.setRequestProperty("connection","Keep-Alive");
+                    if (conn.getResponseCode() == 200) {
+                        InputStream is = conn.getInputStream();
+                        String resultStr = NetUtil.readString(is);
+                        resultListener.onResultSuccess(resultStr);
+                    }else {
+                        resultListener.onResultFail(ERROR_SERVICE);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    resultListener.onResultFail(ERROR_NETWORK);
+                }finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+    public static void executeGetThree(final String  url,final ResultListener resultListener) {
         new Thread(new Runnable() {
             @Override
             public void run() {

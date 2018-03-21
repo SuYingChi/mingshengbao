@@ -60,7 +60,7 @@
                     android:textSize="@dimen/text_18"
                     android:textColor="@color/white"
                     android:layout_below="@+id/id_text1"
-                    android:layout_marginTop="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_65"
                     android:layout_marginRight="@dimen/margin_65"
                     android:background="@drawable/selector_touch_button_change"/>

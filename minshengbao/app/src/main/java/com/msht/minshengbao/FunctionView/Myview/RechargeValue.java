@@ -16,36 +16,46 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Adapter.PaywayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RechargeValue extends BaseActivity implements View.OnClickListener {
+public class RechargeValue extends BaseActivity  {
     private EditText et_value;
     private Button btn_recharge;
     private RadioButton Ryiwangtong,Raalipay;
     private RadioButton Rawechat,Rayinlian;
+    private ListViewForScrollView mListView;
     private String  userId,id;
     private String  password;
     private String  charge,type="4";
     private String  amount;
     private String  channels;
+    private String source="wallet_recharge";
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
+    private PaywayAdapter mAdapter;
     private JSONObject jsonObject;
+    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -60,7 +70,7 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
                         if(Results.equals("success")) {
                             showcharge();
                         }else {
-                            showNotify(Error);
+                            showNotify("充值提示",Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -68,13 +78,61 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
                     break;
                 case FAILURE:
                     customDialog.dismiss();
-                    showNotify(msg.obj.toString());
+                    showNotify("充值提示",msg.obj.toString());
                     break;
                 default:
                     break;
             }
         }
     };
+    Handler methodHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String Results=object.optString("result");
+                        String Error = object.optString("error");
+                        if(Results.equals("success")) {
+                            JSONArray Array =object.getJSONArray("data");
+                            Paywayshow(Array);
+                        }else {
+                            showNotify("提示",Error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case FAILURE:
+                    showNotify("提示",msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private void Paywayshow(JSONArray array) {
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject json = array.getJSONObject(i);
+                String tips = json.getString("tips");
+                String name=json.getString("name");
+                String code=json.getString("code");
+                String channel=json.getString("channel");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("tips", tips);
+                map.put("name",name);
+                map.put("code",code);
+                map.put("channel",channel);
+                List.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (List.size()!=0){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     private void showcharge() {
         try {
             id = jsonObject.optString("id");
@@ -84,9 +142,9 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
         }
         Pingpp.createPayment(RechargeValue.this, charge);
     }
-    private void showNotify(String string) {
+    private void showNotify(String title ,String string) {
         new PromptDialog.Builder(this)
-                .setTitle("充值提示")
+                .setTitle(title)
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(string)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
@@ -106,22 +164,52 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
+        VariableUtil.MealPos=-1;
         initView();
+        mAdapter=new PaywayAdapter(context,List);
+        mListView.setAdapter(mAdapter);
+        initData();
+        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+            @Override
+            public void ItemClick(View view, int thisPosition) {
+                btn_recharge.setEnabled(true);       //选择支付方式可点击
+                VariableUtil.paypos=thisPosition;
+                mAdapter.notifyDataSetChanged();
+                channels=List.get(thisPosition).get("channel");
+            }
+        });
+
     }
+
+    private void initData() {
+
+        String validateURL= UrlUtil.Paymethod_Url;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("source",source);
+        HttpUrlconnectionUtil.executepost(validateURL, textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                methodHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                methodHandler.sendMessage(msg);
+            }
+        });
+    }
+
     private void initView() {
-        findViewById(R.id.id_balance_layout).setVisibility(View.GONE);  //无余额支付
+        mListView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         et_value=(EditText)findViewById(R.id.id_et_value);
         btn_recharge=(Button)findViewById(R.id.id_btn_recharge);
-        Ryiwangtong=(RadioButton)findViewById(R.id.id_radio_wangtong);
-        Raalipay=(RadioButton)findViewById(R.id.id_radio_alipay);
-        Rawechat=(RadioButton)findViewById(R.id.id_radio_wechat);
-        Rayinlian=(RadioButton)findViewById(R.id.id_radio_yinlian);
         btn_recharge.setEnabled(false);       //初始未选择支付方式不可点击
-        btn_recharge.setBackgroundResource(R.drawable.shape_gray_corner_button);
-        Raalipay.setOnClickListener(this);
-        Rawechat.setOnClickListener(this);
-        Rayinlian.setOnClickListener(this);
-        Ryiwangtong.setOnClickListener(this);
         btn_recharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +243,7 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
                     })
                     .show();
         }else {
-            showNotify("请输入充值金额");
+            showNotify("充值提示","请输入充值金额");
         }
     }
     private boolean matchText(String amount) {
@@ -189,49 +277,6 @@ public class RechargeValue extends BaseActivity implements View.OnClickListener 
                 requestHandler.sendMessage(msg);
             }
         });
-    }
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.id_radio_alipay:
-                channels = "1";
-                Raalipay.setChecked(true);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                btn_recharge.setEnabled(true);    //设置可点击
-                btn_recharge.setBackgroundResource(R.drawable.selector_touch_button_change);
-                Ryiwangtong.setChecked(false);
-                break;
-            case R.id.id_radio_wechat:
-                channels = "5";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(true);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(false);
-                btn_recharge.setEnabled(true);
-                btn_recharge.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_yinlian:
-                channels = "3";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(true);
-                Ryiwangtong.setChecked(false);
-                btn_recharge.setEnabled(true);
-                btn_recharge.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            case R.id.id_radio_wangtong:
-                channels = "7";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(true);
-                btn_recharge.setEnabled(true);
-                btn_recharge.setBackgroundResource(R.drawable.selector_touch_button_change);
-                break;
-            default:
-                break;
-        }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

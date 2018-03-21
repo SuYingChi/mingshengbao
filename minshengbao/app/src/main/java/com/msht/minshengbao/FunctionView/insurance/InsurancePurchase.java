@@ -43,23 +43,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InsurancePurchase extends BaseActivity implements View.OnClickListener {
-    private ImageView forwardimg;
-    private RelativeLayout Rtype,Rbuys,Rtoubao,Rdetails;
-    private LinearLayout   Ltoubao;
+    private RelativeLayout Rbuys,Rcallphone;
     private CheckBox checkBox;
     private TextView tv_consult;
     private TextView tv_agree1,tv_agree2,tv_agree3;
-    private TextView tv_insurance_amount,tv_type;
-    private TextView tv_type1,tv_buyamount;
-    private TextView tv_deadline,tv_effective,tv_cut_off;
     private TextView tv_realamount;
     private EditText et_name,et_idcard,et_customer,et_phone,et_email;
     private EditText et_address,et_recommend;
     private String   name,idcard,customer,phone,email;
     private String   address,recommend;
     private String   insurance_amount="942000.00";
-    private String   type="保险套餐A",id="829073";
-    private String   deadline="5";
+    private String   id="1537981";
+    private int   deadline=5;
     private String   amount="300.00";
     private String   start_time,stop_time;
     private String   idNo;
@@ -128,6 +123,10 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         context=this;
         setCommonHeader("购买保险");
         customDialog=new CustomDialog(this, "正在加载");
+        amount=getIntent().getStringExtra("Amount");
+        id=getIntent().getStringExtra("insurance_Id");
+        deadline=getIntent().getIntExtra("vDeadLines",5);
+        insurance_amount=getIntent().getStringExtra("vSecuritys");
         initHeader();
         initView();
         initEvent();
@@ -135,7 +134,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private void initHeader() {
         findViewById(R.id.id_status_view).setVisibility(View.GONE);
         tv_consult=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_consult.setVisibility(View.VISIBLE);
+        tv_consult.setVisibility(View.GONE);
         tv_consult.setText("咨询");
     }
     @Override
@@ -145,17 +144,11 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 if (resultCode==1){
                     if (data!=null){
                         id=data.getStringExtra("Id");
-                        type=data.getStringExtra("type");
-                        deadline=data.getStringExtra("time");
                         amount=data.getStringExtra("amount");
                         insurance_amount=data.getStringExtra("insurance");
-                        tv_buyamount.setText(amount+"元");
-                        tv_type.setText(type);
-                        tv_type1.setText(type);
-                        tv_deadline.setText(deadline+"年");
-                        tv_insurance_amount.setText(insurance_amount+"元");
-                        tv_realamount.setText("¥"+amount);
-                        int time=Integer.valueOf(deadline).intValue();
+                        tv_realamount.setText(amount);
+                       // int time=Integer.valueOf(deadline).intValue();
+                        int time=deadline;
                         SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
                         Calendar calendar=Calendar.getInstance();
                         Calendar start=Calendar.getInstance();
@@ -163,8 +156,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                         start_time=formats.format(start.getTime());
                         calendar.add(Calendar.YEAR,time);
                         stop_time=formats.format(calendar.getTime());
-                        tv_cut_off.setText(stop_time);
-                        tv_effective.setText(start_time);
                     }
                 }
         }
@@ -172,7 +163,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
 
     }
     private void initEvent() {
-        Rtype.setOnClickListener(this);
         Rbuys.setOnClickListener(this);
         tv_consult.setOnClickListener(this);
         tv_agree1.setOnClickListener(this);
@@ -189,46 +179,16 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 return false;
             }
         });
-        Rdetails.setOnClickListener(this);
-        Rtoubao.setTag(0);
-        Rtoubao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int tag=(Integer)v.getTag();
-                switch (tag){
-                    case 0:
-                        forwardimg.setImageResource(R.drawable.downward_m);
-                        Ltoubao.setVisibility(View.VISIBLE);
-                        v.setTag(1);
-                        break;
-                    case 1:
-                        forwardimg.setImageResource(R.drawable.forward_m);
-                        Ltoubao.setVisibility(View.GONE);
-                        v.setTag(0);
-                        break;
-                }
-            }
-        });
+        Rcallphone.setOnClickListener(this);
     }
     private void initView() {
-        forwardimg=(ImageView)findViewById(R.id.id_img_forward);;
-        Rtype=(RelativeLayout)findViewById(R.id.id_re_type);
         Rbuys=(RelativeLayout)findViewById(R.id.id_re_buy);
-        Rtoubao=(RelativeLayout)findViewById(R.id.id_re_toubaoran);
-        Rdetails=(RelativeLayout)findViewById(R.id.id_re_detail);
-        Ltoubao=(LinearLayout)findViewById(R.id.id_li_toubao);
+        Rcallphone=(RelativeLayout)findViewById(R.id.id_re_call);
         checkBox=(CheckBox)findViewById(R.id.id_box_read);
         tv_agree1=(TextView)findViewById(R.id.id_text1);
         tv_agree2=(TextView)findViewById(R.id.id_text2);
         tv_agree3=(TextView)findViewById(R.id.id_text3);
         tv_realamount=(TextView)findViewById(R.id.id_buy_amount);
-        tv_insurance_amount=(TextView)findViewById(R.id.id_tv_insurance_amount);
-        tv_type=(TextView)findViewById(R.id.id_tv_insurance_type);
-        tv_type1=(TextView) findViewById(R.id.id_tv_type);
-        tv_buyamount=(TextView)findViewById(R.id.id_tv_buy_amount) ;
-        tv_deadline=(TextView)findViewById(R.id.id_tv_time);
-        tv_effective=(TextView)findViewById(R.id.id_tv_effive);
-        tv_cut_off=(TextView)findViewById(R.id.id_tv_stop);
         et_name=(EditText)findViewById(R.id.id_et_name);
         et_idcard=(EditText) findViewById(R.id.id_et_idcard);
         et_customer=(EditText)findViewById(R.id.id_et_customerNo);
@@ -236,21 +196,14 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         et_email=(EditText)findViewById(R.id.id_et_email);
         et_address=(EditText)findViewById(R.id.id_et_address);
         et_recommend=(EditText)findViewById(R.id.id_et_recommend);
-        tv_buyamount.setText(amount+"元");
-        tv_type.setText(type);
-        tv_type1.setText(type);
-        tv_deadline.setText(deadline+"年");
-        tv_insurance_amount.setText(insurance_amount+"元");
-        tv_realamount.setText("¥"+amount);
+        tv_realamount.setText(amount);
         SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar=Calendar.getInstance();
         Calendar start=Calendar.getInstance();
         start.add(Calendar.DAY_OF_MONTH,1);
         start_time=formats.format(start.getTime());
-        calendar.add(Calendar.YEAR,5);
+        calendar.add(Calendar.YEAR,deadline);
         stop_time=formats.format(calendar.getTime());
-        tv_cut_off.setText(stop_time);
-        tv_effective.setText(start_time);
     }
     @Override
     public void onClick(View v) {
@@ -258,11 +211,8 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             case R.id.id_goback:
                 finish();
                 break;
-            case R.id.id_re_type:
-                selectcombo();
-                break;
-            case R.id.id_re_detail:
-                Detail();
+            case R.id.id_re_call:
+                CallHotline();
                 break;
             case R.id.id_re_buy:
                 buyinsurance();

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+    <string name="default_text">XXXXXX</string>
+    <string name="default_value0">0.0</string>
+    <string name="balance_explain">(账户余额只能用于缴纳燃气费)</string>
+    <string name="account_recharge">账号充值</string>
+    <string name="self_payfee">自动燃气缴费</string>
+    <string name="card_arch">卡券包</string>
+    <string name="recharge_hint">账户余额用于缴纳燃气费或自动缴费</string>
+    <string name="autopay_hint">绑定燃气用户号才能自动缴费</string>
+    <string name="card_hint">分享给好友可获得代金券</string>
+    <string name="notice">提示</string>
+    <string name="gas_selfpay1">绑定燃气用户号才能</string>
+    <string name="gas_selfpay2">使用账户余额自动缴费</string>
+    <string name="binding">去绑定</string>
+    <!--首页  -->
+    <string name="updata_apk">你的版本过老，如若需使用，请点击更新</string>
+
+    <!--地址 -->
+    <string name="delect_text">删除</string>
+    <string name="edit_text">编辑</string>
+</resources>

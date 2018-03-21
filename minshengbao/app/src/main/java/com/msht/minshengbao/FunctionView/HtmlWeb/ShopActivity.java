@@ -69,7 +69,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     private byte[] bytes;
     private Intent mSourceIntent;
     private ValueCallback<Uri> mUploadMessage;
-    public ValueCallback<Uri[]> mUploadCallbackAboveL;
+    public  ValueCallback<Uri[]> mUploadCallbackAboveL;
     private final static int FILECHOOSER_RESULTCODE = 3;
     private static final int REQUEST_CODE_PICK_IMAGE = 0;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 1;
@@ -136,10 +136,16 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         }
         Shopweb.requestFocusFromTouch();
         Shopweb.setWebViewClient(new WebViewClient() {
-           @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String UrlString="";
                 view.reload();
-                if (url!=null&&url.contains(loginHtml)){
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+                    UrlString=request.getUrl().toString();
+                }else {
+                    UrlString=request.toString();
+                }
+                if (UrlString!=null&&UrlString.contains(loginHtml)){
                     if (!lstate){
                         Intent intent =new Intent(ShopActivity.this, LoginView.class);
                         startActivity(intent);
@@ -155,14 +161,14 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                             First=0;
                             Rnavigation.setVisibility(View.VISIBLE);
                         }else {
-                            view.loadUrl(url);
+                            view.loadUrl(UrlString);
                         }
                     }else {
-                        if (url.contains(targeUrl)){
-                            view.loadUrl(url);
+                        if (UrlString.contains(targeUrl)){
+                            view.loadUrl(UrlString);
                             Rnavigation.setVisibility(View.VISIBLE);
                         }else {
-                            view.loadUrl(url);
+                            view.loadUrl(UrlString);
                             Rnavigation.setVisibility(View.GONE);
                         }
                     }

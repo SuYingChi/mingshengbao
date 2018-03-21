@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     tools:context="com.msht.minshengbao.FunctionView.fragmeht.HomeFragment">
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,104 +19,115 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-            <com.msht.minshengbao.ViewUI.ImageCycleView
-                android:id="@+id/ad_view"
+            android:orientation="vertical">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_banner">
-            </com.msht.minshengbao.ViewUI.ImageCycleView>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.msht.minshengbao.ViewUI.ImageCycleView
+                        android:id="@+id/ad_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_width200">
+                    </com.msht.minshengbao.ViewUI.ImageCycleView>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_width75"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="@dimen/margin_20"
+                        android:minHeight="@dimen/margin_20">
+                        <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                            android:id="@+id/id_function_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:numColumns="5"
+                            android:verticalSpacing="@dimen/margin_width15">
+                        </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                    </RelativeLayout>
+                </LinearLayout>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/id_card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_marginTop="@dimen/margin_width174"
+                    android:minHeight="@dimen/margin_width20"
+                    app:cardCornerRadius="@dimen/margin_width8"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardElevation="@dimen/margin_width3"
+                    android:visibility="gone">
+                    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                        android:id="@+id/id_topmodule_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginTop="@dimen/margin_width7"
+                        android:layout_marginBottom="@dimen/margin_width12"
+                        android:numColumns="4"
+                        android:verticalSpacing="@dimen/margin_width15">
+                    </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
             <LinearLayout
                 android:id="@+id/id_layout_havedata"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:paddingBottom="@dimen/margin_20"
-                    android:minHeight="@dimen/margin_20">
-                    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
-                        android:id="@+id/id_function_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:numColumns="4"
-                        android:verticalSpacing="@dimen/margin_20">
-                    </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
-                </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_8"
+                    android:layout_height="@dimen/margin_width10"
                     android:background="@color/background_gray"/>
                 <include layout="@layout/layout_line_gray"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width45"
                     android:background="@color/white" >
+                    <View
+                        android:id="@+id/id_view0"
+                        android:layout_width="@dimen/margin_3"
+                        android:layout_height="@dimen/margin_width18"
+                        android:background="@color/colorOrange"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_centerVertical="true"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_6"
-                        android:layout_centerInParent="true"
+                        android:layout_toRightOf="@+id/id_view0"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_centerVertical="true"
                         android:text="专题活动"
                         android:textSize="@dimen/text_width18"
                         android:textColor="#ff4f4f4f"/>
-
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/white"
-                    >
-                    <RelativeLayout
-                        android:id="@+id/id_layout_leftimg"
-                        android:layout_weight="0.5"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/margin_widthHight"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_5"
-                        android:layout_marginRight="@dimen/margin_5"
-                        android:background="@mipmap/specialtopic_left">
-                    </RelativeLayout>
-                    <LinearLayout
-                        android:id="@+id/id_layout_homegastools"
-                        android:layout_weight="0.5"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/margin_widthHight"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_5"
-                        android:layout_marginRight="@dimen/margin_5"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/id_righttop_img"
-                            android:layout_weight="1.0"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/specialtopic_righttop_xh"/>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/margin_10"
-                            android:background="@color/white"/>
-                        <ImageView
-                            android:id="@+id/id_rightbottom_img"
-                            android:layout_weight="1.0"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/specialtopic_rightbottom_xh"/>
-                    </LinearLayout>
-                </LinearLayout>
+                    android:layout_height="wrap_content">
+                    <com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView
+                        android:id="@+id/banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_width160"
+                        android:layout_marginTop="@dimen/margin_width12"
+                        android:layout_marginBottom="@dimen/margin_width12"
+                        app:open_mz_mode="true"
+                        app:canLoop="true"
+                        app:middle_page_cover="true"
+                        app:indicatorAlign="center"
+                        app:indicatorPaddingTop="@dimen/margin_width10"
+                        app:indicatorPaddingLeft="10dp"
+                        app:indicatorPaddingBottom="10dp">
+                    </com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView>
+                </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_8"
+                    android:layout_height="@dimen/margin_width10"
                     android:background="@color/background_gray"/>
                 <include layout="@layout/layout_line_gray"/>
                 <RelativeLayout
@@ -183,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/id_hot_text1"
                             android:layout_marginTop="@dimen/margin_10"
-                            android:text="赶走细菌，呼吸新的空气！"
+                            android:text="高温杀毒，杜绝尘螨！"
                             android:textSize="@dimen/text_width14"
                             android:textColor="#ff4f4f4f"/>
                         <TextView
@@ -191,7 +202,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/id_hot_text2"
                             android:layout_marginTop="@dimen/margin_8"
-                            android:text="明码标价，价格透明公开，统一收费标准"
+                            android:text="明码标价给您最优惠的选择"
                             android:textSize="@dimen/text_width14"
                             android:textColor="#ff4f4f4f"/>
                     </RelativeLayout>
@@ -229,7 +240,7 @@
                             android:id="@+id/id_hot_text3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="油烟机清洗"
+                            android:text="燃气灶维修"
                             android:textSize="@dimen/text_width16"
                             android:textColor="#ff4f4f4f"/>
                         <TextView
@@ -238,7 +249,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/id_hot_text3"
                             android:layout_marginTop="@dimen/margin_10"
-                            android:text="解放你的双手，还你一个洁净空间！"
+                            android:text="修的放心，用的舒心！"
                             android:textSize="@dimen/text_width14"
                             android:textColor="#ff4f4f4f"/>
                         <TextView
@@ -246,7 +257,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/id_hot_text4"
                             android:layout_marginTop="@dimen/margin_8"
-                            android:text="明码标价，价格透明公开，统一收费标准"
+                            android:text="以最快的速度给您最好的服务"
                             android:textSize="@dimen/text_width14"
                             android:textColor="#ff4f4f4f"/>
                     </RelativeLayout>
@@ -310,36 +321,36 @@
                         android:text="专业专注，用心做好每一次服务!"
                         android:textSize="@dimen/text_14"
                         android:textColor="@color/colorOrange"/>
-
                 </RelativeLayout>
             </LinearLayout>
             <include android:id="@+id/id_not_open" layout="@layout/layout_notopen_city"
                 android:visibility="gone"/>
         </LinearLayout>
     </com.msht.minshengbao.ViewUI.widget.MyScrollview>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
     <!--    标题栏  -->
     <LinearLayout
         android:id="@+id/id_li_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_50"
+        android:minHeight="@dimen/margin_width70"
         android:orientation="vertical"
         android:background="@android:color/transparent">
         <View
             android:id="@+id/id_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_20" />
+            android:layout_height="@dimen/margin_width20" />
         <RelativeLayout
             android:id="@+id/id_re_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_50"
+            android:minHeight="@dimen/margin_width50"
             android:background="@android:color/transparent">
             <RelativeLayout
                 android:id="@+id/id_re_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/shape_oval_back_button"
                 android:layout_marginLeft="@dimen/margin_10"
                 android:layout_centerVertical="true">
                 <TextView
@@ -347,14 +358,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_18"
+                    android:textSize="@dimen/text_width16"
+                    android:maxWidth="@dimen/margin_width80"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="海口"/>
                 <ImageView
                     android:layout_width="@dimen/margin_12"
                     android:layout_height="@dimen/margin_12"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/id_tv_city"
-                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_marginLeft="@dimen/margin_width5"
                     android:src="@drawable/downward_xh"/>
             </RelativeLayout>
             <TextView

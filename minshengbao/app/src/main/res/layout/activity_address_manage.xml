@@ -4,10 +4,12 @@
     android:id="@+id/activity_address_manage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.FunctionView.Myview.AddressManage">
     <include layout="@layout/layout_header"/>
     <ScrollView
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -17,9 +19,9 @@
             <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
                 android:id="@+id/id_address_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:divider="@null">
             </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
-            <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_re_nodata"
                 android:layout_width="match_parent"
@@ -34,22 +36,20 @@
                     android:textSize="@dimen/text_18"
                     android:textColor="@color/colorOrange"/>
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/id_btn_newaddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_45"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:layout_marginBottom="@dimen/margin_15"
-                    android:text="新增地址"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_18"
-                    android:background="@drawable/selector_touch_button_change"/>
-            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
+    <RelativeLayout
+        android:id="@+id/id_re_newaddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width48"
+        android:background="@drawable/selector_rectangle_change_button">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加新地址"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
 </LinearLayout>

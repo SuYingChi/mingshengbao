@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.CircleImageView;
 
@@ -76,13 +77,17 @@ public class MasterEvaluteAdapter extends BaseAdapter {
         }else if (eval_score.equals("5")){
             holder.img_status.setImageResource(R.drawable.star_five_h);
         }
-        Glide
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.error(R.drawable.potrait);
+        Glide.with(context).load(avatarurl).apply(requestOptions)
+                .into(holder.portrait);
+       /* Glide
                 .with(context)
                 .load(avatarurl)
                 .error(R.drawable.potrait)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//deactivate the disk cache for a request.
                 .skipMemoryCache(true)//glide will not put image in the memory cache
-                .into(holder.portrait);
+                .into(holder.portrait);*/
 
         holder.cn_username.setText(goodList.get(position).get("username"));
         holder.cn_eval_info.setText(goodList.get(position).get("eval_info"));

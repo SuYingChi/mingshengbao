@@ -15,26 +15,32 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.Adapter.PaywayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.FunctionView.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.FunctionView.Public.PaySuccess;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RepairPayment extends BaseActivity implements View.OnClickListener {
-    private RadioButton Ryiwangtong,Raalipay,Rawechat,Rayinlian;
-    private RadioButton Racash,Rbalance;
+public class RepairPayment extends BaseActivity  {
+
     private Button btn_send;
     private TextView tv_realamount,tv_orderNo;
     private TextView tv_balance;
@@ -42,8 +48,14 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
     private String  realmoney,channel,orderNo,type,orderId;
     private String id ;      //订单号
     private String charge;   //
+    private String source="repair_order";
+    private JSONArray jsonArray;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
+    private ListViewForScrollView forScrollView;
+    private PaywayAdapter mAdapter;
+    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
+
     private int requestCode=0;
     private JSONObject jsonObject;
     private CustomDialog customDialog;
@@ -80,18 +92,113 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
             }
         }
     };
+
+    Handler requestHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    customDialog.dismiss();
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String Results=object.optString("result");
+                        String Error = object.optString("error");
+                        if(Results.equals("success")) {
+                            if (requestCode==0){
+                                jsonArray =object.getJSONArray("data");
+                                Paywayshow();
+                            }else if (requestCode==2){
+                                JSONObject json=object.getJSONObject("data");
+                                payresult(json);
+                            }
+                        }else {
+                            showfaiture(Error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case FAILURE:
+                    customDialog.dismiss();
+                    showfaiture(msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private void payresult(JSONObject json) {
+        String status=json.optString("status");
+        String chargeId=json.optString("chargeId");
+        String lottery=json.optString("lottery");
+        if (status.equals("0")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                showdialogs("新订单");
+            }
+
+        }else if (status.equals("1")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                Intent success=new Intent(context,PaySuccess.class);
+                success.putExtra("type","1");
+                startActivity(success);
+                finish();
+            }
+        }else if (status.equals("2")){
+            showdialogs("缴费失败");
+        }else if (status.equals("3")){
+            if (lottery!=null&&(!lottery.equals(""))){
+                Intent success=new Intent(context,HtmlPage.class);
+                success.putExtra("url",lottery);
+                success.putExtra("navigate","活动");
+                startActivity(success);
+                finish();
+            }else {
+                showdialogs("正在支付");
+            }
+        }
+    }
+    private void Paywayshow() {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                String tips = json.getString("tips");
+                String name=json.getString("name");
+                String code=json.getString("code");
+                String channel=json.getString("channel");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("tips", tips);
+                map.put("name",name);
+                map.put("code",code);
+                map.put("channel",channel);
+                List.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (List.size()!=0){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     private void ShowBalance() {
         double doublebalance=jsonObject.optDouble("balance");
         double doubleamount=Double.valueOf(realmoney);
         if (doubleamount<=doublebalance){
-            Rbalance.setEnabled(true);
-            String balance=jsonObject.optString("balance");
-            tv_balance.setText(balance+"元");
+            VariableUtil.balance="余额充足";
         }else {
-            tv_balance.setText("余额不足");
-            tv_balance.setTextColor(0xfff96331);
-            Rbalance.setEnabled(false);
+            VariableUtil.balance="余额不足";
         }
+        initPayway();
     }
     private void showfaiture(String error) {
         new PromptDialog.Builder(this)
@@ -138,16 +245,23 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initfindViewByid();
+        mAdapter=new PaywayAdapter(context,List);
+        forScrollView.setAdapter(mAdapter);
         initData();
         initEvent();
+        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+            @Override
+            public void ItemClick(View view, int thisPosition) {
+                btn_send.setEnabled(true);
+                VariableUtil.paypos=thisPosition;
+                mAdapter.notifyDataSetChanged();
+                channel=List.get(thisPosition).get("channel");
+            }
+        });
     }
     private void initfindViewByid() {
-        Ryiwangtong=(RadioButton)findViewById(R.id.id_radio_wangtong);
-        Raalipay=(RadioButton)findViewById(R.id.id_radio_alipay);
-        Rawechat=(RadioButton)findViewById(R.id.id_radio_wechat);
-        Rayinlian=(RadioButton)findViewById(R.id.id_radio_yinlian);
-        Racash=(RadioButton)findViewById(R.id.id_radio_cash);
-        Rbalance=(RadioButton)findViewById(R.id.id_radio_balance);
+        forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
+
         tv_balance=(TextView)findViewById(R.id.id_tv_balance);
         btn_send=(Button)findViewById(R.id.id_evaluate_order);
         btn_send.setEnabled(false);       //初始未选择支付方式不可点击
@@ -190,17 +304,14 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
         }
         if (str.equals("缴费成功")){
             setResult(0x005);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","1");
-            startActivity(success);
-            finish();
+            requestResult();
         }else {
             showdialogs(str);
         }
     }
     private void showdialogs(String str) {
         new PromptDialog.Builder(this)
-                .setTitle("缴费提示")
+                .setTitle("支付提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(str)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
@@ -236,85 +347,12 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
         });
     }
     private void initEvent() {
-        Raalipay.setOnClickListener(this);
-        Rawechat.setOnClickListener(this);
-        Rayinlian.setOnClickListener(this);
-        Racash.setOnClickListener(this);
-        Ryiwangtong.setOnClickListener(this);
-        Rbalance.setOnClickListener(this);
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTips();
             }
         });
-    }
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.id_radio_alipay:
-                channel = "1";
-                Ryiwangtong.setChecked(false);
-                Raalipay.setChecked(true);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Racash.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);    //设置可点击
-                break;
-            case R.id.id_radio_wechat:
-                channel = "5";
-                Ryiwangtong.setChecked(false);
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(true);
-                Rayinlian.setChecked(false);
-                Racash.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                break;
-            case R.id.id_radio_yinlian:
-                channel = "3";
-                Ryiwangtong.setChecked(false);
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(true);
-                Racash.setChecked(false);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                break;
-            case R.id.id_radio_cash:
-                channel = "6";
-                Ryiwangtong.setChecked(false);
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Racash.setChecked(true);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                break;
-            case R.id.id_radio_wangtong:
-                channel = "7";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Racash.setChecked(false);
-                Ryiwangtong.setChecked(true);
-                Rbalance.setChecked(false);
-                btn_send.setEnabled(true);
-                break;
-            case R.id.id_radio_balance:
-                channel = "8";
-                Raalipay.setChecked(false);
-                Rawechat.setChecked(false);
-                Rayinlian.setChecked(false);
-                Ryiwangtong.setChecked(false);
-                Racash.setChecked(false);
-                Rbalance.setChecked(true);
-                btn_send.setEnabled(true);
-                break;
-            default:
-                break;
-        }
     }
     private void showTips() {
         new PromptDialog.Builder(this)
@@ -366,5 +404,53 @@ public class RepairPayment extends BaseActivity implements View.OnClickListener 
                 chargesHandler.sendMessage(msg);
             }
         });
+    }
+    private void initPayway() {
+        customDialog.show();
+        String validateURL= UrlUtil.Paymethod_Url;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("source",source);
+        HttpUrlconnectionUtil.executepost(validateURL, textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                requestHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                requestHandler.sendMessage(msg);
+            }
+        });
+    }
+    private void requestResult() {
+        requestCode=2;
+        String validateURL= UrlUtil.PayResult_Notarize;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        textParams.put("id",id);
+        HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                requestHandler.sendMessage(msg);
+            }
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                requestHandler.sendMessage(msg);
+            }
+        });
+
     }
 }

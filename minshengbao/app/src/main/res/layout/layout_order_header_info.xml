@@ -12,7 +12,7 @@
             android:id="@+id/id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:text="订单编号："
             android:textSize="@dimen/text_16"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/id_text"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_width10"
             android:textSize="@dimen/text_18"
             />
         <TextView
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:textColor="@color/colorOrange"
             />
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_tv_type"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_width10"
                 android:textSize="@dimen/text_15"/>
         </RelativeLayout>
         <TextView
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_width10"
             android:textSize="@dimen/text_14"/>
     </RelativeLayout>
 </LinearLayout>

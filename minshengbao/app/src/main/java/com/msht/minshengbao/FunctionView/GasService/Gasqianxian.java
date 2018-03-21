@@ -372,7 +372,6 @@ public class Gasqianxian extends BaseActivity implements View.OnClickListener {
         if (requestCode==MY_PERMISSIONS_REQUEST_CALL_PHONE){
             if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(Gasqianxian.this,"已授权，请重新拨打",Toast.LENGTH_SHORT).show();
-
             }else {
                 Toast.makeText(Gasqianxian.this,"授权失败",Toast.LENGTH_SHORT).show();
             }

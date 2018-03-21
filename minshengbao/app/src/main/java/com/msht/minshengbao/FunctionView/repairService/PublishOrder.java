@@ -2,7 +2,6 @@ package com.msht.minshengbao.FunctionView.repairService;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,10 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,7 +20,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +41,6 @@ import com.msht.minshengbao.ViewUI.Dialog.NoticeDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectTable;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
-import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -64,14 +59,15 @@ import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
 public class PublishOrder extends BaseActivity implements View.OnClickListener {
-    private EditText  Eneed,et_name,Ephone;
+    private EditText  Eneed,et_name, et_phone;
+    private EditText  et_recommand;
     private Button    Bsendorder;
     private TextView  tv_address;
     private TextView  appointment_data,appointment_time;
     private MultiLineChooseLayout multiChoose;
     private DatePicker datePicker;
     private View pickview;
-    private String textString="";
+    private String textString="",recommend;
     private String reid,userId,password,phone,id,userphone;
     private String maintype,type,address,info,appoint_time;
     private String source="1",raw_order_id="",username,city_id="";
@@ -112,6 +108,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                                 initShow();
                             }
                         }else {
+                            customDialog.dismiss();
                             faifure(Error);
                         }
                     }catch (Exception e){
@@ -291,6 +288,14 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         if (requestCode==4){
             if (resultCode==1){
                 String mAddress=data.getStringExtra("mAddress");
+                String name=data.getStringExtra("name");
+                String phone=data.getStringExtra("phone");
+                if (name.equals("")||name.equals("null")){
+                    et_name.setText(phone);
+                }else {
+                    et_name.setText(name);
+                }
+                et_phone.setText(phone);
                 tv_address.setText(mAddress);
             }
         }
@@ -320,13 +325,14 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     };
     private void initView() {
         Bsendorder=(Button)findViewById(R.id.id_btn_sendorder);
+        et_recommand=(EditText)findViewById(R.id.id_et_recommand);
         et_name=(EditText)findViewById(R.id.id_et_name);
-        Ephone=(EditText)findViewById(R.id.id_et_phone);
+        et_phone =(EditText)findViewById(R.id.id_et_phone);
         Eneed=(EditText)findViewById(R.id.id_et_info);
         tv_address=(TextView) findViewById(R.id.id_tv_address);
         ((TextView)findViewById(R.id.id_tv_project_type)).setText(maintype);
         ((TextView)findViewById(R.id.id_tv_type)).setText(type);
-        Ephone.setText(userphone);    //默认显示用户手机号
+        et_phone.setText(userphone);    //默认显示用户手机号
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
         photogridview=(GridView)findViewById(R.id.noScrollgridview);
         appointment_data=(TextView)findViewById(R.id.id_data);
@@ -456,13 +462,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         Bsendorder.setOnClickListener(this);
         appointment_data.setOnClickListener(this);
         appointment_time.setOnClickListener(this);
-        Ephone.addTextChangedListener(new TextWatcher() {
+        et_phone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (TextUtils.isEmpty(tv_address.getText().toString())||TextUtils.isEmpty(Ephone.getText().toString())) {
+                if (TextUtils.isEmpty(tv_address.getText().toString())||TextUtils.isEmpty(et_phone.getText().toString())) {
                     Bsendorder.setEnabled(false);
                 }else {
                     Bsendorder.setEnabled(true);
@@ -476,7 +482,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(tv_address.getText().toString())||TextUtils.isEmpty(Ephone.getText().toString())) {
+                if (TextUtils.isEmpty(tv_address.getText().toString())||TextUtils.isEmpty(et_phone.getText().toString())) {
                     Bsendorder.setEnabled(false);
                 }else {
                     Bsendorder.setEnabled(true);
@@ -633,7 +639,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         String time=appointment_time.getText().toString().trim();
         String otherinfo=Eneed.getText().toString().trim();
         username=et_name.getText().toString().trim();
-        phone=Ephone.getText().toString().trim();
+        recommend=et_recommand.getText().toString().trim();
+        phone= et_phone.getText().toString().trim();
         address=tv_address.getText().toString().trim();
         appoint_time=date+"  "+time;
         info=textString+otherinfo;
@@ -673,6 +680,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         textParams.put("address",address);
         textParams.put("info",info);
         textParams.put("appoint_time",appoint_time);
+        textParams.put("recommend_code",recommend);
         textParams.put("source",source);
         textParams.put("raw_order_id",raw_order_id);
         textParams.put("username",username);
