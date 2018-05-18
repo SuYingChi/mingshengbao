@@ -15,11 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.msht.minshengbao.FunctionView.Public.ScanCode;
+import com.msht.minshengbao.FunctionView.Public.QRCodeScan;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.yanzhenjie.permission.AndPermission;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,9 +66,8 @@ public class IcCard extends Fragment {
             GoScanActivity();
         }
     }
-
     private void GoScanActivity() {
-        Intent intent =new Intent(getActivity(), ScanCode.class);
+        Intent intent =new Intent(getActivity(), QRCodeScan.class);
         startActivity(intent);
     }
     @Override

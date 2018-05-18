@@ -97,18 +97,25 @@ public class SelectVoucher extends BaseActivity {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 int ID = jsonObject.optInt("id");
                 String id=Integer.toString(ID);
+                String name=jsonObject.optString("name");
                 String scope = jsonObject.getString("scope");
                 String amount = jsonObject.getString("amount");
                 String use_limit = jsonObject.getString("use_limit");
                 String start_date = jsonObject.getString("start_date");
                 String end_date= jsonObject.getString("end_date");
+                String remainder_days="";
+                if (jsonObject.has("remainder_days")){
+                    remainder_days=jsonObject.optString("remainder_days");
+                }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
+                map.put("name",name);
                 map.put("scope", scope);
                 map.put("amount", amount);
                 map.put("use_limit", use_limit);
                 map.put("start_date",start_date);
                 map.put("end_date", end_date);
+                map.put("remainder_days",remainder_days);
                 voucherList.add(map);
             }
         }catch (JSONException e){
@@ -221,32 +228,59 @@ public class SelectVoucher extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
+            final int thisposition=position;
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.item_dicount_coupon, null);
+                holder.cn_name=(TextView)convertView.findViewById(R.id.id_title_name);
+                holder.cn_time=(TextView)convertView.findViewById(R.id.id_time);
                 holder.cn_scope=(TextView) convertView.findViewById(R.id.id_scope);
                 holder.cn_amount=(TextView) convertView.findViewById(R.id.id_amount);
                 holder.cn_use_limit=(TextView) convertView.findViewById(R.id.id_use_limit);
-                holder.cn_start_date=(TextView) convertView.findViewById(R.id.id_start_date);
+                holder.btn_use=(Button)convertView.findViewById(R.id.id_btn_use);
+
+                // holder.cn_start_date=(TextView) convertView.findViewById(R.id.id_start_date);
                 holder.cn_end_date=(TextView) convertView.findViewById(R.id.id_end_date);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            String remainder_days=voucherList.get(position).get("remainder_days");
+            if (!remainder_days.equals("")){
+                holder.cn_time.setVisibility(View.VISIBLE);
+                holder.cn_time.setText("剩"+remainder_days+"天");
+            }else {
+                holder.cn_time.setVisibility(View.GONE);
+            }
+            holder.cn_name.setText(voucherList.get(position).get("name"));
             String limit_use="买满"+voucherList.get(position).get("use_limit")+"元可用";
             holder.cn_scope.setText(voucherList.get(position).get("scope"));
-            holder.cn_amount.setText(voucherList.get(position).get("amount"));
+            holder.cn_amount.setText("¥"+voucherList.get(position).get("amount"));
             holder.cn_use_limit.setText(limit_use);
-            holder.cn_start_date.setText(voucherList.get(position).get("start_date"));
+           // holder.cn_start_date.setText(voucherList.get(position).get("start_date"));
             holder.cn_end_date.setText(voucherList.get(position).get("end_date"));
+            holder.btn_use.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String vouid = voucherList.get(thisposition).get("id");
+                    String amount = voucherList.get(thisposition).get("amount");
+                    Intent name = new Intent();
+                    name.putExtra("vouid", vouid);
+                    name.putExtra("amount", amount);
+                    setResult(3, name);
+                    finish();
+                }
+            });
             return convertView;
         }
     }
     class ViewHolder {
+        TextView  cn_name;
         public TextView  cn_scope;
         public TextView  cn_amount;
-        public TextView cn_use_limit;
-        public TextView  cn_start_date;
+        public TextView  cn_use_limit;
         public TextView  cn_end_date;
+        TextView  cn_time;
+        Button    btn_use;
     }
 }

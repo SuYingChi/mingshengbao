@@ -27,7 +27,20 @@ public class NetUtil {
 
 		}
 	}
+	public static void writeContentParams(Map<String, String> textParams,
+										 DataOutputStream ds) throws Exception {
+		Set<String> keySet = textParams.keySet();
+		for (Iterator<String> it = keySet.iterator(); it.hasNext();) {
+			String name = it.next();
+			String value = textParams.get(name);
+			ds.writeBytes("--" + BOUNDARY + "\r\n");
+			ds.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"\r\n");
+			ds.writeBytes("\r\n");
+			value = value + "\r\n";
+			ds.write(value.getBytes());
 
+		}
+	}
 	public static void writeFileParams(Map<String, File> fileparams, 
 			DataOutputStream ds) throws Exception {
 		Set<String> keySet = fileparams.keySet();
@@ -55,12 +68,10 @@ public class NetUtil {
 		in.close();
 		return out.toByteArray();
 	}
-
 	public static void paramsEnd(DataOutputStream ds) throws Exception {
 		ds.writeBytes("--" + BOUNDARY + "--" + "\r\n");
 		ds.writeBytes("\r\n");
 	}
-
 	public static String readString(InputStream is) {
 		return new String(readBytes(is));
 	}

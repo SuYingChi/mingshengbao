@@ -4,7 +4,7 @@
     <shape>
         <solid android:color="#D3D3D3D3" /><!--填充色-->
         <corners 
-            android:bottomLeftRadius="5dp" />
+            android:bottomLeftRadius="@dimen/margin_width10" />
     </shape>
   </item>
 </layer-list>

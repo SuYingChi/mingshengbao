@@ -13,23 +13,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:minHeight="@dimen/margin_48">
+        android:minHeight="@dimen/margin_width48">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textSize="@dimen/text_16"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:textSize="@dimen/text_width16"
             android:text="WLAN环境下自动升级软件"
             android:textColor="@color/title_tv"/>
         <com.msht.minshengbao.ViewUI.widget.SwitchView
             android:id="@+id/id_switch"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/margin_30"
+            android:layout_height="@dimen/margin_width30"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_width10"
             android:layout_centerVertical="true"
-            android:minHeight="@dimen/margin_25"
+            android:minHeight="@dimen/margin_width25"
             app:primaryColor="@color/blue"
             app:primaryColorDark="@color/blue"/>
     </RelativeLayout>
@@ -39,26 +39,60 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_touch_background"
-        android:minHeight="@dimen/margin_48">
+        android:minHeight="@dimen/margin_width48">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_width10"
             android:text="检查新版本"
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:src="@drawable/forward_m"/>
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:id="@+id/id_re_clearCache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_touch_background"
+        android:minHeight="@dimen/margin_width48">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:text="清除缓存"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/title_tv"/>
+        <TextView
+            android:id="@+id/id_cache_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/id_forword_img"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/title_tv"
+            android:text="@string/default_value0"/>
+        <ImageView
+            android:id="@+id/id_forword_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_width10"
             android:src="@drawable/forward_m"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_10"
+        android:layout_height="@dimen/margin_width10"
         android:background="@color/background_gray"/>
     <RelativeLayout
         android:id="@+id/id_re_aboutme"
@@ -70,16 +104,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_width10"
             android:text="关于我们"
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_width10"
             android:src="@drawable/forward_m"/>
     </RelativeLayout>
     <include layout="@layout/layout_line_gray"/>
@@ -90,13 +124,13 @@
             android:id="@+id/id_btn_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_45"
-            android:layout_marginTop="@dimen/margin_30"
-            android:layout_marginRight="@dimen/margin_20"
-            android:layout_marginLeft="@dimen/margin_20"
+            android:minHeight="@dimen/margin_width45"
+            android:layout_marginTop="@dimen/margin_width30"
+            android:layout_marginRight="@dimen/margin_width20"
+            android:layout_marginLeft="@dimen/margin_width20"
             android:background="@drawable/selector_touch_button_change"
             android:text="退出登录"
-            android:textSize="@dimen/text_18"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/white"
             android:visibility="gone"/>
     </RelativeLayout>

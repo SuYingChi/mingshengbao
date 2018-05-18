@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyorderworkDetail extends BaseActivity implements View.OnClickListener {
-    private ImageView backimg,typeimg,forwardimg;
+    private ImageView typeimg,forwardimg;
     private ImageView evaluateimg,masterphoneimg;
     private TextView  tv_title,tv_type,tv_orderNo,tv_phone;
     private TextView  tv_createtime,tv_appoint_time;
@@ -266,6 +266,14 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
             }
             Rbutton.setVisibility(View.GONE);
             finishInfo();
+        }else if(status.equals("14")){
+            String repair_man_cancel_info=jsonObject.optString("repair_man_cancel_info");
+            reason_title.setText("改单原因：");
+            Repair_cancel.setVisibility(View.VISIBLE);
+            tv_cancelinfo.setText(repair_man_cancel_info);
+            btn_cancel.setVisibility(View.VISIBLE);
+            Rbutton.setVisibility(View.GONE);
+            Rfixcard.setVisibility(View.GONE);
         }
     }
 
@@ -516,7 +524,6 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
                 break;
         }
     }
-
     private void fixcard() {
         Intent intent=new Intent(context,Warrantycard.class);
         intent.putExtra("title",title);

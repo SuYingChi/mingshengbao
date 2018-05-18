@@ -34,6 +34,7 @@ import com.msht.minshengbao.Utils.BitmapUtil;
 import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StreamTools;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -463,12 +464,13 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         company_tel=et_company_tel.getText().toString().trim();
         company_addr=et_company_addr.getText().toString().trim();
         double double_amount=Double.valueOf(amount).doubleValue();
-        if (type.equals("2")){
+        if (type.equals("1")){
+            requestServer(double_amount);
+        }else if (type.equals("2")){
             if (TextUtils.isEmpty(et_taxpayer_num.getText().toString())){
                 noticeDialog("请输入您的纳税人识别号");
             }else if (TextUtils.isEmpty(et_bank.getText().toString())){
                 noticeDialog("请输入您的开户银行");
-
             }else if (TextUtils.isEmpty(et_bankcard.getText().toString())){
                 noticeDialog("请输入您的开户账号");
             }else if (TextUtils.isEmpty(et_company_tel.getText().toString())){
@@ -506,9 +508,6 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                         @Override
                         public void onClick(Dialog dialog, int which) {
                             dialog.dismiss();
-                            Toast.makeText(ApplyInvoice.this,type,
-                                    Toast.LENGTH_SHORT)
-                                    .show();
                             customDialog.show();
                             Thread ApplyThread=new Thread(new ApplyInvoiceHandler());
                             ApplyThread.start();

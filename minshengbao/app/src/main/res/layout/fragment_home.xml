@@ -58,7 +58,7 @@
                     android:minHeight="@dimen/margin_width20"
                     app:cardCornerRadius="@dimen/margin_width8"
                     app:cardBackgroundColor="@color/white"
-                    app:cardElevation="@dimen/margin_width3"
+                    app:cardElevation="@dimen/margin_width5"
                     android:visibility="gone">
                     <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                         android:id="@+id/id_topmodule_view"

@@ -27,6 +27,7 @@ import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.FunctionView.MainActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
+import com.msht.minshengbao.Utils.CacheUtil;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -41,6 +42,7 @@ import org.json.JSONObject;
 
 public class MoreSetting extends BaseActivity implements View.OnClickListener {
     private Button     btn_exit;
+    private TextView   tv_CacheSize;
     private SwitchView switchView;
     private String  urls;
     private boolean lstate,VersionState;
@@ -145,10 +147,12 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         initView();
     }
     private void initView() {
+        tv_CacheSize=(TextView)findViewById(R.id.id_cache_size);
         btn_exit=(Button)findViewById(R.id.id_btn_exit);
         switchView=(SwitchView)findViewById(R.id.id_switch);
         findViewById(R.id.id_re_version).setOnClickListener(this);
         findViewById(R.id.id_re_aboutme).setOnClickListener(this);
+        findViewById(R.id.id_re_clearCache).setOnClickListener(this);
         btn_exit.setOnClickListener(this);
         if (lstate){
             btn_exit.setVisibility(View.VISIBLE);
@@ -172,7 +176,17 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                 SharedPreferencesUtil.putBoolean(context,SharedPreferencesUtil.VersionState,false);
             }
         });
+        setTextCacheSize();
     }
+
+    private void setTextCacheSize() {
+        try {
+            tv_CacheSize.setText(CacheUtil.getTotalCacheSize(context));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -184,6 +198,11 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.id_btn_exit:
                 ExitLogin();
+                break;
+            case R.id.id_re_clearCache:
+                if (CacheUtil.clearAllCache(context)){
+                    setTextCacheSize();
+                }
                 break;
             default:
                 break;

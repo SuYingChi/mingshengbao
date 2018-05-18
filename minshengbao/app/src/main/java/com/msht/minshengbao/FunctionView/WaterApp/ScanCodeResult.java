@@ -70,7 +70,6 @@ public class ScanCodeResult extends BaseActivity {
                             }else {
                                 tv_result.setText(error);
                                 tv_notice.setText(R.string.result_notice3);
-                                //showfaiture(error);
                             }
                         }
                     }catch (Exception e){
@@ -95,18 +94,6 @@ public class ScanCodeResult extends BaseActivity {
         String  communityName=jsonObject.optString("communityName");
         tv_equipment.setText(equipment);
         tv_estate.setText(communityName);
-    }
-    private void showfaiture(String error) {
-        new PromptDialog.Builder(this)
-                .setTitle("扫码提示")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(error)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

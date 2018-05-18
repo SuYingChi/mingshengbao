@@ -131,41 +131,28 @@ public class RepairPayment extends BaseActivity  {
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
         if (status.equals("0")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                showdialogs("新订单");
-            }
-
+            //新订单
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","1");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("1")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                Intent success=new Intent(context,PaySuccess.class);
-                success.putExtra("type","1");
-                startActivity(success);
-                finish();
-            }
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","1");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("2")){
-            showdialogs("缴费失败");
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","5");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
         }else if (status.equals("3")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                showdialogs("正在支付");
-            }
+            showdialogs("正在支付");
         }
     }
     private void Paywayshow() {
@@ -223,10 +210,7 @@ public class RepairPayment extends BaseActivity  {
             Pingpp.createPayment(RepairPayment.this, charge);
         }else if (channel.equals("8")||channel.equals("6")){
             setResult(0x005);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","1");
-            startActivity(success);
-            finish();
+            requestResult();
         }
     }
     @Override

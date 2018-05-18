@@ -289,6 +289,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 intent.putExtra("url",myurl);
                 intent.putExtra("first",1);
                 startActivity(intent);
+            }else if (getDomain(myurl).equals("jsxss.net")){
+                if (lstate){
+                    DegetableScxs();
+                }else {
+                    gologins();
+                }
             }else if(!myurl.equals("null")){
                 Intent intent=new Intent(getActivity(), HtmlPage.class);
                 intent.putExtra("url",myurl);
@@ -709,6 +715,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         intent.putExtra("url",right_Url);
                         intent.putExtra("navigate",title);
                         startActivity(intent);
+                    }else if (Domain.equals("jsxss.net")){
+                        if (lstate){
+                            DegetableScxs();
+                        }else {
+                            gologins();
+                        }
                     }else if (!Domain.equals("")){
                         Intent intent=new Intent(getActivity(), HtmlPage.class);
                         intent.putExtra("url",right_Url);

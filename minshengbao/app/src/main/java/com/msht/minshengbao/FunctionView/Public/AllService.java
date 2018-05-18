@@ -27,6 +27,7 @@ import com.msht.minshengbao.FunctionView.HtmlWeb.IntelligentFarmHml;
 import com.msht.minshengbao.FunctionView.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.FunctionView.HtmlWeb.VegetableGentlemen;
 import com.msht.minshengbao.FunctionView.WaterApp.WaterHome;
+import com.msht.minshengbao.FunctionView.insurance.InsuranceHome;
 import com.msht.minshengbao.FunctionView.insurance.InsurancePurchase;
 import com.msht.minshengbao.FunctionView.repairService.HomeAppliancescClean;
 import com.msht.minshengbao.FunctionView.repairService.HouseApplianceFix;
@@ -290,7 +291,7 @@ public class AllService extends BaseActivity {
         startActivity(selete);
     }
     private void insurance() {
-        Intent intent=new Intent(context, InsurancePurchase.class);
+        Intent intent=new Intent(context, InsuranceHome.class);
         startActivity(intent);
     }
     private void sterilizer() {

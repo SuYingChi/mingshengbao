@@ -385,7 +385,7 @@ public class WaterRecharge extends BaseActivity {
             str += "\n" + msg2;
         }
         if (str.equals("缴费成功")){
-            setResult(0x005);
+            setResult(0x002);
             requestResult();
         }else {
             showdialogs("充值提示",str);

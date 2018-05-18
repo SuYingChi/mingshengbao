@@ -67,6 +67,7 @@
                 android:textColor="@color/title_tv"
                 android:text="单价："/>
             <TextView
+                android:id="@+id/id_tv_waterPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_water_type"
@@ -95,6 +96,7 @@
             android:background="@color/background_gray"
             android:text="1"/>
         <Button
+            android:id="@+id/id_subtract_btn1"
             android:layout_width="@dimen/margin_width25"
             android:layout_height="@dimen/margin_width25"
             android:layout_centerVertical="true"

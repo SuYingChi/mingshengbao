@@ -37,6 +37,7 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
     private String    password,userId;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
+    public static final String MY_ACTION = "ui";
     private CustomDialog customDialog;
     Handler requestHandler= new Handler() {
         public void handleMessage(Message msg) {
@@ -122,6 +123,7 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         initData();
         initBinding();
     }
+
     private void NoticeDialogs() {
         final SelfPayDialog selfPayDialog=new SelfPayDialog(context);
         selfPayDialog.setOnpositiveListener(new View.OnClickListener() {
@@ -201,7 +203,7 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         switch (v.getId()){
             case R.id.id_layout_card:
                 Intent discount=new Intent(context, DiscountCoupon.class);
-                startActivity(discount);
+                startActivityForResult(discount,2);
                 break;
             case R.id.id_layout_recharge:
                 Intent recharge=new Intent(context, RechargeValue.class);
@@ -227,9 +229,21 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
                     initData();
                 }
                 break;
+            case 2:
+                if (resultCode==2){
+                    setResult(0x004);
+                    finish();
+                }
+                break;
             default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    private void sendBroad() {
+        Intent broadcast=new Intent();
+        broadcast.setAction(MY_ACTION);
+        broadcast.putExtra("broadcast", "3");
+        sendBroadcast(broadcast);
     }
 }

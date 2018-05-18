@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class IncomExpenseFragment extends BaseFragment {
                         String Error = object.optString("error");
                         jsonArray =object.optJSONArray("data");
                         if(Results.equals("success")) {
+                            Log.d("记录=",msg.obj.toString());
                             if (refreshType==0){
                                 mListView.stopRefresh(true);
                             }else if (refreshType==1){

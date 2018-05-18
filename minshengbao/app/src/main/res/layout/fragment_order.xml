@@ -7,17 +7,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_50"
+        android:minHeight="@dimen/margin_width70"
         android:orientation="vertical"
         android:background="@drawable/shape_change_background">
         <View
             android:id="@+id/id_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_20" />
+            android:layout_height="@dimen/margin_width20" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_50">
+            android:minHeight="@dimen/margin_width50">
             <ImageView
                 android:id="@+id/id_goback"
                 android:padding="@dimen/margin_5"
@@ -68,6 +68,5 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </android.support.v4.view.ViewPager>
 </LinearLayout>

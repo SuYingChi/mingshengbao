@@ -39,7 +39,7 @@
                         android:layout_below="@+id/id_result_img"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_width20"
-                        android:text="@string/scan_result1"
+                        android:text="@string/default_text"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_width18" />
                     <TextView
@@ -49,7 +49,7 @@
                         android:layout_below="@+id/id_scan_result"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_width10"
-                        android:text="@string/result_notice1"
+                        android:text="@string/default_text"
                         android:textSize="@dimen/text_width14"/>
                 </RelativeLayout>
                 <RelativeLayout
@@ -109,7 +109,6 @@
                 </RelativeLayout>
 
                 <include layout="@layout/layout_line_gray" />
-
                 <Button
                     android:id="@+id/id_btn_know"
                     android:layout_width="match_parent"
@@ -119,7 +118,7 @@
                     android:layout_marginTop="@dimen/margin_width12"
                     android:background="@drawable/selector_touch_button_change"
                     android:minHeight="@dimen/margin_width40"
-                    android:text="我知道了"
+                    android:text="@string/i_know"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_width16" />
             </LinearLayout>

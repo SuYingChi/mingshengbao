@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,11 +26,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.FunctionView.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.FunctionView.Myview.LoginView;
-import com.msht.minshengbao.FunctionView.Public.ScanCode;
+import com.msht.minshengbao.FunctionView.Public.QRCodeScan;
 import com.msht.minshengbao.FunctionView.fragmeht.HomeFragment;
 import com.msht.minshengbao.FunctionView.fragmeht.LoginMyFrag;
 import com.msht.minshengbao.FunctionView.fragmeht.MyFragment;
@@ -46,6 +47,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.PopupMenu;
+import com.msht.minshengbao.receiver.NetBroadcastReceiver;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.yanzhenjie.permission.AndPermission;
@@ -63,21 +65,21 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private PopupMenu popupMenu;
-    private ImageView messageimg;
-    private RadioGroup radiogroup_main;
+public class MainActivity extends BaseActivity implements View.OnClickListener {
+    private PopupMenu   popupMenu;
+    private ImageView   messageimg;
+    private RadioGroup  radiogroup_main;
     private RadioButton myradiobutton;
-    private TextView  tv_naviga,tv_massnum;
-    private Fragment  minshengFrag, myFrag,mynewFrag;
-    private Fragment  orderFrag,currentFragment;
-   // private View      Head_layout;
-    private int    click_code=0x001;
-    private String userId;
-    private String password;
-    private String messnum="0";
-    private String  urls;
-    private boolean VersionState;
+    private TextView    tv_naviga,tv_massnum;
+    private Fragment    minshengFrag, myFrag,mynewFrag;
+    private Fragment    orderFrag,currentFragment;
+    private View        network_layout;
+    private int         click_code=0x001;
+    private String      userId;
+    private String      password;
+    private String      messnum="0";
+    private String      urls;
+    private boolean     VersionState;
     private JSONObject objectJson;
     private JSONObject jsonObject;
     private Context   mContext;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static  final int MY_CAMERA_REQUEST=3;
     private static final String ERROR_NETWORK = "网络连接失败，请稍后再试";
     private static final String ERROR_SERVICE = "服务器异常，请稍后再试";
+    private NetBroadcastReceiver receiver;
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -124,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case SUCCESS:
                     try {
-
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
@@ -251,14 +253,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void initinfoShow() {
         String sex     =objectJson.optString("sex");
-        String level   = objectJson.optString("level");
-        String nickname= objectJson.optString("nickname");
-        String avatar  = objectJson.optString("avatar");
-        String points  =objectJson.optString("points");
-        String idCard  =objectJson.optString("idCard");
-        String phonenum=objectJson.optString("phone");
+        String phoneNo=objectJson.optString("phone");
         SharedPreferencesUtil.putSex(this,SharedPreferencesUtil.Sex,sex);
-        SharedPreferencesUtil.putPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,phonenum);
+        SharedPreferencesUtil.putPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,phoneNo);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -276,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         StatusBarCompat.compat(this,0x00ffffff);
-        StatusBarCompat.setStatusBar(this);
+        //StatusBarCompat.setStatusBar(this);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
         }
@@ -292,8 +289,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (lstate){
             if (NetWorkUtil.IsNetWorkEnable(this)){
                 unmessage();
-            }else {
-                nonetwork();
             }
             initGetinfomation();
             initPush();
@@ -301,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CheckVerSion();
         initBroadcast();//广播接收
     }
-
     private void intrequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -338,6 +332,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+        if (resultCode==0x004){    //用于点击使用优惠券返回首页
+            ((RadioButton)findViewById(R.id.radio_home)).setChecked(true);
+        }
     }
     private void CheckVerSion() {
         int device=2;
@@ -364,19 +361,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Thread messageThread=new Thread(new unreadRunnable());
         messageThread.start();
     }
-    private void nonetwork() {
-        new PromptDialog.Builder(this)
-                .setTitle("当前网络不可用")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage("请检查你的网络设置")
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
     private void initBroadcast() {
         IntentFilter filter=new IntentFilter();
         filter.addAction(MY_ACTION);
@@ -395,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
     private void initView() {
-       // Head_layout=findViewById(R.id.id_head_view);
+        network_layout=findViewById(R.id.id_network_layout);
         radiogroup_main = (RadioGroup) findViewById(R.id.radiogroup_main);
         tv_naviga=(TextView)findViewById(R.id.id_tv_navigation);
         tv_massnum=(TextView)findViewById(R.id.id_main_messnum);
@@ -447,9 +431,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_naviga.setText("我的");
             addOrShowFragment(getSupportFragmentManager().beginTransaction(),mynewFrag);
         }
-
     }
-
     private void initMy() {
         if (myFrag ==null) {
             myFrag  = new MyFragment();
@@ -527,7 +509,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
     private void GoScancode() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
@@ -551,9 +532,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GoScanActivity();
         }
     }
-
     private void GoScanActivity() {
-        Intent intent=new Intent(mContext, ScanCode.class);
+        Intent intent=new Intent(mContext, QRCodeScan.class);
         startActivity(intent);
     }
     private void GoMessage() {
@@ -575,9 +555,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), minshengFrag);
     }
     private void clickTab2Layout() {
-        Intent intent=new Intent(mContext, ShopActivity.class);
-        startActivityForResult(intent,click_code);
-
+        if (networkStatus){
+            Intent intent=new Intent(mContext, ShopActivity.class);
+            startActivityForResult(intent,click_code);
+        }
     }
     private void clickTab3Layout() {
        // Head_layout.setVisibility(View.VISIBLE);
@@ -769,6 +750,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(mContext,"获取权限失败！",Toast.LENGTH_SHORT).show();
         }
     };
+    public void initNetBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver =new  NetBroadcastReceiver();
+        registerReceiver(receiver, filter);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initNetBroadcast();
+    }
+    @Override
+    public void onNetChange(boolean netMobile) {
+        super.onNetChange(netMobile);
+        if (netMobile){
+            network_layout.setVisibility(View.GONE);
+        }else {
+            network_layout.setVisibility(View.VISIBLE);
+        }
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode== KeyEvent.KEYCODE_BACK&& event.getRepeatCount()==0){
@@ -815,6 +816,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+        if (broadcastReceiver!=null){
+            unregisterReceiver(broadcastReceiver);
+        }
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
     }
 }

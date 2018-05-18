@@ -36,8 +36,10 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -212,7 +214,6 @@
         <activity android:name=".FunctionView.repairService.OtherRepair" />
         <activity android:name=".FunctionView.insurance.InsurancePurchase" />
         <activity android:name=".FunctionView.insurance.InsuranceDetail" />
-        <activity android:name=".FunctionView.insurance.InsuranceType" />
         <activity android:name=".FunctionView.insurance.InsurancePay" />
         <activity android:name=".FunctionView.Myview.RegisterSeccess" />
         <activity android:name=".FunctionView.Myview.ConsultRecommend" />
@@ -231,7 +232,6 @@
         <activity android:name=".FunctionView.Public.PaySuccess" />
         <activity android:name=".FunctionView.GasService.GasPayRecord" />
         <activity android:name=".Base.BaseActivity" />
-        <activity android:name=".FunctionView.Public.ScanCode" />
         <activity android:name=".FunctionView.GasService.PreexistenceDetail" />
         <activity android:name=".FunctionView.GasService.IcCardExpense" />
         <activity android:name=".FunctionView.HtmlWeb.IcbcHtml" />
@@ -256,7 +256,11 @@
             android:name=".FunctionView.HtmlWeb.VegetableGentlemen"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".FunctionView.HtmlWeb.IntelligentFarmHml" />
-        <activity android:name=".FunctionView.insurance.InsuranceHome"></activity>
+        <activity android:name=".FunctionView.insurance.InsuranceHome" />
+        <activity android:name=".FunctionView.WaterApp.SelectEstate" />
+        <activity android:name=".FunctionView.WaterApp.WaterOrderList" />
+        <activity android:name=".FunctionView.Public.QRCodeScan"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

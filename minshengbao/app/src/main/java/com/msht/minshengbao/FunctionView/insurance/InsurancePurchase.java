@@ -11,7 +11,10 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -54,13 +57,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private String   address,recommend;
     private String   insurance_amount="942000.00";
     private String   id="1537981";
-    private int   deadline=5;
+    private int      deadline=5;
     private String   amount="300.00";
     private String   start_time,stop_time;
     private String   idNo;
     private final int SUCCESS   = 1;
     private final int FAILURE   = 0;
-    private JSONObject jsonObject;
+    private int requestType=0;
     private CustomDialog customDialog;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     Handler GetInvoiceHandler = new Handler() {
@@ -72,9 +75,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        jsonObject =object.optJSONObject("data");
+                        JSONObject jsonObject =object.optJSONObject("data");
                         if(Results.equals("success")) {
-                            initShow();
+                            if (requestType==0){
+                                initShow(jsonObject);
+                            }else if (requestType==1){
+                                getHouse(jsonObject);
+                            }
                         }else {
                             faifure(Error);
                         }
@@ -93,10 +100,18 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         }
 
     };
-    private void initShow() {
-        String url=jsonObject.optString("url");
-        String orderNumber=jsonObject.optString("orderNumber");
-        String params=jsonObject.optString("params");
+
+    private void getHouse(JSONObject jsonObject) {
+        String customerName= jsonObject.optString("customerName");
+        String customerType= jsonObject.optString("customerType");
+        String address= jsonObject.optString("address");
+        String room= jsonObject.optString("room");
+        et_address.setText(address);
+    }
+    private void initShow(JSONObject jsonObject) {
+        String url= jsonObject.optString("url");
+        String orderNumber= jsonObject.optString("orderNumber");
+        String params= jsonObject.optString("params");
         Intent intent=new Intent(this,InsurancePay.class);
         intent.putExtra("url",url);
         intent.putExtra("params",params);
@@ -204,6 +219,42 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         start_time=formats.format(start.getTime());
         calendar.add(Calendar.YEAR,deadline);
         stop_time=formats.format(calendar.getTime());
+        et_customer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length()==8||s.length()==10){
+                    requestServer();
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+    }
+    private void requestServer() {
+        requestType=1;
+        customer=et_customer.getText().toString().trim();
+        String validateURL = UrlUtil.GethouseAddress_Url;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("customerNo",customer);
+        HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                GetInvoiceHandler.sendMessage(msg);
+            }
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                GetInvoiceHandler.sendMessage(msg);
+            }
+        });
     }
     @Override
     public void onClick(View v) {
@@ -320,6 +371,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         insurance.show();
     }
     private void requestSevice() {
+        requestType=0;
         String validateURL = UrlUtil.Insurance_buy_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("insurance_id",id);
@@ -374,10 +426,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         Intent detail=new Intent(this,InsuranceDetail.class);
         detail.putExtra("id",id);
         startActivity(detail);
-    }
-    private void selectcombo() {
-        Intent type=new Intent(this,InsuranceType.class);
-        startActivityForResult(type,1);
     }
     private void CallHotline() {
         final String phone = "963666";

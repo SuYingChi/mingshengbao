@@ -2,10 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item>
     <shape>
-        <solid android:color="#33D3D3D3" /><!--填充色-->
+        <solid android:color="@color/white" /><!--填充色-->
         <corners 
-            android:bottomLeftRadius="5dp"
-            android:bottomRightRadius="5dp" />
+            android:bottomLeftRadius="@dimen/margin_width10"
+            android:bottomRightRadius="@dimen/margin_width10" />
     </shape>
   </item>
 </layer-list>

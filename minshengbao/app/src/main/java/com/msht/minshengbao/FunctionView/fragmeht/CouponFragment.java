@@ -118,20 +118,26 @@ public class CouponFragment extends BaseFragment {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 int ID = jsonObject.optInt("id");
                 String id=Integer.toString(ID);
+                String name=jsonObject.optString("name");
                 String scope = jsonObject.getString("scope");
                 String amount = jsonObject.getString("amount");
                 String use_limit = jsonObject.getString("use_limit");
                 String start_date = jsonObject.getString("start_date");
                 String end_date= jsonObject.getString("end_date");
-
+                String remainder_days="";
+                if (jsonObject.has("remainder_days")){
+                    remainder_days=jsonObject.optString("remainder_days");
+                }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
+                map.put("name",name);
                 map.put("scope", scope);
                 map.put("amount", amount);
                 map.put("use_limit", use_limit);
                 map.put("start_date",start_date);
                 map.put("end_date", end_date);
-                map.put("type","1");
+                map.put("remainder_days",remainder_days);
+                map.put("type",status);
                 couponList.add(map);
             }
         }catch (JSONException e){
@@ -208,6 +214,13 @@ public class CouponFragment extends BaseFragment {
             public void onLoadMore() {
                 refreshType=1;
                 loadData(pageIndex + 1);
+            }
+        });
+        mAdapter.SetOnItemSelectListener(new CouponAdapter.OnItemSelectListener() {
+            @Override
+            public void ItemSelectClick(View view, int thisposition) {
+                getActivity().setResult(2);
+                getActivity().finish();
             }
         });
     }

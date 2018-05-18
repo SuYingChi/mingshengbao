@@ -144,7 +144,6 @@
                 android:shadowColor="#ffffff"
                 android:clickable="true" />
         </RelativeLayout>
-
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"

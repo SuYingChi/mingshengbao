@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/minshengbao.iml" filepath="$PROJECT_DIR$/minshengbao.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/pingpp/pingpp.iml" filepath="$PROJECT_DIR$/lib/pingpp/pingpp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zxinglite/zxinglite.iml" filepath="$PROJECT_DIR$/zxinglite/zxinglite.iml" />
     </modules>
   </component>
 </project>

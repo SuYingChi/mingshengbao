@@ -212,7 +212,6 @@ public class WaterIncomeFra extends BaseFragment {
             }
         });
     }
-
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;

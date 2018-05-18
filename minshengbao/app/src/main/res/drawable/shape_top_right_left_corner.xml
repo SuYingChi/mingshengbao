@@ -9,8 +9,8 @@
     <!-- 设置按钮的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
     <corners
-        android:topLeftRadius="8dp"
-        android:topRightRadius="8dp"/>
+        android:topLeftRadius="@dimen/margin_width10"
+        android:topRightRadius="@dimen/margin_width10"/>
 
     <!-- padding：Button里面的文字与Button边界的间隔 -->
 </shape>

@@ -28,6 +28,7 @@
     <string name="NOT_OPEN_condition">常见未能正常开通情况</string>
     <string name="input_customerNo">请输入燃气用户号</string>
 
+    <string name="network_error">网络连接断开，请检查网络设置。</string>
     <string name="load_more_text">正在加载...</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
@@ -48,6 +49,9 @@
     <string name="xrefreshview_refresh_minutes_ago">%1s分钟之前刷新</string>
     <string name="xrefreshview_refresh_hours_ago">%1s小时之前刷新</string>
     <string name="xrefreshview_refresh_days_ago">%1s天之前刷新</string>
+    <string name="i_know">我知道了</string>
+    <string name="re_recharge">请重新支付！</string>
+    <string name="cancel_order">取消订单</string>
 
     <!--保险   -->
     <string name="total_text">共计：</string>
@@ -55,4 +59,7 @@
     <string name="scan_buywater">扫码购水</string>
     <string name="send_water">送水到家</string>
     <string name="balance_recharge">余额充值</string>
+    <!--优惠劵  -->
+    <string name="effective_date">有效期至:</string>
+    <string name="use_text">使用说明:</string>
 </resources>

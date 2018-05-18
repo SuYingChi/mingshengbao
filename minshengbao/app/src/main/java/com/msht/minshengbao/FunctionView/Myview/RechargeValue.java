@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.Adapter.PaywayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.FunctionView.Public.PaySuccess;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -50,11 +51,12 @@ public class RechargeValue extends BaseActivity  {
     private String  charge,type="4";
     private String  amount;
     private String  channels;
+    private String  orderId="";
     private String source="wallet_recharge";
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
+    private int requestCode=0;
     private PaywayAdapter mAdapter;
-    private JSONObject jsonObject;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     Handler requestHandler = new Handler() {
@@ -66,9 +68,13 @@ public class RechargeValue extends BaseActivity  {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        jsonObject =object.optJSONObject("data");
                         if(Results.equals("success")) {
-                            showcharge();
+                            JSONObject jsonObject =object.optJSONObject("data");
+                            if (requestCode==0){
+                                showcharge(jsonObject);
+                            }else if (requestCode==1){
+                                payresult(jsonObject);
+                            }
                         }else {
                             showNotify("充值提示",Error);
                         }
@@ -85,6 +91,7 @@ public class RechargeValue extends BaseActivity  {
             }
         }
     };
+
     Handler methodHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -133,7 +140,7 @@ public class RechargeValue extends BaseActivity  {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void showcharge() {
+    private void showcharge(JSONObject jsonObject) {
         try {
             id = jsonObject.optString("id");
             charge = jsonObject.optString("charge");
@@ -154,6 +161,40 @@ public class RechargeValue extends BaseActivity  {
 
                     }
                 }).show();
+    }
+
+    private void payresult(JSONObject jsonObject) {
+
+        String status=jsonObject.optString("status");
+        String chargeId=jsonObject.optString("chargeId");
+        String lottery=jsonObject.optString("lottery");
+        if (status.equals("0")){
+            //新订单
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","1");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            setResult(1);
+            finish();
+        }else if (status.equals("1")){
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","1");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            setResult(1);
+            finish();
+        }else if (status.equals("2")){
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","5");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+        }else if (status.equals("3")){
+            setResult(1);
+            showdialogs("正在支付");
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +295,7 @@ public class RechargeValue extends BaseActivity  {
         }
     }
     private void requestSevice() {
+        requestCode=0;
         String validateURL= UrlUtil.PayfeeWay_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
@@ -279,7 +321,6 @@ public class RechargeValue extends BaseActivity  {
         });
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
 
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
@@ -311,8 +352,40 @@ public class RechargeValue extends BaseActivity  {
         if (null !=extraMsg &&extraMsg.length() != 0) {
             str += "\n" + extraMsg;
         }
-        showdialogs(str);
+        if (str.equals("缴费成功")){
+            setResult(0x005);
+            requestResult();
+        }else {
+            showdialogs(str);
+        }
     }
+
+    private void requestResult() {
+        requestCode=1;
+        String validateURL= UrlUtil.PayResult_Notarize;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        textParams.put("id",id);
+        HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                requestHandler.sendMessage(msg);
+            }
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                requestHandler.sendMessage(msg);
+            }
+        });
+
+    }
+
     private void showdialogs(String str) {
         new PromptDialog.Builder(this)
                 .setTitle("充值提示")

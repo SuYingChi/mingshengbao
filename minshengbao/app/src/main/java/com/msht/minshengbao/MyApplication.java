@@ -2,12 +2,16 @@ package com.msht.minshengbao;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.receiver.NetBroadcastReceiver;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,7 +63,6 @@ public class MyApplication extends Application {
     //新浪微博
     PlatformConfig.setSinaWeibo("4049059641", "22c648140a8ac43032e26bb3bcec71b3","http://sns.whalecloud.com/sina2/callback");
      }
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

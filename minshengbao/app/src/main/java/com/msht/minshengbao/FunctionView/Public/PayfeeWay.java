@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,30 +45,70 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
     private Button btn_send;
     private TextView tv_realamount;
     private TextView tv_balance;
-
+    private TextView tv_subtract;
+    private TextView tv_shouldAmount;
     private ListViewForScrollView forScrollView;
     private PaywayAdapter mAdapter;
     private String userId,id,voucherId;
+    private String PayId;
     private String password;
     private String charge;   //
     private String channels;
     private String type;
-    private String CustomerNo;
+    private String discountAmt="0";
+    private String orderId="";
     private String amount;
+    private String realamount;
     private String source="";
     private JSONArray jsonArray;
     private int requestCode=0;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
-
     private JSONObject jsonObject;
     private CustomDialog customDialog;
+    Handler SubtractHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUCCESS:
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String Results=object.optString("result");
+                        JSONObject optJSONObject =object.optJSONObject("data");
+                        if(Results.equals("success")) {
+                            SubtractAmount(optJSONObject);
+                        }else {
+                            realamount=amount;
+                            tv_subtract.setText("¥"+discountAmt);
+                            tv_realamount.setText(realamount);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case FAILURE:
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
+                    realamount=amount;
+                    tv_subtract.setText("¥"+discountAmt);
+                    tv_realamount.setText(realamount);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     Handler balanceHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    customDialog.dismiss();
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
@@ -87,7 +128,9 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                     }
                     break;
                 case FAILURE:
-                    customDialog.dismiss();
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
                     showfaiture(msg.obj.toString());
                     break;
                 default:
@@ -99,7 +142,9 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS:
-                    customDialog.dismiss();
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
@@ -120,7 +165,9 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                     }
                     break;
                 case FAILURE:
-                    customDialog.dismiss();
+                    if (customDialog!=null&&customDialog.isShowing()){
+                        customDialog.dismiss();
+                    }
                     showfaiture(msg.obj.toString());
                     break;
                 default:
@@ -128,46 +175,52 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
             }
         }
     };
+    private void SubtractAmount(JSONObject optJSONObject) {
+        try{
+            String showType=optJSONObject.optString("showType");
+            JSONObject showData=optJSONObject.getJSONObject("showData");
+            double subtract_amount=showData.optDouble("subtract_amount");
+            discountAmt=String.valueOf(subtract_amount);
+            tv_subtract.setText("¥"+subtract_amount);
+            double shouldAmount=Double.parseDouble(amount);
+            double real=shouldAmount-subtract_amount;
+            real=VariableUtil.TwoDecinmal2(real);
+            realamount=String.valueOf(real);
+            tv_realamount.setText(realamount);
+        }catch (Exception e){
+           e.printStackTrace();
+        }
+    }
     private void payresult(JSONObject json) {
         String status=json.optString("status");
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
         if (status.equals("0")){
             if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
+                Intent success=new Intent(context,PaySuccess.class);
                 success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
+                success.putExtra("type","0");
+                success.putExtra("orderId",orderId);
                 startActivity(success);
                 finish();
             }else {
                 showdialogs("新订单");
             }
-
         }else if (status.equals("1")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                Intent success=new Intent(context,PaySuccess.class);
-                success.putExtra("type","0");
-                startActivity(success);
-                finish();
-            }
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","0");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("2")){
-            showdialogs("缴费失败");
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","3");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
         }else if (status.equals("3")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                showdialogs("正在支付");
-            }
+            showdialogs("正在支付");
         }
     }
     private void Paywayshow() {
@@ -225,15 +278,17 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         }
         if (channels.equals("1")||channels.equals("3")||channels.equals("5")||channels.equals("7"))
         {
-          Pingpp.createPayment(PayfeeWay.this, charge);
+            //实付金额为0，不调用ping++,
+            if (realamount.equals("0.0")||realamount.equals("0.00")||realamount.equals("0")){
+                setResult(0x002);
+                requestResult();
+            }else {
+                Pingpp.createPayment(PayfeeWay.this, charge);
+            }
         }else {
             setResult(0x002);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","0");
-            startActivity(success);
-            finish();
+            requestResult();
         }
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,13 +300,13 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent getdata=getIntent();
-        CustomerNo=getdata.getStringExtra("CustomerNo");
         amount=getdata.getStringExtra("amount");
-        voucherId=getdata.getStringExtra("voucherid");
+        PayId=getdata.getStringExtra("id");
         type="1";
         initView();
         mAdapter=new PaywayAdapter(context,List);
         forScrollView.setAdapter(mAdapter);
+        initSubtract();
         initData();
         mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
             @Override
@@ -263,12 +318,18 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
             }
         });
     }
+
     private void initView() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         tv_balance=(TextView)findViewById(R.id.id_tv_balance);
         tv_realamount=(TextView)findViewById(R.id.id_real_fee);
+        tv_subtract=(TextView)findViewById(R.id.id_subtract_amount);
+        tv_shouldAmount=(TextView)findViewById(R.id.id_should_fee);
         btn_send=(Button)findViewById(R.id.id_btn_pay) ;
+        tv_shouldAmount.setText("¥"+amount+"元");
         tv_realamount.setText("¥"+amount);
+        tv_subtract.setText("¥"+discountAmt);
+        realamount=amount;
         btn_send.setEnabled(false);       //初始未选择支付方式不可点击
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,6 +338,30 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
             }
         });
         PingppLog.DEBUG = true;
+    }
+    private void initSubtract() {
+        customDialog.show();
+        String validateURL= UrlUtil.PaySubtract_Url;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("event_code","gas_pay_before");
+        textParams.put("event_relate_id",PayId);
+        HttpUrlconnectionUtil.executepostTwo(validateURL, textParams, new ResultListener() {
+            @Override
+            public void onResultSuccess(String success) {
+                Message msg = new Message();
+                msg.obj = success;
+                msg.what = SUCCESS;
+                SubtractHandler.sendMessage(msg);
+            }
+            @Override
+            public void onResultFail(String fail) {
+                Message msg = new Message();
+                msg.obj = fail;
+                msg.what = FAILURE;
+                SubtractHandler.sendMessage(msg);
+            }
+        });
     }
     private void initData() {
         requestCode=0;
@@ -361,14 +446,14 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                 .show();
     }
     private void requestSevice() {
-        String validateURL= UrlUtil.PayfeeWay_Url;
+        String validateURL= UrlUtil.GasExpense_Pay;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
+        textParams.put("id",PayId);
         textParams.put("type",type);
-        textParams.put("amount",amount);
-        textParams.put("customerNo",CustomerNo);
-        textParams.put("couponId",voucherId);
+        textParams.put("amount",realamount);
+        textParams.put("discountAmt",discountAmt);
         textParams.put("channel",channels);
         HttpUrlconnectionUtil.executepost(validateURL,textParams, new ResultListener() {
             @Override

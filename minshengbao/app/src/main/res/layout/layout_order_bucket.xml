@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_width16"
                 android:textColor="@color/black1"
-                android:text="7.5升直饮水"/>
+                android:text="7.5升直饮水桶"/>
             <TextView
                 android:id="@+id/id_text_price"
                 android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                 android:textColor="@color/title_tv"
                 android:text="单价："/>
             <TextView
-                android:id="@+id/id_bucket_price"
+                android:id="@+id/id_tv_bucketPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_bucket_type"
@@ -75,7 +75,7 @@
                 android:layout_toRightOf="@+id/id_text_price"
                 android:layout_marginLeft="@dimen/margin_width6"
                 android:textColor="@color/colorOrange"
-                android:text="¥ 3.5/个"/>
+                android:text="¥ 0.0/个"/>
         </RelativeLayout>
         <Button
             android:id="@+id/id_add_btn2"
@@ -96,7 +96,7 @@
             android:background="@color/background_gray"
             android:text="1"/>
         <Button
-            android:id="@+id/id_minus_btn2"
+            android:id="@+id/id_subtract_btn2"
             android:layout_width="@dimen/margin_width25"
             android:layout_height="@dimen/margin_width25"
             android:layout_centerVertical="true"

@@ -17,8 +17,6 @@ public class StreamTools {
             while ((len = is.read(buffer)) != -1) {
                 // 将Buffer中的数据写到outputStream对象中
                 outputStream.write(buffer, 0, len);
-
-
             }
             is.close();
             outputStream.close();

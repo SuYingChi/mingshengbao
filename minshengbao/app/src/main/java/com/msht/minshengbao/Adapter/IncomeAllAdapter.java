@@ -67,6 +67,9 @@ public class IncomeAllAdapter extends BaseAdapter {
         } else if (type.equals("2")) {
             holder.cn_amount.setTextColor(0xff333333);
             holder.cn_amount.setText("-" + incomeList.get(position).get("amount") + "元");
+        }else {
+            holder.cn_amount.setTextColor(0xff333333);
+            holder.cn_amount.setText("-" + incomeList.get(position).get("amount") + "元");
         }
         holder.cn_time.setText(incomeList.get(position).get("time"));
         return convertView;

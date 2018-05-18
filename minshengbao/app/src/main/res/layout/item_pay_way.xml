@@ -38,9 +38,12 @@
             android:id="@+id/id_radio_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/margin_width25"
+            android:minHeight="@dimen/margin_width25"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_15" />
+            android:layout_marginRight="@dimen/margin_15"
+            android:button="@drawable/selector_circle_checked"/>
         <RelativeLayout
             android:id="@+id/id_layout_tip"
             android:layout_width="wrap_content"

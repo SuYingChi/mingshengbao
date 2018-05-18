@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -130,7 +131,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         GoActivity();
         return  view;
     }
-    @Override
+   /* @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
@@ -147,8 +148,13 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                     }
                 }
                 break;
+            case 0x004:
+                if (resultCode==0x001){
+                    Toast.makeText(getActivity(), "卡券包返回", Toast.LENGTH_SHORT)
+                            .show();
+                }
         }
-    }
+    }*/
     private void initView(View view) {
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
         mGridView=(MyNoScrollGridView)view.findViewById(R.id.id_function_view);
@@ -350,7 +356,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     }
     private void Gomywallet() {
         Intent intent=new Intent(mContext, Mywallet.class);
-        startActivity(intent);
+        startActivityForResult(intent,0x004);
     }
     private void Goinvoice() {
         Intent intent=new Intent(mContext, InvoiceOpen.class);

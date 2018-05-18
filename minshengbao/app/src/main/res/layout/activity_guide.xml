@@ -22,32 +22,32 @@
         android:layout_marginBottom="24.0dip"
         android:orientation="horizontal" >
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/margin_width10"
+            android:layout_height="@dimen/margin_width10"
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:padding="1.0dip"
             android:src="@drawable/dot_selector" />
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/margin_width10"
+            android:layout_height="@dimen/margin_width10"
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:padding="1.0dip"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginRight="@dimen/margin_width10"
             android:src="@drawable/dot_selector" />
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/margin_width10"
+            android:layout_height="@dimen/margin_width10"
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:padding="1.0dip"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/dot_selector" />
+            android:layout_marginRight="@dimen/margin_width10"
+            android:src="@drawable/dot_selector"/>
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/margin_width10"
+            android:layout_height="@dimen/margin_width10"
             android:layout_gravity="center_vertical"
             android:clickable="true"
             android:padding="1.0dip"

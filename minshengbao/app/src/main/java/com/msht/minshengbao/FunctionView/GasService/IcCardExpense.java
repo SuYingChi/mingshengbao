@@ -5,21 +5,16 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Adapter.PaywayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionView.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.FunctionView.Public.PaySuccess;
-import com.msht.minshengbao.FunctionView.Public.PayfeeWay;
-import com.msht.minshengbao.FunctionView.Public.ScanCode;
+import com.msht.minshengbao.FunctionView.Public.QRCodeScan;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
@@ -55,6 +50,7 @@ public class IcCardExpense extends BaseActivity  {
     private String CustomerNo;
     private String channels;
     private String userId,id;
+    private String orderId="";
     private String source="";
     private long time1,overtime;
     private String password;
@@ -67,7 +63,6 @@ public class IcCardExpense extends BaseActivity  {
     private JSONObject jsonObject,Expenseobject;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
-
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -171,10 +166,7 @@ public class IcCardExpense extends BaseActivity  {
             Pingpp.createPayment(IcCardExpense.this, charge);
         }else {
             setResult(0x002);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","2");
-            startActivity(success);
-            finish();
+            requestResult();
         }
     }
     private void showfaiture(String s) {
@@ -242,41 +234,29 @@ public class IcCardExpense extends BaseActivity  {
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
         if (status.equals("0")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                showdialogs("新订单");
-            }
-
+            //新订单
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","2");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("1")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                Intent success=new Intent(context,PaySuccess.class);
-                success.putExtra("type","2");
-                startActivity(success);
-                finish();
-            }
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","2");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("2")){
-            showdialogs("缴费失败");
+            Intent success=new Intent(context,PaySuccess.class);
+            success.putExtra("type","5");
+            success.putExtra("url",lottery);
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }else if (status.equals("3")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,HtmlPage.class);
-                success.putExtra("url",lottery);
-                success.putExtra("navigate","活动");
-                startActivity(success);
-                finish();
-            }else {
-                showdialogs("正在支付");
-            }
+            showdialogs("正在支付");
         }
     }
     @Override
@@ -413,7 +393,7 @@ public class IcCardExpense extends BaseActivity  {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-                        Intent intent=new Intent(IcCardExpense.this, ScanCode.class);
+                        Intent intent=new Intent(IcCardExpense.this, QRCodeScan.class);
                         startActivity(intent);
                         finish();
 

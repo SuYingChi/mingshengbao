@@ -145,7 +145,34 @@ public class SecretKeyUtil {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Log.d("jsonData数据=",jsonresult);
         return jsonresult;
+    }
+
+    public static String getKeyextParams(String object){
+        Log.d("ParamsData数据=",object);
+        String extParams="";
+        try{
+            extParams=DesUtil.encrypt(object,VariableUtil.SECURITY_ENCRYPT_KEY);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return extParams;
+    }
+    private static String CreateKeyJson(JSONObject object) {
+        String  jsonresult=object.toString();
+        return jsonresult;
+    }
+    public static String getKeySign(TreeMap<String, String> treeMap){
+        StringBuffer buffer = new StringBuffer();
+        Iterator<String> it = treeMap.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            String value = treeMap.get(key);
+            if (!TextUtils.isEmpty(value)) {
+                buffer.append(value);
+            }
+        }
+        String sign = MD5.sign(buffer.toString(), VariableUtil.SECURITY_SIGN_KEY, "UTF-8");
+        return sign;
     }
 }

@@ -48,7 +48,7 @@
             android:textSize="@dimen/text_16"
             android:text="7.5升直饮水"/>
         <TextView
-            android:id="@+id/id_text_num3"
+            android:id="@+id/id_water_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -57,7 +57,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/id_water_amount"
             android:textColor="@color/title_tv"
-            android:text="x2"/>
+            android:text="x1"/>
 
         <TextView
             android:id="@+id/id_water_amount"
@@ -81,7 +81,7 @@
             android:textSize="@dimen/text_16"
             android:text="7.5升PC食品级饮用纯净水桶"/>
         <TextView
-            android:id="@+id/id_text_num4"
+            android:id="@+id/id_bucket_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"

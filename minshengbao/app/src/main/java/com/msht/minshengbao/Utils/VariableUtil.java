@@ -14,6 +14,7 @@ public class VariableUtil {
     public static int citypos;
     public static int paypos;
     public static int MealPos=-1;
+    public static int estatePos=-1;
     public static String balance;
     public static String City;
     public static boolean Boolselect;

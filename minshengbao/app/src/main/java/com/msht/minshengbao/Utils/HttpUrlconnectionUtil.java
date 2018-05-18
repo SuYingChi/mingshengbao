@@ -212,7 +212,7 @@ public class HttpUrlconnectionUtil  {
                     conn.setDoOutput(true); // 发送POST请求必须设置允许输出
                     conn.setRequestProperty("Charset", "UTF-8");//设置编码
                     conn.setRequestProperty("ser-Agent", "Fiddler");
-                    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
+                    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ NetUtil.BOUNDARY);
                     OutputStream os = conn.getOutputStream();
                     DataOutputStream ds = new DataOutputStream(os);
                     NetUtil.writeStringParams(parameters, ds);
@@ -220,7 +220,7 @@ public class HttpUrlconnectionUtil  {
                     os.flush();
                     os.close();
                     conn.connect();
-                    if (conn.getResponseCode() == 200) {
+                    if (conn.getResponseCode() ==200) {
                         InputStream is = conn.getInputStream();
                         String resultStr = NetUtil.readString(is);
                         resultListener.onResultSuccess(resultStr);
@@ -266,7 +266,7 @@ public class HttpUrlconnectionUtil  {
                     os.flush();
                     os.close();
                     conn.connect();
-                    if (conn.getResponseCode() == 200) {
+                    if (conn.getResponseCode()== 200) {
                         InputStream is = conn.getInputStream();
                         String resultStr = NetUtil.readString(is);
                         resultListener.onResultSuccess(resultStr);
