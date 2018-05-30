@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_gray"
-    tools:context="com.msht.minshengbao.FunctionView.repairService.PublishSuccess">
+    tools:context="com.msht.minshengbao.FunctionActivity.repairService.PublishSuccess">
    <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FunctionActivity.Public.PublicPayway">
+    <include layout="@layout/layout_header"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_10"
+                android:background="@color/background_gray"  />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/text6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:text="应付金额："
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/text_width16"
+                    />
+                <TextView
+                    android:id="@+id/id_should_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/default_value0"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:textColor="@color/color_383838"
+                    android:textSize="@dimen/text_width16"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_10"
+                android:background="@color/background_gray"/>
+            <include layout="@layout/layout_line_gray"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/white"
+                android:layout_above="@+id/id_img"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+                <TextView
+                    android:id="@+id/text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="选择支付方式："
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/text_20"
+                    />
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray" />
+            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+                android:id="@+id/id_payway_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            <include layout="@layout/layout_line_gray"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/id_btn_pay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_60"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:layout_marginLeft="@dimen/margin_20"
+                    android:background="@drawable/selector_touch_button_change"
+                    android:text="立即支付"
+                    android:textSize="@dimen/text_18"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

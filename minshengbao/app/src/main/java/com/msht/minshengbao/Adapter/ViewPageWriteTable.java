@@ -4,10 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.View;
 
-import com.msht.minshengbao.FunctionView.fragmeht.SelfWriteFrage;
-import com.msht.minshengbao.FunctionView.fragmeht.TableRecordFrag;
+import com.msht.minshengbao.FunctionActivity.fragment.SelfWriteFrage;
+import com.msht.minshengbao.FunctionActivity.fragment.TableRecordFrag;
 
 
 /**

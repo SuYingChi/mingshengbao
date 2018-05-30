@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.msht.minshengbao.FunctionView.fragmeht.MyFragment">
+    tools:context="com.msht.minshengbao.FunctionActivity.fragment.MyFragment">
     <com.msht.minshengbao.ViewUI.widget.MyScrollview
         android:id="@+id/id_scrollview"
         android:layout_width="match_parent"

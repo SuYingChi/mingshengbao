@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.insurance.InsuranceDetail">
-
+    tools:context="com.msht.minshengbao.FunctionActivity.insurance.InsuranceDetail">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -175,18 +174,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="250000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_amont1"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:text="限5人以内"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -236,18 +226,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="50000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_text4"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:text="限5人以内"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -297,18 +278,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="400000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_text6"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:text="不限人数"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -358,18 +330,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="300000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_text8"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:text="不限人数"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -420,18 +383,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="6000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_text10"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:text="不限人数"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -476,19 +430,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_15"
                         android:text="150000元"
-                        android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_ins_xian6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_text12"
-                        android:layout_marginTop="@dimen/margin_12"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_15"
-                        android:layout_marginBottom="@dimen/margin_15"
-                        android:text="不限人数"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
             </LinearLayout>

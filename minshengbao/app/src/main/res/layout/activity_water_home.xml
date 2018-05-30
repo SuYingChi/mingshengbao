@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.WaterApp.WaterHome">
+    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterHome">
     <include layout="@layout/layout_header" />
     <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_swipe_refresh"

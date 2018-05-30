@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.msht.minshengbao.FunctionView.fragmeht.TableRecordFrag">
+    tools:context="com.msht.minshengbao.FunctionActivity.fragment.TableRecordFrag">
     <!-- TODO: Update blank fragment layout -->
     <com.msht.minshengbao.ViewUI.PullRefresh.XListView
         android:id="@+id/id_payrecord_listview"

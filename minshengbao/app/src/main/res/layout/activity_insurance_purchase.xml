@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_insurance_purchase"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@drawable/shape_change_background"
-    tools:context="com.msht.minshengbao.FunctionView.insurance.InsurancePurchase">
+    tools:context="com.msht.minshengbao.FunctionActivity.insurance.InsurancePurchase">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_weight="1"
@@ -26,15 +27,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/white">
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_name"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_centerVertical="true"
@@ -44,32 +44,34 @@
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_name"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_toRightOf="@+id/id_tv_name"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:gravity="end"
                         android:maxLength="20"
                         android:textSize="@dimen/text_width16"
+                        android:textColor="@color/color_9e9e9e"
                         android:layout_centerVertical="true"
                         android:background="@null"
                         android:hint="投保人与支付人姓名必须一致" />
-                </LinearLayout>
+                </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:background="@color/line_gray">
                 </View>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_customerNo"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_centerVertical="true"
@@ -79,160 +81,203 @@
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_customerNo"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@+id/id_tv_customerNo"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:textColor="@color/color_9e9e9e"
+                        android:gravity="end"
                         android:maxLength="18"
                         android:inputType="number"
                         android:textSize="@dimen/text_width16"
                         android:layout_centerVertical="true"
                         android:background="@null"
                         android:hint="请输8-10位数字" />
-                </LinearLayout>
+                </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:background="@color/line_gray">
                 </View>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:minHeight="@dimen/margin_width45">
+                    <TextView
+                        android:id="@+id/id_certificate_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_centerVertical="true"
+                        android:text="@string/certificate_type"
+                        android:textColor="@color/color_383838"
+                        android:textSize="@dimen/text_width16"/>
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        app:ms_dropdown_max_height="350dp"
+                        app:ms_dropdown_height="wrap_content"
+                        app:ms_background_color="@color/white"
+                        app:ms_text_color="@color/color_9e9e9e"
+                        android:textSize="@dimen/text_16"
+                        android:layout_centerVertical="true"
+                        />
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:background="@color/line_gray">
+                </View>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_idCard"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/margin_10"
-                        android:text="身份证号码"
+                        android:text="证件号"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_idcard"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_toRightOf="@+id/id_tv_idCard"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:gravity="end"
                         android:maxLength="18"
                         android:textSize="@dimen/text_width16"
+                        android:textColor="@color/color_9e9e9e"
                         android:hint="请输入您的身份证号"
                         android:layout_centerVertical="true"
                         android:background="@null"
                         />
-                </LinearLayout>
+                </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:background="@color/line_gray">
                 </View>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_phone"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:text="手机号码"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_phone"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_toRightOf="@+id/id_tv_phone"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:gravity="end"
                         android:maxLength="11"
+                        android:textColor="@color/color_9e9e9e"
                         android:textSize="@dimen/text_width16"
                         android:hint="请输入您的手机号"
                         android:inputType="phone"
                         android:layout_centerVertical="true"
                         android:background="@null"
                         />
-                </LinearLayout>
+                </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:background="@color/line_gray">
                 </View>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_address"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_gravity="center_vertical"
+                        android:layout_centerVertical="true"
                         android:text="地址"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_address"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/id_tv_address"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:gravity="end"
                         android:maxLength="100"
                         android:hint="请输入您的地址"
+                        android:textColor="@color/color_9e9e9e"
                         android:textSize="@dimen/text_width16"
                         android:background="@null"
                         />
-                </LinearLayout>
+                </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_10"
                     android:background="@color/line_gray">
                 </View>
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
                         android:id="@+id/id_tv_email"
-                        android:layout_weight="0.25"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:text="电子邮箱"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_email"
-                        android:layout_weight="0.75"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:inputType="textEmailAddress"
-                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_toRightOf="@+id/id_tv_email"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:gravity="end"
                         android:maxLength="50"
                         android:hint="选填"
+                        android:textColor="@color/color_9e9e9e"
                         android:textSize="@dimen/text_width16"
                         android:layout_centerVertical="true"
-                        android:background="@null"
-                        />
-                </LinearLayout>
+                        android:background="@null" />
+                </RelativeLayout>
             </LinearLayout>
             <include layout="@layout/layout_line_gray"/>
             <View
@@ -241,7 +286,7 @@
                 android:layout_centerVertical="true"
                 android:background="@color/touch_backgroud">
             </View>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -249,26 +294,29 @@
                 android:minHeight="@dimen/margin_width45">
                 <TextView
                     android:id="@+id/id_tv_recommend"
-                    android:layout_weight="0.25"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:text="推荐人"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <EditText
                     android:id="@+id/id_et_recommend"
-                    android:layout_weight="0.75"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/id_tv_recommend"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_9e9e9e"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_width6"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:gravity="end"
                     android:hint="请填写推荐人手机号"
-                    android:background="@null"
-                    />
-            </LinearLayout>
+                    android:background="@null"/>
+            </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_10"

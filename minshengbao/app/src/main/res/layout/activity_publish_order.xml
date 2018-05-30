@@ -7,7 +7,7 @@
     android:background="@drawable/shape_change_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.repairService.PublishOrder">
+    tools:context="com.msht.minshengbao.FunctionActivity.repairService.PublishOrder">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                 android:minHeight="@dimen/margin_width70"
                 android:background="@color/white">
                 <EditText
-                    android:id="@+id/id_et_name"
+                    android:id="@+id/id_tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width12"
@@ -145,8 +145,8 @@
                     android:background="@null"
                     android:layout_marginLeft="@dimen/margin_width18"
                     android:textSize="@dimen/text_width16"/>
-                <EditText
-                    android:id="@+id/id_et_phone"
+                <TextView
+                    android:id="@+id/id_tv_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width12"

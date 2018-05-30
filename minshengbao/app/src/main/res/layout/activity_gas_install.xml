@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.msht.minshengbao.FunctionView.GasService.GasInstall">
+    tools:context="com.msht.minshengbao.FunctionActivity.GasService.GasInstall">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -15,120 +15,153 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="#ffffff">
+            android:background="@color/white">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="@dimen/margin_width50"
+                android:orientation="horizontal">
                 <EditText
-                    android:layout_width="240dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/id_btn_selectaddress"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_width5"
                     android:inputType="textMultiLine"
                     android:ems="10"
                     android:hint="请输入或选择地址"
                     android:textSize="@dimen/text_16"
                     android:background="@null"
                     android:id="@+id/id_select_address"
-                    android:layout_marginLeft="@dimen/margin_15"
-                    android:layout_centerVertical="true"
                     />
                 <Button
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/margin_35"
+                    android:minHeight="@dimen/margin_width30"
+                    android:layout_alignParentRight="true"
                     android:text="请选择"
                     android:textColor="@color/white"
                     android:clickable="true"
                     android:id="@+id/id_btn_selectaddress"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/shape_orange_corner_button"
-                    android:layout_alignParentRight="true" />
+                    android:background="@drawable/shape_orange_corner_button" />
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_install_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_50"
+                android:minHeight="@dimen/margin_width50"
                 android:background="@drawable/selector_touch_background">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="报装类型"
-                    android:textSize="16dp"
-                    android:textColor="#ff363636"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
                     android:textStyle="bold"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     android:id="@+id/textView" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/textView"
                     android:hint="请选择报装类型"
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:background="@null"
                     android:id="@+id/id_install_type"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="105dp"
+                    android:layout_marginLeft="@dimen/margin_width15"
                     />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_width10"
                     android:src="@drawable/forward_2x"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#ffffff">
+                android:layout_height="@dimen/margin_width50"
+                android:background="@color/white">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="@dimen/margin_width50">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="报装主题"
-                        android:textSize="16dp"
-                        android:textColor="#ff363636"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/color_383838"
                         android:textStyle="bold"
                         android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="@dimen/margin_width10"
                         android:id="@+id/textView2" />
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
+                        android:layout_toRightOf="@+id/textView2"
                         android:ems="10"
                         android:hint="请输入报装主题"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:background="@null"
                         android:id="@+id/id_install_topic"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="105dp"
+                        android:layout_marginLeft="@dimen/margin_width15"
                         />
                 </RelativeLayout>
             </LinearLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:minHeight="@dimen/margin_width50">
+                <TextView
+                    android:id="@+id/id_phone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
+                    android:textStyle="bold"
+                    android:text="@string/connetion_phone"/>
+                <EditText
+                    android:id="@+id/id_et_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/id_phone_text"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:inputType="phone"
+                    android:hint="请输入联系电话"
+                    android:background="@null"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width45"
                 android:background="#ffffff">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="详细描述"
-                    android:textSize="@dimen/text_16"
-                    android:textColor="#ff363636"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
                     android:textStyle="bold"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     />
             </RelativeLayout>
             <LinearLayout
@@ -140,11 +173,11 @@
                     android:id="@+id/id_et_install_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="180dp"
-                    android:paddingLeft="@dimen/margin_15"
+                    android:minHeight="@dimen/margin_width180"
+                    android:paddingLeft="@dimen/margin_width15"
                     android:inputType="textMultiLine"
                     android:ems="10"
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:maxLength="100"
                     android:hint="请详细写下需求描述"
                     android:background="@null"
@@ -159,12 +192,12 @@
                     android:id="@+id/id_btn_verify"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:layout_marginBottom="@dimen/margin_25"
-                    android:minHeight="@dimen/margin_45"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_marginBottom="@dimen/margin_width25"
+                    android:minHeight="@dimen/margin_width45"
                     android:text="确认"
-                    android:textSize="@dimen/text_18"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="@color/white"
                     android:background="@drawable/selector_touch_button_change"
                     android:layout_gravity="center_horizontal"

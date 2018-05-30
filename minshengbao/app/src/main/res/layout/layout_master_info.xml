@@ -6,31 +6,23 @@
     android:id="@+id/id_re_master">
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_10"
+        android:layout_height="@dimen/margin_width10"
         android:background="@color/background_gray" />
     <RelativeLayout
         android:id="@+id/id_relauout_master"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_touch_background"
-        android:minHeight="@dimen/margin_48">
-        <ImageView
-            android:id="@+id/id_img3"
-            android:layout_width="25dp"
-            android:layout_height="26dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:src="@drawable/repair_master_xh"/>
+        android:minHeight="@dimen/margin_width48">
         <TextView
             android:id="@+id/id_text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_15"
-            android:layout_toRightOf="@+id/id_img3"
             android:layout_centerVertical="true"
             android:text="接单师傅"
             android:textColor="@color/title_tv"
-            android:textSize="@dimen/text_16"/>
+            android:textSize="@dimen/text_width16"/>
         <TextView
             android:id="@+id/id_master"
             android:layout_width="wrap_content"
@@ -39,7 +31,7 @@
             android:layout_toLeftOf="@+id/id_img_forward"
             android:layout_marginRight="@dimen/margin_10"
             android:text="师傅名"
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/colorOrange"/>
         <ImageView
             android:id="@+id/id_img_forward"
@@ -57,22 +49,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/selector_touch_background"
         android:minHeight="@dimen/margin_48">
-        <ImageView
-            android:id="@+id/id_img4"
-            android:layout_width="@dimen/margin_25"
-            android:layout_height="@dimen/margin_25"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:src="@drawable/master_phone_xh"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_15"
-            android:layout_toRightOf="@+id/id_img4"
             android:layout_centerVertical="true"
             android:text="师傅电话"
             android:textColor="@color/title_tv"
-            android:textSize="@dimen/text_16"/>
+            android:textSize="@dimen/text_width16"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

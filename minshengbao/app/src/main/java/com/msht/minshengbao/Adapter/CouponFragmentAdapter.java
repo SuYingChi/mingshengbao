@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionView.fragmeht.CouponFragment;
+import com.msht.minshengbao.FunctionActivity.fragment.CouponFragment;
 
 /**
  * Created by hong on 2017/4/1.

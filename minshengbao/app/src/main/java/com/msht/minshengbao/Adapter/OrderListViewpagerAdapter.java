@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionView.fragmeht.OrderListFragment;
+import com.msht.minshengbao.FunctionActivity.fragment.OrderListFragment;
 
 
 /**
@@ -13,12 +13,10 @@ import com.msht.minshengbao.FunctionView.fragmeht.OrderListFragment;
  */
 
 public class OrderListViewpagerAdapter extends FragmentPagerAdapter {
-    public String[] Titles={"全部","未完成","已完成"};
-
+    public String[] Titles={"全部","未完成","已完成","退款返修"};
     public OrderListViewpagerAdapter(FragmentManager fm) {
         super(fm);
     }
-
     @Override
     public Fragment getItem(int position) {
         return OrderListFragment.getInstanse(position);

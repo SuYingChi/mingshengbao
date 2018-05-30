@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.fragmeht.SelfhelpPay">
+    tools:context="com.msht.minshengbao.FunctionActivity.fragment.SelfhelpPay">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

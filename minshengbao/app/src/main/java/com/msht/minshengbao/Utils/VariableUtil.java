@@ -19,6 +19,7 @@ public class VariableUtil {
     public static String City;
     public static boolean Boolselect;
     public static boolean BoolCode;
+    public static boolean loginStatus=false;
     public static ArrayList<String> options1item=new ArrayList<String>();
     public static ArrayList<ArrayList<String>> options2item=new ArrayList<ArrayList<String>>();
     public static ArrayList<ArrayList<ArrayList<String>>> options3item=new ArrayList<>();

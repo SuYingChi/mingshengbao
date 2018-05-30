@@ -2,7 +2,6 @@ package com.msht.minshengbao;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -16,17 +15,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.msht.minshengbao.Callback.ResultImgListenner;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionView.MainActivity;
-import com.msht.minshengbao.Utils.ACache;
-import com.msht.minshengbao.Utils.AndroidBug54971Workaround;
-import com.msht.minshengbao.Utils.HttpUrlconnectionUtil;
+import com.msht.minshengbao.FunctionActivity.MainActivity;
+import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -164,7 +159,7 @@ public class LaunchActivity extends AppCompatActivity {
     }
     private void initAd() {
         String avatarurl= UrlUtil.Launcher_ImgUrl;
-        HttpUrlconnectionUtil.ShortTimeGet(avatarurl, new ResultListener() {
+        SendrequestUtil.ShortTimeGet(avatarurl, new ResultListener() {
             @Override
             public void onResultSuccess(String success) {
                 Message msg = new Message();

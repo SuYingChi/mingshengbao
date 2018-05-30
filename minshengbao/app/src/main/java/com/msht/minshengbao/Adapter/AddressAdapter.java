@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.msht.minshengbao.FunctionView.Public.MoveSelectAddress;
-import com.msht.minshengbao.MoveSelectAddress.LocationBean;
 import com.msht.minshengbao.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by hong on 2017/11/30.

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.HtmlWeb.VegetableGentlemen">
+    tools:context="com.msht.minshengbao.FunctionActivity.HtmlWeb.VegetableGentlemen">
     <include layout="@layout/layout_header" />
     <FrameLayout
         android:layout_width="match_parent"

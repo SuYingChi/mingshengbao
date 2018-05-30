@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.msht.minshengbao.Adapter.GuideViewPagerAdapter;
-import com.msht.minshengbao.FunctionView.MainActivity;
+import com.msht.minshengbao.FunctionActivity.MainActivity;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;

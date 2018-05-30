@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.GasService.GasPayfee">
+    tools:context="com.msht.minshengbao.FunctionActivity.GasService.GasPayfee">
     <include layout="@layout/layout_header"/>
     <com.msht.minshengbao.ViewUI.ViewPagerIndicator
         android:id="@+id/indicator"

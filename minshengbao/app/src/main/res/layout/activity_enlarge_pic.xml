@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/black"
-    tools:context="com.msht.minshengbao.FunctionView.repairService.EnlargePicActivity">
+    tools:context="com.msht.minshengbao.FunctionActivity.repairService.EnlargePicActivity">
     <RelativeLayout
         android:background="#fff96331"
         android:layout_width="match_parent"

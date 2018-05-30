@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.view.View;
 
-import com.msht.minshengbao.FunctionView.fragmeht.CounterFrag;
-import com.msht.minshengbao.FunctionView.fragmeht.GasNeedKnowFrag;
+import com.msht.minshengbao.FunctionActivity.fragment.CounterFrag;
+import com.msht.minshengbao.FunctionActivity.fragment.GasNeedKnowFrag;
 
 /**
  * Created by hong on 2016/12/19.

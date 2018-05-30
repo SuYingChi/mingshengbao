@@ -7,7 +7,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:background="@mipmap/loginback_xh"
-    tools:context="com.msht.minshengbao.FunctionView.Myview.LoginView">
+    tools:context="com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity">
     <ImageView
         android:id="@+id/id_gobackimg"
         android:layout_width="33dp"

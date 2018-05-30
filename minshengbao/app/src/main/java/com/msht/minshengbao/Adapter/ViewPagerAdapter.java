@@ -1,13 +1,12 @@
 package com.msht.minshengbao.Adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionView.fragmeht.ConsultFragment;
-import com.msht.minshengbao.FunctionView.fragmeht.RecommendFragment;
+import com.msht.minshengbao.FunctionActivity.fragment.ConsultFragment;
+import com.msht.minshengbao.FunctionActivity.fragment.RecommendFragment;
 
 
 /**

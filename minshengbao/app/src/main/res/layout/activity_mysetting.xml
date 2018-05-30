@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.Myview.Mysetting">
+    tools:context="com.msht.minshengbao.FunctionActivity.MyActivity.Mysetting">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -17,128 +17,163 @@
             <RelativeLayout
                 android:id="@+id/id_setting_portrait_layout"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:minHeight="@dimen/margin_width80"
+                android:layout_height="wrap_content"
                 android:background="@drawable/selector_touch_background">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="头像"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"/>
+                    android:layout_marginLeft="@dimen/margin_width15"/>
                 <com.msht.minshengbao.ViewUI.CircleImageView
                     android:id="@+id/id_portraitview"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/margin_width60"
+                    android:layout_height="@dimen/margin_width60"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_centerVertical="true"
                     android:src="@drawable/potrait"
-                    android:layout_marginRight="40dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_toLeftOf="@+id/id_img1"
+                    android:layout_marginRight="@dimen/margin_width15"
                     />
                 <ImageView
+                    android:id="@+id/id_img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/margin_18"
+                    android:layout_marginRight="@dimen/margin_width15"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/forward_2x"/>
+                    android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:background="#eaeaea" />
+                android:layout_height="@dimen/margin_width15"
+                android:background="@color/background_gray" />
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_setting_nickname_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_45"
+                android:minHeight="@dimen/margin_width45"
                 android:background="@drawable/selector_touch_background">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_nick_name"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"/>
+                    android:layout_marginLeft="@dimen/margin_width15"/>
                 <TextView
                     android:id="@+id/id_tv_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="16sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="30dp"/>
+                    android:textSize="@dimen/text_width14"
+                    android:textColor="@color/color_9e9e9e"
+                    android:layout_toLeftOf="@+id/id_img2"
+                    android:layout_marginRight="@dimen/margin_width6"/>
                 <ImageView
+                    android:id="@+id/id_img2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/forward_2x"/>
+                    android:layout_marginRight="@dimen/margin_width15"
+                    android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_setting_sex_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_45"
+                android:minHeight="@dimen/margin_width45"
                 android:background="@drawable/selector_touch_background">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_sex"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"/>
+                    android:layout_marginLeft="@dimen/margin_width15"/>
                 <TextView
                     android:id="@+id/id_tv_sex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="16sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="30dp"/>
+                    android:textSize="@dimen/text_width14"
+                    android:textColor="@color/color_9e9e9e"
+                    android:layout_toLeftOf="@+id/id_img3"
+                    android:layout_marginRight="@dimen/margin_width6"/>
                 <ImageView
+                    android:id="@+id/id_img3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="18dp"
-                    android:src="@drawable/forward_2x"/>
+                    android:layout_marginRight="@dimen/margin_width15"
+                    android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="@dimen/margin_width45"
                 android:background="@color/white">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_phonenumber"
-                    android:textSize="16sp"
+                    android:textColor="@color/color_383838"
+                    android:textSize="@dimen/text_width16"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"/>
+                    android:layout_marginLeft="@dimen/margin_width15"/>
                 <TextView
                     android:id="@+id/id_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/id_img_phone"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="30dp"/>
+                    android:textColor="@color/color_9e9e9e"
+                    android:textSize="@dimen/text_width14"
+                    android:layout_marginRight="@dimen/margin_width6"/>
                 <ImageView
+                    android:id="@+id/id_img_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="18dp"/>
+                    android:layout_marginRight="@dimen/margin_width15"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
-            <View
+            <RelativeLayout
+                android:id="@+id/id_layout_setpwd"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                />
+                android:layout_height="@dimen/margin_width45"
+                android:background="@drawable/selector_touch_background">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/set_password"
+                    android:textColor="@color/color_383838"
+                    android:textSize="@dimen/text_width16"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_width15"/>
+                <ImageView
+                    android:id="@+id/id_img4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width15"
+                    android:src="@drawable/forward_m"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

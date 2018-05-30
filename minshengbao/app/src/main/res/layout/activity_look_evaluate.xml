@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionView.repairService.LookEvaluate">
+    tools:context="com.msht.minshengbao.FunctionActivity.repairService.LookEvaluate">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

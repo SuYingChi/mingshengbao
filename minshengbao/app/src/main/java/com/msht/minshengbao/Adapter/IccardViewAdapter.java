@@ -6,10 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionView.fragmeht.IcCard;
-import com.msht.minshengbao.FunctionView.fragmeht.PayRecord;
-import com.msht.minshengbao.FunctionView.fragmeht.RechargeFrag;
-import com.msht.minshengbao.FunctionView.fragmeht.SelfhelpPay;
+import com.msht.minshengbao.FunctionActivity.fragment.IcCard;
+import com.msht.minshengbao.FunctionActivity.fragment.RechargeFrag;
 
 /**
  * Created by hong on 2017/11/8.

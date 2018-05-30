@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.msht.minshengbao.FunctionView.fragmeht.IncomExpenseFragment;
+import com.msht.minshengbao.FunctionActivity.fragment.IncomExpenseFragment;
 
 /**
  * Created by hong on 2017/6/13.

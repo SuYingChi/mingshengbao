@@ -1,16 +1,12 @@
 package com.msht.minshengbao.Adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionView.fragmeht.IcCard;
-import com.msht.minshengbao.FunctionView.fragmeht.IncomExpenseFragment;
-import com.msht.minshengbao.FunctionView.fragmeht.RechargeFrag;
-import com.msht.minshengbao.FunctionView.fragmeht.WaterExpenditureFra;
-import com.msht.minshengbao.FunctionView.fragmeht.WaterIncomeFra;
+import com.msht.minshengbao.FunctionActivity.fragment.WaterExpenditureFra;
+import com.msht.minshengbao.FunctionActivity.fragment.WaterIncomeFra;
 
 /**
  * Created by hong on 2018/1/3.

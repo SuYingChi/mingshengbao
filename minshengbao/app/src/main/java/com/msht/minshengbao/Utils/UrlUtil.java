@@ -5,12 +5,13 @@ package com.msht.minshengbao.Utils;
  */
 public class UrlUtil {
    // public static final String URL_HEADS ="http://test.msbapp.cn";
-   // public static final String URL_HEADS="http://test.msbapp.cn:8080";
+    public static final String URL_HEADS="http://test.msbapp.cn:8080";
     //public static final String URL_HEAD="http://test.msbapp.cn";
-    public static final String URL_SHOP="http://shop.msbapp.cn:8090";
-    public static final String URL_HEADS="https://msbapp.cn";
-   // public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
-    public static final String URL_MSSB="http://sb-api.msbapp.cn";
+  //  public static final String URL_SHOP="http://shop.msbapp.cn:8090";
+    public static final String URL_SHOP="http://dev.msbapp.cn";
+  //  public static final String URL_HEADS="https://msbapp.cn";
+    public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
+   // public static final String URL_MSSB="http://sb-api.msbapp.cn";
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
     //启动页
     public static final  String Launcher_ImgUrl=URL_HEADS+"/api/app/app_start_page?type=2";
@@ -43,6 +44,7 @@ public class UrlUtil {
     public static final String Shop_Lampblack=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1063";
     public static final String Shop_Gasstove=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
     public static final String Shop_GasHeater=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
+    public static final String Shop_OrderList=URL_SHOP+"/wap/tmpl/member/order_list.html";
     /*首页功能 */
     public static final String App_versionUrl= URL_HEADS +"/Gas/app/version";
     public static final String AllServeCatalog_Url=URL_HEADS+"/api/serve_city/user_app_all_serve";
@@ -124,6 +126,7 @@ public class UrlUtil {
     public static final String Insurance_buy_Url= URL_HEADS +"/Gas/insurance/create_order";
     public static final String Insurance_history_Url= URL_HEADS +"/Gas/invoice/history";
     public static final String GethouseAddress_Url="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
+    public static final String INSURANCE_PAY_URL=URL_HEADS+"/Gas/views/insurance/pay.html";
     /*myView   */
     public static final String AddAdress_Url= URL_HEADS +"/Gas/usedHouse/add";
     public static final String HouseSearch_Url= URL_HEADS +"/Gas/usedHouse/search";
@@ -146,6 +149,7 @@ public class UrlUtil {
     public static final String NewModifyAddress_Url=URL_HEADS+"/Gas/address/modify_with_user_info";
     public static final String DelectAddress_Url=URL_HEADS +"/Gas/address/delete";
     public static final String SetDefaultAddr_Url=URL_HEADS +"/Gas/address/set_default_address";
+    public static final String SetPassword_Url=URL_HEADS+"/Gas/user/modifyPassword";
     /*发票*/
     public static final String Invoice_explain= URL_HEADS +"/repair_h5/invoice_note.html";
     public static final String Invoice_applyUrl= URL_HEADS +"/Gas/invoice/apply";
