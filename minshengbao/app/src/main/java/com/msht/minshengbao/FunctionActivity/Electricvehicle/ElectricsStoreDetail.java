@@ -152,7 +152,7 @@ public class ElectricsStoreDetail extends BaseActivity implements View.OnClickLi
     }
 
     private void initData() {
-        String dataurl = UrlUtil.Store_Detail;
+        String dataurl = UrlUtil.STORE_DETAIL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",id);
         SendrequestUtil.executepost(dataurl,textParams, new ResultListener() {

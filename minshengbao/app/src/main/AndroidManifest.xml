@@ -146,6 +146,9 @@
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="7dc4d7937bab57666f9188e5667e5930" />
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="118eae5408" />
 
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
@@ -198,8 +201,8 @@
         <activity android:name=".FunctionActivity.MyActivity.AboutMine" />
         <activity android:name=".FunctionActivity.MyActivity.ShareMenuActivity" />
         <activity android:name=".FunctionActivity.GasService.GasEvaluateWorkorder" />
-        <activity android:name=".FunctionActivity.MessageCenter" />
-        <activity android:name=".FunctionActivity.MessageDetail" />
+        <activity android:name=".FunctionActivity.MessageCenterActivity" />
+        <activity android:name=".FunctionActivity.MessageDetailActivity" />
         <activity android:name=".FunctionActivity.repairService.MyorderworkDetail" />
         <activity android:name=".FunctionActivity.MyActivity.AddressManage" />
         <activity android:name=".FunctionActivity.MyActivity.AddAddress" />

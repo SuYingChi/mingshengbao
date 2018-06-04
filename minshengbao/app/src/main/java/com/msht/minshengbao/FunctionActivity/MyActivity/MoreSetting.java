@@ -163,12 +163,12 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {
-                view.toggleSwitch(true); // or false
+                view.toggleSwitch(true);
                 SharedPreferencesUtil.putBoolean(context,SharedPreferencesUtil.VersionState,true);
             }
             @Override
             public void toggleToOff(SwitchView view) {
-                view.toggleSwitch(false); // or false
+                view.toggleSwitch(false);
                 SharedPreferencesUtil.putBoolean(context,SharedPreferencesUtil.VersionState,false);
             }
         });
@@ -205,9 +205,11 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         }
     }
     private void ExitLogin() {
-        SharedPreferencesUtil.Clear(this,"AppData");//清除原有数据
-        mCache.remove("AVATARIMG");//清除原有数据
+        //清除原有数据
+        SharedPreferencesUtil.Clear(this,"AppData");
+        mCache.remove("AVATARIMG");
         mCache.clear();
+        //清除网页Cookie
         clearCookie();
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(context, SharedPreferencesUtil.Lstate, false);
         /*Intent broadcast=new Intent();
@@ -217,6 +219,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         Intent intent=new Intent(context,MainActivity.class);
         intent.setFlags(2);
         startActivity(intent);*/
+        setResult(0x005);
         finish();
 
     }

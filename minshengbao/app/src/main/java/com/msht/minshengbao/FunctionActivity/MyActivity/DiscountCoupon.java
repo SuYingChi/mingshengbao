@@ -37,6 +37,7 @@ public class DiscountCoupon extends BaseActivity implements ViewPager.OnPageChan
     }
     @Override
     public void onPageScrollStateChanged(int state) {}
+    @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(context);

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
-import com.msht.minshengbao.Adapter.PaywayAdapter;
+import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Adapter.WaterMealAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.WaterAppBean;
@@ -54,7 +54,7 @@ public class WaterRecharge extends BaseActivity {
     private Button btn_send;
     private MyNoScrollGridView gridView;
     private ListViewForScrollView mListView;
-    private PaywayAdapter mAdapter;
+    private PayWayAdapter mAdapter;
     private WaterMealAdapter waterMealAdapter;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> ListType = new ArrayList<HashMap<String, String>>();
@@ -319,13 +319,13 @@ public class WaterRecharge extends BaseActivity {
         userphone=SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         setCommonHeader("直饮水账户充值");
         initView();
-        mAdapter=new PaywayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,List);
         mListView.setAdapter(mAdapter);
         waterMealAdapter=new WaterMealAdapter(context,ListType);
         gridView.setAdapter(waterMealAdapter);
         initBalance();
         initData();
-        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);       //选择支付方式可点击
@@ -519,7 +519,7 @@ public class WaterRecharge extends BaseActivity {
         });
     }
     private void initPaymethod() {
-        String validateURL= UrlUtil.Paymethod_Url;
+        String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
@@ -568,7 +568,7 @@ public class WaterRecharge extends BaseActivity {
     }
     private void requestResult() {
         requestCode=2;
-        String validateURL= UrlUtil.PayResult_Notarize;
+        String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

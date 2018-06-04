@@ -8,8 +8,8 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2000038
-        versionName "v3.9.5"
+        versionCode 2000039
+        versionName "v3.9.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -62,5 +62,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.facebook.fresco:fresco:0.12.0'
     compile 'com.facebook.fresco:animated-gif:0.12.0'
+    compile 'com.tencent.bugly:crashreport:latest.release'
     testCompile 'junit:junit:4.12'
 }

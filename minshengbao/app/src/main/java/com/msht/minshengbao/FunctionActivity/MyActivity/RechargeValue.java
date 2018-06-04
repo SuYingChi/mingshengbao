@@ -10,9 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
-import com.msht.minshengbao.Adapter.PaywayAdapter;
+import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.Public.PaySuccess;
@@ -38,8 +37,6 @@ import java.util.Map;
 public class RechargeValue extends BaseActivity  {
     private EditText et_value;
     private Button btn_recharge;
-    private RadioButton Ryiwangtong,Raalipay;
-    private RadioButton Rawechat,Rayinlian;
     private ListViewForScrollView mListView;
     private String  userId,id;
     private String  password;
@@ -47,11 +44,11 @@ public class RechargeValue extends BaseActivity  {
     private String  amount;
     private String  channels;
     private String  orderId="";
-    private String source="wallet_recharge";
+    private String  source="wallet_recharge";
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private int requestCode=0;
-    private PaywayAdapter mAdapter;
+    private PayWayAdapter mAdapter;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     Handler requestHandler = new Handler() {
@@ -166,7 +163,7 @@ public class RechargeValue extends BaseActivity  {
         if (status.equals("0")){
             //新订单
             Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","1");
+            success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
@@ -174,7 +171,7 @@ public class RechargeValue extends BaseActivity  {
             finish();
         }else if (status.equals("1")){
             Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","1");
+            success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
@@ -202,13 +199,14 @@ public class RechargeValue extends BaseActivity  {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         VariableUtil.MealPos=-1;
         initView();
-        mAdapter=new PaywayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,List);
         mListView.setAdapter(mAdapter);
         initData();
-        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
-                btn_recharge.setEnabled(true);       //选择支付方式可点击
+                //选择支付方式可点击
+                btn_recharge.setEnabled(true);
                 VariableUtil.paypos=thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
@@ -218,8 +216,7 @@ public class RechargeValue extends BaseActivity  {
     }
 
     private void initData() {
-
-        String validateURL= UrlUtil.Paymethod_Url;
+        String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
@@ -315,6 +312,7 @@ public class RechargeValue extends BaseActivity  {
             }
         });
     }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
@@ -326,8 +324,9 @@ public class RechargeValue extends BaseActivity  {
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                // 错误信息
+                String errorMsg = data.getExtras().getString("error_msg");
+                String extraMsg = data.getExtras().getString("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
@@ -357,7 +356,7 @@ public class RechargeValue extends BaseActivity  {
 
     private void requestResult() {
         requestCode=1;
-        String validateURL= UrlUtil.PayResult_Notarize;
+        String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

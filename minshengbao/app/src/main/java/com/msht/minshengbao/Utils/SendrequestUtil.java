@@ -29,7 +29,7 @@ public class SendrequestUtil {
     public static final int SUCCESS=1;
     public static final int FAILURE=0;
 
-    public static void ShortTimeGet(final String  url,final ResultListener resultListener) {
+    public static void ShortTimeGet(final String  url, final Handler mhandler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -46,13 +46,22 @@ public class SendrequestUtil {
                     if (conn.getResponseCode() == 200) {
                         InputStream is = conn.getInputStream();
                         String resultStr = NetUtil.readString(is);
-                        resultListener.onResultSuccess(resultStr);
+                        Message msg = new Message();
+                        msg.obj = resultStr;
+                        msg.what = SUCCESS;
+                        mhandler.sendMessage(msg);
                     }else {
-                        resultListener.onResultFail(ERROR_SERVICE);
+                        Message msg = new Message();
+                        msg.what =FAILURE;
+                        msg.obj=ERROR_SERVICE;
+                        mhandler.sendMessage(msg);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    resultListener.onResultFail(ERROR_NETWORK);
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_NETWORK;
+                    mhandler.sendMessage(msg);
                 }finally {
                     if (conn != null) {
                         conn.disconnect();
@@ -323,7 +332,7 @@ public class SendrequestUtil {
     /**
      * 通过Get方式获取数据
      */
-    public static void GetDataFromService(final String validateURL, final Handler mHandler) {
+    public static void getDataFromService(final String validateURL, final Handler mHandler) {
         new Thread() {
             @Override
             public void run() {
@@ -369,7 +378,7 @@ public class SendrequestUtil {
     /**
      * 通过Get方式获取数据  带参数
      */
-    public static void GetDataFromService(final String validateURL, final String param, final Handler mHandler) {
+    public static void getDataFromService(final String validateURL, final String param, final Handler mHandler) {
         new Thread() {
             @Override
             public void run() {
@@ -416,7 +425,7 @@ public class SendrequestUtil {
     /**
      * 通过Post方式获取数据
      */
-    public static void PostDataFromService( final String validateURL,final Map<String, String> params, final Handler mhandler) {
+    public static void postDataFromService(final String validateURL, final Map<String, String> params, final Handler mhandler) {
 
         new Thread() {
             @Override
@@ -470,7 +479,125 @@ public class SendrequestUtil {
             }
         }.start();
     }
-    public static void PostFileToServer(final Map<String, String> textparams, final Map<String, File> fileparams, final String validateURL, final Handler mhandler) {
+    /**
+     * 通过Post方式获取数据
+     */
+    public static void postDataFromServiceTwo(final String validateURL, final Map<String, String> params, final Handler mhandler) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                DataInputStream dis = null;
+                Map<String, String> textParams = params;
+                try {
+                    URL url = new URL(validateURL);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(5000);
+                    // 发送POST请求必须设置允许输入
+                    conn.setDoInput(true);
+                    // 发送POST请求必须设置允许输出
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Charset", "UTF-8");
+                    conn.setRequestProperty("User-Agent", "Fiddler");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
+                    OutputStream os = conn.getOutputStream();
+                    DataOutputStream ds = new DataOutputStream(os);
+                    NetUtil.writeStringParams(textParams, ds);
+                    NetUtil.paramsEnd(ds);
+                    os.flush();
+                    os.close();
+                    conn.connect();
+                    // 从Internet获取网页,发送请求,将网页以流的形式读回来
+                    if (conn.getResponseCode()== 200) {
+                        InputStream is = conn.getInputStream();
+                        String result = StreamTools.readInputStream(is);
+                        Message msg = new Message();
+                        msg.obj = result;
+                        msg.what = SUCCESS;
+                        mhandler.sendMessage(msg);
+
+                    } else {
+                        Message msg = new Message();
+                        msg.what =FAILURE;
+                        msg.obj=ERROR_SERVICE;
+                        mhandler.sendMessage(msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_NETWORK;
+                    mhandler.sendMessage(msg);
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            }
+        }.start();
+    }
+    /**
+     * 通过Post方式获取数据
+     */
+    public static void postDataFromServiceThree(final String validateURL, final Map<String, String> params, final Handler mhandler) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                DataInputStream dis = null;
+                Map<String, String> textParams = params;
+                try {
+                    URL url = new URL(validateURL);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(5000);
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Charset", "UTF-8");
+                    conn.setRequestProperty("User-Agent", "Fiddler");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
+                    OutputStream os = conn.getOutputStream();
+                    DataOutputStream ds = new DataOutputStream(os);
+                    NetUtil.writeStringParams(textParams, ds);
+                    NetUtil.paramsEnd(ds);
+                    os.flush();
+                    os.close();
+                    conn.connect();
+                    // 从Internet获取网页,发送请求,将网页以流的形式读回来
+                    if (conn.getResponseCode()== 200) {
+                        InputStream is = conn.getInputStream();
+                        String result = StreamTools.readInputStream(is);
+                        Message msg = new Message();
+                        msg.obj = result;
+                        msg.what = SUCCESS;
+                        mhandler.sendMessage(msg);
+
+                    } else {
+                        Message msg = new Message();
+                        msg.what =FAILURE;
+                        msg.obj=ERROR_SERVICE;
+                        mhandler.sendMessage(msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_NETWORK;
+                    mhandler.sendMessage(msg);
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            }
+        }.start();
+    }
+    public static void postFileToServer(final Map<String, String> textparams, final Map<String, File> fileparams, final String validateURL, final Handler mhandler) {
         new Thread(){
             @Override
             public void run() {
@@ -480,11 +607,11 @@ public class SendrequestUtil {
                     URL url = new URL(validateURL);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(10000);
-                    conn.setDoInput(true); // 发送POST请求必须设置允许输入
-                    conn.setDoOutput(true); // 发送POST请求必须设置允许输出
-                    conn.setUseCaches(false);//新加
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
                     conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Charset", "UTF-8");//设置编码
+                    conn.setRequestProperty("Charset", "UTF-8");
                     conn.setRequestProperty("ser-Agent", "Fiddler");
                     conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
                     OutputStream os = conn.getOutputStream();
@@ -495,7 +622,7 @@ public class SendrequestUtil {
                     os.flush();
                     os.close();
                     conn.connect();
-                    int code = conn.getResponseCode(); // 从Internet获取网页,发送请求,将网页以流的形式读回来
+                    int code = conn.getResponseCode();
                     if (code == 200) {
                         InputStream is = conn.getInputStream();
                         String result = StreamTools.readInputStream(is);
@@ -523,6 +650,5 @@ public class SendrequestUtil {
                 }
             }
         }.start();
-
     }
 }

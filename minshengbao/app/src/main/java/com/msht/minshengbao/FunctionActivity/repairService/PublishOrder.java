@@ -78,9 +78,9 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     private int k=0;
     private int pos=-1;
     private static  final int MY_PERMISSIONS_REQUEST=1;
-    private int thisposition=-1;
+    private int thisPosition =-1;
     private int requesttype=0;
-    private JSONObject jsonbject;   //数据解析
+    private JSONObject jsonObject;
     private JSONArray jsonArray;
     private ArrayList<String> mDataList=new ArrayList<>();
     private ArrayList<String>multiResult=new ArrayList<>();
@@ -115,7 +115,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                                 activity.jsonArray=object.optJSONArray("data");
                                 activity.questionData();
                             }else if (activity.requesttype==1){
-                                activity.jsonbject =object.optJSONObject("data");
+                                activity.jsonObject =object.optJSONObject("data");
                                 activity.initShow();
                             }
                         }else {
@@ -212,7 +212,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         multiChoose.setList(mDataList);      //显示数据
     }
     private void initShow() {
-        id=jsonbject.optString("id");
+        id= jsonObject.optString("id");
         if (imgPaths.size()!=0){
             for(int i=0;i<imgPaths.size();i++){
                 File files=new File(imgPaths.get(i));
@@ -229,9 +229,10 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private void compressImg(final File files) {
+        //压缩的图片
         Luban.with(this)
-                .load(files)                     //传人要压缩的图片
-                .setCompressListener(new OnCompressListener() { //设置回调
+                .load(files)
+                .setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {}
                     @Override
@@ -255,7 +256,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         textParams.put("password",password);
         textParams.put("id", id);
         fileparams.put("img",file);
-        SendrequestUtil.PostFileToServer(textParams,fileparams,validateURL,bitmapHandler);
+        SendrequestUtil.postFileToServer(textParams,fileparams,validateURL,bitmapHandler);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,7 +272,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         userphone=SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
-        findViewById(R.id.id_status_view).setVisibility(View.GONE);//状态栏View
+        //状态栏View
+        findViewById(R.id.id_status_view).setVisibility(View.GONE);
         initJudge();
         initView();
         initData();
@@ -341,13 +343,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     private void initView() {
         Bsendorder=(Button)findViewById(R.id.id_btn_sendorder);
         et_recommand=(EditText)findViewById(R.id.id_et_recommand);
-        tv_name=(TextView) findViewById(R.id.id_tv_name);
+        tv_name=(TextView)findViewById(R.id.id_tv_name);
         tv_phone =(TextView) findViewById(R.id.id_tv_phone);
         Eneed=(EditText)findViewById(R.id.id_et_info);
         tv_address=(TextView) findViewById(R.id.id_tv_address);
         ((TextView)findViewById(R.id.id_tv_project_type)).setText(maintype);
         ((TextView)findViewById(R.id.id_tv_type)).setText(type);
-        tv_phone.setText(userphone);    //默认显示用户手机号
+        tv_phone.setText(userphone);
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
         photogridview=(GridView)findViewById(R.id.noScrollgridview);
         appointment_data=(TextView)findViewById(R.id.id_data);
@@ -359,7 +361,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         requesttype=0;
         String validateURL = UrlUtil.RepairOrder_QuestionUrl;
         String geturl=validateURL+"?rc_id="+reid;
-        SendrequestUtil.GetDataFromService(geturl,requestHandler);
+        SendrequestUtil.getDataFromService(geturl,requestHandler);
     }
     private void initExecute() {
         mAdapter = new PhotoPickerAdapter(imgPaths);
@@ -368,7 +370,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    thisposition=position;
+                    thisPosition =position;
                     initphoto(position);
                 } else {
                     if (position == imgPaths.size()) {
@@ -419,7 +421,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private void showphoto() {
-        if (thisposition== imgPaths.size()) {
+        if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
                     .setPhotoCount(4)
                     .setShowCamera(true)
@@ -430,10 +432,10 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         } else {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("imgPaths",imgPaths);
-            bundle.putInt("position",thisposition);
+            bundle.putInt("position", thisPosition);
             Intent intent=new Intent(PublishOrder.this, EnlargePicActivity.class);
             intent.putExtras(bundle);
-            startActivityForResult(intent,thisposition);
+            startActivityForResult(intent, thisPosition);
         }
     }
     @Override
@@ -509,7 +511,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 selectAddr();
                 break;
             case R.id.id_btn_sendorder:
-                if (!VariableUtil.City.equals("海口")){    //非海口业务未开通
+                //非海口地区业务未开通
+                if (!VariableUtil.City.equals("海口")){
                     noticeDialog.show();
                     mHandler.sendEmptyMessageDelayed(1, SPLASH_DELAY_MILLIS);
                 }else {
@@ -536,7 +539,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                                       int monthOfYear, int dayOfMonth) {//滑动日期进行对日期的方位进行判断
                 Calendar mAfter=Calendar.getInstance();
                 Calendar mBefore=Calendar.getInstance();
-                mAfter.add(mAfter.DAY_OF_MONTH,6);
+                mAfter.add(Calendar.DAY_OF_MONTH,6);
                 if (isDateAfter(view)) {
                     view.init(mAfter.get(Calendar.YEAR),mAfter.get(Calendar.MONTH),mAfter.get(Calendar.DAY_OF_MONTH), this);
                 }
@@ -549,7 +552,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 .setTitle("选择预约日期")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 //.setMessage("2016年")
-                .setView(pickview)    //pickview  日期选择布局
+                .setView(pickview)
                 .setButton1("取消", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
@@ -573,7 +576,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         Calendar mCalendar = Calendar.getInstance();
         Calendar temCalendar = Calendar.getInstance();
         temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
-        if (temCalendar.before(mCalendar)) {     //2016年9月21 后
+        if (temCalendar.before(mCalendar)) {
             return true;
         } else {
             return false;
@@ -581,11 +584,11 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     }
     private boolean isDateAfter(DatePicker tempView) {
         Calendar mCalendar=Calendar.getInstance();
-        mCalendar.add(mCalendar.DAY_OF_MONTH,6);
+        mCalendar.add(Calendar.DAY_OF_MONTH,6);
         Calendar temCalendar=Calendar.getInstance();
-        temCalendar.add(temCalendar.DAY_OF_MONTH,6);
+        temCalendar.add(Calendar.DAY_OF_MONTH,6);
         temCalendar.set(tempView.getYear(),tempView.getMonth(),tempView.getDayOfMonth(),0,0,0);
-        if (temCalendar.after(mCalendar)){  //2016年9月21 前
+        if (temCalendar.after(mCalendar)){
             return true;
         }else {
             return false;
@@ -671,6 +674,6 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         textParams.put("city_id",city_id);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
-        SendrequestUtil.PostDataFromService(validateURL,textParams,requestHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 }

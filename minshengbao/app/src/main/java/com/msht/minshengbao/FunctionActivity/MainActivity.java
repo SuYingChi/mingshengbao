@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
@@ -40,7 +38,6 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
@@ -58,32 +55,29 @@ import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Demo class
+ * 首页
+ * @author hong
+ * @date 2016/4/10
+ */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    private PopupMenu   popupMenu;
-    private ImageView   messageimg;
-    private RadioGroup  radiogroup_main;
-    private RadioButton myradiobutton;
-    private TextView    tv_naviga,tv_massnum;
+    private RadioButton radioButton;
+    private TextView    tvNavigation, tvMassageNum;
     private Fragment    minshengFrag, myFrag,mynewFrag;
     private Fragment    orderFrag,currentFragment;
-    private View        network_layout;
-    private int         click_code=0x001;
+    private View        networkLayout;
     private String      userId;
     private String      password;
-    private String      messnum="0";
+    private String      messageCount="0";
     private String      urls;
-    private boolean     VersionState;
-    private JSONObject objectJson;
-    private JSONObject jsonObject;
+    private boolean     versionState;
+    private JSONObject  objectJson;
+    private JSONObject  jsonObject;
     private static final int SUCCESS=1;
     private static final int FAILURE=2;
     private static final String MY_ACTION = "ui";
@@ -91,111 +85,162 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static  final int REQUEST_CODE=2;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private static  final int MY_CAMERA_REQUEST=3;
-    private static final String ERROR_NETWORK = "网络连接失败，请稍后再试";
-    private static final String ERROR_SERVICE = "服务器异常，请稍后再试";
+    private int         clickCode =0x001;
+    /**
+     USE_COUPON_CODE 优惠券使用返回
+    */
+    private static final int USE_COUPON_CODE=0x004;
+    /**
+      EXIT_CODE 退出登录返回
+     */
+    private static final int EXIT_CODE=0x005;
     private NetBroadcastReceiver receiver;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private final MessageNumHandler messageNumHandler=new MessageNumHandler(this);
+    private final PushHandler pushHandler=new PushHandler(this);
+    private final VersionHandler versionHandler=new VersionHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<MainActivity> mWeakReference;
+        public RequestHandler(MainActivity mainActivity) {
+            mWeakReference = new WeakReference<MainActivity>(mainActivity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MainActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String results=object.optString("result");
                         String error = object.optString("error");
-                        objectJson=object.getJSONObject("data");
-                        if(Results.equals("success")) {
-                            initinfoShow();
+                        activity.objectJson=object.getJSONObject("data");
+                        if(results.equals("success")) {
+                            activity.onPersionalInfomation();
                         }else {
-                            ToastUtil.ToastText(context,error);
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    ToastUtil.ToastText(context,msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler  MessageNumHandler = new Handler() {
+    }
+    private static class MessageNumHandler extends Handler{
+        private WeakReference<MainActivity> mWeakReference;
+        public MessageNumHandler(MainActivity mainActivity) {
+            mWeakReference = new WeakReference<MainActivity>(mainActivity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MainActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
+                        String results=object.optString("result");
+                        String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
-                        if(Results.equals("success")) {
-                            showunread(json);
+                        if(results.equals("success")) {
+                            activity.onUnreadMassage(json);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    
+                case SendrequestUtil.FAILURE:
                     break;
                 default:
                     break;
 
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler VersionHandler = new Handler() {
+    }
+    private static class PushHandler extends Handler{
+        private WeakReference<MainActivity> mWeakReference;
+        public PushHandler(MainActivity mainActivity) {
+            mWeakReference = new WeakReference<MainActivity>(mainActivity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MainActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            switch (msg.what) {
+                case SendrequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals("success")) {
+                        }else {
+                            ToastUtil.ToastText(activity.context,error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    private static class VersionHandler extends Handler{
+
+        private WeakReference<MainActivity> mWeakReference;
+        public VersionHandler(MainActivity mainActivity) {
+            mWeakReference = new WeakReference<MainActivity>(mainActivity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final MainActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
                 case SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String error = object.optString("error");
-                        jsonObject =object.optJSONObject("data");
+                        activity.jsonObject =object.optJSONObject("data");
                         if(Results.equals("success")) {
-                            initVersion();
+                            activity.onReceiveVersion();
                         }else {
-                            ToastUtil.ToastText(context,error);
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
                 case FAILURE:
-                    ToastUtil.ToastText(context,msg.obj.toString());
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler  pushHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                        }else {
-                            ToastUtil.ToastText(context,Error);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    ToastUtil.ToastText(context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-    private void initVersion() {
+    }
+    private void onReceiveVersion() {
         String version=jsonObject.optString("version");
         int versions=Integer.parseInt(version);
         String title=jsonObject.optString("title");
@@ -210,7 +255,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             e.printStackTrace();
         }
         if (versionCode<versions){
-            if (VersionState&&NetWorkUtil.isWifiAvailable(context)){
+            if (versionState &&NetWorkUtil.isWifiAvailable(context)){
                 LoadApk(url);
             }else {
                 new PromptDialog.Builder(this)
@@ -235,17 +280,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
     }
-    private void showunread(JSONObject json) {
+    private void onUnreadMassage(JSONObject json) {
         int unreadNum=json.optInt("num");
         if (unreadNum!=0){
-            messnum=String.valueOf(unreadNum);
-            tv_massnum.setText(messnum);
-            tv_massnum.setVisibility(View.VISIBLE);
+            messageCount=String.valueOf(unreadNum);
+            tvMassageNum.setText(messageCount);
+            tvMassageNum.setVisibility(View.VISIBLE);
         }else {
-            tv_massnum.setVisibility(View.GONE);
+            tvMassageNum.setVisibility(View.GONE);
         }
     }
-    private void initinfoShow() {
+    private void onPersionalInfomation() {
         String sex     =objectJson.optString("sex");
         String phoneNo=objectJson.optString("phone");
         SharedPreferencesUtil.putSex(this,SharedPreferencesUtil.Sex,sex);
@@ -263,7 +308,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        PushAgent.getInstance(context).onAppStart();   //推送统计
+        //推送统计
+        PushAgent.getInstance(context).onAppStart();
         userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         StatusBarCompat.compat(this,0x00ffffff);
@@ -272,25 +318,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.id_view).setVisibility(View.GONE);
         }
         VariableUtil.loginStatus=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
-        VersionState=SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
+        versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
         if (savedInstanceState!=null){
             currentFragment=getSupportFragmentManager().getFragment(savedInstanceState,"Myfragment");
         }else {
             initTab();
         }
-        intrequestPermission();
+        initRequestPermission();
         if (VariableUtil.loginStatus){
             if (NetWorkUtil.IsNetWorkEnable(this)){
-                unmessage();
+                onGetMessage();
             }
             initGetinfomation();
             initPush();
         }
-        CheckVerSion();
-        initBroadcast();//广播接收
+        checkVerSion();
+        initBroadcast();
     }
-    private void intrequestPermission() {
+    private void initRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -326,34 +372,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
-        if (resultCode==0x004){    //用于点击使用优惠券返回首页
+        //用于点击使用优惠券返回首页
+        if (resultCode==USE_COUPON_CODE){
             ((RadioButton)findViewById(R.id.radio_home)).setChecked(true);
+        }else if (resultCode==EXIT_CODE){
+            clickTab4Layout();
         }
     }
-    private void CheckVerSion() {
+    private void checkVerSion() {
         int device=2;
         String validateURL = UrlUtil.App_versionUrl+"?device="+device;
-        SendrequestUtil.executeGet(validateURL, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                VersionHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                VersionHandler.sendMessage(msg);
-
-            }
-        });
+        SendrequestUtil.getDataFromService(validateURL,versionHandler);
     }
-    private void unmessage() {
-        Thread messageThread=new Thread(new unreadRunnable());
-        messageThread.start();
+    private void onGetMessage() {
+        String validateURL = UrlUtil.Message_unreadUrl;
+        Map<String, String> textParams = new HashMap<String, String>();
+        textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        SendrequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
     }
     private void initBroadcast() {
         IntentFilter filter=new IntentFilter();
@@ -366,23 +403,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String info=intent.getExtras().getString("broadcast");
             if(info.equals("1")){
-                finish();  //接受到广播后把上一级的Mainpage 消除
+                finish();  //接受到广播后把上一级的MainActivity 消除
             }else if (info.equals("2")){
-                tv_massnum.setVisibility(View.GONE);
+                tvMassageNum.setVisibility(View.GONE);
             }
         }
     };
     private void initView() {
-        network_layout=findViewById(R.id.id_network_layout);
-        radiogroup_main = (RadioGroup) findViewById(R.id.radiogroup_main);
-        tv_naviga=(TextView)findViewById(R.id.id_tv_navigation);
-        tv_massnum=(TextView)findViewById(R.id.id_main_messnum);
+        networkLayout =findViewById(R.id.id_network_layout);
+        RadioGroup radiogroupMain = (RadioGroup) findViewById(R.id.radiogroup_main);
+        tvNavigation =(TextView)findViewById(R.id.id_tv_navigation);
+        tvMassageNum =(TextView)findViewById(R.id.id_main_messnum);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
-        myradiobutton=(RadioButton)findViewById(R.id.radio_me);
-        messageimg=(ImageView)findViewById(R.id.id_massage_img);
-        messageimg.setOnClickListener(this);
+        radioButton =(RadioButton)findViewById(R.id.radio_me);
+        ImageView messageImg =(ImageView)findViewById(R.id.id_massage_img);
+        messageImg.setOnClickListener(this);
         findViewById(R.id.id_right_massage).setOnClickListener(this);
-        radiogroup_main.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radiogroupMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
@@ -402,6 +439,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     case R.id.radio_me:
                         clickTab4Layout();
                         break;
+                    default:
+                        break;
                 }
             }
         });
@@ -412,17 +451,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Bundle bundle = new Bundle();
             String phone= SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
             bundle.putString("phonenumber", phone);
-            bundle.putString("messnum",messnum);
+            bundle.putString("messnum",messageCount);
             mynewFrag.setArguments(bundle);
         }
         if (!mynewFrag.isAdded()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_layout, mynewFrag).commit();
             currentFragment = mynewFrag;
-            myradiobutton.setChecked(true);
-           // Head_layout.setVisibility(View.VISIBLE);
-            click_code=0x003;
-            tv_naviga.setText("我的");
+            radioButton.setChecked(true);
+            clickCode =0x003;
+            tvNavigation.setText("我的");
             addOrShowFragment(getSupportFragmentManager().beginTransaction(),mynewFrag);
         }
     }
@@ -434,15 +472,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_layout, minshengFrag).commit();
             currentFragment = minshengFrag;
-            click_code=0x001;
-           // Head_layout.setVisibility(View.VISIBLE);
+            clickCode =0x001;
         }
     }
     private void addOrShowFragment(FragmentTransaction fragmentTransaction, Fragment minshengFrag) {
-        if (currentFragment == minshengFrag)
+        if (currentFragment == minshengFrag){
             return;
-
-        if (!minshengFrag.isAdded()) { // 如果当前fragment未被添加，则添加到Fragment管理器中
+        }
+        // 如果当前fragment未被添加，则添加到Fragment管理器中
+        if (!minshengFrag.isAdded()) {
             fragmentTransaction.hide(currentFragment)
                     .add(R.id.content_layout, minshengFrag).commit();
         } else {
@@ -473,28 +511,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
     private void messageCenter() {
         String[] abs = new String[]{"扫一扫", "消息"};
-        popupMenu = new PopupMenu(this,abs);
-        popupMenu.showLocation(R.id.id_massage_img,-90,10);// 设置弹出菜单弹出的位置
+        PopupMenu mPopupMenu = new PopupMenu(this,abs);
+        // 设置弹出菜单弹出的位置
+        mPopupMenu.showLocation(R.id.id_massage_img,-90,10);
         // 设置回调监听，获取点击事件
-        popupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
+        mPopupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
             @Override
             public void onClick(PopupMenu.MENUITEM item, int position) {
                 if (position==0){
-                    GoScancode();
+                    goScancode();
                 }else if (position==1){
-                    GoMessage();
+                    goMessage();
                 }
             }
         });
     }
-    private void GoScancode() {
+    private void goScancode() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
                 MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA}, new MPermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted(int Code) {
                         if (Code==MY_CAMERA_REQUEST){
-                            GoScanActivity();
+                            goScanActivity();
                         }
                     }
                     @Override
@@ -504,28 +543,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
 
             }else {
-                GoScanActivity();
+                goScanActivity();
             }
         }else {
-            GoScanActivity();
+            goScanActivity();
         }
     }
-    private void GoScanActivity() {
+    private void goScanActivity() {
         Intent intent=new Intent(context, QRCodeScan.class);
         startActivity(intent);
     }
-    private void GoMessage() {
-         Intent intent=new Intent(context,MessageCenter.class);
+    private void goMessage() {
+         Intent intent=new Intent(context,MessageCenterActivity.class);
         startActivityForResult(intent,0);
     }
     private void gologinActivity(){
         Intent intent=new Intent(context,LoginActivity.class);
-        startActivityForResult(intent,click_code);
+        startActivityForResult(intent, clickCode);
     }
     private void clickTab1Layout() {
-       // Head_layout.setVisibility(View.VISIBLE);
-        click_code=0x001;
-        tv_naviga.setText("民生宝");
+        clickCode =0x001;
+        tvNavigation.setText("民生宝");
         if (minshengFrag == null) {
             minshengFrag = new HomeFragment();
         }
@@ -534,23 +572,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void clickTab2Layout() {
         if (networkStatus){
             Intent intent=new Intent(context, ShopActivity.class);
-            startActivityForResult(intent,click_code);
+            startActivityForResult(intent, clickCode);
         }
     }
     private void clickTab3Layout() {
        // Head_layout.setVisibility(View.VISIBLE);
-        click_code=0x002;
-        tv_naviga.setText("订单");
+        clickCode =0x002;
+        tvNavigation.setText("订单");
         /*if (orderFrag== null) {
             orderFrag = new OrderFragment();
         }*/
-        orderFrag = new OrderFragment();   //每次进入重新加载
+        //每次进入重新加载
+        orderFrag = new OrderFragment();
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), orderFrag);
     }
     private void clickTab4Layout() {
-       // Head_layout.setVisibility(View.VISIBLE);
-        click_code=0x003;
-        tv_naviga.setText("我的");
+        clickCode =0x003;
+        tvNavigation.setText("我的");
         if(!VariableUtil.loginStatus) {
             /*if (myFrag == null) {
                 myFrag = new MyFragment();
@@ -587,101 +625,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("password",password);
         textParams.put("deviceType","2");
         textParams.put("token",DeviceToken);
-        SendrequestUtil.executepostTwo(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                pushHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = SUCCESS;
-                pushHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromServiceThree(validateURL,textParams,pushHandler);
     }
     private void initGetinfomation() {
         String validateURL = UrlUtil.Userinfo_GasUrl;
-        HttpURLConnection conn = null;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
-    }
-    private class unreadRunnable implements Runnable {
-        @Override
-        public void run() {
-            String validateURL = UrlUtil.Message_unreadUrl;
-            HttpURLConnection conn = null;
-            DataInputStream dis = null;
-            Map<String, String> textParams = new HashMap<String, String>();
-            try {
-                textParams = new HashMap<String, String>();
-                URL url = new URL(validateURL);
-                textParams.put("userId",userId);
-                textParams.put("password",password);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setUseCaches(false);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true); // 发送POST请求必须设置允许输入
-                conn.setDoOutput(true); // 发送POST请求必须设置允许输出
-                conn.setRequestProperty("Charset", "UTF-8");//设置编码
-                conn.setRequestProperty("ser-Agent", "Fiddler");
-                conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
-                OutputStream os = conn.getOutputStream();
-                DataOutputStream ds = new DataOutputStream(os);
-                NetUtil.writeStringParams(textParams, ds);
-                NetUtil.paramsEnd(ds);
-                os.flush();
-                os.close();
-                conn.connect();
-                dis = new DataInputStream(conn.getInputStream());
-                if (conn.getResponseCode() == 200) {
-                    InputStream is = conn.getInputStream();
-                    String resultStr= NetUtil.readString(is);
-                    Message msg = new Message();
-                    msg.obj = resultStr;
-                    msg.what = SUCCESS;
-                    MessageNumHandler.sendMessage(msg);
-                }else {
-                    Message msg = new Message();
-                    msg.obj=ERROR_SERVICE;
-                    msg.what = FAILURE;
-                    MessageNumHandler.sendMessage(msg);
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
-                Message msg = new Message();
-                msg.obj=ERROR_NETWORK;
-                msg.what = FAILURE;
-                MessageNumHandler.sendMessage(msg);
-                Log.d(this.toString(), e.getMessage() + "  127 line");
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
-            }
-        }
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void LoadApk(String url) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -692,13 +643,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .send();
             }else {
-                DownLoadApk(url);
+                downLoadApk(url);
             }
         }else {
-            DownLoadApk(url);
+            downLoadApk(url);
         }
     }
-    private void DownLoadApk(String url) {
+    private void downLoadApk(String url) {
         Intent intent = new Intent(context,DownloadService.class);
         intent.putExtra("url", url);
         startService(intent);
@@ -717,14 +668,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onSucceed(int requestCode) {
             if (requestCode==MY_PERMISSIONS_REQUEST){
-                DownLoadApk(urls);
+                downLoadApk(urls);
             }else if (requestCode==REQUEST_CODE){
                 pushMessage();
             }
         }
         @Override
         public void onFailed(int requestCode) {
-            Toast.makeText(context,"获取权限失败！",Toast.LENGTH_SHORT).show();
+            ToastUtil.ToastText(context,"获取权限失败！");
         }
     };
     public void initNetBroadcast() {
@@ -742,9 +693,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onNetChange(boolean netMobile) {
         super.onNetChange(netMobile);
         if (netMobile){
-            network_layout.setVisibility(View.GONE);
+            networkLayout.setVisibility(View.GONE);
         }else {
-            network_layout.setVisibility(View.VISIBLE);
+            networkLayout.setVisibility(View.VISIBLE);
         }
     }
     @Override

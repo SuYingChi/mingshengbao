@@ -357,7 +357,7 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         }
     }
     private void initData() {
-        String dataurl = UrlUtil.ElectricList_Url;
+        String dataurl = UrlUtil.ELECTRIC_LIST_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("type","0");

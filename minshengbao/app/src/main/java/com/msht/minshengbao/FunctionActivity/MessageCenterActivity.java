@@ -18,13 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -34,31 +33,38 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageCenter extends BaseActivity implements View.OnClickListener {
+/**
+ * Demo class
+ *
+ * @author hong
+ * @date 2016/05/10
+ */
+public class MessageCenterActivity extends BaseActivity implements View.OnClickListener {
     private XListView mListView;
     private ListViewAdapter mAdapter;
     private RelativeLayout relayout;
-    private LinearLayout   Lordertype,Lgonggao;
-    private View Rnodata;
+    private LinearLayout layoutOrderType, layoutNotice;
+    private View rNotData;
     private View view1,view2;
-    private RelativeLayout Delect;
-    private RelativeLayout Cancel;
-    private ImageView Imgedit;
-    private TextView tv_naviga;
-    private TextView tv_nodata;
-    private TextView tv_type1,tv_type2;
-    private String userId, password,type="1";
+    private RelativeLayout layoutDelect;
+    private RelativeLayout layoutCancel;
+    private ImageView imgEdit;
+    private TextView tvNotData;
+    private TextView tvType1, tvType2;
+    private String  userId, password,type="1";
     private boolean refreshType=false;
     private boolean dataType=false;
-    private boolean visiblecheck = false;
+    private boolean visibleCheck = false;
     public  boolean isMulChoice = false;
-    public  static final String MY_ACTION = "ui";   //广播跳转意图
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    /**
+     * MY_ACTION 广播跳转意图
+     */
+    public  static final String MY_ACTION = "ui";
     private JSONArray jsonArray;
     private CustomDialog customDialog;
     private int pageNo;
@@ -68,86 +74,115 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
     private ArrayList<String> arraylist=new ArrayList<String>() ;
     private ArrayList<HashMap<String, Boolean>> checkList = new ArrayList<HashMap<String, Boolean>>();
     private String idLIst="";
-    Handler listinformHandler = new Handler() {
+    private final ListInformationHandler listinformHandler=new ListInformationHandler(this);
+    private final DeleteHandler deleteHandler=new DeleteHandler(this);
+    private static class ListInformationHandler extends Handler{
+        private WeakReference<MessageCenterActivity> mWeakReference;
+        public ListInformationHandler(MessageCenterActivity activity) {
+            mWeakReference = new WeakReference<MessageCenterActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MessageCenterActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
+                        activity.jsonArray =object.optJSONArray("data");
                         if(Results.equals("success")) {
                             Intent broadcast=new Intent();
                             broadcast.setAction(MY_ACTION);
                             broadcast.putExtra("broadcast", "2");
-                            sendBroadcast(broadcast);
-                            setResult(2);
-                            if (!refreshType){
-                                mListView.stopRefresh(true);
+                            activity.sendBroadcast(broadcast);
+                            activity.setResult(2);
+                            if (!activity.refreshType){
+                                activity.mListView.stopRefresh(true);
                             }else {
-                                mListView.stopLoadMore();
+                                activity.mListView.stopLoadMore();
                             }
-                            if (!dataType){
-                                if(jsonArray.length()>0){
-                                    if (pageNo==1){
-                                        mList.clear();
-                                        checkList.clear();
+                            if (!activity.dataType){
+                                if(activity.jsonArray.length()>0){
+                                    if (activity.pageNo==1){
+                                        activity.mList.clear();
+                                        activity.checkList.clear();
                                     }
                                 }
                             }else {
-                                if (pageNo==1){
-                                    mList.clear();
-                                    checkList.clear();
+                                if (activity.pageNo==1){
+                                    activity.mList.clear();
+                                    activity.checkList.clear();
                                 }
                             }
-                            initView();
+                            activity.onInfomationData();
                         }else {
-                            Toast.makeText(context, Error, Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastText(activity.context,Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler deleteHandler = new Handler() {
+    }
+    private static class DeleteHandler extends Handler{
+        private WeakReference<MessageCenterActivity> mWeakReference;
+        public  DeleteHandler(MessageCenterActivity activity) {
+            mWeakReference = new WeakReference<MessageCenterActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MessageCenterActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
                         if(Results.equals("success")) {
-                            delectSuccess();
+                            activity.onDelectSuccess();
                         }else {
-                            failure(Error);
+                            activity.failure(Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    arraylist.clear();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    activity.arraylist.clear();
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     private void failure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -160,7 +195,7 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
                     }
                 }).show();
     }
-    private void delectSuccess() {
+    private void onDelectSuccess() {
         idLIst="";
         if (isMulChoice){
             arraylist.clear();
@@ -170,7 +205,7 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void initView() {
+    private void onInfomationData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -197,9 +232,9 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
         }
         if (mList.size()==0){
             mAdapter.notifyDataSetChanged();
-            Rnodata.setVisibility(View.VISIBLE);
+            rNotData.setVisibility(View.VISIBLE);
         }else {
-            Rnodata.setVisibility(View.GONE);
+            rNotData.setVisibility(View.GONE);
             mAdapter.notifyDataSetChanged();
         }
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -222,21 +257,21 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(context, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password,"");
-        Imgedit=(ImageView)findViewById(R.id.id_right_img);
-        Imgedit.setVisibility(View.VISIBLE);
-        Imgedit.setImageResource(R.drawable.delete2x);
+        imgEdit =(ImageView)findViewById(R.id.id_right_img);
+        imgEdit.setVisibility(View.VISIBLE);
+        imgEdit.setImageResource(R.drawable.delete2x);
         relayout=(RelativeLayout)findViewById(R.id.id_layout_edit);
-        Rnodata=findViewById(R.id.id_nodata_view);
+        rNotData =findViewById(R.id.id_nodata_view);
         view1=findViewById(R.id.id_view1);
         view2=findViewById(R.id.id_view2);
-        tv_type1=(TextView)findViewById(R.id.id_type1);
-        tv_type2=(TextView)findViewById(R.id.id_type2);
-        tv_nodata=(TextView)findViewById(R.id.id_tv_nodata);
-        tv_nodata.setText("亲，您还没有消息哦！");
-        Delect=(RelativeLayout)findViewById(R.id.id_re_delect);
-        Cancel=(RelativeLayout)findViewById(R.id.id_re_cancel);
-        Lordertype=(LinearLayout)findViewById(R.id.id_li_ordertype);
-        Lgonggao=(LinearLayout)findViewById(R.id.id_li_gonggao);
+        tvType1 =(TextView)findViewById(R.id.id_type1);
+        tvType2 =(TextView)findViewById(R.id.id_type2);
+        tvNotData =(TextView)findViewById(R.id.id_tv_nodata);
+        tvNotData.setText("亲，您还没有消息哦！");
+        layoutDelect =(RelativeLayout)findViewById(R.id.id_re_delect);
+        layoutCancel =(RelativeLayout)findViewById(R.id.id_re_cancel);
+        layoutOrderType =(LinearLayout)findViewById(R.id.id_li_ordertype);
+        layoutNotice =(LinearLayout)findViewById(R.id.id_li_gonggao);
         mListView = (XListView) findViewById(R.id.lv_swipe_listview);
         mAdapter= new ListViewAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -250,7 +285,7 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
                 int positions=position-1;
                 String Id=mList.get(positions).get("id");
                 String types=mList.get(positions).get("type");
-                Intent intent=new Intent(context,MessageDetail.class);
+                Intent intent=new Intent(context,MessageDetailActivity.class);
                 intent.putExtra("id",Id);
                 intent.putExtra("type",types);
                 startActivity(intent);
@@ -284,29 +319,14 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
         textParams.put("password",password);
         textParams.put("type",type);
         textParams.put("page",pageNum);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                listinformHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                listinformHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,listinformHandler);
     }
     private void initEvent() {
-        Imgedit.setOnClickListener(this);
-        Delect.setOnClickListener(this);
-        Cancel.setOnClickListener(this);
-        Lgonggao.setOnClickListener(this);
-        Lordertype.setOnClickListener(this);
+        imgEdit.setOnClickListener(this);
+        layoutDelect.setOnClickListener(this);
+        layoutCancel.setOnClickListener(this);
+        layoutNotice.setOnClickListener(this);
+        layoutOrderType.setOnClickListener(this);
 
     }
 
@@ -315,12 +335,12 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
         switch (v.getId()){
             case R.id.id_right_img:
                 relayout.setVisibility(View.VISIBLE);
-                visiblecheck = true;
+                visibleCheck = true;
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.id_re_cancel:
                 relayout.setVisibility(View.GONE);
-                visiblecheck = false;
+                visibleCheck = false;
                 for (int i=0;i<mList.size();i++){
                     checkList.get(i).put("ischeck",false);
                 }
@@ -350,8 +370,8 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
        // checkList.clear();
         view1.setBackgroundResource(R.color.colorOrange);
         view2.setBackgroundResource(R.color.white);
-        tv_type1.setTextColor(0xfff96331);
-        tv_type2.setTextColor(0xff555555);
+        tvType1.setTextColor(0xfff96331);
+        tvType2.setTextColor(0xff555555);
         loadData(1);
     }
 
@@ -362,8 +382,8 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
        // checkList.clear();
         view1.setBackgroundResource(R.color.white);
         view2.setBackgroundResource(R.color.colorOrange);
-        tv_type1.setTextColor(0xff555555);
-        tv_type2.setTextColor(0xfff96331);
+        tvType1.setTextColor(0xff555555);
+        tvType2.setTextColor(0xfff96331);
         loadData(1);
     }
 
@@ -428,22 +448,7 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",idLIst);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                deleteHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                deleteHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,deleteHandler);
     }
 
     public  class ListViewAdapter extends BaseAdapter {
@@ -480,7 +485,7 @@ public class MessageCenter extends BaseActivity implements View.OnClickListener 
             } else {                // 有直接获得ViewHolder
                 item = (ViewHolder) convertView.getTag();
             }
-            if(visiblecheck){
+            if(visibleCheck){
                 item.item_cb.setVisibility(View.VISIBLE);
             }else{
                 item.item_cb.setVisibility(View.GONE);

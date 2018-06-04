@@ -40,6 +40,9 @@ public class AgreeTreayt extends BaseActivity {
         }else if (idNo.equals("5")){
             setCommonHeader("充返活动说明");
             my_url=UrlUtil.Recharge_BackAgree;
+        }else if (idNo.equals("6")){
+            setCommonHeader("保险说明");
+            my_url=UrlUtil.INSURANCE_EXPLAIN_URL;
         }
         initWeBView();
     }

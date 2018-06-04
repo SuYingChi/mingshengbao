@@ -31,6 +31,7 @@ import com.msht.minshengbao.Utils.BitmapUtil;
 import com.msht.minshengbao.Utils.FileUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -45,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,16 +61,20 @@ public class Mysetting extends BaseActivity implements OnClickListener {
     private String phone;
     private String userId,password;
     private static final File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache");
-    private File mCurrentPhotoFile;// 照相机拍照得到的图片
+    /**
+     * mCurrentPhotoFile 照相机拍照得到的图片
+     */
+    private File mCurrentPhotoFile;
     private File mCacheFile;
     private CircleImageView circleImageView;
     private final String mPageName ="我的设置";
     private SelectPicPopupWindow takePhotoPopWin;
-    private String urlpath;			// 图片本地路径
+    /** 
+     * urlPath 图片本地路径
+     */
+    private String urlPath;
     private Bitmap bitmap=null;
-    private ACache mCache;//缓存
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    private ACache mCache;
     private static  final int MY_PERMISSIONS_REQUEST=2;
     private static final int REQUESTCODE_PICK = 0;		// 相册选图标记
     private static final int REQUESTCODE_TAKE = 1;		// 相机拍照标记
@@ -77,10 +83,13 @@ public class Mysetting extends BaseActivity implements OnClickListener {
     private static final int REQUESTCOODE_SEX=5;//性别标志
     private static final int RESET_CODE=4;    //设置密码
     private static final int RESULT_CODE=1;
-    private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
+    /**
+     * IMAGE_FILE_NAME  头像文件名称
+     */
+    private static final String IMAGE_FILE_NAME = "avatarImage.jpg";
     private static String ImagrfileName;
     private CustomDialog customDialog;
-
+    private final MyHandler myHandler=new MyHandler(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +99,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         initfindViewByid();
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        mCache = ACache.get(this);//获取缓存数据
+        mCache = ACache.get(this);
         customDialog=new CustomDialog(this, "正在上传图片");
         initShowinfo();
         initEvent();
@@ -138,7 +147,8 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 finish();
                 break;
             case R.id.id_setting_portrait_layout:
-                if (Build.VERSION.SDK_INT >= 23) {     //适配ANDROID6.0
+                //适配ANDROID6.0
+                if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
                         AndPermission.with(this)
                                 .requestCode(MY_PERMISSIONS_REQUEST)
@@ -153,7 +163,8 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 }
                 break;
             case R.id.id_portraitview:
-                if (Build.VERSION.SDK_INT >= 23) {     //适配ANDROID6.0
+                //适配ANDROID6.0
+                if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
                         AndPermission.with(this)
                                 .requestCode(MY_PERMISSIONS_REQUEST)
@@ -270,28 +281,32 @@ public class Mysetting extends BaseActivity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUESTCODE_PICK:// 直接从相册获取
+            // 直接从相册获取
+            case REQUESTCODE_PICK:
                 try {
                     startCrop(data.getData());
                 } catch (NullPointerException e) {
-                    e.printStackTrace();// 用户点击取消操作
+                    e.printStackTrace();
                 }
                 break;
-            case REQUESTCODE_TAKE:// 调用相机拍照
+            // 调用相机拍照
+            case REQUESTCODE_TAKE:
                 File temp = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache/"+ImagrfileName);
                 if (temp!=null) {
                     startCrop(Uri.fromFile(temp));
                 }else {
-                    Toast.makeText(context, "文件不存在", Toast.LENGTH_LONG).show();
+                    ToastUtil.ToastText(context,"文件不存在");
                 }
                 break;
-            case REQUESTCODE_CUTTING:// 取得裁剪后的图片
-                urlpath=mCacheFile.getAbsolutePath();
-                if (urlpath!=null){
+            // 取得裁剪后的图片
+            case REQUESTCODE_CUTTING:
+                urlPath=mCacheFile.getAbsolutePath();
+                if (urlPath!=null){
                     getImagePicture();
                 }
                 break;
-            case REQUESTCOODE_NICK://获取昵称设置返回数据
+            //获取昵称设置返回数据
+            case REQUESTCOODE_NICK:
                 if(data!=null){
                     String nickname=data.getStringExtra("nickname");
                     tv_nickname.setText(nickname);
@@ -304,7 +319,9 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 }
                 break;
             case RESET_CODE:
+                //修改密码成功返回
                 if (resultCode==RESULT_CODE){
+                    setResult(0x005);
                     finish();
                 }
                 break;
@@ -315,7 +332,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void getImagePicture() {
-        bitmap =BitmapUtil.decodeSampledBitmapFromFile(urlpath, 500, 500) ;
+        bitmap =BitmapUtil.decodeSampledBitmapFromFile(urlPath, 500, 500) ;
         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
         circleImageView.setImageDrawable(drawable);
         customDialog.show();
@@ -332,9 +349,11 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         Intent intent = new Intent("com.android.camera.action.CROP");
         //sdk>=24
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            Uri imageUri = FileProvider.getUriForFile(Mysetting.this, "com.msht.minshengbao.fileProvider", new File(url));//通过FileProvider创建一个content类型的Uri
+            //通过FileProvider创建一个content类型的Uri
+            Uri imageUri = FileProvider.getUriForFile(Mysetting.this, "com.msht.minshengbao.fileProvider", new File(url));
+            //去除默认的人脸识别，否则和剪裁匡重叠
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra("noFaceDetection", true);//去除默认的人脸识别，否则和剪裁匡重叠
+            intent.putExtra("noFaceDetection", true);
             intent.setDataAndType(imageUri, "image/*");
             //19=<sdk<24
         }else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT&&android.os.Build.VERSION.SDK_INT<Build.VERSION_CODES.N) {
@@ -359,33 +378,28 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         String validateURL= UrlUtil.GasmodifyInfo_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         Map<String, File> fileparams = new HashMap<String, File>();
-        File file = new File(urlpath);
+        File file = new File(urlPath);
         textParams.put("userId",userId);
         textParams.put("password",password);
         fileparams.put("avatar", file);
-        SendrequestUtil.multipleFileParameters(validateURL, textParams, fileparams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                handler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj =fail;
-                handler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postFileToServer(textParams,fileparams,validateURL,myHandler);
     }
-    Handler handler = new Handler() {
-
+    private static class MyHandler extends Handler{
+        private WeakReference<Mysetting> mWeakReference;
+        public MyHandler(Mysetting activity) {
+            mWeakReference = new WeakReference<Mysetting>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final Mysetting activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
@@ -393,29 +407,30 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         JSONObject ObjectInfo = jsonObject.optJSONObject("data");
                         String avatarurl=ObjectInfo.optString("avatar");
                         if (results.equals("success")){
-                            mCache.remove("avatarimg");//清除原有数据
-                            mCache.put("avatarimg", bitmap);//保存新数据
-                            SharedPreferencesUtil.putAvatarUrl(context,SharedPreferencesUtil.AvatarUrl,avatarurl);
-                            Retureavatar();//给Mynewfragment返回数据
+                            //清除原有数据
+                            activity.mCache.remove("avatarimg");
+                            activity.mCache.put("avatarimg", activity.bitmap);
+                            SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarurl);
+                            activity.onRetureavatar();//给Mynewfragment返回数据
                         }else {
-                            faifure(error);
+                            activity.faifure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(Mysetting.this, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
-
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
+    }
     private void faifure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -430,7 +445,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                     }
                 }).show();
     }
-    private void Retureavatar() {
+    private void onRetureavatar() {
         setResult(4);
     }
 }

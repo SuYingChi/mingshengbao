@@ -154,7 +154,7 @@ public class OrderListFragment extends BaseFragment {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        SendrequestUtil.PostDataFromService(validateURL,textParams,requestHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private static class RequestHandler extends Handler{
         private WeakReference<OrderListFragment> mWeakReference;

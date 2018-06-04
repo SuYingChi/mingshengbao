@@ -191,7 +191,7 @@ public class PasswordActivity extends BaseActivity {
         textParams.put("password",password);
         textParams.put("oldPassword",oldPassword);
         textParams.put("newPassword",newPassword);
-        SendrequestUtil.PostDataFromService(Url, textParams,methodHandler);
+        SendrequestUtil.postDataFromService(Url, textParams,methodHandler);
     }
 
 }

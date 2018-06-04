@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Created by hong on 2017/11/22.
  */
 
-public class PaywayAdapter extends BaseAdapter {
+public class PayWayAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     public OnRadioItemClickListener listener;
@@ -30,7 +30,7 @@ public class PaywayAdapter extends BaseAdapter {
     public interface OnRadioItemClickListener{
         void ItemClick(View view, int thisPosition);
     }
-    public PaywayAdapter(Context context, ArrayList<HashMap<String, String>> list) {
+    public PayWayAdapter(Context context, ArrayList<HashMap<String, String>> list) {
         super();
         this.mList =list;
         mInflater = (LayoutInflater) context

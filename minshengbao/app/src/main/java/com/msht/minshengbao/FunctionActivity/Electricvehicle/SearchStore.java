@@ -235,9 +235,9 @@ public class SearchStore extends BaseActivity {
     private void initData() {
         String dataurl="";
         if (requestType==0){
-            dataurl= UrlUtil.Search_History;
+            dataurl= UrlUtil.SEARCH_HISTORY;
         }else if (requestType==1){
-            dataurl= UrlUtil.Clear_History;
+            dataurl= UrlUtil.CLEAR_HISTORY;
         }
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("type","1");
@@ -327,7 +327,7 @@ public class SearchStore extends BaseActivity {
     private void requestSever(int i) {
         pageIndex =i;
         pageNo=i;
-        String dataurl = UrlUtil.ElectricList_Url;
+        String dataurl = UrlUtil.ELECTRIC_LIST_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("type","1");

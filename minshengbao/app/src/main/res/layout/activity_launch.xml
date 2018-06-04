@@ -19,7 +19,6 @@
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            fresco:placeholderImage="@drawable/logo_top"
             fresco:failureImage="@drawable/logo_top"/>
         <TextView
             android:id="@+id/id_tv_time"

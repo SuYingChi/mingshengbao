@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PaywayAdapter;
+import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -38,11 +38,11 @@ public class PublicPayway extends BaseActivity {
     private Button btn_send;
     private TextView tv_shouldAmount;
     private ListViewForScrollView mForScrollView;
-    private PaywayAdapter mAdapter;
+    private PayWayAdapter mAdapter;
     private String shopUrl;
     private String userId;
     private String password;
-    private String charge;   //
+    private String charge;
     private String channels;
     private String orderId="";
     private String amount;
@@ -51,13 +51,13 @@ public class PublicPayway extends BaseActivity {
     private int requestCode=0;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
-    private final PaywayHandler mHandler = new PaywayHandler(this);
+    private final PayWayHandler mHandler = new PayWayHandler(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_payway);
         context=this;
-        mPageName="公共支付";
+        mPageName="订单支付";
         setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
@@ -66,10 +66,10 @@ public class PublicPayway extends BaseActivity {
         amount=getdata.getStringExtra("amount");
         shopUrl=getdata.getStringExtra("url");
         initView();
-        mAdapter=new PaywayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,List);
         mForScrollView.setAdapter(mAdapter);
         initPaywayData();
-        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);
@@ -121,20 +121,20 @@ public class PublicPayway extends BaseActivity {
         }
         requestCode=1;
         customDialog.show();
-        SendrequestUtil.GetDataFromService(validateURL,mHandler);
+        SendrequestUtil.getDataFromService(validateURL,mHandler);
     }
     private void initPaywayData() {
         requestCode=0;
         customDialog.show();
-        String validateURL= UrlUtil.Paymethod_Url;
+        String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.PostDataFromService(validateURL, textParams,mHandler);
+        SendrequestUtil.postDataFromService(validateURL, textParams,mHandler);
     }
-    private static class PaywayHandler extends Handler {
+    private static class PayWayHandler extends Handler {
 
         private WeakReference<PublicPayway> mWeakReference;
-        public PaywayHandler(PublicPayway reference) {
+        public PayWayHandler(PublicPayway reference) {
             mWeakReference = new WeakReference<PublicPayway>(reference);
         }
         @Override
@@ -310,11 +310,11 @@ public class PublicPayway extends BaseActivity {
     }
     private void requestResult() {
         requestCode=2;
-        String validateURL= UrlUtil.PayResult_Notarize;
+        String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",orderId);
-        SendrequestUtil.PostDataFromService(validateURL,textParams,mHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,mHandler);
     }
 }

@@ -711,7 +711,7 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        SendrequestUtil.PostDataFromService(validateURL,textParams,requestHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void goevaluate() {
         Intent evaluate=new Intent(context,RepairEvaluate.class);

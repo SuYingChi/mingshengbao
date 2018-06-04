@@ -14,20 +14,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
-import com.msht.minshengbao.FunctionActivity.repairService.MyorderworkDetail;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -244,6 +239,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         tv_agree1=(TextView)findViewById(R.id.id_text1);
         tv_agree2=(TextView)findViewById(R.id.id_text2);
         tv_agree3=(TextView)findViewById(R.id.id_text3);
+        findViewById(R.id.id_text4).setOnClickListener(this);
         tv_realamount=(TextView)findViewById(R.id.id_buy_amount);
         et_name=(EditText)findViewById(R.id.id_et_name);
         et_idcard=(EditText) findViewById(R.id.id_et_idcard);
@@ -282,7 +278,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         String validateURL = UrlUtil.GethouseAddress_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("customerNo",customer);
-        SendrequestUtil.PostDataFromService(validateURL,textParams,getinsuranceHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
     }
     @Override
     public void onClick(View v) {
@@ -309,6 +305,10 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.id_text3:
                 idNo="3";
+                gotoAgree();
+                break;
+            case R.id.id_text4:
+                idNo="6";
                 gotoAgree();
                 break;
             default:
@@ -402,8 +402,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         requestType=0;
         String validateURL = UrlUtil.Insurance_buy_Url;
         Map<String, String> textParams = new HashMap<String, String>();
-       // textParams.put("insurance_id",id);
-        textParams.put("insurance_id","330450");
+        textParams.put("insurance_id",id);
         textParams.put("customer_no",customer);
         textParams.put("amount",amount);
         textParams.put("name",name);
@@ -415,7 +414,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         textParams.put("start_date",start_time);
         textParams.put("end_date",stop_time);
         textParams.put("recommend",recommend);
-        SendrequestUtil.PostDataFromService(validateURL,textParams,getinsuranceHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
     }
     private boolean match(String name, String idcard, String customer, String address) {
         if (TextUtils.isEmpty(name)||TextUtils.isEmpty(idcard)||TextUtils.isEmpty(customer)||TextUtils.isEmpty(address)){

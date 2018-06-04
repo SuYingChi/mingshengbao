@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,83 +18,101 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.MainActivity;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+
 public class LaunchActivity extends AppCompatActivity {
     private Context mContext;
-    private final String mPageName = "启动页";
-    private TextView tv_time;
-    private ImageView logo_bottom;
+    private final String     mPageName = "启动页";
+    private TextView         tvTime;
+    private ImageView        logoBottom;
     private SimpleDraweeView draweeView;
-    private View   layout_frame;
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
-    boolean isFirstIn = false;
+    private View             layoutFrame;
+    private CountDownTimer timer;
     private static final int GO_HOME = 1;
     private static final int GO_GUIDE = 2;
     private static final long SPLASH_DELAY_MILLIS = 3000;
-    private Handler mHandler = new Handler() {
-
+    private final  GuideHandler mHandler=new GuideHandler(this);
+    private final  GetImageHandler getImageHandler=new GetImageHandler(this);
+    private static  class GuideHandler extends Handler{
+        private WeakReference<LaunchActivity> mWeakReference;
+        public GuideHandler(LaunchActivity launchActivity) {
+            mWeakReference = new WeakReference<LaunchActivity>(launchActivity);
+        }
         @Override
         public void handleMessage(Message msg) {
+            final LaunchActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
                 case GO_HOME:
-                    goHome();
+                    activity.goHome();
                     break;
                 case GO_GUIDE:
-                    goGuide();
+                    activity.goGuide();
                     break;
                 default:
                     break;
             }
             super.handleMessage(msg);
         }
-    };
-    Handler getimgHandler = new Handler() {
+    }
+    private static class GetImageHandler extends Handler{
+        private WeakReference<LaunchActivity> mWeakReference;
+        public GetImageHandler(LaunchActivity launchActivity) {
+            mWeakReference = new WeakReference<LaunchActivity>(launchActivity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final LaunchActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject jsonObject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
+                        if(results.equals("success")) {
                             String logourl=jsonObject.optString("url");
                             if (logourl!=null&&!(logourl.equals("null"))){
-                                layout_frame.setVisibility(View.VISIBLE);
-                                logo_bottom.setVisibility(View.VISIBLE);
-                                Log.d("tupian",logourl);
-                                ShowAdimage(logourl);
+                                activity.layoutFrame.setVisibility(View.VISIBLE);
+                                activity.logoBottom.setVisibility(View.VISIBLE);
+                                activity.onShowAdimage(logourl);
                             }
                         }else {
-                            init();   //计时
-                            layout_frame.setVisibility(View.GONE);
-                            logo_bottom.setVisibility(View.GONE);
+                            activity.init();   //计时
+                            activity.layoutFrame.setVisibility(View.GONE);
+                            activity.logoBottom.setVisibility(View.GONE);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    init();   //计时
-                    layout_frame.setVisibility(View.GONE);
-                    logo_bottom.setVisibility(View.GONE);
+                case SendrequestUtil.FAILURE:
+                    activity.init();   //计时
+                    activity.layoutFrame.setVisibility(View.GONE);
+                    activity.logoBottom.setVisibility(View.GONE);
                     break;
                 default:
                     break;
             }
-            //init();   //计时
+            super.handleMessage(msg);
         }
-    };
-    private void ShowAdimage(String logourl) {    //支持动画
+    }
+    private void onShowAdimage(String logourl) {    //支持动画
         startCountDownTime(4);
         Uri uri = Uri.parse(logourl);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -117,21 +134,32 @@ public class LaunchActivity extends AppCompatActivity {
             window.setAttributes(params);
         }
         mContext = this;
-        boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
+        final boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
         if (isFirstOpen){
-            SharedPreferencesUtil.Clear(this,"AppData");//清除原有数据
+            SharedPreferencesUtil.Clear(this,"AppData");
         }
-        tv_time=(TextView)findViewById(R.id.id_tv_time);
+        tvTime =(TextView)findViewById(R.id.id_tv_time);
         draweeView = (SimpleDraweeView) findViewById(R.id.id_logo_top);
-        logo_bottom=(ImageView)findViewById(R.id.id_logo_bottom);
-        layout_frame=findViewById(R.id.id_frame_layout);
+        logoBottom =(ImageView)findViewById(R.id.id_logo_bottom);
+        layoutFrame =findViewById(R.id.id_frame_layout);
         if (NetWorkUtil.IsNetWorkEnable(mContext)){
             initAd();
         }else {
             init();   //计时
         }
+        tvTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeCancel();
+                if (isFirstOpen){
+                    goGuide();
+                }else {
+                    goHome();
+                }
+            }
+        });
     }
-    private void NextActivity() {
+    private void onNextActivity() {
         final boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
         if (isFirstOpen){
             goGuide();
@@ -141,10 +169,10 @@ public class LaunchActivity extends AppCompatActivity {
     }
     private void startCountDownTime(long time) {
         final boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
-        CountDownTimer timer=new CountDownTimer(time*1000,1000) {
+        timer=new CountDownTimer(time*1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tv_time.setText(millisUntilFinished/1000+"秒");
+                tvTime.setText(millisUntilFinished/1000+"秒");
             }
             @Override
             public void onFinish() {
@@ -158,23 +186,8 @@ public class LaunchActivity extends AppCompatActivity {
         timer.start();
     }
     private void initAd() {
-        String avatarurl= UrlUtil.Launcher_ImgUrl;
-        SendrequestUtil.ShortTimeGet(avatarurl, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                getimgHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                getimgHandler.sendMessage(msg);
-            }
-        });
+        String avatarurl= UrlUtil.LAUNCHER_IMG_URL;
+        SendrequestUtil.ShortTimeGet(avatarurl,getImageHandler);
     }
     private void init() {
         boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
@@ -196,8 +209,26 @@ public class LaunchActivity extends AppCompatActivity {
         LaunchActivity.this.startActivity(intent);
         LaunchActivity.this.finish();
     }
+    private void timeCancel() {
+        if (timer!=null){
+            timer.cancel();
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onResume(mContext);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPause(mContext);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        timeCancel();
     }
 }

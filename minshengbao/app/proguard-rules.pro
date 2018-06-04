@@ -171,3 +171,6 @@
      -keep class android.support.design.** { *; }
      -keep interface android.support.design.** { *; }
      -keep public class android.support.design.R$* { *; }
+
+     -dontwarn com.tencent.bugly.**
+     -keep public class com.tencent.bugly.**{*;}

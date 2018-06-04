@@ -238,7 +238,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             textParams.put("password",password);
             textParams.put("code",verifycode);
         }
-        SendrequestUtil.PostDataFromService(validateURL,textParams,requestHandler);
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private boolean isPhone(String phoneNo) {     //判断电话号码个格式
         Matcher matcher=NUMBER_PATTERN.matcher(phoneNo);

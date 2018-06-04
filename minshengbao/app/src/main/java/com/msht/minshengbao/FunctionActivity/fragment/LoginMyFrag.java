@@ -382,7 +382,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     }
     private void GoMoresetting() {
         Intent intent=new Intent(mContext, MoreSetting.class);
-        startActivity(intent);
+        startActivityForResult(intent,0x005);
     }
     @Override
     public void onResume() {

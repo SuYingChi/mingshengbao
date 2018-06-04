@@ -29,8 +29,9 @@ public class InsurancePay extends BaseActivity {
         Intent data=getIntent();
         final String insurance_data=data.getStringExtra("params");
        // String  url=data.getStringExtra("url");
-        String url= UrlUtil.INSURANCE_PAY_URL;
-        String insurance_url=url+"?"+insurance_data;
+        String url= UrlUtil.INSURANCE_PAY_URL+"?payType=0";
+        String insurance_url=url+"&"+insurance_data;
+        Log.d("insurance_url",insurance_url);
         insurance=(WebView)findViewById(R.id.id_Wview_insurancce);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         insurance.loadUrl(insurance_url);

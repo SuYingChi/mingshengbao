@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PaywayAdapter;
+import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
@@ -41,7 +40,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
     private TextView tv_subtract;
     private TextView tv_shouldAmount;
     private ListViewForScrollView forScrollView;
-    private PaywayAdapter mAdapter;
+    private PayWayAdapter mAdapter;
     private String userId,id,voucherId;
     private String PayId;
     private String password;
@@ -296,11 +295,11 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         PayId=getdata.getStringExtra("id");
         type="1";
         initView();
-        mAdapter=new PaywayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,List);
         forScrollView.setAdapter(mAdapter);
         initSubtract();
         initData();
-        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);
@@ -382,7 +381,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
 
     private void initpayway() {
         customDialog.show();
-        String validateURL= UrlUtil.Paymethod_Url;
+        String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
@@ -518,7 +517,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
     }
     private void requestResult() {
         requestCode=2;
-        String validateURL= UrlUtil.PayResult_Notarize;
+        String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

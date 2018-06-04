@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageDetail extends BaseActivity {
+public class MessageDetailActivity extends BaseActivity {
     private TextView tv_message,tv_time;
     private String userId, password,id,type;
     private final int SUCCESS = 1;

@@ -371,6 +371,7 @@
                         android:layout_marginTop="@dimen/margin_width10"
                         android:layout_below="@+id/id_box_read"
                         android:text="《投保须知》"
+                        android:textSize="@dimen/text_width12"
                         android:textColor="@color/colorOrange"/>
                     <TextView
                         android:id="@+id/id_text2"
@@ -379,18 +380,30 @@
                         android:layout_marginTop="@dimen/margin_width10"
                         android:layout_toRightOf="@id/id_text1"
                         android:layout_below="@+id/id_box_read"
+                        android:layout_marginLeft="@dimen/margin_width5"
                         android:text="《投保声明与授权》"
+                        android:textSize="@dimen/text_width12"
                         android:textColor="@color/colorOrange"/>
                     <TextView
                         android:id="@+id/id_text3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_width10"
-                        android:layout_below="@+id/id_box_read"
-                        android:layout_toRightOf="@+id/id_text2"
+                        android:layout_below="@+id/id_text1"
                         android:text="《适用产寿险条款》"
+                        android:textSize="@dimen/text_width12"
                         android:textColor="@color/colorOrange"/>
+                    <TextView
+                        android:id="@+id/id_text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_width10"
+                        android:layout_below="@+id/id_text1"
+                        android:layout_toRightOf="@+id/id_text3"
+                        android:layout_marginLeft="@dimen/margin_width5"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="@dimen/text_width12"
+                        android:text="《保险说明》"/>
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

@@ -124,7 +124,7 @@ public class ScanCodeResult extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String validateURL= UrlUtil.ScanCode_Buy;
+        String validateURL= UrlUtil.SCAN_CODE_BUY;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);

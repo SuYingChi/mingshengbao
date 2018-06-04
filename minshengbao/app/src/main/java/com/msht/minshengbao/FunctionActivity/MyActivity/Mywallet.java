@@ -219,11 +219,13 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case 1:
-                if (resultCode==1){   //充值成功
+                //充值成功
+                if (resultCode==1){
                     initData();
                 }
                 break;
             case 2:
+                //卡卷包使用，返回触发
                 if (resultCode==2){
                     setResult(0x004);
                     finish();

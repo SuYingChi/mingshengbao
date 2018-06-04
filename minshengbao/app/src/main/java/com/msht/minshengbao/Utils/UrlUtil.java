@@ -5,35 +5,35 @@ package com.msht.minshengbao.Utils;
  */
 public class UrlUtil {
    // public static final String URL_HEADS ="http://test.msbapp.cn";
-    public static final String URL_HEADS="http://test.msbapp.cn:8080";
+   // public static final String URL_HEADS="http://test.msbapp.cn:8080";
     //public static final String URL_HEAD="http://test.msbapp.cn";
-  //  public static final String URL_SHOP="http://shop.msbapp.cn:8090";
-    public static final String URL_SHOP="http://dev.msbapp.cn";
-  //  public static final String URL_HEADS="https://msbapp.cn";
-    public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
-   // public static final String URL_MSSB="http://sb-api.msbapp.cn";
+    public static final String URL_SHOP="http://shop.msbapp.cn:8090";
+    //public static final String URL_SHOP="http://dev.msbapp.cn";
+    public static final String URL_HEADS="https://msbapp.cn";
+   // public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
+    public static final String URL_MSSB="http://sb-api.msbapp.cn";
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
     //启动页
-    public static final  String Launcher_ImgUrl=URL_HEADS+"/api/app/app_start_page?type=2";
+    public static final  String LAUNCHER_IMG_URL=URL_HEADS+"/api/app/app_start_page?type=2";
     //支付确认
-    public static final String PayResult_Notarize=URL_HEADS+"/Gas/payment/queryOrder";
+    public static final String PAY_RESULT_NOTARIZE =URL_HEADS+"/Gas/payment/queryOrder";
     //电动车
-    public static final String ElectricList_Url=URL_Repair+"/repairshop/shop/searchByLocate";
-    public static final String Store_Detail=URL_Repair+"/repairshop/shop/get";
-    public static final String Search_History=URL_Repair+"/repairshop/searchHistory/list";
-    public static final String Clear_History=URL_Repair+"/repairshop/searchHistory/clear";
+    public static final String ELECTRIC_LIST_URL =URL_Repair+"/repairshop/shop/searchByLocate";
+    public static final String STORE_DETAIL =URL_Repair+"/repairshop/shop/get";
+    public static final String SEARCH_HISTORY =URL_Repair+"/repairshop/searchHistory/list";
+    public static final String CLEAR_HISTORY =URL_Repair+"/repairshop/searchHistory/clear";
     //水宝
-    public static final String ScanCode_Buy=URL_MSSB+"/order/appScanNotice";
+    public static final String PAYMETHOD_URL =URL_HEADS+"/api/app/pay_method";
+    public static final String SearchEstate_Url=URL_MSSB+"/community/search";
+    public static final String SCAN_CODE_BUY=URL_MSSB+"/order/appScanNotice";
     public static final String WaterAccount_Url=URL_MSSB+"/member/get";
     public static final String WaterCard_Recharge=URL_MSSB+"/order/recharge";
     public static final String WaterCard_PayUrl=URL_MSSB+"/order/payNotice";
     public static final String WaterOrder_ListUrl=URL_MSSB+"/order/list";
     public static final String WaterRecharge_Meal=URL_MSSB+"/pack/list";
-    public static final String SearchEstate_Url=URL_MSSB+"/community/search";
     public static final String WaterPrice_Url=URL_MSSB+"/order/getPrice";
     public static final String WaterCreate_Url=URL_MSSB+"/order/create";
     public static final String WaterCancel_Url=URL_MSSB+"/order/oper";
-    public static final String Paymethod_Url=URL_HEADS+"/api/app/pay_method";
     //商城
     public static final String Shop_LoginHtml=URL_SHOP+"/wap/tmpl/member/login.html";
     public static final String Shop_HomeUrl= URL_SHOP +"/wap/index.html";
@@ -60,7 +60,6 @@ public class UrlUtil {
     public static final String Read_searchUserhouse= URL_HEADS +"/Gas/usedHouse/search";
     public static final String Pre_deposit_history= URL_HEADS +"/Gas/payment/pre_deposit_history";
     public static final String SpecialTopic_Url=URL_HEADS+"/api/app/specail_topic_activity";
-
     /*燃气服务模块 */
     //自助抄表
     public static final String InstallServer_Url= URL_HEADS +"/Gas/workOrder/add";
@@ -81,7 +80,6 @@ public class UrlUtil {
     /*HTML5Web*/
     //智慧农贸
     public static final String Intelligent_FarmUrl="http://msbapp.cn/wyh/index.html";
-
     //燃气须知
     public static final String Companyprofile_Url= URL_HEADS +"/Gas/xuzhi/company";
     public static final String GasJiaoNa_Url= URL_HEADS +"/Gas/xuzhi/gas_payment";
@@ -109,10 +107,8 @@ public class UrlUtil {
     /*城市服务 */
     public static final String SelectCity_Url= URL_HEADS +"/api/serve_city/list";
     //违章查询
-
     public static final String BrulesInfoma_Url= URL_HEADS +"/pis/peccancy/query";
     public static final String GdetailInfo_Url= URL_HEADS +"/pis/info/view";
-
     //Fragment
     public static final String Evalute_UrL= URL_HEADS +"/Gas/repairman/evaluate_list";
     public static final String maintainservise_Url= URL_HEADS +"/Gas/repairOrder/list";
@@ -121,7 +117,6 @@ public class UrlUtil {
     public static final String Counpon_Url= URL_HEADS +"/Gas/coupon/list";
     public static final String imgavatar_Url= URL_HEADS +"/Gas/app/headerImg";
     public static final String PayRecord_Url= URL_HEADS +"/Gas/payment/list";
-
     /*保险*/
     public static final String Insurance_buy_Url= URL_HEADS +"/Gas/insurance/create_order";
     public static final String Insurance_history_Url= URL_HEADS +"/Gas/invoice/history";
@@ -153,7 +148,7 @@ public class UrlUtil {
     /*发票*/
     public static final String Invoice_explain= URL_HEADS +"/repair_h5/invoice_note.html";
     public static final String Invoice_applyUrl= URL_HEADS +"/Gas/invoice/apply";
-    public static final String Invoice_getUrl= URL_HEADS +"/Gas/invoice/uninvoce_list";//获取未开发票列表
+    public static final String Invoice_getUrl= URL_HEADS +"/Gas/invoice/uninvoce_list";
     /*维修服务*/
     public static final String Service_noteUrl= URL_HEADS +"/repair_h5/service_note.html";
     public static final String RepairOrder_detailUrl= URL_HEADS +"/Gas/repairOrder/view";
@@ -172,6 +167,7 @@ public class UrlUtil {
     public static final String HotRepair_Url= URL_HEADS +"/api/serve_city/hot_repair";
     //HTML5页面
     public static final String ApppaySuccess_Page=URL_HEADS+"/Gas/app/app_pay_success_page?";
+    public static final String INSURANCE_EXPLAIN_URL="http://msbapp.cn/insurance/toubaoshuoming.html";
     public static final String Recharge_BackAgree=URL_HEADS+"/water_h5/chongfanxieyi.html";
     public static final String Replacepay_agreeUrl= URL_HEADS +"/gas_h5/daikouxieyi.html";
     public static final String Vegetable_Url="http://jsxss.net/app/index.php?i=5&c=entry&m=ewei_shopv2&do=mobile";

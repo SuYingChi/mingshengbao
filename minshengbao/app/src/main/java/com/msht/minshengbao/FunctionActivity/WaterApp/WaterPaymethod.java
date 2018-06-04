@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.PaywayAdapter;
+import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.WaterAppBean;
 import com.msht.minshengbao.Callback.ResultListener;
@@ -62,7 +62,7 @@ public class WaterPaymethod extends BaseActivity {
     private int requestCode=0;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
-    private PaywayAdapter mAdapter;
+    private PayWayAdapter mAdapter;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
     private CustomDialog customDialog;
@@ -326,11 +326,11 @@ public class WaterPaymethod extends BaseActivity {
         sign= SecretKeyUtil.getStringSign(bean);
         extParams=SecretKeyUtil.getextParams(bean);
         initView();
-        mAdapter=new PaywayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,List);
         forScrollView.setAdapter(mAdapter);
         initBalance();
         initOrder();
-        mAdapter.SetOnItemClickListener(new PaywayAdapter.OnRadioItemClickListener() {
+        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);       //选择支付方式可点击
@@ -446,7 +446,7 @@ public class WaterPaymethod extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String validateURL= UrlUtil.Paymethod_Url;
+        String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
@@ -491,7 +491,7 @@ public class WaterPaymethod extends BaseActivity {
     }
     private void requestResult() {
         requestCode=2;
-        String validateURL= UrlUtil.PayResult_Notarize;
+        String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
