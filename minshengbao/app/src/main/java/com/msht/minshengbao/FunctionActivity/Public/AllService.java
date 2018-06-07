@@ -325,13 +325,12 @@ public class AllService extends BaseActivity {
 
     }
     private void redwind() {
-        String shop_url=UrlUtil.Shop_Redwine;
+        String shop_url=UrlUtil.Shop_IMPORT_FOODSTUFF;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
-
     private void intData() {
 
         String functionUrl= UrlUtil.AllServeCatalog_Url;

@@ -6,32 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.FunctionActivity.MyActivity.AboutMine">
+    <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_45"
-        android:background="#fff96331">
-        <ImageView
-            android:id="@+id/id_goback"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:background="@android:color/transparent"
-            android:layout_marginLeft="2dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/back2x"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="关于我们"
-            android:textSize="@dimen/text_18"
-            android:textColor="#ffffffff"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_10"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        >
+        android:layout_height="180dp">
         <ImageView
             android:id="@+id/id_img"
             android:layout_width="120dp"

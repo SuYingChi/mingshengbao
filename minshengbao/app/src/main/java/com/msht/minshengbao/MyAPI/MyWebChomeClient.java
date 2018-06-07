@@ -7,16 +7,18 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 /**
- * MyWebChomeClient
+ * Demo class
+ *
+ * @author hong
+ * @date 2017/08/20
  */
 public class MyWebChomeClient extends WebChromeClient {
 
     private OpenFileChooserCallBack mOpenFileChooserCallBack;
-   // private ProgressChanged mProgressChanged;
-
     public MyWebChomeClient(OpenFileChooserCallBack openFileChooserCallBack) {
         mOpenFileChooserCallBack = openFileChooserCallBack;
     }
+    @Override
     public void onProgressChanged(WebView view, int newProgress) {
         mOpenFileChooserCallBack.onProgressChangeds(view,newProgress);
     }
@@ -32,20 +34,29 @@ public class MyWebChomeClient extends WebChromeClient {
         openFileChooser(uploadMsg, acceptType);
     }
 
+    @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
                                      FileChooserParams fileChooserParams) {
         return mOpenFileChooserCallBack.openFileChooserCallBackAndroid5(webView, filePathCallback, fileChooserParams);
     }
 
     public interface OpenFileChooserCallBack {
-        // for API - Version below 5.0.
+        /**
+         *
+         * @param uploadMsg
+         * @param acceptType
+         */
         void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType);
         void onProgressChangeds(WebView view, int newProgress);
 
-        // for API - Version above 5.0 (contais 5.0).
+        /**
+         *
+         * @param webView
+         * @param filePathCallback
+         * @param fileChooserParams
+         * @return
+         */
         boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback,
                                                 FileChooserParams fileChooserParams);
     }
-
-
 }

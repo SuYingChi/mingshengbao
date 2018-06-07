@@ -43,7 +43,7 @@
                     android:layout_marginRight="@dimen/margin_20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="添加新地址"
+                    android:text="@string/add_customer_no"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:layout_marginBottom="@dimen/margin_15"

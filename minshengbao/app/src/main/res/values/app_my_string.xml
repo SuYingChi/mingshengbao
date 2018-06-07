@@ -27,6 +27,8 @@
     <string name="delect_text">删除</string>
     <string name="edit_text">编辑</string>
     <!-- 燃气维修  -->
+    <string name="add_customer_no">添加燃气用户号</string>
+    <string name="not_add_customerNo">当前没有添加燃气用户号</string>
     <string name="connetion_phone">联系电话</string>
     <!--保险  -->
     <string name="certificate_type">证件类型</string>

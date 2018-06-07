@@ -433,9 +433,9 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
     }
 
     private void moreOrder() {
-       // showdialogs("民生宝","近期上线");
-        Intent intent=new Intent(context,WaterOrderList.class);
-        startActivityForResult(intent,1);
+        showdialogs("民生宝","近期上线");
+        /*Intent intent=new Intent(context,WaterOrderList.class);
+        startActivityForResult(intent,1);*/
     }
     private void waterHelp() {
         String url="http://msbapp.cn/water_h5/sbtips.html";
@@ -457,9 +457,9 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         startActivityForResult(intent,2);
     }
     private void placeOrder() {
-        //showdialogs("民生宝","近期上线");
-        Intent intent=new Intent(context,OnlinePlaceOrder.class);
-        startActivityForResult(intent,1);
+        showdialogs("民生宝","近期上线");
+        /*Intent intent=new Intent(context,OnlinePlaceOrder.class);
+        startActivityForResult(intent,1);*/
     }
     private void DialogTip(final String orderNo) {
         final WaterDialog waterDialog=new WaterDialog(context);

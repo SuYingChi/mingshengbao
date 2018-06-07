@@ -176,6 +176,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 Btngetcode.setTextColor(Color.parseColor("#ffffffff"));
                 Btngetcode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
             }
+            if(TextUtils.isEmpty(Etphonenumber.getText().toString())||TextUtils.isEmpty(Etcode.getText().toString() )
+                    ||TextUtils.isEmpty(Etnpassword.getText().toString())){
+                Btnregister.setEnabled(false);
+
+            }else {
+                Btnregister.setEnabled(true);
+            }
         }
         @Override
         public void afterTextChanged(Editable s) {}

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AppPackageUtil;
 
 
 public class AboutMine extends BaseActivity {
@@ -20,22 +21,11 @@ public class AboutMine extends BaseActivity {
         setContentView(R.layout.activity_about_mine);
         context=this;
         mPageName ="关于我们";
+        setCommonHeader(mPageName);
         tv_versionName=(TextView)findViewById(R.id.id_versionName);
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        try {
-            PackageManager pm = context.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
-            Name=pi.versionName;
-            if (Name!=null){
-                tv_versionName.setText("版本:"+Name);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        Name= AppPackageUtil.getPackageVersionName(context);
+        if (Name!=null){
+            tv_versionName.setText("版本:"+Name);
         }
     }
     @Override

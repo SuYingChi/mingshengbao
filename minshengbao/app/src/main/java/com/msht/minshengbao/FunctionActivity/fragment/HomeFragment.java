@@ -37,7 +37,6 @@ import com.msht.minshengbao.Adapter.HotRepairAdapter;
 import com.msht.minshengbao.Adapter.TopmoduleAdapter;
 import com.msht.minshengbao.Bean.ADInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.Electricvehicle.ElectricHome;
 import com.msht.minshengbao.FunctionActivity.GasService.GasIccard;
 import com.msht.minshengbao.FunctionActivity.GasService.GasPayfee;
@@ -63,6 +62,7 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView;
@@ -82,6 +82,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -90,190 +91,234 @@ import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
+ * @author hong
+ * @date 2016/04/10
  */
 public class HomeFragment extends Fragment implements View.OnClickListener, AMapLocationListener ,MyScrollview.ScrollViewListener{
-    private View  layout_notopen;
-    private LinearLayout Lnavigation;
-    private RelativeLayout Rselectcity;
+    private View layoutNotOpen;
+    private LinearLayout layoutNavigation;
+    private RelativeLayout layoutSelectCity;
     private MyScrollview myScrollview;
     private VerticalSwipeRefreshLayout mSwipeRefresh;
     private CardView  cardView;
-    private View layout_havedata;
+    private View layoutHaveData;
     private ImageCycleView mAdView;
-    private MyNoScrollGridView mGridView,mHotGrid;
-    private MyNoScrollGridView mTopmodule;
+    private MyNoScrollGridView  mGridView,mHotGrid;
+    private MyNoScrollGridView  mTopModule;
     private HomeFunctionAdapter homeFunctionAdapter;
     private HotRepairAdapter    hotRepairAdapter;
-    private TopmoduleAdapter topmoduleAdapter;
-    private TextView  tv_City,tv_naviga;
-    private TextView  tv_notopen;
+    private TopmoduleAdapter    topmoduleAdapter;
+    private TextView tvCity, tvNavigation;
+    private TextView tvNotOpen;
     private String mCity="海口";
     private String cityId="";
     private String Id;
     private String flag;
     private int times=0;
-    private int bgHeight;// 上半身的高度
-    private JSONArray jsonArray,topmoduleArray;
-    private static final int SUCCESS=1;
-    private static final int FAILURE = 0;
-    private static final int REQUESTCOODE=1;//城市标志
+    /**
+     * bgHeight;上半身的高度
+     */
+    private int bgHeight;
+    private JSONArray jsonArray, rightTopArray;
+    /**
+     * REQUEST_CODE 城市标志
+     */
+    private static final int REQUEST_CODE=1;
     private Context mContext;
     private final String mPageName = "首页_民生";
-    private ArrayList<ADInfo> infos = new ArrayList<ADInfo>();
+    private ArrayList<ADInfo> adInformation = new ArrayList<ADInfo>();
     private ArrayList<ActivityInfo> activityInfos = new ArrayList<ActivityInfo>();
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> hotList = new ArrayList<HashMap<String, String>>();
-    private ArrayList<HashMap<String, String>> topmoduleList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> rightTopList = new ArrayList<HashMap<String, String>>();
     private MZBannerView mMZBanner;
-
+    private final GeturlHandler geturlHandler=new GeturlHandler(this);
+    private final GetFunctionHandler getFunctionHandler=new GetFunctionHandler(this);
+    private final SpecialTopicHandler specialToppicHandler=new SpecialTopicHandler(this);
+    private final GetHotHandler getHotHandler=new GetHotHandler(this);
     public HomeFragment() {}
-    Handler geturlhandler = new Handler() {
+    private static class GeturlHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+
+        public GeturlHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final HomeFragment reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String results=object.optString("result");
                         String error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            mSwipeRefresh.setRefreshing(false);
-                            infos.clear();//再次刷新清除原数据
-                            getimageUrls();
+                        reference.jsonArray =object.optJSONArray("data");
+                        if(results.equals("success")) {
+                            reference.mSwipeRefresh.setRefreshing(false);
+                            reference.adInformation.clear();//再次刷新清除原数据
+                            reference.onGetimageUrls();
                         }else {
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    mSwipeRefresh.setRefreshing(false);
-                    Toast.makeText(getActivity(), msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    reference.mSwipeRefresh.setRefreshing(false);
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler getfunctionhandler= new Handler() {
+    }
+    private static class GetFunctionHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+        public GetFunctionHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
         public void handleMessage(Message msg) {
-            getHotFix();
+            final HomeFragment reference =mWeakReference.get();
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            reference.getHotFix();
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
-                        String Error = object.optString("error");
+                        String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
-                        cityId=json.optString("city_id");
+                        reference.cityId=json.optString("city_id");
                         int online_flag=json.getInt("online_flag");
                         if (online_flag==1){
-                            layout_havedata.setVisibility(View.VISIBLE);
-                            layout_notopen.setVisibility(View.GONE);
+                            reference.layoutHaveData.setVisibility(View.VISIBLE);
+                            reference.layoutNotOpen.setVisibility(View.GONE);
                         }else {
-                            layout_havedata.setVisibility(View.GONE);
-                            layout_notopen.setVisibility(View.VISIBLE);
-                            tv_notopen.setText("您定位到的城市#"+mCity+"#未开通服务，请切换城市");
+                            reference.layoutHaveData.setVisibility(View.GONE);
+                            reference.layoutNotOpen.setVisibility(View.VISIBLE);
+                            reference.tvNotOpen.setText("您定位到的城市#"+reference.mCity+"#未开通服务，请切换城市");
 
                         }
                         JSONObject server=json.getJSONObject("serve");
-                        topmoduleArray=server.optJSONArray("top_module");
-                        jsonArray=server.optJSONArray("first_module");
+                        reference.rightTopArray =server.optJSONArray("top_module");
+                        reference.jsonArray=server.optJSONArray("first_module");
                         if(result.equals("success")) {
-                            mSwipeRefresh.setRefreshing(false);
-                            topmoduleList.clear();
-                            intiTopmodule();
-                            functionList.clear();
-                            initFunction();
+                            reference.mSwipeRefresh.setRefreshing(false);
+                            reference.rightTopList.clear();
+                            reference.onTipTopModule();
+                            reference.functionList.clear();
+                            reference.onFunction();
                         }else {
-                            Toast.makeText(getActivity(), Error,
-                                    Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastText(reference.mContext,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    mSwipeRefresh.setRefreshing(false);
-                    Toast.makeText(getActivity(), msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    reference.mSwipeRefresh.setRefreshing(false);
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-
-    Handler SpecialTopichandler = new Handler() {
+    }
+    private static class SpecialTopicHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+        public SpecialTopicHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String error = object.optString("error");
-                        JSONArray Array =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            activityInfos.clear();//再次刷新清除原数据
-                            getSpecialUrls(Array);
-                        }else {
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    Toast.makeText(getActivity(), msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+            final HomeFragment reference =mWeakReference.get();
+            if (reference == null||reference.isDetached()) {
+                return;
             }
-        }
-    };
-
-    Handler getHothandler = new Handler() {
-        public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONArray Array =object.optJSONArray("data");
                         if(results.equals("success")) {
-                            hotList.clear();
-                            SavaHotRepair(Array);
+                            reference.activityInfos.clear();//再次刷新清除原数据
+                            reference.onGetSpecialUrls(Array);
                         }else {
-                            Toast.makeText(getActivity(),error,
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(getActivity(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void getimageUrls() {
+    }
+    private static class GetHotHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+        public GetHotHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final HomeFragment reference =mWeakReference.get();
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            switch (msg.what) {
+                case SendrequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        JSONArray Array =object.optJSONArray("data");
+                        if(results.equals("success")) {
+                            reference.hotList.clear();
+                            reference.onSavaHotRepair(Array);
+                        }else {
+                            ToastUtil.ToastText(reference.mContext,error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    private void onGetimageUrls() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 ADInfo info = new ADInfo();
                 info.setImages(jsonObject.getString("image"));
                 info.setUrl(jsonObject.getString("url"));
-                infos.add(info);
+                adInformation.add(info);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        mAdView.setImageResources(infos, mAdCycleViewListener);
+        mAdView.setImageResources(adInformation, mAdCycleViewListener);
     }
     private ImageCycleViewListener mAdCycleViewListener = new ImageCycleViewListener() {
 
@@ -299,7 +344,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
         @Override
         public void displayImage(String imageURL, ImageView imageView) {
-            ImageLoader.getInstance().displayImage(imageURL, imageView);// 使用ImageLoader对图片进行加装！
+            // 使用ImageLoader对图片进行加装！
+            ImageLoader.getInstance().displayImage(imageURL, imageView);
         }
     };
     public static String getDomain(String url){   //获取域名
@@ -314,7 +360,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         urls=null;
         return p;
     }
-    private void getSpecialUrls(JSONArray array) {
+    private void onGetSpecialUrls(JSONArray array) {
         try {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonObject = array.getJSONObject(i);
@@ -334,7 +380,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             }
         });
         mMZBanner.start();
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -349,8 +394,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
         initView(view);
         initRefresh();
-        topmoduleAdapter=new TopmoduleAdapter(mContext,topmoduleList);
-        mTopmodule.setAdapter(topmoduleAdapter);
+        topmoduleAdapter=new TopmoduleAdapter(mContext, rightTopList);
+        mTopModule.setAdapter(topmoduleAdapter);
         homeFunctionAdapter=new HomeFunctionAdapter(mContext,functionList);
         mGridView.setAdapter(homeFunctionAdapter);
         hotRepairAdapter=new HotRepairAdapter(mContext,hotList);
@@ -363,7 +408,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         initListeners();
         return view;
     }
-
     private void initRefresh() {
         mSwipeRefresh.setProgressViewEndTarget(false,100);
         mSwipeRefresh.setProgressViewOffset(false,2,45);
@@ -470,11 +514,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 }
             }
         });
-        mTopmodule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mTopModule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String codes=topmoduleList.get(position).get("code");
-                Id=topmoduleList.get(position).get("id");
+                String codes= rightTopList.get(position).get("code");
+                Id= rightTopList.get(position).get("id");
                 switch (codes){
                     case "shop":
                         shopmall();
@@ -507,9 +551,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             }
         });
     }
-
-
-
     private void showNotify(String title ,String string) {
         new PromptDialog.Builder(mContext)
                 .setTitle(title)
@@ -614,14 +655,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case REQUESTCOODE://获取昵称设置返回数据
+            //获取昵称设置返回数据
+            case REQUEST_CODE:
                 if(data!=null){
                     if (resultCode==2){
                         mCity=data.getStringExtra("mCity");
                         VariableUtil.City=mCity;
                         flag=data.getStringExtra("flag");
                         cityId=data.getStringExtra("Id");
-                        tv_City.setText(mCity);
+                        tvCity.setText(mCity);
                         functionList.clear();
                         hotList.clear();
                         FunctionData();
@@ -635,23 +677,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     }
     private void initData() {
         String validateURL = UrlUtil.imgavatar_Url;
-        SendrequestUtil.executeGet(validateURL, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                geturlhandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj = fail;
-                geturlhandler.sendMessage(msg);
-            }
-        });
-
+        SendrequestUtil.getDataFromService(validateURL,geturlHandler);
     }
     private void initLocation() {
         LocationUtils.setmLocation(mContext);
@@ -673,18 +699,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         cardView=(CardView)view.findViewById(R.id.id_card_view);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)view.findViewById(R.id.id_swipe_refresh);
         mMZBanner = (MZBannerView) view.findViewById(R.id.banner);
-        layout_notopen=view.findViewById(R.id.id_not_open);
-        layout_havedata=view.findViewById(R.id.id_layout_havedata);
-        Rselectcity=(RelativeLayout)view.findViewById(R.id.id_re_city);
-        Lnavigation=(LinearLayout) view.findViewById(R.id.id_li_navigation);
+        layoutNotOpen =view.findViewById(R.id.id_not_open);
+        layoutHaveData =view.findViewById(R.id.id_layout_havedata);
+        layoutSelectCity =(RelativeLayout)view.findViewById(R.id.id_re_city);
+        layoutNavigation=(LinearLayout) view.findViewById(R.id.id_li_navigation);
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
         mAdView = (ImageCycleView)view.findViewById(R.id.ad_view);
         mGridView=(MyNoScrollGridView)view.findViewById(R.id.id_function_view);
         mHotGrid=(MyNoScrollGridView) view.findViewById(R.id.id_hot_view);
-        mTopmodule=(MyNoScrollGridView)view.findViewById(R.id.id_topmodule_view);
-        tv_naviga=(TextView)view.findViewById(R.id.id_tv_naviga);
-        tv_City=(TextView)view.findViewById(R.id.id_tv_city);
-        tv_notopen=(TextView)view.findViewById(R.id.id_tv_nodata);
+        mTopModule =(MyNoScrollGridView)view.findViewById(R.id.id_topmodule_view);
+        tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
+        tvCity =(TextView)view.findViewById(R.id.id_tv_city);
+        tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
     }
     private void initCardBanner() {
         mMZBanner.setIndicatorVisible(true);
@@ -736,7 +762,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         });
     }
     private void initEvent() {
-        Rselectcity.setOnClickListener(this);
+        layoutSelectCity.setOnClickListener(this);
     }
     private void initListeners() {
         ViewTreeObserver vto = mAdView.getViewTreeObserver();
@@ -745,27 +771,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onGlobalLayout() {
                 mAdView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 bgHeight = mAdView.getHeight();
-                inisetListaner();
+                onSetListaner();
             }
         });
     }
-    private void inisetListaner() {
+    private void onSetListaner() {
         myScrollview.setScrollViewListener(this);
     }
     @Override
     public void onScrollChanged(MyScrollview scrollView, int l, int t, int oldl, int oldt) {
-        if (t <= 0) {   //设置标题的背景颜色
-            Lnavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));//0;0;255;0
-            tv_naviga.setTextColor(Color.argb(0, 0, 255, 0));
-        } else if (t > 0 && t <= bgHeight) { //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
+        if (t <= 0) {
+            //设置标题的背景颜色
+            layoutNavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
+            tvNavigation.setTextColor(Color.argb(0, 0, 255, 0));
+            //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
+        } else if (t > 0 && t <= bgHeight) {
             float scale = (float) t / bgHeight;
             float alpha = (255 * scale);
-            tv_naviga.setTextColor(Color.argb((int) alpha, 255, 255, 255));
-            Lnavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
+            tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
+            layoutNavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
         } else {    //滑动到banner下面设置普通颜色
            // Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
-            Lnavigation.setBackgroundResource(R.drawable.shape_change_background);
-            tv_naviga.setTextColor(Color.argb(255, 255, 255, 255));
+            layoutNavigation.setBackgroundResource(R.drawable.shape_change_background);
+            tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
 
     }
@@ -782,13 +810,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         @Override
         public void onBind(Context context, int position, ActivityInfo data) {
             // 数据绑定
-           // mImageView.setImageResource(data);
             String imgurl=data.getImages();
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.error(R.drawable.icon_stub);
             requestOptions.placeholder(R.drawable.icon_stub);
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);//deactivate the disk cache for a request.
-            requestOptions.skipMemoryCache(false);//glide will not put image in the memory cache
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
+            requestOptions.skipMemoryCache(false);
             Glide.with(context).load(imgurl).apply(requestOptions)
                     .thumbnail(0.5f)
                     .into(mImageView);
@@ -808,7 +835,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         switch (v.getId()){
             case R.id.id_re_city:
                 Intent city=new Intent(mContext, SelectCity.class);
-                startActivityForResult(city,REQUESTCOODE);
+                startActivityForResult(city,REQUEST_CODE);
                 break;
             case R.id.id_layout_air:
                 if (VariableUtil.loginStatus){
@@ -861,11 +888,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                     mCity=city.replace("市","");
                 }
                 VariableUtil.City=mCity;
-                tv_City.setText(mCity);
+                tvCity.setText(mCity);
                 LocationUtils.mlocationClient.stopLocation();
             }else {
                 VariableUtil.City=mCity;
-                tv_City.setText(mCity);
+                tvCity.setText(mCity);
                 String text="ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo();
@@ -889,22 +916,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendrequestUtil.executeGetTwo(function, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                SpecialTopichandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj = fail;
-                SpecialTopichandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.getDataFromServiceTwo(function,specialToppicHandler);
     }
 
     private void FunctionData() {
@@ -915,27 +927,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendrequestUtil.executeGetTwo(function, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                getfunctionhandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj = fail;
-                getfunctionhandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.getDataFromServiceTwo(function,getFunctionHandler);
     }
-    private void intiTopmodule() {
+    private void onTipTopModule() {
         try {
-            for (int i = 0; i < topmoduleArray.length(); i++) {
-                JSONObject jsonObject = topmoduleArray.getJSONObject(i);
+            for (int i = 0; i < rightTopArray.length(); i++) {
+                JSONObject jsonObject = rightTopArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
                 String name=jsonObject.getString("name");
                 String code=jsonObject.getString("code");
@@ -943,20 +940,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 map.put("id", id);
                 map.put("name",name);
                 map.put("code",code);
-                topmoduleList.add(map);
+                rightTopList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (topmoduleList.size()!=0){
+        if (rightTopList.size()!=0){
             topmoduleAdapter.notifyDataSetChanged();
             cardView.setVisibility(View.VISIBLE);
         }else {
             cardView.setVisibility(View.GONE);
         }
     }
-    private void initFunction() {
-        VariableUtil.BoolCode=true;  //记录是否提供燃气服务模块
+    private void onFunction() {
+        //记录是否提供燃气服务模块
+        VariableUtil.BoolCode=true;
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -988,24 +986,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendrequestUtil.executeGetTwo(function, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                getHothandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj = fail;
-                getHothandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.getDataFromServiceTwo(function,getHotHandler);
     }
-    private void SavaHotRepair(JSONArray array) {
+    private void onSavaHotRepair(JSONArray array) {
         try {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonObject = array.getJSONObject(i);

@@ -355,7 +355,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/margin_width30"
+                    android:layout_marginBottom="@dimen/margin_width50"
                     android:layout_centerHorizontal="true">
                     <CheckBox
                         android:id="@+id/id_box_read"
@@ -380,7 +380,7 @@
                         android:layout_marginTop="@dimen/margin_width10"
                         android:layout_toRightOf="@id/id_text1"
                         android:layout_below="@+id/id_box_read"
-                        android:layout_marginLeft="@dimen/margin_width5"
+                        android:layout_marginLeft="@dimen/margin_width10"
                         android:text="《投保声明与授权》"
                         android:textSize="@dimen/text_width12"
                         android:textColor="@color/colorOrange"/>
@@ -400,18 +400,21 @@
                         android:layout_marginTop="@dimen/margin_width10"
                         android:layout_below="@+id/id_text1"
                         android:layout_toRightOf="@+id/id_text3"
-                        android:layout_marginLeft="@dimen/margin_width5"
+                        android:layout_marginLeft="@dimen/margin_width10"
                         android:textColor="@color/colorOrange"
                         android:textSize="@dimen/text_width12"
                         android:text="《保险说明》"/>
                 </RelativeLayout>
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width10"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_45"
+        android:minHeight="@dimen/margin_width45"
         android:orientation="horizontal">
         <RelativeLayout
             android:layout_weight="1"

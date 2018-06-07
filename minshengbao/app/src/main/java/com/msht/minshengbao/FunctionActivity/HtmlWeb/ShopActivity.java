@@ -34,32 +34,38 @@ import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.FunctionActivity.Public.PublicPayway;
 import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.ImageUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Demo class
+ *
+ * @author hong
+ * @date 2016/05/20
+ */
 public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
-    private View Rnavigation;
-    private WebView Shopweb;
+    private View layoutNavigation;
+    private WebView shopWeb;
     private ProgressBar progressBar;
-    private String username="",password="";
-    private String client="wap";
-    private String shopCookie;
+    private String  username="",password="";
+    private String  client="wap";
+    private String  shopCookie;
     private String  urls=null;
-    private boolean lstate;
-    private boolean shopstate;
+    private boolean loginState;
+    private boolean shopState;
     private int First=0;
     private Context mContext;
     private final String mPageName ="商城";
-   // private String loginUrl="http://shop.msbapp.cn/mobile/index.php?m=default&c=user&a=login";
-   // private String targeUrl="http://shop.msbapp.cn/mobile/index.php?m=default&c=index&a=index";
     private String loginUrl=UrlUtil.Shop_Login;
-    private String targeUrl=UrlUtil.Shop_HomeUrl;
+    private String targetUrl=UrlUtil.Shop_HomeUrl;
     private String loginHtml=UrlUtil.Shop_LoginHtml;
     private byte[] bytes;
     private Intent mSourceIntent;
@@ -78,17 +84,17 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         mContext=this;
         username = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName, "");
         password = SharedPreferencesUtil.getpassw(this, SharedPreferencesUtil.passw, "");
-        lstate= SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
-        shopstate=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Shopstate, false);
+        loginState= SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
+        shopState=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Shopstate, false);
         shopCookie= SharedPreferencesUtil.getStringData(this, SharedPreferencesUtil.shopCookie, "");
         Intent data=getIntent();
         urls=data.getStringExtra("url");
         First=data.getIntExtra("first",0);
         ((TextView)findViewById(R.id.tv_navigation)).setText("商城");
-        Rnavigation=findViewById(R.id.id_header) ;
-        Shopweb=(WebView)findViewById(R.id.id_shangcheng_webView);
+        layoutNavigation=findViewById(R.id.id_header) ;
+        shopWeb=(WebView)findViewById(R.id.id_shangcheng_webView);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
-        initweb();
+        initWebView();
         initEvent();
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +104,11 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         });
     }
 
-    private void initweb() {
-        final String data = "username="+ username + "&password=" + password+"&client="+client;
+    private void initWebView() {
+        String versionName=AppPackageUtil.getPackageVersionName(mContext);
+        versionName =versionName.replace("v","");
+        final String data = "username="+ username + "&password=" + password+"&client="+client
+                +"&version="+ versionName;
         try{
             bytes=data.getBytes("UTF-8");
         }catch (UnsupportedEncodingException e){
@@ -107,38 +116,39 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         }
         SettingWeb();
         if (urls!=null){
-            if (shopstate) {
-                Shopweb.loadUrl(urls);
+            if (shopState) {
+                shopWeb.loadUrl(urls);
             }else {
-                if (lstate){
-                    Shopweb.postUrl(loginUrl,bytes);
+                if (loginState){
+                    shopWeb.postUrl(loginUrl,bytes);
                     SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Shopstate,true);
                 }else {
-                    Shopweb.loadUrl(urls);
+                    shopWeb.loadUrl(urls);
                     First=0;
                 }
             }
         }else {
-            if (lstate) {
-                if (shopstate){
-                    Shopweb.loadUrl(targeUrl);
+            if (loginState) {
+                if (shopState){
+                    //shopWeb.loadUrl(targetUrl);
+                    shopWeb.postUrl(loginUrl, bytes);
+                    shopWeb.reload();
                 }else {
-                    Shopweb.postUrl(loginUrl, bytes);
+                    shopWeb.postUrl(loginUrl, bytes);
                     SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Shopstate,true);
-                    Shopweb.reload();
+                    shopWeb.reload();
                 }
             } else {
-                Shopweb.loadUrl(targeUrl);
+                shopWeb.loadUrl(targetUrl);
             }
         }
-        Shopweb.requestFocusFromTouch();
-        Shopweb.setWebViewClient(new WebViewClient() {
-
+        shopWeb.requestFocusFromTouch();
+        shopWeb.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.reload();
                 if (url!=null&&url.contains(loginHtml)){
-                    if (!lstate){
+                    if (!loginState){
                         Intent intent =new Intent(ShopActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -150,73 +160,34 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                     PingPay(url);
                 }else {
                     if (First==1){
-                        if (!shopstate){
+                        if (!shopState){
                             view.loadUrl(urls);
                             First=0;
-                            Rnavigation.setVisibility(View.VISIBLE);
+                            layoutNavigation.setVisibility(View.VISIBLE);
                         }else {
                             view.loadUrl(url);
                         }
                     }else {
-                        if (url.contains(targeUrl)){
+                        if (url.contains(targetUrl)){
                             view.loadUrl(url);
-                            Rnavigation.setVisibility(View.VISIBLE);
+                            layoutNavigation.setVisibility(View.VISIBLE);
                         }else {
                             view.loadUrl(url);
-                            Rnavigation.setVisibility(View.GONE);
+                            layoutNavigation.setVisibility(View.GONE);
                         }
                     }
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
-            /*@Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                String UrlString="";
-                view.reload();
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-                    UrlString=request.getUrl().toString();
-                }else {
-                    UrlString=request.toString();
-                }
-                if (UrlString!=null&&UrlString.contains(loginHtml)){
-                    if (!lstate){
-                        Intent intent =new Intent(ShopActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }else {
-                        view.postUrl(loginUrl,bytes);
-                        SharedPreferencesUtil.putLstate(mContext,SharedPreferencesUtil.Shopstate,true);
-                    }
-                }else {
-                    if (First==1){
-                        if (!shopstate){
-                            view.loadUrl(urls);
-                            First=0;
-                            Rnavigation.setVisibility(View.VISIBLE);
-                        }else {
-                            view.loadUrl(UrlString);
-                        }
-                    }else {
-                        if (UrlString.contains(targeUrl)){
-                            view.loadUrl(UrlString);
-                            Rnavigation.setVisibility(View.VISIBLE);
-                        }else {
-                            view.loadUrl(UrlString);
-                            Rnavigation.setVisibility(View.GONE);
-                        }
-                    }
-                }
-                return true;
-            }*/
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                if (url.contains(targeUrl)){
-                    Rnavigation.setVisibility(View.VISIBLE);
+                if (url.contains(targetUrl)){
+                    layoutNavigation.setVisibility(View.VISIBLE);
                 }else {
                     if (urls!=null){
-                        Rnavigation.setVisibility(View.VISIBLE);
+                        layoutNavigation.setVisibility(View.VISIBLE);
                     }else {
-                        Rnavigation.setVisibility(View.GONE);
+                        layoutNavigation.setVisibility(View.GONE);
                     }
                 }
                 super.doUpdateVisitedHistory(view, url, isReload);
@@ -227,7 +198,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
             }
         });
         fixDirPath();
-        Shopweb.setWebChromeClient(new MyWebChomeClient(ShopActivity.this));
+        shopWeb.setWebChromeClient(new MyWebChomeClient(ShopActivity.this));
     }
     private void fixDirPath() {
         String path = ImageUtil.getDirPath();
@@ -371,7 +342,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     }
 
     private void SettingWeb() {
-        WebSettings settings=Shopweb.getSettings();
+        WebSettings settings=shopWeb.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -413,14 +384,14 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         }
     }
     private void initEvent() {
-        Shopweb.setOnKeyListener(new View.OnKeyListener() {
+        shopWeb.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (keyCode == KeyEvent.KEYCODE_BACK ) {
                         //这里处理返回键事件
-                        if(Shopweb.canGoBack()){
-                            Shopweb.goBack();
+                        if(shopWeb.canGoBack()){
+                            shopWeb.goBack();
                             return true;
                         }
                         else
@@ -437,14 +408,14 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==PAY_CODE){
             if (resultCode==PAY_CODE){
-                Shopweb.loadUrl(UrlUtil.Shop_OrderList);
+                shopWeb.loadUrl(UrlUtil.Shop_OrderList);
             }
         }
         if (resultCode != Activity.RESULT_OK) {
             if (mUploadMessage != null) {
                 mUploadMessage.onReceiveValue(null);
             }
-            if (mUploadCallbackAboveL != null) {         // for android 5.0+
+            if (mUploadCallbackAboveL != null) {
                 mUploadCallbackAboveL.onReceiveValue(null);
             }
             return;
@@ -466,7 +437,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
 
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (mUploadCallbackAboveL == null) {        // for android 5.0+
-                            Toast.makeText(mContext,"空的",Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastText(mContext,"空数据");
                             return;
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
@@ -492,7 +463,8 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                 }
                 break;
             }
-            case REQUEST_CODE_PICK_IMAGE: {
+            case REQUEST_CODE_PICK_IMAGE: 
+                {
                 try {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                         if (mUploadMessage == null) {
@@ -507,8 +479,9 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         mUploadMessage.onReceiveValue(uri);
 
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        if (mUploadCallbackAboveL == null) {        // for android 5.0+
-                            Toast.makeText(mContext,"空的",Toast.LENGTH_SHORT).show();
+                        // for android 5.0+
+                        if (mUploadCallbackAboveL == null) {
+                            ToastUtil.ToastText(mContext,"空数据");
                             return;
                         }
                         String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
@@ -532,7 +505,10 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                     e.printStackTrace();
                 }
                 break;
+                
             }
+            default:
+                break;
         }
     }
 

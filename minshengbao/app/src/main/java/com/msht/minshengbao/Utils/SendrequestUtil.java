@@ -376,6 +376,52 @@ public class SendrequestUtil {
         }.start();
     }
     /**
+     * 通过Get方式获取数据
+     */
+    public static void getDataFromServiceTwo(final String validateURL, final Handler mHandler) {
+        new Thread() {
+            @Override
+            public void run() {
+
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(validateURL);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+                    connection.setRequestProperty("accept", "*/*");
+                    connection.setRequestProperty("connection", "Keep-Alive");
+                    if (connection.getResponseCode() == 200) {
+                        InputStream is = connection.getInputStream();
+                        String resultStr = NetUtil.readString(is);
+                        Message message = new Message();
+                        message.what = SUCCESS;
+                        message.obj = resultStr;
+                        mHandler.sendMessage(message);
+                    } else {
+                        Message msg = new Message();
+                        msg.what = FAILURE;
+                        msg.obj=ERROR_SERVICE;
+                        mHandler.sendMessage(msg);
+                    }
+                } catch (Exception e)//内部捕获异常并做处理
+                {
+                    e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_NETWORK;
+                    mHandler.sendMessage(msg);
+                } finally {
+                    //最后，释放连接
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }.start();
+    }
+    /**
      * 通过Get方式获取数据  带参数
      */
     public static void getDataFromService(final String validateURL, final String param, final Handler mHandler) {

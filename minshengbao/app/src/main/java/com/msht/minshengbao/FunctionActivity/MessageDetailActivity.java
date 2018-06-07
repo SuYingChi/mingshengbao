@@ -12,56 +12,81 @@ import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Demo class 消息详情
+ *
+ * @author hong
+ * @date 2016/04/12
+ */
 public class MessageDetailActivity extends BaseActivity {
-    private TextView tv_message,tv_time;
+    private TextView tvMessage,tvTime;
     private String userId, password,id,type;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private CustomDialog customDialog;
-    Handler messageHandler = new Handler() {
+    private final MessageHandler messageHandler=new MessageHandler(this);
+    private static class MessageHandler extends Handler{
+        private WeakReference<MessageDetailActivity> mWeakReference;
+        public MessageHandler(MessageDetailActivity activity) {
+            mWeakReference = new WeakReference<MessageDetailActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MessageDetailActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject json=object.getJSONObject("data");
                         if(results.equals("success")) {
-                            initView(json);
+                            activity.onMessageData(json);
                         }else {
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
 
-    private void initView(JSONObject json) {
+    /**
+     *
+     * @param json  消息数据json
+     */
+    private void onMessageData(JSONObject json) {
         String types=json.optString("type");
         String title=json.optString("title");
         String content=json.optString("content");
         String time=json.optString("time");
-        tv_message.setText(content);
-        tv_time.setText(time);
+        tvMessage.setText(content);
+        tvTime.setText(time);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +107,8 @@ public class MessageDetailActivity extends BaseActivity {
             setCommonHeader("消息详情");
         }
         mPageName="消息详情";
-        tv_message=(TextView)findViewById(R.id.id_message_detail);
-        tv_time=(TextView)findViewById(R.id.id_time) ;
+        tvMessage=(TextView)findViewById(R.id.id_message_detail);
+        tvTime=(TextView)findViewById(R.id.id_time) ;
         initData();
     }
     private void initData() {
@@ -93,21 +118,6 @@ public class MessageDetailActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        SendrequestUtil.executepost(messageUrl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                messageHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                messageHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(messageUrl,textParams,messageHandler);
     }
 }

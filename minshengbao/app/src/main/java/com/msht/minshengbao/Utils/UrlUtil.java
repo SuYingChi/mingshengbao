@@ -8,12 +8,14 @@ public class UrlUtil {
    // public static final String URL_HEADS="http://test.msbapp.cn:8080";
     //public static final String URL_HEAD="http://test.msbapp.cn";
     public static final String URL_SHOP="http://shop.msbapp.cn:8090";
-    //public static final String URL_SHOP="http://dev.msbapp.cn";
+   // public static final String URL_SHOP="http://dev.msbapp.cn";
     public static final String URL_HEADS="https://msbapp.cn";
    // public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
     public static final String URL_MSSB="http://sb-api.msbapp.cn";
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
-    //启动页
+    /**
+     * LAUNCHER_IMG_URL 启动页广告图链接
+     */
     public static final  String LAUNCHER_IMG_URL=URL_HEADS+"/api/app/app_start_page?type=2";
     //支付确认
     public static final String PAY_RESULT_NOTARIZE =URL_HEADS+"/Gas/payment/queryOrder";
@@ -38,7 +40,7 @@ public class UrlUtil {
     public static final String Shop_LoginHtml=URL_SHOP+"/wap/tmpl/member/login.html";
     public static final String Shop_HomeUrl= URL_SHOP +"/wap/index.html";
     public static final String Shop_Login= URL_SHOP +"/mobile/index.php?act=login&op=appindex";
-    public static final String Shop_Redwine=URL_SHOP +"/wap/tmpl/class_list.html?gc_id=1246";
+    public static final String Shop_IMPORT_FOODSTUFF=URL_SHOP +"/wap/tmpl/class_list.html?gc_id=1246";
     public static final String Shop_Disinfectioncabinet=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1059";
     public static final String Shop_Heatercalorifier=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1060";
     public static final String Shop_Lampblack=URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1063";

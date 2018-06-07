@@ -16,16 +16,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_45">
+        android:minHeight="@dimen/margin_width45">
         <TextView
             android:id="@+id/id_nodata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/margin_width20"
             android:visibility="gone"
-            android:text="当前没有添加地址"
-            android:textSize="@dimen/text_18"
+            android:text="@string/not_add_customerNo"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/colorOrange"/>
     </RelativeLayout>
 </LinearLayout>

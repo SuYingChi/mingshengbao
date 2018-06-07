@@ -78,8 +78,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean     versionState;
     private JSONObject  objectJson;
     private JSONObject  jsonObject;
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
     private static final String MY_ACTION = "ui";
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final int REQUEST_CODE=2;
@@ -216,7 +214,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
@@ -231,7 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
+                case SendrequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:

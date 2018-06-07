@@ -22,7 +22,6 @@ import com.msht.minshengbao.FunctionActivity.MainActivity;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -35,9 +34,9 @@ public class LaunchActivity extends AppCompatActivity {
     private final String     mPageName = "启动页";
     private TextView         tvTime;
     private ImageView        logoBottom;
-    private SimpleDraweeView draweeView;
+    private SimpleDraweeView drawView;
     private View             layoutFrame;
-    private CountDownTimer timer;
+    private CountDownTimer   timer;
     private static final int GO_HOME = 1;
     private static final int GO_GUIDE = 2;
     private static final long SPLASH_DELAY_MILLIS = 3000;
@@ -120,7 +119,7 @@ public class LaunchActivity extends AppCompatActivity {
                 .setAutoPlayAnimations(true)
                  //. 其他设置（如果有的话）
                 .build();
-        draweeView.setController(controller);
+        drawView.setController(controller);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +138,7 @@ public class LaunchActivity extends AppCompatActivity {
             SharedPreferencesUtil.Clear(this,"AppData");
         }
         tvTime =(TextView)findViewById(R.id.id_tv_time);
-        draweeView = (SimpleDraweeView) findViewById(R.id.id_logo_top);
+        drawView = (SimpleDraweeView) findViewById(R.id.id_logo_top);
         logoBottom =(ImageView)findViewById(R.id.id_logo_bottom);
         layoutFrame =findViewById(R.id.id_frame_layout);
         if (NetWorkUtil.IsNetWorkEnable(mContext)){
