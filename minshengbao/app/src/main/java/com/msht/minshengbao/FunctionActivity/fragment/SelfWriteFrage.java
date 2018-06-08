@@ -64,19 +64,16 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
     private String userId;
     private String password;
     private String tableId;
-    private String tableaddress;
-    private String tablebh;
+    private String tableAddress;
+    private String tableBh;
     private String lastNumber;
 
     private String name;
     private String CustomerNum,all_balance;
-    private String  debts;
+    private String debts="";
     private String total_num;
     private String discount_fees;
     private String late_fee;
-
-    private String Etaddress;
-    private String Ettable;
     private String Etm2;
     private String Stlast;
 
@@ -248,7 +245,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         mselecttable.setEnabled(true);
         Eselecttable.setText(tableList.get(0).get("address"));
         Etlast.setText(tableList.get(0).get("lastNum"));
-        tablebh=tableList.get(0).get("bh");
+        tableBh =tableList.get(0).get("bh");
         tableId=tableList.get(0).get("id");
     }
     @Override
@@ -284,7 +281,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
     }
     private void tablepickers() {
         validateURL = UrlUtil.GetTable_Url;
-        requestType=0;                    //获取表具信息
+        requestType=0;
         requesSevice();
     }
     private void requesSevice() {
@@ -324,9 +321,9 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         verifysend.setEnabled(false);
     }
     private void iniEvent() {
-        mselecttable.setOnClickListener(this);//选择表具
-        mselectaddr.setOnClickListener(this); //选择地址
-        verifysend.setOnClickListener(this);//确认
+        mselecttable.setOnClickListener(this);
+        mselectaddr.setOnClickListener(this);
+        verifysend.setOnClickListener(this);
         Eselecttable.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -397,10 +394,10 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
                 pos=position;
                 adapter.notifyDataSetChanged();
                 tableId = tableList.get(position).get("id");
-                tableaddress = tableList.get(position).get("address");
-                tablebh = tableList.get(position).get("bh");
+                tableAddress = tableList.get(position).get("address");
+                tableBh = tableList.get(position).get("bh");
                 lastNumber = tableList.get(position).get("lastNum");
-                Eselecttable.setText(tableaddress);//显示地址
+                Eselecttable.setText(tableAddress);//显示地址
                 Etlast.setText(lastNumber);
                 selectTable.dismiss();
             }
@@ -411,7 +408,7 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         startActivityForResult(selete,REQUESTCOODE);
     }
     private void Verifysend() {
-        Ettable=Eselecttable.getText().toString().trim();
+        String etTable=Eselecttable.getText().toString().trim();
         Stlast=Etlast.getText().toString().trim();
         Etm2=EttableNum.getText().toString().trim();
         SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日");

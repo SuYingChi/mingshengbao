@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.GetrecordAdapter;
+import com.msht.minshengbao.Adapter.GetRecordAdapter;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +44,8 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     private int refreshType;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
-
-    private GetrecordAdapter adapter;
+    private JSONArray jsonArray;
+    private GetRecordAdapter adapter;
     private int pageNo=1;
     private int pageIndex=0;
     private final String mPageName ="抄表记录";
@@ -54,7 +54,21 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     public TableRecordFrag() {
         // Required empty public constructor
     }
-
+    private static class PayRecordHandler extends Handler{
+        private WeakReference<TableRecordFrag> mWeakReference;
+        public PayRecordHandler(TableRecordFrag tableRecordFrag) {
+            mWeakReference = new WeakReference<TableRecordFrag>(tableRecordFrag);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final TableRecordFrag reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            super.handleMessage(msg);
+        }
+    }
     Handler payrecordHandler = new Handler() {
         public void handleMessage(Message msg) {
 
@@ -87,7 +101,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                     break;
                 case FAILURE:
                     mListView.stopRefresh(false);
-                    Toast.makeText(getActivity(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.ToastText(mContext, msg.obj.toString());
                     break;
                 default:
                     break;
@@ -147,7 +161,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         tv_nodata=(TextView)view.findViewById(R.id.id_tv_nodata);
         mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
         mListView.setPullLoadEnable(true);
-        adapter = new GetrecordAdapter(getActivity(),writeList);
+        adapter = new GetRecordAdapter(getActivity(),writeList);
         mListView.setAdapter(adapter);
         initdata();
         return view;
@@ -182,7 +196,6 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
             }
         });
     }
-
     @Override
     public void onRefresh() {
         refreshType=0;

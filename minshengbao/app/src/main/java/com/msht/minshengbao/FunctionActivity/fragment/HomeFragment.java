@@ -139,7 +139,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     public HomeFragment() {}
     private static class GeturlHandler extends Handler{
         private WeakReference<HomeFragment> mWeakReference;
-
         public GeturlHandler(HomeFragment homeFragment) {
             mWeakReference = new WeakReference<HomeFragment>(homeFragment);
         }

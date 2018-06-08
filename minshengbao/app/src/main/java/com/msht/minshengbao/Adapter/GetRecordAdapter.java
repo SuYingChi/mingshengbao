@@ -16,11 +16,11 @@ import java.util.HashMap;
  * Created by hong on 2017/3/20.
  */
 
-public class GetrecordAdapter extends BaseAdapter {
+public class GetRecordAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> writeList = new ArrayList<HashMap<String, String>>();
-    public GetrecordAdapter(Context context, ArrayList<HashMap<String, String>> mList) {
+    public GetRecordAdapter(Context context, ArrayList<HashMap<String, String>> mList) {
         super();
         this.writeList=mList;
         this.mContext=context;

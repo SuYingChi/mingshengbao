@@ -48,27 +48,21 @@ import java.util.Map;
  */
 public class SelfhelpPay extends Fragment {
 
-    private RadioGroup Radiogroup ;
-    private RadioButton RBaddress,RBcustomer;
+    private RadioGroup radioGroup;
+    private RadioButton radioButtonAddress, radioButtonCustomer;
     private ListViewForScrollView mLstView;
-    private RelativeLayout customerlayout;         //布局
-    private EditText Etcustomer;            //客户号
-    private Button btn_payquery;         //查询
-    private String         userId;
-    private String         password;
-    private String         GetcustomerNo;
-    private String         EdicustomerNo;
-    private String         CustomerNo;
-
-    private String  name;
-    private String  CustomerNum;
-    private String  debts,all_balance;
-    private String  total_num;
-    private String  discount_fees;
-    private String  late_fee;
+    private RelativeLayout customerLayout;
+    private EditText etCustomer;
+    private Button btnPayQuery;
+    private String userId;
+    private String password;
+    private String getCustomerNo;
+    private String ediCustomerNo;
+    private String customerNo;
 
     private CustomDialog customDialog;
-    private boolean requestline=false;            /*****判断进入线程 ******/
+    /*****判断进入线程 ******/
+    private boolean requestLine =false;
     private String validateURL;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
@@ -94,7 +88,7 @@ public class SelfhelpPay extends Fragment {
                         String Error = object.optString("error");
                         jsonArray =object.optJSONArray("data");
                         if(Results.equals("success")) {
-                            if (!requestline){
+                            if (!requestLine){
                                 jsonArray =object.optJSONArray("data");
                                 Showlistview();
                             }else {
@@ -102,7 +96,7 @@ public class SelfhelpPay extends Fragment {
                                 initshowdata();
                             }
                         }else {
-                            CustomerNo="";      //清空原来数据
+                            customerNo="";      //清空原来数据
                             displayDialog(Error);
                         }
                     }catch (Exception e){
@@ -111,7 +105,7 @@ public class SelfhelpPay extends Fragment {
                     break;
                 case FAILURE:
                     customDialog.dismiss();
-                    CustomerNo="";      //清空原来数据
+                    customerNo="";      //清空原来数据
                     displayDialog(msg.obj.toString());
                     break;
                 default:
@@ -140,24 +134,27 @@ public class SelfhelpPay extends Fragment {
         mLstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GetcustomerNo = houseList.get(position).get("customerNo");
+                getCustomerNo = houseList.get(position).get("customerNo");
                 VariableUtil.mPos=position; //选中item的position 赋给cus_pos
                 adapter.notifyDataSetInvalidated();      //更新listView
-                CustomerNo = GetcustomerNo;
-                btn_payquery.setEnabled(true);           //选择地址后按钮有效点击，
+                customerNo = getCustomerNo;
+                //选择地址后按钮有效点击，
+                btnPayQuery.setEnabled(true);
             }
         });
     }
     private void initshowdata() {
-        CustomerNo="";      //清空原来数据
-        name=jsonObject.optString("name");
-        CustomerNum=jsonObject.optString("customerNo");
-        all_balance=jsonObject.optString("balance");
+        //清空原来数据
+        customerNo="";
+        String debts="";
+        String name=jsonObject.optString("name");
+        String CustomerNum=jsonObject.optString("customerNo");
+        String all_balance=jsonObject.optString("balance");
         debts=jsonObject.optString("debts");
-        total_num=jsonObject.optString("total_num");
+        String total_num=jsonObject.optString("total_num");
         String gas_fee=jsonObject.optString("gas_fee");
-        discount_fees=jsonObject.optString("discount_fee");
-        late_fee=jsonObject.optString("late_fee");
+        String discount_fees=jsonObject.optString("discount_fee");
+        String late_fee=jsonObject.optString("late_fee");
         JSONArray json=jsonObject.optJSONArray("detail_list");
         try {
             for (int i = 0; i < json.length(); i++) {
@@ -168,7 +165,7 @@ public class SelfhelpPay extends Fragment {
                 String amounts=Object.getString("amount");
                 String balance=Object.getString("balance");
                 String discount_fee=Object.getString("discount_fee");
-                String late_fee=Object.getString("late_fee");
+                String lateFee=Object.getString("late_fee");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("date", date);
                 map.put("num", num);
@@ -176,7 +173,7 @@ public class SelfhelpPay extends Fragment {
                 map.put("amounts",amounts);
                 map.put("balance",balance);
                 map.put("discount_fee", discount_fee);
-                map.put("late_fee", late_fee);
+                map.put("late_fee", lateFee);
                 VariableUtil.detailList.add(map);
             }
         }catch (JSONException e){
@@ -214,20 +211,20 @@ public class SelfhelpPay extends Fragment {
         Bundle bundle=getArguments();
         userId=bundle.getString("id");             //获取从Activity传来的值
         password=bundle.getString("password");
-        Radiogroup=(RadioGroup)view.findViewById(R.id.id_radiogroup);
-        RBaddress=(RadioButton)view.findViewById(R.id.id_rb_address);
-        RBcustomer=(RadioButton)view.findViewById(R.id.id_rb_customer);
+        radioGroup =(RadioGroup)view.findViewById(R.id.id_radiogroup);
+        radioButtonAddress =(RadioButton)view.findViewById(R.id.id_rb_address);
+        radioButtonCustomer =(RadioButton)view.findViewById(R.id.id_rb_customer);
         mLstView=(ListViewForScrollView)view.findViewById(R.id.id_addre_listview);
-        customerlayout=(RelativeLayout)view.findViewById(R.id.id_customer_layout);
-        Etcustomer=(EditText)view.findViewById(R.id.id_et_customerNo);
-        btn_payquery=(Button)view.findViewById(R.id.id_btn_payquery);
-        btn_payquery.setEnabled(false);               //设置无效点击、背景
+        customerLayout =(RelativeLayout)view.findViewById(R.id.id_customer_layout);
+        etCustomer =(EditText)view.findViewById(R.id.id_et_customerNo);
+        btnPayQuery =(Button)view.findViewById(R.id.id_btn_payquery);
+        btnPayQuery.setEnabled(false);
         VariableUtil.mPos=-1;
         adapter=new GethouseAdapter(getActivity(),houseList);
         mLstView.setAdapter(adapter);
-        if (NetWorkUtil.IsNetWorkEnable(getActivity())){   //检测网络是否可否
+        if (NetWorkUtil.IsNetWorkEnable(getActivity())){
             customDialog.show();
-            initdata();
+            initData();
         }else {
             Nonetwork();
         }
@@ -235,16 +232,16 @@ public class SelfhelpPay extends Fragment {
         ButtonEvent();
         return view;
     }
-    private void initdata() {
+    private void initData() {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("category","1");
-        if (!requestline){
+        if (!requestLine){
             validateURL = UrlUtil.SelectAddress_Url;
         }else {
             validateURL = UrlUtil.Searchbill_GasUrl;
-            textParams.put("CustomerNo",CustomerNo);
+            textParams.put("CustomerNo",customerNo);
         }
         SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
             @Override
@@ -278,27 +275,31 @@ public class SelfhelpPay extends Fragment {
                 }).show();
     }
     private void initEvent() {
-        RBaddress.setChecked(true);     //默认选中地址
-        Radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioButtonAddress.setChecked(true);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int id = group.getCheckedRadioButtonId();
                 switch (group.getCheckedRadioButtonId()) {
                     case R.id.id_rb_address:
-                        customerlayout.setVisibility(View.GONE);
+                        customerLayout.setVisibility(View.GONE);
                         mLstView.setVisibility(View.VISIBLE);
-                        EdicustomerNo="";            //编辑框数据清空清空
-                        CustomerNo=GetcustomerNo;    //选择地址后获取
+                        //编辑框数据清空清空
+                        ediCustomerNo ="";
+                        //选择地址后获取
+                        customerNo= getCustomerNo;
                         break;
                     case R.id.id_rb_customer:
-                        btn_payquery.setEnabled(false);            //设置无效点击、背景
+                        btnPayQuery.setEnabled(false);
                         mLstView.setVisibility(View.GONE);
-                        customerlayout.setVisibility(View.VISIBLE);
-                        VariableUtil.mPos=-1;                //地址颜色变暗
-                        adapter.notifyDataSetInvalidated();   //更新listView
-                        GetcustomerNo="";
+                        customerLayout.setVisibility(View.VISIBLE);
+                        //地址颜色变色标志
+                        VariableUtil.mPos=-1;
+                        adapter.notifyDataSetInvalidated();
+                        getCustomerNo ="";
                         Editaction();
-                        CustomerNo=EdicustomerNo;   //获取编辑框输入的客户号
+                        //获取编辑框输入的客户号
+                        customerNo= ediCustomerNo;
                         break;
                     default:
                         break;
@@ -309,17 +310,17 @@ public class SelfhelpPay extends Fragment {
     }
 
     private void Editaction() {
-        Etcustomer.addTextChangedListener(new TextWatcher() {
+        etCustomer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                EdicustomerNo=Etcustomer.getText().toString().trim();
-                if (TextUtils.isEmpty(EdicustomerNo)) {
-                    btn_payquery.setEnabled(false);            //设置无效点击、背景
+                ediCustomerNo = etCustomer.getText().toString().trim();
+                if (TextUtils.isEmpty(ediCustomerNo)) {
+                    btnPayQuery.setEnabled(false);
 
                 }else {
-                    btn_payquery.setEnabled(true);            //有效点击，
+                    btnPayQuery.setEnabled(true);
                 }
             }
             @Override
@@ -327,21 +328,21 @@ public class SelfhelpPay extends Fragment {
         });
     }
     private void ButtonEvent() {
-        btn_payquery.setOnClickListener(new View.OnClickListener() {
+        btnPayQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 VariableUtil.detailList.clear();//清除账单明细数据
-                if (TextUtils.isEmpty(CustomerNo)) {
-                    EdicustomerNo = Etcustomer.getText().toString().trim();
-                    CustomerNo=EdicustomerNo;   //获取编辑框输入的客户号
+                if (TextUtils.isEmpty(customerNo)) {
+                    ediCustomerNo = etCustomer.getText().toString().trim();
+                    customerNo= ediCustomerNo;
                 }
                 customDialog.show();
-                requestline=true;
-                initdata();
+                requestLine =true;
+                initData();
                 VariableUtil.mPos=-1;
-                adapter.notifyDataSetInvalidated();   //更换listView
-                Etcustomer.setText("");
-                btn_payquery.setEnabled(false);            //设置无效点击、背景
+                adapter.notifyDataSetInvalidated();
+                etCustomer.setText("");
+                btnPayQuery.setEnabled(false);
             }
         });
     }

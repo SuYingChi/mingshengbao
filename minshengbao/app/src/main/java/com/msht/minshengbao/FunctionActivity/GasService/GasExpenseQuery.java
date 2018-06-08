@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -43,7 +44,7 @@ public class GasExpenseQuery extends BaseActivity {
     private String CustomerNo,all_balance;
     private String houseId,voucherId="0";
     private String name,id;
-    private String debts;
+    private String debts="";
     private String total_num;
     private String discount_fees,gas_fee,real_fee;
     private String late_fee;
@@ -117,7 +118,8 @@ public class GasExpenseQuery extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        PushAgent.getInstance(context).onAppStart();   //推送统计
+        //推送统计
+        PushAgent.getInstance(context).onAppStart();
         Intent getdata=getIntent();
         CustomerNo=getdata.getStringExtra("CustomerNo");
         all_balance=getdata.getStringExtra("all_balance");
@@ -179,7 +181,7 @@ public class GasExpenseQuery extends BaseActivity {
         btn_payfees=(Button)findViewById(R.id.id_btn_payfees);
         Address.setText(name);
         tv_customer.setText(CustomerNo);
-        if (debts.equals("null")){
+        if (TextUtils.isEmpty(debts)){
             Layout_nodata.setVisibility(View.VISIBLE);
             Layout_data.setVisibility(View.GONE);
             Layout_btn.setVisibility(View.GONE);
