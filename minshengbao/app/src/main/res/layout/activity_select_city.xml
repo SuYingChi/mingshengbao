@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_select_city"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionActivity.Public.SelectCity">
+    <include layout="@layout/layout_header"/>
+    <ListView
+        android:id="@+id/id_city_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+    <include layout="@layout/layout_line_gray"/>
+</LinearLayout>

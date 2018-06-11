@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_about_mine"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionActivity.MyActivity.AboutMine">
+    <include layout="@layout/layout_header"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+        <ImageView
+            android:id="@+id/id_img"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/minshengbao_guanyuwm2x"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/id_versionName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/id_img"
+            android:layout_marginTop="@dimen/margin_10"
+            android:text="版本：V2.0.5"
+            android:textSize="@dimen/text_16"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10">
+        <TextView
+            android:id="@+id/id_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="38dp"
+            android:layout_marginLeft="38dp"
+            android:textSize="@dimen/text_16"
+            android:lineSpacingExtra="3dp"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/black"
+            android:text="在建立燃气服务平台的基础上，应用互联网技术和智慧城市概念，建立用户互联网服务平台，依据用户的民生需求和可为社会提供服务的可能，把线上线下相关资源高度集成，为燃气用户提供包括燃气服务在内的各项民生生活服务。"/>
+    </RelativeLayout>
+</LinearLayout>

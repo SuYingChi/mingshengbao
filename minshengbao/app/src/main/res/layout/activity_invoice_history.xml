@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_invoice_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionActivity.Invoice.InvoiceHistory">
+    <include layout="@layout/layout_header"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+            android:id="@+id/id_view_invoice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        <include layout="@layout/layout_nodata_view"
+            android:id="@+id/id_nodata_view"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

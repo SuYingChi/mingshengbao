@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.msht.minshengbao">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <permission android:protectionLevel="normal" android:name="oem.permission.SENDMAIL"/>
+    <permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".LaunchActivity"
+            android:theme="@style/LauncherTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".FunctionActivity.MainActivity" />
+        <activity
+            android:name=".GuideActivity"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".FunctionActivity.GasService.GasService" />
+        <activity android:name=".FunctionActivity.MyActivity.LoginActivity" />
+        <activity android:name=".FunctionActivity.MyActivity.RegisterActivity" />
+        <activity android:name=".FunctionActivity.MyActivity.Findpassword" />
+        <activity android:name=".FunctionActivity.GasService.GasRepair" />
+        <activity android:name=".FunctionActivity.GasService.SelectCustomerno" />
+        <activity android:name=".FunctionActivity.GasService.ServerSuccess" />
+        <activity android:name=".FunctionActivity.GasService.AddCustomerNo" />
+        <activity android:name=".FunctionActivity.GasService.GasWriteTable" />
+        <activity android:name=".FunctionActivity.GasService.GasExpenseQuery" />
+        <activity android:name=".FunctionActivity.GasService.GasInstall" />
+        <activity android:name=".FunctionActivity.GasService.GasIntroduce" />
+        <activity android:name=".FunctionActivity.HtmlWeb.HtmlPage" />
+        <activity android:name=".FunctionActivity.GasService.GasServerGuide" />
+        <activity android:name=".FunctionActivity.GasService.Gasqianxian" />
+        <activity android:name=".FunctionActivity.GasService.GasPayfee" />
+        <activity android:name=".FunctionActivity.Public.SelectVoucher" />
+        <activity android:name=".FunctionActivity.Public.PayfeeWay" />
+        <activity android:name=".FunctionActivity.GasService.BillDetail" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource" />
+        </provider>
+
+        <service
+            android:name=".DownloadVersion.DownloadService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="oem.permission.SENDMAIL"/>
+        <!-- Ping++ SDK -->
+        <activity
+            android:name="com.pingplusplus.android.PaymentActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 微信支付 -->
+        <activity-alias
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:targetActivity="com.pingplusplus.android.PaymentActivity" />
+
+        <!-- 支付宝 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind" />
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind" />
+
+        <!-- 银联支付 -->
+        <uses-library
+            android:name="org.simalliance.openmobileapi"
+            android:required="false" />
+
+        <activity
+            android:name="com.unionpay.uppay.PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize" />
+
+        <!-- 招行一网通 -->
+        <service
+            android:name="cmb.pb.cmbsafe.CmbService"
+            android:exported="false" />
+
+        <activity
+            android:name="cmb.pb.ui.PBKeyboardActivity"
+            android:theme="@style/CmbDialogStyleBottom" />
+
+        <service android:name="com.amap.api.location.APSService" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="e2c5771dfb582ec340c3498b8a3fb8d4" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="57c01f0fe0f55a9919003a43" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Minshengbao" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="7dc4d7937bab57666f9188e5667e5930" />
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="118eae5408" />
+
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <!-- 分享 -->
+        <!-- 新浪 -->
+        <activity
+            android:name=".WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 微博编辑页 -->
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault" />
+        <!-- 微信 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".FunctionActivity.Public.SelectCity" />
+        <activity android:name=".FunctionActivity.HtmlWeb.ShopActivity" />
+        <activity android:name=".FunctionActivity.MyActivity.CustomerNoManage" />
+        <activity android:name=".FunctionActivity.MyActivity.Mysetting" />
+        <activity android:name=".FunctionActivity.MyActivity.SettingSex" />
+        <activity android:name=".FunctionActivity.MyActivity.SettingNickname" />
+        <activity android:name=".FunctionActivity.GasService.GasServerOrder" />
+        <activity android:name=".FunctionActivity.GasService.GasservirceDetail" />
+        <activity android:name=".FunctionActivity.Invoice.InvoiceOpen" />
+        <activity android:name=".FunctionActivity.Invoice.ApplyInvoice" />
+        <activity android:name=".FunctionActivity.Invoice.InvoiceHistory" />
+        <activity android:name=".FunctionActivity.HtmlWeb.AgreeTreayt" />
+        <activity android:name=".FunctionActivity.MyActivity.Mywallet" />
+        <activity android:name=".FunctionActivity.MyActivity.DiscountCoupon" />
+        <activity android:name=".FunctionActivity.MyActivity.RechargeValue" />
+        <activity android:name=".FunctionActivity.MyActivity.AutomatePay" />
+        <activity android:name=".FunctionActivity.MyActivity.IncomeExpense" />
+        <activity android:name=".FunctionActivity.HtmlWeb.ReplacePayAgree" />
+        <activity android:name=".FunctionActivity.MyActivity.AboutMine" />
+        <activity android:name=".FunctionActivity.MyActivity.ShareMenuActivity" />
+        <activity android:name=".FunctionActivity.GasService.GasEvaluateWorkorder" />
+        <activity android:name=".FunctionActivity.MessageCenterActivity" />
+        <activity android:name=".FunctionActivity.MessageDetailActivity" />
+        <activity android:name=".FunctionActivity.repairService.MyorderworkDetail" />
+        <activity android:name=".FunctionActivity.MyActivity.AddressManageActivity" />
+        <activity android:name=".FunctionActivity.MyActivity.AddAddressActivity" />
+        <activity android:name=".FunctionActivity.Public.SelectAddress" />
+        <activity android:name=".FunctionActivity.Public.MoveSelectAddress" />
+        <activity android:name=".FunctionActivity.MyActivity.ModifyAddress" />
+        <activity android:name=".FunctionActivity.repairService.HomeAppliancescClean" />
+        <activity android:name=".FunctionActivity.repairService.HouseApplianceFix" />
+        <activity android:name=".FunctionActivity.repairService.SanitaryWare" />
+        <activity android:name=".FunctionActivity.repairService.LampCircuit" />
+        <activity android:name=".FunctionActivity.repairService.OtherRepair" />
+        <activity android:name=".FunctionActivity.insurance.InsurancePurchase" />
+        <activity android:name=".FunctionActivity.insurance.InsuranceDetail" />
+        <activity android:name=".FunctionActivity.insurance.InsurancePay" />
+        <activity android:name=".FunctionActivity.MyActivity.RegisterSeccess" />
+        <activity android:name=".FunctionActivity.MyActivity.ConsultRecommend" />
+        <activity android:name=".FunctionActivity.repairService.PublishOrder" />
+        <activity android:name=".FunctionActivity.repairService.EnlargePicActivity" />
+        <activity android:name=".FunctionActivity.HtmlWeb.PriceMenu" />
+        <activity android:name=".FunctionActivity.repairService.PublishSuccess" />
+        <activity android:name=".FunctionActivity.repairService.RepairEvaluate" />
+        <activity android:name=".FunctionActivity.repairService.LookEvaluate" />
+        <activity android:name=".FunctionActivity.repairService.RepairPayment" />
+        <activity android:name=".FunctionActivity.repairService.MasterDetail" />
+        <activity android:name=".FunctionActivity.repairService.Warrantycard" />
+        <activity android:name=".FunctionActivity.repairService.RefundApply" />
+        <activity android:name=".FunctionActivity.repairService.RepeatFix" />
+        <activity android:name=".FunctionActivity.MyActivity.MoreSetting" />
+        <activity android:name=".FunctionActivity.Public.PaySuccess" />
+        <activity android:name=".FunctionActivity.GasService.GasPayRecord" />
+        <activity android:name=".Base.BaseActivity" />
+        <activity android:name=".FunctionActivity.GasService.PreexistenceDetail" />
+        <activity android:name=".FunctionActivity.GasService.IcCardExpense" />
+        <activity android:name=".FunctionActivity.HtmlWeb.IcbcHtml" />
+        <activity android:name=".FunctionActivity.Public.QrCodeError" />
+        <activity android:name=".FunctionActivity.GasService.GasIccard" />
+        <activity android:name=".FunctionActivity.Public.AllService" />
+        <activity android:name=".FunctionActivity.Electricvehicle.ElectricHome" />
+        <activity android:name=".FunctionActivity.Electricvehicle.ElectricMap" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterPaymethod" />
+        <activity android:name=".FunctionActivity.Electricvehicle.ElectricsStoreDetail" />
+        <activity android:name=".FunctionActivity.Electricvehicle.StoreMap" />
+        <activity android:name=".FunctionActivity.Electricvehicle.SearchStore" />
+        <activity android:name=".FunctionActivity.Electricvehicle.ReplaceAddress" />
+        <activity android:name=".FunctionActivity.Electricvehicle.ElectricPicture" />
+        <activity android:name=".FunctionActivity.WaterApp.ScanCodeResult" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterHome" />
+        <activity android:name=".FunctionActivity.WaterApp.OnlinePlaceOrder" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterRecharge" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterBalanceDetail" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterSuccess" />
+        <activity
+            android:name=".FunctionActivity.HtmlWeb.VegetableGentlemen"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".FunctionActivity.HtmlWeb.IntelligentFarmHml" />
+        <activity android:name=".FunctionActivity.insurance.InsuranceHome"
+            android:screenOrientation="portrait" />
+        <activity android:name=".FunctionActivity.WaterApp.SelectEstate" />
+        <activity android:name=".FunctionActivity.WaterApp.WaterOrderList" />
+        <activity
+            android:name=".FunctionActivity.Public.QRCodeScan"
+            android:screenOrientation="portrait" />
+        <activity android:name=".FunctionActivity.MyActivity.PasswordActivity" />
+        <activity android:name=".FunctionActivity.Public.PublicPayway"></activity>
+    </application>
+
+</manifest>

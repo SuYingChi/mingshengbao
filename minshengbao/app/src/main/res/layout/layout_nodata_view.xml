@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/id_re_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_100"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/id_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/biaoqing_m"/>
+        <TextView
+            android:id="@+id/id_tv_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/id_img"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="亲，您没有可开发票的订单"
+            android:textSize="@dimen/text_16"
+            />
+    </RelativeLayout>
+</RelativeLayout>

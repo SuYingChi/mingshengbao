@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width225"
+            android:layout_centerInParent="true">
+            <TextView
+                android:id="@+id/id_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="网络连接失败"
+                android:textSize="@dimen/text_width16"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/id_text2"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_width16"
+                android:text="重新加载"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

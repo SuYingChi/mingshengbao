@@ -1,0 +1,208 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.msht.minshengbao.FunctionActivity.fragment.SelfWriteFrage">
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/id_re_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_touch_background"
+                android:minHeight="@dimen/margin_50">
+
+                <TextView
+                    android:id="@+id/id_select_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_5"
+                    android:layout_toLeftOf="@+id/id_forward_img"
+                    android:hint="选择燃气用户号"
+                    android:textColorHint="#ff363636"
+                    android:textSize="16dp" />
+
+                <ImageView
+                    android:id="@+id/id_forward_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:src="@drawable/forward_2x" />
+            </RelativeLayout>
+
+            <include layout="@layout/layout_line_gray" />
+
+            <RelativeLayout
+                android:id="@+id/id_select_table"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="选择表具"
+                    android:textColor="#ff363636"
+                    android:textSize="@dimen/text_16" />
+
+                <EditText
+                    android:id="@+id/id_tv_selecttable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_30"
+                    android:layout_toRightOf="@+id/textView"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:focusableInTouchMode="false"
+                    android:hint="请选择"
+                    android:inputType="textMultiLine"
+                    android:textSize="16dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:src="@drawable/forward_2x" />
+            </RelativeLayout>
+
+            <include layout="@layout/layout_line_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="上次表底数"
+                    android:textColor="#ff363636"
+                    android:textSize="@dimen/text_16" />
+
+                <EditText
+                    android:id="@+id/id_last_table"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_toLeftOf="@+id/text2"
+                    android:layout_toRightOf="@+id/text1"
+                    android:background="@null"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:text="NM³"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="18dp" />
+            </RelativeLayout>
+
+            <include layout="@layout/layout_line_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/text3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:text="本次表读数"
+                    android:textColor="#ff363636"
+                    android:textSize="@dimen/text_16" />
+
+                <EditText
+                    android:id="@+id/id_reading_tble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_toLeftOf="@+id/text5"
+                    android:layout_toRightOf="@+id/text3"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="请输入"
+                    android:inputType="number"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:text="NM³"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="18dp" />
+            </RelativeLayout>
+
+            <include layout="@layout/layout_line_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_30">
+
+                <Button
+                    android:id="@+id/id_btn_verify"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_marginRight="@dimen/margin_20"
+                    android:background="@drawable/selector_touch_button_change"
+                    android:text="确认"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_18" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/id_btn_verify"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/margin_25"
+                    android:layout_marginTop="@dimen/margin_width18"
+                    android:text="温馨提示：每月最多可抄表3次"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_width16" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+    <string name="activity_protocol">《充返活动说明》</string>
+    <string name="immediately_recharge">立即充值</string>
+    <string name="result_notice1">请继续操作设备，完成订单</string>
+    <string name="result_notice2">网络开小差了，请稍后再试或使用IC卡</string>
+    <string name="result_notice3">其他异常，敬请谅解</string>
+    <string name="scan_result1">扫码成功</string>
+    <string name="scan_result2">售水机网络异常</string>
+    <string name="scan_result3">售水机设备异常</string>
+</resources>

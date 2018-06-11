@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionActivity.Electricvehicle.ElectricMap">
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.amap.api.maps.MapView
+            android:id="@+id/id_mapView"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    <include layout="@layout/layout_electric_home_header"/>
+    </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/id_layout_near"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:background="@color/white">
+        <View
+            android:id="@+id/id_view"
+            android:layout_width="@dimen/margin_width50"
+            android:layout_height="@dimen/margin_width6"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_width6"
+            android:background="@color/black_gray"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/id_view"
+            android:layout_marginTop="@dimen/margin_width15"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:text="点击查看附近维修点"
+            android:textSize="@dimen/text_14"
+            android:textColor="@color/title_tv"/>
+    </RelativeLayout>
+</LinearLayout>

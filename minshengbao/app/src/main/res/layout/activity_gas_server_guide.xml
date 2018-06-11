@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_gas_server_guide"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.msht.minshengbao.FunctionActivity.GasService.GasServerGuide">
+    <include layout="@layout/layout_header"/>
+    <RelativeLayout
+        android:id="@+id/id_layout_wangdian"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#ffffff">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/yingye_wangdian"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_18"
+            />
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:id="@+id/id_layout_yewu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_baoxiu_yewu"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_18"
+            />
+
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:id="@+id/id_layout_jiaona"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_price_jiaona"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_18"
+            />
+
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:id="@+id/id_layout_promise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_service_promise"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_18"
+            />
+
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:id="@+id/id_layout_notopen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/NOT_OPEN_condition"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:textSize="@dimen/text_18"
+            />
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+
+</LinearLayout>

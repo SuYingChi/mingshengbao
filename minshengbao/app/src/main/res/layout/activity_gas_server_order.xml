@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_gas_server_order"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.msht.minshengbao.FunctionActivity.GasService.GasServerOrder">
+    <include layout="@layout/layout_header"/>
+    <FrameLayout
+        android:id="@+id/id_fr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+            android:id="@+id/id_gasserver_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        <include layout="@layout/layout_nodata_view"
+            android:id="@+id/id_nodata_layout"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>
