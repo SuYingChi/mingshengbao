@@ -446,7 +446,7 @@ public class WaterPaymethod extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String validateURL= UrlUtil.PAYMETHOD_URL;
+        String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {

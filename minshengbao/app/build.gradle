@@ -8,13 +8,32 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2000039
+        versionCode 2000040
         versionName "v3.9.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    //配置keystore签名
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+    properties.load(inputStream)
+    def keyDir = properties.getProperty('key.file')
+    signingConfigs {
+        debug {
+            storeFile file(keyDir)
+        }
+    }
     buildTypes {
+        debug {
+            buildConfigField 'String','URL_HEADS','"http://test.msbapp.cn:8080"'
+            buildConfigField 'String','URL_MSSB','"http://120.25.195.173:17080/rwapi"'
+            buildConfigField 'String','URL_SHOP','"http://dev.msbapp.cn"'
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
+            buildConfigField 'String','URL_HEADS','"https://msbapp.cn"'
+            buildConfigField 'String','URL_MSSB','"http://sb-api.msbapp.cn"'
+            buildConfigField 'String','URL_SHOP','"http://shop.msbapp.cn:8090"'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

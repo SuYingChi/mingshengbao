@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -384,7 +383,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private void initpayway() {
         String source="";
         customDialog.show();
-        String validateURL= UrlUtil.PAYMETHOD_URL;
+        String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);

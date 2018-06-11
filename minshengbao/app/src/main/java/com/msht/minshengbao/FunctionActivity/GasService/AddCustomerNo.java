@@ -191,7 +191,7 @@ public class AddCustomerNo extends BaseActivity implements View.OnClickListener 
         if (requestCode==0){
             validateURL = UrlUtil.HouseSearch_Url;
         }else if (requestCode==1){
-            validateURL =UrlUtil.AddAdress_Url;
+            validateURL =UrlUtil.ADD_ADDRESS_URL;
         }
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
