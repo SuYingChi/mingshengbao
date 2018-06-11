@@ -12,7 +12,21 @@ android {
         versionName "v3.9.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    //配置keystore签名
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+    properties.load(inputStream)
+    def keyDir = properties.getProperty('key.file')
+    signingConfigs {
+        debug {
+            storeFile file(keyDir)
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
