@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,19 +35,21 @@ public class SwipeAdapter extends BaseAdapter {
     /**
      * 单击事件监听器
      */
-    private IOnItemButtonClickListener mListener = null;
+    public IOnItemButtonClickListener mListener = null;
 
     public interface IOnItemButtonClickListener {
         void onButtonClick(View v, int position);
     }
 
+    public void setOnDelectListener(IOnItemButtonClickListener delectlistener){
+        this.mListener=delectlistener;
+    }
     /**
 
      */
-    public SwipeAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists, IOnItemButtonClickListener iOnItem) {
+    public SwipeAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists) {
         mContext = ctx;
         houseList=houseLists;
-        mListener = iOnItem;
     }
     @Override
     public int getCount() {
@@ -79,7 +80,7 @@ public class SwipeAdapter extends BaseAdapter {
         }
         item.item_left_txt.setText(houseList.get(position).get("name"));
         item.item_customer.setText(houseList.get(position).get("customerNo"));
-        if (VariableUtil.Boolselect){
+        if (VariableUtil.boolSelect){
             item.item_delect.setVisibility(View.VISIBLE);
         }else {
             item.item_delect.setVisibility(View.GONE);

@@ -111,10 +111,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     private TextView tvCity, tvNavigation;
     private TextView tvNotOpen;
     private String mCity="海口";
-    private String cityId="";
-    private String Id;
+    private String cityId="1";
+    private String Id="null";
     private String flag;
     private int times=0;
+
     /**
      * bgHeight;上半身的高度
      */
@@ -156,7 +157,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.mSwipeRefresh.setRefreshing(false);
                             reference.adInformation.clear();//再次刷新清除原数据
                             reference.onGetimageUrls();
@@ -209,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         JSONObject server=json.getJSONObject("serve");
                         reference.rightTopArray =server.optJSONArray("top_module");
                         reference.jsonArray=server.optJSONArray("first_module");
-                        if(result.equals("success")) {
+                        if(result.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.mSwipeRefresh.setRefreshing(false);
                             reference.rightTopList.clear();
                             reference.onTipTopModule();
@@ -250,7 +251,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONArray Array =object.optJSONArray("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.activityInfos.clear();//再次刷新清除原数据
                             reference.onGetSpecialUrls(Array);
                         }else {
@@ -286,7 +287,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONArray Array =object.optJSONArray("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.hotList.clear();
                             reference.onSavaHotRepair(Array);
                         }else {
@@ -389,7 +390,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             view.findViewById(R.id.id_view).setVisibility(View.GONE);
         }
-        VariableUtil.citypos=-1;
+        VariableUtil.cityPos =-1;
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
         initView(view);
         initRefresh();

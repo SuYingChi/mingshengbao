@@ -28,7 +28,7 @@ import com.msht.minshengbao.Adapter.MyfunctionAdapter;
 import com.msht.minshengbao.Callback.ResultImgListenner;
 import com.msht.minshengbao.FunctionActivity.GasService.GasServerOrder;
 import com.msht.minshengbao.FunctionActivity.Invoice.InvoiceOpen;
-import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManage;
+import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ConsultRecommend;
 import com.msht.minshengbao.FunctionActivity.MyActivity.CustomerNoManage;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
@@ -356,7 +356,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivity(intent);
     }
     private void Gomanage() {
-        Intent intent=new Intent(mContext, AddressManage.class);
+        Intent intent=new Intent(mContext, AddressManageActivity.class);
         startActivity(intent);
     }
     private void Gomywallet() {

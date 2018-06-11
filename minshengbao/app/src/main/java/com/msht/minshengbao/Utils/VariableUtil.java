@@ -11,15 +11,25 @@ public class VariableUtil {
 
     public static int firstCome=0;
     public static int mPos;
-    public static int citypos;
+    public static int cityPos;
     public static int paypos;
     public static int MealPos=-1;
     public static int estatePos=-1;
     public static String balance;
     public static String City;
-    public static boolean Boolselect;
+    public static boolean boolSelect;
     public static boolean BoolCode;
     public static boolean loginStatus=false;
+    public static final  String VALUE_ZERO= "0";
+    public static final  String VALUE_ONE=  "1";
+    public static final  String VALUE_TWO=  "2";
+    public static final  String VALUE_THREE="3";
+    public static final  String VALUE_FOUR= "4";
+    public static final  String VALUE_FIVE= "5";
+    public static final  String VALUE_SIX=  "6";
+    public static final  String VALUE_SEVER="7";
+    public static final  String VALUE_ZERO1="0.0";
+    public static final  String VALUE_ZERO2="0.00";
     public static ArrayList<String> options1item=new ArrayList<String>();
     public static ArrayList<ArrayList<String>> options2item=new ArrayList<ArrayList<String>>();
     public static ArrayList<ArrayList<ArrayList<String>>> options3item=new ArrayList<>();
@@ -29,7 +39,7 @@ public class VariableUtil {
     public static String SECURITY_SIGN_KEY="www.msht.com2017v1!@#";
 
 
-    public static double TwoDecinmal2(double amount) {   //保留两位小数
+    public static double twoDecinmal2(double amount) {   //保留两位小数
         BigDecimal bg=new BigDecimal(amount);
         double double1=bg.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
         return double1;

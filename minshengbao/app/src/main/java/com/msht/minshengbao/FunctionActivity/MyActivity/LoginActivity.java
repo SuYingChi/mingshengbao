@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
         context=this;
         mPageName ="登录界面";
-        PushAgent.getInstance(context).onAppStart();   //推送统计
+        PushAgent.getInstance(context).onAppStart();
         customDialog=new CustomDialog(this, "正在加载");
         initfindview();
         initEvent();
@@ -170,7 +170,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(reg);
                 break;
             case R.id.id_button_findpassword:
-                Intent findpaw=new Intent(context,Findpassword.class);
+                Intent findpaw=new Intent(context,FindPasswordActivity.class);
                 startActivity(findpaw);
                 break;
             case R.id.id_button_login:

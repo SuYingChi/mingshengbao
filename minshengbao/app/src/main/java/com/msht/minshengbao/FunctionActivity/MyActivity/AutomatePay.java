@@ -9,15 +9,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.AutopayAdapter;
+import com.msht.minshengbao.Adapter.AutomaticPayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.ReplacePayAgree;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.EnsureAddress;
@@ -28,14 +27,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AutomatePay extends BaseActivity implements View.OnClickListener {
-    private AutopayAdapter adapter;
+    private AutomaticPayAdapter adapter;
     private View views;
-    private TextView nodata,tv_rightText;
+    private TextView tvNoData, tvRightText;
     private String password,userId;
     private String Id,customerNum,addr;
     private int pos=-1;
@@ -46,54 +46,69 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
     private JSONArray jsonArray;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> autoList = new ArrayList<HashMap<String, String>>();
-    Handler requestHandler= new Handler() {
+    private final RequestHandler requestHandler =new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<AutomatePay> mWeakReference;
+        public RequestHandler(AutomatePay activity) {
+            mWeakReference = new WeakReference<AutomatePay>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+
+            final AutomatePay activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestCode==0) {
-                                jsonArray =object.optJSONArray("data");
-                                if (jsonArray.length() == 0) {
-                                    nodata.setVisibility(View.VISIBLE);
-                                    views.setVisibility(View.GONE);
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0) {
+                                activity.jsonArray =object.optJSONArray("data");
+                                if (activity.jsonArray.length() == 0) {
+                                    activity.tvNoData.setVisibility(View.VISIBLE);
+                                    activity.views.setVisibility(View.GONE);
                                 } else {
-                                    initView();
-                                    views.setVisibility(View.VISIBLE);
-                                    nodata.setVisibility(View.GONE);
+                                    activity.onPayFee();
+                                    activity.views.setVisibility(View.VISIBLE);
+                                    activity.tvNoData.setVisibility(View.GONE);
                                 }
-                            }else if (requestCode==1){
+                            }else if (activity.requestCode==1){
                                 JSONObject ObjectInfo = object.optJSONObject("data");
-                                addr = ObjectInfo.optString("address");
-                                requestCode=2;
-                                showDialogs("再仔细瞧瞧哦！");
-                            }else if (requestCode==2){
-                                displayDialog("添加自动缴费地址完成");
-                            }else if (requestCode==3){
-                                autoList.remove(pos);
-                                adapter.notifyDataSetChanged();
+                                activity.addr = ObjectInfo.optString("address");
+                                activity.requestCode=2;
+                                activity.showDialogs("再仔细瞧瞧哦！");
+                            }else if (activity.requestCode==2){
+                                activity.displayDialog("添加自动缴费地址完成");
+                            }else if (activity.requestCode==3){
+                                activity.autoList.remove(activity.pos);
+                                activity.adapter.notifyDataSetChanged();
                             }
                         }else {
-                            displayDialog(Error);
+                            activity.displayDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     private void displayDialog(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -112,7 +127,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                     }
                 }).show();
     }
-    private void initView() {
+    private void onPayFee() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -129,10 +144,10 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
             e.printStackTrace();
         }
         if (autoList.size()!=0){
-            nodata.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
         }else {
-            nodata.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.VISIBLE);
         }
 
     }
@@ -145,8 +160,8 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        initfindViewByid();
-        adapter=new AutopayAdapter(context,autoList, new AutopayAdapter.IOnItemButtonClickListener() {
+        initFindViewByid();
+        adapter=new AutomaticPayAdapter(context,autoList, new AutomaticPayAdapter.IOnItemButtonClickListener() {
             @Override
             public void onDelectClick(View v, int position) {
                 pos=position;
@@ -181,13 +196,13 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
         ensureAddress.show();
 
     }
-    private void initfindViewByid() {
-        tv_rightText=(TextView) findViewById(R.id.id_tv_rightText);
-        tv_rightText.setVisibility(View.VISIBLE);
-        tv_rightText.setText("添加");
-        tv_rightText.setOnClickListener(this);
+    private void initFindViewByid() {
+        tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("添加");
+        tvRightText.setOnClickListener(this);
         views=findViewById(R.id.id_view);
-        nodata=(TextView)findViewById(R.id.id_nodata);
+        tvNoData =(TextView)findViewById(R.id.id_nodata);
         mListView = (ListView)findViewById(R.id.id_auto_address);
     }
     private void requestSevice() {
@@ -208,22 +223,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
             validateURL = UrlUtil.DelectAutopay_AddUrl;
             textParams.put("id",Id);
         }
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     public void onClick(View v) {

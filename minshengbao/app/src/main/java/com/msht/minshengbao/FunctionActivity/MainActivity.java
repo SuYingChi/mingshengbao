@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.objectJson=object.getJSONObject("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.onPersionalInfomation();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.onUnreadMassage(json);
                         }
                     }catch (Exception e){
@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                         }else {
                             ToastUtil.ToastText(activity.context,error);
                         }
@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String Results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonObject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
+                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveVersion();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
@@ -479,10 +479,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         // 如果当前fragment未被添加，则添加到Fragment管理器中
         if (!minshengFrag.isAdded()) {
+            /*fragmentTransaction.hide(currentFragment)
+                    .add(R.id.content_layout, minshengFrag).commit();*/
             fragmentTransaction.hide(currentFragment)
-                    .add(R.id.content_layout, minshengFrag).commit();
+                    .add(R.id.content_layout, minshengFrag).commitAllowingStateLoss();
         } else {
-            fragmentTransaction.hide(currentFragment).show(minshengFrag).commit();
+            //fragmentTransaction.hide(currentFragment).show(minshengFrag).commit();
+            fragmentTransaction.hide(currentFragment).show(minshengFrag).commitAllowingStateLoss();
         }
         currentFragment = minshengFrag;
     }

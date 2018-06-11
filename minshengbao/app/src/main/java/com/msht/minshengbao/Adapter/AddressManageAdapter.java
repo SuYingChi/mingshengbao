@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Created by hong on 2017/4/28.
  */
 
-public class AddrManageAdapter extends BaseAdapter {
+public class AddressManageAdapter extends BaseAdapter {
     private Context mContext = null;
     private LayoutInflater inflater;
     public OnSelectDelectListener delectlistener;
@@ -45,7 +45,7 @@ public class AddrManageAdapter extends BaseAdapter {
         void ItemSelectClick(View view,int thisposition);
     }
     private ArrayList<HashMap<String, String>> addrList = new ArrayList<HashMap<String, String>>();
-    public AddrManageAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public AddressManageAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         inflater=LayoutInflater.from(context);
         this.mContext=context;
         this.addrList=List;

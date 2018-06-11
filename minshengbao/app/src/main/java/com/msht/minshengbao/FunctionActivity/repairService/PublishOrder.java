@@ -82,6 +82,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     private int requesttype=0;
     private JSONObject jsonObject;
     private JSONArray jsonArray;
+    private static final String CITY_NAME="海口";
     private ArrayList<String> mDataList=new ArrayList<>();
     private ArrayList<String>multiResult=new ArrayList<>();
     private ArrayList<String> imgPaths = new ArrayList<>();
@@ -311,7 +312,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private void initJudge() {
-        if (!VariableUtil.City.equals("海口")){
+        if (!VariableUtil.City.equals(CITY_NAME)){
             noticeDialog=new NoticeDialog(context);
             noticeDialog.show();
             mHandler.sendEmptyMessageDelayed(1, SPLASH_DELAY_MILLIS);

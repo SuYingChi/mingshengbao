@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,167 +29,197 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PayfeeWay extends BaseActivity implements View.OnClickListener {
+public class PayFeeWayActivity extends BaseActivity implements View.OnClickListener {
 
-    private Button btn_send;
-    private TextView tv_realamount;
-    private TextView tv_balance;
-    private TextView tv_subtract;
-    private TextView tv_shouldAmount;
+    private Button btnSend;
+    private TextView tvRealAmount;
+    private TextView tvSubtract;
+    private TextView tvShouldAmount;
     private ListViewForScrollView forScrollView;
     private PayWayAdapter mAdapter;
-    private String userId,id,voucherId;
+    private String userId,voucherId;
     private String PayId;
     private String password;
-    private String charge;   //
+    private String charge;
     private String channels;
     private String type;
     private String discountAmt="0";
     private String orderId="";
     private String amount;
-    private String realamount;
-    private String source="";
+    private String realAmount;
     private JSONArray jsonArray;
     private int requestCode=0;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
     private JSONObject jsonObject;
     private CustomDialog customDialog;
-    Handler SubtractHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
-                    }
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        JSONObject optJSONObject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
-                            SubtractAmount(optJSONObject);
-                        }else {
-                            realamount=amount;
-                            tv_subtract.setText("¥"+discountAmt);
-                            tv_realamount.setText(realamount);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
-                    }
-                    realamount=amount;
-                    tv_subtract.setText("¥"+discountAmt);
-                    tv_realamount.setText(realamount);
-                    break;
-                default:
-                    break;
-            }
+    private final SubtractHandler subtractHandler=new SubtractHandler(this);
+    private final BalanceHandler balanceHandler=new BalanceHandler(this);
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<PayFeeWayActivity> mWeakReference;
+        public RequestHandler(PayFeeWayActivity activity) {
+            mWeakReference = new WeakReference<PayFeeWayActivity>(activity);
         }
-    };
-    Handler balanceHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
-                    }
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonObject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
-                            if (requestCode==0){
-                                ShowBalance();
-                            }else if (requestCode==1){
-                                showcharge();
-                            }
-                        }else {
-                            showfaiture(Error);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
-                    }
-                    showfaiture(msg.obj.toString());
-                    break;
-                default:
-                    break;
+            final PayFeeWayActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
             }
-        }
-    };
-    Handler requestHandler = new Handler() {
-        public void handleMessage(Message msg) {
             switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestCode==0){
-                                jsonArray =object.getJSONArray("data");
-                                Paywayshow();
-                            }else if (requestCode==2){
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0){
+                                activity.jsonArray =object.getJSONArray("data");
+                                activity.onGetPayWayData();
+                            }else if (activity.requestCode==2){
                                 JSONObject json=object.getJSONObject("data");
-                                payresult(json);
+                                activity.onPayResult(json);
                             }
                         }else {
-                            showfaiture(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    if (customDialog!=null&&customDialog.isShowing()){
-                        customDialog.dismiss();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
                     }
-                    showfaiture(msg.obj.toString());
+                    activity.onFailure(msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void SubtractAmount(JSONObject optJSONObject) {
+    }
+    private static class SubtractHandler extends Handler{
+        private WeakReference<PayFeeWayActivity> mWeakReference;
+        public SubtractHandler(PayFeeWayActivity activity) {
+            mWeakReference = new WeakReference<PayFeeWayActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final PayFeeWayActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            switch (msg.what) {
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        JSONObject optJSONObject =object.optJSONObject("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.onSubtractAmount(optJSONObject);
+                        }else {
+                            activity.realAmount =activity.amount;
+                            activity.tvSubtract.setText("¥"+activity.discountAmt);
+                            activity.tvRealAmount.setText(activity.realAmount);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    activity.realAmount =activity.amount;
+                    activity.tvSubtract.setText("¥"+activity.discountAmt);
+                    activity.tvRealAmount.setText(activity.realAmount);
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    private static class BalanceHandler extends Handler{
+        private WeakReference<PayFeeWayActivity> mWeakReference;
+        public BalanceHandler(PayFeeWayActivity activity) {
+            mWeakReference = new WeakReference<PayFeeWayActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final PayFeeWayActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            switch (msg.what) {
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonObject =object.optJSONObject("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0){
+                                activity.onGetBalanceData();
+                            }else if (activity.requestCode==1){
+                                activity.onChargePayWay();
+                            }
+                        }else {
+                            activity.onFailure(error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    activity.onFailure(msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    private void onSubtractAmount(JSONObject optJSONObject) {
         try{
             String showType=optJSONObject.optString("showType");
             JSONObject showData=optJSONObject.getJSONObject("showData");
             double subtract_amount=showData.optDouble("subtract_amount");
             discountAmt=String.valueOf(subtract_amount);
-            tv_subtract.setText("¥"+subtract_amount);
+            tvSubtract.setText("¥"+subtract_amount);
             double shouldAmount=Double.parseDouble(amount);
             double real=shouldAmount-subtract_amount;
-            real=VariableUtil.TwoDecinmal2(real);
-            realamount=String.valueOf(real);
-            tv_realamount.setText(realamount);
+            real=VariableUtil.twoDecinmal2(real);
+            realAmount =String.valueOf(real);
+            tvRealAmount.setText(realAmount);
         }catch (Exception e){
            e.printStackTrace();
         }
     }
-    private void payresult(JSONObject json) {
+    private void onPayResult(JSONObject json) {
         String status=json.optString("status");
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
-        if (status.equals("0")){
-            if (lottery!=null&&(!lottery.equals(""))){
+        if (status.equals(VariableUtil.VALUE_ZERO)){
+            if (lottery!=null&&(!TextUtils.isEmpty(lottery))){
                 Intent success=new Intent(context,PaySuccess.class);
                 success.putExtra("url",lottery);
                 success.putExtra("type","0");
@@ -196,26 +227,26 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                 startActivity(success);
                 finish();
             }else {
-                showdialogs("新订单");
+                onShowdialogs("新订单");
             }
-        }else if (status.equals("1")){
+        }else if (status.equals(VariableUtil.VALUE_ONE)){
             Intent success=new Intent(context,PaySuccess.class);
             success.putExtra("type","0");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
-        }else if (status.equals("2")){
+        }else if (status.equals(VariableUtil.VALUE_TWO)){
             Intent success=new Intent(context,PaySuccess.class);
             success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
-        }else if (status.equals("3")){
-            showdialogs("正在支付");
+        }else if (status.equals(VariableUtil.VALUE_THREE)){
+            onShowdialogs("正在支付");
         }
     }
-    private void Paywayshow() {
+    private void onGetPayWayData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -237,7 +268,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void showfaiture(String s) {
+    private void onFailure(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("缴费提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -250,31 +281,33 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                     }
                 }).show();
     }
-    private void ShowBalance() {
-        double doublebalance=jsonObject.optDouble("balance");
-        double doubleamount=Double.valueOf(amount);
-        if (doubleamount<=doublebalance){
+    private void onGetBalanceData() {
+        double doubleBalance=jsonObject.optDouble("balance");
+        double doubleAmount=Double.valueOf(amount);
+        if (doubleAmount<=doubleBalance){
             VariableUtil.balance="余额充足";
         }else {
             VariableUtil.balance="余额不足";
         }
         initpayway();
     }
-    private void showcharge() {
+    private void onChargePayWay() {
         try {
-            id = jsonObject.optString("id");
+            orderId=jsonObject.optString("id");
             charge = jsonObject.optString("charge");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals("1")||channels.equals("3")||channels.equals("5")||channels.equals("7"))
+        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_TWO)||channels.equals(VariableUtil.VALUE_FIVE)
+                ||channels.equals(VariableUtil.VALUE_SEVER))
         {
             //实付金额为0，不调用ping++,
-            if (realamount.equals("0.0")||realamount.equals("0.00")||realamount.equals("0")){
+            if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
+                    || realAmount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(0x002);
                 requestResult();
             }else {
-                Pingpp.createPayment(PayfeeWay.this, charge);
+                Pingpp.createPayment(PayFeeWayActivity.this, charge);
             }
         }else {
             setResult(0x002);
@@ -290,9 +323,9 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        Intent getdata=getIntent();
-        amount=getdata.getStringExtra("amount");
-        PayId=getdata.getStringExtra("id");
+        Intent data=getIntent();
+        amount=data.getStringExtra("amount");
+        PayId=data.getStringExtra("id");
         type="1";
         initView();
         mAdapter=new PayWayAdapter(context,List);
@@ -302,7 +335,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
-                btn_send.setEnabled(true);
+                btnSend.setEnabled(true);
                 VariableUtil.paypos=thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
@@ -312,17 +345,17 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
 
     private void initView() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
-        tv_balance=(TextView)findViewById(R.id.id_tv_balance);
-        tv_realamount=(TextView)findViewById(R.id.id_real_fee);
-        tv_subtract=(TextView)findViewById(R.id.id_subtract_amount);
-        tv_shouldAmount=(TextView)findViewById(R.id.id_should_fee);
-        btn_send=(Button)findViewById(R.id.id_btn_pay) ;
-        tv_shouldAmount.setText("¥"+amount+"元");
-        tv_realamount.setText("¥"+amount);
-        tv_subtract.setText("¥"+discountAmt);
-        realamount=amount;
-        btn_send.setEnabled(false);
-        btn_send.setOnClickListener(new View.OnClickListener() {
+      //  tvBalance =(TextView)findViewById(R.id.id_tv_balance);
+        tvRealAmount =(TextView)findViewById(R.id.id_real_fee);
+        tvSubtract =(TextView)findViewById(R.id.id_subtract_amount);
+        tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
+        btnSend =(Button)findViewById(R.id.id_btn_pay) ;
+        tvShouldAmount.setText("¥"+amount+"元");
+        tvRealAmount.setText("¥"+amount);
+        tvSubtract.setText("¥"+discountAmt);
+        realAmount =amount;
+        btnSend.setEnabled(false);
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTips();
@@ -337,22 +370,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         textParams.put("userId",userId);
         textParams.put("event_code","gas_pay_before");
         textParams.put("event_relate_id",PayId);
-        SendrequestUtil.executepostTwo(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                SubtractHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                SubtractHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,subtractHandler);
     }
     private void initData() {
         requestCode=0;
@@ -360,47 +378,16 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                balanceHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                balanceHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
 
     private void initpayway() {
+        String source="";
         customDialog.show();
         String validateURL= UrlUtil.PAYMETHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     public void onClick(View view) {
@@ -443,33 +430,18 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         textParams.put("password",password);
         textParams.put("id",PayId);
         textParams.put("type",type);
-        textParams.put("amount",realamount);
+        textParams.put("amount", realAmount);
         textParams.put("discountAmt",discountAmt);
         textParams.put("channel",channels);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                balanceHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                balanceHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
-        if (str.equals("success")){
+        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
             str="缴费成功";
-        }else if (str.equals("fail")){
+        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
             str="缴费失败";
-        }else if (str.equals("cancel")){
+        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
             str="已取消缴费";
         }
         if (null !=msg1 && msg1.length() != 0) {
@@ -478,14 +450,14 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         if (null !=msg2 && msg2.length() != 0) {
             str += "\n" + msg2;
         }
-        if (str.equals("缴费成功")){
+        if (title!=null&&title.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(0x002);
             requestResult();
         }else {
-            showdialogs(str);
+            onShowdialogs(str);
         }
     }
-    private void showdialogs(String str) {
+    private void onShowdialogs(String str) {
         new PromptDialog.Builder(this)
                 .setTitle("缴费提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -499,6 +471,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                     }
                 }).show();
     }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
@@ -509,8 +482,8 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                String errorMsg = data.getExtras().getString("error_msg");
+                String extraMsg = data.getExtras().getString("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
@@ -521,23 +494,7 @@ public class PayfeeWay extends BaseActivity implements View.OnClickListener {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("id",id);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
-
+        textParams.put("id",orderId);
+        SendrequestUtil.postDataFromService(validateURL,textParams, requestHandler);
     }
 }

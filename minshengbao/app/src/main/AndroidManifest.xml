@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <permission android:protectionLevel="normal" android:name="oem.permission.SENDMAIL"/>
     <permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -58,7 +59,7 @@
         <activity android:name=".FunctionActivity.GasService.GasService" />
         <activity android:name=".FunctionActivity.MyActivity.LoginActivity" />
         <activity android:name=".FunctionActivity.MyActivity.RegisterActivity" />
-        <activity android:name=".FunctionActivity.MyActivity.Findpassword" />
+        <activity android:name=".FunctionActivity.MyActivity.FindPasswordActivity" />
         <activity android:name=".FunctionActivity.GasService.GasRepair" />
         <activity android:name=".FunctionActivity.GasService.SelectCustomerno" />
         <activity android:name=".FunctionActivity.GasService.ServerSuccess" />
@@ -72,7 +73,7 @@
         <activity android:name=".FunctionActivity.GasService.Gasqianxian" />
         <activity android:name=".FunctionActivity.GasService.GasPayfee" />
         <activity android:name=".FunctionActivity.Public.SelectVoucher" />
-        <activity android:name=".FunctionActivity.Public.PayfeeWay" />
+        <activity android:name=".FunctionActivity.Public.PayFeeWayActivity" />
         <activity android:name=".FunctionActivity.GasService.BillDetail" />
 
         <provider
@@ -90,7 +91,8 @@
         <service
             android:name=".DownloadVersion.DownloadService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="oem.permission.SENDMAIL"/>
         <!-- Ping++ SDK -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
@@ -204,8 +206,8 @@
         <activity android:name=".FunctionActivity.MessageCenterActivity" />
         <activity android:name=".FunctionActivity.MessageDetailActivity" />
         <activity android:name=".FunctionActivity.repairService.MyorderworkDetail" />
-        <activity android:name=".FunctionActivity.MyActivity.AddressManage" />
-        <activity android:name=".FunctionActivity.MyActivity.AddAddress" />
+        <activity android:name=".FunctionActivity.MyActivity.AddressManageActivity" />
+        <activity android:name=".FunctionActivity.MyActivity.AddAddressActivity" />
         <activity android:name=".FunctionActivity.Public.SelectAddress" />
         <activity android:name=".FunctionActivity.Public.MoveSelectAddress" />
         <activity android:name=".FunctionActivity.MyActivity.ModifyAddress" />
@@ -258,7 +260,8 @@
             android:name=".FunctionActivity.HtmlWeb.VegetableGentlemen"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".FunctionActivity.HtmlWeb.IntelligentFarmHml" />
-        <activity android:name=".FunctionActivity.insurance.InsuranceHome" />
+        <activity android:name=".FunctionActivity.insurance.InsuranceHome"
+            android:screenOrientation="portrait" />
         <activity android:name=".FunctionActivity.WaterApp.SelectEstate" />
         <activity android:name=".FunctionActivity.WaterApp.WaterOrderList" />
         <activity

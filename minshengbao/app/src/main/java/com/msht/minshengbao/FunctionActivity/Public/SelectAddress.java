@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.MyActivity.AddAddress;
-import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManage;
+import com.msht.minshengbao.FunctionActivity.MyActivity.AddAddressActivity;
+import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ModifyAddress;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -182,14 +182,14 @@ public class SelectAddress extends BaseActivity {
         tv_rightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, AddressManage.class);
+                Intent intent=new Intent(context, AddressManageActivity.class);
                 startActivityForResult(intent,1);
             }
         });
         Rbtnnew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,AddAddress.class);
+                Intent intent=new Intent(context,AddAddressActivity.class);
                 startActivityForResult(intent,1);
             }
         });

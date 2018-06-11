@@ -12,84 +12,101 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.Public.MoveSelectAddress;
 import com.msht.minshengbao.FunctionActivity.Public.SelectCity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddAddress extends BaseActivity implements View.OnClickListener {
-    private View     Rcity,Raddress;
-    private TextView tv_city;
-    private TextView tv_address;
-    private EditText  et_name;
-    private EditText  et_phone;
-    private EditText et_doorplate;
-    private String userId;
-    private String password;
-    private String mCity,cityId;
-    private String mAddress;
+public class AddAddressActivity extends BaseActivity implements View.OnClickListener {
+    private View      layoutCity;
+    private View      layoutAddress;
+    private TextView  tvCity;
+    private TextView  tvAddress;
+    private EditText  etName;
+    private EditText  etPhone;
+    private EditText  etDoorplate;
+    private String    userId;
+    private String    password;
+    private String    mCity,cityId;
+    private String    mAddress;
     private String    mName;
     private String    mPhone;
-    private String longitude;
-    private String latitude;
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
-    private int   requestCode=0;
+    private String    longitude;
+    private String    latitude;
+    private int       requestCode=0;
     private CustomDialog customDialog;
-    private static final int REQUESTCOODE=1;//城市标志
-    private static final int AddressCode=2;
-
-    Handler requestHandler= new Handler() {
+    /**
+     * 城市标志
+     */
+    private static final int REQUEST_CODE =1;
+    private static final int ADDRESS_CODE =2;
+    private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<AddAddressActivity> mWeakReference;
+        private   RequestHandler(AddAddressActivity activity) {
+            mWeakReference = new WeakReference<AddAddressActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final AddAddressActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestCode==0) {
-                                setResult(0x001);
-                                finish();
-                            }else if (requestCode==1){
-                                setResult(0x002);
-                                finish();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0) {
+                                activity.setResult(0x001);
+                                activity.finish();
+                            }else if (activity.requestCode==1){
+                                activity.setResult(0x002);
+                                activity.finish();
                             }
                         }else {
-                            displayDialog(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void displayDialog(String string) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(string)
+                .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
@@ -97,7 +114,6 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
                     }
                 }).show();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,78 +130,78 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case REQUESTCOODE:
+            case REQUEST_CODE:
                 if (data!=null){
                     if (resultCode==2){
                         mCity=data.getStringExtra("mCity");
                         cityId=data.getStringExtra("Id");
-                        tv_city.setText(mCity);
+                        tvCity.setText(mCity);
                     }
                 }
                 break;
-            case AddressCode:
+            case ADDRESS_CODE:
                 if (data!=null){
                     if (resultCode==1){
-                        String Address=data.getStringExtra("addressInfo");
+                        String addressInfo=data.getStringExtra("addressInfo");
                         String title=data.getStringExtra("title");
                         longitude=data.getStringExtra("longitude");
                         latitude=data.getStringExtra("latitude");
-                        tv_address.setText(Address);
+                        tvAddress.setText(addressInfo);
                     }
                 }
                 break;
+            default:
+                    break;
         }
     }
     private void initView() {
-        Rcity=findViewById(R.id.id_re_city);
-        Raddress=findViewById(R.id.id_re_address);
-        tv_city=(TextView)findViewById(R.id.id_tv_city);
-        tv_address=(TextView)findViewById(R.id.id_address);
-        et_name=(EditText)findViewById(R.id.id_et_name);
-        et_phone=(EditText)findViewById(R.id.id_et_phone);
-        et_doorplate=(EditText)findViewById(R.id.id_et_doorplate);
+        layoutCity =findViewById(R.id.id_re_city);
+        layoutAddress =findViewById(R.id.id_re_address);
+        tvCity =(TextView)findViewById(R.id.id_tv_city);
+        tvAddress =(TextView)findViewById(R.id.id_address);
+        etName =(EditText)findViewById(R.id.id_et_name);
+        etPhone =(EditText)findViewById(R.id.id_et_phone);
+        etDoorplate =(EditText)findViewById(R.id.id_et_doorplate);
         findViewById(R.id.id_re_newaddress).setOnClickListener(this);
     }
     private void initEvent() {
-        Rcity.setOnClickListener(this);
-        Raddress.setOnClickListener(this);
+        layoutCity.setOnClickListener(this);
+        layoutAddress.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_newaddress:
-                String address=tv_address.getText().toString().trim();
-                String doorplate=et_doorplate.getText().toString().trim();
+                String address= tvAddress.getText().toString().trim();
+                String doorplate= etDoorplate.getText().toString().trim();
                 mAddress=address+doorplate;
-                mName=et_name.getText().toString().trim();
-                mPhone=et_phone.getText().toString().trim();
-                if (matchcity(tv_city.getText().toString())&&matchaddress(tv_address.getText().toString())
-                        &&matchName(mName)&&matchphone(mPhone)&&isPhone(mPhone)){
+                mName= etName.getText().toString().trim();
+                mPhone= etPhone.getText().toString().trim();
+                if (matchCity(tvCity.getText().toString())&& matchAddress(tvAddress.getText().toString())
+                        &&matchName(mName)&& matchPhone(mPhone)&&isPhone(mPhone)){
                     requestService();
                 }
                 break;
             case R.id.id_re_city:
                 Intent city=new Intent(context, SelectCity.class);
-                startActivityForResult(city,REQUESTCOODE);
+                startActivityForResult(city, REQUEST_CODE);
                 break;
             case R.id.id_re_address:
-                if (TextUtils.isEmpty(tv_city.getText().toString())){
-                    Toast.makeText(context, "请选择城市", Toast.LENGTH_SHORT)
-                            .show();
+                if (TextUtils.isEmpty(tvCity.getText().toString())){
+                    ToastUtil.ToastText(context,"请选择城市");
                 }else {
                     Intent intent=new Intent(context, MoveSelectAddress.class);
                     intent.putExtra("city_name",mCity);
-                    startActivityForResult(intent,AddressCode);
+                    startActivityForResult(intent, ADDRESS_CODE);
                 }
                 break;
             default:
                 break;
         }
     }
-    private boolean matchphone(String s) {
+    private boolean matchPhone(String s) {
         if (TextUtils.isEmpty(s)){
-            Toast.makeText(context, "请填写您的联系电话", Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtil.ToastText(context,"请填写您的联系电话");
             return false;
         }else {
             return true;
@@ -193,39 +209,40 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
     }
     private boolean matchName(String s) {
         if (TextUtils.isEmpty(s)){
-            Toast.makeText(context, "请填写您的收货人名", Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtil.ToastText(context,"请填写您的收货人名");
             return false;
         }else {
             return true;
         }
     }
-    private boolean matchaddress(String s) {
+    private boolean matchAddress(String s) {
         if (TextUtils.isEmpty(s)){
-            Toast.makeText(context, "请填写您的地址", Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtil.ToastText(context,"请填写您的地址");
             return false;
         }else {
             return true;
         }
     }
-    private boolean matchcity(String s) {
+    private boolean matchCity(String s) {
         if (TextUtils.isEmpty(s)){
-            Toast.makeText(context, "请选择城市", Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtil.ToastText(context,"请选择城市");
             return false;
         }else {
             return true;
         }
     }
-    private boolean isPhone(String phoneNo) {     //判断电话号码个格式
-        Pattern pattern=Pattern.compile("1[0-9]{10}");
-        Matcher matcher=pattern.matcher(phoneNo);
+
+    /**
+     * 验证是否为11位电话号码
+     * @param phoneNo  电话号码
+     * @return true or false
+     */
+    private boolean isPhone(String phoneNo) {
+        Matcher matcher=NUMBER_PATTERN.matcher(phoneNo);
         if (matcher.matches()){
             return true;
         }else {
-            Toast.makeText(context, "电话号码格式不正确", Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtil.ToastText(context,"电话号码格式不正确");
             return false;
         }
     }
@@ -242,21 +259,6 @@ public class AddAddress extends BaseActivity implements View.OnClickListener {
         textParams.put("latitude",latitude);
         textParams.put("name",mName);
         textParams.put("phone",mPhone);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 }

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Adapter.GetRecordAdapter;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -39,11 +38,8 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     private String    userId;
     private String    password;
     private XListView mListView;
-    private TextView tv_nodata;
-
+    private TextView tvNotHavaData;
     private int refreshType;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private JSONArray jsonArray;
     private GetRecordAdapter adapter;
     private int pageNo=1;
@@ -51,6 +47,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     private final String mPageName ="抄表记录";
     private Context mContext;
     private ArrayList<HashMap<String, String>> writeList = new ArrayList<HashMap<String, String>>();
+    private final PayRecordHandler payRecordHandler=new PayRecordHandler(this);
     public TableRecordFrag() {
         // Required empty public constructor
     }
@@ -66,51 +63,45 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
             if (reference == null||reference.isDetached()) {
                 return;
             }
-            super.handleMessage(msg);
-        }
-    }
-    Handler payrecordHandler = new Handler() {
-        public void handleMessage(Message msg) {
-
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListView.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListView.stopLoadMore();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        reference.jsonArray =object.optJSONArray("data");
+                        if(results.equals("success")) {
+                            if (reference.refreshType==0){
+                                reference.mListView.stopRefresh(true);
+                            }else if (reference.refreshType==1){
+                                reference.mListView.stopLoadMore();
                             }
-                            if (jsonArray.length()>0){
-                                if (pageNo==1){
-                                    writeList.clear();
+                            if (reference.jsonArray.length()>0){
+                                if (reference.pageNo==1){
+                                    reference.writeList.clear();
                                 }
-                                initShow();
+                                reference.onWriteTableData();
                             }
                         }else {
-                            mListView.stopRefresh(false);
-                            failure(Error);
+                            reference.mListView.stopRefresh(false);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    mListView.stopRefresh(false);
-                    ToastUtil.ToastText(mContext, msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    reference.mListView.stopRefresh(false);
+                    ToastUtil.ToastText(reference.mContext, msg.obj.toString());
                     break;
                 default:
                     break;
 
             }
+            super.handleMessage(msg);
         }
-
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(getActivity())
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -124,7 +115,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                 }).show();
     }
 
-    private void initShow() {
+    private void onWriteTableData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -144,7 +135,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
             e.printStackTrace();
         }
         if (writeList.size()==0){
-            tv_nodata.setVisibility(View.VISIBLE);
+            tvNotHavaData.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }else {
             adapter.notifyDataSetChanged();
@@ -158,7 +149,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         mContext=getActivity();
         userId= SharedPreferencesUtil.getUserId(mContext, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(mContext, SharedPreferencesUtil.Password,"");
-        tv_nodata=(TextView)view.findViewById(R.id.id_tv_nodata);
+        tvNotHavaData =(TextView)view.findViewById(R.id.id_tv_nodata);
         mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
         mListView.setPullLoadEnable(true);
         adapter = new GetRecordAdapter(getActivity(),writeList);
@@ -179,22 +170,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("page",pageNum);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                payrecordHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                payrecordHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
     }
     @Override
     public void onRefresh() {

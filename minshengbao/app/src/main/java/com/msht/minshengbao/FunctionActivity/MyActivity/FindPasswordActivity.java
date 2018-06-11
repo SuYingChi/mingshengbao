@@ -15,68 +15,77 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Findpassword extends BaseActivity implements View.OnClickListener {
-    private EditText  Etphonenumber, Etcode;
-    private EditText  Etnewpassword;
-    private ImageView clearimg, showimg;
-    private Button Btngetcode, Btnreset;
-    private String PhoneNo, verifycode;
-    private String newpassword;
-    private TimeCount time;     //倒计时时间
+public class FindPasswordActivity extends BaseActivity implements View.OnClickListener {
+    private EditText etPhoneNumber, etCode;
+    private EditText etNewPassword;
+    private ImageView clearImg, showImg;
+    private Button btnGetCode, btnReset;
+    private String PhoneNo, verifyCode;
+    private String newPassword;
+    private TimeCount time;
     private int requestCode = 0;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler =new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<FindPasswordActivity> mWeakReference;
+        public RequestHandler(FindPasswordActivity activity) {
+            mWeakReference = new WeakReference<FindPasswordActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final FindPasswordActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results = object.optString("result");
-                        String Error = object.optString("error");
-                        if (Results.equals("success")) {
-                            if (requestCode == 1) {
-                                displayDialog("密码重置成功，返回登录界面");
+                        String results = object.optString("result");
+                        String error = object.optString("error");
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode == 1) {
+                                activity.onDisplayDialog("密码重置成功，返回登录界面");
                             }
                         } else {
-                            if (requestCode == 0) {
-                                Btngetcode.setText("获取验证码");
-                                Btngetcode.setClickable(true);
+                            if (activity.requestCode == 0) {
+                                activity.btnGetCode.setText("获取验证码");
+                                activity.btnGetCode.setClickable(true);
                             }
-                            displayDialog(Error);
+                            activity.onDisplayDialog(error);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void displayDialog(String s) {
+    }
+    private void onDisplayDialog(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -106,118 +115,120 @@ public class Findpassword extends BaseActivity implements View.OnClickListener {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            Btngetcode.setClickable(false);
-            Btngetcode.setText(millisUntilFinished / 1000 + "秒");
+            btnGetCode.setClickable(false);
+            btnGetCode.setText(millisUntilFinished / 1000 + "秒");
         }
         @Override
         public void onFinish() {
-            Btngetcode.setText("获取验证码");
-            Btngetcode.setClickable(true);
+            btnGetCode.setText("获取验证码");
+            btnGetCode.setClickable(true);
         }
     }
     private void initView() {
-        clearimg = (ImageView) findViewById(R.id.id_clear);
-        showimg = (ImageView) findViewById(R.id.id_image_show); //显示密码
-        showimg.setTag(0);
-        Btngetcode = (Button) findViewById(R.id.id_btn_getcode);
-        Btnreset = (Button) findViewById(R.id.id_btn_resetpsw);
-        Etphonenumber = (EditText) findViewById(R.id.id_et_phonenumber);
-        Etcode = (EditText) findViewById(R.id.id_et_code);
-        Etnewpassword = (EditText) findViewById(R.id.id_et_newpassword);
-        Btnreset.setEnabled(false);
+        clearImg = (ImageView) findViewById(R.id.id_clear);
+        showImg = (ImageView) findViewById(R.id.id_image_show);
+        showImg.setTag(0);
+        btnGetCode = (Button) findViewById(R.id.id_btn_getcode);
+        btnReset = (Button) findViewById(R.id.id_btn_resetpsw);
+        etPhoneNumber = (EditText) findViewById(R.id.id_et_phonenumber);
+        etCode = (EditText) findViewById(R.id.id_et_code);
+        etNewPassword = (EditText) findViewById(R.id.id_et_newpassword);
+        btnReset.setEnabled(false);
     }
     private void initEvent() {
-        clearimg.setOnClickListener(this);
-        Etphonenumber.addTextChangedListener(new TextWatcher() {
+        clearImg.setOnClickListener(this);
+        etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(Etphonenumber.getText().toString())) {
-                    Btngetcode.setEnabled(false);            //设置无效点击、背景
-                    Btngetcode.setTextColor(Color.parseColor("#FF545454"));
-                    Btngetcode.setBackgroundResource(R.drawable.shape_white_border_rectangle);
+                if (TextUtils.isEmpty(etPhoneNumber.getText().toString())) {
+                    btnGetCode.setEnabled(false);
+                    btnGetCode.setTextColor(Color.parseColor("#FF545454"));
+                    btnGetCode.setBackgroundResource(R.drawable.shape_white_border_rectangle);
                 } else {
-                    Btngetcode.setEnabled(true);            //有效点击，
-                    Btngetcode.setTextColor(Color.parseColor("#ffffffff"));
-                    Btngetcode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
+                    btnGetCode.setEnabled(true);
+                    btnGetCode.setTextColor(Color.parseColor("#ffffffff"));
+                    btnGetCode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        Btngetcode.setOnClickListener(new View.OnClickListener() {
+        btnGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhoneNo = Etphonenumber.getText().toString().trim();
+                PhoneNo = etPhoneNumber.getText().toString().trim();
                 if (isPhone(PhoneNo)) {
-                    Btngetcode.setText("正在发送...");
+                    btnGetCode.setText("正在发送...");
                     time.start();
                     requestCode = 0;
                     requestService();
                 }
             }
         });
-        Etcode.addTextChangedListener(new TextWatcher() {
+        etCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (TextUtils.isEmpty(Etcode.getText().toString()) || TextUtils.isEmpty(Etnewpassword.getText().toString())
+                if (TextUtils.isEmpty(etCode.getText().toString()) || TextUtils.isEmpty(etNewPassword.getText().toString())
                         ) {
-                    Btnreset.setEnabled(false);
+                    btnReset.setEnabled(false);
                 } else {
-                    Btnreset.setEnabled(true);
+                    btnReset.setEnabled(true);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        Etnewpassword.addTextChangedListener(new TextWatcher() {
+        etNewPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (TextUtils.isEmpty(Etcode.getText().toString()) || TextUtils.isEmpty(Etnewpassword.getText().toString())
+                if (TextUtils.isEmpty(etCode.getText().toString()) || TextUtils.isEmpty(etNewPassword.getText().toString())
                         ) {
-                    Btnreset.setEnabled(false);
+                    btnReset.setEnabled(false);
                 } else {
-                    Btnreset.setEnabled(true);
+                    btnReset.setEnabled(true);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        Btnreset.setOnClickListener(new View.OnClickListener() {
+        btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verifycode = Etcode.getText().toString().trim();  //获取验证码
-                newpassword = Etnewpassword.getText().toString().trim();  //获取密码
+                verifyCode = etCode.getText().toString().trim();
+                newPassword = etNewPassword.getText().toString().trim();
                 customDialog.show();
                 requestCode = 1;
                 requestService();
             }
         });
-        showimg.setOnClickListener(new View.OnClickListener() {
+        showImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int tag = (Integer) v.getTag();
                 switch (tag) {
                     case 0:
-                        showimg.setImageResource(R.drawable.password_red);
-                        Etnewpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        showImg.setImageResource(R.drawable.password_red);
+                        etNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         v.setTag(1);
                         break;
                     case 1:
-                        showimg.setImageResource(R.drawable.password_gray);
-                        Etnewpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        showImg.setImageResource(R.drawable.password_gray);
+                        etNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         v.setTag(0);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -231,31 +242,19 @@ public class Findpassword extends BaseActivity implements View.OnClickListener {
             validateURL = UrlUtil.Captcha_CodeUrl;
         } else if (requestCode == 1) {
             validateURL = UrlUtil.Resetpwd_Url;
-            textParams.put("password", newpassword);
-            textParams.put("code", verifycode);
+            textParams.put("password", newPassword);
+            textParams.put("code", verifyCode);
         }
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
-    /*验证电话号码是否正确*/
+
+    /**
+     *
+     * @param phoneNo  电话号码
+     * @return
+     */
     private boolean isPhone(String phoneNo) {
-        Pattern pattern = Pattern.compile("1[0-9]{10}");
-        Matcher matcher = pattern.matcher(phoneNo);
+        Matcher matcher =NUMBER_PATTERN.matcher(phoneNo);
         if (matcher.matches()) {
             return true;
         } else {
@@ -280,7 +279,7 @@ public class Findpassword extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.id_clear:
-                Etphonenumber.setText("");
+                etPhoneNumber.setText("");
                 break;
             default:
                 break;

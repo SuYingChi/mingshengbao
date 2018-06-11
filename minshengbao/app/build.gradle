@@ -8,7 +8,7 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2000040
+        versionCode 2000039
         versionName "v3.9.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

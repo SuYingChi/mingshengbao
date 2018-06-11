@@ -14,6 +14,7 @@ import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -23,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,55 +40,68 @@ public class GasPayRecord extends BaseActivity {
     private XListView mListView;
     private TextView tv_nodata;
     private int refreshType;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
+    private JSONArray jsonArray;
     private PayRecordAdapter adapter;
     private int pageNo=1;
     private int pageIndex=0;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
-    Handler payrecordHandler = new Handler() {
+    private final PayRecordHandler payRecordHandler=new PayRecordHandler(this);
+    private static class PayRecordHandler  extends Handler{
+        private WeakReference<GasPayRecord> mWeakReference;
+        public PayRecordHandler(GasPayRecord gasPayRecord) {
+            mWeakReference = new WeakReference<GasPayRecord>(gasPayRecord);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final GasPayRecord activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
+                        activity.jsonArray =object.optJSONArray("data");
                         if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListView.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListView.stopLoadMore();
+                            if (activity.refreshType==0){
+                                activity.mListView.stopRefresh(true);
+                            }else if (activity.refreshType==1){
+                                activity.mListView.stopLoadMore();
                             }
-                            if (jsonArray.length()>0){
-                                if (pageNo==1){
-                                    recordList.clear();
+                            if (activity.jsonArray.length()>0){
+                                if (activity.pageNo==1){
+                                    activity.recordList.clear();
                                 }
-                                initShow();
+                                activity.onRecordData();
                             }
                         }else {
-                            mListView.stopLoadMore();
-                            mListView.stopRefresh(false);
-                            failure(Error);
+                            activity.mListView.stopLoadMore();
+                            activity.mListView.stopRefresh(false);
+                            activity.onFailure(Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    mListView.stopRefresh(false);
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    activity.mListView.stopRefresh(false);
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -99,8 +114,7 @@ public class GasPayRecord extends BaseActivity {
                     }
                 }).show();
     }
-
-    private void initShow() {
+    private void onRecordData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -178,22 +192,7 @@ public class GasPayRecord extends BaseActivity {
         textParams.put("customerNo",customerNo);
         textParams.put("page",pageNum);
         textParams.put("size",size);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                payrecordHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                payrecordHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
     }
     private void inittView() {
         tv_nodata=(TextView)findViewById(R.id.id_tv_nodata);

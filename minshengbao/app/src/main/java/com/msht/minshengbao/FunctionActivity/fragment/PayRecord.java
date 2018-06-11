@@ -20,6 +20,7 @@ import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.GasService.GasPayRecord;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
@@ -82,7 +83,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                     break;
                 case FAILURE:
                     mListView.stopRefresh(false);
-                    Toast.makeText(getActivity(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.ToastText(mContext,msg.obj.toString());
                     break;
                 default:
                     break;

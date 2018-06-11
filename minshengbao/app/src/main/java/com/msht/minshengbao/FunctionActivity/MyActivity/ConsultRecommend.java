@@ -16,7 +16,6 @@ import com.umeng.analytics.MobclickAgent;
 public class ConsultRecommend extends AppCompatActivity {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
-    private final String mPageName = "咨询建议";
     private Context mContext;
 
     @Override
@@ -29,6 +28,7 @@ public class ConsultRecommend extends AppCompatActivity {
         initEvent();
     }
     private void initView() {
+        String mPageName = "咨询建议";
         ((TextView)findViewById(R.id.tv_navigation)).setText(mPageName);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {

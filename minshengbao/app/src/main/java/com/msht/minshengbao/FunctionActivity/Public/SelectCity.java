@@ -31,7 +31,7 @@ public class SelectCity extends BaseActivity {
     private SelectCityAdapter  mAdapter;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
+    private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> cityList = new ArrayList<HashMap<String, String>>();
     Handler CityHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -107,7 +107,7 @@ public class SelectCity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                VariableUtil.citypos=position;
+                VariableUtil.cityPos =position;
                 String mCity=cityList.get(position).get("name");
                 String flag=cityList.get(position).get("flag");
                 String Id=cityList.get(position).get("id");

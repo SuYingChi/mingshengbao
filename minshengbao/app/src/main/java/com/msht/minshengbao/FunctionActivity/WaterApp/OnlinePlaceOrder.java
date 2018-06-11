@@ -388,9 +388,9 @@ public class OnlinePlaceOrder extends BaseActivity implements View.OnClickListen
         double waterValue=mWatercount*waterPrice;
         double bucketValue=mBucketcount*bucketPrice;
         double tatolValue=waterValue+bucketValue;
-        waterValue= VariableUtil.TwoDecinmal2(waterValue);
-        bucketValue= VariableUtil.TwoDecinmal2(bucketValue);
-        tatolValue= VariableUtil.TwoDecinmal2(tatolValue);
+        waterValue= VariableUtil.twoDecinmal2(waterValue);
+        bucketValue= VariableUtil.twoDecinmal2(bucketValue);
+        tatolValue= VariableUtil.twoDecinmal2(tatolValue);
         waterFee=String.valueOf(waterValue);
         bucketFee=String.valueOf(bucketValue);
         mWaterTotal=String.valueOf(tatolValue);

@@ -19,7 +19,7 @@ import java.util.HashMap;
  * Created by hong on 2017/2/15.
  */
 
-public class AutopayAdapter extends BaseAdapter {
+public class AutomaticPayAdapter extends BaseAdapter {
     private Context mContext = null;
 
     /**
@@ -40,7 +40,7 @@ public class AutopayAdapter extends BaseAdapter {
         void onDelectClick(View v, int position);
     }
 
-    public AutopayAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists, IOnItemButtonClickListener iOnItem) {
+    public AutomaticPayAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists, IOnItemButtonClickListener iOnItem) {
         mContext = ctx;
         List=houseLists;
         mListener = iOnItem;

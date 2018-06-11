@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.Public.PayfeeWay;
+import com.msht.minshengbao.FunctionActivity.Public.PayFeeWayActivity;
 import com.msht.minshengbao.FunctionActivity.Public.SelectVoucher;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -50,6 +50,7 @@ public class GasExpenseQuery extends BaseActivity {
     private String late_fee;
     private String userId;
     private String password;
+    private static final String NULL_VALUE="null";
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private CustomDialog customDialog;
@@ -89,7 +90,7 @@ public class GasExpenseQuery extends BaseActivity {
         }
     };
     private void Queryresult(String id) {
-        Intent amount=new Intent(context,PayfeeWay.class);
+        Intent amount=new Intent(context,PayFeeWayActivity.class);
         amount.putExtra("CustomerNo",CustomerNo);
         amount.putExtra("amount",real_fee);
         amount.putExtra("id",id);
@@ -181,7 +182,7 @@ public class GasExpenseQuery extends BaseActivity {
         btn_payfees=(Button)findViewById(R.id.id_btn_payfees);
         Address.setText(name);
         tv_customer.setText(CustomerNo);
-        if (TextUtils.isEmpty(debts)){
+        if (TextUtils.isEmpty(debts)||debts.equals(NULL_VALUE)){
             Layout_nodata.setVisibility(View.VISIBLE);
             Layout_data.setVisibility(View.GONE);
             Layout_btn.setVisibility(View.GONE);

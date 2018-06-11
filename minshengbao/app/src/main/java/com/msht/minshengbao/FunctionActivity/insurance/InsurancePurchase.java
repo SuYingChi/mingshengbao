@@ -95,7 +95,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject jsonObject =object.optJSONObject("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestType==0){
                                 reference.initShow(jsonObject);
                             }else if (reference.requestType==1){
@@ -378,7 +378,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         insurance.setCustomerText(customer);
         insurance.setNameText(name);
         insurance.setIdcardText(idcard);
-        insurance.setAmount(insurance_amount+"元");
+        insurance.setAmount(insurance_amount);
         insurance.setTypeText(amount+"套餐");
         insurance.setEffictive(start_time);
         insurance.setCutoffDate(stop_time);

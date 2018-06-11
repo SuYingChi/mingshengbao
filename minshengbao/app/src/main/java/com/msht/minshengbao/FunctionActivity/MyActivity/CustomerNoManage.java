@@ -22,6 +22,7 @@ import com.msht.minshengbao.FunctionActivity.GasService.AddCustomerNo;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -33,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,64 +42,76 @@ import java.util.Map;
 public class CustomerNoManage extends BaseActivity implements View.OnClickListener {
     private SwipeAdapter adapter;
     private View views;
-    private Button btn_Addr;
-    private TextView nodata,tv_rightText;
+    private Button btnAddress;
+    private TextView tvNoData, tvRightText;
     private String password,userId;
-    private String houseId,customerNum,addr;
+    private String houseId,customerNum, addressText;
     private ListViewForScrollView mListView;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private int   requestCode=0;
     private JSONArray jsonArray;
     private CustomDialog customDialog;
     private static final int ADDRESS_CODE=3;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
-    Handler requestHandler= new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<CustomerNoManage> mWeakReference;
+        public RequestHandler(CustomerNoManage activity) {
+            mWeakReference = new WeakReference<CustomerNoManage>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final CustomerNoManage activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if (requestCode==0){
-                            jsonArray =object.optJSONArray("data");
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if (activity.requestCode==0){
+                            activity.jsonArray =object.optJSONArray("data");
                         }
-                        if(Results.equals("success")) {
-                            if (requestCode==0) {
-                                if (jsonArray.length() == 0) {
-                                    nodata.setVisibility(View.VISIBLE);
-                                    views.setVisibility(View.GONE);
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0) {
+                                if (activity.jsonArray.length() == 0) {
+                                    activity.tvNoData.setVisibility(View.VISIBLE);
+                                    activity.views.setVisibility(View.GONE);
                                 } else {
-                                    initView();
-                                    views.setVisibility(View.VISIBLE);
-                                    nodata.setVisibility(View.GONE);
+                                    activity.onCustomerNoList();
+                                    activity.views.setVisibility(View.VISIBLE);
+                                    activity.tvNoData.setVisibility(View.GONE);
                                 }
-                            }else if (requestCode==1){
-                                houseList.clear();
-                                requestCode=0;
-                                initgetjson();
+                            }else if (activity.requestCode==1){
+                                activity.houseList.clear();
+                                activity.requestCode=0;
+                                activity.onGetCustomerNoData();
 
                             }
                         }else {
-                            displayDialog(Error);
+                            activity.onDisplayDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(CustomerNoManage.this, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void displayDialog(String string) {
+    }
+    private void onDisplayDialog(String string) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -107,13 +121,13 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                     public void onClick(Dialog dialog, int which) {
                         if (requestCode==2){
                             houseList.clear();  //清除原来数据
-                            initgetjson();
+                            onGetCustomerNoData();
                         }
                         dialog.dismiss();
                     }
                 }).show();
     }
-    private void initView() {
+    private void onCustomerNoList() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -134,12 +148,12 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 houseId = houseList.get(position).get("id");
-                showdelete();
+                onDeleteData();
                 return false;
             }
         });
     }
-    private void showdelete() {
+    private void onDeleteData() {
         LayoutInflater inflater=LayoutInflater.from(this);
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.self_make_dialog,null);
         final Dialog dialog=new AlertDialog.Builder(CustomerNoManage.this).create();
@@ -166,20 +180,20 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-       // initHeader();
         initfindViewByid();
-        VariableUtil.Boolselect=false;
-        adapter = new SwipeAdapter(this,houseList, new SwipeAdapter.IOnItemButtonClickListener() {
+        VariableUtil.boolSelect =false;
+        adapter = new SwipeAdapter(this,houseList);
+        mListView.setAdapter(adapter);
+        onGetCustomerNoData();
+        initEvent();
+        adapter.setOnDelectListener(new SwipeAdapter.IOnItemButtonClickListener() {
             @Override
             public void onButtonClick(View v, int position) {
                 houseId=houseList.get(position).get("id");
-                addr=houseList.get(position).get("name");
+                addressText =houseList.get(position).get("name");
                 delectCustomerNo();
             }
         });
-        mListView.setAdapter(adapter);
-        initgetjson();
-        initEvent();
     }
     private void delectCustomerNo() {
         new PromptDialog.Builder(this)
@@ -207,46 +221,34 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ADDRESS_CODE://获取昵称设置返回数据
+            //获取昵称设置返回数据
+            case ADDRESS_CODE:
                 if(resultCode==1) {
                     houseList.clear();  //清除原来数据
-                    initgetjson();
+                    onGetCustomerNoData();
                 }
+                break;
+            default:
                 break;
         }
     }
     private void initfindViewByid() {
-        tv_rightText=(TextView) findViewById(R.id.id_tv_rightText);
-        tv_rightText.setVisibility(View.VISIBLE);
-        tv_rightText.setText("编辑");
+        tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("编辑");
         views=findViewById(R.id.id_view);
-        nodata=(TextView)findViewById(R.id.id_nodata);
-        btn_Addr=(Button)findViewById(R.id.id_btn_customer);
+        tvNoData =(TextView)findViewById(R.id.id_nodata);
+        btnAddress =(Button)findViewById(R.id.id_btn_customer);
         mListView = (ListViewForScrollView)findViewById(R.id.id_address_listview);
     }
-    private void initgetjson() {
+    private void onGetCustomerNoData() {
         customDialog.show();
         requestCode=0;
         String validateURL = UrlUtil.SelectAddress_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void requestSevice(){
         customDialog.show();
@@ -258,42 +260,29 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         if (requestCode==1){
             validateURL = UrlUtil.Address_delectUrl;
         }
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initEvent() {
-        btn_Addr.setOnClickListener(this);
-        tv_rightText.setTag(0);
-        tv_rightText.setOnClickListener(new View.OnClickListener() {
+        btnAddress.setOnClickListener(this);
+        tvRightText.setTag(0);
+        tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int tag=(Integer)v.getTag();
                 switch (tag){
                     case 0:
-                        VariableUtil.Boolselect=true;
+                        VariableUtil.boolSelect =true;
                         adapter.notifyDataSetChanged();
                         v.setTag(1);
-                        tv_rightText.setText("撤销");
+                        tvRightText.setText("撤销");
                         break;
                     case 1:
-                        VariableUtil.Boolselect=false;
+                        VariableUtil.boolSelect =false;
                         adapter.notifyDataSetChanged();
                         v.setTag(0);
-                        tv_rightText.setText("编辑");
+                        tvRightText.setText("编辑");
+                        break;
+                    default:
                         break;
                 }
             }
@@ -302,7 +291,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     private void EnsureDialog() {
         final EnsureAddress ensureAddress=new EnsureAddress(this);
         ensureAddress.setTitleText("请详细查看");
-        ensureAddress.setAddressText(addr);
+        ensureAddress.setAddressText(addressText);
         ensureAddress.setCustomerText(customerNum);
         ensureAddress.setOnNegativeListener(new View.OnClickListener() {
             @Override

@@ -32,8 +32,8 @@ import java.util.HashMap;
 public class GasService extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private GasServiceAdapter homeAdapter;
-    private String pid;
-    private String cityId;
+    private String pid="null";
+    private String cityId="null";
     private   boolean lstate=false;
     private static final int SUCCESS=1;
     private static final int FAILURE=2;

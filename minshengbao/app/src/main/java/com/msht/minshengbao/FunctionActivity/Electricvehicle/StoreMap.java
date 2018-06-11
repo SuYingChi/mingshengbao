@@ -130,7 +130,7 @@ public class StoreMap extends BaseActivity implements  AMap.OnMyLocationChangeLi
             LatLng latLng=new LatLng(latitude,longitude);
             LatLng latLng1=new LatLng(lat,lon);
             float distance = AMapUtils.calculateLineDistance(latLng,latLng1);
-            double mDistance= VariableUtil.TwoDecinmal2(distance);
+            double mDistance= VariableUtil.twoDecinmal2(distance);
             tv_distance.setText(String.valueOf(mDistance)+"m");
         } else {
             Toast.makeText(context,"定位失败",Toast.LENGTH_SHORT).show();

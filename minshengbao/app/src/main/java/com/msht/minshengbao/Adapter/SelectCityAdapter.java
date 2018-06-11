@@ -55,7 +55,7 @@ public class SelectCityAdapter extends BaseAdapter {
         }
         holder.img.setVisibility(View.GONE);
         holder.cn_city.setText(cityList.get(position).get("name"));
-        if (VariableUtil.citypos==position){
+        if (VariableUtil.cityPos ==position){
             holder.radio.setChecked(true);
         }else {
             holder.radio.setChecked(false);

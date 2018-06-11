@@ -4,12 +4,18 @@ package com.msht.minshengbao.Utils;
  * Created by hong on 2016/11/15.
  */
 public class UrlUtil {
+    /**
+     * 测试环境
+     */
    // public static final String URL_HEADS ="http://test.msbapp.cn";
     public static final String URL_HEADS="http://test.msbapp.cn:8080";
     //public static final String URL_HEAD="http://test.msbapp.cn";
-   // public static final String URL_SHOP="http://shop.msbapp.cn:8090";
-    public static final String URL_SHOP="http://dev.msbapp.cn";
-   // public static final String URL_HEADS="https://msbapp.cn";
+    /**
+     * 线上环境
+     */
+  //  public static final String URL_HEADS="https://msbapp.cn";
+    public static final String URL_SHOP="http://shop.msbapp.cn:8090";
+   // public static final String URL_SHOP="http://dev.msbapp.cn";
    // public static final String URL_MSSB="http://120.25.195.173:17080/rwapi";
     public static final String URL_MSSB="http://sb-api.msbapp.cn";
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";

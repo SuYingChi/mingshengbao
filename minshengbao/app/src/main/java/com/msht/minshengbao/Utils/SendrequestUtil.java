@@ -28,6 +28,9 @@ public class SendrequestUtil {
     private static final String ERROR_OVER_TIME = "网络连接超时，请检查您的网络";
     public static final int SUCCESS=1;
     public static final int FAILURE=0;
+    public static final String SUCCESS_VALUE="success";
+    public static final String FAILURE_VALUE="fail";
+    public static final String CANCEL_VALUE="fail";
 
     public static void ShortTimeGet(final String  url, final Handler mhandler) {
         new Thread(new Runnable() {
