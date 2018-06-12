@@ -231,7 +231,7 @@ public class RepairPayment extends BaseActivity  {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);
-                VariableUtil.paypos=thisPosition;
+                VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channel=List.get(thisPosition).get("channel");
             }

@@ -49,8 +49,10 @@
             android:layout_width="@dimen/margin_width35"
             android:layout_height="@dimen/margin_width35"
             android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:background="@drawable/shape_transparent_circle"
             android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true">
             <ImageView
                 android:id="@+id/id_massage_img"
@@ -65,11 +67,13 @@
             android:layout_width="@dimen/margin_16"
             android:layout_height="@dimen/margin_16"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_8"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/margin_width8"
+            android:layout_marginEnd="@dimen/margin_width8"
             android:layout_marginTop="@dimen/margin_3"
             android:background="@drawable/shape_red_circle"
             android:gravity="center"
-            android:text="3"
+            android:text="0"
             android:textSize="@dimen/text_10"
             android:textColor="@color/white"
             android:visibility="gone"/>

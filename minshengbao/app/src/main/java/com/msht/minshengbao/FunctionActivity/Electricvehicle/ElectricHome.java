@@ -149,7 +149,6 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         if (mList.size()!=0&&mList!=null){
             mAdapter.notifyDataSetChanged();
         }
-
     }
     private void showfaiture(String error) {
         new PromptDialog.Builder(context)
@@ -269,7 +268,8 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         refreshView=(MySwipeRefreshLayout) findViewById(R.id.id_refresh_view);
         refreshView.setOnRefreshListener(this);
         mMapView = (MapView) findViewById(R.id.id_mapView);
-        mMapView.onCreate(savedInstanceState); // 此方法必须重写
+        // 此方法必须重写
+        mMapView.onCreate(savedInstanceState);
         aMap = mMapView.getMap();
         aMap.setOnCameraChangeListener(myOncameraChange); // 添加移动地图事件监听器
         UiSettings uiSettings = aMap.getUiSettings();

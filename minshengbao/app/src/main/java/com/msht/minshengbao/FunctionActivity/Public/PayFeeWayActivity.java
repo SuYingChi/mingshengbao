@@ -335,7 +335,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btnSend.setEnabled(true);
-                VariableUtil.paypos=thisPosition;
+                VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
             }

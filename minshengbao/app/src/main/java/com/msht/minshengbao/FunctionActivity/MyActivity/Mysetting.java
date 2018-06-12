@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.BitmapUtil;
@@ -51,14 +50,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Mysetting extends BaseActivity implements OnClickListener {
-    private RelativeLayout Settingportrait;
-    private RelativeLayout Settingnickname;
-    private RelativeLayout Settingsex;
-    private TextView tv_nickname,tv_sex,tv_phone;
-    private String fnickname;
-    private String fsex;
-    private Bitmap favatar;
+    private RelativeLayout settingPortrait;
+    private RelativeLayout settingNickname;
+    private RelativeLayout layoutSettingSex;
+    private TextView tvNickname, tvSex, tvPhone;
+    private String mNickname;
+    private String mSexText;
+    private Bitmap mAvatar;
     private String phone;
+    private String avatarUrl;
     private String userId,password;
     private static final File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache");
     /**
@@ -76,20 +76,69 @@ public class Mysetting extends BaseActivity implements OnClickListener {
     private Bitmap bitmap=null;
     private ACache mCache;
     private static  final int MY_PERMISSIONS_REQUEST=2;
-    private static final int REQUESTCODE_PICK = 0;		// 相册选图标记
-    private static final int REQUESTCODE_TAKE = 1;		// 相机拍照标记
-    private static final int REQUESTCODE_CUTTING = 2;// 图片裁切标记
-    private static final int REQUESTCOODE_NICK=3;//昵称标志
-    private static final int REQUESTCOODE_SEX=5;//性别标志
-    private static final int RESET_CODE=4;    //设置密码
+    /**
+     * // 相册选图标记
+     */
+    private static final int REQUEST_CODE_PICK = 0;
+    /**
+     *相机拍照标记
+     */
+    private static final int REQUEST_CODE_TAKE = 1;
+    /**
+     * 图片裁切标记
+     */
+    private static final int REQUEST_CODE_CUTTING = 2;
+    /**
+     *昵称标志
+     */
+    private static final int REQUEST_CODE_NICK =3;
+    /**
+     * 性别标志
+     */
+    private static final int REQUEST_CODE_SEX =5;
+    /**
+     * 设置密码
+     */
+    private static final int RESET_CODE=4;
     private static final int RESULT_CODE=1;
     /**
      * IMAGE_FILE_NAME  头像文件名称
      */
-    private static final String IMAGE_FILE_NAME = "avatarImage.jpg";
-    private static String ImagrfileName;
+    private static String imageFileName;
     private CustomDialog customDialog;
     private final MyHandler myHandler=new MyHandler(this);
+    private final GetImageHandler getImageHandler=new GetImageHandler(this);
+    private static class GetImageHandler extends Handler{
+        private WeakReference<Mysetting> mWeakReference;
+        public GetImageHandler(Mysetting activity) {
+            mWeakReference = new WeakReference<Mysetting>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final Mysetting reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isFinishing()) {
+                return;
+            }
+            switch (msg.what) {
+                case SendrequestUtil.SUCCESS:
+                    Bitmap bitmap  = (Bitmap)msg.obj;
+                    if (bitmap==null||bitmap.isRecycled()){
+                        reference.circleImageView.setImageResource(R.drawable.potrait);
+                    }else {
+                        reference.circleImageView.setImageBitmap(bitmap);
+                        reference.mCache.put("avatarimg", bitmap);
+                    }
+                    break;
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.context,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,46 +148,47 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         initfindViewByid();
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
+        avatarUrl =SharedPreferencesUtil.getAvatarUrl(context,SharedPreferencesUtil.AvatarUrl,"");
         mCache = ACache.get(this);
         customDialog=new CustomDialog(this, "正在上传图片");
         initShowinfo();
         initEvent();
     }
     private void initShowinfo() {
-        fnickname= SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
-        favatar=mCache.getAsBitmap("avatarimg");
-        fsex=SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
+        mNickname = SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
+        mAvatar =mCache.getAsBitmap("avatarimg");
+        mSexText =SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
         phone=SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
-        if (fnickname==null){
-            tv_nickname.setText("");
+        if (mNickname ==null){
+            tvNickname.setText("");
         }else {
-            tv_nickname.setText(fnickname);
+            tvNickname.setText(mNickname);
         }
-        tv_phone.setText(phone);
-        tv_sex.setText(fsex);
-        if (favatar!=null){
-            circleImageView.setImageBitmap(favatar);
+        tvPhone.setText(phone);
+        tvSex.setText(mSexText);
+        if (mAvatar !=null){
+            circleImageView.setImageBitmap(mAvatar);
         }else {
-            circleImageView.setImageResource(R.drawable.potrait);
+            SendrequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
         }
     }
     private void initfindViewByid() {
         circleImageView = (CircleImageView) findViewById(R.id.id_portraitview);
-        Settingportrait=(RelativeLayout)findViewById(R.id.id_setting_portrait_layout);
-        Settingnickname=(RelativeLayout)findViewById(R.id.id_setting_nickname_layout);
-        Settingsex=(RelativeLayout)findViewById(R.id.id_setting_sex_layout);
-        tv_nickname=(TextView)findViewById(R.id.id_tv_nickname);
-        tv_sex=(TextView)findViewById(R.id.id_tv_sex);
-        tv_phone=(TextView)findViewById(R.id.id_phone);
+        settingPortrait =(RelativeLayout)findViewById(R.id.id_setting_portrait_layout);
+        settingNickname =(RelativeLayout)findViewById(R.id.id_setting_nickname_layout);
+        layoutSettingSex =(RelativeLayout)findViewById(R.id.id_setting_sex_layout);
+        tvNickname =(TextView)findViewById(R.id.id_tv_nickname);
+        tvSex =(TextView)findViewById(R.id.id_tv_sex);
+        tvPhone =(TextView)findViewById(R.id.id_phone);
     }
     private void initEvent() {
         findViewById(R.id.id_layout_setpwd).setOnClickListener(this);
         circleImageView.setOnClickListener(this);
-        tv_nickname.setOnClickListener(this);
-        tv_sex.setOnClickListener(this);
-        Settingportrait.setOnClickListener(this);
-        Settingnickname.setOnClickListener(this);
-        Settingsex.setOnClickListener(this);
+        tvNickname.setOnClickListener(this);
+        tvSex.setOnClickListener(this);
+        settingPortrait.setOnClickListener(this);
+        settingNickname.setOnClickListener(this);
+        layoutSettingSex.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -156,10 +206,10 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 .send();
                     }else {
-                        Settingportraits();
+                        onSettingPortraits();
                     }
                 } else {
-                    Settingportraits();
+                    onSettingPortraits();
                 }
                 break;
             case R.id.id_portraitview:
@@ -172,10 +222,10 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 .send();
                     }else {
-                        Settingportraits();
+                        onSettingPortraits();
                     }
                 } else {
-                    Settingportraits();
+                    onSettingPortraits();
                 }
                 break;
             case R.id.id_setting_nickname_layout:
@@ -203,16 +253,16 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         startActivityForResult(pwd, RESET_CODE);
     }
     private void setSexInfo() {
-        String sexvalue=tv_sex.getText().toString();
+        String sexvalue= tvSex.getText().toString();
         Intent sex=new Intent(this,SettingSex.class);
         sex.putExtra("SEX",sexvalue);
-        startActivityForResult(sex, REQUESTCOODE_SEX);
+        startActivityForResult(sex, REQUEST_CODE_SEX);
     }
     private void setNickname() {
         Intent nick=new Intent(this,SettingNickname.class);
-        startActivityForResult(nick, REQUESTCOODE_NICK);
+        startActivityForResult(nick, REQUEST_CODE_NICK);
     }
-    private void Settingportraits() {
+    private void onSettingPortraits() {
         takePhotoPopWin = new SelectPicPopupWindow(this, onClickListener);
         takePhotoPopWin.showAtLocation(findViewById(R.id.activity_mysetting), Gravity.CENTER, 0, 0);
     }
@@ -231,7 +281,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                     takePhotoPopWin.dismiss();
                     Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                     pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                    startActivityForResult(pickIntent, REQUEST_CODE_PICK);
                     break;
                 default:
                     break;
@@ -244,8 +294,8 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             if (!PHOTO_DIR.exists()) {
                 PHOTO_DIR.mkdirs();// 创建照片的存储目录
             }
-            ImagrfileName= System.currentTimeMillis() + ".jpg";
-            mCurrentPhotoFile = new File(PHOTO_DIR, ImagrfileName);
+            imageFileName = System.currentTimeMillis() + ".jpg";
+            mCurrentPhotoFile = new File(PHOTO_DIR, imageFileName);
             Intent intentC = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Uri imageUri = FileProvider.getUriForFile(Mysetting.this, "com.msht.minshengbao.fileProvider", mCurrentPhotoFile);
@@ -255,7 +305,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             } else {
                 intentC.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mCurrentPhotoFile));
             }
-            startActivityForResult(intentC, REQUESTCODE_TAKE);
+            startActivityForResult(intentC, REQUEST_CODE_TAKE);
         } else {
             Toast.makeText(context, "没有SD卡", Toast.LENGTH_LONG).show();
         }
@@ -268,7 +318,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         @Override
         public void onSucceed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Settingportraits();
+                onSettingPortraits();
             }
         }
         @Override
@@ -282,7 +332,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // 直接从相册获取
-            case REQUESTCODE_PICK:
+            case REQUEST_CODE_PICK:
                 try {
                     startCrop(data.getData());
                 } catch (NullPointerException e) {
@@ -290,8 +340,8 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 }
                 break;
             // 调用相机拍照
-            case REQUESTCODE_TAKE:
-                File temp = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache/"+ImagrfileName);
+            case REQUEST_CODE_TAKE:
+                File temp = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache/"+ imageFileName);
                 if (temp!=null) {
                     startCrop(Uri.fromFile(temp));
                 }else {
@@ -299,23 +349,23 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 }
                 break;
             // 取得裁剪后的图片
-            case REQUESTCODE_CUTTING:
+            case REQUEST_CODE_CUTTING:
                 urlPath=mCacheFile.getAbsolutePath();
                 if (urlPath!=null){
                     getImagePicture();
                 }
                 break;
             //获取昵称设置返回数据
-            case REQUESTCOODE_NICK:
+            case REQUEST_CODE_NICK:
                 if(data!=null){
                     String nickname=data.getStringExtra("nickname");
-                    tv_nickname.setText(nickname);
+                    tvNickname.setText(nickname);
                 }
                 break;
-            case REQUESTCOODE_SEX:
+            case REQUEST_CODE_SEX:
                 if (data!=null){
                     String gender=data.getStringExtra("gender");
-                    tv_sex.setText(gender);
+                    tvSex.setText(gender);
                 }
                 break;
             case RESET_CODE:
@@ -371,8 +421,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         intent.putExtra("outputY", 300);
         intent.putExtra("output", outputUri);
         intent.putExtra("return-data", false);
-        startActivityForResult(intent, REQUESTCODE_CUTTING);
-
+        startActivityForResult(intent, REQUEST_CODE_CUTTING);
     }
     private void requestSevice() {
         String validateURL= UrlUtil.GasmodifyInfo_Url;
@@ -406,14 +455,14 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         String error=jsonObject.optString("error");
                         JSONObject ObjectInfo = jsonObject.optJSONObject("data");
                         String avatarurl=ObjectInfo.optString("avatar");
-                        if (results.equals("success")){
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
                             //清除原有数据
                             activity.mCache.remove("avatarimg");
                             activity.mCache.put("avatarimg", activity.bitmap);
                             SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarurl);
-                            activity.onRetureavatar();//给Mynewfragment返回数据
+                            activity.onRetureAvatar();//给Mynewfragment返回数据
                         }else {
-                            activity.faifure(error);
+                            activity.onFaifure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -431,7 +480,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             super.handleMessage(msg);
         }
     }
-    private void faifure(String error) {
+    private void onFaifure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -445,7 +494,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                     }
                 }).show();
     }
-    private void onRetureavatar() {
+    private void onRetureAvatar() {
         setResult(4);
     }
 }

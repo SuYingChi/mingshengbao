@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -97,7 +96,7 @@ public class PayWayAdapter extends BaseAdapter {
             holder.cn_balance.setVisibility(View.GONE);
             holder.wayimg.setImageResource(R.drawable.cash_pay_h);
         }
-        if (VariableUtil.paypos!=position){
+        if (VariableUtil.payPos !=position){
             holder.cn_radio.setChecked(false);
         }
         holder.cn_radio.setOnClickListener(new View.OnClickListener() {

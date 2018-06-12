@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
@@ -68,9 +67,10 @@ import java.util.Map;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioButton radioButton;
     private TextView    tvNavigation, tvMassageNum;
-    private Fragment    minshengFrag, myFrag,mynewFrag;
+    private Fragment    homeFrag, myFrag,myNewFrag;
     private Fragment    orderFrag,currentFragment;
     private View        networkLayout;
+    private View        hearLayout;
     private String      userId;
     private String      password;
     private String      messageCount="0";
@@ -78,12 +78,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean     versionState;
     private JSONObject  objectJson;
     private JSONObject  jsonObject;
-    private static final String MY_ACTION = "ui";
+    private static  final String MY_ACTION = "ui";
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final int REQUEST_CODE=2;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private static  final int MY_CAMERA_REQUEST=3;
-    private int         clickCode =0x001;
+    private int     clickCode =0x001;
     /**
      USE_COUPON_CODE 优惠券使用返回
     */
@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String error = object.optString("error");
                         activity.objectJson=object.getJSONObject("data");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                            activity.onPersionalInfomation();
+                            activity.onPersonalInformation();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
                         }
@@ -217,10 +217,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonObject =object.optJSONObject("data");
-                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveVersion();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
@@ -279,16 +279,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
     private void onUnreadMassage(JSONObject json) {
-        int unreadNum=json.optInt("num");
-        if (unreadNum!=0){
-            messageCount=String.valueOf(unreadNum);
+        VariableUtil.messageNum=json.optInt("num");
+        if ( VariableUtil.messageNum!=0){
+            messageCount=String.valueOf(VariableUtil.messageNum);
             tvMassageNum.setText(messageCount);
             tvMassageNum.setVisibility(View.VISIBLE);
         }else {
             tvMassageNum.setVisibility(View.GONE);
         }
     }
-    private void onPersionalInfomation() {
+    private void onPersonalInformation() {
         String sex     =objectJson.optString("sex");
         String phoneNo=objectJson.optString("phone");
         SharedPreferencesUtil.putSex(this,SharedPreferencesUtil.Sex,sex);
@@ -348,7 +348,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
                     @Override
                     public void onPermissionDenied(int Code) {
-                        Toast.makeText(context,"没有权限您将无法进行相关操作！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(context,"没有权限您将无法进行相关操作！");
                     }
                 });
             }
@@ -395,29 +395,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         filter.addAction(MY_ACTION);
         registerReceiver(broadcastReceiver, filter);
     }
-    /*接受广播*/
+    /**
+     * 接受广播
+     */
     private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String info=intent.getExtras().getString("broadcast");
-            if(info.equals("1")){
+            if(info.equals(VariableUtil.VALUE_ONE)){
                 finish();  //接受到广播后把上一级的MainActivity 消除
-            }else if (info.equals("2")){
+            }else if (info.equals(VariableUtil.VALUE_TWO)){
                 tvMassageNum.setVisibility(View.GONE);
+                VariableUtil.messageNum=0;
             }
         }
     };
     private void initView() {
         networkLayout =findViewById(R.id.id_network_layout);
-        RadioGroup radiogroupMain = (RadioGroup) findViewById(R.id.radiogroup_main);
+        RadioGroup radioGroupMain = (RadioGroup) findViewById(R.id.radiogroup_main);
         tvNavigation =(TextView)findViewById(R.id.id_tv_navigation);
         tvMassageNum =(TextView)findViewById(R.id.id_main_messnum);
+        hearLayout=findViewById(R.id.id_head_view);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
         radioButton =(RadioButton)findViewById(R.id.radio_me);
         ImageView messageImg =(ImageView)findViewById(R.id.id_massage_img);
         messageImg.setOnClickListener(this);
         findViewById(R.id.id_right_massage).setOnClickListener(this);
-        radiogroupMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroupMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
@@ -444,50 +448,50 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
     }
     private void initMynew() {
-        if (mynewFrag==null) {
-            mynewFrag = new LoginMyFrag();
+        if (myNewFrag==null) {
+            myNewFrag = new LoginMyFrag();
             Bundle bundle = new Bundle();
             String phone= SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
             bundle.putString("phonenumber", phone);
             bundle.putString("messnum",messageCount);
-            mynewFrag.setArguments(bundle);
+            myNewFrag.setArguments(bundle);
         }
-        if (!mynewFrag.isAdded()) {
+        if (!myNewFrag.isAdded()) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_layout, mynewFrag).commit();
-            currentFragment = mynewFrag;
+                    .add(R.id.content_layout, myNewFrag).commit();
+            currentFragment = myNewFrag;
             radioButton.setChecked(true);
             clickCode =0x003;
             tvNavigation.setText("我的");
-            addOrShowFragment(getSupportFragmentManager().beginTransaction(),mynewFrag);
+            addOrShowFragment(getSupportFragmentManager().beginTransaction(),myNewFrag);
         }
     }
     private void initTab() {
-        if (minshengFrag == null) {
-            minshengFrag = new HomeFragment();
+        if (homeFrag == null) {
+            homeFrag = new HomeFragment();
         }
-        if (!minshengFrag.isAdded()) {
+        if (!homeFrag.isAdded()) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_layout, minshengFrag).commit();
-            currentFragment = minshengFrag;
+                    .add(R.id.content_layout, homeFrag).commit();
+            currentFragment = homeFrag;
             clickCode =0x001;
         }
     }
-    private void addOrShowFragment(FragmentTransaction fragmentTransaction, Fragment minshengFrag) {
-        if (currentFragment == minshengFrag){
+    private void addOrShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment) {
+        if (currentFragment == fragment){
             return;
         }
         // 如果当前fragment未被添加，则添加到Fragment管理器中
-        if (!minshengFrag.isAdded()) {
+        if (!fragment.isAdded()) {
             /*fragmentTransaction.hide(currentFragment)
                     .add(R.id.content_layout, minshengFrag).commit();*/
             fragmentTransaction.hide(currentFragment)
-                    .add(R.id.content_layout, minshengFrag).commitAllowingStateLoss();
+                    .add(R.id.content_layout, fragment).commitAllowingStateLoss();
         } else {
             //fragmentTransaction.hide(currentFragment).show(minshengFrag).commit();
-            fragmentTransaction.hide(currentFragment).show(minshengFrag).commitAllowingStateLoss();
+            fragmentTransaction.hide(currentFragment).show(fragment).commitAllowingStateLoss();
         }
-        currentFragment = minshengFrag;
+        currentFragment = fragment;
     }
     @Override
     public void onClick(View v) {
@@ -520,14 +524,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(PopupMenu.MENUITEM item, int position) {
                 if (position==0){
-                    goScancode();
+                    goScanCode();
                 }else if (position==1){
                     goMessage();
                 }
             }
         });
     }
-    private void goScancode() {
+    private void goScanCode() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
                 MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA}, new MPermissionUtils.OnPermissionListener() {
@@ -539,7 +543,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
                     @Override
                     public void onPermissionDenied(int Code) {
-                        Toast.makeText(context,"没有权限您将无法进行扫描操作！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
                     }
                 });
 
@@ -563,12 +567,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         startActivityForResult(intent, clickCode);
     }
     private void clickTab1Layout() {
+        hearLayout.setVisibility(View.VISIBLE);
         clickCode =0x001;
         tvNavigation.setText("民生宝");
-        if (minshengFrag == null) {
-            minshengFrag = new HomeFragment();
+        if (homeFrag == null) {
+            homeFrag = new HomeFragment();
         }
-        addOrShowFragment(getSupportFragmentManager().beginTransaction(), minshengFrag);
+        addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
     }
     private void clickTab2Layout() {
         if (networkStatus){
@@ -577,7 +582,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void clickTab3Layout() {
-       // Head_layout.setVisibility(View.VISIBLE);
+        hearLayout.setVisibility(View.INVISIBLE);
         clickCode =0x002;
         tvNavigation.setText("订单");
         /*if (orderFrag== null) {
@@ -590,6 +595,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void clickTab4Layout() {
         clickCode =0x003;
         tvNavigation.setText("我的");
+        hearLayout.setVisibility(View.INVISIBLE);
         if(!VariableUtil.loginStatus) {
             /*if (myFrag == null) {
                 myFrag = new MyFragment();
@@ -600,8 +606,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             /*if (mynewFrag==null){
                 mynewFrag=new LoginMyFrag();
             }*/
-            mynewFrag=new LoginMyFrag();
-            addOrShowFragment(getSupportFragmentManager().beginTransaction(), mynewFrag);
+            myNewFrag=new LoginMyFrag();
+            addOrShowFragment(getSupportFragmentManager().beginTransaction(), myNewFrag);
         }
     }
     private void initPush() {

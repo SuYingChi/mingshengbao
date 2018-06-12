@@ -15,80 +15,94 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScanCodeResult extends BaseActivity {
-    private View layout_result;
-    private View layout_error;
+    private View layoutResult;
+    private View layoutError;
     private ImageView result_img;
-    private TextView  tv_result;
-    private TextView  tv_notice;
-    private TextView  tv_equipment;
-    private TextView  tv_estate;
-    private String    equipmentNo;
-    private String    userphone="";
-    private String    sign,extParams;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    private TextView tvResult;
+    private TextView tvNotice;
+    private TextView tvEquipment;
+    private TextView tvEstate;
+    private String   equipmentNo;
+    private String   userPhone ="";
+    private String   sign,extParams;
     private JSONObject jsonObject;
     private CustomDialog customDialog;
-    Handler chargesHandler = new Handler() {
+    private final ResultHandler resultHandler=new ResultHandler(this);
+    private static class ResultHandler extends Handler{
+        private WeakReference<ScanCodeResult> mWeakReference;
+        public ResultHandler(ScanCodeResult activity) {
+            mWeakReference = new WeakReference<ScanCodeResult>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+
+            final ScanCodeResult activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("message");
                         String code=object.optString("code");
-                        jsonObject =object.optJSONObject("data");
-                        if(results.equals("success")) {
-                            layout_result.setVisibility(View.VISIBLE);
-                            layout_error.setVisibility(View.GONE);
-                            tv_result.setText(R.string.scan_result1);
-                            tv_notice.setText(R.string.result_notice1);
-                            showcharge();
+                        activity.jsonObject =object.optJSONObject("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.layoutResult.setVisibility(View.VISIBLE);
+                            activity.layoutError.setVisibility(View.GONE);
+                            activity.tvResult.setText(R.string.scan_result1);
+                            activity.tvNotice.setText(R.string.result_notice1);
+                            activity.onResultData();
                         }else {
-                            showcharge();
-                            layout_result.setVisibility(View.VISIBLE);
-                            layout_error.setVisibility(View.GONE);
-                            if(code.equals("0001")){
-                                tv_result.setText(R.string.scan_result2);
-                                tv_notice.setText(R.string.result_notice2);
+                            activity.onResultData();
+                            activity.layoutResult.setVisibility(View.VISIBLE);
+                            activity.layoutError.setVisibility(View.GONE);
+                            if(code.equals("0010")){
+                                activity.tvResult.setText(R.string.scan_result2);
+                                activity.tvNotice.setText(R.string.result_notice2);
                             }else {
-                                tv_result.setText(error);
-                                tv_notice.setText(R.string.result_notice3);
+                                activity.tvResult.setText(R.string.scan_result3);
+                                activity.tvNotice.setText(R.string.result_notice3);
                             }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context,msg.obj.toString() ,
-                            Toast.LENGTH_SHORT).show();
-                    layout_result.setVisibility(View.GONE);
-                    layout_error.setVisibility(View.VISIBLE);
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
+                    activity.layoutResult.setVisibility(View.GONE);
+                    activity.layoutError.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void showcharge() {
+    }
+    private void onResultData() {
         String  equipment=jsonObject.optString("equipmentNo");
-        String  address=jsonObject.optString("address");
         String  communityName=jsonObject.optString("communityName");
-        tv_equipment.setText(equipment);
-        tv_estate.setText(communityName);
+        tvEquipment.setText(equipment);
+        tvEstate.setText(communityName);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +112,9 @@ public class ScanCodeResult extends BaseActivity {
         setCommonHeader("扫码结果");
         customDialog=new CustomDialog(this, "正在加载");
         equipmentNo=getIntent().getStringExtra("equipmentNo");
-        userphone= SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
+        userPhone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         WaterAppBean bean=new WaterAppBean();
-        bean.setAccount(userphone);
+        bean.setAccount(userPhone);
         bean.setEquipmentNo(equipmentNo);
         sign= SecretKeyUtil.getStringSign(bean);
         extParams=SecretKeyUtil.getextParams(bean);
@@ -108,13 +122,13 @@ public class ScanCodeResult extends BaseActivity {
         initData();
     }
     private void initView() {
-        layout_error=findViewById(R.id.id_layout_neterror);
-        layout_result=findViewById(R.id.id_layout_success);
+        layoutError =findViewById(R.id.id_layout_neterror);
+        layoutResult =findViewById(R.id.id_layout_success);
         result_img=(ImageView)findViewById(R.id.id_result_img);
-        tv_result=(TextView)findViewById(R.id.id_scan_result) ;
-        tv_notice=(TextView)findViewById(R.id.id_result_notice);
-        tv_estate=(TextView)findViewById(R.id.id_tv_estate);
-        tv_equipment=(TextView)findViewById(R.id.id_tv_equipment);
+        tvResult =(TextView)findViewById(R.id.id_scan_result) ;
+        tvNotice =(TextView)findViewById(R.id.id_result_notice);
+        tvEstate =(TextView)findViewById(R.id.id_tv_estate);
+        tvEquipment =(TextView)findViewById(R.id.id_tv_equipment);
         findViewById(R.id.id_btn_know).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,23 +142,8 @@ public class ScanCodeResult extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        textParams.put("account",userphone);
+        textParams.put("account", userPhone);
         textParams.put("equipmentNo",equipmentNo);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                chargesHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                chargesHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,resultHandler);
     }
 }

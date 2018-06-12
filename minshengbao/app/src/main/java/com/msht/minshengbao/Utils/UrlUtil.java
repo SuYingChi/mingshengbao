@@ -1,9 +1,11 @@
 package com.msht.minshengbao.Utils;
 
 import com.msht.minshengbao.BuildConfig;
-
 /**
- * Created by hong on 2016/11/15.
+ * Demo class
+ * 接口工具
+ * @author hong
+ * @date 2016/11/15
  */
 public class UrlUtil {
     /**
@@ -47,7 +49,9 @@ public class UrlUtil {
     public static final String WaterPrice_Url=BuildConfig.URL_MSSB+"/order/getPrice";
     public static final String WaterCreate_Url=BuildConfig.URL_MSSB+"/order/create";
     public static final String WaterCancel_Url=BuildConfig.URL_MSSB+"/order/oper";
-    //商城
+    /**
+     * 商城
+     */
     public static final String Shop_LoginHtml=BuildConfig.URL_SHOP+"/wap/tmpl/member/login.html";
     public static final String Shop_HomeUrl= BuildConfig.URL_SHOP +"/wap/index.html";
     public static final String Shop_Login= BuildConfig.URL_SHOP +"/mobile/index.php?act=login&op=appindex";
@@ -58,7 +62,9 @@ public class UrlUtil {
     public static final String Shop_Gasstove=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
     public static final String Shop_GasHeater=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
     public static final String Shop_OrderList=BuildConfig.URL_SHOP+"/wap/tmpl/member/order_list.html";
-    /*首页功能 */
+    /**
+     * 首页功能
+     */
     public static final String App_versionUrl= BuildConfig.URL_HEADS +"/Gas/app/version";
     public static final String AllServeCatalog_Url=BuildConfig.URL_HEADS+"/api/serve_city/user_app_all_serve";
     public static final String Function_Url= BuildConfig.URL_HEADS +"/api/serve_city/user_app_serve";
@@ -73,8 +79,9 @@ public class UrlUtil {
     public static final String Read_searchUserhouse=BuildConfig. URL_HEADS +"/Gas/usedHouse/search";
     public static final String Pre_deposit_history= BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
     public static final String SpecialTopic_Url=BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
-    /*燃气服务模块 */
-    //自助抄表
+    /**
+     * 燃气服务模块
+     */
     public static final String InstallServer_Url=BuildConfig. URL_HEADS +"/Gas/workOrder/add";
     public static final String InstallType_Url= BuildConfig.URL_HEADS +"/Gas/app/gas_install_type";
     public static final String GetTable_Url= BuildConfig.URL_HEADS +"/Gas/meter/rqb";
@@ -84,16 +91,18 @@ public class UrlUtil {
     public static final String SelectAddress_Url= BuildConfig.URL_HEADS +"/Gas/usedHouse/list";
     public static final String CreateOrder_Gas=BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/createOrder";
     public static final String GasExpense_Pay=BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/pay";
-    //ic卡
+    /**
+     * ic卡
+     */
     public static final String IcRecharge_BillUrl=BuildConfig.URL_HEADS+"/Gas/payment/icRecharge";
     public static final String IcRechargeSearch_Url=BuildConfig.URL_HEADS+"/Gas/payment/icRechargeSearch";
     public static final String IcRechargeHistory_Url=BuildConfig.URL_HEADS+"/Gas/payment/icRechargeHistory";
     //抢险
     public static final String GasQiangxian_Url= BuildConfig.URL_HEADS +"/Gas/app/rescue";
-    /*HTML5Web*/
-    //智慧农贸
+    /**
+     * HTML5Web
+      */
     public static final String Intelligent_FarmUrl="http://msbapp.cn/wyh/index.html";
-    //燃气须知
     public static final String Companyprofile_Url=BuildConfig. URL_HEADS +"/Gas/xuzhi/company";
     public static final String GasJiaoNa_Url= BuildConfig.URL_HEADS +"/Gas/xuzhi/gas_payment";
     public static final String Gasprice_Url= BuildConfig.URL_HEADS +"/gas_h5/qijiashuoming.html";
@@ -102,10 +111,11 @@ public class UrlUtil {
     public static final String GasYeWu_Url= BuildConfig.URL_HEADS +"/Gas/xuzhi/business_guid";
     public static final String uninstall_Url= BuildConfig.URL_HEADS +"/Gas/xuzhi/uninstall";
     public static final String ServicePromise_Url= BuildConfig.URL_HEADS +"/Gas/xuzhi/service_promise";
- //柜台业务
     public static final String Guitai_Url= BuildConfig.URL_HEADS +"/Gas/guitai/guitai";
     public static final String YingyeSite_Url= BuildConfig.URL_HEADS +"/Gas/guitai/wangdian";
-    //缴费
+    /**
+     * 缴费
+     */
     public static final String PaySubtract_Url=BuildConfig.URL_HEADS+"/msht_operation_platform/activity/get_event_activity";
     public static final String AgreeTreayt_Url= BuildConfig.URL_HEADS +"/repair_h5/regist_agreement.html";
     public static final String AutomataPay_Url= BuildConfig.URL_HEADS +"/Gas/gasWithhold/list";
@@ -117,12 +127,15 @@ public class UrlUtil {
     public static final String PayRecors_HistoryUrl= BuildConfig.URL_HEADS +"/Gas/payment/customerno_history";
     public static final String PayCustomerNo_Url= BuildConfig.URL_HEADS +"/Gas/payment/app_pay_customerno";
     public static final String Voucher_CanuseUrl= BuildConfig.URL_HEADS +"/Gas/coupon/can_use_list";
-    /*城市服务 */
+    /**
+     * 城市服务
+     */
     public static final String SelectCity_Url= BuildConfig.URL_HEADS +"/api/serve_city/list";
-    //违章查询
     public static final String BrulesInfoma_Url= BuildConfig.URL_HEADS +"/pis/peccancy/query";
     public static final String GdetailInfo_Url= BuildConfig.URL_HEADS +"/pis/info/view";
-    //Fragment
+    /**
+     * Fragment
+     */
     public static final String Evalute_UrL= BuildConfig.URL_HEADS +"/Gas/repairman/evaluate_list";
     public static final String maintainservise_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/list";
     public static final String AllMyservice_Url= BuildConfig.URL_HEADS +"/Gas/workOrder/userWorkOrder";
@@ -130,7 +143,9 @@ public class UrlUtil {
     public static final String Counpon_Url= BuildConfig.URL_HEADS +"/Gas/coupon/list";
     public static final String imgavatar_Url= BuildConfig.URL_HEADS +"/Gas/app/headerImg";
     public static final String PayRecord_Url= BuildConfig.URL_HEADS +"/Gas/payment/list";
-    /*保险*/
+    /**
+     *  保险
+    */
     public static final String Insurance_buy_Url=BuildConfig.URL_HEADS +"/Gas/insurance/create_order";
     public static final String Insurance_history_Url= BuildConfig.URL_HEADS +"/Gas/invoice/history";
     public static final String GethouseAddress_Url="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
@@ -167,7 +182,8 @@ public class UrlUtil {
     public static final String Invoice_applyUrl=BuildConfig. URL_HEADS +"/Gas/invoice/apply";
     public static final String Invoice_getUrl= BuildConfig.URL_HEADS +"/Gas/invoice/uninvoce_list";
     /**
-    维修服务*/
+     * 维修服务
+    */
     public static final String Service_noteUrl= BuildConfig.URL_HEADS +"/repair_h5/service_note.html";
     public static final String RepairOrder_detailUrl= BuildConfig.URL_HEADS +"/Gas/repairOrder/view";
     public static final String RepairOrder_cancelUrl= BuildConfig.URL_HEADS +"/Gas/repairOrder/cancel";
@@ -182,9 +198,9 @@ public class UrlUtil {
     public static final String RefundApply_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/refund";
     public static final String RefundImg_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/refund_img";
     /**
-    热门维修 */
+     * 热门维修
+     */
     public static final String HotRepair_Url= BuildConfig.URL_HEADS +"/api/serve_city/hot_repair";
-
     /**
      * HTML5页面
      */

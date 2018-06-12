@@ -334,7 +334,7 @@ public class WaterPaymethod extends BaseActivity {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);       //选择支付方式可点击
-                VariableUtil.paypos=thisPosition;
+                VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
             }

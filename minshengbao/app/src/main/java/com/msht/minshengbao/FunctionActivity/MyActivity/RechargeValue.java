@@ -207,7 +207,7 @@ public class RechargeValue extends BaseActivity  {
             public void ItemClick(View view, int thisPosition) {
                 //选择支付方式可点击
                 btn_recharge.setEnabled(true);
-                VariableUtil.paypos=thisPosition;
+                VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
             }

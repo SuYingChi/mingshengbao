@@ -18,9 +18,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 /**
- * Created by hong on 2016/12/28.
+ * Demo class
+ *
+ * @author hong
+ * @date 2016/10/31
  */
 public class SendrequestUtil {
     private static final String ERROR_NETWORK = "服务器连接失败，请稍后再试";
@@ -31,7 +33,6 @@ public class SendrequestUtil {
     public static final String SUCCESS_VALUE="success";
     public static final String FAILURE_VALUE="fail";
     public static final String CANCEL_VALUE="fail";
-
     public static void ShortTimeGet(final String  url, final Handler mhandler) {
         new Thread(new Runnable() {
             @Override
@@ -302,8 +303,12 @@ public class SendrequestUtil {
             }
         }).start();
     }
-    /*获取网络图片 */
-    public static void BitmapGet(final String  url, final ResultImgListenner resultListener){
+    /**
+     * 获取网络图片
+     * @param url  图片链接
+     * @param mHandler
+     */
+    public static void  getBitmapFromService(final String  url, final Handler mHandler ){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -312,17 +317,23 @@ public class SendrequestUtil {
                 try {
                     URL picurl = new URL(url);
                     conn = (HttpURLConnection)picurl.openConnection();
-                    conn.setConnectTimeout(6000);//设置超时
+                    conn.setConnectTimeout(6000);
                     conn.setDoInput(true);
-                    conn.setUseCaches(false);//不缓存
+                    conn.setUseCaches(false);
                     conn.connect();
-                    InputStream is = conn.getInputStream();//获得图片的数据流
+                    InputStream is = conn.getInputStream();
                     img = BitmapFactory.decodeStream(is);
-                    resultListener.Success(img);
+                    Message message = new Message();
+                    message.what = SUCCESS;
+                    message.obj =img;
+                    mHandler.sendMessage(message);
                     is.close();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    resultListener.Failure(ERROR_NETWORK);
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_SERVICE;
+                    mHandler.sendMessage(msg);
                 }finally {
                     if (conn != null) {
                         conn.disconnect();
@@ -331,7 +342,6 @@ public class SendrequestUtil {
             }
         }).start();
     }
-
     /**
      * 通过Get方式获取数据
      */
@@ -486,11 +496,11 @@ public class SendrequestUtil {
                     URL url = new URL(validateURL);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setConnectTimeout(5000);
-                    conn.setDoInput(true); // 发送POST请求必须设置允许输入
-                    conn.setDoOutput(true); // 发送POST请求必须设置允许输出
-                    conn.setUseCaches(false);//新加
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
                     conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Charset", "UTF-8");//设置编码
+                    conn.setRequestProperty("Charset", "UTF-8");
                     conn.setRequestProperty("User-Agent", "Fiddler");
                     conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
                     OutputStream os = conn.getOutputStream();

@@ -25,9 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Adapter.MyfunctionAdapter;
-import com.msht.minshengbao.Callback.ResultImgListenner;
 import com.msht.minshengbao.FunctionActivity.GasService.GasServerOrder;
 import com.msht.minshengbao.FunctionActivity.Invoice.InvoiceOpen;
+import com.msht.minshengbao.FunctionActivity.MessageCenterActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ConsultRecommend;
 import com.msht.minshengbao.FunctionActivity.MyActivity.CustomerNoManage;
@@ -40,13 +40,16 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.ViewUI.widget.MyScrollview;
+import com.umeng.analytics.MobclickAgent;
 
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -55,48 +58,56 @@ import java.util.HashMap;
  */
 public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScrollview.ScrollViewListener {
     private MyScrollview    myScrollview;
-    private LinearLayout    Lnavigation;
-    private RelativeLayout  Rmysetting;
+    private LinearLayout    layoutNavigation;
+    private RelativeLayout  layoutMySetting;
     private CircleImageView circleImageView;
-    private TextView tv_naviga;
-    private TextView tv_nickname;
-    private String userId;
-    private String password;
-    private String avatarurl;
+    private TextView tvNavigation;
+    private TextView tvNickname;
+    private TextView tvMessageNum;
+    private String avatarUrl;
     private String nickname;
-    private Bitmap myavatar=null;
+    private Bitmap myAvatar =null;
     private ACache mCache;
-    private int bgHeight;// 上半身的高度
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
+    private int   bgHeight;
     private Context mContext;
     private MyNoScrollGridView mGridView;
     private MyfunctionAdapter  mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
+    private final GetImageHandler getImageHandler=new GetImageHandler(this);
     public LoginMyFrag() {}
-    Handler getimgHandler = new Handler() {
+    private static class GetImageHandler extends Handler{
+        private WeakReference<LoginMyFrag> mWeakReference;
+        public GetImageHandler(LoginMyFrag loginMyFrag) {
+            mWeakReference = new WeakReference<LoginMyFrag>(loginMyFrag);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final LoginMyFrag reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    myavatar = (Bitmap)msg.obj;
-                    if (myavatar==null){   //未设置头像时
-                        circleImageView.setImageResource(R.drawable.potrait);
+                case SendrequestUtil.SUCCESS:
+                    reference.myAvatar = (Bitmap)msg.obj;
+                    if (reference.myAvatar ==null){
+                        reference.circleImageView.setImageResource(R.drawable.potrait);
                     }else {
-                        circleImageView.setImageBitmap(myavatar);
-                        mCache.put("avatarimg", myavatar);
+                        reference.circleImageView.setImageBitmap(reference.myAvatar);
+                        reference.mCache.put("avatarimg", reference.myAvatar);
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(getActivity(), msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,21 +115,19 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         View view=inflater.inflate(R.layout.fragment_loginafter_my, container, false);
         mContext=getActivity();
         mCache=ACache.get(mContext);
-        userId= SharedPreferencesUtil.getUserId(mContext, SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(mContext, SharedPreferencesUtil.Password,"");
-        avatarurl=SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
+        avatarUrl =SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
         nickname=SharedPreferencesUtil.getNickName(mContext,SharedPreferencesUtil.NickName,"");
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             view.findViewById(R.id.id_view).setVisibility(View.GONE);
         }
         initView(view);
-        myavatar=mCache.getAsBitmap("avatarimg");
-        if (myavatar!=null){
-            circleImageView.setImageBitmap(myavatar);
+        myAvatar =mCache.getAsBitmap("avatarimg");
+        if (myAvatar !=null){
+            circleImageView.setImageBitmap(myAvatar);
         }else {
-            if (avatarurl!=null&&!avatarurl.equals("")){
-                initgetavatar();
+            if (avatarUrl !=null&&!avatarUrl.equals("")){
+                onGetAvatar();
             }
         }
         initListeners();
@@ -131,16 +140,28 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private void initView(View view) {
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
         mGridView=(MyNoScrollGridView)view.findViewById(R.id.id_function_view);
-        Lnavigation=(LinearLayout) view.findViewById(R.id.id_li_navigation);
-        Rmysetting=(RelativeLayout) view.findViewById(R.id.id_re_gosetting);
-        Rmysetting.setOnClickListener(this);
+        layoutNavigation =(LinearLayout) view.findViewById(R.id.id_li_navigation);
+        layoutMySetting =(RelativeLayout) view.findViewById(R.id.id_re_gosetting);
+        layoutMySetting.setOnClickListener(this);
+        tvMessageNum=(TextView)view.findViewById(R.id.id_message_num);
         view.findViewById(R.id.id_re_hotline).setOnClickListener(this);
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
         view.findViewById(R.id.id_re_setting).setOnClickListener(this);
+        view.findViewById(R.id.id_right_massage).setOnClickListener(this);
         circleImageView=(CircleImageView)view.findViewById(R.id.id_potrait);
-        tv_naviga=(TextView)view.findViewById(R.id.id_tv_naviga);
-        tv_nickname=(TextView)view.findViewById(R.id.id_nickname);
-        tv_nickname.setText(nickname);
+        tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
+        tvNickname =(TextView)view.findViewById(R.id.id_nickname);
+        tvNickname.setText(nickname);
+        onUnReadMessage();
+    }
+
+    private void onUnReadMessage() {
+        if ( VariableUtil.messageNum!=0){
+            tvMessageNum.setText(String.valueOf(VariableUtil.messageNum));
+            tvMessageNum.setVisibility(View.VISIBLE);
+        }else {
+            tvMessageNum.setVisibility(View.GONE);
+        }
     }
     private void initData() {
         for (int i = 0; i <6; i++) {
@@ -213,31 +234,16 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         Intent login=new Intent(mContext, LoginActivity.class);
         startActivity(login);
     }
-    private void initgetavatar() {
-        SendrequestUtil.BitmapGet(avatarurl, new ResultImgListenner() {
-            @Override
-            public void Success(Bitmap bitmap) {
-                Message msg = new Message();
-                msg.obj = bitmap;
-                msg.what = SUCCESS;
-                getimgHandler.sendMessage(msg);
-            }
-            @Override
-            public void Failure(String string) {
-                Message msg = new Message();
-                msg.obj =string;
-                msg.what =FAILURE;
-                getimgHandler.sendMessage(msg);
-            }
-        });
+    private void onGetAvatar() {
+        SendrequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
     }
     private void initListeners() {
-        ViewTreeObserver vto = Rmysetting.getViewTreeObserver();
+        ViewTreeObserver vto = layoutMySetting.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Rmysetting.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                bgHeight = Rmysetting.getHeight();
+                layoutMySetting.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                bgHeight = layoutMySetting.getHeight();
                 inisetListaner();
             }
         });
@@ -247,17 +253,19 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     }
     @Override
     public void onScrollChanged(MyScrollview scrollView, int l, int t, int oldl, int oldt) {
-        if (t <= 0) {   //设置标题的背景颜色
-            Lnavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
-            tv_naviga.setTextColor(Color.argb(0, 0, 255, 0));
-        } else if (t > 0 && t <= bgHeight) { //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
+        if (t <= 0) {
+            //设置标题的背景颜色
+            layoutNavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
+            tvNavigation.setTextColor(Color.argb(0, 0, 255, 0));
+            //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
+        } else if (t > 0 && t <= bgHeight) {
             float scale = (float) t / bgHeight;
             float alpha = (255 * scale);
-            tv_naviga.setTextColor(Color.argb((int) alpha, 255, 255, 255));
-            Lnavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
+            tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
+            layoutNavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
         } else {    //滑动到banner下面设置普通颜色
-            Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
-            tv_naviga.setTextColor(Color.argb(255, 255, 255, 255));
+            layoutNavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
+            tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
     }
     @Override
@@ -282,23 +290,31 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 }
                 break;
             case R.id.id_re_hotline:
-                hotline();
+                hotLine();
                 break;
             case R.id.id_re_setting:
                 GoMoresetting();
+                break;
+            case R.id.id_right_massage:
+                goMessageCenter();
                 break;
             default:
                 break;
         }
     }
-    private void hotline() {
+
+    private void goMessageCenter() {
+        Intent intent=new Intent(mContext,MessageCenterActivity.class);
+        startActivity(intent);
+        tvMessageNum.setVisibility(View.GONE);
+    }
+    private void hotLine() {
         final String phone = "963666";
         new PromptDialog.Builder(mContext)
                 .setTitle("服务热线")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(phone)
                 .setButton1("取消", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
@@ -330,7 +346,9 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 })
                 .show();
     }
-    /*动态权限*/
+    /**
+     * 动态权限
+    */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode==MY_PERMISSIONS_REQUEST_CALL_PHONE){
@@ -341,7 +359,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(callIntent);
             }else {
-                Toast.makeText(mContext,"未授权不可拨打电话",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(mContext,"未授权不可拨打电话");
             }
             return;
         }
@@ -387,12 +405,12 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     @Override
     public void onResume() {
         super.onResume();
-       // MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onPageStart(mPageName);
 
     };
     @Override
     public void onPause() {
         super.onPause();
-       // MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPageEnd(mPageName);
     }
 }

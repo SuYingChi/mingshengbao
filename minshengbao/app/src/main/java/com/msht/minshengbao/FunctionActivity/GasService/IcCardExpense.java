@@ -279,7 +279,7 @@ public class IcCardExpense extends BaseActivity  {
             @Override
             public void ItemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);
-                VariableUtil.paypos=thisPosition;
+                VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
             }

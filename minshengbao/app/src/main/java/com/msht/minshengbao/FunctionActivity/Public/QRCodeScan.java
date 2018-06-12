@@ -19,15 +19,15 @@ import com.msht.minshengbao.FunctionActivity.GasService.IcCardExpense;
 import com.msht.minshengbao.FunctionActivity.WaterApp.ScanCodeResult;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class QRCodeScan extends BaseCaptureActivity {
-
-    private ImageView backimg;
-    private TextView  tv_navigaTile;
+    private ImageView backImg;
+    private TextView  tvNavigationTitle;
     private SurfaceView surfaceView;
     private AutoScannerView autoScannerView;
     private FlowLineView flowLineView;
@@ -48,17 +48,17 @@ public class QRCodeScan extends BaseCaptureActivity {
     }
     private void setCommonHeader(String title) {
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
-            findViewById(R.id.id_status_view).setVisibility(View.GONE);//状态栏View
+            findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
-        backimg = (ImageView) findViewById(R.id.id_goback);
-        tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg = (ImageView) findViewById(R.id.id_goback);
+        tvNavigationTitle = (TextView) findViewById(R.id.tv_navigation);
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        tv_navigaTile.setText(title);
+        tvNavigationTitle.setText(title);
     }
     private void initView() {
         findViewById(R.id.id_erwei).setOnClickListener(new View.OnClickListener() {
@@ -80,12 +80,10 @@ public class QRCodeScan extends BaseCaptureActivity {
             }
         });
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onRestart() {
+        super.onRestart();
         if(isPause){
-           // flowLineView.start();
             flowLineView.StartRunning();
         }
     }
@@ -106,34 +104,33 @@ public class QRCodeScan extends BaseCaptureActivity {
         playBeepSoundAndVibrate(true, true);
         ResultActions(rawResult.getText());
     }
-
     private void ResultActions(String result) {
-        String download_url="http://msbapp.cn/download/success.html?QRCodeJson=";
-        String reverse_result=result.replace(download_url,"");
-        if (reverse_result.contains("QrcodeType")){
+        String downloadUrl="http://msbapp.cn/download/success.html?QRCodeJson=";
+        String reverseResult=result.replace(downloadUrl,"");
+        if (reverseResult.contains("QrcodeType")){
             try{
-                JSONObject object = new JSONObject(reverse_result);
+                JSONObject object = new JSONObject(reverseResult);
                 String QrcodeType=object.optString("QrcodeType");
                 JSONObject jsonObject=object.optJSONObject("data");
-                if (QrcodeType.equals("1")){
+                if (QrcodeType.equals(VariableUtil.VALUE_ONE)){
                     String equipmentNo=jsonObject.optString("equipmentNo");
                     Intent intent=new Intent(context, ScanCodeResult.class);
                     intent.putExtra("equipmentNo",equipmentNo);
                     startActivity(intent);
                     finish();
-                }else if (QrcodeType.equals("2")){
+                }else if (QrcodeType.equals(VariableUtil.VALUE_TWO)){
                     MakeMistakes("0");
                 }
             }catch (JSONException e){
                 e.printStackTrace();
             }
-        }else if(reverse_result.contains("payType")){
+        }else if(reverseResult.contains("payType")){
             try {
-                JSONObject object = new JSONObject(reverse_result);
+                JSONObject object = new JSONObject(reverseResult);
                 String payType =object.getString("payType");
                 String payId  = object.getString("payId");
                 String payTime=object.getString("payTime");
-                if (payType.equals("1")){
+                if (payType.equals(VariableUtil.VALUE_ONE)){
                     Intent intent=new Intent(QRCodeScan.this, IcCardExpense.class);
                     intent.putExtra("payId",payId);
                     intent.putExtra("payTime",payTime);
@@ -153,17 +150,13 @@ public class QRCodeScan extends BaseCaptureActivity {
     private void MakeMistakes(String s) {
         Intent error=new Intent(QRCodeScan.this,QrCodeError.class);
         error.putExtra("error_type",s);
-        startActivityForResult(error,0);
-
+        startActivity(error);
     }
     @Override
     protected void onResume() {
         super.onResume();
         autoScannerView.setCameraManager(cameraManager);
         flowLineView.setCameraManager(cameraManager);
-       /* if(isPause){
-            flowLineView.Pause();
-        }*/
         MobclickAgent.onPageStart(mPageName);
         MobclickAgent.onResume(context);
     }
@@ -171,9 +164,6 @@ public class QRCodeScan extends BaseCaptureActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        /*if(isPause){
-            flowLineView.Pause();
-        }*/
         MobclickAgent.onPageEnd(mPageName);
         MobclickAgent.onPause(context);
     }

@@ -12,9 +12,10 @@ public class VariableUtil {
     public static int firstCome=0;
     public static int mPos;
     public static int cityPos;
-    public static int paypos;
+    public static int payPos;
     public static int MealPos=-1;
     public static int estatePos=-1;
+    public static int messageNum=0;
     public static String balance;
     public static String City;
     public static boolean boolSelect;
