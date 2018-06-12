@@ -20,6 +20,8 @@ public class UrlUtil {
     /**
      * 电动车域名
       */
+    public static final String URL_HEADS=BuildConfig.URL_HEADS;
+
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
     /**
      * LAUNCHER_IMG_URL 启动页广告图链接
