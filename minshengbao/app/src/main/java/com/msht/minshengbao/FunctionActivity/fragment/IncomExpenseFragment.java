@@ -18,6 +18,7 @@ import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -82,7 +83,6 @@ public class IncomExpenseFragment extends BaseFragment {
                         String Error = object.optString("error");
                         jsonArray =object.optJSONArray("data");
                         if(Results.equals("success")) {
-                            Log.d("记录=",msg.obj.toString());
                             if (refreshType==0){
                                 mListView.stopRefresh(true);
                             }else if (refreshType==1){
@@ -104,8 +104,7 @@ public class IncomExpenseFragment extends BaseFragment {
                     break;
                 case FAILURE:
                     mListView.stopRefresh(false);
-                    Toast.makeText(getActivity(), msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtil.ToastText(mContext,msg.obj.toString());
                     break;
                 default:
                     break;

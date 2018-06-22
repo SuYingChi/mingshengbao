@@ -9,7 +9,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 
 public class RegisterSeccess extends BaseActivity {
-    private final int SPLASH_DISPLAY_LENGHT=3000;
+    private final int SPLASH_DISPLAY_TIME =3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,10 +20,10 @@ public class RegisterSeccess extends BaseActivity {
         initgo();
     }
     private void initview() {
-        TextView tv_success=(TextView)findViewById(R.id.id_tv_success);
-        TextView tv_tishi=(TextView)findViewById(R.id.id_tv_tishi);
-        tv_success.setText("注册成功");
-        tv_tishi.setText("即将转入到登录界面");
+        TextView tvSuccess=(TextView)findViewById(R.id.id_tv_success);
+        TextView tvTip=(TextView)findViewById(R.id.id_tv_tishi);
+        tvSuccess.setText("注册成功");
+        tvTip.setText("即将转入到登录界面");
     }
     private void initgo() {
         new Handler().postDelayed(new Runnable(){
@@ -33,6 +33,6 @@ public class RegisterSeccess extends BaseActivity {
                 RegisterSeccess.this.startActivity(mainintent);
                 RegisterSeccess.this.finish();
             }
-        }, SPLASH_DISPLAY_LENGHT);
+        }, SPLASH_DISPLAY_TIME);
     }
 }

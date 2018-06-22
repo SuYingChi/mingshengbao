@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.msht.minshengbao.FunctionActivity.fragment.PayRecord;
-import com.msht.minshengbao.FunctionActivity.fragment.SelfhelpPay;
+import com.msht.minshengbao.FunctionActivity.fragment.SelfHelpPay;
 
 /**
  * Created by hong on 2016/3/25.
@@ -16,7 +16,7 @@ public class ViewAdapter extends FragmentPagerAdapter {
     private String fragments[] = {"自助缴费","缴费记录"};
     private String id;
     private String password;
-    private SelfhelpPay mSelfpay;
+    private SelfHelpPay mSelfpay;
     private PayRecord mPayrecord;
     public ViewAdapter(FragmentManager fm, Context applicationContext, String userId, String passwords) {
         super(fm);
@@ -26,11 +26,11 @@ public class ViewAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Bundle bundle=new Bundle();
-        bundle.putString("id",id);//传值昵称
+        bundle.putString("id",id);
         bundle.putString("password",password);
         switch (position){
             case 0:
-                mSelfpay=new SelfhelpPay();
+                mSelfpay=new SelfHelpPay();
                 mSelfpay.setArguments(bundle);
                 return mSelfpay;
             case 1:

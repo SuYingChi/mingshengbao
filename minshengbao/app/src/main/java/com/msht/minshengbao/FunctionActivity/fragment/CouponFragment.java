@@ -19,7 +19,9 @@ import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
@@ -29,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,19 +43,18 @@ public class CouponFragment extends BaseFragment {
     private String userId;
     private String password;
     private  String status="1";
-    private RelativeLayout Rnodata;
-    private Button btn_share;
-    private XListView mListview;
+    private RelativeLayout layoutNoData;
+    private Button btnShare;
+    private XListView xListView;
     private CouponAdapter mAdapter;
     private int pageNo=1;
     private int pageIndex=0;
     private int refreshType;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private JSONArray jsonArray;   //数据解析
+    private JSONArray jsonArray;
     private final String mPageName = "优惠券";
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> couponList = new ArrayList<HashMap<String, String>>();
+    private final RequestHandler requestHandler=new RequestHandler(this);
     public CouponFragment() {}
     public static CouponFragment getinstance(int position) {
         CouponFragment couponFragment = new CouponFragment();
@@ -70,46 +72,60 @@ public class CouponFragment extends BaseFragment {
         }
         return couponFragment ;
     }
-    Handler requestHandler = new Handler() {
+    private static class RequestHandler extends Handler{
+        private WeakReference<CouponFragment> mWeakReference;
+        public RequestHandler(CouponFragment couponFragment) {
+            mWeakReference = new WeakReference<CouponFragment>(couponFragment);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final CouponFragment reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                        reference.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListview.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListview.stopLoadMore();
+                        reference.jsonArray =object.optJSONArray("data");
+                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (reference.refreshType==0){
+                                reference.xListView.stopRefresh(true);
+                            }else if (reference.refreshType==1){
+                                reference.xListView.stopLoadMore();
                             }
-                            if(jsonArray.length()>0){
-                                if (pageNo==1){
-                                    couponList.clear();
+                            if(reference.jsonArray.length()>0){
+                                if (reference.pageNo==1){
+                                    reference.couponList.clear();
                                 }
                             }
-                            initShow();
+                            reference.onGetCouponData();
                         }else {
-                            faifure(Error);
+                            reference.onFaifure(Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(getActivity(), msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                        reference.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void initShow() {
+    }
+    private void onGetCouponData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -141,17 +157,17 @@ public class CouponFragment extends BaseFragment {
             e.printStackTrace();
         }
         if (couponList.size()==0){
-            if (status.equals("1")){
-                Rnodata.setVisibility(View.VISIBLE);
+            if (status.equals(VariableUtil.VALUE_ONE)){
+                layoutNoData.setVisibility(View.VISIBLE);
             }else {
-                Rnodata.setVisibility(View.GONE);
+                layoutNoData.setVisibility(View.GONE);
             }
         }else {
-            Rnodata.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.GONE);
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void faifure(String error) {
+    private void onFaifure(String error) {
         new PromptDialog.Builder(getActivity())
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -184,7 +200,7 @@ public class CouponFragment extends BaseFragment {
         userId= SharedPreferencesUtil.getUserId(getActivity(), SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(getActivity(), SharedPreferencesUtil.Password,"");
         initMyView(mRootView);
-        btn_share.setOnClickListener(new View.OnClickListener() {
+        btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(), ShareMenuActivity.class);
@@ -195,13 +211,13 @@ public class CouponFragment extends BaseFragment {
     }
 
     private void initMyView(View mRootView) {
-        Rnodata=(RelativeLayout)mRootView.findViewById(R.id.id_re_nodata);
-        btn_share=(Button)mRootView.findViewById(R.id.id_btn_share);
-        mListview=(XListView)mRootView.findViewById(R.id.id_dicount_mlistview);
-        mListview.setPullLoadEnable(true);
+        layoutNoData =(RelativeLayout)mRootView.findViewById(R.id.id_re_nodata);
+        btnShare =(Button)mRootView.findViewById(R.id.id_btn_share);
+        xListView =(XListView)mRootView.findViewById(R.id.id_dicount_mlistview);
+        xListView.setPullLoadEnable(true);
         mAdapter=new CouponAdapter(getActivity(),couponList);
-        mListview.setAdapter(mAdapter);
-        mListview.setXListViewListener(new XListView.IXListViewListener() {
+        xListView.setAdapter(mAdapter);
+        xListView.setXListViewListener(new XListView.IXListViewListener() {
             @Override
             public void onRefresh() {
                 refreshType=0;
@@ -211,13 +227,6 @@ public class CouponFragment extends BaseFragment {
             public void onLoadMore() {
                 refreshType=1;
                 loadData(pageIndex + 1);
-            }
-        });
-        mAdapter.SetOnItemSelectListener(new CouponAdapter.OnItemSelectListener() {
-            @Override
-            public void ItemSelectClick(View view, int thisposition) {
-                getActivity().setResult(2);
-                getActivity().finish();
             }
         });
     }
@@ -236,23 +245,9 @@ public class CouponFragment extends BaseFragment {
         textParams.put("password",password);
         textParams.put("status",status);
         textParams.put("page",pageNum);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
+    @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onPageStart(mPageName);
@@ -262,5 +257,13 @@ public class CouponFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

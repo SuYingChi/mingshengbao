@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -18,9 +16,9 @@ import java.util.HashMap;
 /**
  * Created by hong on 2017/3/17.
  */
-public class GetaddressAdapter extends BaseAdapter {
+public class GetAddressAdapter extends BaseAdapter {
     private Context mContext;
-    private int thispos;
+    private int thisPos;
     private LayoutInflater mInflater = null;
     public  ItemRadioButtonClickListener mListener = null;
     public void setRadioButtonClickListener(ItemRadioButtonClickListener listener){
@@ -30,11 +28,11 @@ public class GetaddressAdapter extends BaseAdapter {
         void onRadioButtonClick(View v, int position);
     }
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
-    public GetaddressAdapter(Context context, ArrayList<HashMap<String, String>> mList,int pos) {
+    public GetAddressAdapter(Context context, ArrayList<HashMap<String, String>> mList, int pos) {
         super();
         this.mContext = context;
         this.houseList=mList;
-        this.thispos=pos;
+        this.thisPos =pos;
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -62,15 +60,15 @@ public class GetaddressAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_customerno_record, null);
             holder.radioButton=(RadioButton)convertView.findViewById(R.id.id_radio);
-            holder.address_word = (TextView) convertView.findViewById(R.id.id_address_text);
-            holder.item_customerNo = (TextView) convertView.findViewById(R.id.id_customerText);
+            holder.addressWord = (TextView) convertView.findViewById(R.id.id_address_text);
+            holder.itemCustomerNo = (TextView) convertView.findViewById(R.id.id_customerText);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.item_customerNo.setText(houseList.get(position).get("customerNo"));
-        holder.address_word.setText(houseList.get(position).get("name"));
-        if (thispos==position){
+        holder.itemCustomerNo.setText(houseList.get(position).get("customerNo"));
+        holder.addressWord.setText(houseList.get(position).get("name"));
+        if (thisPos ==position){
             holder.radioButton.setChecked(true);
         }else {
             holder.radioButton.setChecked(false);
@@ -86,8 +84,8 @@ public class GetaddressAdapter extends BaseAdapter {
         return convertView;
     }
     class ViewHolder {
-        public RadioButton radioButton;
-        public TextView address_word;
-        public TextView item_customerNo;
+        RadioButton radioButton;
+        TextView addressWord;
+        TextView itemCustomerNo;
     }
 }

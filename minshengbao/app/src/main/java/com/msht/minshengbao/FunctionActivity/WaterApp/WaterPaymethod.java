@@ -45,7 +45,7 @@ public class WaterPaymethod extends BaseActivity {
     private String userId;
     private String password;
     private String userphone;
-    private String charge;   //
+    private String charge;
     private String id;
     private String orderId;
     private String channels;

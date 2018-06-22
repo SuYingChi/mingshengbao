@@ -12,6 +12,7 @@ public class UrlUtil {
      * 测试环境
      * public static final String URL_HEADS ="http://test.msbapp.cn";
      * public static final String URL_HEADS="http://test.msbapp.cn:8080";
+     * public static final String URL_HEADS=BuildConfig.URL_HEADS;
      */
     /**
      * 线上环境
@@ -20,7 +21,6 @@ public class UrlUtil {
     /**
      * 电动车域名
       */
-    public static final String URL_HEADS=BuildConfig.URL_HEADS;
 
     public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
     /**
@@ -129,6 +129,8 @@ public class UrlUtil {
     public static final String PayRecors_HistoryUrl= BuildConfig.URL_HEADS +"/Gas/payment/customerno_history";
     public static final String PayCustomerNo_Url= BuildConfig.URL_HEADS +"/Gas/payment/app_pay_customerno";
     public static final String Voucher_CanuseUrl= BuildConfig.URL_HEADS +"/Gas/coupon/can_use_list";
+    public static final String RECHARGE_CREATE_ORDER_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_create_order";
+    public static final String RECHARGE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_pay";
     /**
      * 城市服务
      */

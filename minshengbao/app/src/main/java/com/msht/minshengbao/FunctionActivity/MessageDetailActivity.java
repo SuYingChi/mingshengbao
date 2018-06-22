@@ -120,4 +120,12 @@ public class MessageDetailActivity extends BaseActivity {
         textParams.put("id",id);
         SendrequestUtil.postDataFromService(messageUrl,textParams,messageHandler);
     }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

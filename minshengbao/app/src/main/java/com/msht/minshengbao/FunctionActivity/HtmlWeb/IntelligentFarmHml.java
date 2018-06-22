@@ -50,7 +50,7 @@ public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
+       // settings.setBuiltInZoomControls(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);

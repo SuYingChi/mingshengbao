@@ -15,6 +15,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -23,45 +24,53 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SelectCity extends BaseActivity {
     private ListView mListView;
     private SelectCityAdapter  mAdapter;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> cityList = new ArrayList<HashMap<String, String>>();
-    Handler CityHandler = new Handler() {
+    private final CityHandler cityHandler=new CityHandler(this);
+    private static class CityHandler extends Handler{
+        private WeakReference<SelectCity> mWeakReference;
+        public CityHandler(SelectCity activity) {
+            mWeakReference=new WeakReference<SelectCity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SelectCity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            initShow();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonArray =object.optJSONArray("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.onReceiveCityData();
                         }else {
-                            failure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -73,7 +82,7 @@ public class SelectCity extends BaseActivity {
                     }
                 }).show();
     }
-    private void initShow() {
+    private void onReceiveCityData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -122,23 +131,7 @@ public class SelectCity extends BaseActivity {
         requestserver();
     }
     private void requestserver() {
-        String cityurl= UrlUtil.SelectCity_Url;
-        SendrequestUtil.executeGet(cityurl, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                CityHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                CityHandler.sendMessage(msg);
-
-            }
-        });
+        String cityUrl= UrlUtil.SelectCity_Url;
+        SendrequestUtil.getDataFromService(cityUrl,cityHandler);
     }
 }

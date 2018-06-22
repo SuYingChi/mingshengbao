@@ -52,8 +52,9 @@ public class WaterOrderList extends BaseActivity {
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private int refreshType=0;
-    private static final int    REQUEST_CALL_PHONE=2;
+    private static final int  REQUEST_CALL_PHONE=2;
     private ArrayList<HashMap<String, String>> orderList = new ArrayList<HashMap<String, String>>();
+    private
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {

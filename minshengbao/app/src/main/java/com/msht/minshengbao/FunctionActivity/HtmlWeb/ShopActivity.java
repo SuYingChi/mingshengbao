@@ -1,6 +1,7 @@
 package com.msht.minshengbao.FunctionActivity.HtmlWeb;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
@@ -31,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.PublicPayway;
+import com.msht.minshengbao.FunctionActivity.Public.PublicPayWayActivity;
 import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AppPackageUtil;
@@ -71,12 +72,13 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     private Intent mSourceIntent;
     private ValueCallback<Uri> mUploadMessage;
     public  ValueCallback<Uri[]> mUploadCallbackAboveL;
-    private final static int FILECHOOSER_RESULTCODE = 3;
+    private final static int FILE_CHOOSER_RESULT_CODE = 3;
     private static final int REQUEST_CODE_PICK_IMAGE = 0;
     private static final int REQUEST_CODE_IMAGE_CAPTURE = 1;
     private static final int PAY_CODE=4;
     private static final int MY_CAMERA_REQUEST=2;
-    private static String ImagrfileName;
+    private static final String URL_VALUE="op=msbapppay";
+    private static String imageFileName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +116,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
         }
-        SettingWeb();
+        settingWeb();
         if (urls!=null){
             if (shopState) {
                 shopWeb.loadUrl(urls);
@@ -156,8 +158,8 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         view.postUrl(loginUrl,bytes);
                         SharedPreferencesUtil.putLstate(mContext,SharedPreferencesUtil.Shopstate,true);
                     }
-                }else if (url.contains("op=msbapppay")){
-                    PingPay(url);
+                }else if (url!=null&&url.contains(URL_VALUE)){
+                    pingPay(url);
                 }else {
                     if (First==1){
                         if (!shopState){
@@ -168,7 +170,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                             view.loadUrl(url);
                         }
                     }else {
-                        if (url.contains(targetUrl)){
+                        if (url!=null&&url.contains(targetUrl)){
                             view.loadUrl(url);
                             layoutNavigation.setVisibility(View.VISIBLE);
                         }else {
@@ -207,19 +209,19 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
             file.mkdirs();
         }
     }
-    private void PingPay(String shopurl) {
-        String pay_amount=Uri.parse(shopurl).getQueryParameter("pay_amount");
-        String pay_url=replace(shopurl,"op","pay_new");
-        Intent pay=new Intent(mContext, PublicPayway.class);
-        pay.putExtra("amount",pay_amount);
-        pay.putExtra("url",pay_url);
+    private void pingPay(String shopUrl) {
+        String payAmount=Uri.parse(shopUrl).getQueryParameter("pay_amount");
+        String payUrl=replace(shopUrl,"op","pay_new");
+        Intent pay=new Intent(mContext, PublicPayWayActivity.class);
+        pay.putExtra("amount",payAmount);
+        pay.putExtra("url",payUrl);
         startActivityForResult(pay,PAY_CODE);
     }
-    private String replace(String shopurl, String key, String value) {
-        if (!TextUtils.isEmpty(shopurl)&&!TextUtils.isEmpty(key)){
-            shopurl=shopurl.replaceAll("("+key+"=[^&]*)",key+"="+value);
+    private String replace(String shopUrl, String key, String value) {
+        if (!TextUtils.isEmpty(shopUrl)&&!TextUtils.isEmpty(key)){
+            shopUrl=shopUrl.replaceAll("("+key+"=[^&]*)",key+"="+value);
         }
-        return shopurl;
+        return shopUrl;
     }
     @Override
     public void onProgressChangeds(WebView view, int newProgress) {
@@ -255,7 +257,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                                 if (isPermission(0)){
                                     try {
-                                        SelectPicture();
+                                        selectPicture();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         Toast.makeText(ShopActivity.this,
@@ -268,13 +270,13 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                                     return;
                                 }
                             }else {
-                                SelectPicture();
+                                selectPicture();
                             }
                         } else {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                                if (isPermission(1)){
                                    try {
-                                       TakePicture();
+                                       takePicture();
                                    } catch (Exception e) {
                                        e.printStackTrace();
                                        Toast.makeText(ShopActivity.this,
@@ -288,7 +290,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                                    return;
                                }
                             }else {
-                                TakePicture();
+                                takePicture();
                             }
                         }
                     }
@@ -296,12 +298,12 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         );
         alertDialog.show();
     }
-    private void TakePicture() {
-        ImagrfileName=System.currentTimeMillis() + ".jpg";
-        mSourceIntent = ImageUtil.takeBigPicture(mContext,ImagrfileName);
+    private void takePicture() {
+        imageFileName =System.currentTimeMillis() + ".jpg";
+        mSourceIntent = ImageUtil.takeBigPicture(mContext, imageFileName);
         startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
     }
-    private void SelectPicture() {
+    private void selectPicture() {
         mSourceIntent = ImageUtil.choosePicture();
         startActivityForResult(mSourceIntent, REQUEST_CODE_PICK_IMAGE);
     }
@@ -309,39 +311,33 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     private void requestPermissionsAndroidM(final int limit) {
         MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
             @Override
-            public void onPermissionGranted(int Code) {
-                if (Code==MY_CAMERA_REQUEST){
+            public void onPermissionGranted(int code) {
+                if (code==MY_CAMERA_REQUEST){
                     if (limit==0){
-                        SelectPicture();
+                        selectPicture();
                     }else {
-                        TakePicture();
+                        takePicture();
                     }
                 }
             }
             @Override
-            public void onPermissionDenied(int Code) {
+            public void onPermissionDenied(int code) {
                 restoreUploadMsg();
-                Toast.makeText(mContext,"没有权限您将无法进行扫描操作！",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(mContext,"没有权限您将无法进行扫描操作！");
             }
         });
     }
     private boolean isPermission(int limit) {
+        boolean permissionStatue;
         if (limit==0){
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                return false;
-            }else {
-                return true;
-            }
+            permissionStatue=ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
         }else {
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                return false;
-            }else {
-                return true;
-            }
+            permissionStatue=ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED;
         }
+        return permissionStatue;
     }
-
-    private void SettingWeb() {
+    @SuppressLint("SetJavaScriptEnabled")
+    private void settingWeb() {
         WebSettings settings=shopWeb.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -357,7 +353,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        settings.setBuiltInZoomControls(true);
+       // settings.setBuiltInZoomControls(true);
     }
     private void synCookies(String targetUrl){
         CookieSyncManager.createInstance(mContext);
@@ -394,8 +390,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                             shopWeb.goBack();
                             return true;
                         }
-                        else
-                        {
+                        else {
                             finish();
                         }
                     }
@@ -436,14 +431,15 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         mUploadMessage.onReceiveValue(uri);
 
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        if (mUploadCallbackAboveL == null) {        // for android 5.0+
+                        // for android 5.0+
+                        if (mUploadCallbackAboveL == null) {
                             ToastUtil.ToastText(mContext,"空数据");
                             return;
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                            String filepath=ImageUtil.getExistPath()+ImagrfileName;
+                            String filepath=ImageUtil.getExistPath()+ imageFileName;
                             File photoFile=new File(filepath);
-                            if (photoFile!=null){
+                            if (photoFile.exists()){
                                 Toast.makeText(mContext,filepath,Toast.LENGTH_SHORT).show();
                                 Uri uri = Uri.fromFile(photoFile);
                                 mUploadCallbackAboveL.onReceiveValue(new Uri[]{uri});
@@ -511,18 +507,16 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                 break;
         }
     }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode != FILECHOOSER_RESULTCODE
+        if (requestCode != FILE_CHOOSER_RESULT_CODE
                 || mUploadCallbackAboveL == null) {
             return;
         }
         Uri[] results = null;
         if (resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-            } else {
+            if (data != null) {
                 String dataString = data.getDataString();
                 ClipData clipData = data.getClipData();
                 if (clipData != null) {
@@ -532,8 +526,9 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         results[i] = item.getUri();
                     }
                 }
-                if (dataString != null)
+                if (dataString != null){
                     results = new Uri[]{Uri.parse(dataString)};
+                }
             }
         }
         mUploadCallbackAboveL.onReceiveValue(results);
@@ -545,14 +540,18 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode==MY_CAMERA_REQUEST){
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }else {
-
         }
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //  unregisterReceiver(broadcastReceiver);
+        if(shopWeb!=null){
+            shopWeb.stopLoading();
+            shopWeb.removeAllViews();
+            shopWeb.destroy();
+            shopWeb = null;
+        }
+
     }
     @Override
     public void onResume() {

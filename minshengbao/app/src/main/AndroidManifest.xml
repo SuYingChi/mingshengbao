@@ -24,7 +24,9 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <permission android:protectionLevel="normal" android:name="oem.permission.SENDMAIL"/>
+    <permission
+        android:name="oem.permission.SENDMAIL"
+        android:protectionLevel="normal" />
     <permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -48,6 +50,7 @@
             android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -91,7 +94,7 @@
             android:name=".DownloadVersion.DownloadService"
             android:enabled="true"
             android:exported="true"
-            android:permission="oem.permission.SENDMAIL"/>
+            android:permission="oem.permission.SENDMAIL" />
         <!-- Ping++ SDK -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
@@ -192,7 +195,7 @@
         <activity android:name=".FunctionActivity.Invoice.ApplyInvoice" />
         <activity android:name=".FunctionActivity.Invoice.InvoiceHistory" />
         <activity android:name=".FunctionActivity.HtmlWeb.AgreeTreayt" />
-        <activity android:name=".FunctionActivity.MyActivity.Mywallet" />
+        <activity android:name=".FunctionActivity.MyActivity.MyWalletActivity" />
         <activity android:name=".FunctionActivity.MyActivity.DiscountCoupon" />
         <activity android:name=".FunctionActivity.MyActivity.RechargeValue" />
         <activity android:name=".FunctionActivity.MyActivity.AutomatePay" />
@@ -258,7 +261,8 @@
             android:name=".FunctionActivity.HtmlWeb.VegetableGentlemen"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".FunctionActivity.HtmlWeb.IntelligentFarmHml" />
-        <activity android:name=".FunctionActivity.insurance.InsuranceHome"
+        <activity
+            android:name=".FunctionActivity.insurance.InsuranceHome"
             android:screenOrientation="portrait" />
         <activity android:name=".FunctionActivity.WaterApp.SelectEstate" />
         <activity android:name=".FunctionActivity.WaterApp.WaterOrderList" />
@@ -266,7 +270,7 @@
             android:name=".FunctionActivity.Public.QRCodeScan"
             android:screenOrientation="portrait" />
         <activity android:name=".FunctionActivity.MyActivity.PasswordActivity" />
-        <activity android:name=".FunctionActivity.Public.PublicPayway"></activity>
+        <activity android:name=".FunctionActivity.Public.PublicPayWayActivity" />
     </application>
 
 </manifest>

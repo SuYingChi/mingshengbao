@@ -14,16 +14,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ModifyAddress;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -32,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,53 +39,64 @@ import java.util.Map;
 public class SelectAddress extends BaseActivity {
     private ListView mListView;
     private AddressAdapter mAdapter;
-    private View Rview;
-    private View Rbtnnew;
-    private TextView tv_rightText;
+    private View layoutView;
+    private View layoutBtnNew;
+    private TextView tvRightText;
     private String userId;
     private String password;
-    private String Id;
-    private boolean boolAction=false;
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
+    private String id;
     private JSONArray jsonArray;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> addrList = new ArrayList<HashMap<String, String>>();
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<SelectAddress> mWeakReference;
+        public RequestHandler(SelectAddress activity) {
+            mWeakReference=new WeakReference<SelectAddress>(activity);
+        }
 
-    Handler requestHandler= new Handler() {
+        @Override
         public void handleMessage(Message msg) {
+            final SelectAddress activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (jsonArray.length() == 0) {
-                                    Rview.setVisibility(View.VISIBLE);
-                                } else {
-                                    initShow();
-                                    Rview.setVisibility(View.GONE);
-                                }
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonArray =object.optJSONArray("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.jsonArray.length() == 0) {
+                                activity.layoutView.setVisibility(View.VISIBLE);
+                            } else {
+                                activity.onReceiveAddressData();
+                                activity.layoutView.setVisibility(View.GONE);
+                            }
                         }else {
-                            displayDialog(Error);
+                            activity.displayDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     private void displayDialog(String string) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -98,7 +109,7 @@ public class SelectAddress extends BaseActivity {
                     }
                 }).show();
     }
-    private void initShow() {
+    private void onReceiveAddressData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -179,14 +190,14 @@ public class SelectAddress extends BaseActivity {
         }
     }
     private void initEvent() {
-        tv_rightText.setOnClickListener(new View.OnClickListener() {
+        tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context, AddressManageActivity.class);
                 startActivityForResult(intent,1);
             }
         });
-        Rbtnnew.setOnClickListener(new View.OnClickListener() {
+        layoutBtnNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,AddAddressActivity.class);
@@ -195,14 +206,14 @@ public class SelectAddress extends BaseActivity {
         });
     }
     private void initView() {
-        Rview=findViewById(R.id.id_re_nodata);
-        Rbtnnew=findViewById(R.id.id_re_newaddress);
+        layoutView =findViewById(R.id.id_re_nodata);
+        layoutBtnNew =findViewById(R.id.id_re_newaddress);
         mListView=(ListView)findViewById(R.id.id_address_view);
     }
     private void initHeader() {
-        tv_rightText=(TextView) findViewById(R.id.id_tv_rightText);
-        tv_rightText.setVisibility(View.VISIBLE);
-        tv_rightText.setText("管理");
+        tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("管理");
     }
     private void initData() {
         customDialog.show();
@@ -210,22 +221,7 @@ public class SelectAddress extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
     private class AddressAdapter extends BaseAdapter {
@@ -261,20 +257,20 @@ public class SelectAddress extends BaseActivity {
             if(convertView==null){
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address_manage, null);
-                holder.cn_name=(TextView)convertView.findViewById(R.id.id_tv_name);
-                holder.cn_phone=(TextView)convertView.findViewById(R.id.id_tv_phone);
-                holder.cn_addre = (TextView) convertView.findViewById(R.id.id_tv_address);
-                holder.img_edit=(ImageView)convertView.findViewById(R.id.id_edit_img);
-                holder.edit_layout=convertView.findViewById(R.id.id_edit_layout);
+                holder.cnName =(TextView)convertView.findViewById(R.id.id_tv_name);
+                holder.cnPhone =(TextView)convertView.findViewById(R.id.id_tv_phone);
+                holder.cnAddress = (TextView) convertView.findViewById(R.id.id_tv_address);
+                holder.imgEdit =(ImageView)convertView.findViewById(R.id.id_edit_img);
+                holder.editLayout =convertView.findViewById(R.id.id_edit_layout);
                 convertView.setTag(holder);
             }else{
                 holder = (Holder) convertView.getTag();
             }
-            holder.cn_phone.setText(addrList.get(position).get("phone"));
-            holder.cn_name.setText(addrList.get(position).get("name"));
-            holder.cn_addre.setText(addrList.get(position).get("address"));
-            holder.edit_layout.setVisibility(View.GONE);
-            holder.img_edit.setOnClickListener(new View.OnClickListener() {
+            holder.cnPhone.setText(addrList.get(position).get("phone"));
+            holder.cnName.setText(addrList.get(position).get("name"));
+            holder.cnAddress.setText(addrList.get(position).get("address"));
+            holder.editLayout.setVisibility(View.GONE);
+            holder.imgEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String address=addrList.get(thisposition).get("address");
@@ -294,11 +290,19 @@ public class SelectAddress extends BaseActivity {
             return convertView;
         }
         class Holder{
-            View     edit_layout;
-            ImageView   img_edit;
-            TextView    cn_addre;
-            TextView cn_name;
-            TextView cn_phone;
+            View editLayout;
+            ImageView imgEdit;
+            TextView cnAddress;
+            TextView cnName;
+            TextView cnPhone;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
         }
     }
 }

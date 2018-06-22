@@ -1,5 +1,6 @@
 package com.msht.minshengbao.FunctionActivity.HtmlWeb;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -25,16 +26,16 @@ import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
     private VerticalSwipeRefreshLayout mRefresh;
     private WebView   mWebview;
-    private View      Head_layout;
-    private String    Url,naviga;
+    private View      headLayout;
+    private String    mUrl, mNavigation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html_page);
         Intent data=getIntent();
-        Url=data.getStringExtra("url");
-        naviga=data.getStringExtra("navigate");
-        mPageName=naviga;
+        mUrl =data.getStringExtra("url");
+        mNavigation =data.getStringExtra("navigate");
+        mPageName= mNavigation;
         initHeader();
         initWeBView();
         initEvent();
@@ -43,7 +44,7 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
     private void initHeader() {
         backimg = (ImageView) findViewById(R.id.id_goback);
         tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        tv_navigaTile.setText(naviga);
+        tv_navigaTile.setText(mNavigation);
         backimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,15 +56,16 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
             }
         });
     }
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWeBView() {
         mRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_vertical_refresh);
         mRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        Head_layout=findViewById(R.id.id_re_second);
+        headLayout =findViewById(R.id.id_re_second);
         mWebview=(WebView)findViewById(R.id.id_web_html);
-        mWebview.loadUrl(Url);
+        mWebview.loadUrl(mUrl);
         WebSettings settings= mWebview.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -71,7 +73,7 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
+        //settings.setBuiltInZoomControls(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -95,7 +97,7 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
            @Override
            public void onRefresh() {
-               mWebview.loadUrl(Url);
+               mWebview.loadUrl(mUrl);
            }
        });
         mRefresh.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {

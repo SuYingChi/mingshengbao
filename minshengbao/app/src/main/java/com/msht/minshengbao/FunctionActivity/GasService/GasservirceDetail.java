@@ -144,8 +144,8 @@ public class GasservirceDetail extends BaseActivity {
             btn_status.setText("待支付");
         }else if (status.equals("6")){
             btn_status.setText("待评价");
-            btn_evaluate.setVisibility(View.VISIBLE);   //显示评价按钮
-            btn_cancel.setVisibility(View.GONE);        //隐藏取消按钮
+            btn_evaluate.setVisibility(View.VISIBLE);
+            btn_cancel.setVisibility(View.GONE);
         }else if (status.equals("7")){
             btn_status.setTextColor(Color.parseColor("#ffbfbfbf"));
             btn_status.setText("已完成");

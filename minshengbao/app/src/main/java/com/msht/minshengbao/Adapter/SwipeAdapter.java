@@ -71,21 +71,21 @@ public class SwipeAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_customerno, parent, false);
             item = new ViewHolder();
-            item.item_customer=(TextView)convertView.findViewById(R.id.id_customerText);
-            item.item_left_txt = (TextView)convertView.findViewById(R.id.id_address_text);
-            item.item_delect=(ImageView) convertView.findViewById(R.id.id_btn_contast);
+            item.itemCustomer =(TextView)convertView.findViewById(R.id.id_customerText);
+            item.itemLeftTxt = (TextView)convertView.findViewById(R.id.id_address_text);
+            item.itemDelect =(ImageView) convertView.findViewById(R.id.id_btn_contast);
             convertView.setTag(item);
         } else {                // 有直接获得ViewHolder
             item = (ViewHolder)convertView.getTag();
         }
-        item.item_left_txt.setText(houseList.get(position).get("name"));
-        item.item_customer.setText(houseList.get(position).get("customerNo"));
+        item.itemLeftTxt.setText(houseList.get(position).get("name"));
+        item.itemCustomer.setText(houseList.get(position).get("customerNo"));
         if (VariableUtil.boolSelect){
-            item.item_delect.setVisibility(View.VISIBLE);
+            item.itemDelect.setVisibility(View.VISIBLE);
         }else {
-            item.item_delect.setVisibility(View.GONE);
+            item.itemDelect.setVisibility(View.GONE);
         }
-        item.item_delect.setOnClickListener(new View.OnClickListener() {
+        item.itemDelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
@@ -96,8 +96,8 @@ public class SwipeAdapter extends BaseAdapter {
         return convertView;
     }
     private class ViewHolder {
-        ImageView item_delect;
-        TextView  item_customer;
-        TextView  item_left_txt;
+        ImageView itemDelect;
+        TextView itemCustomer;
+        TextView itemLeftTxt;
     }
 }

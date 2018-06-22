@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 
 public class InsurancePay extends BaseActivity {
-    private WebView insurance;
     private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +27,13 @@ public class InsurancePay extends BaseActivity {
         context=this;
         setCommonHeader("保险支付");
         Intent data=getIntent();
-        final String insurance_data=data.getStringExtra("params");
+        final String insuranceData=data.getStringExtra("params");
        // String  url=data.getStringExtra("url");
         String url= UrlUtil.INSURANCE_PAY_URL+"?payType=0";
-        String insurance_url=url+"&"+insurance_data;
-        Log.d("insurance_url",insurance_url);
-        insurance=(WebView)findViewById(R.id.id_Wview_insurancce);
+        String insuranceUrl=url+"&"+insuranceData;
+        WebView insurance=(WebView)findViewById(R.id.id_Wview_insurancce);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
-        insurance.loadUrl(insurance_url);
+        insurance.loadUrl(insuranceUrl);
         insurance.reload();
         WebSettings settings=insurance.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -51,7 +50,6 @@ public class InsurancePay extends BaseActivity {
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        settings.setBuiltInZoomControls(true);
         insurance.requestFocusFromTouch();
         insurance.setWebViewClient(new WebViewClient() {
             @Override
@@ -64,7 +62,7 @@ public class InsurancePay extends BaseActivity {
                         intent.setData(Uri.parse(url));
                         startActivity(intent);
                     }catch (ActivityNotFoundException e){
-                        Toast.makeText(context,"请安装微信最新版本" , Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(context,"请安装微信最新版本");
                     }
                     return true;
                 }else {

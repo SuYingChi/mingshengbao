@@ -16,11 +16,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Adapter.WaterOrderAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.FunctionActivity.Public.QRCodeScan;
 import com.msht.minshengbao.R;
@@ -41,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,102 +47,124 @@ import java.util.TreeMap;
 
 public class WaterHome extends BaseActivity implements View.OnClickListener {
 
-    private String    type="3";
     private String    account="";
-    private TextView  tv_totalAmount;
-    private TextView  tv_payAmount;
-    private TextView  tv_giveAmount;
+    private TextView tvTotalAmount;
+    private TextView tvPayAmount;
+    private TextView tvGiveAmount;
     private int pageNo=1;
     private String   phone="";
     private ListViewForScrollView mListView;
     private WaterOrderAdapter mAdapter;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private int requestType=0;
     private VerticalSwipeRefreshLayout mSwipeRefresh;
     private ArrayList<HashMap<String, String>> orderList = new ArrayList<HashMap<String, String>>();
     private static final int    REQUEST_CALL_PHONE=2;
     private static  final int MY_CAMERA_REQUEST=1;
     private CustomDialog customDialog;
-    Handler balanceHandler = new Handler() {
+    private final BalanceHandler balanceHandler=new BalanceHandler(this);
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class BalanceHandler extends Handler{
+        private WeakReference<WaterHome> mWeakReference;
+        public BalanceHandler(WaterHome activity) {
+            mWeakReference=new WeakReference<WaterHome>(activity);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+            final WaterHome activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog.isShowing()){
-                        customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String message = object.optString("message");
-                        if(Results.equals("success")) {
-                            if (requestType==0){
-                                mSwipeRefresh.setRefreshing(false);
+                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestType==0){
+                                activity.mSwipeRefresh.setRefreshing(false);
                                 JSONObject json =object.optJSONObject("data");
-                                initAccount(json);
-                            }else if (requestType==1){
-                                showdialogs("提示","订单已取消");
+                                activity.onReceiveAccountData(json);
+                            }else if (activity.requestType==1){
+                                activity.onShowDialog("提示","订单已取消");
                             }
                         }else {
-                            ToastUtil.ToastText(context,message);
+                            ToastUtil.ToastText(activity.context,message);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    mSwipeRefresh.setRefreshing(false);
-                    customDialog.dismiss();
-                    ToastUtil.ToastText(context,msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    activity.mSwipeRefresh.setRefreshing(false);
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler requestHandler = new Handler() {
+    }
+    private static class RequestHandler extends Handler{
+        private WeakReference<WaterHome> mWeakReference;
+        public RequestHandler(WaterHome activity) {
+            mWeakReference=new WeakReference<WaterHome>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final WaterHome activity =mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                        customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog.isShowing()&&activity.customDialog!=null){
+                        activity.customDialog.dismiss();
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("message");
+                        String results=object.optString("result");
+                        String error = object.optString("message");
                         JSONObject jsonObject =object.optJSONObject("data");
                         boolean firstPage=jsonObject.optBoolean("firstPage");
                         boolean lastPage=jsonObject.optBoolean("lastPage");
                         JSONArray jsonArray=jsonObject.optJSONArray("list");
-                        if(Results.equals("success")) {
-                            mSwipeRefresh.setRefreshing(false);
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.mSwipeRefresh.setRefreshing(false);
                             if(jsonArray.length()>0){
-                                if (pageNo==1){
-                                    orderList.clear();
+                                if (activity.pageNo==1){
+                                    activity.orderList.clear();
                                 }
                             }
-                            initShow(jsonArray);
+                            activity.onReceiveOrderListData(jsonArray);
                         }else {
-                            ToastUtil.ToastText(context,Error);
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                        customDialog.dismiss();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
                     }
-                    mSwipeRefresh.setRefreshing(false);
-                    ToastUtil.ToastText(context,msg.obj.toString());
+                    activity.mSwipeRefresh.setRefreshing(false);
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void initShow(JSONArray jsonArray) {
+    }
+    private void onReceiveOrderListData(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -188,7 +209,7 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
            // layout_nodata.setVisibility(View.VISIBLE);
         }
     }
-    private void initAccount(JSONObject json) {
+    private void onReceiveAccountData(JSONObject json) {
         String id=json.optString("id");
         String type=json.optString("type");
         String accounts=json.optString("account");
@@ -198,11 +219,11 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         double giveBalance=json.optDouble("giveBalance");
         double totalBalance=payBalance+giveBalance;
         String totalAmount=String.valueOf(totalBalance);
-        tv_giveAmount.setText(giveAmount);
-        tv_payAmount.setText(payAmount);
-        tv_totalAmount.setText(totalAmount);
+        tvGiveAmount.setText(giveAmount);
+        tvPayAmount.setText(payAmount);
+        tvTotalAmount.setText(totalAmount);
     }
-    private void showdialogs(String title, String s) {
+    private void onShowDialog(String title, String s) {
         new PromptDialog.Builder(this)
                 .setTitle(title)
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -298,28 +319,14 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
                 .show();
     }
     private void initOrderData() {
+        String type="3";
         String validateURL = UrlUtil.WaterOrder_ListUrl;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
         textParams.put("type",type);
         textParams.put("page","1");
         textParams.put("pageSize","20");
-        SendrequestUtil.executepostTwo(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
     @Override
@@ -347,22 +354,7 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         String validateURL= UrlUtil.WaterAccount_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                balanceHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                balanceHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     private void initView() {
         mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
@@ -374,9 +366,9 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.id_tv_detail).setOnClickListener(this);
         findViewById(R.id.id_forward_img).setOnClickListener(this);
         mListView=(ListViewForScrollView)findViewById(R.id.id_order_list);
-        tv_giveAmount=(TextView)findViewById(R.id.id_give_fee);
-        tv_payAmount=(TextView)findViewById(R.id.id_pay_fee);
-        tv_totalAmount=(TextView)findViewById(R.id.id_total_amount);
+        tvGiveAmount =(TextView)findViewById(R.id.id_give_fee);
+        tvPayAmount =(TextView)findViewById(R.id.id_pay_fee);
+        tvTotalAmount =(TextView)findViewById(R.id.id_total_amount);
         right_img.setImageResource(R.drawable.water_help_xh);
         right_img.setVisibility(View.VISIBLE);
         right_img.setOnClickListener(this);
@@ -388,13 +380,13 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
                 placeOrder();
                 break;
             case R.id.id_layout_recharge:
-                RechargeAmount();
+                rechargeAmount();
                 break;
             case R.id.id_tv_detail:
-                BalanceDtail();
+                balanceDtail();
                 break;
             case R.id.id_forward_img:
-                BalanceDtail();
+                balanceDtail();
                 break;
             case R.id.id_scan_layout:
                 requestPermission();
@@ -416,24 +408,24 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
                 MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted(int Code) {
-                        ScanQrcode();
+                        scanQrCode();
                     }
                     @Override
                     public void onPermissionDenied(int Code) {
-                        Toast.makeText(context,"没有权限您将无法进行扫描操作！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
                     }
                 });
 
             }else {
-                ScanQrcode();
+                scanQrCode();
             }
         }else {
-            ScanQrcode();
+            scanQrCode();
         }
     }
 
     private void moreOrder() {
-        showdialogs("民生宝","近期上线");
+        onShowDialog("民生宝","近期上线");
         /*Intent intent=new Intent(context,WaterOrderList.class);
         startActivityForResult(intent,1);*/
     }
@@ -444,20 +436,20 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         intent.putExtra("navigate","帮助");
         startActivity(intent);
     }
-    private void ScanQrcode() {
+    private void scanQrCode() {
         Intent intent =new Intent(context, QRCodeScan.class);
         startActivity(intent);
     }
-    private void BalanceDtail() {
+    private void balanceDtail() {
         Intent intent =new Intent(context,WaterBalanceDetail.class);
         startActivity(intent);
     }
-    private void RechargeAmount() {
+    private void rechargeAmount() {
         Intent intent=new Intent(context,WaterRecharge.class);
         startActivityForResult(intent,2);
     }
     private void placeOrder() {
-        showdialogs("民生宝","近期上线");
+        onShowDialog("民生宝","近期上线");
         /*Intent intent=new Intent(context,OnlinePlaceOrder.class);
         startActivityForResult(intent,1);*/
     }
@@ -476,12 +468,12 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 waterDialog.dismiss();
-                Cancelrequest(orderNo);
+                cancelRequest(orderNo);
             }
         });
         waterDialog.show();
     }
-    private void Cancelrequest(String orderNo) {
+    private void cancelRequest(String orderNo) {
         long time= DateUtils.getCurTimeLong();
         String pattern="yyyy-MM-dd HH:mm:ss";
         String operTime=DateUtils.getDateToString(time,pattern);
@@ -511,22 +503,7 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                balanceHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                balanceHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -543,10 +520,18 @@ public class WaterHome extends BaseActivity implements View.OnClickListener {
                 }
 
             }else {
-                Toast.makeText(context,"授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"授权失败");
             }
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

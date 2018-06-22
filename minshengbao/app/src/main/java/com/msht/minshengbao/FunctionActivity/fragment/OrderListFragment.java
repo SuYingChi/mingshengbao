@@ -172,7 +172,9 @@ public class OrderListFragment extends BaseFragment {
             }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    reference.customDialog.dismiss();
+                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                        reference.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -199,7 +201,9 @@ public class OrderListFragment extends BaseFragment {
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    reference.customDialog.dismiss();
+                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                        reference.customDialog.dismiss();
+                    }
                     reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
@@ -278,5 +282,13 @@ public class OrderListFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

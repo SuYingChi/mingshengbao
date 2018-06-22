@@ -9,11 +9,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.Public.PayFeeWayActivity;
 import com.msht.minshengbao.FunctionActivity.Public.SelectVoucher;
 import com.msht.minshengbao.R;
@@ -26,77 +24,85 @@ import com.umeng.message.PushAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GasExpenseQuery extends BaseActivity {
-    private TextView  tv_customer,tv_gasfee,tv_bill;
-    private TextView  Address,Tvdebts,Tvtotal_num;
-    private TextView  tv_voucher,tv_balance;
-    private TextView  Tvlate_fee,tv_real;
-    private Button    btn_payfees;
-    private LinearLayout Layout_data;
-    private View      Layout_nodata,Layout_reversed1;
-    private View      Layout_reversed2;
-    private RelativeLayout Layout_btn,Rvoucher;
-    private String CustomerNo,all_balance;
+    private TextView tvBill;
+    private TextView tvVoucher;
+    private TextView tvReal;
+    private Button   btnPayFee;
+    private View  layoutReversed1;
+    private View  layoutReversed2;
+    private View  layoutVoucher;
+    private String customerNo,allBalance;
     private String houseId,voucherId="0";
     private String name,id;
     private String debts="";
-    private String total_num;
-    private String discount_fees,gas_fee,real_fee;
-    private String late_fee;
+    private String totalNum;
+    private String gasFee,realFee;
+    private String lateFee;
     private String userId;
     private String password;
     private static final String NULL_VALUE="null";
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private CustomDialog customDialog;
     private boolean placeStatus=true;
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<GasExpenseQuery> mWeakReference;
+        public RequestHandler(GasExpenseQuery activity) {
+            mWeakReference=new WeakReference<GasExpenseQuery>(activity);
+        }
 
-   private  Handler requestHandler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
+            final GasExpenseQuery activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                        customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog.isShowing()&&activity.customDialog!=null){
+                        activity.customDialog.dismiss();
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             JSONObject json=object.getJSONObject("data");
-                            id=json.optString("id");
-                            Queryresult(id);
+                            activity.id=json.optString("id");
+                            activity.onQueryResult(activity.id);
                         }else {
-                            showfaiture(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                    customDialog.dismiss();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog.isShowing()&&activity.customDialog!=null){
+                        activity.customDialog.dismiss();
                     }
-                    showfaiture(msg.obj.toString());
+                    activity.onFailure(msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void Queryresult(String id) {
+    }
+    private void onQueryResult(String id) {
         Intent amount=new Intent(context,PayFeeWayActivity.class);
-        amount.putExtra("CustomerNo",CustomerNo);
-        amount.putExtra("amount",real_fee);
+        amount.putExtra("CustomerNo",customerNo);
+        amount.putExtra("amount",realFee);
         amount.putExtra("id",id);
         startActivityForResult(amount,0x002);
     }
-    private void showfaiture(String s) {
+    private void onFailure(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("缴费提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -122,15 +128,15 @@ public class GasExpenseQuery extends BaseActivity {
         //推送统计
         PushAgent.getInstance(context).onAppStart();
         Intent getdata=getIntent();
-        CustomerNo=getdata.getStringExtra("CustomerNo");
-        all_balance=getdata.getStringExtra("all_balance");
+        customerNo=getdata.getStringExtra("CustomerNo");
+        allBalance=getdata.getStringExtra("all_balance");
         name=getdata.getStringExtra("name");
         debts=getdata.getStringExtra("debts");
-        total_num=getdata.getStringExtra("total_num");
-        discount_fees=getdata.getStringExtra("discount_fees");
-        gas_fee=getdata.getStringExtra("gas_fee");
-        late_fee=getdata.getStringExtra("late_fee");
-        real_fee=debts;
+        totalNum=getdata.getStringExtra("total_num");
+        String discountFees=getdata.getStringExtra("discount_fees");
+        gasFee=getdata.getStringExtra("gas_fee");
+        lateFee=getdata.getStringExtra("late_fee");
+        realFee=debts;
         initView();
         initEvent();
     }
@@ -146,9 +152,9 @@ public class GasExpenseQuery extends BaseActivity {
                     double a=Double.parseDouble(debts);
                     double fee=a-b;
                     NumberFormat format=new DecimalFormat("0.##");
-                    real_fee=format.format(fee);
-                    tv_real.setText("¥"+real_fee);
-                    tv_voucher.setText(amount+"元");
+                    realFee=format.format(fee);
+                    tvReal.setText("¥"+realFee);
+                    tvVoucher.setText(amount+"元");
                 }
                 break;
             case 0x002:
@@ -163,43 +169,43 @@ public class GasExpenseQuery extends BaseActivity {
         }
     }
     private void initView() {
-        Layout_data=(LinearLayout)findViewById(R.id.id_layout_data);
-        Layout_nodata=findViewById(R.id.id_nodata_layout);
-        Layout_btn=(RelativeLayout)findViewById(R.id.id_layout_btn);
-        Rvoucher=(RelativeLayout)findViewById(R.id.id_re_voucher);
-        Layout_reversed1=findViewById(R.id.id_detail_layout);
-        Layout_reversed2=findViewById(R.id.id_re_detail);
-        tv_customer=(TextView)findViewById(R.id.id_customerText);
-        Address=(TextView)findViewById(R.id.id_address);
-        tv_bill=(TextView)findViewById(R.id.id_tv_bill);
-        tv_gasfee=(TextView)findViewById(R.id.id_gas_amount);
-        Tvdebts=(TextView)findViewById(R.id.id_debts);
-        Tvtotal_num=(TextView)findViewById(R.id.id_total_num);
-        tv_balance=(TextView)findViewById(R.id.id_tv_balance);
-        Tvlate_fee=(TextView)findViewById(R.id.id_lastfees);
-        tv_voucher=(TextView)findViewById(R.id.id_tv_voucher);
-        tv_real=(TextView)findViewById(R.id.id_real_amount);
-        btn_payfees=(Button)findViewById(R.id.id_btn_payfees);
-        Address.setText(name);
-        tv_customer.setText(CustomerNo);
+        View layoutData =(LinearLayout)findViewById(R.id.id_layout_data);
+        View layoutNoData =findViewById(R.id.id_nodata_layout);
+        View layoutBtn =findViewById(R.id.id_layout_btn);
+        layoutVoucher =findViewById(R.id.id_re_voucher);
+        layoutReversed1 =findViewById(R.id.id_detail_layout);
+        layoutReversed2 =findViewById(R.id.id_re_detail);
+        TextView tvCustomer =(TextView)findViewById(R.id.id_customerText);
+        TextView tvAddress =(TextView)findViewById(R.id.id_address);
+        tvBill =(TextView)findViewById(R.id.id_tv_bill);
+        TextView tvGasFee =(TextView)findViewById(R.id.id_gas_amount);
+        TextView tvDebts =(TextView)findViewById(R.id.id_debts);
+        TextView tvTotalNum =(TextView)findViewById(R.id.id_total_num);
+        TextView tvBalance =(TextView)findViewById(R.id.id_tv_balance);
+        TextView tvLateFee =(TextView)findViewById(R.id.id_lastfees);
+        tvVoucher =(TextView)findViewById(R.id.id_tv_voucher);
+        tvReal =(TextView)findViewById(R.id.id_real_amount);
+        btnPayFee =(Button)findViewById(R.id.id_btn_payfees);
+        tvAddress.setText(name);
+        tvCustomer.setText(customerNo);
         if (TextUtils.isEmpty(debts)||debts.equals(NULL_VALUE)){
-            Layout_nodata.setVisibility(View.VISIBLE);
-            Layout_data.setVisibility(View.GONE);
-            Layout_btn.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.VISIBLE);
+            layoutData.setVisibility(View.GONE);
+            layoutBtn.setVisibility(View.GONE);
         }else {
-            Layout_nodata.setVisibility(View.GONE);
-            Layout_data.setVisibility(View.VISIBLE);
-            Layout_btn.setVisibility(View.VISIBLE);
-            tv_balance.setText(all_balance+"元");
-            tv_gasfee.setText(gas_fee+"元");
-            Tvdebts.setText("¥"+debts+"元");
-            tv_real.setText("¥"+real_fee+"元");
-            Tvtotal_num.setText(total_num+"立方米");
-            Tvlate_fee.setText(late_fee+"元");
+            layoutNoData.setVisibility(View.GONE);
+            layoutData.setVisibility(View.VISIBLE);
+            layoutBtn.setVisibility(View.VISIBLE);
+            tvBalance.setText(allBalance+"元");
+            tvGasFee.setText(gasFee+"元");
+            tvDebts.setText("¥"+debts+"元");
+            tvReal.setText("¥"+realFee+"元");
+            tvTotalNum.setText(totalNum+"立方米");
+            tvLateFee.setText(lateFee+"元");
         }
     }
     private void initEvent() {
-        Rvoucher.setOnClickListener(new View.OnClickListener() {
+        layoutVoucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent voucher=new Intent(context,SelectVoucher.class);
@@ -208,40 +214,40 @@ public class GasExpenseQuery extends BaseActivity {
                 startActivityForResult(voucher,1);
             }
         });
-        btn_payfees.setOnClickListener(new View.OnClickListener() {
+        btnPayFee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (placeStatus){
                     requestServer();
                 }else {
-                    Queryresult(id);
+                    onQueryResult(id);
                 }
 
             }
         });
-        tv_bill.setOnClickListener(new View.OnClickListener() {
+        tvBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent amount=new Intent(context,BillDetail.class);
-                amount.putExtra("CustomerNo",CustomerNo);
+                amount.putExtra("CustomerNo",customerNo);
                 amount.putExtra("name",name);
                 startActivity(amount);
             }
         });
-        Layout_reversed1.setOnClickListener(new View.OnClickListener() {
+        layoutReversed1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,PreexistenceDetail.class);
-                intent.putExtra("CustomerNo",CustomerNo);
+                intent.putExtra("CustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
             }
         });
-        Layout_reversed2.setOnClickListener(new View.OnClickListener() {
+        layoutReversed2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,PreexistenceDetail.class);
-                intent.putExtra("CustomerNo",CustomerNo);
+                intent.putExtra("CustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
             }
@@ -254,24 +260,17 @@ public class GasExpenseQuery extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("type","1");
-        textParams.put("amount",real_fee);
-        textParams.put("customerNo",CustomerNo);
+        textParams.put("amount",realFee);
+        textParams.put("customerNo",customerNo);
         textParams.put("couponId",voucherId);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

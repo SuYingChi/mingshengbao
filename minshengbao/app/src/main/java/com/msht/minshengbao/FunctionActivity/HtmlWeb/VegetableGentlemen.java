@@ -28,12 +28,12 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
 public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
-    private WebView   mwebView;
-    private ImageView backimg;
-    private TextView  tv_navigaTile;
+    private WebView   mWebView;
+    private ImageView backImage;
+    private TextView  tvNavigationTile;
     private ProgressBar progressBar;
     private boolean   SecondExecute=false;
-    private String    userphone;
+    private String    userPhone;
     private String    userId;
     private String    sign;
     private String    mPageName="海南蔬菜先生";
@@ -45,9 +45,9 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         setContentView(R.layout.activity_vegetable_gentlemen);
         StatusBarCompat.setStatusBar(this);
         context=this;
-        userphone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName, "");
+        userPhone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName, "");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-        mwebView=(WebView)findViewById(R.id.id_vegetable_webView);
+        mWebView =(WebView)findViewById(R.id.id_vegetable_webView);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         setCommonHeader();
         initWebView();
@@ -57,19 +57,19 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
-        backimg = (ImageView) findViewById(R.id.id_goback);
-        tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        tv_navigaTile.setText(mPageName);
+        backImage = (ImageView) findViewById(R.id.id_goback);
+        tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
+        tvNavigationTile.setText(mPageName);
     }
     private void initWebView() {
-        String SignString ="phone="+userphone+"&userid="+userId+"&key="+key;
-        sign = MD5.md5Digest(SignString);
-        final String data = "&userid="+ userId +"&phone=" + userphone+"&sign="+sign;
+        String signString ="phone="+ userPhone +"&userid="+userId+"&key="+key;
+        sign = MD5.md5Digest(signString);
+        final String data = "&userid="+ userId +"&phone=" + userPhone +"&sign="+sign;
         String loginUrl= UrlUtil.Vegetable_Url+data;
-        SettingWeb();
-        mwebView.loadUrl(loginUrl);
-        mwebView.requestFocusFromTouch();
-        mwebView.setWebViewClient(new WebViewClient(){
+        settingWeb();
+        mWebView.loadUrl(loginUrl);
+        mWebView.requestFocusFromTouch();
+        mWebView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("weixin://wap/pay?")){
@@ -92,17 +92,17 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
                if (url.startsWith("https://wx.tenpay.com")) {
                    if (SecondExecute){
-                       mwebView.goBack();
+                       mWebView.goBack();
                        SecondExecute=false;
                    }
                }
                super.doUpdateVisitedHistory(view, url, isReload);
            }
         });
-        mwebView.setWebChromeClient(new MyWebChomeClient(VegetableGentlemen.this));
+        mWebView.setWebChromeClient(new MyWebChomeClient(VegetableGentlemen.this));
     }
-    private void SettingWeb() {
-        WebSettings settings=mwebView.getSettings();
+    private void settingWeb() {
+        WebSettings settings= mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -120,14 +120,14 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         settings.setBuiltInZoomControls(true);
     }
     private void initEvent() {
-        mwebView.setOnKeyListener(new View.OnKeyListener() {
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (keyCode == KeyEvent.KEYCODE_BACK ) {
                         //这里处理返回键事件
-                        if(mwebView.canGoBack()){
-                            mwebView.goBack();
+                        if(mWebView.canGoBack()){
+                            mWebView.goBack();
                             return true;
                         }else {
                             finish();
@@ -137,11 +137,11 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
                 return false;
             }
         });
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mwebView.canGoBack()){
-                    mwebView.goBack();
+                if(mWebView.canGoBack()){
+                    mWebView.goBack();
                 }else {
                     finish();
                 }
@@ -166,8 +166,8 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if(mwebView.canGoBack()){
-                mwebView.goBack();
+            if(mWebView.canGoBack()){
+                mWebView.goBack();
                 return true;
             }else {
                 finish();
@@ -191,9 +191,9 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mwebView.stopLoading();
-        mwebView.removeAllViews();
-        mwebView.destroy();
-        mwebView = null;
+        mWebView.stopLoading();
+        mWebView.removeAllViews();
+        mWebView.destroy();
+        mWebView = null;
     }
 }

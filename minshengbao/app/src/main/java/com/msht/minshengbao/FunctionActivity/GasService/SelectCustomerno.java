@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.GetaddressAdapter;
+import com.msht.minshengbao.Adapter.GetAddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
@@ -37,7 +37,7 @@ public class SelectCustomerno extends BaseActivity {
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
     private static final int ADDRESS_CODE=1;
-    private GetaddressAdapter adapter;
+    private GetAddressAdapter adapter;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
 
     Handler gethouseHandler = new Handler() {
@@ -111,7 +111,7 @@ public class SelectCustomerno extends BaseActivity {
         password = SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password, "");
         initfindViewByid();
         initEvent();
-        adapter=new GetaddressAdapter(this, houseList,pos);
+        adapter=new GetAddressAdapter(this, houseList,pos);
         addresslist.setAdapter(adapter);
         addresslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,7 +129,7 @@ public class SelectCustomerno extends BaseActivity {
                 finish();
             }
         });
-        adapter.setRadioButtonClickListener(new GetaddressAdapter.ItemRadioButtonClickListener() {
+        adapter.setRadioButtonClickListener(new GetAddressAdapter.ItemRadioButtonClickListener() {
             @Override
             public void onRadioButtonClick(View v, int position) {
                 pos=position;

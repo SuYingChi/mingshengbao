@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,6 +34,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Demo class
+ *  燃气支付
+ * @author chenhong
+ * @date 2016/10/31
+ */
 public class PayFeeWayActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btnSend;
@@ -42,7 +49,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private ListViewForScrollView forScrollView;
     private PayWayAdapter mAdapter;
     private String userId,voucherId;
-    private String PayId;
+    private String payId;
     private String password;
     private String charge;
     private String channels;
@@ -201,11 +208,11 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         try{
             String showType=optJSONObject.optString("showType");
             JSONObject showData=optJSONObject.getJSONObject("showData");
-            double subtract_amount=showData.optDouble("subtract_amount");
-            discountAmt=String.valueOf(subtract_amount);
-            tvSubtract.setText("¥"+subtract_amount);
+            double subtractAmount=showData.optDouble("subtract_amount");
+            discountAmt=String.valueOf(subtractAmount);
+            tvSubtract.setText("¥"+subtractAmount);
             double shouldAmount=Double.parseDouble(amount);
-            double real=shouldAmount-subtract_amount;
+            double real=shouldAmount-subtractAmount;
             real=VariableUtil.twoDecinmal2(real);
             realAmount =String.valueOf(real);
             tvRealAmount.setText(realAmount);
@@ -226,7 +233,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 startActivity(success);
                 finish();
             }else {
-                onShowdialogs("新订单");
+                onShowDialogs("新订单");
             }
         }else if (status.equals(VariableUtil.VALUE_ONE)){
             Intent success=new Intent(context,PaySuccess.class);
@@ -242,7 +249,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             success.putExtra("orderId",orderId);
             startActivity(success);
         }else if (status.equals(VariableUtil.VALUE_THREE)){
-            onShowdialogs("正在支付");
+            onShowDialogs("正在支付");
         }
     }
     private void onGetPayWayData() {
@@ -288,7 +295,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         }else {
             VariableUtil.balance="余额不足";
         }
-        initpayway();
+        onPayWayData();
     }
     private void onChargePayWay() {
         try {
@@ -324,7 +331,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
         amount=data.getStringExtra("amount");
-        PayId=data.getStringExtra("id");
+        payId =data.getStringExtra("id");
         type="1";
         initView();
         mAdapter=new PayWayAdapter(context,List);
@@ -341,10 +348,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             }
         });
     }
-
     private void initView() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
-      //  tvBalance =(TextView)findViewById(R.id.id_tv_balance);
         tvRealAmount =(TextView)findViewById(R.id.id_real_fee);
         tvSubtract =(TextView)findViewById(R.id.id_subtract_amount);
         tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
@@ -368,7 +373,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("event_code","gas_pay_before");
-        textParams.put("event_relate_id",PayId);
+        textParams.put("event_relate_id", payId);
         SendrequestUtil.postDataFromService(validateURL,textParams,subtractHandler);
     }
     private void initData() {
@@ -380,7 +385,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
 
-    private void initpayway() {
+    private void onPayWayData() {
         String source="";
         customDialog.show();
         String validateURL= UrlUtil.PAY_METHOD_URL;
@@ -416,18 +421,18 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                     public void onClick(Dialog dialog, int which) {
                         customDialog.show();
                         requestCode=1;
-                        requestSevice();
+                        requestService();
                         dialog.dismiss();
                     }
                 })
                 .show();
     }
-    private void requestSevice() {
+    private void requestService() {
         String validateURL= UrlUtil.GasExpense_Pay;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("id",PayId);
+        textParams.put("id", payId);
         textParams.put("type",type);
         textParams.put("amount", realAmount);
         textParams.put("discountAmt",discountAmt);
@@ -443,20 +448,20 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
             str="已取消缴费";
         }
-        if (null !=msg1 && msg1.length() != 0) {
+        /*if (null !=msg1 && msg1.length() != 0) {
             str += "\n" + msg1;
         }
         if (null !=msg2 && msg2.length() != 0) {
             str += "\n" + msg2;
-        }
-        if (title!=null&&title.equals(SendrequestUtil.SUCCESS_VALUE)){
+        }*/
+        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(0x002);
             requestResult();
         }else {
-            onShowdialogs(str);
+            onShowDialogs(str);
         }
     }
-    private void onShowdialogs(String str) {
+    private void onShowDialogs(String str) {
         new PromptDialog.Builder(this)
                 .setTitle("缴费提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -495,5 +500,13 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("password",password);
         textParams.put("id",orderId);
         SendrequestUtil.postDataFromService(validateURL,textParams, requestHandler);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

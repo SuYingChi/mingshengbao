@@ -509,4 +509,12 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             TextView item_time;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

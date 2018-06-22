@@ -17,11 +17,11 @@ import java.util.HashMap;
  * Created by hong on 2017/11/6.
  */
 
-public class TopmoduleAdapter extends BaseAdapter {
+public class TopModuleAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
-    public TopmoduleAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public TopModuleAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         super();
         this.mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

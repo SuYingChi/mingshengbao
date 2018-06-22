@@ -46,6 +46,7 @@ public class OrderFragment extends Fragment {
         view.findViewById(R.id.id_goback).setVisibility(View.GONE);
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onPageStart(mPageName);

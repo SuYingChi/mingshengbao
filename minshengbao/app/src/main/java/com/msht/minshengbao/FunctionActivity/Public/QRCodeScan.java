@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.zxing.Result;
@@ -26,13 +25,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class QRCodeScan extends BaseCaptureActivity {
-    private ImageView backImg;
-    private TextView  tvNavigationTitle;
     private SurfaceView surfaceView;
     private AutoScannerView autoScannerView;
     private FlowLineView flowLineView;
     private boolean isPause = false;
-    private static final String mPageName="二维码";
+    private static final String PAGE_NAME="二维码";
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +37,7 @@ public class QRCodeScan extends BaseCaptureActivity {
         setContentView(R.layout.activity_qrcode_scan);
         StatusBarCompat.setStatusBar(this);
         context=this;
-        setCommonHeader(mPageName);
+        setCommonHeader(PAGE_NAME);
         surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         autoScannerView = (AutoScannerView) findViewById(R.id.autoscanner_view);
         flowLineView = (FlowLineView) findViewById(R.id.id_autoscanner_view);
@@ -50,9 +47,8 @@ public class QRCodeScan extends BaseCaptureActivity {
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
-        backImg = (ImageView) findViewById(R.id.id_goback);
-        tvNavigationTitle = (TextView) findViewById(R.id.tv_navigation);
-        backImg.setOnClickListener(new View.OnClickListener() {
+        TextView tvNavigationTitle = (TextView) findViewById(R.id.tv_navigation);
+        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -102,24 +98,24 @@ public class QRCodeScan extends BaseCaptureActivity {
             flowLineView.Pause();
         }
         playBeepSoundAndVibrate(true, true);
-        ResultActions(rawResult.getText());
+        resultActions(rawResult.getText());
     }
-    private void ResultActions(String result) {
+    private void resultActions(String result) {
         String downloadUrl="http://msbapp.cn/download/success.html?QRCodeJson=";
         String reverseResult=result.replace(downloadUrl,"");
         if (reverseResult.contains("QrcodeType")){
             try{
                 JSONObject object = new JSONObject(reverseResult);
-                String QrcodeType=object.optString("QrcodeType");
+                String qrCodeType=object.optString("QrcodeType");
                 JSONObject jsonObject=object.optJSONObject("data");
-                if (QrcodeType.equals(VariableUtil.VALUE_ONE)){
+                if (qrCodeType.equals(VariableUtil.VALUE_ONE)){
                     String equipmentNo=jsonObject.optString("equipmentNo");
                     Intent intent=new Intent(context, ScanCodeResult.class);
                     intent.putExtra("equipmentNo",equipmentNo);
                     startActivity(intent);
                     finish();
-                }else if (QrcodeType.equals(VariableUtil.VALUE_TWO)){
-                    MakeMistakes("0");
+                }else if (qrCodeType.equals(VariableUtil.VALUE_TWO)){
+                    MakeMistakes(VariableUtil.VALUE_ZERO);
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -157,14 +153,14 @@ public class QRCodeScan extends BaseCaptureActivity {
         super.onResume();
         autoScannerView.setCameraManager(cameraManager);
         flowLineView.setCameraManager(cameraManager);
-        MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onPageStart(PAGE_NAME);
         MobclickAgent.onResume(context);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPageEnd(PAGE_NAME);
         MobclickAgent.onPause(context);
     }
     @Override

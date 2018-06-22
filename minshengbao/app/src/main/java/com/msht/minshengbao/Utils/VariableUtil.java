@@ -17,10 +17,11 @@ public class VariableUtil {
     public static int estatePos=-1;
     public static int messageNum=0;
     public static String balance;
-    public static String City;
+    public static String City="0";
     public static boolean boolSelect;
     public static boolean BoolCode;
     public static boolean loginStatus=false;
+    public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
     public static final  String VALUE_ONE=  "1";
     public static final  String VALUE_TWO=  "2";

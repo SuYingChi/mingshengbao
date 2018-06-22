@@ -7,13 +7,12 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -22,76 +21,106 @@ import com.msht.minshengbao.ViewUI.Dialog.SelfPayDialog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mywallet extends BaseActivity implements View.OnClickListener {
-    private TextView  tv_rightText;
-    private TextView  tv_banlance;
+/**
+ * Demo class
+ *
+ * @author hong
+ * @date 2017/6/5
+ */
+public class MyWalletActivity extends BaseActivity implements View.OnClickListener {
+    private TextView tvRightText;
+    private TextView tvBalance;
     private String    password,userId;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     public static final String MY_ACTION = "ui";
     private CustomDialog customDialog;
-    Handler requestHandler= new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private final BindingHandler bindingHandler=new BindingHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<MyWalletActivity> mWeakReference;
+        public RequestHandler(MyWalletActivity activity) {
+            mWeakReference=new WeakReference<MyWalletActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MyWalletActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String results=object.optString("result");
                         String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             JSONObject data=object.getJSONObject("data");
                             String balance=data.optString("balance");
-                            tv_banlance.setText(balance);
+                            activity.tvBalance.setText(balance);
                         }else {
-                            displayDialog(Error);
+                            activity.displayDialog(Error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler BindingHandler= new Handler() {
+    }
+    private static class BindingHandler  extends Handler{
+        private WeakReference<MyWalletActivity> mWeakReference;
+
+        public BindingHandler(MyWalletActivity activity) {
+            mWeakReference=new WeakReference<MyWalletActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MyWalletActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             JSONArray jsonArray =object.optJSONArray("data");
                             if (jsonArray.length()==0){
-                                NoticeDialogs();
+                                activity.noticeDialogs();
                             }
                         }else {
-                            displayDialog(Error);
+                            activity.displayDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     private void displayDialog(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -118,7 +147,7 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         initBinding();
     }
 
-    private void NoticeDialogs() {
+    private void noticeDialogs() {
         final SelfPayDialog selfPayDialog=new SelfPayDialog(context);
         selfPayDialog.setOnpositiveListener(new View.OnClickListener() {
             @Override
@@ -136,11 +165,11 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         selfPayDialog.show();
     }
     private void initView() {
-        tv_rightText=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_rightText.setVisibility(View.VISIBLE);
-        tv_rightText.setText("明细");
-        tv_banlance=(TextView)findViewById(R.id.id_balance);
-        tv_rightText.setOnClickListener(this);
+        tvRightText =(TextView)findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("明细");
+        tvBalance =(TextView)findViewById(R.id.id_balance);
+        tvRightText.setOnClickListener(this);
         findViewById(R.id.id_layout_recharge).setOnClickListener(this);
         findViewById(R.id.id_layout_gaspayfee).setOnClickListener(this);
         findViewById(R.id.id_layout_card).setOnClickListener(this);
@@ -152,45 +181,14 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
-
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initBinding() {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         String validateURL = UrlUtil.AutomataPay_Url;
-        SendrequestUtil.executepostTwo(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                BindingHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                BindingHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,bindingHandler);
     }
     @Override
     public void onClick(View v) {
@@ -241,5 +239,13 @@ public class Mywallet extends BaseActivity implements View.OnClickListener {
         broadcast.setAction(MY_ACTION);
         broadcast.putExtra("broadcast", "3");
         sendBroadcast(broadcast);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

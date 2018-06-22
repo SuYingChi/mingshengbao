@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PublicPayway extends BaseActivity {
+public class PublicPayWayActivity extends BaseActivity {
     private Button btn_send;
     private TextView tv_shouldAmount;
     private ListViewForScrollView mForScrollView;
@@ -133,13 +132,13 @@ public class PublicPayway extends BaseActivity {
     }
     private static class PayWayHandler extends Handler {
 
-        private WeakReference<PublicPayway> mWeakReference;
-        public PayWayHandler(PublicPayway reference) {
-            mWeakReference = new WeakReference<PublicPayway>(reference);
+        private WeakReference<PublicPayWayActivity> mWeakReference;
+        public PayWayHandler(PublicPayWayActivity reference) {
+            mWeakReference = new WeakReference<PublicPayWayActivity>(reference);
         }
         @Override
         public void handleMessage(Message msg) {
-            final PublicPayway reference =mWeakReference.get();
+            final PublicPayWayActivity reference =mWeakReference.get();
             // the referenced object has been cleared
             if (reference == null||reference.isFinishing()) {
                 return;
@@ -151,13 +150,12 @@ public class PublicPayway extends BaseActivity {
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 JSONArray jsonArray =object.getJSONArray("data");
                                 reference.PayWayshow(jsonArray);
-                                Log.d("支付方法",msg.obj.toString());
                            }else if (reference.requestCode==1){
                                 JSONObject json=object.getJSONObject("data");
                                 reference.getChargeData(json);
@@ -167,7 +165,7 @@ public class PublicPayway extends BaseActivity {
                                 reference.payResult(json);
                             }
                         }else {
-                            reference.showfaiture(Error);
+                            reference.showfaiture(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -191,14 +189,14 @@ public class PublicPayway extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals("1")||channels.equals("3")||channels.equals("5")||channels.equals("7"))
+        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_THREE)||channels.equals(VariableUtil.VALUE_FIVE)||channels.equals(VariableUtil.VALUE_SEVER))
         {
             //实付金额为0，不调用ping++,
-            if (amount.equals("0.0")||amount.equals("0.00")||amount.equals("0")){
+            if (amount.equals(VariableUtil.VALUE_ZERO1)||amount.equals(VariableUtil.VALUE_ZERO2)||amount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(PAY_CODE);
                 requestResult();
             }else {
-                Pingpp.createPayment(PublicPayway.this, charge);
+                Pingpp.createPayment(PublicPayWayActivity.this, charge);
             }
         }else {
             setResult(PAY_CODE);
@@ -316,5 +314,12 @@ public class PublicPayway extends BaseActivity {
         textParams.put("password",password);
         textParams.put("id",orderId);
         SendrequestUtil.postDataFromService(validateURL,textParams,mHandler);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

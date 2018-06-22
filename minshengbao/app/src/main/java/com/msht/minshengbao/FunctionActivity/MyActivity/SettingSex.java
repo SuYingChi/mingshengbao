@@ -21,43 +21,51 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SettingSex extends BaseActivity {
-    private RadioGroup Sexgroup;
-    private RadioButton maleradio,femaleradio,secretradio;
+    private RadioGroup sexGroup;
     private String gender;
-    private String fsex,password,userId;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    Handler sexHandler = new Handler() {
+    private String mSex,password,userId;
+    private final SexHandler sexHandler=new SexHandler(this);
+    private static class SexHandler extends Handler{
+        private WeakReference<SettingSex>mWeakReference;
+        public SexHandler(SettingSex activity) {
+            mWeakReference=new WeakReference<SettingSex>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SettingSex activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if (Results.equals("success")){
-                            Judgedata();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
+                            activity.onReceivePersionalData();
                         }else {
-                            failure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    failure(msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    activity.onFailure(msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -71,7 +79,7 @@ public class SettingSex extends BaseActivity {
                     }
                 }).show();
     }
-    private void Judgedata() {
+    private void onReceivePersionalData() {
         SharedPreferences share = this.getSharedPreferences("AppData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=share.edit();
         editor.remove(SharedPreferencesUtil.Sex);
@@ -88,26 +96,33 @@ public class SettingSex extends BaseActivity {
         context=this;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        Intent sexs=getIntent();
-        fsex=sexs.getStringExtra("SEX");
+        Intent sexData=getIntent();
+        mSex =sexData.getStringExtra("SEX");
         initfindViewByid();
-        Setpersonalsex();
+        setPersonalSex();
     }
     private void initfindViewByid() {
-        Sexgroup=(RadioGroup)findViewById(R.id.id_sex_radiogroup);
-        secretradio=(RadioButton)findViewById(R.id.id_sercetradio);
-        maleradio=(RadioButton)findViewById(R.id.id_maleradio);
-        femaleradio=(RadioButton)findViewById(R.id.id_femaleradio);
-        if (fsex.equals("男")){     //设置默认选择
-            maleradio.setChecked(true);
-        }else if (fsex.equals("保密")){
-            secretradio.setChecked(true);
-        }else if (fsex.equals("女")){
-            femaleradio.setChecked(true);
+        sexGroup =(RadioGroup)findViewById(R.id.id_sex_radiogroup);
+        RadioButton secretRadioButton =(RadioButton)findViewById(R.id.id_sercetradio);
+        RadioButton maleRadioButton =(RadioButton)findViewById(R.id.id_maleradio);
+        RadioButton femaleRadioButton =(RadioButton)findViewById(R.id.id_femaleradio);
+        //设置默认选择
+        switch (mSex){
+            case "男":
+                maleRadioButton.setChecked(true);
+                break;
+            case "女":
+                femaleRadioButton.setChecked(true);
+                break;
+            case "保密":
+                secretRadioButton.setChecked(true);
+                break;
+            default:
+                break;
         }
     }
-    private void Setpersonalsex() {
-        Sexgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+    private void setPersonalSex() {
+        sexGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -121,6 +136,8 @@ public class SettingSex extends BaseActivity {
                     case R.id.id_femaleradio:
                         gender = "女";
                         break;
+                    default:
+                        break;
                 }
                 requestSevice();
             }
@@ -132,21 +149,6 @@ public class SettingSex extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("sex", gender);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                sexHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                sexHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,sexHandler);
     }
 }

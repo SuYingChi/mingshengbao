@@ -194,7 +194,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_width20"
                     android:layout_marginRight="@dimen/margin_width20"
-                    android:layout_marginBottom="@dimen/margin_width25"
                     android:minHeight="@dimen/margin_width45"
                     android:text="确认"
                     android:textSize="@dimen/text_width18"
@@ -202,6 +201,17 @@
                     android:background="@drawable/selector_touch_button_change"
                     android:layout_gravity="center_horizontal"
                     android:layout_centerHorizontal="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="漏气等紧急情况请使用“燃气抢险”功能"
+                    android:layout_below="@+id/id_btn_verify"
+                    android:layout_marginTop="@dimen/margin_width25"
+                    android:layout_marginBottom="@dimen/margin_width10"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_width16"
                     />
             </RelativeLayout>
         </LinearLayout>

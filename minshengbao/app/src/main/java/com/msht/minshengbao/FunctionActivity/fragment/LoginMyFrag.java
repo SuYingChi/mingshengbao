@@ -22,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Adapter.MyfunctionAdapter;
 import com.msht.minshengbao.FunctionActivity.GasService.GasServerOrder;
@@ -34,7 +33,7 @@ import com.msht.minshengbao.FunctionActivity.MyActivity.CustomerNoManage;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.MoreSetting;
 import com.msht.minshengbao.FunctionActivity.MyActivity.Mysetting;
-import com.msht.minshengbao.FunctionActivity.MyActivity.Mywallet;
+import com.msht.minshengbao.FunctionActivity.MyActivity.MyWalletActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
@@ -60,6 +59,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private MyScrollview    myScrollview;
     private LinearLayout    layoutNavigation;
     private RelativeLayout  layoutMySetting;
+    private View            layoutMessage;
     private CircleImageView circleImageView;
     private TextView tvNavigation;
     private TextView tvNickname;
@@ -143,6 +143,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         layoutNavigation =(LinearLayout) view.findViewById(R.id.id_li_navigation);
         layoutMySetting =(RelativeLayout) view.findViewById(R.id.id_re_gosetting);
         layoutMySetting.setOnClickListener(this);
+        layoutMessage=view.findViewById(R.id.id_message_layout);
         tvMessageNum=(TextView)view.findViewById(R.id.id_message_num);
         view.findViewById(R.id.id_re_hotline).setOnClickListener(this);
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
@@ -158,9 +159,9 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private void onUnReadMessage() {
         if ( VariableUtil.messageNum!=0){
             tvMessageNum.setText(String.valueOf(VariableUtil.messageNum));
-            tvMessageNum.setVisibility(View.VISIBLE);
+            layoutMessage.setVisibility(View.VISIBLE);
         }else {
-            tvMessageNum.setVisibility(View.GONE);
+            layoutMessage.setVisibility(View.GONE);
         }
     }
     private void initData() {
@@ -307,6 +308,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         Intent intent=new Intent(mContext,MessageCenterActivity.class);
         startActivity(intent);
         tvMessageNum.setVisibility(View.GONE);
+        layoutMessage.setVisibility(View.GONE);
     }
     private void hotLine() {
         final String phone = "963666";
@@ -378,7 +380,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivity(intent);
     }
     private void Gomywallet() {
-        Intent intent=new Intent(mContext, Mywallet.class);
+        Intent intent=new Intent(mContext, MyWalletActivity.class);
         startActivityForResult(intent,0x004);
     }
     private void Goinvoice() {

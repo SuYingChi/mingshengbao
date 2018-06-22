@@ -18,8 +18,8 @@
             android:id="@+id/id_logo_top"
             android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            fresco:failureImage="@drawable/logo_top"/>
+            android:layout_height="match_parent" />
+            <!--fresco:failureImage="@drawable/logo_top"-->
         <TextView
             android:id="@+id/id_tv_time"
             android:layout_marginTop="@dimen/margin_width15"

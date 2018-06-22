@@ -22,6 +22,7 @@ import com.msht.minshengbao.FunctionActivity.MainActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -30,52 +31,64 @@ import com.umeng.message.PushAgent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    private Button Btnregister,Btnfindpws,Btnlogin;
-    private EditText Eusername,Epassword;
-    private TextView Tresult;
-    private ImageView backimg;
+    private Button btnRegister, btnFindPassword, btnLogin;
+    private EditText etUserName, etPassword;
+    private TextView tvResult;
+    private ImageView backImage;
     private String username;
-    private String passwordes;
+    private String mPassword;
     private CustomDialog customDialog;
     public static final String MY_ACTION = "ui";
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    Handler loginHandler = new Handler() {
+    private final LogonHandler logonHandler=new LogonHandler(this);
+    private static class LogonHandler extends Handler{
+        private WeakReference<LoginActivity> mWeakReference;
+        public LogonHandler(LoginActivity activity) {
+            mWeakReference=new WeakReference<LoginActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final LoginActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
-                        JSONObject ObjectInfo = object.optJSONObject("data");
-                        if (result.equals("success")){
-                            Judgedata(ObjectInfo);
+                        JSONObject objectInfo = object.optJSONObject("data");
+                        if (result.equals(SendrequestUtil.SUCCESS_VALUE)){
+                            activity.onReceivePersionalData(objectInfo);
                         }else {
-                            Tresult.setText(error);
+                            activity.tvResult.setText(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context,msg.obj.toString(),
-                            Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void Judgedata(JSONObject objectInfo) {
+    }
+    private void onReceivePersionalData(JSONObject objectInfo) {
         String id = objectInfo.optString("id");
         String password = objectInfo.optString("password");
         String level = objectInfo.optString("level");
@@ -88,7 +101,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putPassword(this,SharedPreferencesUtil.Password,password);
         SharedPreferencesUtil.putNickName(this,SharedPreferencesUtil.NickName,nickname);
         SharedPreferencesUtil.putUserName(this,SharedPreferencesUtil.UserName,username);
-        SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,passwordes);
+        SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,mPassword);
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
         VariableUtil.loginStatus=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
@@ -113,52 +126,52 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mPageName ="登录界面";
         PushAgent.getInstance(context).onAppStart();
         customDialog=new CustomDialog(this, "正在加载");
-        initfindview();
+        initFindView();
         initEvent();
     }
-    private void initfindview() {
-        Btnregister=(Button)findViewById(R.id.id_button_register);
-        Btnfindpws=(Button)findViewById(R.id.id_button_findpassword);
-        Btnlogin=(Button)findViewById(R.id.id_button_login);
-        Eusername=(EditText)findViewById(R.id.id_et_usename);
-        Epassword=(EditText)findViewById(R.id.id_et_password);
-        Tresult=(TextView)findViewById(R.id.id_result);
-        backimg=(ImageView)findViewById(R.id.id_gobackimg);
-        Btnlogin.setEnabled(false);
+    private void initFindView() {
+        btnRegister =(Button)findViewById(R.id.id_button_register);
+        btnFindPassword =(Button)findViewById(R.id.id_button_findpassword);
+        btnLogin =(Button)findViewById(R.id.id_button_login);
+        etUserName =(EditText)findViewById(R.id.id_et_usename);
+        etPassword =(EditText)findViewById(R.id.id_et_password);
+        tvResult =(TextView)findViewById(R.id.id_result);
+        backImage =(ImageView)findViewById(R.id.id_gobackimg);
+        btnLogin.setEnabled(false);
     }
     private void initEvent() {
-        Btnregister.setOnClickListener(this);
-        Btnfindpws.setOnClickListener(this);
-        backimg.setOnClickListener(this);
-        Eusername.addTextChangedListener(new TextWatcher() {
+        btnRegister.setOnClickListener(this);
+        btnFindPassword.setOnClickListener(this);
+        backImage.setOnClickListener(this);
+        etUserName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(Eusername.getText().toString()) || TextUtils.isEmpty(Epassword.getText().toString())) {
-                    Btnlogin.setEnabled(false);
+                if (TextUtils.isEmpty(etUserName.getText().toString()) || TextUtils.isEmpty(etPassword.getText().toString())) {
+                    btnLogin.setEnabled(false);
                 } else {
-                    Btnlogin.setEnabled(true);
+                    btnLogin.setEnabled(true);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {}
         });
-        Epassword.addTextChangedListener(new TextWatcher() {
+        etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(Eusername.getText().toString()) || TextUtils.isEmpty(Epassword.getText().toString())) {
-                    Btnlogin.setEnabled(false);
+                if (TextUtils.isEmpty(etUserName.getText().toString()) || TextUtils.isEmpty(etPassword.getText().toString())) {
+                    btnLogin.setEnabled(false);
                 } else {
-                    Btnlogin.setEnabled(true);
+                    btnLogin.setEnabled(true);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {}
         });
-        Btnlogin.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
 
     }
 
@@ -170,61 +183,55 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(reg);
                 break;
             case R.id.id_button_findpassword:
-                Intent findpaw=new Intent(context,FindPasswordActivity.class);
-                startActivity(findpaw);
+                Intent findPassword=new Intent(context,FindPasswordActivity.class);
+                startActivity(findPassword);
                 break;
             case R.id.id_button_login:
-                Loginsystem();
+                loginSystem();
                 break;
             case R.id.id_gobackimg:
                 finish();
                 break;
+            default:
+                break;
         }
     }
 
-    private void Loginsystem() {
-        username = Eusername.getText().toString().trim();
-        passwordes = Epassword.getText().toString().trim();
-        if(matchLoginMsg(username,passwordes)) {
+    private void loginSystem() {
+        username = etUserName.getText().toString().trim();
+        mPassword = etPassword.getText().toString().trim();
+        if(matchLoginMsg(username,mPassword)) {
             customDialog.show();
-            requestSevice();
+            requestService();
         }
     }
 
-    private void requestSevice() {
+    private void requestService() {
         String validateURL= UrlUtil.Login_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("username",username);
-        textParams.put("password", passwordes);
-        SendrequestUtil.executepost(validateURL, textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj =success;
-                msg.what = SUCCESS;
-                loginHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj =fail;
-                msg.what = FAILURE;
-                loginHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("password", mPassword);
+        SendrequestUtil.postDataFromService(validateURL,textParams,logonHandler);
     }
 
-    private boolean matchLoginMsg(String name, String wordes) {
-        if(name.equals(""))
+    private boolean matchLoginMsg(String name, String word) {
+        if(TextUtils.isEmpty(name))
         {
-            Toast.makeText(context, "账号不能为空",Toast.LENGTH_SHORT).show();
+            ToastUtil.ToastText(context,"账号不能为空");
             return false;
         }
-        if(wordes.equals(""))
+        if(TextUtils.isEmpty(word))
         {
-            Toast.makeText(context, "密码不能为空",Toast.LENGTH_SHORT).show();
+            ToastUtil.ToastText(context,"密码不能为空");
             return false;
         }
         return true;
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

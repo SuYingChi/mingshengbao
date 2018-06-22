@@ -41,7 +41,6 @@ public class AddressManageActivity extends BaseActivity {
     private JSONArray jsonArray;
     private int   requestCodes=0;
     private CustomDialog customDialog;
-    private final String mPageName ="地址管理";
     private ArrayList<HashMap<String, String>> addrList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
@@ -118,7 +117,7 @@ public class AddressManageActivity extends BaseActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                String city_id=jsonObject.getString("city_id");
+                String cityId=jsonObject.getString("city_id");
                 String cityName=jsonObject.optString("city_name");
                 String flag=jsonObject.optString("flag");
                 String address=jsonObject.getString("address");
@@ -128,7 +127,7 @@ public class AddressManageActivity extends BaseActivity {
                 String latitude = jsonObject.getString("latitude");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
-                map.put("city_id",city_id);
+                map.put("city_id",cityId);
                 map.put("city_name",cityName);
                 map.put("flag",flag);
                 map.put("address",address);
@@ -273,5 +272,13 @@ public class AddressManageActivity extends BaseActivity {
             textParams.put("id",addressId);
         }
         SendrequestUtil.postDataFromService(validateURL,textParams, requestHandler);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

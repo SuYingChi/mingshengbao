@@ -261,4 +261,13 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         textParams.put("phone",mPhone);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

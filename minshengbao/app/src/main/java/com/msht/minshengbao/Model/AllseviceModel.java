@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class AllseviceModel extends BaseModel{
     public MainCategory data;
-
     public static class MainCategory{
         public int city_id;
         public int online_flag;

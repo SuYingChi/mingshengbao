@@ -304,7 +304,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
         removeTimeout();
+        super.onDestroy();
     }
 }

@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.GetaddressAdapter;
-import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.Adapter.GetAddressAdapter;
 import com.msht.minshengbao.FunctionActivity.GasService.GasPayRecord;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -30,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,55 +41,65 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
     private String    password;
     private XListView mListView;
     private int pos=-1;
-    private TextView tv_nodata;
+    private TextView tvNoData;
     private int refreshType;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
-    private GetaddressAdapter adapter;
+    private JSONArray jsonArray;
+    private GetAddressAdapter adapter;
     private int pageNo=1;
     private Context mContext;
     private final String mPageName ="燃气缴费";
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
+    private final PayRecordHandler payRecordHandler =new PayRecordHandler(this);
     public PayRecord() {}
-    Handler payrecordHandler = new Handler() {
+    private static class PayRecordHandler extends Handler{
+
+        private WeakReference<PayRecord> mWeakReference;
+        public PayRecordHandler(PayRecord reference) {
+            mWeakReference=new WeakReference<PayRecord>(reference);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final PayRecord reference=mWeakReference.get();
+            if (reference==null||reference.isDetached()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListView.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListView.stopLoadMore();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        reference.jsonArray =object.optJSONArray("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (reference.refreshType==0){
+                                reference.mListView.stopRefresh(true);
+                            }else if (reference.refreshType==1){
+                                reference.mListView.stopLoadMore();
                             }
-                            if (jsonArray.length()>0){
-                                if (pageNo==1){
-                                    recordList.clear();
+                            if (reference.jsonArray.length()>0){
+                                if (reference.pageNo==1){
+                                    reference.recordList.clear();
                                 }
-                                initShow();
+                                reference.onReceiveRecordData();
                             }
                         }else {
-                            mListView.stopRefresh(false);
-                            failure(Error);
+                            reference.mListView.stopRefresh(false);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
-                case FAILURE:
-                    mListView.stopRefresh(false);
-                    ToastUtil.ToastText(mContext,msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    reference.mListView.stopRefresh(false);
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(getActivity())
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -103,8 +112,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                     }
                 }).show();
     }
-
-    private void initShow() {
+    private void onReceiveRecordData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -119,11 +127,11 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (recordList.size()==0){
-            tv_nodata.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-        }else {
+        if (recordList!=null&&recordList.size()!=0){
             adapter.notifyDataSetChanged();
+        }else {
+            tvNoData.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
         }
     }
     @Override
@@ -133,13 +141,13 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
         View view=inflater.inflate(R.layout.fragment_table_record, container, false);
         mContext=getActivity();
         Bundle bundle=getArguments();
-        userId=bundle.getString("id");             //获取从Activity传来的值
+        userId=bundle.getString("id");
         password=bundle.getString("password");
-        tv_nodata=(TextView)view.findViewById(R.id.id_tv_nodata);
-        tv_nodata.setText("当前没有客户号");
+        tvNoData =(TextView)view.findViewById(R.id.id_tv_nodata);
+        tvNoData.setText("当前没有客户号");
         mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
         mListView.setPullLoadEnable(false);
-        adapter = new GetaddressAdapter(mContext,recordList,pos);
+        adapter = new GetAddressAdapter(mContext,recordList,pos);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -156,7 +164,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                 startActivity(name);
             }
         });
-        adapter.setRadioButtonClickListener(new GetaddressAdapter.ItemRadioButtonClickListener() {
+        adapter.setRadioButtonClickListener(new GetAddressAdapter.ItemRadioButtonClickListener() {
             @Override
             public void onRadioButtonClick(View v, int position) {
                 adapter.notifyDataSetChanged();
@@ -192,27 +200,13 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                payrecordHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                payrecordHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
     }
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart(mPageName);   //友盟统计页面
+        //友盟统计页面
+        MobclickAgent.onPageStart(mPageName);
     }
     @Override
     public void onPause() {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -25,25 +26,21 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
+import com.msht.minshengbao.FunctionActivity.MyActivity.RegisterActivity;
 import com.msht.minshengbao.FunctionActivity.Public.SelectAddress;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.BitmapUtil;
-import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.Utils.StreamTools;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONObject;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,71 +50,76 @@ import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
 public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
-    private ImageView licenseimg;
-    private LinearLayout Li_view;
-    private LinearLayout Li_taxpayer;
-    private LinearLayout Li_company;
-    private LinearLayout Li_camara;
-    private Button  btn_personal,btn_company;
-    private Button btn_commen,btn_zengzhi,btn_send;
-    private TextView  Eaddress;
-    private EditText  et_name;
-    private EditText  et_recipients,et_phone;
-    private EditText  et_taxpayer_num,et_bank,et_bankcard;
-    private EditText  et_company_tel,et_company_addr;
-    private TextView  tv_title,tv_amount;
-    private TextView  tv_rightText;
-    private RelativeLayout Rdistrict;
+    private ImageView licenseImage;
+    private LinearLayout layoutView;
+    private LinearLayout layoutTaxpayer;
+    private LinearLayout layoutCompany;
+    private LinearLayout layoutCamara;
+    private Button btnPersonal, btnCompany;
+    private Button btnCommen, btnZengzhi, btnSend;
+    private TextView  etAddress;
+    private EditText etName;
+    private EditText etRecipients, etPhone;
+    private EditText etTaxpayerNum, etBank, etBankcard;
+    private EditText etCompanyTel, etCompanyAddress;
+    private TextView tvTitle, tvAmount;
+    private TextView tvRightText;
+    private RelativeLayout layoutDistrict;
     private String  userId,password,type="1";
     private String  name,content,amount;
-    private String  recipients,phonenum,district;
+    private String  recipients, phoneNum;
     private String  address,identyfyNo,bank;
-    private String  bankcard,company_tel,company_addr;
-    private String  relate_order;
-    private File certe_file=null;
-    private boolean   BooleanType=false;
-    private boolean   BooleaninVoice=false;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private final int ERRORCODE = 2;
+    private String  bankcard,companyTel, companyAddress;
+    private String  relateOrder;
+    private File    certeFile =null;
+    private boolean booleanType =false;
+    private boolean booleanInvoice =false;
     private static  final int REQUEST_CALL_CAMERE=1;
+    private static final int OVER_AMOUNT=400;
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<ApplyInvoice> mWeakReference;
+        public RequestHandler(ApplyInvoice activity) {
+            mWeakReference=new WeakReference<ApplyInvoice>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final ApplyInvoice activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String result_code=object.optString("result_code");
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if (Results.equals("success")) {
-                            success();
+                        String resultCode=object.optString("result_code");
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.onSuccess();
                         } else {
-                            noticeDialog(Error);
+                            activity.noticeDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(ApplyInvoice.this,"网络请求出错!",
-                            Toast.LENGTH_SHORT)
-                            .show();
-                    break;
-                case ERRORCODE:
-                    customDialog.dismiss();
-                    Toast.makeText(ApplyInvoice.this, "请求出错!",
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void success() {
+    }
+    private void onSuccess() {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -157,124 +159,79 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
-        relate_order=data.getStringExtra("idinvoice");
+        relateOrder=data.getStringExtra("idinvoice");
         amount=data.getStringExtra("total_amount");
         initHeader();
         initView();
         initEvent();
     }
     private void initHeader() {
-        findViewById(R.id.id_status_view).setVisibility(View.GONE);//状态栏View
-        tv_rightText=(TextView) findViewById(R.id.id_tv_rightText);
-        tv_rightText.setVisibility(View.VISIBLE);
-        tv_rightText.setText("说明");
+        findViewById(R.id.id_status_view).setVisibility(View.GONE);
+        tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("说明");
     }
     private void initView() {
-        licenseimg=(ImageView)findViewById(R.id.id_license_img);
-        btn_commen=(Button)findViewById(R.id.id_btn_commen);
-        btn_zengzhi=(Button)findViewById(R.id.id_btn_zengzhi);
-        btn_send=(Button)findViewById(R.id.id_btn_send);
-        btn_personal=(Button)findViewById(R.id.id_btn_personal);
-        btn_company=(Button)findViewById(R.id.id_btn_company);
-        Rdistrict=(RelativeLayout)findViewById(R.id.id_re_district);
-        Li_view=(LinearLayout)findViewById(R.id.id_li_view);
-        Li_taxpayer=(LinearLayout)findViewById(R.id.id_taxpayer_layout);
-        Li_company=(LinearLayout)findViewById(R.id.id_company_layout);;
-        Li_camara=(LinearLayout)findViewById(R.id.id_camara_layout);;
-        Eaddress=(TextView) findViewById(R.id.id_tv_address);
-        tv_title=(TextView) findViewById(R.id.id_tv_title);
-        et_name=(EditText)findViewById(R.id.id_et_name);
-        et_recipients=(EditText)findViewById(R.id.id_et_recipient);
-        et_phone=(EditText)findViewById(R.id.id_et_phone);
-        et_taxpayer_num=(EditText)findViewById(R.id.id_et_taxpayer_num);
-        et_bank=(EditText)findViewById(R.id.id_et_bank);
-        et_bankcard=(EditText)findViewById(R.id.id_et_bankcard);
-        et_company_tel=(EditText)findViewById(R.id.id_et_company_tel);
-        et_company_addr=(EditText)findViewById(R.id.id_et_company_addr);
-        tv_amount=(TextView)findViewById(R.id.id_amount);
-      //  Eaddress.setInputType(InputType.TYPE_NULL);
-        tv_amount.setText(amount);
-        btn_send.setEnabled(false);
+        licenseImage =(ImageView)findViewById(R.id.id_license_img);
+        btnCommen =(Button)findViewById(R.id.id_btn_commen);
+        btnZengzhi =(Button)findViewById(R.id.id_btn_zengzhi);
+        btnSend =(Button)findViewById(R.id.id_btn_send);
+        btnPersonal =(Button)findViewById(R.id.id_btn_personal);
+        btnCompany =(Button)findViewById(R.id.id_btn_company);
+        layoutDistrict =(RelativeLayout)findViewById(R.id.id_re_district);
+        layoutView =(LinearLayout)findViewById(R.id.id_li_view);
+        layoutTaxpayer =(LinearLayout)findViewById(R.id.id_taxpayer_layout);
+        layoutCompany =(LinearLayout)findViewById(R.id.id_company_layout);;
+        layoutCamara =(LinearLayout)findViewById(R.id.id_camara_layout);;
+        etAddress=(TextView) findViewById(R.id.id_tv_address);
+        tvTitle =(TextView) findViewById(R.id.id_tv_title);
+        etName =(EditText)findViewById(R.id.id_et_name);
+        etRecipients =(EditText)findViewById(R.id.id_et_recipient);
+        etPhone =(EditText)findViewById(R.id.id_et_phone);
+        etTaxpayerNum =(EditText)findViewById(R.id.id_et_taxpayer_num);
+        etBank =(EditText)findViewById(R.id.id_et_bank);
+        etBankcard =(EditText)findViewById(R.id.id_et_bankcard);
+        etCompanyTel =(EditText)findViewById(R.id.id_et_company_tel);
+        etCompanyAddress =(EditText)findViewById(R.id.id_et_company_addr);
+        tvAmount =(TextView)findViewById(R.id.id_amount);
+        tvAmount.setText(amount);
+        btnSend.setEnabled(false);
     }
     private void initEvent() {
-        tv_rightText.setOnClickListener(this);
-        btn_commen.setOnClickListener(this);
-        btn_zengzhi.setOnClickListener(this);
-        btn_company.setOnClickListener(this);
-        btn_personal.setOnClickListener(this);
-        licenseimg.setOnClickListener(this);
-        Rdistrict.setOnClickListener(new View.OnClickListener() {
+        tvRightText.setOnClickListener(this);
+        btnCommen.setOnClickListener(this);
+        btnZengzhi.setOnClickListener(this);
+        btnCompany.setOnClickListener(this);
+        btnPersonal.setOnClickListener(this);
+        licenseImage.setOnClickListener(this);
+        layoutDistrict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context, SelectAddress.class);
                 startActivityForResult(intent,1);
             }
         });
-        et_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (TextUtils.isEmpty(et_name.getText().toString())||TextUtils.isEmpty(et_recipients.getText().toString())
-                        ||TextUtils.isEmpty(et_phone.getText().toString())||TextUtils.isEmpty(Eaddress.getText().toString())){
-                    btn_send.setEnabled(false);
-                }else {
-                    btn_send.setEnabled(true);
-                }
-
+        MyTextWatcher myTextWatcher = new MyTextWatcher();
+        etName.addTextChangedListener(myTextWatcher);
+        etRecipients.addTextChangedListener(myTextWatcher);
+        etPhone.addTextChangedListener(myTextWatcher);
+        etAddress.addTextChangedListener(myTextWatcher);
+        btnSend.setOnClickListener(this);
+    }
+    private class MyTextWatcher implements TextWatcher{
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (TextUtils.isEmpty(etName.getText().toString())||TextUtils.isEmpty(etRecipients.getText().toString())
+                    ||TextUtils.isEmpty(etPhone.getText().toString())||TextUtils.isEmpty(etAddress.getText().toString())){
+                btnSend.setEnabled(false);
+            }else {
+                btnSend.setEnabled(true);
             }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        et_recipients.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(et_name.getText().toString())||TextUtils.isEmpty(et_recipients.getText().toString())
-                        ||TextUtils.isEmpty(et_phone.getText().toString())||TextUtils.isEmpty(Eaddress.getText().toString())
-                        ){
-                    btn_send.setEnabled(false);
-                }else {
-                    btn_send.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        et_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(et_name.getText().toString())||TextUtils.isEmpty(et_recipients.getText().toString())
-                        ||TextUtils.isEmpty(et_phone.getText().toString())||TextUtils.isEmpty(Eaddress.getText().toString())
-                        ){
-                    btn_send.setEnabled(false);
-                }else {
-                    btn_send.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        Eaddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(et_name.getText().toString())||TextUtils.isEmpty(et_recipients.getText().toString())
-                        ||TextUtils.isEmpty(et_phone.getText().toString())||TextUtils.isEmpty(Eaddress.getText().toString())){
-                    btn_send.setEnabled(false);
-                }else {
-                    btn_send.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        btn_send.setOnClickListener(this);
+        }
+        @Override
+        public void afterTextChanged(Editable s) {}
     }
     @Override
     public void onClick(View v) {
@@ -283,84 +240,84 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.id_btn_commen:
-                BooleaninVoice=false;
-                btn_commen.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btn_zengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                if (BooleanType){
+                booleanInvoice =false;
+                btnCommen.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnZengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                if (booleanType){
                     type="3";
-                    Li_view.setVisibility(View.VISIBLE);
-                    Li_taxpayer.setVisibility(View.VISIBLE);
-                    Li_company.setVisibility(View.GONE);
-                    Li_camara.setVisibility(View.GONE);
-                    et_bank.setHint("请输入您的开户银行（选填）");
-                    et_bankcard.setHint("请输入您的开户账号（选填）");
+                    layoutView.setVisibility(View.VISIBLE);
+                    layoutTaxpayer.setVisibility(View.VISIBLE);
+                    layoutCompany.setVisibility(View.GONE);
+                    layoutCamara.setVisibility(View.GONE);
+                    etBank.setHint("请输入您的开户银行（选填）");
+                    etBankcard.setHint("请输入您的开户账号（选填）");
                 }else {
                     type="1";
-                    Li_view.setVisibility(View.GONE);
-                    Li_camara.setVisibility(View.GONE);
-                    Li_taxpayer.setVisibility(View.GONE);
+                    layoutView.setVisibility(View.GONE);
+                    layoutCamara.setVisibility(View.GONE);
+                    layoutTaxpayer.setVisibility(View.GONE);
                 }
                 break;
             case R.id.id_btn_zengzhi:
-                BooleaninVoice=true;
+                booleanInvoice =true;
                 type="2";
-                btn_commen.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                btn_zengzhi.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                Li_view.setVisibility(View.VISIBLE);
-                Li_camara.setVisibility(View.VISIBLE);
-                Li_taxpayer.setVisibility(View.VISIBLE);
-                Li_company.setVisibility(View.VISIBLE);
-                Li_view.setVisibility(View.VISIBLE);
-                et_bank.setHint("请输入您的开户银行（必填）");
-                et_bankcard.setHint("请输入您的开户账号（必填）");
+                btnCommen.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                btnZengzhi.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                layoutView.setVisibility(View.VISIBLE);
+                layoutCamara.setVisibility(View.VISIBLE);
+                layoutTaxpayer.setVisibility(View.VISIBLE);
+                layoutCompany.setVisibility(View.VISIBLE);
+                layoutView.setVisibility(View.VISIBLE);
+                etBank.setHint("请输入您的开户银行（必填）");
+                etBankcard.setHint("请输入您的开户账号（必填）");
                 break;
             case R.id.id_btn_personal:
-                BooleanType=false;
-                BooleaninVoice=false;
+                booleanType =false;
+                booleanInvoice =false;
                 type="1";
-                btn_commen.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btn_personal.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btn_company.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                btn_zengzhi.setVisibility(View.GONE);
-                Li_view.setVisibility(View.GONE);
-                Li_camara.setVisibility(View.GONE);
-                Li_taxpayer.setVisibility(View.GONE);
+                btnCommen.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnPersonal.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnCompany.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                btnZengzhi.setVisibility(View.GONE);
+                layoutView.setVisibility(View.GONE);
+                layoutCamara.setVisibility(View.GONE);
+                layoutTaxpayer.setVisibility(View.GONE);
                 break;
             case R.id.id_btn_company:
-                BooleanType=true;
-                if (BooleaninVoice){
+                booleanType =true;
+                if (booleanInvoice){
                     type="2";
-                    Li_view.setVisibility(View.VISIBLE);
-                    Li_camara.setVisibility(View.VISIBLE);
-                    Li_taxpayer.setVisibility(View.VISIBLE);
-                    Li_company.setVisibility(View.VISIBLE);
-                    Li_view.setVisibility(View.VISIBLE);
-                    btn_zengzhi.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                    et_bank.setHint("请输入您的开户银行（必填）");
-                    et_bankcard.setHint("请输入您的开户账号（必填）");
+                    layoutView.setVisibility(View.VISIBLE);
+                    layoutCamara.setVisibility(View.VISIBLE);
+                    layoutTaxpayer.setVisibility(View.VISIBLE);
+                    layoutCompany.setVisibility(View.VISIBLE);
+                    layoutView.setVisibility(View.VISIBLE);
+                    btnZengzhi.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                    etBank.setHint("请输入您的开户银行（必填）");
+                    etBankcard.setHint("请输入您的开户账号（必填）");
                 }else {
                     type="3";
-                    Li_view.setVisibility(View.VISIBLE);
-                    Li_taxpayer.setVisibility(View.VISIBLE);
-                    Li_company.setVisibility(View.GONE);
-                    Li_camara.setVisibility(View.GONE);
-                    btn_zengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                    et_bank.setHint("请输入您的开户银行（选填）");
-                    et_bankcard.setHint("请输入您的开户账号（选填）");
+                    layoutView.setVisibility(View.VISIBLE);
+                    layoutTaxpayer.setVisibility(View.VISIBLE);
+                    layoutCompany.setVisibility(View.GONE);
+                    layoutCamara.setVisibility(View.GONE);
+                    btnZengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                    etBank.setHint("请输入您的开户银行（选填）");
+                    etBankcard.setHint("请输入您的开户账号（选填）");
                 }
-                btn_zengzhi.setVisibility(View.VISIBLE);
-                btn_company.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btn_personal.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                btnZengzhi.setVisibility(View.VISIBLE);
+                btnCompany.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnPersonal.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
                 break;
             case R.id.id_license_img:
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(ApplyInvoice.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(ApplyInvoice.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CALL_CAMERE);
                     }else {
-                        receivephoto();
+                        receivePhoto();
                     }
                 } else {
-                    receivephoto();
+                    receivePhoto();
                 }
                 break;
             case R.id.id_btn_send:
@@ -382,7 +339,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
 
         if (requestCode==REQUEST_CALL_CAMERE){
             if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                receivephoto();
+                receivePhoto();
             }else {
                 Toast.makeText(ApplyInvoice.this,"授权失败",Toast.LENGTH_SHORT).show();
             }
@@ -390,7 +347,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-    private void receivephoto() {
+    private void receivePhoto() {
         PhotoPicker.builder()
                 .setPhotoCount(1)
                 .setShowCamera(true)
@@ -408,23 +365,25 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                 String filepath = photos.get(0);
-                certe_file = new File(filepath);
-                if (certe_file.exists()&&certe_file.canRead()) {
-                    licenseimg.setImageBitmap(BitmapUtil.decodeSampledBitmapFromFile(filepath, 500, 500));
+                certeFile = new File(filepath);
+                if (certeFile.exists()&& certeFile.canRead()) {
+                    licenseImage.setImageBitmap(BitmapUtil.decodeSampledBitmapFromFile(filepath, 500, 500));
                 }
-                compressImg(certe_file);
+                compressImg(certeFile);
             }
         }else if (requestCode==1){
             if (resultCode==1){
                 String mAddress=data.getStringExtra("mAddress");
-                Eaddress.setText(mAddress);
+                etAddress.setText(mAddress);
             }
         }
     }
     private void compressImg(File files) {
         Luban.with(this)
-                .load(files)                     //传人要压缩的图片
-                .setCompressListener(new OnCompressListener() { //设置回调
+                //传人要压缩的图片
+                .load(files)
+                //设置回调
+                .setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {
                         // TODO 压缩开始前调用，可以在方法内启动 loading UI
@@ -432,7 +391,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onSuccess(File file) {
                         // TODO 压缩成功后调用，返回压缩后的图片文件
-                        certe_file=file;
+                        certeFile =file;
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -445,45 +404,51 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
     }
 
     private void applyData() {
-        name      =et_name.getText().toString().trim();
-        content   =tv_title.getText().toString().trim();
-        recipients=et_recipients.getText().toString().trim();
-        phonenum  =et_phone.getText().toString().trim();
-        district  =Eaddress.getText().toString().trim();
+        name      = etName.getText().toString().trim();
+        content   = tvTitle.getText().toString().trim();
+        recipients= etRecipients.getText().toString().trim();
+        phoneNum = etPhone.getText().toString().trim();
+        String district  =etAddress.getText().toString().trim();
         address   =district;
-        identyfyNo=et_taxpayer_num.getText().toString().trim();
-        bank      =et_bank.getText().toString().trim();
-        bankcard  =et_bankcard.getText().toString().trim();
-        company_tel=et_company_tel.getText().toString().trim();
-        company_addr=et_company_addr.getText().toString().trim();
-        double double_amount=Double.valueOf(amount).doubleValue();
-        if (type.equals("1")){
-            requestServer(double_amount);
-        }else if (type.equals("2")){
-            if (TextUtils.isEmpty(et_taxpayer_num.getText().toString())){
-                noticeDialog("请输入您的纳税人识别号");
-            }else if (TextUtils.isEmpty(et_bank.getText().toString())){
-                noticeDialog("请输入您的开户银行");
-            }else if (TextUtils.isEmpty(et_bankcard.getText().toString())){
-                noticeDialog("请输入您的开户账号");
-            }else if (TextUtils.isEmpty(et_company_tel.getText().toString())){
-                noticeDialog("请输入您的企业电话");
-            }else if (TextUtils.isEmpty(et_company_addr.getText().toString())){
-                noticeDialog("请输入您的企业地址");
-            }else {
-                requestServer(double_amount);
-            }
-        }else if (type.equals("3")){
-            if (TextUtils.isEmpty(et_taxpayer_num.getText().toString())){
-                noticeDialog("请输入您的纳税人识别号");
-            }else {
-                requestServer(double_amount);
-            }
+        identyfyNo= etTaxpayerNum.getText().toString().trim();
+        bank      = etBank.getText().toString().trim();
+        bankcard  = etBankcard.getText().toString().trim();
+        companyTel= etCompanyTel.getText().toString().trim();
+        companyAddress = etCompanyAddress.getText().toString().trim();
+        double doubleAmount=Double.parseDouble(amount);
+        switch (type){
+            case VariableUtil.VALUE_ONE:
+                requestServer(doubleAmount);
+                break;
+            case VariableUtil.VALUE_TWO:
+                if (TextUtils.isEmpty(etTaxpayerNum.getText().toString())){
+                    noticeDialog("请输入您的纳税人识别号");
+                }else if (TextUtils.isEmpty(etBank.getText().toString())){
+                    noticeDialog("请输入您的开户银行");
+                }else if (TextUtils.isEmpty(etBankcard.getText().toString())){
+                    noticeDialog("请输入您的开户账号");
+                }else if (TextUtils.isEmpty(etCompanyTel.getText().toString())){
+                    noticeDialog("请输入您的企业电话");
+                }else if (TextUtils.isEmpty(etCompanyAddress.getText().toString())){
+                    noticeDialog("请输入您的企业地址");
+                }else {
+                    requestServer(doubleAmount);
+                }
+                break;
+            case VariableUtil.VALUE_THREE:
+                if (TextUtils.isEmpty(etTaxpayerNum.getText().toString())){
+                    noticeDialog("请输入您的纳税人识别号");
+                }else {
+                    requestServer(doubleAmount);
+                }
+                break;
+            default:
+                break;
         }
     }
 
-    private void requestServer(double double_amount) {
-        if (double_amount<400){
+    private void requestServer(double doubleAmount) {
+        if (doubleAmount<OVER_AMOUNT){
             new PromptDialog.Builder(this)
                     .setTitle("民生宝")
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -502,87 +467,38 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                         public void onClick(Dialog dialog, int which) {
                             dialog.dismiss();
                             customDialog.show();
-                            Thread ApplyThread=new Thread(new ApplyInvoiceHandler());
-                            ApplyThread.start();
+                            sendService();
                         }
                     })
                     .show();
         }else {
             customDialog.show();
-            Thread ApplyThread=new Thread(new ApplyInvoiceHandler());
-            ApplyThread.start();
+            sendService();
         }
     }
-    private class ApplyInvoiceHandler implements Runnable {
-        @Override
-        public void run() {
-            String validateURL= UrlUtil.Invoice_applyUrl;
-            HttpURLConnection conn = null;
-            DataInputStream dis = null;
-            Map<String, String> textParams = new HashMap<String, String>();
-            Map<String,File> fileParams=new HashMap<String,File>();
-            try {
-                URL url = new URL(validateURL);
-                textParams.put("userId", userId);
-                textParams.put("password",password);
-                textParams.put("type",type);
-                textParams.put("name",name);
-                textParams.put("title",content);
-                textParams.put("amount",amount);
-                textParams.put("recipient",recipients);
-                textParams.put("phone",phonenum);
-                textParams.put("address",address);
-                textParams.put("taxpayer_num",identyfyNo);
-                textParams.put("bank",bank);
-                textParams.put("bankcard",bankcard);
-                textParams.put("company_tel",company_tel);
-                textParams.put("company_address",company_addr);
-                textParams.put("relate_order",relate_order);
-                if (certe_file!=null){
-                    fileParams.put("business_license_img",certe_file);
-                }
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setDoInput(true); // 发送POST请求必须设置允许输入
-                conn.setDoOutput(true); // 发送POST请求必须设置允许输出
-                conn.setUseCaches(false);//新加
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Charset", "UTF-8");//设置编码
-                conn.setRequestProperty("ser-Agent", "Fiddler");
-                conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
-                OutputStream os = conn.getOutputStream();
-                DataOutputStream ds = new DataOutputStream(os);
-                NetUtil.writeStringParams(textParams, ds);
-                if (certe_file!=null){
-                    NetUtil.writeFileParams(fileParams,ds);
-                }
-                NetUtil.paramsEnd(ds);
-                os.flush();
-                os.close();
-                conn.connect();
-                int code = conn.getResponseCode(); // 从Internet获取网页,发送请求,将网页以流的形式读回来
-                if (code==200) {
-                    InputStream is=conn.getInputStream();
-                    String result= StreamTools.readInputStream(is);
-                    Message msg = new Message();
-                    msg.obj = result;
-                    msg.what = SUCCESS;
-                    requestHandler.sendMessage(msg);
-                }else {
-                    Message msg = new Message();
-                    msg.what = ERRORCODE;
-                    requestHandler.sendMessage(msg);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-                Message msg = new Message();
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
-            }
+
+    private void sendService() {
+        String validateURL= UrlUtil.Invoice_applyUrl;
+        Map<String, String> textParams = new HashMap<String, String>();
+        Map<String,File> fileParams=new HashMap<String,File>();
+        textParams.put("userId", userId);
+        textParams.put("password",password);
+        textParams.put("type",type);
+        textParams.put("name",name);
+        textParams.put("title",content);
+        textParams.put("amount",amount);
+        textParams.put("recipient",recipients);
+        textParams.put("phone", phoneNum);
+        textParams.put("address",address);
+        textParams.put("taxpayer_num",identyfyNo);
+        textParams.put("bank",bank);
+        textParams.put("bankcard",bankcard);
+        textParams.put("company_tel",companyTel);
+        textParams.put("company_address", companyAddress);
+        textParams.put("relate_order",relateOrder);
+        if (certeFile !=null){
+            fileParams.put("business_license_img", certeFile);
         }
+        SendrequestUtil.postFileToServer(textParams,fileParams,validateURL,requestHandler);
     }
 }

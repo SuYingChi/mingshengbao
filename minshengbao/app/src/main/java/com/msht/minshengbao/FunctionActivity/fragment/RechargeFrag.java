@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.GetaddressAdapter;
+import com.msht.minshengbao.Adapter.GetAddressAdapter;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.GasService.GasPayRecord;
 import com.msht.minshengbao.R;
@@ -46,8 +46,8 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
     private int refreshType;
     private final int SUCCESS = 1;
     private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
-    private GetaddressAdapter adapter;
+    private JSONArray jsonArray;
+    private GetAddressAdapter adapter;
     private int pageNo=1;
     private Context mContext;
     private final String mPageName ="燃气缴费";
@@ -135,19 +135,18 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
         View view=inflater.inflate(R.layout.fragment_recharge_record, container, false);
         mContext=getActivity();
         Bundle bundle=getArguments();
-        userId=bundle.getString("id");             //获取从Activity传来的值
+        userId=bundle.getString("id");
         password=bundle.getString("password");
         tv_nodata=(TextView)view.findViewById(R.id.id_tv_nodata);
         tv_nodata.setText("当前没有客户号");
         mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
         mListView.setPullLoadEnable(false);
-        adapter = new GetaddressAdapter(mContext,recordList,pos);
+        adapter = new GetAddressAdapter(mContext,recordList,pos);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 pos=position-1;
-                adapter.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
                 String customerNo=recordList.get(pos).get("customerNo");
                 String address=recordList.get(pos).get("name");
@@ -158,7 +157,7 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
                 startActivity(name);
             }
         });
-        adapter.setRadioButtonClickListener(new GetaddressAdapter.ItemRadioButtonClickListener() {
+        adapter.setRadioButtonClickListener(new GetAddressAdapter.ItemRadioButtonClickListener() {
             @Override
             public void onRadioButtonClick(View v, int position) {
                 adapter.notifyDataSetChanged();

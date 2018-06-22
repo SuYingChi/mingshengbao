@@ -10,21 +10,21 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 
 public class ServerSuccess extends BaseActivity {
-    private final int SPLASH_DISPLAY_LENGHT=4000;
+    private static final int SPLASH_DISPLAY_TIME=4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
         setContentView(R.layout.activity_server_success);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
-        Intent naviga=getIntent();
-        String navi=naviga.getStringExtra("navigation");
-        boolean Firstsever= SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.First_server, true);
-        boolean booleanfirst=naviga.getBooleanExtra("boolean",false);
-        setCommonHeader(navi);
+        Intent data=getIntent();
+        String navigation=data.getStringExtra("navigation");
+        boolean firstSever= SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.First_server, true);
+        boolean booleanFirst=data.getBooleanExtra("boolean",false);
+        setCommonHeader(navigation);
         mPageName ="服务提交成功";
-        if (booleanfirst){
-            if (Firstsever){
+        if (booleanFirst){
+            if (firstSever){
                 findViewById(R.id.id_layout_second).setVisibility(View.GONE);
                 findViewById(R.id.id_re_first).setVisibility(View.VISIBLE);
                 SharedPreferencesUtil.putBoolean(ServerSuccess.this, SharedPreferencesUtil.First_server, false);
@@ -45,6 +45,6 @@ public class ServerSuccess extends BaseActivity {
             public void run() {
                 ServerSuccess.this.finish();
             }
-        }, SPLASH_DISPLAY_LENGHT);
+        }, SPLASH_DISPLAY_TIME);
     }
 }

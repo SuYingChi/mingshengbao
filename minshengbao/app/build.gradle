@@ -8,8 +8,8 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2000040
-        versionName "v3.9.7"
+        versionCode 2000041
+        versionName "v3.9.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     //配置keystore签名
@@ -17,24 +17,33 @@ android {
     InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
     properties.load(inputStream)
     def keyDir = properties.getProperty('key.file')
+    def signFile = properties.getProperty('signKey.file')
     signingConfigs {
         debug {
             storeFile file(keyDir)
         }
+        release {
+            keyAlias 'msht'
+            keyPassword 'mshtmsht'
+            storeFile file(signFile)
+            storePassword 'mshtmsht'
+        }
+
     }
     buildTypes {
         debug {
-            buildConfigField 'String','URL_HEADS','"http://test.msbapp.cn:8080"'
-            buildConfigField 'String','URL_MSSB','"http://120.25.195.173:17080/rwapi"'
-            buildConfigField 'String','URL_SHOP','"http://dev.msbapp.cn"'
+            buildConfigField 'String', 'URL_HEADS', '"http://test.msbapp.cn:8080"'
+            buildConfigField 'String', 'URL_MSSB', '"http://120.25.195.173:17080/rwapi"'
+            buildConfigField 'String', 'URL_SHOP', '"http://dev.msbapp.cn"'
             signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled false
-            buildConfigField 'String','URL_HEADS','"https://msbapp.cn"'
-            buildConfigField 'String','URL_MSSB','"http://sb-api.msbapp.cn"'
-            buildConfigField 'String','URL_SHOP','"http://shop.msbapp.cn:8090"'
+            buildConfigField 'String', 'URL_HEADS', '"https://msbapp.cn"'
+            buildConfigField 'String', 'URL_MSSB', '"http://sb-api.msbapp.cn"'
+            buildConfigField 'String', 'URL_SHOP', '"http://shop.msbapp.cn:8090"'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     configurations {
@@ -77,7 +86,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.bumptech.glide:glide:4.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.3'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.facebook.fresco:fresco:0.12.0'
     compile 'com.facebook.fresco:animated-gif:0.12.0'

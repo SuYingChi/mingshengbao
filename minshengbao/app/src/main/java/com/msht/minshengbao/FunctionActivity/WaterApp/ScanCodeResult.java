@@ -146,4 +146,12 @@ public class ScanCodeResult extends BaseActivity {
         textParams.put("equipmentNo",equipmentNo);
         SendrequestUtil.postDataFromService(validateURL,textParams,resultHandler);
     }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

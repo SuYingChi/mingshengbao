@@ -15,12 +15,9 @@ import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
 public class WaterBalanceDetail extends AppCompatActivity {
-    private ViewPagerIndicator indicator;
-    private ViewPager mviewPager;
-    private TextView tv_naviga;
     private String    userId;
     private String    password;
-    private String mPageName="余额明细";
+    private String    mPageName="余额明细";
     private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +30,12 @@ public class WaterBalanceDetail extends AppCompatActivity {
         initView();
     }
     private void initView() {
-        tv_naviga=(TextView)findViewById(R.id.tv_navigation) ;
-        tv_naviga.setText(mPageName);
-        indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        mviewPager=(ViewPager)findViewById(R.id.id_viewPager_fees);
-        mviewPager.setAdapter(new PublicViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
-        indicator.setViewPager(mviewPager,0);
+        TextView tvNavigation=(TextView)findViewById(R.id.tv_navigation) ;
+        tvNavigation.setText(mPageName);
+        ViewPagerIndicator indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
+        ViewPager viewPager=(ViewPager)findViewById(R.id.id_viewPager_fees);
+        viewPager.setAdapter(new PublicViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
+        indicator.setViewPager(viewPager,0);
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

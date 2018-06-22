@@ -21,6 +21,7 @@ import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -30,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -38,73 +40,84 @@ import java.util.Map;
 
 public class InvoiceOpen extends BaseActivity {
     private XListView  mListView;
-    private View       Rnodata;
-    private TextView   tv_total;
-    private TextView   tv_history;
-    private Button     btn_next;
-    private CheckBox   box_allselect;
+    private View       layoutNoData;
+    private TextView   tvTotal;
+    private TextView   tvHistory;
+    private Button     btnNext;
+    private CheckBox   boxAllSelect;
     private String     userId,password;
-    private String     total_amount;
+    private String     totalAmount;
     private String     idinvoice;
     private String     text="(满400包邮)";
     private double     amount=0;
     private int        count=0;
     private InvoiceAdapter mAdapter;
-    private final int SUCCESS   = 1;
-    private final int FAILURE   = 0;
-    private JSONArray jsonArray;   //数据解析
+    private JSONArray jsonArray;
     private int       pageNo    = 1;
     private int pageIndex=0;
     private int refreshType;
     private CustomDialog customDialog;
     private boolean  ignoreChange=true;
-    private boolean  nochange=true;
+    private boolean  noChange =true;
     private ArrayList<String> idList = new ArrayList<String>();
     private ArrayList<HashMap<String, Boolean>> checkList = new ArrayList<HashMap<String, Boolean>>();
     private ArrayList<HashMap<String, String>> invoiceList = new ArrayList<HashMap<String, String>>();
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<InvoiceOpen> mWeakReference;
+        public RequestHandler(InvoiceOpen activity) {
+            mWeakReference=new WeakReference<InvoiceOpen>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final InvoiceOpen activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListView.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListView.stopLoadMore();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonArray =object.optJSONArray("data");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (activity.refreshType==0){
+                                activity.mListView.stopRefresh(true);
+                            }else if (activity.refreshType==1){
+                                activity.mListView.stopLoadMore();
                             }
-                            if(jsonArray.length()>0){
-                                if (pageNo==1){
-                                    invoiceList .clear();
-                                    checkList.clear();
+                            if(activity.jsonArray.length()>0){
+                                if (activity.pageNo==1){
+                                    activity.invoiceList .clear();
+                                    activity.checkList.clear();
                                 }
                             }
-                            initShow();
+                            activity.onReceiveInvoiceData();
                         }else {
-                            mListView.stopRefresh(false);
-                            faifure(Error);
+                            activity.mListView.stopRefresh(false);
+                            activity.faifure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    mListView.stopRefresh(false);
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                        activity.customDialog.dismiss();
+                    }
+                    activity.mListView.stopRefresh(false);
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
+    }
     private void faifure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -119,7 +132,7 @@ public class InvoiceOpen extends BaseActivity {
                     }
                 }).show();
     }
-    private void initShow() {
+    private void onReceiveInvoiceData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -145,10 +158,10 @@ public class InvoiceOpen extends BaseActivity {
             e.printStackTrace();
         }
         if (invoiceList.size()==0){
-            Rnodata.setVisibility(View.VISIBLE);
+            layoutNoData.setVisibility(View.VISIBLE);
         }else {
             mListView.setVisibility(View.VISIBLE);
-            Rnodata.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.GONE);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -182,14 +195,14 @@ public class InvoiceOpen extends BaseActivity {
         }
     }
     private void intView() {
-        tv_history=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_history.setVisibility(View.VISIBLE);
-        tv_history.setText("发票历史");
+        tvHistory =(TextView)findViewById(R.id.id_tv_rightText);
+        tvHistory.setVisibility(View.VISIBLE);
+        tvHistory.setText("发票历史");
         mListView=(XListView)findViewById(R.id.id_view_invoice);
-        Rnodata=findViewById(R.id.id_nodata_view);
-        tv_total=(TextView)findViewById(R.id.id_tv_total);
-        box_allselect=(CheckBox)findViewById(R.id.id_box_allselect);
-        btn_next=(Button)findViewById(R.id.id_btn_next);
+        layoutNoData =findViewById(R.id.id_nodata_view);
+        tvTotal =(TextView)findViewById(R.id.id_tv_total);
+        boxAllSelect =(CheckBox)findViewById(R.id.id_box_allselect);
+        btnNext =(Button)findViewById(R.id.id_btn_next);
     }
     private void initData() {
         customDialog.show();
@@ -202,8 +215,9 @@ public class InvoiceOpen extends BaseActivity {
                 count=0;
                 amount=0.00;
                 NumberFormat format=new DecimalFormat("0.##");
-                total_amount=format.format(amount);
-                tv_total.setText("已选"+count+"个订单共"+total_amount+"元"+text);
+                totalAmount=format.format(amount);
+                String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+                tvTotal.setText(longText);
             }
             @Override
             public void onLoadMore() {
@@ -221,32 +235,17 @@ public class InvoiceOpen extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("page",pageNum);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initEvent() {
-        tv_history.setOnClickListener(new View.OnClickListener() {
+        tvHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,InvoiceHistory.class);
                 startActivity(intent);
             }
         });
-        btn_next.setOnClickListener(new View.OnClickListener() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i=0;i<checkList.size();i++){
@@ -268,15 +267,15 @@ public class InvoiceOpen extends BaseActivity {
                 if (matchjudge(idinvoice)){
                     Intent intent=new Intent(context,ApplyInvoice.class);
                     intent.putExtra("idinvoice",idinvoice);
-                    intent.putExtra("total_amount",total_amount);
+                    intent.putExtra("total_amount",totalAmount);
                     startActivityForResult(intent,1);
                 }
             }
         });
-        box_allselect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        boxAllSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (nochange){
+                if (noChange){
                     if (isChecked){
                         amount=0;
                         for (int i=0;i<invoiceList.size();i++){
@@ -288,8 +287,9 @@ public class InvoiceOpen extends BaseActivity {
                         mAdapter.notifyDataSetChanged();
                         count=invoiceList.size();
                         NumberFormat format=new DecimalFormat("0.##");
-                        total_amount=format.format(amount);
-                        tv_total.setText("已选"+count+"个订单共"+total_amount+"元"+text);
+                        totalAmount=format.format(amount);
+                        String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+                        tvTotal.setText(longText);
                     }else {
                         for (int i=0;i<checkList.size();i++){
                             checkList.get(i).put("ischeck",false);
@@ -298,8 +298,9 @@ public class InvoiceOpen extends BaseActivity {
                         count=0;
                         amount=0.0;
                         NumberFormat format=new DecimalFormat("0.##");
-                        total_amount=format.format(amount);
-                        tv_total.setText("已选"+count+"个订单共"+total_amount+"元"+text);
+                        totalAmount=format.format(amount);
+                        String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+                        tvTotal.setText(longText);
                     }
                 }
             }
@@ -357,21 +358,21 @@ public class InvoiceOpen extends BaseActivity {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.item_invoice_order, null);
-                holder.box_select=(CheckBox) convertView.findViewById(R.id.id_box_type);
-                holder.tv_time=(TextView) convertView.findViewById(R.id.id_tv_time);
-                holder.tv_orderNo=(TextView) convertView.findViewById(R.id.id_tv_oderNo);
-                holder.tv_name=(TextView) convertView.findViewById(R.id.id_tv_name);
-                holder.tv_money=(TextView)convertView.findViewById(R.id.id_tv_money);
+                holder.boxSelect =(CheckBox) convertView.findViewById(R.id.id_box_type);
+                holder.tvTime =(TextView) convertView.findViewById(R.id.id_tv_time);
+                holder.tvOrderNo =(TextView) convertView.findViewById(R.id.id_tv_oderNo);
+                holder.tvName =(TextView) convertView.findViewById(R.id.id_tv_name);
+                holder.tvMoney =(TextView)convertView.findViewById(R.id.id_tv_money);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.tv_orderNo.setText(invoiceList.get(position).get("orderno"));
-            holder.tv_time.setText(invoiceList.get(position).get("time"));
-            holder.box_select.setText(invoiceList.get(position).get("main_category"));
-            holder.tv_name.setText(invoiceList.get(position).get("category"));
-            holder.tv_money.setText(invoiceList.get(position).get("amount"));
-            holder.box_select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            holder.tvOrderNo.setText(invoiceList.get(position).get("orderno"));
+            holder.tvTime.setText(invoiceList.get(position).get("time"));
+            holder.boxSelect.setText(invoiceList.get(position).get("main_category"));
+            holder.tvName.setText(invoiceList.get(position).get("category"));
+            holder.tvMoney.setText(invoiceList.get(position).get("amount"));
+            holder.boxSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     checkList.get(position).put("ischeck",isChecked);
@@ -381,35 +382,45 @@ public class InvoiceOpen extends BaseActivity {
                             double a=Double.parseDouble(money);
                             amount=amount+a;
                             NumberFormat format=new DecimalFormat("0.##");
-                            total_amount=format.format(amount);
+                            totalAmount=format.format(amount);
                             count++;
-                            tv_total.setText("已选"+count+"个订单共"+total_amount+"元"+text);
+                            String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+                            tvTotal.setText(longText);
                         }else {
                             String money=invoiceList.get(thisposition).get("amount");
                             double a=Double.parseDouble(money);
                             amount=amount-a;
                             NumberFormat format=new DecimalFormat("0.##");
-                            total_amount=format.format(amount);
+                            totalAmount=format.format(amount);
                             count--;
-                            tv_total.setText("已选"+count+"个订单共"+total_amount+"元"+text);
-                            nochange=false;
-                            box_allselect.setChecked(false);
-                            nochange=true;
+                            String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+                            tvTotal.setText(longText);
+                            noChange =false;
+                            boxAllSelect.setChecked(false);
+                            noChange =true;
                         }
                     }
                 }
             });
             ignoreChange=false;
-            holder.box_select.setChecked(checkList.get(position).get("ischeck"));
+            holder.boxSelect.setChecked(checkList.get(position).get("ischeck"));
             ignoreChange=true;
             return convertView;
         }
     }
     class ViewHolder {
-        public CheckBox  box_select;
-        public TextView  tv_time;
-        public TextView  tv_orderNo;
-        public TextView  tv_name;
-        public TextView  tv_money;
+        public CheckBox boxSelect;
+        public TextView tvTime;
+        public TextView tvOrderNo;
+        public TextView tvName;
+        public TextView tvMoney;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

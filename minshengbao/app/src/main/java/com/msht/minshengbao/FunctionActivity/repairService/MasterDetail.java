@@ -354,7 +354,10 @@ public class MasterDetail extends BaseActivity {
                     case R.id.radio_button_bad:
                         type = "3";
                         break;
+                    default:
+                        break;
                 }
+
                 getevalution();
             }
         });

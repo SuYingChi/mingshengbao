@@ -88,6 +88,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                                 }
                             }else if (activity.requestCode==1){
                                 activity.houseList.clear();
+                                activity.adapter.notifyDataSetChanged();
                                 activity.requestCode=0;
                                 activity.onGetCustomerNoData();
 
@@ -166,7 +167,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 requestCode=1;
-                requestSevice();
+                requestService();
                 dialog.dismiss();
             }
         });
@@ -191,11 +192,11 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             public void onButtonClick(View v, int position) {
                 houseId=houseList.get(position).get("id");
                 addressText =houseList.get(position).get("name");
-                delectCustomerNo();
+                deleteCustomerNo();
             }
         });
     }
-    private void delectCustomerNo() {
+    private void deleteCustomerNo() {
         new PromptDialog.Builder(this)
                 .setTitle("删除燃气用户号")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -211,7 +212,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         requestCode=1;
-                        requestSevice();
+                        requestService();
                         dialog.dismiss();
                     }
                 })
@@ -250,7 +251,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         textParams.put("password",password);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
-    private void requestSevice(){
+    private void requestService(){
         customDialog.show();
         String validateURL="";
         Map<String, String> textParams = new HashMap<String, String>();
@@ -304,7 +305,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 ensureAddress.dismiss();
                 requestCode=2;
-                requestSevice();
+                requestService();
             }
         });
         ensureAddress.show();
@@ -320,5 +321,13 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

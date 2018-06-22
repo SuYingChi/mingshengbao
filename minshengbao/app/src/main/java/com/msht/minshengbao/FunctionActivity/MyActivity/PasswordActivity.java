@@ -37,7 +37,7 @@ public class PasswordActivity extends BaseActivity {
     private Button   btn_ensure;
     private String   userId,password;
     private final int RESET_CODE=1;
-    private ACache mCache;//缓存
+    private ACache mCache;
     private MethodHandler methodHandler=new MethodHandler(this);
     private static class MethodHandler extends Handler{
         private WeakReference<PasswordActivity> mWeakReference;

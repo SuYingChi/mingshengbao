@@ -8,60 +8,68 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SettingNickname extends BaseActivity {
-    private EditText Enickname;
-    private TextView Tensure;
-    private String Snickname,password,userId;
+    private EditText etNickname;
+    private TextView tvEnsure;
+    private String mNickname,password,userId;
     public static final String NICK_NAME = "NICK";
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    Handler nickHandler = new Handler() {
+    private final NickHandler nickHandler=new NickHandler(this);
+    private static class NickHandler extends Handler{
+        private WeakReference<SettingNickname> mWeakReference;
+        public NickHandler(SettingNickname activity) {
+            mWeakReference=new WeakReference<SettingNickname>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SettingNickname activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if (Results.equals("success")) {
-                            Judgedata(Results);
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.onUpdateNickname(results);
                         }else {
-                            failure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(SettingNickname.this, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -74,17 +82,17 @@ public class SettingNickname extends BaseActivity {
                     }
                 }).show();
     }
-    private void Judgedata(String results) {
+    private void onUpdateNickname(String results) {
         SharedPreferences share = this.getSharedPreferences("AppData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=share.edit();
         editor.remove(SharedPreferencesUtil.NickName);
-        SharedPreferencesUtil.putNickName(this,SharedPreferencesUtil.NickName,Snickname);
+        SharedPreferencesUtil.putNickName(this,SharedPreferencesUtil.NickName, mNickname);
         Intent nickN=new Intent();
-        nickN.putExtra("nickname", Snickname);
+        nickN.putExtra("nickname", mNickname);
         setResult(1, nickN);
         Intent broadcast=new Intent();
         broadcast.setAction(NICK_NAME);
-        broadcast.putExtra("nickname", Snickname);
+        broadcast.putExtra("nickname", mNickname);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
         finish();
     }
@@ -97,55 +105,41 @@ public class SettingNickname extends BaseActivity {
         context=this;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        initfindViewByid();
+        initFindViewByid();
         initEvent();
     }
-    private void initfindViewByid() {
-        Tensure=(TextView)findViewById(R.id.id_tv_rightText);
-        Tensure.setVisibility(View.VISIBLE);
-        Tensure.setText("确定");
-        Enickname=(EditText)findViewById(R.id.id_et_nickname);
-        String NICK=SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
-        Enickname.setText(NICK);//显示
-        Enickname.setSelection(NICK.length());  //光标尾处
+    private void initFindViewByid() {
+        tvEnsure =(TextView)findViewById(R.id.id_tv_rightText);
+        tvEnsure.setVisibility(View.VISIBLE);
+        tvEnsure.setText("确定");
+        etNickname =(EditText)findViewById(R.id.id_et_nickname);
+        String nick=SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
+        etNickname.setText(nick);
+        //光标尾处
+        etNickname.setSelection(nick.length());
     }
     private void initEvent() {
-        Tensure.setOnClickListener(new View.OnClickListener() {
+        tvEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snickname= Enickname.getText().toString().trim();
-                if(matchnicknameMsg()){
-                    requestSevice();
+                mNickname = etNickname.getText().toString().trim();
+                if(matchNicknameMsg()){
+                    requestService();
                 }
             }
         });
     }
-    private void requestSevice() {
-        Snickname = Enickname.getText().toString().trim();
+    private void requestService() {
+        mNickname = etNickname.getText().toString().trim();
         String validateURL = UrlUtil.GasmodifyInfo_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("nickname", Snickname);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                nickHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                nickHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("nickname", mNickname);
+        SendrequestUtil.postDataFromService(validateURL,textParams,nickHandler);
     }
-    private boolean matchnicknameMsg() {
-        if( Snickname.equals("")){
+    private boolean matchNicknameMsg() {
+        if(TextUtils.isEmpty(mNickname)){
             new PromptDialog.Builder(this)
                     .setTitle("民生宝")
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)

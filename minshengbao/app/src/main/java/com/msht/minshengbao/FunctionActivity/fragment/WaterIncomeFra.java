@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +36,10 @@ import java.util.Map;
  */
 public class WaterIncomeFra extends BaseFragment {
 
-    private String  userAccount,password;
+    private String  userAccount;
     private String    type="2";
-    private Activity mActivity;
-    private View layout_nodata;
-    private View layout_data;
-    private TextView mText;
+    private View layoutNoData;
+    private View layoutData;
     private XListView mListView;
     private int pageIndex=0;
     private int pageNo   = 1;
@@ -47,11 +47,10 @@ public class WaterIncomeFra extends BaseFragment {
     private CustomDialog customDialog;
     private final String mPageName = "余额明细";
     private WaterIncomeAdapter adapter;
-    private final int SUCCESS   = 1;
-    private final int FAILURE   = 0;
-    private JSONArray jsonArray;   //数据解析
+    private JSONArray jsonArray;
     private JSONObject jsonObject;
     private ArrayList<HashMap<String, String>> incomeList = new ArrayList<HashMap<String, String>>();
+    private final RequestHandler requestHandler=new RequestHandler(this);
     public static WaterIncomeFra getinstance(int position) {
         WaterIncomeFra waterIncomeFra = new WaterIncomeFra();
         switch (position){
@@ -67,61 +66,69 @@ public class WaterIncomeFra extends BaseFragment {
         return waterIncomeFra ;
     }
     public WaterIncomeFra() {}
-    Handler requestHandler = new Handler() {
+    private static class RequestHandler extends Handler{
+        private WeakReference<WaterIncomeFra> mWeakReference;
+        public RequestHandler(WaterIncomeFra reference) {
+            mWeakReference=new WeakReference<WaterIncomeFra>(reference);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+            final WaterIncomeFra reference=mWeakReference.get();
+            if (reference==null||reference.isDetached()){
+                return;
+            }
+            if (reference.customDialog.isShowing()&&reference.customDialog!=null){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                        customDialog.dismiss();
-                    }
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("message");
-                        jsonObject =object.optJSONObject("data");
-                        boolean firstPage=jsonObject.optBoolean("firstPage");
-                        boolean lastPage=jsonObject.optBoolean("lastPage");
-                        jsonArray=jsonObject.optJSONArray("list");
-                        if(Results.equals("success")) {
-                            if (refreshType==0){
-                                mListView.stopRefresh(true);
-                            }else if (refreshType==1){
-                                mListView.stopLoadMore();
+                        String results=object.optString("result");
+                        String error = object.optString("message");
+                        reference.jsonObject =object.optJSONObject("data");
+                        boolean firstPage=reference.jsonObject.optBoolean("firstPage");
+                        boolean lastPage=reference.jsonObject.optBoolean("lastPage");
+                        reference.jsonArray=reference.jsonObject.optJSONArray("list");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            if (reference.refreshType==0){
+                                reference.mListView.stopRefresh(true);
+                            }else if (reference.refreshType==1){
+                                reference.mListView.stopLoadMore();
                             }
                             if (lastPage){
-                                mListView.setPullLoadEnable(false);
+                                reference.mListView.setPullLoadEnable(false);
                             }else {
-                                mListView.setPullLoadEnable(true);
+                                reference.mListView.setPullLoadEnable(true);
                             }
-                            if(jsonArray.length()>0){
-                                if (pageNo==1){
-                                    incomeList.clear();
+                            if(reference.jsonArray.length()>0){
+                                if (reference.pageNo==1){
+                                    reference.incomeList.clear();
                                 }
                             }
-                            initShow();
+                            reference.onReceiveIncomeData();
                         }else {
-                            mListView.stopLoadMore();
-                            mListView.stopRefresh(false);
-                            showNotify(Error);
+                            reference.mListView.stopLoadMore();
+                            reference.mListView.stopRefresh(false);
+                            reference.showNotify(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    if (customDialog.isShowing()&&customDialog!=null){
-                        customDialog.dismiss();
-                    }
-                    mListView.stopLoadMore();
-                    mListView.stopRefresh(false);
-                    showNotify(msg.obj.toString());
+                case SendrequestUtil.FAILURE:
+                    reference.mListView.stopLoadMore();
+                    reference.mListView.stopRefresh(false);
+                    reference.showNotify(msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void initShow() {
+    }
+    private void onReceiveIncomeData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -156,11 +163,12 @@ public class WaterIncomeFra extends BaseFragment {
             e.printStackTrace();
         }
         if (incomeList.size()!=0&&incomeList!=null){
-            layout_data.setVisibility(View.VISIBLE);
+            layoutData.setVisibility(View.VISIBLE);
             adapter.notifyDataSetChanged();
         }else {
-            layout_data.setVisibility(View.GONE);
-            layout_nodata.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
+            layoutData.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.VISIBLE);
         }
     }
     private void showNotify(String error) {
@@ -179,17 +187,16 @@ public class WaterIncomeFra extends BaseFragment {
     @Override
     public View initView() {
         mRootView = LayoutInflater.from(mContext).inflate(R.layout.fragment_water_income, null, false);
-        mActivity = getActivity();
+        Activity mActivity = getActivity();
         customDialog=new CustomDialog(mActivity,"正在加载");
         userAccount= SharedPreferencesUtil.getUserName(mActivity, SharedPreferencesUtil.UserName,"");
-        password=SharedPreferencesUtil.getPassword(mActivity, SharedPreferencesUtil.Password,"");
         initMyView(mRootView);
         return mRootView;
     }
     private void initMyView(View mRootView) {
-        layout_data=mRootView.findViewById(R.id.id_layout_data);
-        layout_nodata=mRootView.findViewById(R.id.id_nodata_view);
-        mText=(TextView)mRootView.findViewById(R.id.id_tv_nodata);
+        layoutData =mRootView.findViewById(R.id.id_layout_data);
+        layoutNoData =mRootView.findViewById(R.id.id_nodata_view);
+        TextView mText=(TextView)mRootView.findViewById(R.id.id_tv_nodata);
         mText.setText("亲，您还没有收支数据");
         mListView=(XListView)mRootView.findViewById(R.id.id_income_view);
         mListView.setPullLoadEnable(true);
@@ -216,28 +223,20 @@ public class WaterIncomeFra extends BaseFragment {
         String pageNum=String.valueOf(pageNo);
         textParams.put("account",userAccount);
         textParams.put("type",type);
-        textParams.put("page",pageNum);
+        textParams.put("pageNo",pageNum);
         textParams.put("pageSize","16");
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     public void initData() {
         customDialog.show();
         loadData(1);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (customDialog.isShowing()&&customDialog!=null){
+            customDialog.dismiss();
+        }
     }
 }

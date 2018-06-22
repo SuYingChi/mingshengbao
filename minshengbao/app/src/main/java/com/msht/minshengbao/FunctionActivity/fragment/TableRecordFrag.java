@@ -70,7 +70,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.mListView.stopRefresh(true);
                             }else if (reference.refreshType==1){

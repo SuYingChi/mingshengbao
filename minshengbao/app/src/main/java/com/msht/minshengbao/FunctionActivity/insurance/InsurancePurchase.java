@@ -48,26 +48,26 @@ import java.util.regex.Pattern;
  * @date 2016/10/31
  */
 public class InsurancePurchase extends BaseActivity implements View.OnClickListener {
-    private View Rbuys,Rcallphone;
+    private View layoutBuy, layoutCallPhone;
     private CheckBox checkBox;
-    private TextView tv_consult;
-    private TextView tv_agree1,tv_agree2,tv_agree3;
-    private TextView tv_realamount;
-    private EditText et_name,et_idcard,et_customer;
-    private EditText et_phone,et_email;
-    private EditText et_address,et_recommend;
+    private TextView tvConsult;
+    private TextView tvAgree1, tvAgree2, tvAgree3;
+    private TextView tvRealAmount;
+    private EditText etName, etIdCard, etCustomer;
+    private EditText etPhone, etEmail;
+    private EditText etAddress, etRecommend;
     private MaterialSpinner spinner;
-    private String   name,idcard,customer,phone,email;
+    private String   name, idCard,customer,phone,email;
     private String   address,recommend;
-    private String   insurance_amount="942000.00";
+    private String   insuranceAmount ="942000.00";
     private String   id="1537981";
     private int      deadline=5;
     private String   amount="300.00";
-    private String   start_time,stop_time;
+    private String   startTime, stopTime;
     private String   idNo;
     private String   card_type="0";
     private int requestType=0;
-    private static final String[] certificateType = {"居民身份证","港澳通行证","台湾通行证"};
+    private static final String[] CERTIFICATE_TYPE = {"居民身份证","港澳通行证","台湾通行证"};
     private CustomDialog customDialog;
     private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
@@ -125,7 +125,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         String customerType= jsonObject.optString("customerType");
         String address= jsonObject.optString("address");
         String room= jsonObject.optString("room");
-        et_address.setText(address);
+        etAddress.setText(address);
     }
     private void initShow(JSONObject jsonObject) {
         String url= jsonObject.optString("url");
@@ -160,16 +160,16 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         amount=getIntent().getStringExtra("Amount");
         id=getIntent().getStringExtra("insurance_Id");
         deadline=getIntent().getIntExtra("vDeadLines",5);
-        insurance_amount=getIntent().getStringExtra("vSecuritys");
+        insuranceAmount =getIntent().getStringExtra("vSecuritys");
         initHeader();
         initView();
         initEvent();
     }
     private void initHeader() {
         findViewById(R.id.id_status_view).setVisibility(View.GONE);
-        tv_consult=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_consult.setVisibility(View.GONE);
-        tv_consult.setText("咨询");
+        tvConsult =(TextView)findViewById(R.id.id_tv_rightText);
+        tvConsult.setVisibility(View.GONE);
+        tvConsult.setText("咨询");
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -179,17 +179,17 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                     if (data!=null){
                         id=data.getStringExtra("Id");
                         amount=data.getStringExtra("amount");
-                        insurance_amount=data.getStringExtra("insurance");
-                        tv_realamount.setText(amount);
+                        insuranceAmount =data.getStringExtra("insurance");
+                        tvRealAmount.setText(amount);
                        // int time=Integer.valueOf(deadline).intValue();
                         int time=deadline;
                         SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
                         Calendar calendar=Calendar.getInstance();
                         Calendar start=Calendar.getInstance();
                         start.add(Calendar.DAY_OF_MONTH,1);
-                        start_time=formats.format(start.getTime());
+                        startTime =formats.format(start.getTime());
                         calendar.add(Calendar.YEAR,time);
-                        stop_time=formats.format(calendar.getTime());
+                        stopTime =formats.format(calendar.getTime());
                     }
                 }
                 default:
@@ -199,12 +199,12 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
 
     }
     private void initEvent() {
-        Rbuys.setOnClickListener(this);
-        tv_consult.setOnClickListener(this);
-        tv_agree1.setOnClickListener(this);
-        tv_agree2.setOnClickListener(this);
-        tv_agree3.setOnClickListener(this);
-        Rbuys.setOnTouchListener(new View.OnTouchListener() {
+        layoutBuy.setOnClickListener(this);
+        tvConsult.setOnClickListener(this);
+        tvAgree1.setOnClickListener(this);
+        tvAgree2.setOnClickListener(this);
+        tvAgree3.setOnClickListener(this);
+        layoutBuy.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
@@ -215,7 +215,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 return false;
             }
         });
-        Rcallphone.setOnClickListener(this);
+        layoutCallPhone.setOnClickListener(this);
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -233,32 +233,32 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         });
     }
     private void initView() {
-        Rbuys=findViewById(R.id.id_re_buy);
-        Rcallphone=findViewById(R.id.id_re_call);
+        layoutBuy =findViewById(R.id.id_re_buy);
+        layoutCallPhone =findViewById(R.id.id_re_call);
         checkBox=(CheckBox)findViewById(R.id.id_box_read);
-        tv_agree1=(TextView)findViewById(R.id.id_text1);
-        tv_agree2=(TextView)findViewById(R.id.id_text2);
-        tv_agree3=(TextView)findViewById(R.id.id_text3);
+        tvAgree1 =(TextView)findViewById(R.id.id_text1);
+        tvAgree2 =(TextView)findViewById(R.id.id_text2);
+        tvAgree3 =(TextView)findViewById(R.id.id_text3);
         findViewById(R.id.id_text4).setOnClickListener(this);
-        tv_realamount=(TextView)findViewById(R.id.id_buy_amount);
-        et_name=(EditText)findViewById(R.id.id_et_name);
-        et_idcard=(EditText) findViewById(R.id.id_et_idcard);
-        et_customer=(EditText)findViewById(R.id.id_et_customerNo);
-        et_phone=(EditText)findViewById(R.id.id_et_phone);
-        et_email=(EditText)findViewById(R.id.id_et_email);
-        et_address=(EditText)findViewById(R.id.id_et_address);
-        et_recommend=(EditText)findViewById(R.id.id_et_recommend);
-        tv_realamount.setText(amount);
+        tvRealAmount =(TextView)findViewById(R.id.id_buy_amount);
+        etName =(EditText)findViewById(R.id.id_et_name);
+        etIdCard =(EditText) findViewById(R.id.id_et_idcard);
+        etCustomer =(EditText)findViewById(R.id.id_et_customerNo);
+        etPhone =(EditText)findViewById(R.id.id_et_phone);
+        etEmail =(EditText)findViewById(R.id.id_et_email);
+        etAddress =(EditText)findViewById(R.id.id_et_address);
+        etRecommend =(EditText)findViewById(R.id.id_et_recommend);
+        tvRealAmount.setText(amount);
         spinner = (MaterialSpinner)findViewById(R.id.spinner);
-        spinner.setItems(certificateType);
+        spinner.setItems(CERTIFICATE_TYPE);
         SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar=Calendar.getInstance();
         Calendar start=Calendar.getInstance();
         start.add(Calendar.DAY_OF_MONTH,1);
-        start_time=formats.format(start.getTime());
+        startTime =formats.format(start.getTime());
         calendar.add(Calendar.YEAR,deadline);
-        stop_time=formats.format(calendar.getTime());
-        et_customer.addTextChangedListener(new TextWatcher() {
+        stopTime =formats.format(calendar.getTime());
+        etCustomer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -274,7 +274,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     }
     private void requestServer() {
         requestType=1;
-        customer=et_customer.getText().toString().trim();
+        customer= etCustomer.getText().toString().trim();
         String validateURL = UrlUtil.GethouseAddress_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("customerNo",customer);
@@ -321,14 +321,14 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         startActivity(intent);
     }
     private void buyinsurance() {
-        name=et_name.getText().toString().trim();
-        idcard=et_idcard.getText().toString().trim();
-        customer=et_customer.getText().toString().trim();
-        phone=et_phone.getText().toString().trim();
-        email=et_email.getText().toString().trim();
-        address=et_address.getText().toString().trim();
-        recommend=et_recommend.getText().toString().trim();
-        if (match(name,idcard,customer,address)){
+        name= etName.getText().toString().trim();
+        idCard = etIdCard.getText().toString().trim();
+        customer= etCustomer.getText().toString().trim();
+        phone= etPhone.getText().toString().trim();
+        email= etEmail.getText().toString().trim();
+        address= etAddress.getText().toString().trim();
+        recommend= etRecommend.getText().toString().trim();
+        if (match(name, idCard,customer,address)){
             if (isphone(phone)&&isemailEmpty(email)){
                 if (checkBox.isChecked()){
                     showDialogs();
@@ -377,11 +377,11 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         final EnsureBuy insurance=new EnsureBuy(this);
         insurance.setCustomerText(customer);
         insurance.setNameText(name);
-        insurance.setIdcardText(idcard);
-        insurance.setAmount(insurance_amount);
+        insurance.setIdcardText(idCard);
+        insurance.setAmount(insuranceAmount);
         insurance.setTypeText(amount+"套餐");
-        insurance.setEffictive(start_time);
-        insurance.setCutoffDate(stop_time);
+        insurance.setEffictive(startTime);
+        insurance.setCutoffDate(stopTime);
         insurance.setOnNegativeListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -407,12 +407,12 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         textParams.put("amount",amount);
         textParams.put("name",name);
         textParams.put("card_type",card_type);
-        textParams.put("id_card",idcard);
+        textParams.put("id_card", idCard);
         textParams.put("phone",phone);
         textParams.put("email",email);
         textParams.put("address",address);
-        textParams.put("start_date",start_time);
-        textParams.put("end_date",stop_time);
+        textParams.put("start_date", startTime);
+        textParams.put("end_date", stopTime);
         textParams.put("recommend",recommend);
         SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
     }
@@ -499,5 +499,14 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

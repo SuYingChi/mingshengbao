@@ -108,9 +108,9 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String  results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (activity.requesttype==0){
                                 activity.customDialog.dismiss();
                                 activity.jsonArray=object.optJSONArray("data");
@@ -123,7 +123,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                                 activity.customDialog.dismiss();
                             }
-                            activity.faifure(Error);
+                            activity.faifure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -158,7 +158,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
                         String error=jsonObject.optString("error");
-                        if (results.equals("success")){
+                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
                             activity.k++;
                             if(activity.k==activity.imgPaths.size()){
                                 activity.customDialog.dismiss();
@@ -210,7 +210,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        multiChoose.setList(mDataList);      //显示数据
+        //显示数据
+        multiChoose.setList(mDataList);
     }
     private void initShow() {
         id= jsonObject.optString("id");
@@ -301,7 +302,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 String mAddress=data.getStringExtra("mAddress");
                 String name=data.getStringExtra("name");
                 String phone=data.getStringExtra("phone");
-                if (name.equals("")||name.equals("null")){
+                if (TextUtils.isEmpty(name)){
                     tv_name.setText(phone);
                 }else {
                     tv_name.setText(name);
@@ -312,7 +313,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private void initJudge() {
-        if (!VariableUtil.City.equals(CITY_NAME)){
+        if (TextUtils.isEmpty(VariableUtil.City)||(!VariableUtil.City.equals(CITY_NAME))){
             noticeDialog=new NoticeDialog(context);
             noticeDialog.show();
             mHandler.sendEmptyMessageDelayed(1, SPLASH_DELAY_MILLIS);

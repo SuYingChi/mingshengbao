@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -34,7 +34,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.Adapter.HomeFunctionAdapter;
 import com.msht.minshengbao.Adapter.HotRepairAdapter;
-import com.msht.minshengbao.Adapter.TopmoduleAdapter;
+import com.msht.minshengbao.Adapter.TopModuleAdapter;
 import com.msht.minshengbao.Bean.ADInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
 import com.msht.minshengbao.FunctionActivity.Electricvehicle.ElectricHome;
@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     private MyNoScrollGridView  mTopModule;
     private HomeFunctionAdapter homeFunctionAdapter;
     private HotRepairAdapter    hotRepairAdapter;
-    private TopmoduleAdapter    topmoduleAdapter;
+    private TopModuleAdapter topmoduleAdapter;
     private TextView tvCity, tvNavigation;
     private TextView tvNotOpen;
     private String mCity="海口";
@@ -127,20 +127,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     private static final int REQUEST_CODE=1;
     private Context mContext;
     private final String mPageName = "首页_民生";
+    private static final String SHOP_DOMAIN="shop.msbapp.cn";
+    private static final String VEGETABLE_DOMAIN="jsxss.net";
     private ArrayList<ADInfo> adInformation = new ArrayList<ADInfo>();
     private ArrayList<ActivityInfo> activityInfos = new ArrayList<ActivityInfo>();
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> hotList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> rightTopList = new ArrayList<HashMap<String, String>>();
     private MZBannerView mMZBanner;
-    private final GeturlHandler geturlHandler=new GeturlHandler(this);
+    private final GetUrlHandler geturlHandler=new GetUrlHandler(this);
     private final GetFunctionHandler getFunctionHandler=new GetFunctionHandler(this);
     private final SpecialTopicHandler specialToppicHandler=new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     public HomeFragment() {}
-    private static class GeturlHandler extends Handler{
+    private static class GetUrlHandler extends Handler{
         private WeakReference<HomeFragment> mWeakReference;
-        public GeturlHandler(HomeFragment homeFragment) {
+        public GetUrlHandler(HomeFragment homeFragment) {
             mWeakReference = new WeakReference<HomeFragment>(homeFragment);
         }
         @Override
@@ -161,7 +163,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                             reference.mSwipeRefresh.setRefreshing(false);
                             reference.adInformation.clear();//再次刷新清除原数据
                             reference.onGetimageUrls();
-                        }else {
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -197,8 +198,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
                         reference.cityId=json.optString("city_id");
-                        int online_flag=json.getInt("online_flag");
-                        if (online_flag==1){
+                        int onlineFlag=json.getInt("online_flag");
+                        if (onlineFlag==1){
                             reference.layoutHaveData.setVisibility(View.VISIBLE);
                             reference.layoutNotOpen.setVisibility(View.GONE);
                         }else {
@@ -250,11 +251,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        JSONArray Array =object.optJSONArray("data");
+                        JSONArray array =object.optJSONArray("data");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.activityInfos.clear();//再次刷新清除原数据
-                            reference.onGetSpecialUrls(Array);
-                        }else {
+                            reference.onGetSpecialUrls(array);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -286,10 +286,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        JSONArray Array =object.optJSONArray("data");
+                        JSONArray array =object.optJSONArray("data");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             reference.hotList.clear();
-                            reference.onSavaHotRepair(Array);
+                            reference.onSavaHotRepair(array);
                         }else {
                             ToastUtil.ToastText(reference.mContext,error);
                         }
@@ -324,22 +324,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
 
         @Override
         public void onImageClick(ADInfo info, int position, View imageView) {
-            String myurl=info.getUrl();
-            if (getDomain(myurl).equals("shop.msbapp.cn")){
-                Intent intent=new Intent(getActivity(), ShopActivity.class);
-                intent.putExtra("url",myurl);
-                intent.putExtra("first",1);
-                startActivity(intent);
-            }else if (getDomain(myurl).equals("jsxss.net")){
-                if (VariableUtil.loginStatus){
-                    DegetableScxs();
-                }else {
-                    gologins();
+            String myUrl=info.getUrl();
+            if (!TextUtils.isEmpty(myUrl)){
+                if (getDomain(myUrl).equals(SHOP_DOMAIN)){
+                    Intent intent=new Intent(getActivity(), ShopActivity.class);
+                    intent.putExtra("url",myUrl);
+                    intent.putExtra("first",1);
+                    startActivity(intent);
+                }else if (getDomain(myUrl).equals(VEGETABLE_DOMAIN)){
+                    if (VariableUtil.loginStatus){
+                        vegetableScxs();
+                    }else {
+                        gologins();
+                    }
+                }else if(!myUrl.equals(VariableUtil.NULL_VALUE)){
+                    Intent intent=new Intent(getActivity(), HtmlPage.class);
+                    intent.putExtra("url",myUrl);
+                    startActivity(intent);
                 }
-            }else if(!myurl.equals("null")){
-                Intent intent=new Intent(getActivity(), HtmlPage.class);
-                intent.putExtra("url",myurl);
-                startActivity(intent);
             }
         }
         @Override
@@ -357,7 +359,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }catch (MalformedURLException e){
             e.printStackTrace();
         }
-        urls=null;
         return p;
     }
     private void onGetSpecialUrls(JSONArray array) {
@@ -394,13 +395,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
         initView(view);
         initRefresh();
-        topmoduleAdapter=new TopmoduleAdapter(mContext, rightTopList);
+        topmoduleAdapter=new TopModuleAdapter(mContext, rightTopList);
         mTopModule.setAdapter(topmoduleAdapter);
         homeFunctionAdapter=new HomeFunctionAdapter(mContext,functionList);
         mGridView.setAdapter(homeFunctionAdapter);
         hotRepairAdapter=new HotRepairAdapter(mContext,hotList);
         mHotGrid.setAdapter(hotRepairAdapter);
-        StartActivity();
+        onStartActivity();
         initCardBanner();
         initLocation();
         initData();
@@ -423,12 +424,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             @Override
             public void onRefresh() {
                 initData();
-                FunctionData();
+                functionData();
                 initCardData();
             }
         });
     }
-    private void StartActivity() {
+    private void onStartActivity() {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -461,32 +462,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         }
                         break;
                     case "electric_vehicle_repair":
-                        ElectricVehicle();
+                        electricVehicle();
                         break;
                     case"all_service":
                         if (VariableUtil.loginStatus){
-                            allserve();
+                            allServe();
                         }else {
                             gologins();
                         }
                         break;
                     case "intelligent_farm":
                         if (VariableUtil.loginStatus){
-                            IntelligentFarm();
+                            intelligentFarm();
                         }else {
                             gologins();
                         }
                         break;
                     case "drinking_water":
                         if (VariableUtil.loginStatus){
-                            Drinkingwater();
+                            drinkingWater();
                         }else {
                             gologins();
                         }
                         break;
                    case "vegetables_scxs":
                         if (VariableUtil.loginStatus){
-                            DegetableScxs();
+                            vegetableScxs();
                         }else {
                             gologins();
                         }
@@ -502,10 +503,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (VariableUtil.loginStatus){
                     String Id=hotList.get(position).get("id");
-                    String Name=hotList.get(position).get("name");
+                    String name=hotList.get(position).get("name");
                     Intent intent=new Intent(mContext,PublishOrder.class);
                     intent.putExtra("id",Id);
-                    intent.putExtra("name",Name);
+                    intent.putExtra("name",name);
                     intent.putExtra("maintype","家电维修");
                     startActivity(intent);
                 }else {
@@ -564,21 +565,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                     }
                 }).show();
     }
-    private void DegetableScxs() {
+    private void vegetableScxs() {
         Intent intent=new Intent(mContext, VegetableGentlemen.class);
         startActivity(intent);
     }
-    private void Drinkingwater() {
+    private void drinkingWater() {
         Intent serve=new Intent(mContext,WaterHome.class);
         serve.putExtra("mCity",mCity);
         serve.putExtra("cityId",cityId);
         startActivity(serve);
     }
-    private void ElectricVehicle() {
+    private void electricVehicle() {
         Intent intent=new Intent(mContext, ElectricHome.class);
         startActivity(intent);
     }
-    private void allserve() {
+    private void allServe() {
         Intent serve=new Intent(mContext,AllService.class);
         serve.putExtra("mCity",mCity);
         serve.putExtra("cityId",cityId);
@@ -644,7 +645,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         Intent intent=new Intent(mContext, InsuranceHome.class);
         startActivity(intent);
     }
-    private void IntelligentFarm() {
+    private void intelligentFarm() {
         String url=UrlUtil.Intelligent_FarmUrl;
         Intent intent=new Intent(mContext, IntelligentFarmHml.class);
         intent.putExtra("url",url);
@@ -666,7 +667,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         tvCity.setText(mCity);
                         functionList.clear();
                         hotList.clear();
-                        FunctionData();
+                        functionData();
                         initCardData();
                     }
                 }
@@ -685,7 +686,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                FunctionData();   //没权限定位默认海口
+                functionData();   //没权限定位默认海口
             }else {
                 LocationUtils.mlocationClient.startLocation();
             }
@@ -719,35 +720,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onPageClick(View view, int position) {
                 ActivityInfo imageInfo=activityInfos.get(position);
                 String title=imageInfo.getTitle();
-                String right_Url=imageInfo.getUrl();
-                String Domain=getDomain(right_Url);
-                if (!right_Url.equals("null")){
-                    if (Domain.equals("shop.msbapp.cn")){
-                        Intent intent=new Intent(getActivity(), ShopActivity.class);
-                        intent.putExtra("url",right_Url);
-                        intent.putExtra("first",1);
-                        startActivity(intent);
-                    }else if(Domain.equals("mims.icbc.com.cn")){
-                        Intent intent=new Intent(getActivity(), IcbcHtml.class);
-                        intent.putExtra("url",right_Url);
-                        intent.putExtra("navigate",title);
-                        startActivity(intent);
-                    }else if (Domain.equals("ccclub.cmbchina.com")){
-                        Intent intent=new Intent(getActivity(), HtmlPage.class);
-                        intent.putExtra("url",right_Url);
-                        intent.putExtra("navigate",title);
-                        startActivity(intent);
-                    }else if (Domain.equals("jsxss.net")){
-                        if (VariableUtil.loginStatus){
-                            DegetableScxs();
-                        }else {
-                            gologins();
-                        }
-                    }else if (!Domain.equals("")){
-                        Intent intent=new Intent(getActivity(), HtmlPage.class);
-                        intent.putExtra("url",right_Url);
-                        intent.putExtra("navigate",title);
-                        startActivity(intent);
+                String rightUrl=imageInfo.getUrl();
+                String domain=getDomain(rightUrl);
+                if ((!TextUtils.isEmpty(rightUrl))&&(!rightUrl.equals(VariableUtil.NULL_VALUE))){
+                    switch (domain){
+                        case SHOP_DOMAIN:
+                            Intent intent=new Intent(getActivity(), ShopActivity.class);
+                            intent.putExtra("url",rightUrl);
+                            intent.putExtra("first",1);
+                            startActivity(intent);
+                            break;
+                        case "mims.icbc.com.cn":
+                            Intent bank1=new Intent(getActivity(), IcbcHtml.class);
+                            bank1.putExtra("url",rightUrl);
+                            bank1.putExtra("navigate",title);
+                            startActivity(bank1);
+                            break;
+                        case "ccclub.cmbchina.com":
+                            Intent bank2=new Intent(getActivity(), HtmlPage.class);
+                            bank2.putExtra("url",rightUrl);
+                            bank2.putExtra("navigate",title);
+                            startActivity(bank2);
+                            break;
+                        case VEGETABLE_DOMAIN:
+                            if (VariableUtil.loginStatus){
+                                vegetableScxs();
+                            }else {
+                                gologins();
+                            }
+                            break;
+                        default:
+                            Intent other=new Intent(getActivity(), HtmlPage.class);
+                            other.putExtra("url",rightUrl);
+                            other.putExtra("navigate",title);
+                            startActivity(other);
+                            break;
                     }
                 }
             }
@@ -790,8 +797,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             float alpha = (255 * scale);
             tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
             layoutNavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
-        } else {    //滑动到banner下面设置普通颜色
-           // Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
+        } else {
+            //滑动到banner下面设置普通颜色  Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
             layoutNavigation.setBackgroundResource(R.drawable.shape_change_background);
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
@@ -839,14 +846,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 break;
             case R.id.id_layout_air:
                 if (VariableUtil.loginStatus){
-                    AirConditioner();
+                    airConditioner();
                 }else {
                     gologins();
                 }
                 break;
             case R.id.id_layout_over:
                 if (VariableUtil.loginStatus){
-                    HoodsClean();
+                    hoodsClean();
                 }else {
                     gologins();
                 }
@@ -856,14 +863,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 break;
         }
     }
-    private void AirConditioner() {
+    private void airConditioner() {
         Intent intent=new Intent(mContext,PublishOrder.class);
         intent.putExtra("id","33");
         intent.putExtra("name","空调清洗");
         intent.putExtra("maintype","家电清洗");
         startActivity(intent);
     }
-    private void HoodsClean() {
+    private void hoodsClean() {
         Intent intent=new Intent(mContext,PublishOrder.class);
         intent.putExtra("id","10");
         intent.putExtra("name","燃气灶维修");
@@ -896,7 +903,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 String text="ErrCode:"
                         + aMapLocation.getErrorCode() + ", errInfo:"
                         + aMapLocation.getErrorInfo();
-                Toast.makeText(mContext,"获取位置信息失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(mContext,"获取位置信息失败");
                 if (times==2){
                     LocationUtils.mlocationClient.stopLocation();
                     times=0;
@@ -904,7 +911,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 times++;
             }
         }
-        FunctionData();
+        functionData();
         initCardData();
     }
 
@@ -919,7 +926,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         SendrequestUtil.getDataFromServiceTwo(function,specialToppicHandler);
     }
 
-    private void FunctionData() {
+    private void functionData() {
         String functionUrl=UrlUtil.HomeFunction_Url;
         String function="";
         try {
@@ -975,7 +982,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
         if (functionList.size()!=0){
             homeFunctionAdapter.notifyDataSetChanged();
-        }else {
         }
     }
     private void getHotFix() {
@@ -1006,9 +1012,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
         if (hotList.size()!=0){
             hotRepairAdapter.notifyDataSetChanged();
-        }else {
         }
-
     }
     @Override
     public void onResume() {

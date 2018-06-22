@@ -275,4 +275,13 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

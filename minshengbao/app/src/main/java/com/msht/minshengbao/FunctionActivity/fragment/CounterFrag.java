@@ -35,6 +35,7 @@ public class CounterFrag extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         initweb();
         super.onActivityCreated(savedInstanceState);

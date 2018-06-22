@@ -3,6 +3,7 @@ package com.msht.minshengbao.FunctionActivity.Public;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,70 +17,72 @@ import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 
 public class PaySuccess extends BaseActivity {
     private final int SPLASH_DISPLAY_LENGHT=10000;
     private WebView  successPage;
-    private String Url=UrlUtil.ApppaySuccess_Page;
+    private String successUrl=UrlUtil.ApppaySuccess_Page;
     private static final String btnUrl="http://get/event/activityBtn";
     private String activityUrl="";
-    private String userId="";
-    private String orderId="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_success);
         context=this;
         mPageName="支付结果";
-        userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
+        String userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         final String type=getIntent().getStringExtra("type");
         activityUrl=getIntent().getStringExtra("url");
-        orderId=getIntent().getStringExtra("orderId");
+        String orderId=getIntent().getStringExtra("orderId");
         ImageView payImage=(ImageView)findViewById(R.id.id_pay_img);
-        TextView tv_notice=(TextView)findViewById(R.id.id_pay_text);
-        TextView tv_naviga=(TextView)findViewById(R.id.tv_navigation);
-        Button btn_know=(Button)findViewById(R.id.id_btn_know) ;
-        View layout_main=findViewById(R.id.id_failure_layout);
+        TextView tvNotice=(TextView)findViewById(R.id.id_pay_text);
+        TextView tvNavigation=(TextView)findViewById(R.id.tv_navigation);
+        Button btnKnow=(Button)findViewById(R.id.id_btn_know) ;
+        View layoutMain=findViewById(R.id.id_failure_layout);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
-        if (type.equals("0")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=gas_pay_success";
-            tv_naviga.setText("燃气缴费");
+        if (type.equals(VariableUtil.VALUE_ZERO)){
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=gas_fee_pay_success"
+                    +"&event_relate_id="+orderId;
+            tvNavigation.setText("燃气缴费");
             initWebView();
-            layout_main.setVisibility(View.GONE);
-        }else if (type.equals("1")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
-            tv_naviga.setText("维修支付");
+            layoutMain.setVisibility(View.GONE);
+        }else if (type.equals(VariableUtil.VALUE_ONE)){
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
+            tvNavigation.setText("维修支付");
             initWebView();
-            layout_main.setVisibility(View.GONE);
-        }else if (type.equals("2")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=iccard_pay_success";
-            tv_naviga.setText("Ic卡充值");
+            layoutMain.setVisibility(View.GONE);
+        }else if (type.equals(VariableUtil.VALUE_TWO)){
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=iccard_pay_success";
+            tvNavigation.setText("Ic卡充值");
             initWebView();
-            layout_main.setVisibility(View.GONE);
-        }else if (type.equals("3")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=wallet_pay_success";
-            tv_naviga.setText("钱包充值");
+            layoutMain.setVisibility(View.GONE);
+        }else if (type.equals(VariableUtil.VALUE_THREE)){
+
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=wallet_recharge_pay_success"
+                    +"&event_relate_id="+orderId;
+            tvNavigation.setText("钱包充值");
             initWebView();
-            layout_main.setVisibility(View.GONE);
-        }else if (type.equals("4")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=water_wallet_pay_success";
-            tv_naviga.setText("水宝充值");
+            layoutMain.setVisibility(View.GONE);
+        }else if (type.equals(VariableUtil.VALUE_FOUR)){
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=water_wallet_pay_success";
+            tvNavigation.setText("水宝充值");
             initWebView();
-            layout_main.setVisibility(View.GONE);
-        }else if (type.equals("5")){
+            layoutMain.setVisibility(View.GONE);
+        }else if (type.equals(VariableUtil.VALUE_FIVE)){
             payImage.setImageResource(R.drawable.payfailure_3xh);
-            tv_naviga.setText("支付结果");
-            tv_notice.setText("支付失败");
-            btn_know.setText("重新支付");
-            layout_main.setVisibility(View.VISIBLE);
+            tvNavigation.setText("支付结果");
+            tvNotice.setText("支付失败");
+            btnKnow.setText("重新支付");
+            layoutMain.setVisibility(View.VISIBLE);
             successPage.setVisibility(View.GONE);
-        }else if (type.equals("6")){
-            Url=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=shop_pay_success";
-            tv_naviga.setText("商城支付");
+        }else if (type.equals(VariableUtil.VALUE_SIX)){
+            successUrl=UrlUtil.ApppaySuccess_Page+"&userId="+userId+"&event_code=shop_pay_success";
+            tvNavigation.setText("商城支付");
             initWebView();
-            layout_main.setVisibility(View.GONE);
+            layoutMain.setVisibility(View.GONE);
         }
-        btn_know.setOnClickListener(new View.OnClickListener() {
+        btnKnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -89,7 +92,7 @@ public class PaySuccess extends BaseActivity {
     }
     private void initWebView() {
         successPage=(WebView)findViewById(R.id.id_success_page);
-        successPage.loadUrl(Url);
+        successPage.loadUrl(successUrl);
         WebSettings settings= successPage.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);

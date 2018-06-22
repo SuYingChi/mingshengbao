@@ -101,8 +101,8 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(results.equals("success")) {
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 reference.jsonObject =object.optJSONObject("data");
                                 reference.initShow();
@@ -110,7 +110,7 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
                                 reference.success();
                             }
                         }else {
-                            reference.faifure(Error);
+                            reference.faifure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();

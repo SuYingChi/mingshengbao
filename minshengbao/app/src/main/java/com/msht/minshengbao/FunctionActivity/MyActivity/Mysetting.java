@@ -49,14 +49,17 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Demo class
+ *
+ * @author hong
+ * @date 2016/10/31
+ */
 public class Mysetting extends BaseActivity implements OnClickListener {
     private RelativeLayout settingPortrait;
     private RelativeLayout settingNickname;
     private RelativeLayout layoutSettingSex;
     private TextView tvNickname, tvSex, tvPhone;
-    private String mNickname;
-    private String mSexText;
-    private Bitmap mAvatar;
     private String phone;
     private String avatarUrl;
     private String userId,password;
@@ -155,9 +158,9 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         initEvent();
     }
     private void initShowinfo() {
-        mNickname = SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
-        mAvatar =mCache.getAsBitmap("avatarimg");
-        mSexText =SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
+        String mNickname = SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
+        Bitmap mAvatar =mCache.getAsBitmap("avatarimg");
+        String mSexText =SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
         phone=SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
         if (mNickname ==null){
             tvNickname.setText("");
@@ -274,7 +277,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 // 拍照
                 case R.id.takePhotoBtn:
                     takePhotoPopWin.dismiss();
-                    TakePhoto();
+                    takePhoto();
                     break;
                 // 相册选择图片
                 case R.id.pickPhotoBtn:
@@ -288,14 +291,14 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             }
         }
     };
-    private void TakePhoto() {
+    private void takePhoto() {
         String status = Environment.getExternalStorageState();
         if (status.equals(Environment.MEDIA_MOUNTED)) {
             if (!PHOTO_DIR.exists()) {
                 PHOTO_DIR.mkdirs();// 创建照片的存储目录
             }
             imageFileName = System.currentTimeMillis() + ".jpg";
-            mCurrentPhotoFile = new File(PHOTO_DIR, imageFileName);
+            File mCurrentPhotoFile = new File(PHOTO_DIR, imageFileName);
             Intent intentC = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Uri imageUri = FileProvider.getUriForFile(Mysetting.this, "com.msht.minshengbao.fileProvider", mCurrentPhotoFile);
@@ -307,7 +310,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             }
             startActivityForResult(intentC, REQUEST_CODE_TAKE);
         } else {
-            Toast.makeText(context, "没有SD卡", Toast.LENGTH_LONG).show();
+            ToastUtil.ToastText(context,"没有SD卡");
         }
     }
     @Override
@@ -324,7 +327,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Toast.makeText(Mysetting.this,"授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"授权失败");
             }
         }
     };
@@ -342,7 +345,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             // 调用相机拍照
             case REQUEST_CODE_TAKE:
                 File temp = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Livelihool/MsbCameraCache/"+ imageFileName);
-                if (temp!=null) {
+                if (temp.exists()) {
                     startCrop(Uri.fromFile(temp));
                 }else {
                     ToastUtil.ToastText(context,"文件不存在");
@@ -386,7 +389,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
         circleImageView.setImageDrawable(drawable);
         customDialog.show();
-        requestSevice();
+        requestService();
     }
     private void startCrop(Uri uri) {
         String fileName = System.currentTimeMillis() + ".jpg";
@@ -423,15 +426,15 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         intent.putExtra("return-data", false);
         startActivityForResult(intent, REQUEST_CODE_CUTTING);
     }
-    private void requestSevice() {
+    private void requestService() {
         String validateURL= UrlUtil.GasmodifyInfo_Url;
         Map<String, String> textParams = new HashMap<String, String>();
-        Map<String, File> fileparams = new HashMap<String, File>();
+        Map<String, File> stringFileHashMap = new HashMap<String, File>();
         File file = new File(urlPath);
         textParams.put("userId",userId);
         textParams.put("password",password);
-        fileparams.put("avatar", file);
-        SendrequestUtil.postFileToServer(textParams,fileparams,validateURL,myHandler);
+        stringFileHashMap.put("avatar", file);
+        SendrequestUtil.postFileToServer(textParams,stringFileHashMap,validateURL,myHandler);
     }
     private static class MyHandler extends Handler{
         private WeakReference<Mysetting> mWeakReference;
@@ -453,16 +456,16 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
                         String error=jsonObject.optString("error");
-                        JSONObject ObjectInfo = jsonObject.optJSONObject("data");
-                        String avatarurl=ObjectInfo.optString("avatar");
+                        JSONObject objectInfo = jsonObject.optJSONObject("data");
+                        String avatarUrl=objectInfo.optString("avatar");
                         if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
                             //清除原有数据
                             activity.mCache.remove("avatarimg");
                             activity.mCache.put("avatarimg", activity.bitmap);
-                            SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarurl);
-                            activity.onRetureAvatar();//给Mynewfragment返回数据
+                            SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarUrl);
+                            activity.onResetAvatar();//给Mynewfragment返回数据
                         }else {
-                            activity.onFaifure(error);
+                            activity.onFailure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -480,7 +483,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             super.handleMessage(msg);
         }
     }
-    private void onFaifure(String error) {
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -494,7 +497,15 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                     }
                 }).show();
     }
-    private void onRetureAvatar() {
+    private void onResetAvatar() {
         setResult(4);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

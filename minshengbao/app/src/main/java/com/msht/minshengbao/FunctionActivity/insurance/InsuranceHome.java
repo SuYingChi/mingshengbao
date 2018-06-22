@@ -12,19 +12,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.CustomRadioGroup;
 import com.msht.minshengbao.ViewUI.widget.MyRadioButton;
 
 public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnCheckChangedListener {
-    private CustomRadioGroup radio_Group;
-    private MyRadioButton    radio_one,radio_two;
-    private MyRadioButton    radio_three,radio_four;
-    private View     mFamilyhelp;
+    private CustomRadioGroup radioGroup;
+    private MyRadioButton radioOne, radioTwo;
+    private MyRadioButton radioThree, radioFour;
+    private View     mFamilyHelp;
     private View     mDetailType;
     private Button   mButtonPay;
     private TextView mTextView1;
@@ -33,7 +33,7 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
     private TextView mTextView4;
     private TextView mTextView5;
     private TextView mTextView6;
-    private TextView msecuritys;
+    private TextView mSecurity;
     private TextView mDeadlines;
     private String   vAmountNum="300.00";
     private String   vSecuritys="94.2万";
@@ -50,7 +50,7 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
         initEvent();
     }
     private void initEvent() {
-        radio_Group.setOnCheckedChangeListener(this);
+        radioGroup.setOnCheckedChangeListener(this);
         mDetailType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,26 +78,26 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
         });
     }
     private void initView() {
-        mFamilyhelp=findViewById(R.id.id_familyHelp);
+        mFamilyHelp =findViewById(R.id.id_familyHelp);
         mDetailType=findViewById(R.id.id_insurance_detail);
         mButtonPay=(Button)findViewById(R.id.id_mButtonpay);
-        radio_Group = (CustomRadioGroup) findViewById(R.id.radiogroup);
-        radio_one=(MyRadioButton)findViewById(R.id.radio_button_one);
-        radio_two=(MyRadioButton)findViewById(R.id.radio_button_two);
-        radio_three=(MyRadioButton)findViewById(R.id.radio_button_three);
-        radio_four=(MyRadioButton)findViewById(R.id.radio_button_four);
+        radioGroup = (CustomRadioGroup) findViewById(R.id.radiogroup);
+        radioOne =(MyRadioButton)findViewById(R.id.radio_button_one);
+        radioTwo =(MyRadioButton)findViewById(R.id.radio_button_two);
+        radioThree =(MyRadioButton)findViewById(R.id.radio_button_three);
+        radioFour =(MyRadioButton)findViewById(R.id.radio_button_four);
         mTextView1=(TextView)findViewById(R.id.id_amount1);
         mTextView2=(TextView)findViewById(R.id.id_amount2);
         mTextView3=(TextView)findViewById(R.id.id_amount3);
         mTextView4=(TextView)findViewById(R.id.id_amount4);
         mTextView5=(TextView)findViewById(R.id.id_amount5);
         mTextView6=(TextView)findViewById(R.id.id_amount6);
-        msecuritys=(TextView)findViewById(R.id.id_security);
+        mSecurity =(TextView)findViewById(R.id.id_security);
         mDeadlines=(TextView)findViewById(R.id.id_deadline);
         DatafillWrite(vSerialsId);
     }
     private void DatafillWrite(String vSerialsId) {
-        msecuritys.setText(vSecuritys+"元");
+        mSecurity.setText(vSecuritys+"元");
         mDeadlines.setText(vDeadLines+"年");
         if (vSerialsId.equals("1537981")){
             mTextView1.setText("250000元");
@@ -134,44 +134,44 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
     public void onCheckedChanged(CustomRadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.radio_button_one:
-                radio_one.setBackgroundResource(R.drawable.radio_button_back_one);
-                radio_two.setBackgroundResource(R.color.colorOrange_one);
-                radio_three.setBackgroundResource(R.color.colorOrange_two);
-                radio_four.setBackgroundResource(R.color.colorOrange_three);
-                mFamilyhelp.setVisibility(View.VISIBLE);
+                radioOne.setBackgroundResource(R.drawable.radio_button_back_one);
+                radioTwo.setBackgroundResource(R.color.colorOrange_one);
+                radioThree.setBackgroundResource(R.color.colorOrange_two);
+                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="300.00";
                 vSecuritys="94.2万";
                 vSerialsId="1537981";
                 vDeadLines=5;
                 break;
             case R.id.radio_button_two:
-                radio_one.setBackgroundResource(R.color.colorOrange);
-                radio_two.setBackgroundResource(R.drawable.radio_button_back_two);
-                radio_three.setBackgroundResource(R.color.colorOrange_two);
-                radio_four.setBackgroundResource(R.color.colorOrange_three);
-                mFamilyhelp.setVisibility(View.VISIBLE);
+                radioOne.setBackgroundResource(R.color.colorOrange);
+                radioTwo.setBackgroundResource(R.drawable.radio_button_back_two);
+                radioThree.setBackgroundResource(R.color.colorOrange_two);
+                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="200.00";
                 vSecuritys="85.6万";
                 vSerialsId="1534041";
                 vDeadLines=3;
                 break;
             case R.id.radio_button_three:
-                radio_one.setBackgroundResource(R.color.colorOrange);
-                radio_two.setBackgroundResource(R.color.colorOrange_one);
-                radio_three.setBackgroundResource(R.drawable.radio_button_back_three);;
-                radio_four.setBackgroundResource(R.color.colorOrange_three);
-                mFamilyhelp.setVisibility(View.VISIBLE);
+                radioOne.setBackgroundResource(R.color.colorOrange);
+                radioTwo.setBackgroundResource(R.color.colorOrange_one);
+                radioThree.setBackgroundResource(R.drawable.radio_button_back_three);;
+                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="100.00";
                 vSecuritys="115.6万元";
                 vSerialsId="1533994";
                 vDeadLines=1;
                 break;
             case R.id.radio_button_four:
-                radio_one.setBackgroundResource(R.color.colorOrange);
-                radio_two.setBackgroundResource(R.color.colorOrange_one);
-                radio_three.setBackgroundResource(R.color.colorOrange_two);;
-                radio_four.setBackgroundResource(R.drawable.radio_button_back_four);
-                mFamilyhelp.setVisibility(View.GONE);
+                radioOne.setBackgroundResource(R.color.colorOrange);
+                radioTwo.setBackgroundResource(R.color.colorOrange_one);
+                radioThree.setBackgroundResource(R.color.colorOrange_two);;
+                radioFour.setBackgroundResource(R.drawable.radio_button_back_four);
+                mFamilyHelp.setVisibility(View.GONE);
                 vAmountNum="30.00";
                 vSecuritys="30.36万元";
                 vSerialsId="1537980";
@@ -237,7 +237,7 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
                 }
 
             }else {
-                Toast.makeText(context,"授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"授权失败");
             }
             return;
         }

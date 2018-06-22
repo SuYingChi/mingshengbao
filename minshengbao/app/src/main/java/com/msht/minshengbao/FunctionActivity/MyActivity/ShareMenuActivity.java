@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.Defaultcontent;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.umeng.socialize.ShareAction;
@@ -31,47 +31,51 @@ import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ShareMenuActivity extends BaseActivity {
-    private Button     appshare;
-    private String     userId,password;
-    private final int  SUCCESS = 1;
-    private final int  FAILURE = 0;
-    private int num=63912;
-    private byte[] numbyte=new byte[1];
+    private String userId,password;
     private ShareAction mShareAction;
-    Handler requestHandler = new Handler() {
+    private static final String  WEI_XIN_PLATFORM="WEIXIN_FAVORITE";
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<ShareMenuActivity> mWeakReference;
+        public RequestHandler(ShareMenuActivity activity) {
+            mWeakReference=new WeakReference<ShareMenuActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final ShareMenuActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            initShow();    //提示评价成功
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.onShareSuccess();
                         }else {
-                            failure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context,msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-
-
-    };
-    private void initShow() {
+    }
+    private void onShareSuccess() {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -85,7 +89,7 @@ public class ShareMenuActivity extends BaseActivity {
                     }
                 }).show();
     }
-    private void failure(String error) {
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -107,20 +111,6 @@ public class ShareMenuActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initPlatforms();
         initView();
-       // initDATA();
-    }
-    private void initDATA() {
-        String string=IntToBinary(128);
-        String X=string.substring(0,1);
-        char  y=string.charAt(0);
-        Toast.makeText(context,"x="+X+",y="+String.valueOf(y),Toast.LENGTH_SHORT).show();
-    }
-
-    //十进制转八位二进制
-    public static String IntToBinary(int input) {
-        String binaryString = Integer.toBinaryString(input);//1111
-        int binaryInt = Integer.parseInt(binaryString);//1111
-        return String.format("%08d",binaryInt);
     }
     private void initPlatforms() {
         mShareAction=new ShareAction(ShareMenuActivity.this).setDisplayList(SHARE_MEDIA.SINA,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN_FAVORITE)
@@ -140,8 +130,7 @@ public class ShareMenuActivity extends BaseActivity {
     }
 
     private void initView() {
-        appshare=(Button)findViewById(R.id.share_menu);
-        appshare.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.share_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShareAction.open();
@@ -153,24 +142,23 @@ public class ShareMenuActivity extends BaseActivity {
         public void onStart(SHARE_MEDIA share_media) {}
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            if(!platform.name().equals("WEIXIN_FAVORITE")){
+            if(!platform.name().equals(WEI_XIN_PLATFORM)){
                 if (password!=null) {
                     shareEnsure();
                 }else {
-                    Toast.makeText(context,platform + " 分享成功啦",Toast.LENGTH_SHORT).show();
+                    ToastUtil.ToastText(context,platform + " 分享成功啦");
                 }
             }else{
-                Toast.makeText(context,platform + " 收藏成功啦",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,platform + " 收藏成功啦");
             }
         }
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(context,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-            if(t!=null){}
+            ToastUtil.ToastText(context,platform + " 分享失败啦");
         }
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(context,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+            ToastUtil.ToastText(context,platform + " 分享取消了");
         }
     };
     private void shareEnsure() {
@@ -178,22 +166,7 @@ public class ShareMenuActivity extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
