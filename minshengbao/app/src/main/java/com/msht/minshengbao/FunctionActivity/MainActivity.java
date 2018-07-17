@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScan;
+import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.FunctionActivity.fragment.HomeFragment;
 import com.msht.minshengbao.FunctionActivity.fragment.LoginMyFrag;
 import com.msht.minshengbao.FunctionActivity.fragment.MyFragment;
@@ -78,6 +79,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean     versionState;
     private JSONObject  objectJson;
     private JSONObject  jsonObject;
+    /**最大显示消息数 **/
+    private static final int MAX_MASSAGE=99;
     private static  final String MY_ACTION = "ui";
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final int REQUEST_CODE=2;
@@ -184,8 +187,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                        }else {
+                        if(!results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
@@ -254,7 +256,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (versionCode<versions){
             if (versionState &&NetWorkUtil.isWifiAvailable(context)){
-                LoadApk(url);
+                loadMsbApk(url);
             }else {
                 new PromptDialog.Builder(this)
                         .setTitle(title)
@@ -270,7 +272,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             @Override
                             public void onClick(Dialog dialog, int which) {
                                 dialog.dismiss();
-                                LoadApk(url);
+                                loadMsbApk(url);
                             }
                         })
                         .show();
@@ -281,7 +283,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void onUnreadMassage(JSONObject json) {
         VariableUtil.messageNum=json.optInt("num");
         if ( VariableUtil.messageNum!=0){
-            messageCount=String.valueOf(VariableUtil.messageNum);
+            if (VariableUtil.messageNum>MAX_MASSAGE){
+                messageCount=String.valueOf(MAX_MASSAGE);
+            }else {
+                messageCount=String.valueOf(VariableUtil.messageNum);
+            }
             tvMassageNum.setText(messageCount);
             tvMassageNum.setVisibility(View.VISIBLE);
         }else {
@@ -341,13 +347,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 MPermissionUtils.requestPermissionsResult(this, MY_LOCATION_REQUEST, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
                     @Override
-                    public void onPermissionGranted(int Code) {
-                        if (Code==MY_LOCATION_REQUEST){
+                    public void onPermissionGranted(int code) {
+                        if (code==MY_LOCATION_REQUEST){
                             LocationUtils.mlocationClient.startLocation();
                         }
                     }
                     @Override
-                    public void onPermissionDenied(int Code) {
+                    public void onPermissionDenied(int code) {
                         ToastUtil.ToastText(context,"没有权限您将无法进行相关操作！");
                     }
                 });
@@ -401,10 +407,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String info=intent.getExtras().getString("broadcast");
-            if(info.equals(VariableUtil.VALUE_ONE)){
+            String data=intent.getStringExtra("broadcast");
+            if(data.equals(VariableUtil.VALUE_ONE)){
                 finish();  //接受到广播后把上一级的MainActivity 消除
-            }else if (info.equals(VariableUtil.VALUE_TWO)){
+            }else if (data.equals(VariableUtil.VALUE_TWO)){
                 tvMassageNum.setVisibility(View.GONE);
                 VariableUtil.messageNum=0;
             }
@@ -447,34 +453,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
     }
-    private void initMynew() {
-        if (myNewFrag==null) {
-            myNewFrag = new LoginMyFrag();
-            Bundle bundle = new Bundle();
-            String phone= SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
-            bundle.putString("phonenumber", phone);
-            bundle.putString("messnum",messageCount);
-            myNewFrag.setArguments(bundle);
-        }
-        if (!myNewFrag.isAdded()) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_layout, myNewFrag).commit();
-            currentFragment = myNewFrag;
-            radioButton.setChecked(true);
-            clickCode =0x003;
-            tvNavigation.setText("我的");
-            addOrShowFragment(getSupportFragmentManager().beginTransaction(),myNewFrag);
-        }
-    }
     private void initTab() {
         if (homeFrag == null) {
             homeFrag = new HomeFragment();
         }
         if (!homeFrag.isAdded()) {
+            getSupportFragmentManager().beginTransaction().remove(homeFrag).commit();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.content_layout, homeFrag).commit();
             currentFragment = homeFrag;
             clickCode =0x001;
+        }else {
+            clickCode =0x001;
+            addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
         }
     }
     private void addOrShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment) {
@@ -536,13 +527,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
                 MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA}, new MPermissionUtils.OnPermissionListener() {
                     @Override
-                    public void onPermissionGranted(int Code) {
-                        if (Code==MY_CAMERA_REQUEST){
+                    public void onPermissionGranted(int code) {
+                        if (code==MY_CAMERA_REQUEST){
                             goScanActivity();
                         }
                     }
                     @Override
-                    public void onPermissionDenied(int Code) {
+                    public void onPermissionDenied(int code) {
                         ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
                     }
                 });
@@ -555,7 +546,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void goScanActivity() {
-        Intent intent=new Intent(context, QRCodeScan.class);
+        Intent intent=new Intent(context, QRCodeScanActivity.class);
         startActivity(intent);
     }
     private void goMessage() {
@@ -588,7 +579,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         /*if (orderFrag== null) {
             orderFrag = new OrderFragment();
         }*/
-        //每次进入重新加载
+        /**每次进入重新加载 **/
         orderFrag = new OrderFragment();
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), orderFrag);
     }
@@ -603,8 +594,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             myFrag  = new MyFragment();
             addOrShowFragment(getSupportFragmentManager().beginTransaction(), myFrag);
         }else {
-            /*if (mynewFrag==null){
-                mynewFrag=new LoginMyFrag();
+            /*if (myNewFrag==null){
+                myNewFrag=new LoginMyFrag();
             }*/
             myNewFrag=new LoginMyFrag();
             addOrShowFragment(getSupportFragmentManager().beginTransaction(), myNewFrag);
@@ -625,13 +616,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void pushMessage() {
-        String DeviceToken=SharedPreferencesUtil.getDeviceData(this,SharedPreferencesUtil.DeviceToken,"");
+        String deviceData=SharedPreferencesUtil.getDeviceData(this,SharedPreferencesUtil.DeviceToken,"");
         String validateURL = UrlUtil.pushDeviceToken;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("deviceType","2");
-        textParams.put("token",DeviceToken);
+        textParams.put("token",deviceData);
         SendrequestUtil.postDataFromServiceThree(validateURL,textParams,pushHandler);
     }
     private void initGetinfomation() {
@@ -641,7 +632,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("password",password);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
-    private void LoadApk(String url) {
+    private void loadMsbApk(String url) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 urls=url;

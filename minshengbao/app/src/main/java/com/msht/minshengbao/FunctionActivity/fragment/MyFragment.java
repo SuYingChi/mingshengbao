@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.MyfunctionAdapter;
+import com.msht.minshengbao.Adapter.MyFunctionAdapter;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.MoreSetting;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
@@ -51,7 +51,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MyScro
     private boolean lstate=false;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private MyNoScrollGridView mGridView;
-    private MyfunctionAdapter  mAdapter;
+    private MyFunctionAdapter mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     public  MyFragment() {
     }
@@ -66,7 +66,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MyScro
         }
         initView(view);
         initListeners();
-        mAdapter=new MyfunctionAdapter(mContext,mList);
+        mAdapter=new MyFunctionAdapter(mContext,mList);
         mGridView.setAdapter(mAdapter);
         initData();
         GoActivity();

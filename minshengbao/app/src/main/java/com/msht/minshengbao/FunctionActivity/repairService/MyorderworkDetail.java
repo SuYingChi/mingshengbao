@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectVoucher;
+import com.msht.minshengbao.FunctionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -586,7 +586,7 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
         startActivityForResult(fund,0x004);
     }
     private void getVoucher() {
-        Intent voucher=new Intent(context, SelectVoucher.class);
+        Intent voucher=new Intent(context, SelectVoucherActivity.class);
         voucher.putExtra("pay_amount",amount);
         voucher.putExtra("category","1");
         startActivityForResult(voucher,1);
@@ -693,14 +693,15 @@ public class MyorderworkDetail extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        customDialog.show();
                         requestCode=1;
                         requestService();
+                        dialog.dismiss();
                     }
                 })
                 .show();
     }
     private void requestService() {
+        customDialog.show();
         String validateURL ="";
         if (requestCode==0){
             validateURL = UrlUtil.RepairOrder_detailUrl;

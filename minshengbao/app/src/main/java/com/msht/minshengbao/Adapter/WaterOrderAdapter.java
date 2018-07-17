@@ -14,11 +14,13 @@ import com.msht.minshengbao.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 /**
- * Created by hong on 2018/4/10.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/4/10 
  */
-
 public class WaterOrderAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> orderList = new ArrayList<HashMap<String, String>>();
@@ -65,7 +67,7 @@ public class WaterOrderAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final  int thisposition=position;
-       ViewHolder holder = null;
+        ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_water_delivery_order, null);

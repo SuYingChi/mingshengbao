@@ -13,10 +13,10 @@ import com.msht.minshengbao.FunctionActivity.fragment.WaterIncomeFra;
  * @date 2018/1/3
  */
 public class PublicViewAdapter extends FragmentPagerAdapter {
-    private String fragments[] = {"消费明细","充值明细"};
-    private WaterIncomeFra waterIncomeFra;
-    public PublicViewAdapter(FragmentManager fm, Context applicationContext, String userId, String passwords) {
-        super(fm);
+    private String[] fragments;
+    public PublicViewAdapter(FragmentManager supportFragmentManager, Context applicationContext, String[] fragment) {
+        super(supportFragmentManager);
+        this.fragments=fragment;
     }
     @Override
     public Fragment getItem(int position) {

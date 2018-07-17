@@ -9,11 +9,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.Public.MoveSelectAddress;
-import com.msht.minshengbao.FunctionActivity.Public.SelectCity;
+import com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -183,7 +182,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.id_re_city:
-                Intent city=new Intent(context, SelectCity.class);
+                Intent city=new Intent(context, SelectCityActivity.class);
                 startActivityForResult(city, REQUEST_CODE);
                 break;
             case R.id.id_re_address:

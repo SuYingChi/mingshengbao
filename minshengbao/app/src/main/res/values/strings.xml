@@ -30,6 +30,7 @@
 
     <string name="network_error">网络连接断开，请检查网络设置。</string>
     <string name="load_more_text">正在加载...</string>
+    <string name="real_pay_amount">实付款</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
@@ -52,9 +53,10 @@
     <string name="i_know">我知道了</string>
     <string name="re_recharge">请重新支付！</string>
     <string name="cancel_order">取消订单</string>
+    <string name="cancel_text">取消</string>
 
     <!--保险   -->
-    <string name="total_text">共计：</string>
+    <string name="total_text">共计:</string>
     <!--水宝  -->
     <string name="scan_buywater">扫码购水</string>
     <string name="send_water">送水到家</string>
@@ -62,4 +64,5 @@
     <!--优惠劵  -->
     <string name="effective_date">有效期至:</string>
     <string name="use_text">使用说明:</string>
+    <string name="quick_delivery">尽快配送</string>
 </resources>

@@ -52,6 +52,7 @@
     <dimen name="margin_width3">2.66dp</dimen>
     <dimen name="margin_width2">1.8dp</dimen>
     <dimen name="margin_width1">0.88dp</dimen>
+    <dimen name="text_width8">7.04sp</dimen>
     <dimen name="text_width10">8.88sp</dimen>
     <dimen name="text_width12">10.7sp</dimen>
     <dimen name="text_width14">12.4sp</dimen>

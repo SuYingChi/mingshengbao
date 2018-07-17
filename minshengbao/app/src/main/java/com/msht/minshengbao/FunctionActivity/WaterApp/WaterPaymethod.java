@@ -16,7 +16,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.WaterAppBean;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccess;
+import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -38,10 +38,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WaterPaymethod extends BaseActivity {
-    private Button btn_send;
-    private TextView tv_realamount;
+    private Button btnSend;
+    private TextView tvRealAmount;
     private ListViewForScrollView forScrollView;
-    private View layout_view;
+    private View layoutView;
     private String userId;
     private String password;
     private String userphone;
@@ -50,13 +50,9 @@ public class WaterPaymethod extends BaseActivity {
     private String orderId;
     private String channels;
     private String type="7";
-    private String Balance="";
+    private String mBalance ="";
     private String sign,extParams;
-    private String source="";
     private String amount;
-    private String givefee;
-    private String usernum="";
-    private String Ictype="2";
     private String resultCode=null;
     private String resultMsg=null;
     private int requestCode=0;
@@ -176,9 +172,9 @@ public class WaterPaymethod extends BaseActivity {
                         resultCode= object.optString("code");
                         if(Results.equals("success")) {
                             orderId =object.optString("data");
-                            layout_view.setVisibility(View.VISIBLE);
+                            layoutView.setVisibility(View.VISIBLE);
                         }else {
-                            layout_view.setVisibility(View.INVISIBLE);
+                            layoutView.setVisibility(View.INVISIBLE);
                             showfaiture(resultMsg);
                         }
                     }catch (Exception e){
@@ -188,7 +184,7 @@ public class WaterPaymethod extends BaseActivity {
                 case FAILURE:
                     Toast.makeText(context,msg.obj.toString() ,
                             Toast.LENGTH_SHORT).show();
-                    layout_view.setVisibility(View.INVISIBLE);
+                    layoutView.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;
@@ -240,7 +236,7 @@ public class WaterPaymethod extends BaseActivity {
                 startActivity(success);
                 finish();
             }else {
-                Intent success=new Intent(context,PaySuccess.class);
+                Intent success=new Intent(context,PaySuccessActivity.class);
                 success.putExtra("type","0");
                 startActivity(success);
                 finish();
@@ -279,16 +275,7 @@ public class WaterPaymethod extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals("1")||channels.equals("3")||channels.equals("5")||channels.equals("7"))
-        {
-            Pingpp.createPayment(WaterPaymethod.this, charge);
-        }else {
-            setResult(0x002);
-            Intent success=new Intent(context,PaySuccess.class);
-            success.putExtra("type","0");
-            startActivity(success);
-            finish();
-        }
+        Pingpp.createPayment(WaterPaymethod.this, charge);
     }
     private void watercharge() {
         showdialogs("支付成功");
@@ -310,18 +297,19 @@ public class WaterPaymethod extends BaseActivity {
         context=this;
         setCommonHeader("水卡充值");
         customDialog=new CustomDialog(this, "正在加载");
-        VariableUtil.balance=null;//
+        VariableUtil.balance=null;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         userphone=SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         Intent getdata=getIntent();
         amount=getdata.getStringExtra("payFee");
-        givefee=getdata.getStringExtra("giveFee");
-        usernum= getdata.getStringExtra("account");
+        String giveFee=getdata.getStringExtra("giveFee");
+        String icType="2";
+        String userNum= getdata.getStringExtra("account");
         WaterAppBean bean=new WaterAppBean();
-        bean.setAccount(usernum);
-        bean.setTypes(Ictype);
-        bean.setGiveFee(givefee);
+        bean.setAccount(userNum);
+        bean.setTypes(icType);
+        bean.setGiveFee(giveFee);
         bean.setPayFee(amount);
         sign= SecretKeyUtil.getStringSign(bean);
         extParams=SecretKeyUtil.getextParams(bean);
@@ -333,7 +321,7 @@ public class WaterPaymethod extends BaseActivity {
         mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
-                btn_send.setEnabled(true);       //选择支付方式可点击
+                btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channels=List.get(thisPosition).get("channel");
@@ -345,10 +333,6 @@ public class WaterPaymethod extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        /*textParams.put("type",Ictype);
-        textParams.put("account",usernum);
-        textParams.put("payFee",amount);
-        textParams.put("giveFee",givefee);*/
         SendrequestUtil.executepostTwo(validateURL,textParams, new ResultListener() {
             @Override
             public void onResultSuccess(String success) {
@@ -368,14 +352,13 @@ public class WaterPaymethod extends BaseActivity {
     }
 
     private void initView() {
-        layout_view=findViewById(R.id.id_layout_view);
-        tv_realamount=(TextView)findViewById(R.id.id_real_fee);
-        btn_send=(Button)findViewById(R.id.id_btn_pay) ;
-        tv_realamount.setText("¥"+amount);
+        layoutView =findViewById(R.id.id_layout_view);
+        TextView tvRealAmount =(TextView)findViewById(R.id.id_real_fee);
+        btnSend =(Button)findViewById(R.id.id_btn_pay) ;
+        tvRealAmount.setText("¥"+amount);
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
-        btn_send.setEnabled(false);       //初始未选择支付方式不可点击
-
-        btn_send.setOnClickListener(new View.OnClickListener() {
+        btnSend.setEnabled(false);
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTips();
@@ -412,12 +395,12 @@ public class WaterPaymethod extends BaseActivity {
     private void requestSevice() {
         long time= DateUtils.getCurTimeLong();
         String pattern="yyyy-MM-dd HH:mm:ss";
-        String Paytime=DateUtils.getDateToString(time,pattern);
+        String payTime=DateUtils.getDateToString(time,pattern);
         WaterAppBean bean=new WaterAppBean();
         bean.setOrderNo(orderId);
         bean.setPayAccount(userphone);
         bean.setPayType("1");
-        bean.setPayTime(Paytime);
+        bean.setPayTime(payTime);
         bean.setAmount(amount);
         bean.setResultCode(resultCode);
         bean.setResultMsg(resultMsg);
@@ -446,6 +429,7 @@ public class WaterPaymethod extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
+        String source="";
         String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
@@ -514,6 +498,7 @@ public class WaterPaymethod extends BaseActivity {
         });
 
     }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
@@ -524,28 +509,23 @@ public class WaterPaymethod extends BaseActivity {
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                // 错误信息
+                String errorMsg = data.getExtras().getString("error_msg");
+                String extraMsg = data.getExtras().getString("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
     }
     private void showMsg(String result, String msg1, String msg2) {
         String str = result;
-        if (str.equals("success")){
+        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
             str="缴费成功";
-        }else if (str.equals("fail")){
+        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
             str="缴费失败";
-        }else if (str.equals("cancel")){
+        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
             str="已取消缴费";
         }
-        if (null !=msg1 && msg1.length() != 0) {
-            str += "\n" + msg1;
-        }
-        if (null !=msg2 && msg2.length() != 0) {
-            str += "\n" + msg2;
-        }
-        if (str.equals("缴费成功")){
+        if (result.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(0x002);
             requestResult();
         }else {

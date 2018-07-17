@@ -4,11 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
-import com.msht.minshengbao.Adapter.AddressAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 
 /**
  * Created by hong on 2016/7/13.

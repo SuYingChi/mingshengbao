@@ -9,11 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,17 +29,18 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
-    private WebView   mWebView;
+    private WebView mWebView;
     private ImageView backImage;
-    private TextView  tvNavigationTile;
     private ProgressBar progressBar;
     private boolean   SecondExecute=false;
     private String    userPhone;
     private String    userId;
-    private String    sign;
     private String    mPageName="海南蔬菜先生";
-    private String    key="25ef33065ea746987885d44cd413409c";
+    private static final String    KEY="25ef33065ea746987885d44cd413409c";
     private Context   context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         mWebView =(WebView)findViewById(R.id.id_vegetable_webView);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         setCommonHeader();
-        initWebView();
+        initmWebView();
         initEvent();
     }
     private void setCommonHeader() {
@@ -58,12 +61,12 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
             findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
         backImage = (ImageView) findViewById(R.id.id_goback);
-        tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
+        TextView tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mPageName);
     }
-    private void initWebView() {
-        String signString ="phone="+ userPhone +"&userid="+userId+"&key="+key;
-        sign = MD5.md5Digest(signString);
+    private void initmWebView() {
+        String signString ="phone="+ userPhone +"&userid="+userId+"&key="+KEY;
+        String sign = MD5.md5Digest(signString);
         final String data = "&userid="+ userId +"&phone=" + userPhone +"&sign="+sign;
         String loginUrl= UrlUtil.Vegetable_Url+data;
         settingWeb();
@@ -117,7 +120,7 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        settings.setBuiltInZoomControls(true);
+       /// settings.setBuiltInZoomControls(true);
     }
     private void initEvent() {
         mWebView.setOnKeyListener(new View.OnKeyListener() {
@@ -160,7 +163,7 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         }
     }
     @Override
-    public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+    public boolean openFileChooserCallBackAndroid5(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
         return false;
     }
     @Override

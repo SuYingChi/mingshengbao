@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.Public.PayFeeWayActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectVoucher;
+import com.msht.minshengbao.FunctionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -208,7 +208,7 @@ public class GasExpenseQuery extends BaseActivity {
         layoutVoucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent voucher=new Intent(context,SelectVoucher.class);
+                Intent voucher=new Intent(context,SelectVoucherActivity.class);
                 voucher.putExtra("pay_amount",debts);
                 voucher.putExtra("category","2");
                 startActivityForResult(voucher,1);
@@ -228,7 +228,7 @@ public class GasExpenseQuery extends BaseActivity {
         tvBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent amount=new Intent(context,BillDetail.class);
+                Intent amount=new Intent(context,BillDetailActivity.class);
                 amount.putExtra("CustomerNo",customerNo);
                 amount.putExtra("name",name);
                 startActivity(amount);

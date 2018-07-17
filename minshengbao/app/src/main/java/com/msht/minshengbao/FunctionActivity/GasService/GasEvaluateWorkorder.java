@@ -111,7 +111,7 @@ public class GasEvaluateWorkorder extends BaseActivity {
         btn_sendeva=(Button)findViewById(R.id.id_btn_send);
     }
     private void initEvent() {
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

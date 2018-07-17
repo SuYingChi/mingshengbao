@@ -13,12 +13,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Adapter.SwipeAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.GasService.AddCustomerNo;
+import com.msht.minshengbao.FunctionActivity.GasService.AddCustomerNoActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -314,7 +312,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_btn_customer:
-                Intent addaddress=new Intent(CustomerNoManage.this,AddCustomerNo.class);
+                Intent addaddress=new Intent(CustomerNoManage.this,AddCustomerNoActivity.class);
                 addaddress.putExtra("addresscode", ADDRESS_CODE);
                 startActivityForResult(addaddress, 3);
                 break;

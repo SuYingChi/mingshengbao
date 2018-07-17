@@ -20,9 +20,9 @@ import com.umeng.analytics.MobclickAgent;
 public class BaseActivity extends AppCompatActivity implements NetEvent {
 
     public static NetEvent event;
-    protected ImageView backimg;
-    protected ImageView right_img;
-    protected TextView  tv_navigaTile;
+    protected ImageView backImg;
+    protected ImageView rightImg;
+    protected TextView  tvNavigationTile;
     protected Context   context;
     protected String    mPageName;
     protected boolean   networkStatus=false;
@@ -35,17 +35,17 @@ public class BaseActivity extends AppCompatActivity implements NetEvent {
     protected void setCommonHeader(String title) {
         mPageName=title;
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
-            findViewById(R.id.id_status_view).setVisibility(View.GONE);//状态栏View
+            findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
-        backimg = (ImageView) findViewById(R.id.id_goback);
-        tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg = (ImageView) findViewById(R.id.id_goback);
+        tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        tv_navigaTile.setText(title);
+        tvNavigationTile.setText(title);
     }
     @Override
     public void onResume() {

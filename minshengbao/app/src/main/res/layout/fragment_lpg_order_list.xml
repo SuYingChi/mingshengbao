@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FunctionActivity.fragment.LpgOrderListFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        android:id="@+id/id_order_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null">
+    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    <RelativeLayout
+        android:id="@+id/id_not_data_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_width60"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/id_tv_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/not_have_data"/>
+    </RelativeLayout>
+
+
+</FrameLayout>

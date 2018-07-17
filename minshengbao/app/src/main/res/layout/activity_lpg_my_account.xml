@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical"
+    tools:context=".FunctionActivity.LPGActivity.LpgMyAccountActivity">
+    <include layout="@layout/layout_header"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+            android:id="@+id/id_bottle_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:visibility="gone">
+        </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+    </LinearLayout>
+
+    <!--<ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include layout="@layout/layout_lpg_account_header"
+                    android:id="@+id/id_header"/>
+            </LinearLayout>
+        </ScrollView>   -->
+</LinearLayout>

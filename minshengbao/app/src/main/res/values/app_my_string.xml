@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
+    <!--注册 -->
+    <string name="button_extend_m_default_text">text</string>
+    <string name="phone_number">手机号</string>
+    <string name="verification_code">验证码</string>
+    <string name="please_input_phone">请输入手机号</string>
+    <string name="please_input_code">请输入验证码</string>
+    <string name="get_verification_code">获取验证码</string>
+    <string name="user_name">姓名</string>
+    <string name="sex_text">性别</string>
+    <string name="account_address">地址：</string>
+    <string name="user_address">用户地址</string>
+    <string name="elevator_house">电梯房</string>
+    <string name="doorplate">门牌号</string>
     <string name="default_text">XXXXXX</string>
     <string name="default_value0">0.0</string>
     <string name="balance_explain">(账户余额只能用于缴纳燃气费)</string>
@@ -20,6 +33,12 @@
     <string name="ensure_password">确认密码</string>
     <string name="input_originPwd">请输入原始密码</string>
     <string name="ensure_text">确认</string>
+    <string name="send_server">提交</string>
+    <string name="save_text">保存</string>
+    <string name="immediately_pay">立即支付</string>
+    <string name="recommend_code">推荐码</string>
+    <string name="select_pay_way">选择支付方式</string>
+    <string name="water_recharge_tip">提示:此约仅用于直饮水设备购水时支付使用。</string>
     <!--首页  -->
     <string name="updata_apk">你的版本过老，如若需使用，请点击更新</string>
 
@@ -29,7 +48,20 @@
     <!-- 燃气维修  -->
     <string name="add_customer_no">添加燃气用户号</string>
     <string name="not_add_customerNo">当前没有添加燃气用户号</string>
-    <string name="connetion_phone">联系电话</string>
+    <string name="connection_phone">联系电话</string>
+    <string name="connection_server">联系客服</string>
+    <!--家电维修 -->
+    <string name="not_have_address">当前没有添加地址</string>
+    <string name="not_have_data">当前没有数据</string>
     <!--保险  -->
     <string name="certificate_type">证件类型</string>
+    <!--数值  -->
+    <string name="zero_value">0</string>
+    <string name="one_value">1</string>
+    <string name="two_value">2</string>
+    <string name="three_value">3</string>
+    <!--符号 -->
+    <string name="subtract_symbol">-</string>
+    <string name="add_symbol">+</string>
+
 </resources>

@@ -29,6 +29,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/2  
+ */
 public class GasPayRecord extends BaseActivity {
     private String    userId;
     private String    password;
@@ -58,17 +65,17 @@ public class GasPayRecord extends BaseActivity {
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
+                        String results=object.optString("result");
+                        String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (activity.refreshType==0){
                                 activity.mListView.stopRefresh(true);
                             }else if (activity.refreshType==1){
@@ -83,15 +90,12 @@ public class GasPayRecord extends BaseActivity {
                         }else {
                             activity.mListView.stopLoadMore();
                             activity.mListView.stopRefresh(false);
-                            activity.onFailure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
@@ -213,5 +217,13 @@ public class GasPayRecord extends BaseActivity {
                 loadData(pageIndex + 1);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+           customDialog.dismiss();
+        }
     }
 }

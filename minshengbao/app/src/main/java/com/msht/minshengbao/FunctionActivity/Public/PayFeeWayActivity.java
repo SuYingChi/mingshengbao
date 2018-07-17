@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -226,7 +225,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         String lottery=json.optString("lottery");
         if (status.equals(VariableUtil.VALUE_ZERO)){
             if (lottery!=null&&(!TextUtils.isEmpty(lottery))){
-                Intent success=new Intent(context,PaySuccess.class);
+                Intent success=new Intent(context,PaySuccessActivity.class);
                 success.putExtra("url",lottery);
                 success.putExtra("type","0");
                 success.putExtra("orderId",orderId);
@@ -236,14 +235,14 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 onShowDialogs("新订单");
             }
         }else if (status.equals(VariableUtil.VALUE_ONE)){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","0");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
         }else if (status.equals(VariableUtil.VALUE_TWO)){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
@@ -304,7 +303,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_TWO)||channels.equals(VariableUtil.VALUE_FIVE)
+        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_THREE)||channels.equals(VariableUtil.VALUE_TWO)||channels.equals(VariableUtil.VALUE_FIVE)
                 ||channels.equals(VariableUtil.VALUE_SEVER))
         {
             //实付金额为0，不调用ping++,

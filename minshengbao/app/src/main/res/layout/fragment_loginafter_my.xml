@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context="com.msht.minshengbao.FunctionActivity.fragment.LoginMyFrag">
     <com.msht.minshengbao.ViewUI.widget.MyScrollview
@@ -42,41 +43,20 @@
                     android:textColor="@color/white"/>
                 <RelativeLayout
                     android:id="@+id/id_right_massage"
-                    android:layout_width="@dimen/margin_width35"
-                    android:layout_height="@dimen/margin_width35"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_marginTop="@dimen/margin_width25"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true">
-                    <ImageView
-                        android:id="@+id/id_massage_img"
-                        android:layout_width="@dimen/margin_width20"
-                        android:layout_height="@dimen/margin_width20"
+                    <com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM
+                        android:id="@+id/id_mim_message"
+                        android:layout_width="@dimen/margin_width30"
+                        android:layout_height="@dimen/margin_width30"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/my_message"
-                        />
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/id_message_layout"
-                    android:layout_width="@dimen/margin_width15"
-                    android:layout_height="@dimen/margin_width15"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/margin_width10"
-                    android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_marginTop="@dimen/margin_width25"
-                    android:background="@drawable/shape_red_circle">
-                    <TextView
-                        android:id="@+id/id_message_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:textSize="@dimen/text_width10"
-                        android:textColor="@color/white"
-                        android:text="4"/>
+                        app:iconDrawable="@drawable/my_message">
+                    </com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM>
                 </RelativeLayout>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -93,7 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:text="民生服务"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16"/>
@@ -126,7 +107,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:text="其他"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16"/>

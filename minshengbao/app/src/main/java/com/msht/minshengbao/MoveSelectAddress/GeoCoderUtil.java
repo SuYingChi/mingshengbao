@@ -16,7 +16,13 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 /**
  * Created by hong on 2017/3/6.
  */
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/3/6  
+ */
 public class GeoCoderUtil implements GeocodeSearch.OnGeocodeSearchListener{
 
     private GeocodeSearch geocodeSearch;

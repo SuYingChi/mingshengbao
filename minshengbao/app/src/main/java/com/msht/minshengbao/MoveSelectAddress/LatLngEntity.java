@@ -1,14 +1,18 @@
 package com.msht.minshengbao.MoveSelectAddress;
 
 import com.amap.api.services.core.LatLonPoint;
-
 /**
- * Created by hong on 2017/3/6.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/3/6  
  */
-
 public class LatLngEntity {
-    private final double longitude; // 经度
-    private final double latitude;  // 纬度
+    /**经度**/
+    private final double longitude;
+    /**纬度**/
+    private final double latitude;
 
     /**
      * @param value e.g "113.4114889842685,23.172753522587282"
@@ -17,7 +21,6 @@ public class LatLngEntity {
         this.longitude = Double.parseDouble(value.split(",")[0]);
         this.latitude = Double.parseDouble(value.split(",")[1]);
     }
-
     public LatLngEntity(double latitude, double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;

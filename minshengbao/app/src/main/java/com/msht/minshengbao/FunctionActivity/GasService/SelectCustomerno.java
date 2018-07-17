@@ -169,7 +169,7 @@ public class SelectCustomerno extends BaseActivity {
         btn_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addaddress=new Intent(context,AddCustomerNo.class);
+                Intent addaddress=new Intent(context,AddCustomerNoActivity.class);
                 addaddress.putExtra("addresscode", ADDRESS_CODE);
                 startActivityForResult(addaddress, 1);
             }

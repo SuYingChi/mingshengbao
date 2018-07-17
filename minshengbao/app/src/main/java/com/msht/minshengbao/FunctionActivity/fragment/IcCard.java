@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScan;
+import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 
@@ -67,7 +67,7 @@ public class IcCard extends Fragment {
         }
     }
     private void GoScanActivity() {
-        Intent intent =new Intent(getActivity(), QRCodeScan.class);
+        Intent intent =new Intent(getActivity(), QRCodeScanActivity.class);
         startActivity(intent);
     }
     @Override

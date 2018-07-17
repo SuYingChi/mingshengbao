@@ -47,10 +47,13 @@ import com.msht.minshengbao.FunctionActivity.HtmlWeb.IcbcHtml;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.IntelligentFarmHml;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.VegetableGentlemen;
+import com.msht.minshengbao.FunctionActivity.LPGActivity.BindingAccountActivity;
+import com.msht.minshengbao.FunctionActivity.LPGActivity.LpgMyAccountActivity;
+import com.msht.minshengbao.FunctionActivity.LPGActivity.NewUserActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.AllService;
-import com.msht.minshengbao.FunctionActivity.Public.SelectCity;
-import com.msht.minshengbao.FunctionActivity.WaterApp.WaterHome;
+import com.msht.minshengbao.FunctionActivity.Public.AllServiceActivity;
+import com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity;
+import com.msht.minshengbao.FunctionActivity.WaterApp.WaterHomeActivity;
 import com.msht.minshengbao.FunctionActivity.insurance.InsuranceHome;
 import com.msht.minshengbao.FunctionActivity.repairService.HomeAppliancescClean;
 import com.msht.minshengbao.FunctionActivity.repairService.HouseApplianceFix;
@@ -466,7 +469,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         break;
                     case"all_service":
                         if (VariableUtil.loginStatus){
-                            allServe();
+                           // allServe();
+                            lpgService();
                         }else {
                             gologins();
                         }
@@ -552,6 +556,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             }
         });
     }
+
+
+
     private void showNotify(String title ,String string) {
         new PromptDialog.Builder(mContext)
                 .setTitle(title)
@@ -565,12 +572,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                     }
                 }).show();
     }
+    private void lpgService() {
+        Intent intent=new Intent(mContext, LpgMyAccountActivity.class);
+        startActivity(intent);
+    }
     private void vegetableScxs() {
         Intent intent=new Intent(mContext, VegetableGentlemen.class);
         startActivity(intent);
     }
     private void drinkingWater() {
-        Intent serve=new Intent(mContext,WaterHome.class);
+        Intent serve=new Intent(mContext,WaterHomeActivity.class);
         serve.putExtra("mCity",mCity);
         serve.putExtra("cityId",cityId);
         startActivity(serve);
@@ -580,7 +591,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         startActivity(intent);
     }
     private void allServe() {
-        Intent serve=new Intent(mContext,AllService.class);
+        Intent serve=new Intent(mContext,AllServiceActivity.class);
         serve.putExtra("mCity",mCity);
         serve.putExtra("cityId",cityId);
         startActivity(serve);
@@ -725,19 +736,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 if ((!TextUtils.isEmpty(rightUrl))&&(!rightUrl.equals(VariableUtil.NULL_VALUE))){
                     switch (domain){
                         case SHOP_DOMAIN:
-                            Intent intent=new Intent(getActivity(), ShopActivity.class);
+                            Intent intent=new Intent(mContext, ShopActivity.class);
                             intent.putExtra("url",rightUrl);
                             intent.putExtra("first",1);
                             startActivity(intent);
                             break;
                         case "mims.icbc.com.cn":
-                            Intent bank1=new Intent(getActivity(), IcbcHtml.class);
+                            Intent bank1=new Intent(mContext, IcbcHtml.class);
                             bank1.putExtra("url",rightUrl);
                             bank1.putExtra("navigate",title);
                             startActivity(bank1);
                             break;
                         case "ccclub.cmbchina.com":
-                            Intent bank2=new Intent(getActivity(), HtmlPage.class);
+                            Intent bank2=new Intent(mContext, HtmlPage.class);
                             bank2.putExtra("url",rightUrl);
                             bank2.putExtra("navigate",title);
                             startActivity(bank2);
@@ -750,7 +761,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                             }
                             break;
                         default:
-                            Intent other=new Intent(getActivity(), HtmlPage.class);
+                            Intent other=new Intent(mContext, HtmlPage.class);
                             other.putExtra("url",rightUrl);
                             other.putExtra("navigate",title);
                             startActivity(other);
@@ -841,7 +852,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_city:
-                Intent city=new Intent(mContext, SelectCity.class);
+                Intent city=new Intent(mContext, SelectCityActivity.class);
                 startActivityForResult(city,REQUEST_CODE);
                 break;
             case R.id.id_layout_air:

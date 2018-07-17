@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.Public.PaySuccess">
+    tools:context="com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity">
     <include layout="@layout/layout_header"/>
     <WebView
         android:id="@+id/id_success_page"

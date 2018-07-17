@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.Public.MoveSelectAddress;
-import com.msht.minshengbao.FunctionActivity.Public.SelectCity;
+import com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -203,7 +203,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.id_re_city:
-                Intent city=new Intent(context, SelectCity.class);
+                Intent city=new Intent(context, SelectCityActivity.class);
                 startActivityForResult(city, REQUEST_CODE);
                 break;
             case R.id.id_re_address:

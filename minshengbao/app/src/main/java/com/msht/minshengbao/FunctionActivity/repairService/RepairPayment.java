@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccess;
+import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -35,13 +36,13 @@ import java.util.Map;
 
 public class RepairPayment extends BaseActivity  {
 
-    private Button btn_send;
-    private TextView tv_realamount,tv_orderNo;
-    private TextView tv_balance;
+    private Button   btnSend;
+    private TextView tvRealamount, tvOrderNo;
+    private TextView tvBalance;
     private String  userId,password,couponId="0";
     private String  realmoney,channel,orderNo,type,orderId;
-    private String id ;      //订单号
-    private String charge;   //
+    private String id ;
+    private String charge;
     private String source="repair_order";
     private JSONArray jsonArray;
     private final int SUCCESS = 1;
@@ -63,11 +64,11 @@ public class RepairPayment extends BaseActivity  {
                         String Results=object.optString("result");
                         String Error = object.optString("error");
                         jsonObject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
+                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (requestCode==0){
-                                ShowBalance();
+                                onShowBalance();
                             }else if (requestCode==1){
-                                showcharge();
+                                onReceiveChargeData();
                             }
                         }else {
                             showfaiture(Error);
@@ -86,7 +87,6 @@ public class RepairPayment extends BaseActivity  {
             }
         }
     };
-
     Handler requestHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -99,10 +99,10 @@ public class RepairPayment extends BaseActivity  {
                         if(Results.equals("success")) {
                             if (requestCode==0){
                                 jsonArray =object.getJSONArray("data");
-                                Paywayshow();
+                                onPayWayShow();
                             }else if (requestCode==2){
                                 JSONObject json=object.getJSONObject("data");
-                                payresult(json);
+                                onPayResult(json);
                             }
                         }else {
                             showfaiture(Error);
@@ -120,36 +120,37 @@ public class RepairPayment extends BaseActivity  {
             }
         }
     };
-    private void payresult(JSONObject json) {
+    private void onPayResult(JSONObject json) {
         String status=json.optString("status");
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
-        if (status.equals("0")){
+        if (status.equals(VariableUtil.VALUE_ZERO)){
             //新订单
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","1");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
-        }else if (status.equals("1")){
-            Intent success=new Intent(context,PaySuccess.class);
+        }else if (status.equals(VariableUtil.VALUE_ONE)){
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","1");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
-        }else if (status.equals("2")){
-            Intent success=new Intent(context,PaySuccess.class);
+        }else if (status.equals(VariableUtil.VALUE_TWO)){
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","5");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
-        }else if (status.equals("3")){
+            finish();
+        }else if (status.equals(VariableUtil.VALUE_THREE)){
             showdialogs("正在支付");
         }
     }
-    private void Paywayshow() {
+    private void onPayWayShow() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -171,10 +172,10 @@ public class RepairPayment extends BaseActivity  {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void ShowBalance() {
-        double doublebalance=jsonObject.optDouble("balance");
-        double doubleamount=Double.valueOf(realmoney);
-        if (doubleamount<=doublebalance){
+    private void onShowBalance() {
+        double doubleBalance=jsonObject.optDouble("balance");
+        double doubleAmount=Double.valueOf(realmoney);
+        if (doubleAmount<=doubleBalance){
             VariableUtil.balance="余额充足";
         }else {
             VariableUtil.balance="余额不足";
@@ -193,18 +194,23 @@ public class RepairPayment extends BaseActivity  {
                     }
                 }).show();
     }
-    private void showcharge() {
+    private void onReceiveChargeData() {
         try {
             id = jsonObject.optString("id");
             charge = jsonObject.optString("charge");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channel.equals("1")||channel.equals("3")||channel.equals("5")||channel.equals("7")) {
+        if (channel.equals(VariableUtil.VALUE_ONE)||channel.equals(VariableUtil.VALUE_THREE)||channel.equals(VariableUtil.VALUE_FIVE)||channel.equals(VariableUtil.VALUE_SEVER)) {
             Pingpp.createPayment(RepairPayment.this, charge);
-        }else if (channel.equals("8")||channel.equals("6")){
+        }else if (channel.equals(VariableUtil.VALUE_EIGHT)||channel.equals(VariableUtil.VALUE_SIX)){
             setResult(0x005);
-            requestResult();
+            Intent success=new Intent(context,PaySuccessActivity.class);
+            success.putExtra("type","1");
+            success.putExtra("url","");
+            success.putExtra("orderId",orderId);
+            startActivity(success);
+            finish();
         }
     }
     @Override
@@ -230,7 +236,7 @@ public class RepairPayment extends BaseActivity  {
         mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
-                btn_send.setEnabled(true);
+                btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 channel=List.get(thisPosition).get("channel");
@@ -240,14 +246,15 @@ public class RepairPayment extends BaseActivity  {
     private void initfindViewByid() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
 
-        tv_balance=(TextView)findViewById(R.id.id_tv_balance);
-        btn_send=(Button)findViewById(R.id.id_evaluate_order);
-        btn_send.setEnabled(false);       //初始未选择支付方式不可点击
-        tv_realamount=(TextView)findViewById(R.id.id_real_fee);
-        tv_orderNo=(TextView)findViewById(R.id.id_orderNo);
-        tv_realamount.setText("¥"+realmoney);
-        tv_orderNo.setText(orderNo);
+        tvBalance =(TextView)findViewById(R.id.id_tv_balance);
+        btnSend =(Button)findViewById(R.id.id_evaluate_order);
+        btnSend.setEnabled(false);
+        tvRealamount =(TextView)findViewById(R.id.id_real_fee);
+        tvOrderNo =(TextView)findViewById(R.id.id_orderNo);
+        tvRealamount.setText("¥"+realmoney);
+        tvOrderNo.setText(orderNo);
     }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             //if (requestCode == REQUEST_CODE_PAYMENT){
@@ -259,28 +266,23 @@ public class RepairPayment extends BaseActivity  {
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                // 错误信息
+                String errorMsg = data.getExtras().getString("error_msg");
+                String extraMsg = data.getExtras().getString("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
     }
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
-        if (str.equals("success")){
+        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
             str="缴费成功";
-        }else if (str.equals("fail")){
+        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
             str="缴费失败";
-        }else if (str.equals("cancel")){
+        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
             str="已取消缴费";
         }
-        if (null !=msg1 && msg1.length() != 0) {
-            str += "\n" + msg1;
-        }
-        if (null !=msg2 && msg2.length() != 0) {
-            str += "\n" + msg2;
-        }
-        if (str.equals("缴费成功")){
+        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(0x005);
             requestResult();
         }else {
@@ -325,7 +327,7 @@ public class RepairPayment extends BaseActivity  {
         });
     }
     private void initEvent() {
-        btn_send.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTips();
@@ -348,13 +350,13 @@ public class RepairPayment extends BaseActivity  {
                     public void onClick(Dialog dialog, int which) {
                         customDialog.show();
                         requestCode=1;
-                        requestSevice();
+                        requestService();
                         dialog.dismiss();
                     }
                 })
                 .show();
     }
-    private void requestSevice() {
+    private void requestService() {
         String validateURL= UrlUtil.PayfeeWay_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
@@ -362,7 +364,7 @@ public class RepairPayment extends BaseActivity  {
         textParams.put("type",type);
         textParams.put("amount",realmoney);
         textParams.put("orderId",orderId);
-        if (!couponId.equals("")) {
+        if (!TextUtils.isEmpty(couponId)) {
             textParams.put("couponId", couponId);
         }
         textParams.put("channel",channel);

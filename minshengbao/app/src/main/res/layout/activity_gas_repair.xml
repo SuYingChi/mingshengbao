@@ -106,7 +106,7 @@
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:textStyle="bold"
-                    android:text="@string/connetion_phone"/>
+                    android:text="@string/connection_phone"/>
                 <EditText
                     android:id="@+id/id_et_phone"
                     android:layout_width="match_parent"

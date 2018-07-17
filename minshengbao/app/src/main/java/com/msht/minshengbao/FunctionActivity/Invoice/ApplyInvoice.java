@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -26,8 +25,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
-import com.msht.minshengbao.FunctionActivity.MyActivity.RegisterActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectAddress;
+import com.msht.minshengbao.FunctionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.BitmapUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -207,7 +205,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         layoutDistrict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, SelectAddress.class);
+                Intent intent=new Intent(context, SelectAddressActivity.class);
                 startActivityForResult(intent,1);
             }
         });

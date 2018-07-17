@@ -205,6 +205,24 @@ public class UrlUtil {
      * 热门维修
      */
     public static final String HotRepair_Url= BuildConfig.URL_HEADS +"/api/serve_city/hot_repair";
+    /** LPG 接口 **/
+    public static final String LPG_NEW_USER_URL=BuildConfig.URL_LPG+"/msht/lpgUser/newUser";
+    public static final String LPG_GET_CAPTCHA_URL=BuildConfig.URL_LPG+"/msht/lpgUser/getCaptcha";
+    public static final String LPG_BIND_MOBILE_URL=BuildConfig.URL_LPG+"/msht/lpgUser/bindMoblie";
+    public static final String LPG_GET_USER_INFO=BuildConfig.URL_LPG+"/msht/lpgUser/getUserInfo";
+    public static final String LPG_QUERY_PRICE=BuildConfig.URL_LPG+"/msht/lpgGasPrice/queryGasPrice";
+    public static final String LPG_QUERY_DEPOSIT_PRICE=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/queryDepositPrice";
+    public static final String LPG_QUERY_GAS_DEPOSIT_PRICE=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/getGasAndDeposit";
+    public static final String LPG_QUERY_ALL_ADDRESS=BuildConfig.URL_LPG+"/msht/lpgUser/getAllAddress";
+    public static final String LPG_QUERY_ALL_DELIVERY_FEE=BuildConfig.URL_LPG+"/msht/lpgDeliveryFee/getAllDeliveryFee";
+    public static final String LPG_CREATE_NEW_ORDER=BuildConfig.URL_LPG+"/msht/lpgOrder/newOrder";
+    public static final String LPG_CREATE_NEW_ADDRESS=BuildConfig.URL_LPG+"/msht/lpgUser/newAddress";
+    public static final String LPG_MSB_USER_INFO=BuildConfig.URL_LPG+"/msht/lpgUser/getMsbUserInfo";
+    public static final String LPG_ORDER_PAY=BuildConfig.URL_LPG+"/msht/lpgOrder/pay";
+    public static final String LPG_GET_ALL_ORDER=BuildConfig.URL_LPG+"/msht/lpgOrder/allOrder";
+    public static final String LPG_QUERY_ORDER_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/queryOrder";
+    public static final String LPG_FAIL_ORDER_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/failOrder";
+    public static final String LPG_REPLACE_BOTTLE_URL=BuildConfig.URL_LPG+"/msht/lpgReplacePrice/getReplaceBottleList";
     /**
      * HTML5页面
      */

@@ -13,8 +13,7 @@ import android.widget.EditText;
 
 import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccess;
+import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -196,7 +195,7 @@ public class RechargeValue extends BaseActivity  {
         String lottery=jsonObject.optString("lottery");
         if (status.equals(VariableUtil.VALUE_ZERO)){
             //新订单
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
@@ -204,7 +203,7 @@ public class RechargeValue extends BaseActivity  {
             setResult(1);
             finish();
         }else if (status.equals(VariableUtil.VALUE_ONE)){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
@@ -212,7 +211,7 @@ public class RechargeValue extends BaseActivity  {
             setResult(1);
             finish();
         }else if (status.equals(VariableUtil.VALUE_TWO)){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","5");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);

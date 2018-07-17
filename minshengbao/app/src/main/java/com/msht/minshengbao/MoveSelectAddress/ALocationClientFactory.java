@@ -5,11 +5,13 @@ import android.content.Context;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-
 /**
- * Created by hong on 2017/3/6.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/3/6.  
  */
-
 public class ALocationClientFactory {
     public static final String DEFAULT_TAG = "Default";
 

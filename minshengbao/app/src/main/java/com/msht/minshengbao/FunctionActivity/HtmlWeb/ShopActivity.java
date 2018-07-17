@@ -430,7 +430,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         Uri uri = Uri.fromFile(new File(sourcePath));
                         mUploadMessage.onReceiveValue(uri);
 
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else  {
                         // for android 5.0+
                         if (mUploadCallbackAboveL == null) {
                             ToastUtil.ToastText(mContext,"空数据");
@@ -474,7 +474,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         Uri uri = Uri.fromFile(new File(sourcePath));
                         mUploadMessage.onReceiveValue(uri);
 
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else {
                         // for android 5.0+
                         if (mUploadCallbackAboveL == null) {
                             ToastUtil.ToastText(mContext,"空数据");

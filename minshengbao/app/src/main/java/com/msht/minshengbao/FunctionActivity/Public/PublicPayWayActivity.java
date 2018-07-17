@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,8 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PublicPayWayActivity extends BaseActivity {
-    private Button btn_send;
-    private TextView tv_shouldAmount;
+    private Button btnSend;
     private ListViewForScrollView mForScrollView;
     private PayWayAdapter mAdapter;
     private String shopUrl;
@@ -46,9 +46,8 @@ public class PublicPayWayActivity extends BaseActivity {
     private String orderId="";
     private String amount;
     private static final int PAY_CODE=0x004;
-    private String source="app_shop_pay_method";
     private int requestCode=0;
-    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     private final PayWayHandler mHandler = new PayWayHandler(this);
     @Override
@@ -65,16 +64,16 @@ public class PublicPayWayActivity extends BaseActivity {
         amount=getdata.getStringExtra("amount");
         shopUrl=getdata.getStringExtra("url");
         initView();
-        mAdapter=new PayWayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context,list);
         mForScrollView.setAdapter(mAdapter);
         initPaywayData();
         mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
             public void ItemClick(View view, int thisPosition) {
-                btn_send.setEnabled(true);
+                btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
-                channels=List.get(thisPosition).get("channel");
+                channels=list.get(thisPosition).get("channel");
             }
         });
     }
@@ -98,18 +97,18 @@ public class PublicPayWayActivity extends BaseActivity {
     }
     private void initView() {
         mForScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
-        tv_shouldAmount=(TextView)findViewById(R.id.id_should_fee);
-        btn_send=(Button)findViewById(R.id.id_btn_pay) ;
-        tv_shouldAmount.setText("¥"+amount+"元");
-        btn_send.setEnabled(false);
-        btn_send.setOnClickListener(new View.OnClickListener() {
+        TextView tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
+        btnSend =(Button)findViewById(R.id.id_btn_pay) ;
+        tvShouldAmount.setText("¥"+amount+"元");
+        btnSend.setEnabled(false);
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               sendSevices();
+               sendServices();
             }
         });
     }
-    private void sendSevices() {
+    private void sendServices() {
         String validateURL="";
         try{
             validateURL=shopUrl+"&userId="+ URLEncoder.encode(userId, "UTF-8")
@@ -123,6 +122,7 @@ public class PublicPayWayActivity extends BaseActivity {
         SendrequestUtil.getDataFromService(validateURL,mHandler);
     }
     private void initPaywayData() {
+        String source="app_shop_pay_method";
         requestCode=0;
         customDialog.show();
         String validateURL= UrlUtil.PAY_METHOD_URL;
@@ -155,7 +155,7 @@ public class PublicPayWayActivity extends BaseActivity {
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 JSONArray jsonArray =object.getJSONArray("data");
-                                reference.PayWayshow(jsonArray);
+                                reference.payWayShow(jsonArray);
                            }else if (reference.requestCode==1){
                                 JSONObject json=object.getJSONObject("data");
                                 reference.getChargeData(json);
@@ -203,7 +203,7 @@ public class PublicPayWayActivity extends BaseActivity {
             requestResult();
         }
     }
-    private void PayWayshow(JSONArray jsonArray) {
+    private void payWayShow(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -216,12 +216,12 @@ public class PublicPayWayActivity extends BaseActivity {
                 map.put("name",name);
                 map.put("code",code);
                 map.put("channel",channel);
-                List.add(map);
+                list.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (List.size()!=0){
+        if (list.size()!=0){
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -229,9 +229,9 @@ public class PublicPayWayActivity extends BaseActivity {
         String status=json.optString("status");
         String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
-        if (status.equals("0")){
-            if (lottery!=null&&(!lottery.equals(""))){
-                Intent success=new Intent(context,PaySuccess.class);
+        if (status.equals(VariableUtil.VALUE_ZERO)){
+            if (lottery!=null&&(!TextUtils.isEmpty(lottery))){
+                Intent success=new Intent(context,PaySuccessActivity.class);
                 success.putExtra("url",lottery);
                 success.putExtra("type","6");
                 success.putExtra("orderId",orderId);
@@ -240,39 +240,33 @@ public class PublicPayWayActivity extends BaseActivity {
             }else {
                 showdialogs("新订单");
             }
-        }else if (status.equals("1")){
-            Intent success=new Intent(context,PaySuccess.class);
+        }else if (status.equals(VariableUtil.VALUE_ONE)){
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","6");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
-        }else if (status.equals("2")){
-            Intent success=new Intent(context,PaySuccess.class);
+        }else if (status.equals(VariableUtil.VALUE_TWO)){
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","3");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
-        }else if (status.equals("3")){
+        }else if (status.equals(VariableUtil.VALUE_THREE)){
             showdialogs("正在支付");
         }
     }
     private void showMsg(String title, String errorMsg, String extraMsg) {
         String str = title;
-        if (str.equals("success")){
+        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
             str="支付成功";
-        }else if (str.equals("fail")){
+        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
             str="支付失败";
-        }else if (str.equals("cancel")){
+        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
             str="已取消支付";
         }
-        if (null !=errorMsg &&errorMsg.length() != 0) {
-            str += "\n" + errorMsg;
-        }
-        if (null !=extraMsg && extraMsg.length() != 0) {
-            str += "\n" + extraMsg;
-        }
-        if (str.equals("支付成功")){
+        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(PAY_CODE);
             requestResult();
         }else {

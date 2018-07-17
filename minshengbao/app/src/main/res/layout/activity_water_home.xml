@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterHome">
+    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterHomeActivity">
     <include layout="@layout/layout_header" />
     <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_swipe_refresh"
@@ -227,7 +227,9 @@
                     android:layout_height="@dimen/margin_width15"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:src="@drawable/forward_2x"
                     />
                 <TextView
@@ -236,6 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/id_forward2"
+                    android:layout_toStartOf="@+id/id_forward2"
                     android:text="更多"
                     />
             </RelativeLayout>

@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="@dimen/margin_width35"
+        android:layout_height="@dimen/margin_width35"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/order_gas" />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/iv_icon"
+        android:layout_marginTop="@dimen/margin_width6"
+        android:textSize="@dimen/text_width14"
+        android:text="@string/button_extend_m_default_text"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.msht.minshengbao.Adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccess;
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScan;
+import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
+import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -161,7 +161,7 @@ public class IcCardExpense extends BaseActivity  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals("1")||channels.equals("3")||channels.equals("5")||channels.equals("7"))
+        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_THREE)||channels.equals(VariableUtil.VALUE_FIVE)||channels.equals(VariableUtil.VALUE_SEVER))
         {
             Pingpp.createPayment(IcCardExpense.this, charge);
         }else {
@@ -235,21 +235,21 @@ public class IcCardExpense extends BaseActivity  {
         String lottery=json.optString("lottery");
         if (status.equals("0")){
             //新订单
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","2");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
         }else if (status.equals("1")){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","2");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
         }else if (status.equals("2")){
-            Intent success=new Intent(context,PaySuccess.class);
+            Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","5");
             success.putExtra("url",lottery);
             success.putExtra("orderId",orderId);
@@ -393,7 +393,7 @@ public class IcCardExpense extends BaseActivity  {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-                        Intent intent=new Intent(IcCardExpense.this, QRCodeScan.class);
+                        Intent intent=new Intent(IcCardExpense.this, QRCodeScanActivity.class);
                         startActivity(intent);
                         finish();
 

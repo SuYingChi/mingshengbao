@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.MyfunctionAdapter;
+import com.msht.minshengbao.Adapter.MyFunctionAdapter;
 import com.msht.minshengbao.FunctionActivity.GasService.GasServerOrder;
 import com.msht.minshengbao.FunctionActivity.Invoice.InvoiceOpen;
 import com.msht.minshengbao.FunctionActivity.MessageCenterActivity;
@@ -37,10 +36,13 @@ import com.msht.minshengbao.FunctionActivity.MyActivity.MyWalletActivity;
 import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
+import com.msht.minshengbao.Utils.CallPhoneUtil;
+import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM;
 import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
@@ -55,23 +57,31 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/2  
+ */
 public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScrollview.ScrollViewListener {
     private MyScrollview    myScrollview;
     private LinearLayout    layoutNavigation;
     private RelativeLayout  layoutMySetting;
-    private View            layoutMessage;
     private CircleImageView circleImageView;
     private TextView tvNavigation;
     private TextView tvNickname;
-    private TextView tvMessageNum;
+    private MenuItemM btnMessage;
     private String avatarUrl;
     private String nickname;
     private Bitmap myAvatar =null;
     private ACache mCache;
     private int   bgHeight;
     private Context mContext;
+    /**最大显示消息数 **/
+    private static final int MAX_MASSAGE=99;
     private MyNoScrollGridView mGridView;
-    private MyfunctionAdapter  mAdapter;
+    private MyFunctionAdapter mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
@@ -126,15 +136,15 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         if (myAvatar !=null){
             circleImageView.setImageBitmap(myAvatar);
         }else {
-            if (avatarUrl !=null&&!avatarUrl.equals("")){
+            if (avatarUrl !=null&&(!TextUtils.isEmpty(avatarUrl))){
                 onGetAvatar();
             }
         }
         initListeners();
-        mAdapter=new MyfunctionAdapter(mContext,mList);
+        mAdapter=new MyFunctionAdapter(mContext,mList);
         mGridView.setAdapter(mAdapter);
         initData();
-        GoActivity();
+        goActivity();
         return  view;
     }
     private void initView(View view) {
@@ -143,8 +153,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         layoutNavigation =(LinearLayout) view.findViewById(R.id.id_li_navigation);
         layoutMySetting =(RelativeLayout) view.findViewById(R.id.id_re_gosetting);
         layoutMySetting.setOnClickListener(this);
-        layoutMessage=view.findViewById(R.id.id_message_layout);
-        tvMessageNum=(TextView)view.findViewById(R.id.id_message_num);
+        btnMessage=(MenuItemM)view.findViewById(R.id.id_mim_message);
         view.findViewById(R.id.id_re_hotline).setOnClickListener(this);
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
         view.findViewById(R.id.id_re_setting).setOnClickListener(this);
@@ -154,14 +163,18 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         tvNickname =(TextView)view.findViewById(R.id.id_nickname);
         tvNickname.setText(nickname);
         onUnReadMessage();
+        btnMessage.setOnClickListener(new MenuItemM.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goMessageCenter();
+            }
+        });
     }
-
     private void onUnReadMessage() {
-        if ( VariableUtil.messageNum!=0){
-            tvMessageNum.setText(String.valueOf(VariableUtil.messageNum));
-            layoutMessage.setVisibility(View.VISIBLE);
+        if (VariableUtil.messageNum>=MAX_MASSAGE){
+            btnMessage.setUnReadCount(MAX_MASSAGE);
         }else {
-            layoutMessage.setVisibility(View.GONE);
+            btnMessage.setUnReadCount(VariableUtil.messageNum);
         }
     }
     private void initData() {
@@ -180,7 +193,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         }
         mAdapter.notifyDataSetChanged();
     }
-    private void GoActivity() {
+    private void goActivity() {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -188,41 +201,41 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 switch (code){
                     case 0:
                         if (VariableUtil.loginStatus){
-                            Gomywallet();
+                            goMyWallet();
                         }else {
                             goLogin();
                         }
                         break;
                     case 1:
                         if (VariableUtil.loginStatus){
-                            Gogasserver();
+                            goGasServer();
                         }else {
                             goLogin();
                         }
                         break;
                     case 2:
                         if (VariableUtil.loginStatus){
-                            Gocustoerno();
+                            goCustomerNo();
                         }else {
                             goLogin();
                         }
                         break;
                     case 3:
                         if (VariableUtil.loginStatus){
-                            Goinvoice();
+                            goInvoice();
                         }else {
                             goLogin();
                         }
                         break;
                     case 4:
                         if (VariableUtil.loginStatus){
-                            Gomanage();
+                            goManage();
                         }else {
                             goLogin();
                         }
                         break;
                     case 5:
-                        Goshare();
+                        goShare();
                         break;
                     default:
                         break;
@@ -259,7 +272,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
             layoutNavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
             tvNavigation.setTextColor(Color.argb(0, 0, 255, 0));
             //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
-        } else if (t > 0 && t <= bgHeight) {
+        } else if (t >0 && t <= bgHeight) {
             float scale = (float) t / bgHeight;
             float alpha = (255 * scale);
             tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
@@ -278,14 +291,14 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         switch (v.getId()){
             case R.id.id_re_gosetting:
                 if (VariableUtil.loginStatus){
-                    Gosetting();
+                    goSetting();
                 }else {
                    goLogin();
                 }
                 break;
             case R.id.id_re_consult:
                 if (VariableUtil.loginStatus){
-                    Goconsult();
+                    goConsult();
                 }else {
                     goLogin();
                 }
@@ -294,7 +307,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 hotLine();
                 break;
             case R.id.id_re_setting:
-                GoMoresetting();
+                goMoreSetting();
                 break;
             case R.id.id_right_massage:
                 goMessageCenter();
@@ -307,8 +320,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private void goMessageCenter() {
         Intent intent=new Intent(mContext,MessageCenterActivity.class);
         startActivity(intent);
-        tvMessageNum.setVisibility(View.GONE);
-        layoutMessage.setVisibility(View.GONE);
+        btnMessage.setUnReadCount(0);
     }
     private void hotLine() {
         final String phone = "963666";
@@ -318,91 +330,74 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 .setMessage(phone)
                 .setButton1("取消", new PromptDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-
-                    }
-                })
+                    public void onClick(Dialog dialog, int which) { dialog.dismiss(); }})
                 .setButton2("呼叫", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        //String phone = "963666";
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (mContext.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:" + phone));
-                                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(callIntent);
-                            } else {
-                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                            }
-                        } else {
-                            Intent callIntent = new Intent(Intent.ACTION_CALL);
-                            callIntent.setData(Uri.parse("tel:" + phone));
-                            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(callIntent);
-                        }
+                        requestLimit(phone);
                         dialog.dismiss();
                     }
                 })
                 .show();
     }
-    /**
-     * 动态权限
-    */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode==MY_PERMISSIONS_REQUEST_CALL_PHONE){
-            String phone = "963666";
-            if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + phone));
-                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(callIntent);
-            }else {
-                ToastUtil.ToastText(mContext,"未授权不可拨打电话");
-            }
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-    private void Goconsult() {
+    private void goConsult() {
         Intent intent=new Intent(mContext, ConsultRecommend.class);
         startActivity(intent);
     }
-    private void Goshare() {
+    private void goShare() {
         Intent intent=new Intent(mContext, ShareMenuActivity.class);
         startActivity(intent);
     }
-    private void Gomanage() {
+    private void goManage() {
         Intent intent=new Intent(mContext, AddressManageActivity.class);
         startActivity(intent);
     }
-    private void Gomywallet() {
+    private void goMyWallet() {
         Intent intent=new Intent(mContext, MyWalletActivity.class);
         startActivityForResult(intent,0x004);
     }
-    private void Goinvoice() {
+    private void goInvoice() {
         Intent intent=new Intent(mContext, InvoiceOpen.class);
         startActivity(intent);
     }
-    private void Gogasserver() {
+    private void goGasServer() {
         Intent intent=new Intent(mContext, GasServerOrder.class);
         startActivity(intent);
     }
-    private void Gosetting() {
+    private void goSetting() {
         Intent intent=new Intent(mContext, Mysetting.class);
         startActivityForResult(intent,1);
     }
 
-    private void Gocustoerno() {
+    private void goCustomerNo() {
         Intent intent=new Intent(mContext, CustomerNoManage.class);
         startActivity(intent);
     }
-    private void GoMoresetting() {
+    private void goMoreSetting() {
         Intent intent=new Intent(mContext, MoreSetting.class);
         startActivityForResult(intent,0x005);
+    }
+    private void requestLimit(final String phone) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (mContext.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                CallPhoneUtil.callPhone(mContext,phone);
+            } else {
+                MPermissionUtils.requestPermissionsResult(this, MY_PERMISSIONS_REQUEST_CALL_PHONE, new String[]{Manifest.permission.CALL_PHONE}, new MPermissionUtils.OnPermissionListener() {
+                    @Override
+                    public void onPermissionGranted(int code) {
+                        if (code==MY_PERMISSIONS_REQUEST_CALL_PHONE){
+                            CallPhoneUtil.callPhone(mContext,phone);
+                        }
+                    }
+                    @Override
+                    public void onPermissionDenied(int code) {
+                        ToastUtil.ToastText(mContext,"没有权限您将无法进行相关操作！");
+                    }
+                });
+            }
+        }else {
+            CallPhoneUtil.callPhone(mContext,phone);
+        }
     }
     @Override
     public void onResume() {

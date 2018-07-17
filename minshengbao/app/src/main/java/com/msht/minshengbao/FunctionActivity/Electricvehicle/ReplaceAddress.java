@@ -29,7 +29,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.msht.minshengbao.Adapter.AddressAdapter;
+import com.msht.minshengbao.Adapter.MapAddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Base.RecordSQLiteOpenHelper;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
@@ -54,20 +54,18 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
     private EditText et_search;
     private ListViewForScrollView mListview;
     private ListViewForScrollView history_view;
-    private AddressAdapter addressAdapter;
+    private MapAddressAdapter addressAdapter;
     private BaseAdapter adapter;
-
+    private int mActivityMode=0;
     private AMapLocationClient locationClient;
-    private PoiSearch.Query query;// Poi查询条件类
-    private PoiSearch poiSearch;// POI搜索
+    /** Poi查询条件类 **/
+    private PoiSearch.Query query;
+    /** POI搜索  **/
+    private PoiSearch poiSearch;
 
-    // 数据库变量
-    // 用于存放历史搜索记录
+    /** 用于存放历史搜索记录 **/
     private RecordSQLiteOpenHelper helper ;
     private SQLiteDatabase db;
-
-
-
     private static  final int MY_LOCATION_REQUEST=0;
     private ArrayList<HashMap<String, String>>  mList = new ArrayList<HashMap<String, String>>();
 
@@ -77,9 +75,14 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replace_address);
         context=this;
-        setCommonHeader("切换地址");
+        mActivityMode=getIntent().getIntExtra("mode",0);
+        if (mActivityMode!=1){
+            setCommonHeader("切换地址");
+        }else {
+            setCommonHeader("填写地址");
+        }
         initView();
-        addressAdapter=new AddressAdapter(context,mList);
+        addressAdapter=new MapAddressAdapter(context,mList);
         mListview.setAdapter(addressAdapter);
         initEvent();
         initHistory();
@@ -115,10 +118,11 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
                 String mAddress=mList.get(position).get("mContent");
                 String lat=mList.get(position).get("latitude");
                 String lon=mList.get(position).get("longitude");
+                String title=mList.get(position).get("title");
                 // 2. 点击搜索键后，对该搜索字段在数据库是否存在进行检查（查询）->> 关注1
-                boolean hasdata = hasData(mAddress.trim());
+                boolean booleanHasData = hasData(mAddress.trim());
                 // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
-                if (!hasdata) {
+                if (!booleanHasData) {
                     insertData(mAddress.trim());
                     queryData("");
                 }
@@ -126,6 +130,7 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
                 name.putExtra("mAddress",mAddress);
                 name.putExtra("lat",lat);
                 name.putExtra("lon",lon);
+                name.putExtra("title",title);
                 setResult(1, name);
                 finish();
             }

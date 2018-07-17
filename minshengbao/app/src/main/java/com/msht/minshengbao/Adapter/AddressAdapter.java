@@ -1,39 +1,51 @@
 package com.msht.minshengbao.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.FunctionActivity.MyActivity.ModifyAddress;
+import com.msht.minshengbao.FunctionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/11/30.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 选择地址
+ * @author hong
+ * @date 2018/7/6  
  */
+public class AddressAdapter extends BaseAdapter{
+    private ArrayList<HashMap<String, String>> addressList = new ArrayList<HashMap<String, String>>();
 
-public class AddressAdapter extends BaseAdapter {
-    private LayoutInflater inflater;
-    private ArrayList<HashMap<String, String>>  mList = new ArrayList<HashMap<String, String>>();
-    private final int RESOURCE = R.layout.item_electrics_address;
-
-    public AddressAdapter(Context context, ArrayList<HashMap<String, String>> List) {
-        inflater=LayoutInflater.from(context);
-        this.mList=List;
+    private Context mContext = null;
+    public AddressAdapter(Context context, ArrayList<HashMap<String, String>> list) {
+        this.mContext = context;
+        this.addressList=list;
     }
-
     @Override
     public int getCount() {
-        return mList.size();
+        if (addressList!=null){
+            return addressList.size();
+        }else {
+            return 0;
+        }
     }
-
     @Override
     public Object getItem(int position) {
-        return mList.get(position);
+        if (addressList!=null){
+            return addressList.get(position);
+        }else {
+            return null;
+        }
     }
 
     @Override
@@ -42,20 +54,36 @@ public class AddressAdapter extends BaseAdapter {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      ViewHolder vh = null;
-        if(convertView == null){
-            vh = new ViewHolder();
-            convertView = inflater.inflate(RESOURCE, null);
-            vh.tv_title = (TextView) convertView.findViewById(R.id.id_address);
-            convertView.setTag(vh);
+        final int thisposition=position;
+        Holder holder;
+        if(convertView==null){
+            holder = new Holder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address_manage, null);
+            holder.cnName =(TextView)convertView.findViewById(R.id.id_tv_name);
+            holder.cnPhone =(TextView)convertView.findViewById(R.id.id_tv_phone);
+            holder.cnAddress = (TextView) convertView.findViewById(R.id.id_tv_address);
+            holder.imgEdit =(ImageView)convertView.findViewById(R.id.id_edit_img);
+            holder.editLayout =convertView.findViewById(R.id.id_edit_layout);
+            convertView.setTag(holder);
         }else{
-            vh = (ViewHolder) convertView.getTag();
+            holder = (Holder) convertView.getTag();
         }
-        vh.tv_title.setText(mList.get(position).get("mContent"));
+        holder.cnName.setText(addressList.get(position).get("name"));
+        holder.cnAddress.setText(addressList.get(position).get("address"));
+        holder.editLayout.setVisibility(View.GONE);
+        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return convertView;
     }
-    private class ViewHolder{
-        TextView tv_title;
-
+    class Holder{
+        View editLayout;
+        ImageView imgEdit;
+        TextView cnAddress;
+        TextView cnName;
+        TextView cnPhone;
     }
 }

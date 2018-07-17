@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/background_gray"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_change_background"
+        android:minHeight="@dimen/margin_width45">
+        <TextView
+            android:id="@+id/id_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/default_text"/>
+    </RelativeLayout>
+    <include layout="@layout/layout_line_gray"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            android:id="@+id/id_list_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+    </RelativeLayout>
+    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        android:id="@+id/cancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:layout_marginTop="@dimen/margin_width10"
+        android:text="@string/cancel_text"
+        android:textColor="@color/color_383838"
+        android:textSize="@dimen/text_width16"
+        android:gravity="center"
+        app:backColor="@color/white"
+        app:backColorPress="@color/background_gray"
+        app:textColor="@color/blue"/>
+
+</LinearLayout>

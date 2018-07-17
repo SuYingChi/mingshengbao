@@ -27,26 +27,35 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+import java.util.Locale;
 
 
 public class ActionSheetDialog {
+	private int    mHour;
 	private String mSendTime="尽快送达";
 	private String mSendDate="";
 	private Context context;
 	private Dialog dialog;
-	private TextView    text_ok;
-	private TextView    txt_cancel;
-	private RadioGroup  radioGroup1;
-	private RadioGroup  radioGroup2;
-	private RadioButton radioButton1;
 	private RadioButton radioButton2;
 	private RadioButton radioButton3;
+	private RadioButton radioButton4;
+	private RadioButton radioButton5;
+	private RadioButton radioButton6;
+	private RadioButton radioButton7;
+	private RadioButton radioButton8;
+	private RadioButton radioButton9;
+	private RadioButton radioButton10;
+	private RadioButton radioButton11;
+	private RadioButton radioButton12;
 	private RadioButton radioButton;
 	private Display display;
-	public OnSheetButtonOneClickListener itemClickOneListener;
-	public OnSheetButtonTwoClickListener itemClickTwoListener;
+	private OnSheetButtonOneClickListener itemClickOneListener;
+	private OnSheetButtonTwoClickListener itemClickTwoListener;
 	public interface OnSheetButtonOneClickListener {
+		/**
+		 *
+		 * @param string
+		 */
 		void onClick(String string);
 	}
 	public interface OnSheetButtonTwoClickListener {
@@ -64,7 +73,9 @@ public class ActionSheetDialog {
 		this.context = context;
 		WindowManager windowManager = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
-		display = windowManager.getDefaultDisplay();
+		if (windowManager!=null){
+			display = windowManager.getDefaultDisplay();
+		}
 	}
 
 	public ActionSheetDialog builder() {
@@ -74,24 +85,36 @@ public class ActionSheetDialog {
 
 		// 设置Dialog最小宽度为屏幕宽度
 		view.setMinimumWidth(display.getWidth());
-		text_ok=(TextView)view.findViewById(R.id.id_text_ok);
-		txt_cancel = (TextView) view.findViewById(R.id.txt_cancel);
-		radioGroup1=(RadioGroup)view.findViewById(R.id.id_radiogroup1);
-		radioGroup2=(RadioGroup)view.findViewById(R.id.id_radiogroup2);
-		radioButton1=(RadioButton)view.findViewById(R.id.id_radio_date1);
-		radioButton2=(RadioButton)view.findViewById(R.id.id_radio_date2);
-		radioButton3=(RadioButton)view.findViewById(R.id.id_radio_date3);
-		txt_cancel.setOnClickListener(new OnClickListener() {
+		TextView textOk=(TextView)view.findViewById(R.id.id_text_ok);
+		TextView textCancel = (TextView) view.findViewById(R.id.txt_cancel);
+		RadioGroup radioGroup1=(RadioGroup)view.findViewById(R.id.id_radiogroup1);
+		RadioGroup radioGroup2=(RadioGroup)view.findViewById(R.id.id_radiogroup2);
+		RadioButton radioButtonDate1=(RadioButton)view.findViewById(R.id.id_radio_date1);
+		RadioButton radioButtonDate2=(RadioButton)view.findViewById(R.id.id_radio_date2);
+		RadioButton radioButtonDate3=(RadioButton)view.findViewById(R.id.id_radio_date3);
+		radioButton2=(RadioButton)view.findViewById(R.id.id_radio_time2);
+		radioButton3=(RadioButton)view.findViewById(R.id.id_radio_time3);
+		radioButton4=(RadioButton)view.findViewById(R.id.id_radio_time4);
+		radioButton5=(RadioButton)view.findViewById(R.id.id_radio_time5);
+		radioButton6=(RadioButton)view.findViewById(R.id.id_radio_time6);
+		radioButton7=(RadioButton)view.findViewById(R.id.id_radio_time7);
+		radioButton8=(RadioButton)view.findViewById(R.id.id_radio_time8);
+		radioButton9=(RadioButton)view.findViewById(R.id.id_radio_time9);
+		radioButton10=(RadioButton)view.findViewById(R.id.id_radio_time10);
+		radioButton11=(RadioButton)view.findViewById(R.id.id_radio_time11);
+		radioButton12=(RadioButton)view.findViewById(R.id.id_radio_time12);
+		textCancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
 			}
 		});
-		SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat format1=new SimpleDateFormat("E");
+		SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+		SimpleDateFormat format1=new SimpleDateFormat("E",Locale.CHINA);
 		Calendar today=Calendar.getInstance();
 		Calendar tomorrow=Calendar.getInstance();
 		Calendar aftertomorrow=Calendar.getInstance();
+		mHour=today.get(Calendar.HOUR_OF_DAY);
 		tomorrow.add(Calendar.DAY_OF_MONTH,1);
 		aftertomorrow.add(Calendar.DAY_OF_MONTH,2);
 		final String mTodayDate=formats.format(today.getTime());
@@ -104,10 +127,11 @@ public class ActionSheetDialog {
 		String radioText2="("+mtomorrowDate+" "+weektomorrow+")";
 		String radioText3="("+maftertomorrowDate+" "+weekaftertomorrow+")";
 		mSendDate=mTodayDate;
-		radioButton1.setText("今天"+radioText1);
-		radioButton2.setText("明天"+radioText2);
-		radioButton3.setText("后天"+radioText3);
-		text_ok.setOnClickListener(new OnClickListener() {
+		radioButtonDate1.setText("今天"+radioText1);
+		radioButtonDate2.setText("明天"+radioText2);
+		radioButtonDate3.setText("后天"+radioText3);
+		onCheckHourTime();
+		textOk.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (itemClickOneListener!=null){
@@ -123,13 +147,19 @@ public class ActionSheetDialog {
 				switch (checkedId){
 					case R.id.id_radio_date1:
 						mSendDate=mTodayDate;
+						onCheckHourTime();
 						break;
 					case R.id.id_radio_date2:
 						mSendDate=mtomorrowDate;
+						onSetVisibilityView();
 						break;
 					case R.id.id_radio_date3:
 						mSendDate=maftertomorrowDate;
+						onSetVisibilityView();
 						break;
+						default:
+							onSetVisibilityView();
+							break;
 				}
 			}
 		});
@@ -138,35 +168,212 @@ public class ActionSheetDialog {
 			public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
 				radioButton=(RadioButton)group.findViewById(checkedId);
 				mSendTime=radioButton.getText().toString().trim();
-				switch (checkedId){
-					case R.id.id_radio_time1:
-						mSendTime="尽快送达";
-						break;
-					case R.id.id_radio_time2:
-						mSendTime="8:00-9:00";
-						break;
-					case R.id.id_radio_time3:
-						mSendTime="9:00-10:00";
-						break;
-					case R.id.id_radio_time4:
-						mSendTime="10:00-11:00";
-						break;
-					case R.id.id_radio_time5:
-						mSendTime="11:00-12:00";
-						break;
-				}
 			}
 		});
 		dialog = new Dialog(context, R.style.ActionSheetDialogStyle);
 		dialog.setContentView(view);
 		Window dialogWindow = dialog.getWindow();
-		dialogWindow.setGravity(Gravity.LEFT | Gravity.BOTTOM);
-		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-		lp.x = 0;
-		lp.y = 0;
-		dialogWindow.setAttributes(lp);
-
+		if (dialogWindow!=null){
+			dialogWindow.setGravity(Gravity.START|Gravity.BOTTOM);
+			dialogWindow.setGravity(Gravity.LEFT | Gravity.BOTTOM);
+			WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+			lp.x = 0;
+			lp.y = 0;
+			dialogWindow.setAttributes(lp);
+		}
 		return this;
+	}
+
+	/**
+	 * 根据当前时间，控制时间列表显示
+	 */
+	private void onCheckHourTime() {
+		switch (mHour){
+			case 8:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.VISIBLE);
+				radioButton4.setVisibility(View.VISIBLE);
+				radioButton5.setVisibility(View.VISIBLE);
+				radioButton6.setVisibility(View.VISIBLE);
+				radioButton7.setVisibility(View.VISIBLE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 9:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.VISIBLE);
+				radioButton5.setVisibility(View.VISIBLE);
+				radioButton6.setVisibility(View.VISIBLE);
+				radioButton7.setVisibility(View.VISIBLE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 10:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.VISIBLE);
+				radioButton6.setVisibility(View.VISIBLE);
+				radioButton7.setVisibility(View.VISIBLE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 11:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.VISIBLE);
+				radioButton7.setVisibility(View.VISIBLE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 12:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.VISIBLE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 13:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.VISIBLE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 14:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.GONE);
+				radioButton9.setVisibility(View.VISIBLE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 15:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.GONE);
+				radioButton9.setVisibility(View.GONE);
+				radioButton10.setVisibility(View.VISIBLE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 16:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.GONE);
+				radioButton9.setVisibility(View.GONE);
+				radioButton10.setVisibility(View.GONE);
+				radioButton11.setVisibility(View.VISIBLE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 17:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.GONE);
+				radioButton9.setVisibility(View.GONE);
+				radioButton10.setVisibility(View.GONE);
+				radioButton11.setVisibility(View.GONE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			case 18:
+				radioButton2.setVisibility(View.GONE);
+				radioButton3.setVisibility(View.GONE);
+				radioButton4.setVisibility(View.GONE);
+				radioButton5.setVisibility(View.GONE);
+				radioButton6.setVisibility(View.GONE);
+				radioButton7.setVisibility(View.GONE);
+				radioButton8.setVisibility(View.GONE);
+				radioButton9.setVisibility(View.GONE);
+				radioButton10.setVisibility(View.GONE);
+				radioButton11.setVisibility(View.GONE);
+				radioButton12.setVisibility(View.VISIBLE);
+				break;
+			default:
+				if (mHour>=18){
+					radioButton2.setVisibility(View.GONE);
+					radioButton3.setVisibility(View.GONE);
+					radioButton4.setVisibility(View.GONE);
+					radioButton5.setVisibility(View.GONE);
+					radioButton6.setVisibility(View.GONE);
+					radioButton7.setVisibility(View.GONE);
+					radioButton8.setVisibility(View.GONE);
+					radioButton9.setVisibility(View.GONE);
+					radioButton10.setVisibility(View.GONE);
+					radioButton11.setVisibility(View.GONE);
+					radioButton12.setVisibility(View.GONE);
+				}else {
+					radioButton2.setVisibility(View.VISIBLE);
+					radioButton3.setVisibility(View.VISIBLE);
+					radioButton4.setVisibility(View.VISIBLE);
+					radioButton5.setVisibility(View.VISIBLE);
+					radioButton6.setVisibility(View.VISIBLE);
+					radioButton7.setVisibility(View.VISIBLE);
+					radioButton8.setVisibility(View.VISIBLE);
+					radioButton9.setVisibility(View.VISIBLE);
+					radioButton10.setVisibility(View.VISIBLE);
+					radioButton11.setVisibility(View.VISIBLE);
+					radioButton12.setVisibility(View.VISIBLE);
+				}
+				break;
+		}
+
+	}
+	private void onSetVisibilityView(){
+		radioButton2.setVisibility(View.VISIBLE);
+		radioButton3.setVisibility(View.VISIBLE);
+		radioButton4.setVisibility(View.VISIBLE);
+		radioButton5.setVisibility(View.VISIBLE);
+		radioButton6.setVisibility(View.VISIBLE);
+		radioButton7.setVisibility(View.VISIBLE);
+		radioButton8.setVisibility(View.VISIBLE);
+		radioButton9.setVisibility(View.VISIBLE);
+		radioButton10.setVisibility(View.VISIBLE);
+		radioButton11.setVisibility(View.VISIBLE);
+		radioButton12.setVisibility(View.VISIBLE);
 	}
 	public ActionSheetDialog setCancelable(boolean cancel) {
 		dialog.setCancelable(cancel);

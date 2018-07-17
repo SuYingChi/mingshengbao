@@ -24,9 +24,12 @@ public class CustomDialog extends Dialog{
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode){
             case KeyEvent.KEYCODE_BACK:
-                if(CustomDialog.this.isShowing())
+                if(CustomDialog.this.isShowing()){
                     CustomDialog.this.dismiss();
+                }
                 break;
+                default:
+                    break;
         }
         return true;
     }

@@ -12,8 +12,11 @@
     <color name="colorOrange_two">#FFFa7F3F</color>
     <color name="colorOrange_three">#FFFF935B</color>
     <color name="transparent_Orange">#00FF935B</color>
+    <color name="yellow_gray">#c29457</color>
+    <color name="yellow_more_gray">#8e5f23</color>
     <color name="yellow_light">#F2CA12</color>
     <color name="yellow_text">#F5BC33</color>
+    <color name="yellow_more_light">#FAF3D7</color>
     <color name="green_light">#30A949</color>
     <color name="pink_Orange">#FFF4D6CE</color>
     <color name="transparent_color">@android:color/transparent</color>

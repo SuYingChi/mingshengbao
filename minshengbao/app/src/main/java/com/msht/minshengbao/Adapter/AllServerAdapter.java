@@ -1,13 +1,10 @@
 package com.msht.minshengbao.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,17 +12,15 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.ListBaseAdapter;
 import com.msht.minshengbao.Control.FullyGridLayoutManager;
-import com.msht.minshengbao.Model.AllseviceModel;
+import com.msht.minshengbao.Model.AllServiceModel;
 import com.msht.minshengbao.R;
-
-import java.util.ArrayList;
 
 /**
  * Created by hei on 2016/12/30.
  * 技能列表的适配器
  */
 
-public class AllServerAdapter extends ListBaseAdapter<AllseviceModel.MainCategory.ServeCategory> {
+public class AllServerAdapter extends ListBaseAdapter<AllServiceModel.MainCategory.ServeCategory> {
     private LayoutInflater mLayoutInflater;
 
     public AllServerAdapter(Context context) {
@@ -34,7 +29,7 @@ public class AllServerAdapter extends ListBaseAdapter<AllseviceModel.MainCategor
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder,final int position) {
-        AllseviceModel.MainCategory.ServeCategory serveCategory = mDataList.get(position);
+        AllServiceModel.MainCategory.ServeCategory serveCategory = mDataList.get(position);
         MainViewHolder viewHolder = (MainViewHolder) holder;
         viewHolder.tv_type_name.setText(serveCategory.name);
         String code=serveCategory.code;
@@ -95,7 +90,7 @@ public class AllServerAdapter extends ListBaseAdapter<AllseviceModel.MainCategor
     /**
      * 次级列表的适配器
      */
-    private static class SecondAdapter extends ListBaseAdapter<AllseviceModel.MainCategory.ServeCategory.ChildCategory>{
+    private static class SecondAdapter extends ListBaseAdapter<AllServiceModel.MainCategory.ServeCategory.ChildCategory>{
         private LayoutInflater mLayoutInflater;
         private boolean isValid;
 
@@ -112,7 +107,7 @@ public class AllServerAdapter extends ListBaseAdapter<AllseviceModel.MainCategor
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-            final AllseviceModel.MainCategory.ServeCategory.ChildCategory childCategory = mDataList.get(position);
+            final AllServiceModel.MainCategory.ServeCategory.ChildCategory childCategory = mDataList.get(position);
             final SecondViewHolder viewHolder = (SecondViewHolder) holder;
             viewHolder.tv_serve.setText(childCategory.name);
             viewHolder.layout_serve.setOnClickListener(new View.OnClickListener() {

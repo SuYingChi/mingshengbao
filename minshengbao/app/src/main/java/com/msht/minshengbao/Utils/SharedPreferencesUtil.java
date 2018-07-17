@@ -26,6 +26,10 @@ public class SharedPreferencesUtil {
     public static final String VersionState="versionstate";
     public static final String Shopstate="shopstate";
     public static final String DeviceToken="devicetoken";
+    public static final String LPG_USER_ID="lpgUserId";
+    public static final String LPG_USER_NAME="lpgUserName";
+    public static final String LPG_MOBILE="MOBILE";
+    public static final String LPG_SEX="lpgSex";
 
     public static Boolean getBoolean(Context context, String strKey,
                                        Boolean strDefault) {//strDefault  boolean: Value to return if this preference does not exist.

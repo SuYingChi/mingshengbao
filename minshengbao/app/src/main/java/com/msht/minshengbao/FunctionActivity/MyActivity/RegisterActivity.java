@@ -41,10 +41,10 @@ import java.util.regex.Pattern;
  * @date 2015/10/31
  */
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
-    private EditText  Etphonenumber,Etcode;
-    private EditText  Etnpassword;
+    private EditText etPhoneNumber, etCode;
+    private EditText etPassword;
     private ImageView gobackimg,clearimg,showimg;
-    private Button    Btngetcode,Btnregister;
+    private Button    btnGetCode,Btnregister;
     private TextView  tv_treaty;
     private TimeCount time;
     private String    PhoneNo;
@@ -73,18 +73,18 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==1){
-                                reference.Registerrequest();
+                                reference.registerRequest();
                             }
                         }else {
                             if (reference.requestCode==0) {
-                                reference.Btngetcode.setText("获取验证码");
-                                reference.Btngetcode.setClickable(true);
+                                reference.btnGetCode.setText("获取验证码");
+                                reference.btnGetCode.setClickable(true);
                             }
-                            reference.failure(Error);
+                            reference.failure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -135,13 +135,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         @Override
         public void onTick(long millisUntilFinished) {  //计时过程
-            Btngetcode.setClickable(false);
-            Btngetcode.setText(millisUntilFinished/1000+"秒");
+            btnGetCode.setClickable(false);
+            btnGetCode.setText(millisUntilFinished/1000+"秒");
         }
         @Override
         public void onFinish() {
-            Btngetcode.setText("获取验证码");
-            Btngetcode.setClickable(true);
+            btnGetCode.setText("获取验证码");
+            btnGetCode.setClickable(true);
         }
     }
     private  void initView() {
@@ -149,35 +149,35 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         clearimg=(ImageView)findViewById(R.id.id_clearimg);
         showimg=(ImageView)findViewById(R.id.id_image_show);
         showimg.setTag(0);
-        Btngetcode=(Button)findViewById(R.id.id_btn_getcode);
+        btnGetCode =(Button)findViewById(R.id.id_btn_getcode);
         Btnregister=(Button)findViewById(R.id.id_tijiao_regiser);
-        Etphonenumber=(EditText)findViewById(R.id.id_et_phonenumber);
-        Etcode=(EditText)findViewById(R.id.id_et_code);
-        Etnpassword=(EditText)findViewById(R.id.id_et_password);
+        etPhoneNumber =(EditText)findViewById(R.id.id_et_phonenumber);
+        etCode =(EditText)findViewById(R.id.id_et_code);
+        etPassword =(EditText)findViewById(R.id.id_et_password);
         tv_treaty=(TextView)findViewById(R.id.id_treaty);
         Btnregister.setEnabled(false);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
-        Etcode.addTextChangedListener(myTextWatcher);
-        Etnpassword.addTextChangedListener(myTextWatcher);
-        Etphonenumber.addTextChangedListener(myTextWatcher);
+        etCode.addTextChangedListener(myTextWatcher);
+        etPassword.addTextChangedListener(myTextWatcher);
+        etPhoneNumber.addTextChangedListener(myTextWatcher);
     }
     private class MyTextWatcher implements TextWatcher{
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(Etphonenumber.getText().toString())) {
-                Btngetcode.setEnabled(false);
-                Btngetcode.setTextColor(Color.parseColor("#FF545454"));
-                Btngetcode.setBackgroundResource(R.drawable.shape_white_border_rectangle);
+            if (TextUtils.isEmpty(etPhoneNumber.getText().toString())) {
+                btnGetCode.setEnabled(false);
+                btnGetCode.setTextColor(Color.parseColor("#FF545454"));
+                btnGetCode.setBackgroundResource(R.drawable.shape_white_border_rectangle);
             } else {
                 //有效点击，
-                Btngetcode.setEnabled(true);
-                Btngetcode.setTextColor(Color.parseColor("#ffffffff"));
-                Btngetcode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
+                btnGetCode.setEnabled(true);
+                btnGetCode.setTextColor(Color.parseColor("#ffffffff"));
+                btnGetCode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
             }
-            if(TextUtils.isEmpty(Etphonenumber.getText().toString())||TextUtils.isEmpty(Etcode.getText().toString() )
-                    ||TextUtils.isEmpty(Etnpassword.getText().toString())){
+            if(TextUtils.isEmpty(etPhoneNumber.getText().toString())||TextUtils.isEmpty(etCode.getText().toString() )
+                    ||TextUtils.isEmpty(etPassword.getText().toString())){
                 Btnregister.setEnabled(false);
 
             }else {
@@ -191,12 +191,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         gobackimg.setOnClickListener(this);
         clearimg.setOnClickListener(this);
         tv_treaty.setOnClickListener(this);
-        Btngetcode.setOnClickListener(new View.OnClickListener() {
+        btnGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhoneNo = Etphonenumber.getText().toString().trim();
+                PhoneNo = etPhoneNumber.getText().toString().trim();
                 if (isPhone(PhoneNo)) {
-                    Btngetcode.setText("正在发送...");
+                    btnGetCode.setText("正在发送...");
                     time.start();
                     requestCode=0;
                     requestService();
@@ -218,12 +218,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 switch (tag){
                     case 0:
                         showimg.setImageResource(R.drawable.password_red);
-                        Etnpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         v.setTag(1);
                         break;
                     case 1:
                         showimg.setImageResource(R.drawable.password_gray);
-                        Etnpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         v.setTag(0);
                         break;
                     default:
@@ -239,8 +239,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (requestCode==0){
             validateURL= UrlUtil.Captcha_CodeUrl;
         }else if (requestCode==1){
-            verifycode=Etcode.getText().toString().trim();
-            password=Etnpassword.getText().toString().trim();
+            verifycode= etCode.getText().toString().trim();
+            password= etPassword.getText().toString().trim();
             validateURL=UrlUtil.Register_Url;
             textParams.put("password",password);
             textParams.put("code",verifycode);
@@ -274,27 +274,27 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.id_clearimg:
-                ClearForm();
+                clearForm();
                 break;
             case R.id.id_treaty:
-                Treaty();
+                treaty();
                 break;
             default:
                 break;
 
         }
     }
-    private void Treaty() {
+    private void treaty() {
         Intent treaty=new Intent(RegisterActivity.this,AgreeTreayt.class);
         treaty.putExtra("idNo","0");
         startActivity(treaty);
     }
-    private void ClearForm() {   //清除
-        Etphonenumber.setText("");
+    private void clearForm() {   //清除
+        etPhoneNumber.setText("");
     }
-    private void Registerrequest() {
-        Intent intent_success=new Intent(RegisterActivity.this,RegisterSeccess.class);
-        startActivity(intent_success);
+    private void registerRequest() {
+        Intent intentSuccess=new Intent(RegisterActivity.this,RegisterSeccess.class);
+        startActivity(intentSuccess);
         RegisterActivity.this.finish();
     }
     private void removeTimeout() {

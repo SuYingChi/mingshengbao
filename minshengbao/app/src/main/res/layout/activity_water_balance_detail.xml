@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterBalanceDetail">
+    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterBalanceDetailActivity">
     <include layout="@layout/layout_header" />
     <com.msht.minshengbao.ViewUI.ViewPagerIndicator
         android:id="@+id/indicator"
@@ -13,12 +13,11 @@
         android:layout_height="@dimen/margin_width50"
         android:background="@color/white">
     </com.msht.minshengbao.ViewUI.ViewPagerIndicator>
-
     <include layout="@layout/layout_line_gray" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewPager_fees"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></android.support.v4.view.ViewPager>
+        android:layout_weight="1">
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

@@ -25,14 +25,14 @@ import java.util.Map;
  * @date 2016/10/31
  */
 public class SendrequestUtil {
-    private static final String ERROR_NETWORK = "服务器连接失败，请稍后再试";
+    private static final String ERROR_NETWORK = "网络连接异常，请查看网络状态";
     private static final String ERROR_SERVICE = "服务器异常，请稍后再试";
     private static final String ERROR_OVER_TIME = "网络连接超时，请检查您的网络";
     public static final int SUCCESS=1;
     public static final int FAILURE=0;
     public static final String SUCCESS_VALUE="success";
     public static final String FAILURE_VALUE="fail";
-    public static final String CANCEL_VALUE="fail";
+    public static final String CANCEL_VALUE="cancel";
     public static void ShortTimeGet(final String  url, final Handler mhandler) {
         new Thread(new Runnable() {
             @Override
@@ -510,7 +510,7 @@ public class SendrequestUtil {
                     os.flush();
                     os.close();
                     conn.connect();
-                    if (conn.getResponseCode()== 200) {  // 从Internet获取网页,发送请求,将网页以流的形式读回来
+                    if (conn.getResponseCode()== 200) {
                         InputStream is = conn.getInputStream();
                         String result = StreamTools.readInputStream(is);
                         Message msg = new Message();

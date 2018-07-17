@@ -2,6 +2,7 @@ package com.msht.minshengbao.FunctionActivity.fragment;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,13 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/10/20  
+ */
 public class SelfHelpPay extends Fragment {
     private RadioGroup radioGroup;
     private RadioButton radioButtonAddress;
@@ -65,6 +73,7 @@ public class SelfHelpPay extends Fragment {
     private JSONObject jsonObject;
     private GethouseAdapter adapter ;
     private final String mPageName ="燃气缴费";
+    private Context context;
     private ArrayList<HashMap<String,  String>> houseList = new ArrayList<HashMap<String,  String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     public SelfHelpPay() {
@@ -190,19 +199,19 @@ public class SelfHelpPay extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Intent payfees=new Intent(getActivity(), GasExpenseQuery.class);
-        payfees.putExtra("name", name);
-        payfees.putExtra("CustomerNo", customerNum);
-        payfees.putExtra("all_balance",allBalance);
-        payfees.putExtra("debts", debts);
-        payfees.putExtra("total_num", totalNum);
-        payfees.putExtra("discount_fees", discountFees);
-        payfees.putExtra("gas_fee",gasFee);
-        payfees.putExtra("late_fee", lateFee);
-        startActivity(payfees);
+        Intent payFees=new Intent(context, GasExpenseQuery.class);
+        payFees.putExtra("name", name);
+        payFees.putExtra("CustomerNo", customerNum);
+        payFees.putExtra("all_balance",allBalance);
+        payFees.putExtra("debts", debts);
+        payFees.putExtra("total_num", totalNum);
+        payFees.putExtra("discount_fees", discountFees);
+        payFees.putExtra("gas_fee",gasFee);
+        payFees.putExtra("late_fee", lateFee);
+        startActivity(payFees);
     }
     private void displayDialog(String s) {
-        new PromptDialog.Builder(getActivity())
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
@@ -218,6 +227,7 @@ public class SelfHelpPay extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_selfhelp_pay, container, false);
+        context=getActivity();
         customDialog=new CustomDialog(getActivity(), "正在加载");
         Bundle bundle=getArguments();
         userId=bundle.getString("id");
@@ -240,7 +250,7 @@ public class SelfHelpPay extends Fragment {
             noNetwork();
         }
         initEvent();
-        ButtonEvent();
+        buttonEvent();
         return view;
     }
     private void initData() {
@@ -257,7 +267,7 @@ public class SelfHelpPay extends Fragment {
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void noNetwork() {
-        new PromptDialog.Builder(getActivity())
+        new PromptDialog.Builder(context)
                 .setTitle("当前网络不可用")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("请检查你的网络设置")
@@ -323,7 +333,7 @@ public class SelfHelpPay extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
     }
-    private void ButtonEvent() {
+    private void buttonEvent() {
         btnPayQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

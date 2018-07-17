@@ -55,8 +55,9 @@ public class MPermissionUtils {
         mOnPermissionListener = callback;
 
         if(checkPermissions(getContext(object), permissions)){
-            if(mOnPermissionListener != null)
+            if(mOnPermissionListener != null){
                 mOnPermissionListener.onPermissionGranted(requestCode);
+            }
         }else{
             List<String> deniedPermissions = getDeniedPermissions(getContext(object), permissions);
             if(deniedPermissions.size() > 0){

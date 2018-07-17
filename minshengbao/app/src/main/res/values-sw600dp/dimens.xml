@@ -4,6 +4,7 @@
     <dimen name="margin_banner">240dp</dimen>
     <dimen name="margin_imgHight">120dp</dimen>
     <dimen name="margin_width320">384dp</dimen>
+    <dimen name="margin_width270">324dp</dimen>
     <dimen name="margin_width225">270dp</dimen>
     <dimen name="margin_width220">264dp</dimen>
     <dimen name="margin_width200">240dp</dimen>
@@ -51,6 +52,7 @@
     <dimen name="margin_width5">6dp</dimen>
     <dimen name="margin_width3">3.6dp</dimen>
     <dimen name="margin_width2">2.4dp</dimen>
+    <dimen name="text_width8">9.6sp</dimen>
     <dimen name="text_width10">12sp</dimen>
     <dimen name="text_width12">14.4sp</dimen>
     <dimen name="text_width14">16.8sp</dimen>

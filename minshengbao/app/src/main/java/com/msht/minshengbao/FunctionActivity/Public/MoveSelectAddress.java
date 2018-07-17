@@ -44,6 +44,7 @@ import com.msht.minshengbao.MoveSelectAddress.LocationBean;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchTask;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -52,23 +53,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/3/8  
+ */
 public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChangeListener, View.OnClickListener, TextWatcher, AdapterView.OnItemClickListener, AMapLocationListener, PoiSearch.OnPoiSearchListener {
     private MapView mMapView = null;
     private AMap aMap;
     private AMapLocationClient locationClient;
-    private View layout_map;
-    private View layout_search;
-    private ImageView iv_back;
+    private View layoutMap;
+    private View layoutSearch;
     private TextView tvAddressDesc;
-    private ListView lv_data;
-    private ListViewForScrollView search_data;
-    private TextView tv_cancel;
-    private EditText autotext;
-    private LinearLayout ll_poi;
-    private int currentPage = 0;//
+    private TextView tvCancel;
+    private LinearLayout layoutPoi;
     private String mCity;
-    private PoiSearch.Query query;// Poi查询条件类
-    private PoiSearch poiSearch;// POI搜索
     private PoiAdapter poiAdapter;
     private PoiSearchAdapter searchAdapter;
     private LocationBean currentLoc;
@@ -103,40 +104,43 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
     }
     private void initViews(Bundle savedInstanceState) {
         mMapView = (MapView) findViewById(R.id.id_mapView);
-        mMapView.onCreate(savedInstanceState); // 此方法必须重写
+        // 此方法必须重写
+        mMapView.onCreate(savedInstanceState);
         aMap = mMapView.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);  //隐藏缩放按钮
-        ll_poi = (LinearLayout) findViewById(R.id.ll_poi);
-        layout_map=(View)findViewById(R.id.id_map_location);
-        layout_search=(View)findViewById(R.id.id_search_location);
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        autotext =(EditText) findViewById(R.id.et_search);
+        //隐藏缩放按钮
+        uiSettings.setZoomControlsEnabled(false);
+        layoutPoi = (LinearLayout) findViewById(R.id.ll_poi);
+        layoutMap =(View)findViewById(R.id.id_map_location);
+        layoutSearch =(View)findViewById(R.id.id_search_location);
+        ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
+        EditText autoText =(EditText) findViewById(R.id.et_search);
         tvAddressDesc = (TextView) findViewById(R.id.addressDesc);
-        lv_data = (ListView) findViewById(R.id.lv_data);
-        search_data=(ListViewForScrollView)findViewById(R.id.id_search_data);
-        tv_cancel=(TextView)findViewById(R.id.id_cancel);
-        aMap.setOnCameraChangeListener(this); // 添加移动地图事件监听器
-        tv_cancel.setEnabled(false);
-        tv_cancel.setOnClickListener(this);
-        autotext.addTextChangedListener(this);
-        autotext.setOnTouchListener(new View.OnTouchListener() {
+        ListView lvData = (ListView) findViewById(R.id.lv_data);
+        ListViewForScrollView searchData =(ListViewForScrollView)findViewById(R.id.id_search_data);
+        tvCancel =(TextView)findViewById(R.id.id_cancel);
+        // 添加移动地图事件监听器
+        aMap.setOnCameraChangeListener(this);
+        tvCancel.setEnabled(false);
+        tvCancel.setOnClickListener(this);
+        autoText.addTextChangedListener(this);
+        autoText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                tv_cancel.setEnabled(true);
-                tv_cancel.setVisibility(View.VISIBLE);
-                layout_map.setVisibility(View.GONE);
-                layout_search.setVisibility(View.VISIBLE);
+                tvCancel.setEnabled(true);
+                tvCancel.setVisibility(View.VISIBLE);
+                layoutMap.setVisibility(View.GONE);
+                layoutSearch.setVisibility(View.VISIBLE);
                 return false;
             }
         });
-        iv_back.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
         poiAdapter = new PoiAdapter(this);
         searchAdapter=new PoiSearchAdapter(this,mList);
-        search_data.setAdapter(searchAdapter);
-        search_data.setOnItemClickListener(this);
-        lv_data.setOnItemClickListener(this);
-        lv_data.setAdapter(poiAdapter);
+        searchData.setAdapter(searchAdapter);
+        searchData.setOnItemClickListener(this);
+        lvData.setOnItemClickListener(this);
+        lvData.setAdapter(poiAdapter);
     }
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {}
@@ -163,9 +167,9 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
                 finish();
                 break;
             case R.id.id_cancel:
-                tv_cancel.setVisibility(View.GONE);
-                layout_search.setVisibility(View.GONE);
-                layout_map.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.GONE);
+                layoutSearch.setVisibility(View.GONE);
+                layoutMap.setVisibility(View.VISIBLE);
                 break;
             default:
                 break;
@@ -176,19 +180,24 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
     }
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.length() <= 0) {
-            return;
-        }else {
+        if (s.length()>0) {
             doSearchQuery(s.toString().trim());
         }
     }
     private void doSearchQuery(String keyWord) {
-        currentPage = 0;
-        query = new PoiSearch.Query(keyWord, "", mCity);// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
-        query.setPageSize(16);// 设置每页最多返回多少条poiitem
-        query.setPageNum(currentPage);// 设置查第一页
+        int currentPage = 0;
+        /*
+         *  Poi查询条件类
+         *  第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+         */
+        PoiSearch.Query query = new PoiSearch.Query(keyWord, "", mCity);
+        // 设置每页最多返回多少条poiitem
+        query.setPageSize(16);
+        // 设置查第一页
+        query.setPageNum(currentPage);
         query.setCityLimit(true);
-        poiSearch = new PoiSearch(this, query);
+         // POI搜索
+        PoiSearch poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
     }
@@ -239,7 +248,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_LOCATION_REQUEST) {
-                Toast.makeText(context,"获取位置授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"获取位置授权失败");
             }
         }
     };
@@ -291,9 +300,9 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
     }
     @Override
     public void onPoiSearched(PoiResult poiResult, int rCode) {
-        mList.clear();
         if(rCode == 1000) {
             if (poiResult != null && poiResult.getQuery() != null) {
+                mList.clear();
                 ArrayList<PoiItem> items = poiResult.getPois();
                 for (PoiItem item : items) {
                     //获取经纬度对象
@@ -342,28 +351,28 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
             if(convertView == null){
                 vh = new ViewHolder();
                 convertView = getLayoutInflater().inflate(RESOURCE, null);
-                vh.tv_title = (TextView) convertView.findViewById(R.id.address);
-                vh.tv_text = (TextView) convertView.findViewById(R.id.addressDesc);
+                vh.tvTitle = (TextView) convertView.findViewById(R.id.address);
+                vh.tvText = (TextView) convertView.findViewById(R.id.addressDesc);
                 convertView.setTag(vh);
             }else{
                 vh = (ViewHolder) convertView.getTag();
             }
             LocationBean bean = (LocationBean) getItem(position);
-            vh.tv_title.setText(bean.getTitle());
-            vh.tv_text.setText(bean.getContent());
+            vh.tvTitle.setText(bean.getTitle());
+            vh.tvText.setText(bean.getContent());
             return convertView;
         }
         private class ViewHolder{
-            public TextView tv_title;
-            public TextView tv_text;
+            TextView tvTitle;
+            TextView tvText;
         }
         public void setData(List<LocationBean> datas){
             this.datas = datas;
             if(datas.size()>0){
-                ll_poi.setVisibility(View.VISIBLE);
+                layoutPoi.setVisibility(View.VISIBLE);
             }else{
                 Toast.makeText(MoveSelectAddress.this,"没有结果",Toast.LENGTH_SHORT).show();
-                ll_poi.setVisibility(View.GONE);
+                layoutPoi.setVisibility(View.GONE);
             }
         }
     }

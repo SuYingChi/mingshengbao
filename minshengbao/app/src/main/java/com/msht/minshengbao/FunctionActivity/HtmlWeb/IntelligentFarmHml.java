@@ -20,7 +20,6 @@ import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
 
 public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
-
     private WebView mWebview;
     private String    Url,naviga;
     @Override
@@ -36,9 +35,9 @@ public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient
         initEvent();
     }
     private void initHeader() {
-        backimg = (ImageView) findViewById(R.id.id_goback);
-        tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        tv_navigaTile.setText(naviga);
+        backImg = (ImageView) findViewById(R.id.id_goback);
+        tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
+        tvNavigationTile.setText(naviga);
     }
     private void initWeBView() {
         mWebview=(WebView)findViewById(R.id.id_web_html);
@@ -70,7 +69,7 @@ public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient
         mWebview.setWebChromeClient(new MyWebChomeClient(IntelligentFarmHml.this));
     }
     private void initEvent() {
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mWebview.canGoBack()){
@@ -110,5 +109,14 @@ public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient
     @Override
     public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mWebview.stopLoading();
+        mWebview.removeAllViews();
+        mWebview.destroy();
+        mWebview = null;
     }
 }

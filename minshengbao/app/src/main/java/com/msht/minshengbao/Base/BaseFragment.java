@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.msht.minshengbao.FunctionActivity.fragment.WaterIncomeFra;
+
 /**
  * Created by hei on 2016/12/26.
  *
@@ -16,13 +18,19 @@ import android.view.ViewGroup;
  * 懒加载用的fragmnte
  */
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/7/2  
+ */
 public abstract class BaseFragment extends Fragment{
     protected View mRootView;
     public Context mContext;
     protected boolean isVisible;
     private boolean isPrepared;
     private boolean isFirst = true;
-
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -30,7 +38,6 @@ public abstract class BaseFragment extends Fragment{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        Log.d("TAG", "fragment->setUserVisibleHint");
         if (getUserVisibleHint()) {
             isVisible = true;
             lazyLoad();

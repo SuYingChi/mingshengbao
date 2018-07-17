@@ -42,10 +42,10 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
     }
 
     private void initHeader() {
-        backimg = (ImageView) findViewById(R.id.id_goback);
-        tv_navigaTile = (TextView) findViewById(R.id.tv_navigation);
-        tv_navigaTile.setText(mNavigation);
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg = (ImageView) findViewById(R.id.id_goback);
+        tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
+        tvNavigationTile.setText(mNavigation);
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mWebview.canGoBack()){
@@ -136,5 +136,10 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
     @Override
     public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

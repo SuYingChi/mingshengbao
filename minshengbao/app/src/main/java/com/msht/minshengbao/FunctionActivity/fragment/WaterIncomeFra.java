@@ -65,6 +65,7 @@ public class WaterIncomeFra extends BaseFragment {
         }
         return waterIncomeFra ;
     }
+
     public WaterIncomeFra() {}
     private static class RequestHandler extends Handler{
         private WeakReference<WaterIncomeFra> mWeakReference;

@@ -94,10 +94,10 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
+                        String results=object.optString("result");
+                        String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
+                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             Intent broadcast=new Intent();
                             broadcast.setAction(MY_ACTION);
                             broadcast.putExtra("broadcast", "2");
@@ -123,7 +123,7 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                             }
                             activity.onInfomationData();
                         }else {
-                            ToastUtil.ToastText(activity.context,Error);
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();

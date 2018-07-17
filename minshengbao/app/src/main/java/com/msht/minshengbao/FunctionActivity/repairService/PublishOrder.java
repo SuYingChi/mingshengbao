@@ -28,7 +28,7 @@ import com.msht.minshengbao.Adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.Adapter.appointAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.FunctionActivity.HtmlWeb.PriceMenu;
-import com.msht.minshengbao.FunctionActivity.Public.SelectAddress;
+import com.msht.minshengbao.FunctionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -161,7 +161,9 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                         if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
                             activity.k++;
                             if(activity.k==activity.imgPaths.size()){
-                                activity.customDialog.dismiss();
+                                if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                                    activity.customDialog.dismiss();
+                                }
                                 String navigation="发布订单";
                                 Intent success=new Intent(activity.context,PublishSuccess.class);
                                 success.putExtra("navigation",navigation);
@@ -622,7 +624,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         });
     }
     private void selectAddr() {
-        Intent intent=new Intent(context, SelectAddress.class);
+        Intent intent=new Intent(context, SelectAddressActivity.class);
         startActivityForResult(intent,4);
     }
     private void ordersend() {
@@ -677,5 +679,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }
