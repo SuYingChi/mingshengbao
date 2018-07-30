@@ -1,15 +1,13 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.msht.minshengbao.Adapter.LpgBottleReplaceAdapter;
+import com.msht.minshengbao.adapter.LpgBottleReplaceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;

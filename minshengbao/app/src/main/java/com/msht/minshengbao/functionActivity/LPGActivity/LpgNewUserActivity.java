@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Electricvehicle.ReplaceAddress;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddress;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -85,10 +85,10 @@ public class NewUserActivity extends BaseActivity implements View.OnClickListene
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-                        String error = object.optString("error");
+                        String error = object.optString("msg");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.requestCode=1;
-                            activity.displayDialog("您已申请成功");
+                            activity.displayDialog(error);
                         }else {
                             activity.requestCode=0;
                             activity.displayDialog(error);
@@ -298,4 +298,5 @@ public class NewUserActivity extends BaseActivity implements View.OnClickListene
            customDialog.dismiss();
         }
     }
+
 }
