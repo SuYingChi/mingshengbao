@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.os.Build;
@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.OrderListViewpagerAdapter;
+import com.msht.minshengbao.adapter.OrderListViewpagerAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;

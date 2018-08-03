@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FunctionActivity.LPGActivity.LpgMyOrderListActivity">
+    tools:context=".functionActivity.LPGActivity.LpgMyOrderListActivity">
     <include layout="@layout/layout_header" />
     <com.msht.minshengbao.ViewUI.ViewPagerIndicator
         android:id="@+id/indicator"

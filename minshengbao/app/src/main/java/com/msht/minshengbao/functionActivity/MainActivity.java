@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity;
+package com.msht.minshengbao.functionActivity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,13 +26,13 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
-import com.msht.minshengbao.FunctionActivity.fragment.HomeFragment;
-import com.msht.minshengbao.FunctionActivity.fragment.LoginMyFrag;
-import com.msht.minshengbao.FunctionActivity.fragment.MyFragment;
-import com.msht.minshengbao.FunctionActivity.fragment.OrderFragment;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.fragment.HomeFragment;
+import com.msht.minshengbao.functionActivity.fragment.LoginMyFrag;
+import com.msht.minshengbao.functionActivity.fragment.MyFragment;
+import com.msht.minshengbao.functionActivity.fragment.OrderFragment;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.LocationUtils;
@@ -334,7 +333,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (NetWorkUtil.IsNetWorkEnable(this)){
                 onGetMessage();
             }
-            initGetinfomation();
+            initGetInformation();
             initPush();
         }
         checkVerSion();
@@ -625,7 +624,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("token",deviceData);
         SendrequestUtil.postDataFromServiceThree(validateURL,textParams,pushHandler);
     }
-    private void initGetinfomation() {
+    private void initGetInformation() {
         String validateURL = UrlUtil.Userinfo_GasUrl;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);

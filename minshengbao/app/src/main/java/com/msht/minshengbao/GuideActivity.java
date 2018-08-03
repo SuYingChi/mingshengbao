@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.msht.minshengbao.Adapter.GuideViewPagerAdapter;
-import com.msht.minshengbao.FunctionActivity.MainActivity;
+import com.msht.minshengbao.adapter.GuideViewPagerAdapter;
+import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;

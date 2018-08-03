@@ -1,12 +1,11 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.LpgOrderListFragment;
-import com.msht.minshengbao.FunctionActivity.fragment.WaterIncomeFra;
+import com.msht.minshengbao.functionActivity.fragment.LpgOrderListFragment;
 
 /**
  * Demo class

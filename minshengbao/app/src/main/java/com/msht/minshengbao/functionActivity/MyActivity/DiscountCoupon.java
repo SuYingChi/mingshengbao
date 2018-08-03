@@ -1,9 +1,9 @@
-package com.msht.minshengbao.FunctionActivity.MyActivity;
+package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 
-import com.msht.minshengbao.Adapter.CouponFragmentAdapter;
+import com.msht.minshengbao.adapter.CouponFragmentAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,13 +13,14 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
-import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHml;
 
 import org.json.JSONObject;
 
@@ -51,13 +52,14 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
     private double   doublePledge1=1;
     private double   doublePledge2=1;
     private double   doublePledge3=1;
-    private double weightFiveTotal;
-    private double weightFifteenTotal;
-    private double weightFiftyTotal;
+    private double   weightFiveTotal;
+    private double   weightFifteenTotal;
+    private double   weightFiftyTotal;
     private String   mTotalAmount;
-    private int      mBottleNum1=1;
+    private int      mBottleNum1=0;
     private int      mBottleNum2=0;
     private int      mBottleNum3=0;
+    private int      mBottleTotalCount;
     private String   siteId;
 
     private CustomDialog customDialog;
@@ -159,8 +161,6 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
     }
     private void initFindViewId() {
-        View layoutHeader =findViewById(R.id.id_re_layout);
-        layoutHeader.setBackgroundResource(R.color.colorOrange);
         mTextPrice1=(TextView)findViewById(R.id.id_tv_amount);
         mTextPrice2=(TextView)findViewById(R.id.id_tv_amount2);
         mTextPrice3=(TextView)findViewById(R.id.id_tv_amount3);
@@ -218,15 +218,27 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
                 onOperationResult();
                 break;
             case R.id.id_btn_next:
-                onNextActivity();
+                if (mBottleTotalCount>0){
+                    onNextActivity();
+                }else {
+                    ToastUtil.ToastText(context,"请您选择购买瓶装气数量");
+                }
                 break;
             case R.id.id_look_detail:
+                startHtmlWebView();
                 break;
                 default:
                     break;
         }
     }
 
+    private void startHtmlWebView() {
+        String url="";
+        Intent intent=new Intent(context, HtmlPage.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigate","折价说明");
+        startActivity(intent);
+    }
     private void onNextActivity() {
         Intent intent=new Intent(context,LpgOrderGasActivity.class);
         intent.putExtra("weightFiveTotal",weightFiveTotal);
@@ -238,18 +250,18 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
         startActivity(intent);
     }
     private void onOperationResult(){
+         mBottleTotalCount=mBottleNum1+mBottleNum2+mBottleNum3;
          weightFiveTotal=mBottleNum1*doublePrice1;
          weightFifteenTotal=mBottleNum2*doublePrice2;
          weightFiftyTotal=mBottleNum3*doublePrice3;
          double totalValue=weightFiveTotal+weightFifteenTotal+weightFiftyTotal;
          totalValue= VariableUtil.twoDecinmal2(totalValue);
-         mTotalAmount=String.valueOf(totalValue);
+         mTotalAmount="¥"+String.valueOf(totalValue);
          mButtonNum1.setText(String.valueOf(mBottleNum1));
          mButtonNum2.setText(String.valueOf(mBottleNum2));
          mButtonNum3.setText(String.valueOf(mBottleNum3));
          mTextTotal.setText(mTotalAmount);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

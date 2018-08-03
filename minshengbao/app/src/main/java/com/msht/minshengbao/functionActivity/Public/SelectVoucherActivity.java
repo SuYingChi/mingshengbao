@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Public;
+package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/gray_black"
-    tools:context="com.msht.minshengbao.FunctionActivity.repairService.Warrantycard">
+    tools:context="com.msht.minshengbao.functionActivity.repairService.Warrantycard">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

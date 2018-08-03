@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.MyActivity;
+package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.SwipeAdapter;
+import com.msht.minshengbao.adapter.SwipeAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.GasService.AddCustomerNoActivity;
+import com.msht.minshengbao.functionActivity.GasService.AddCustomerNoActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

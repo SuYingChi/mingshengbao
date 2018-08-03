@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.MyActivity;
+package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -285,8 +285,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
     private void treaty() {
-        Intent treaty=new Intent(RegisterActivity.this,AgreeTreayt.class);
-        treaty.putExtra("idNo","0");
+        String url=UrlUtil.AgreeTreayt_Url;
+        Intent treaty=new Intent(RegisterActivity.this,AgreeTreaty.class);
+        treaty.putExtra("navigation","注册协议书");
+        treaty.putExtra("url",url);
         startActivity(treaty);
     }
     private void clearForm() {   //清除

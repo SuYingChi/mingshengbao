@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FunctionActivity.fragment.LpgDepositFragment">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_gray"
+    android:orientation="vertical"
+    tools:context=".functionActivity.fragment.LpgDepositFragment">
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white">
     <com.msht.minshengbao.ViewUI.PullRefresh.XListView
         android:id="@+id/id_order_list"
         android:layout_width="match_parent"
@@ -27,6 +34,68 @@
             android:textSize="@dimen/text_width16"
             android:text="@string/not_have_data"/>
     </RelativeLayout>
-
-
-</FrameLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/id_layout_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:baselineAligned="false"
+        android:background="@color/transparent"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_weight="0.65"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:minHeight="@dimen/margin_width45">
+            <TextView
+                android:id="@+id/id_total_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_width15"
+                android:layout_marginEnd="@dimen/margin_width15"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/colorOrange"
+                android:text="@string/default_value0"/>
+            <TextView
+                android:id="@+id/id_total_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/id_total_amount"
+                android:layout_toLeftOf="@+id/id_total_amount"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/title_tv"
+                android:text="@string/total_amount"/>
+            <TextView
+                android:id="@+id/id_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/id_total_text"
+                android:layout_toStartOf="@+id/id_total_text"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/title_tv" />
+        </RelativeLayout>
+        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            android:id="@+id/id_btn_apply"
+            android:layout_weight="0.35"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_width45"
+            android:gravity="center"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/apply_reimbursement"
+            app:backGroundImage="@drawable/shape_change_background"
+            app:backColorPress="#F4D6CE"
+            app:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

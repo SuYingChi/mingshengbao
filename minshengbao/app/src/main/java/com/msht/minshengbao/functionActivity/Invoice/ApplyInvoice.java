@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Invoice;
+package com.msht.minshengbao.functionActivity.Invoice;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -24,8 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
-import com.msht.minshengbao.FunctionActivity.Public.SelectAddressActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.BitmapUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -322,9 +322,10 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 applyData();
                 break;
             case R.id.id_tv_rightText:
-                String idNo="4";
-                Intent intent=new Intent(this, AgreeTreayt.class);
-                intent.putExtra("idNo",idNo);
+                String url=UrlUtil.Invoice_explain;
+                Intent intent=new Intent(this, AgreeTreaty.class);
+                intent.putExtra("url",url);
+                intent.putExtra("navigation","发票说明");
                 startActivity(intent);
                 break;
             default:
@@ -407,7 +408,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         recipients= etRecipients.getText().toString().trim();
         phoneNum = etPhone.getText().toString().trim();
         String district  =etAddress.getText().toString().trim();
-        address   =district;
+        address=district;
         identyfyNo= etTaxpayerNum.getText().toString().trim();
         bank      = etBank.getText().toString().trim();
         bankcard  = etBankcard.getText().toString().trim();

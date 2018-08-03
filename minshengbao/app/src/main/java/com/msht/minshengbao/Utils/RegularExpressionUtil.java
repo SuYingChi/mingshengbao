@@ -11,8 +11,16 @@ import java.util.regex.Pattern;
  */
 public class RegularExpressionUtil {
     private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
+    private static String eMailText="^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|((["+
+            "a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+
     public static boolean isPhone(String phone){
         Matcher matcher=NUMBER_PATTERN.matcher(phone);
         return matcher.matches();
+    }
+    public static boolean isEmail(String email){
+        Pattern p=Pattern.compile(eMailText);
+        Matcher m=p.matcher(email);
+        return m.matches();
     }
 }

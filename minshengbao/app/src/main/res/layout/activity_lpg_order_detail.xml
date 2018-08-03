@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".FunctionActivity.LPGActivity.LpgOrderDetailActivity">
+    tools:context=".functionActivity.LPGActivity.LpgOrderDetailActivity">
     <include layout="@layout/layout_header" />
     <ScrollView
         android:layout_weight="1"
@@ -39,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"/>
             <RelativeLayout
+                android:id="@+id/id_layout_delivery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_width10"
@@ -140,6 +141,11 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_text"/>
                 </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/id_fiveWeightGas_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_gray"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -184,6 +190,12 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_fifteenWeightGas_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -228,6 +240,12 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_fiftyWeightGas_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -272,6 +290,12 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_fiveWeightPledge_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -304,6 +328,12 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_fifteenWeightPledge_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -336,6 +366,12 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/id_fiftyWeightPledge_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -368,6 +404,7 @@
                         android:textColor="@color/colorOrange"
                         android:text="@string/default_value0"/>
                 </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

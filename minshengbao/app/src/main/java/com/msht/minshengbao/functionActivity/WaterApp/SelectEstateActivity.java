@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.EstateAdapter;
+import com.msht.minshengbao.adapter.EstateAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;

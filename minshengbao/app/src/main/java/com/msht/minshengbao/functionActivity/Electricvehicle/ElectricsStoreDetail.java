@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Electricvehicle;
+package com.msht.minshengbao.functionActivity.Electricvehicle;
 
 import android.Manifest;
 import android.app.Dialog;

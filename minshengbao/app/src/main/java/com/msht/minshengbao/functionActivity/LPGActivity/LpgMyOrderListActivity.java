@@ -1,11 +1,9 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.msht.minshengbao.Adapter.LplOrderViewAdapter;
-import com.msht.minshengbao.Adapter.PublicViewAdapter;
+import com.msht.minshengbao.adapter.LplOrderViewAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;

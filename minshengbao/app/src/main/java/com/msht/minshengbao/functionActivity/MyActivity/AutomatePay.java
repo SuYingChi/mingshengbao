@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.MyActivity;
+package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,9 +10,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.AutomaticPayAdapter;
+import com.msht.minshengbao.adapter.AutomaticPayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.ReplacePayAgree;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ReplacePayAgree;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

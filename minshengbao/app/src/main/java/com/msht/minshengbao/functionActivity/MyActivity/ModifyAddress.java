@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.MyActivity;
+package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Public.MoveSelectAddress;
-import com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity;
+import com.msht.minshengbao.functionActivity.Public.MoveSelectAddress;
+import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

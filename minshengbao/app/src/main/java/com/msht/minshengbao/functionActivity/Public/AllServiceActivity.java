@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Public;
+package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -8,29 +8,31 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.gson.Gson;
-import com.msht.minshengbao.Adapter.AllServerAdapter;
+import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
-import com.msht.minshengbao.FunctionActivity.Electricvehicle.ElectricHome;
-import com.msht.minshengbao.FunctionActivity.GasService.GasIccard;
-import com.msht.minshengbao.FunctionActivity.GasService.GasInstall;
-import com.msht.minshengbao.FunctionActivity.GasService.GasIntroduce;
-import com.msht.minshengbao.FunctionActivity.GasService.GasPayfee;
-import com.msht.minshengbao.FunctionActivity.GasService.GasRepair;
-import com.msht.minshengbao.FunctionActivity.GasService.GasWriteTable;
-import com.msht.minshengbao.FunctionActivity.GasService.Gasqianxian;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.IntelligentFarmHml;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.VegetableGentlemen;
-import com.msht.minshengbao.FunctionActivity.WaterApp.WaterHomeActivity;
-import com.msht.minshengbao.FunctionActivity.insurance.InsuranceHome;
-import com.msht.minshengbao.FunctionActivity.repairService.HomeAppliancescClean;
-import com.msht.minshengbao.FunctionActivity.repairService.HouseApplianceFix;
-import com.msht.minshengbao.FunctionActivity.repairService.LampCircuit;
-import com.msht.minshengbao.FunctionActivity.repairService.OtherRepair;
-import com.msht.minshengbao.FunctionActivity.repairService.SanitaryWare;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome;
+import com.msht.minshengbao.functionActivity.GasService.GasIccard;
+import com.msht.minshengbao.functionActivity.GasService.GasInstall;
+import com.msht.minshengbao.functionActivity.GasService.GasIntroduce;
+import com.msht.minshengbao.functionActivity.GasService.GasPayfee;
+import com.msht.minshengbao.functionActivity.GasService.GasRepair;
+import com.msht.minshengbao.functionActivity.GasService.GasWriteTable;
+import com.msht.minshengbao.functionActivity.GasService.Gasqianxian;
+import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHml;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemen;
+import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
+import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
+import com.msht.minshengbao.functionActivity.repairService.HomeAppliancescClean;
+import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFix;
+import com.msht.minshengbao.functionActivity.repairService.LampCircuit;
+import com.msht.minshengbao.functionActivity.repairService.OtherRepair;
+import com.msht.minshengbao.functionActivity.repairService.SanitaryWare;
 import com.msht.minshengbao.Model.AllServiceModel;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -115,14 +117,17 @@ public class AllServiceActivity extends BaseActivity {
     }
     private void startServer(String code) {
         switch (code){
-            case "gas_pay":
+            case ConstantUtil.GAS_PAY:
                 gaspay();
                 break;
-            case "gas_meter":
+            case ConstantUtil.GAS_METER:
                 gasMeter();
                 break;
-            case "gas_iccard":
+            case ConstantUtil.GAS_IC_CARD:
                 gasIcCard();
+                break;
+            case ConstantUtil.LPG_NAME:
+                lpgService();
                 break;
             case "gas_repair":
                 gasRepair();
@@ -189,6 +194,9 @@ public class AllServiceActivity extends BaseActivity {
                 break;
         }
     }
+
+
+
     private void showNotify(String title, String s) {
         new PromptDialog.Builder(context)
                 .setTitle(title)
@@ -201,6 +209,10 @@ public class AllServiceActivity extends BaseActivity {
 
                     }
                 }).show();
+    }
+    private void lpgService() {
+        Intent intent=new Intent(context, LpgMyAccountActivity.class);
+        startActivity(intent);
     }
     private void vegetableScxs() {
         Intent intent=new Intent(context, VegetableGentlemen.class);

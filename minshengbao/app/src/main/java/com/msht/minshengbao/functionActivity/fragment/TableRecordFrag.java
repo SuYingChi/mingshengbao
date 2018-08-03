@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.GetRecordAdapter;
+import com.msht.minshengbao.adapter.GetRecordAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

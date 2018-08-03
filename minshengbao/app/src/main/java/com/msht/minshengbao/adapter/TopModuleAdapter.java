@@ -1,4 +1,4 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,30 +60,32 @@ public class TopModuleAdapter extends BaseAdapter {
         if (convertView == null) {
             holder =new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_topmodule_view, null);
-            holder.img_function=(ImageView)convertView.findViewById(R.id.id_function_img);
-            holder.tv_name=(TextView) convertView.findViewById(R.id.id_function_name);
+            holder.imgFunction =(ImageView)convertView.findViewById(R.id.id_function_img);
+            holder.tvName =(TextView) convertView.findViewById(R.id.id_function_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         String name=functionList.get(position).get("name");
         String code=functionList.get(position).get("code");
-        holder.tv_name.setText(name);
-        if (code.equals("shop")){
-            holder.img_function.setImageResource(R.drawable.top_shopmall_xh);
-        }else if (code.equals("gas_pay")){
-            holder.img_function.setImageResource(R.drawable.top_gaspay_xh);
-        }else if (code.equals("gas_meter")){
-            holder.img_function.setImageResource(R.drawable.top_gas_writetable_xh);
-        }else if (code.equals("gas_iccard")){
-            holder.img_function.setImageResource(R.drawable.top_iccard_xh);
-        }else if (code.equals("insurance")){
-            holder.img_function.setImageResource(R.drawable.home_insurance_xh);
+        holder.tvName.setText(name);
+        if (code.equals(ConstantUtil.SHOP)){
+            holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
+        }else if (code.equals(ConstantUtil.GAS_PAY)){
+            holder.imgFunction.setImageResource(R.drawable.top_gaspay_xh);
+        }else if (code.equals(ConstantUtil.GAS_METER)){
+            holder.imgFunction.setImageResource(R.drawable.top_gas_writetable_xh);
+        }else if (code.equals(ConstantUtil.GAS_IC_CARD)){
+            holder.imgFunction.setImageResource(R.drawable.top_iccard_xh);
+        }else if (code.equals(ConstantUtil.INSURANCE)){
+            holder.imgFunction.setImageResource(R.drawable.home_insurance_xh);
+        }else if (code.equals(ConstantUtil.LPG_NAME)){
+            holder.imgFunction.setImageResource(R.drawable.lpg_home_xh);
         }
         return convertView;
     }
     class ViewHolder {
-        public ImageView img_function;
-        public TextView tv_name;
+        ImageView imgFunction;
+        TextView tvName;
     }
 }

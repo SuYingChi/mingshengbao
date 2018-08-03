@@ -1,9 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FunctionActivity.LPGActivity.LpgDepositReturnActivity">
-
-</android.support.constraint.ConstraintLayout>
+    android:background="@color/background_gray"
+    android:orientation="vertical"
+    tools:context=".functionActivity.LPGActivity.LpgDepositReturnActivity">
+    <include layout="@layout/layout_header"/>
+    <ScrollView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/background_gray">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width10"
+                android:background="@drawable/shape_change_background"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_gray">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_width70"
+                        android:background="@drawable/shape_change_background"/>
+                </LinearLayout>
+                <include layout="@layout/layout_lpg_select_address_time" />
+            </FrameLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width15"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width45"
+                android:background="@color/white">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:textColor="@color/color_383838"
+                    android:textSize="@dimen/text_width16"
+                    android:text="@string/select_buy_bottle"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
+            <include layout="@layout/layout_lpg_steel_bottle_price_type"/>
+            <include layout="@layout/layout_line_interval"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width20"/>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/id_layout_pay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:baselineAligned="false"
+        android:background="@color/transparent"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_weight="0.65"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:minHeight="@dimen/margin_width45">
+            <TextView
+                android:id="@+id/id_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_toLeftOf="@+id/id_unit"
+                android:layout_toStartOf="@+id/id_unit"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/colorOrange"
+                android:text="@string/default_value0"/>
+            <TextView
+                android:id="@+id/id_total_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/id_total_count"
+                android:layout_toLeftOf="@+id/id_total_count"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/title_tv"
+                android:text="@string/total_amount"/>
+            <TextView
+                android:id="@+id/id_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/title_tv"
+                android:text="@string/unit_one"/>
+        </RelativeLayout>
+        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            android:id="@+id/id_btn_send"
+            android:layout_weight="0.35"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_width45"
+            android:gravity="center"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/send_server"
+            app:backGroundImage="@drawable/shape_change_background"
+            app:backColorPress="#F4D6CE"
+            app:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

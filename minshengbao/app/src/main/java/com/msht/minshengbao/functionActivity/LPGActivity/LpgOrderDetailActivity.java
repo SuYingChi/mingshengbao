@@ -1,12 +1,10 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,6 +17,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
 
 import org.json.JSONObject;
 
@@ -57,7 +56,15 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
     private TextView tvTransportationAmount;
     private TextView tvRealAmount;
     private ButtonM  btnCancel,btnPayFee;
+    private View     layoutDelivery;
     private View     layoutPayAmount;
+    private View     fiveWeightGasView;
+    private View     fifteenWeightGasView;
+    private View     fiftyWeightGasView;
+    private View     fiveWeightPledgeView;
+    private View     fifteenWeightPledgeView;
+    private View     fiftyWeightPledgeView;
+
     private String orderId;
     private String realAmount;
     private int requestCode=0;
@@ -146,17 +153,18 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         String deliveryTime=jsonObject.optString("deliveryTime");
         realAmount=jsonObject.optString("realAmount");
         int orderStatus=jsonObject.optInt("orderStatus");
-        String fiveBottleCount=jsonObject.optString("fiveBottleCount");
-        String fifteenBottleCount=jsonObject.optString("fifteenBottleCount");
-        String fiftyBottleCount=jsonObject.optString("fiftyBottleCount");
+
+        int fiveBottleCount=jsonObject.optInt("fiveBottleCount");
+        int fifteenBottleCount=jsonObject.optInt("fifteenBottleCount");
+        int fiftyBottleCount=jsonObject.optInt("fiftyBottleCount");
 
         double payFiveAmount=jsonObject.optDouble("payFiveAmount");
         double payFifteenAmount=jsonObject.optDouble("payFifteenAmount");
         double payFiftyAmount=jsonObject.optDouble("payFiftyAmount");
 
-        String fiveDepositFee=jsonObject.optString("fiveDepositFee");
-        String fifteenDepositFee=jsonObject.optString("fifteenDepositFee");
-        String fiftyDepositFee=jsonObject.optString("fiftyDepositFee");
+        double fiveDepositFee=jsonObject.optDouble("fiveDepositFee");
+        double fifteenDepositFee=jsonObject.optDouble("fifteenDepositFee");
+        double fiftyDepositFee=jsonObject.optDouble("fiftyDepositFee");
 
         String depositAmount=jsonObject.optString("depositAmount");
         String deliveryAmount=jsonObject.optString("deliveryAmount");
@@ -200,6 +208,36 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         tvTransportationAmount.setText(deliveryAmountText);
         tvDepositAmount.setText(depositAmountText);
         tvRealAmount.setText(realAmountText);
+        if (fiveBottleCount==0){
+           fiveWeightGasView.setVisibility(View.GONE);
+        }else {
+            fiveWeightGasView.setVisibility(View.VISIBLE);
+        }
+        if (fifteenBottleCount==0){
+            fifteenWeightGasView.setVisibility(View.GONE);
+        }else {
+            fifteenWeightGasView.setVisibility(View.VISIBLE);
+        }
+        if (fifteenBottleCount==0){
+            fiftyWeightGasView.setVisibility(View.GONE);
+        }else {
+            fiftyWeightGasView.setVisibility(View.VISIBLE);
+        }
+        if (fiveDepositFee==0){
+            fiveWeightPledgeView.setVisibility(View.GONE);
+        }else {
+            fiveWeightPledgeView.setVisibility(View.VISIBLE);
+        }
+        if (fifteenDepositFee==0){
+            fifteenWeightPledgeView.setVisibility(View.GONE);
+        }else {
+            fifteenWeightPledgeView.setVisibility(View.VISIBLE);
+        }
+        if (fiftyDepositFee==0){
+            fiftyWeightPledgeView.setVisibility(View.GONE);
+        }else {
+            fiftyWeightPledgeView.setVisibility(View.VISIBLE);
+        }
         if (isElevator==0){
             tvElevator.setText("无电梯");
         }else {
@@ -208,43 +246,51 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         switch (orderStatus){
             case 0:
                 tvStatus.setText("待支付");
-                btnCancel.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.VISIBLE);
+                layoutDelivery.setVisibility(View.GONE);
                 break;
             case 1:
                 tvStatus.setText("待发货");
                 btnCancel.setVisibility(View.VISIBLE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.GONE);
                 break;
             case 2:
                 tvStatus.setText("已发货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 tvStatus.setText("已退款");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 4:
                 tvStatus.setText("已退款");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 5:
                 tvStatus.setText("已取消");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.GONE);
                 break;
             case 6:
                 tvStatus.setText("待收货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 7:
                 tvStatus.setText("已收货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
+                layoutDelivery.setVisibility(View.VISIBLE);
                 break;
                 default:
                     break;
@@ -305,10 +351,19 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         tvRealAmount= (TextView) findViewById(R.id.id_real_amount);
         btnCancel=(ButtonM)findViewById(R.id.id_btn_cancel);
         btnPayFee=(ButtonM)findViewById(R.id.id_btn_pay);
+        layoutDelivery=findViewById(R.id.id_layout_delivery);
         layoutPayAmount=findViewById(R.id.id_layout_pay);
+        fiveWeightGasView=findViewById(R.id.id_fiveWeightGas_view);
+        fifteenWeightGasView=findViewById(R.id.id_fifteenWeightGas_view);
+        fiftyWeightGasView=findViewById(R.id.id_fiftyWeightGas_view);
+        fiveWeightPledgeView=findViewById(R.id.id_fiveWeightPledge_view);
+        fifteenWeightPledgeView=findViewById(R.id.id_fifteenWeightPledge_view);
+        fiftyWeightPledgeView=findViewById(R.id.id_fiftyWeightPledge_view);
         findViewById(R.id.id_layout_replace_bottle).setOnClickListener(this);
+        findViewById(R.id.id_transportation_img).setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         btnPayFee.setOnClickListener(this);
+        layoutDelivery.setOnClickListener(this);
     }
     private void initOrderData() {
         requestCode=0;
@@ -332,17 +387,33 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
             case R.id.id_layout_replace_bottle:
                 goReplaceBottleInformation();
                 break;
+            case R.id.id_layout_delivery:
+                goDeliveryInformation();
+                break;
+            case R.id.id_transportation_img:
+                startHtmlWebView();
+                break;
                 default:
                     break;
         }
     }
-
+    private void startHtmlWebView() {
+        String url="";
+        Intent intent=new Intent(context, HtmlPage.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigate","运费说明");
+        startActivity(intent);
+    }
+    private void goDeliveryInformation() {
+        Intent intent=new Intent(context, LpgDeliveryInformationActivity.class);
+        intent.putExtra("orderId",orderId);
+        startActivity(intent);
+    }
     private void goReplaceBottleInformation() {
-        Intent intent=new Intent(context, ReplaceBottleListActivity.class);
+        Intent intent=new Intent(context, LpgReplaceBottleListActivity.class);
         intent.putExtra("orderId",orderId);
         startActivityForResult(intent,PAY_SUCCESS_CODE);
     }
-
     private void onPayOrderFee() {
         Intent intent=new Intent(context, LpgPayOrderActivity.class);
         intent.putExtra("realAmount",realAmount);
@@ -353,7 +424,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage("请确认是否取消工单")
+                .setMessage("请确认是否取消订单")
                 .setButton1("残忍取消", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {

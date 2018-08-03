@@ -38,20 +38,26 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
                 android:background="?android:selectableItemBackground"
                 android:text="代码中更改"
                 android:textSize="@dimen/text_18"
                 android:textColor="@color/white"
                 android:visibility="gone"/>
-            <ImageView
-                android:id="@+id/id_right_img"
-                android:layout_width="@dimen/margin_width25"
-                android:layout_height="@dimen/margin_width25"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
-                android:src="@drawable/message2x"
-                android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/id_right_img"
+            android:layout_width="@dimen/margin_width30"
+            android:layout_height="@dimen/margin_width30"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_width15"
+            android:layout_marginRight="@dimen/margin_width15"
+            android:contentDescription="@string/picture_text"
+            android:src="@drawable/right_top_img"
+            android:visibility="gone" />
         </RelativeLayout>
 </LinearLayout>

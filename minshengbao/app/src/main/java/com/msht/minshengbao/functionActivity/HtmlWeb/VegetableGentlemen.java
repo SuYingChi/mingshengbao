@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.HtmlWeb;
+package com.msht.minshengbao.functionActivity.HtmlWeb;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -7,15 +7,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,9 +27,6 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
     private WebView mWebView;
@@ -70,6 +66,7 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
         final String data = "&userid="+ userId +"&phone=" + userPhone +"&sign="+sign;
         String loginUrl= UrlUtil.Vegetable_Url+data;
         settingWeb();
+        Log.d("loginUrl=",loginUrl);
         mWebView.loadUrl(loginUrl);
         mWebView.requestFocusFromTouch();
         mWebView.setWebViewClient(new WebViewClient(){

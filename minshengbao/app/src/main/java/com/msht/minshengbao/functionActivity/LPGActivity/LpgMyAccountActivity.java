@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -8,13 +8,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.MasterEvaluteAdapter;
-import com.msht.minshengbao.Adapter.MyBottleAdapter;
+import com.msht.minshengbao.adapter.MyBottleAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
@@ -28,6 +29,8 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
+import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
@@ -37,6 +40,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Demo class
@@ -51,16 +55,18 @@ public class LpgMyAccountActivity extends BaseActivity  {
     private String   userName;
     private String   siteId;
     private int pageIndex=0;
-    private View   layoutAccountHeader;
     private LoadMoreListView moreListView;
+    private ImageView rightImage;
     private MyBottleAdapter myBottleAdapter;
     private TextView tvBottleCount;
     private static final String PAGE_NAME="我的账户(lpg)";
     private  ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private static final int LIST_SIZE=3;
     private static final int BINDING_SUCCESS_CODE=1;
+    private static final int SWITCH_SUCCESS_CODE=2;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private CustomDialog customDialog;
+
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
         private WeakReference<LpgMyAccountActivity> mWeakReference;
@@ -82,10 +88,11 @@ public class LpgMyAccountActivity extends BaseActivity  {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        boolean isRegister=object.optBoolean("isRegister");
+                        JSONObject dataObject=object.optJSONObject("data");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                            activity.onReceiveData(object);
+                            activity.onReceiveData(dataObject);
                         }else {
+                            boolean isRegister=object.optBoolean("isRegister");
                             if (!isRegister){
                                 activity.moreListView.setVisibility(View.VISIBLE);
                                 activity.goBindingAccount();
@@ -163,10 +170,12 @@ public class LpgMyAccountActivity extends BaseActivity  {
     }
     private void goBindingAccount() {
         Intent intent=new Intent(context,BindingAccountActivity.class);
+        intent.putExtra("flag",0);
         startActivityForResult(intent,BINDING_SUCCESS_CODE);
+        finish();
     }
     private void onFailure(String error) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -189,6 +198,16 @@ public class LpgMyAccountActivity extends BaseActivity  {
         initFindViewId();
         myBottleAdapter=new MyBottleAdapter(context,mList);
         moreListView.setAdapter(myBottleAdapter);
+        moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position!=0){
+                    int pos=position-1;
+                    String bottleId=mList.get(pos).get("id");
+                    goBottleInfo(bottleId);
+                }
+            }
+        });
         moreListView.setLoadMoreListener(new ILoadMoreCallback() {
             @Override
             public void loadMore() {
@@ -196,7 +215,6 @@ public class LpgMyAccountActivity extends BaseActivity  {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -204,11 +222,18 @@ public class LpgMyAccountActivity extends BaseActivity  {
             case BINDING_SUCCESS_CODE:
                 initListData();
                 break;
+            case SWITCH_SUCCESS_CODE:
+                mList.clear();
+                myBottleAdapter.notifyDataSetChanged();
+                initListData();
+                break;
                 default:
                     break;
         }
     }
     private void initFindViewId() {
+        rightImage=(ImageView)findViewById(R.id.id_right_img);
+        rightImage.setVisibility(View.VISIBLE);
         View layoutHeader =findViewById(R.id.id_re_layout);
         layoutHeader.setBackgroundResource(R.color.colorOrange);
         View layoutAccountHeader=getLayoutInflater().inflate(R.layout.layout_lpg_account_header,null);
@@ -262,6 +287,63 @@ public class LpgMyAccountActivity extends BaseActivity  {
                         .show();
             }
         });
+        rightImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTopRightMenuView();
+            }
+        });
+    }
+
+    private void onTopRightMenuView() {
+        TopRightMenu mTopRightMenu = new TopRightMenu(LpgMyAccountActivity.this);
+        //添加菜单项
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem(R.mipmap.switch_account_h, "切换账号"));
+        menuItems.add(new MenuItem(R.mipmap.lpg_user_h, "开户申请"));
+        menuItems.add(new MenuItem(R.mipmap.lpg_search_h, "钢瓶查询"));
+        mTopRightMenu
+                //显示菜单图标，默认为true
+                .showIcon(true)
+                //背景变暗，默认为true
+                .dimBackground(true)
+                //显示动画，默认为true
+                .needAnimationStyle(true)
+                .setAnimationStyle(R.style.TRM_ANIM_STYLE)
+                .addMenuList(menuItems)
+                .setOnMenuItemClickListener(new TopRightMenu.OnMenuItemClickListener() {
+                    @Override
+                    public void onMenuItemClick(int position) {
+                        if (position==0){
+                            startSwitchUser();
+                        }else if (position==1){
+                            goNewUserActivity();
+                        }else {
+                            goScanCode();
+                        }
+                    }
+
+                })
+                //带偏移量
+                .menuShowAsDropDown(rightImage, -90, 0);
+    }
+
+    private void goScanCode() {
+        Intent intent =new Intent(context, QRCodeScanActivity.class);
+        startActivity(intent);
+    }
+    private void startSwitchUser() {
+        Intent intent=new Intent(context,LpgSwitchAccountActivity.class);
+        startActivityForResult(intent,SWITCH_SUCCESS_CODE);
+    }
+    private void goNewUserActivity() {
+        Intent intent=new Intent(context,LpgNewUserActivity.class);
+        startActivity(intent);
+    }
+    private void goBottleInfo(String bottleId) {
+        Intent intent=new Intent(context,LpgSteelBottleQueryActivity.class);
+        intent.putExtra("bottleId",bottleId);
+        startActivity(intent);
     }
     private void goReturnBottle() {
 

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

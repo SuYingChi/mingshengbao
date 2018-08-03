@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Public;
+package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PayWayAdapter;
+import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;

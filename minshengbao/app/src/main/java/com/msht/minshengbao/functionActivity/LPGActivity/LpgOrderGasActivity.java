@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +21,7 @@ import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.ActionSheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
 
 import org.json.JSONObject;
 
@@ -49,7 +49,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private double weightFifteenTotal;
     private double weightFiftyTotal;
     private String mTotalAmount;
-    private String mDeliveryFeeTotal;
+    private String mDeliveryFeeTotal="0.0";
     private String payAmount;
     private int    weightFiveNum=1;
     private int    weightFifteenNum=0;
@@ -194,7 +194,6 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         lpgUserId=SharedPreferencesUtil.getStringData(this, SharedPreferencesUtil.LPG_USER_ID,"");
         lpgSex= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.LPG_SEX,"");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-
         Intent data=getIntent();
         weightFiveTotal=data.getDoubleExtra("weightFiveTotal",0);
         weightFifteenTotal=data.getDoubleExtra("weightFifteenTotal",0);
@@ -205,8 +204,6 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         initFondViewId();
     }
     private void initFondViewId() {
-        View layoutHeader =findViewById(R.id.id_re_layout);
-        layoutHeader.setBackgroundResource(R.color.colorOrange);
         mButtonSend=(ButtonM)findViewById(R.id.id_btn_send) ;
         tvWeightFiveAmount=(TextView)findViewById(R.id.id_tv_amount1);;
         tvWeightFifteenAmount=(TextView)findViewById(R.id.id_tv_amount2);;
@@ -240,11 +237,18 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         }else {
             findViewById(R.id.id_layout_fifty).setVisibility(View.GONE);
         }
-        tvWeightFiveAmount.setText(String.valueOf(VariableUtil.twoDecinmal2(weightFiveTotal)));
-        tvWeightFifteenAmount.setText(String.valueOf(VariableUtil.twoDecinmal2(weightFifteenTotal)));
-        tvWeightFiftyAmount.setText(String.valueOf(VariableUtil.twoDecinmal2(weightFiftyTotal)));
+        String weightFiveTotalText="¥"+String.valueOf(VariableUtil.twoDecinmal2(weightFiveTotal));
+        String weightFifteenTotalText="¥"+String.valueOf(VariableUtil.twoDecinmal2(weightFifteenTotal));
+        String weightFiftyTotalText="¥"+String.valueOf(VariableUtil.twoDecinmal2(weightFiftyTotal));
+        double total=weightFiveTotal+weightFifteenTotal+weightFiftyTotal;
+        String totalText="¥"+VariableUtil.twoDecinmal2(total);
+        tvWeightFiveAmount.setText(weightFiveTotalText);
+        tvWeightFifteenAmount.setText(weightFifteenTotalText);
+        tvWeightFiftyAmount.setText(weightFiftyTotalText);
+        mTextTotal.setText(totalText);
         findViewById(R.id.id_select_address_layout).setOnClickListener(this);
         findViewById(R.id.id_select_time_layout).setOnClickListener(this);
+        findViewById(R.id.id_transportation_img).setOnClickListener(this);
         tvName.setText(lpgUserName);
         tvPhone.setText(lpgMobile);
         mButtonSend.setOnClickListener(this);
@@ -286,9 +290,11 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private void onGetPriceDeposit() {
         requestCode=0;
         customDialog.show();
-        String requestUrl= UrlUtil.LPG_QUERY_GAS_DEPOSIT_PRICE;
+        String requestUrl= UrlUtil.LPG_GAS_AND_DEPOSIT_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("siteId",siteId);
+        textParams.put("longitude",longitude);
+        textParams.put("latitude",latitude);
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onGetDeliveryFee() {
@@ -315,9 +321,20 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
                     onFailure("请选择配送地址");
                 }
                 break;
+            case R.id.id_transportation_img:
+                startHtmlWebView();
+                break;
             default:
                 break;
         }
+    }
+
+    private void startHtmlWebView() {
+        String url="";
+        Intent intent=new Intent(context, HtmlPage.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigate","运费说明");
+        startActivity(intent);
     }
     private void onGoPayActivity() {
         new PromptDialog.Builder(this)
@@ -341,6 +358,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         String requestUrl= UrlUtil.LPG_CREATE_NEW_ORDER;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",lpgUserId);
+        textParams.put("msbUserId",userId);
         textParams.put("realAmount",mTotalAmount);
         textParams.put("orderType",orderType);
         textParams.put("orderSource",orderSource);
@@ -356,7 +374,6 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         textParams.put("payFiftyAmount",String.valueOf(weightFiftyTotal));
         textParams.put("payAmount",payAmount);
         textParams.put("deliveryAmount",mDeliveryFeeTotal);
-        textParams.put("msbUserId", userId);
         textParams.put("addressName",addressName);
         textParams.put("addressShort",addressShort);
         textParams.put("longitude",longitude);

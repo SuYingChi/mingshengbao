@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -14,9 +14,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.WaterOrderAdapter;
+import com.msht.minshengbao.adapter.WaterOrderAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;

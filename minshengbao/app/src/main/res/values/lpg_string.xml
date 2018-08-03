@@ -3,18 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
     <string name="hit_input_text">请输入手机号及验证码</string>
+    <string name="apply_reimbursement">申请退还</string>
+    <string name="bottle_steel_number">身瓶钢码:</string>
     <string name="crash_pledge">押金</string>
     <string name="connection_service">如有疑问请联系客服：963666</string>
+    <string name="corrosive_degree">腐蚀程度</string>
     <string name="deal_know">《居民用户办理须知》</string>
     <string name="delivery_time">发货时间:</string>
+    <string name="delivery_personnel">配送人员:</string>
+    <string name="delivery_site">配送网点:</string>
+    <string name="delivery_total_order_count">配送总单量</string>
+    <string name="delivery_send_to_me">为我配送</string>
     <string name="ensure_binding">确认绑定</string>
     <string name="ensure_select">确定</string>
     <string name="gas_total_amount">气费总额</string>
-    <string name="new_customer_button">申请开户(新用户点此)</string>
-
+    <string name="last_check">上次检测:</string>
+    <string name="manufacturing_enterprise">生产厂家:</string>
+    <string name="manufacture_date">生产日期:</string>
+    <string name="new_customer_button"><u>申请开户(新用户点此)</u></string>
 
     <string name="order_gas">订气</string>
     <string name="order_text">订单</string>
+    <string name="order_serial_number">订单编号:</string>
+    <string name="particular_year">年份</string>
     <string name="picture_text">图片说明</string>
     <string name="place_order_no">下单编号:</string>
     <string name="place_time">下单时间:</string>
@@ -23,18 +34,21 @@
     <string name="please_select_sex">请选择性别</string>
     <string name="please_select_elevator">是否带电梯</string>
     <string name="please_input_recommend_code">请输入推荐码</string>
+    <string name="pledge_detail">押金明细</string>
     <string name="pledge_total">押金总额</string>
     <string name="pledge_five_weight_text">5kg瓶押金</string>
     <string name="pledge_fifteen_weight_text">15kg瓶押金</string>
     <string name="pledge_fifty_weight_text">50kg瓶押金</string>
 
     <string name="principle_text">自有产品钢瓶基于自愿原则，本公司可以折价回收服务，</string>
+    <string name="property_right_organization">产权单位:</string>
     <string name="my_bottle_gas">我的瓶装气</string>
+    <string name="scrapped_date">报废日期:</string>
     <string name="send_apply">提交申请</string>
     <string name="select_buy_bottle">气瓶选购</string>
     <string name="delivery_good_tip">您的订单已配送，请完成支付</string>
     <string name="please_select_address">请您选择配送地址</string>
-    <string name="look_detail">点击查看明细</string>
+    <string name="look_detail"><u>点击查看明细</u></string>
     <string name="vip_user_hint">(老用户空瓶换重瓶无需缴纳押金)</string>
     <string name="pay_fee">付款</string>
     <string name="pledge_text">押金:</string>
@@ -42,15 +56,21 @@
     <string name="count_text">数量</string>
     <string name="self_own_bottle_replacement">自有产权瓶置换</string>
     <string name="total_price">总价</string>
+    <string name="total_amount">合计:</string>
     <string name="transportation_expense">运费</string>
     <string name="steel_bottle_type1">5kg瓶装气</string>
     <string name="steel_bottle_type2">15kg瓶装气</string>
     <string name="steel_bottle_type3">50kg瓶装气</string>
     <string name="steel_bottle_norms">钢瓶规格</string>
+    <string name="steel_bottle_number">钢瓶编号</string>
     <string name="steel_bottle_year">出厂年份</string>
-    <string name="steel_bottle_number">数量</string>
+    <string name="steel_bottle_count">数量</string>
     <string name="steel_discount_amount">折价</string>
     <string name="send_gas_order_text">送气订单</string>
+    <string name="transfer_trajectory">气瓶流转轨迹</string>
+    <string name="update_new_user">换个新账户</string>
+    <string name="unit_count">单</string>
+    <string name="unit_one">个</string>
     <string name="have_used">已使用了</string>
     <string name="day">天</string>
 </resources>

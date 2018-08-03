@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Public;
+package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -16,9 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.AddAddressActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.AddressManageActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.ModifyAddress;
+import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddress;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

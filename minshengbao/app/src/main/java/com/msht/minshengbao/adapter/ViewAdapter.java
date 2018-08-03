@@ -1,4 +1,4 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.PayRecord;
-import com.msht.minshengbao.FunctionActivity.fragment.SelfHelpPay;
+import com.msht.minshengbao.functionActivity.fragment.PayRecord;
+import com.msht.minshengbao.functionActivity.fragment.SelfHelpPay;
 
 /**
  * Created by hong on 2016/3/25.

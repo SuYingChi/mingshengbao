@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.insurance;
+package com.msht.minshengbao.functionActivity.insurance;
 
 import android.Manifest;
 import android.app.Dialog;

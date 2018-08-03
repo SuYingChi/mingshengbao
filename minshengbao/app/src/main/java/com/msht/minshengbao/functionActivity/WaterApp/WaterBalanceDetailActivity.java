@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -7,9 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PublicViewAdapter;
+import com.msht.minshengbao.adapter.PublicViewAdapter;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;

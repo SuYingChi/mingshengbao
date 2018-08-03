@@ -30,7 +30,7 @@
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginStart="@dimen/margin_width10"
             android:contentDescription="@string/picture_text"
-            android:src="@drawable/order_gas_xh"/>
+            android:src="@drawable/lpg_oreder_orange"/>
         <TextView
             android:id="@+id/id_tv_orderNo"
             android:layout_width="wrap_content"
@@ -233,7 +233,6 @@
             android:textColor="@color/color_383838"
             android:text="@string/cancel_order"
             android:visibility="gone"/>
-
     </RelativeLayout>
     </LinearLayout>
 

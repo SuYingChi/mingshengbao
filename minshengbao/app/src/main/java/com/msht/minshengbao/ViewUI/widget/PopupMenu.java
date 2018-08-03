@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +14,15 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConvertUtil;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class PopupMenu extends PopupWindow implements OnClickListener {
 
 	private Activity activity;
@@ -40,16 +49,23 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 		this.tabs = tabs;
 		LayoutInflater inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		popView = inflater.inflate(R.layout.popup_menu, null);// 加载菜单布局文件
-		this.setContentView(popView);// 把布局文件添加到popupwindow中
-		this.setWidth(dip2px(activity, 120));// 设置菜单的宽度（需要和菜单于右边距的距离搭配，可以自己调到合适的位置）
+		// 加载菜单布局文件
+		popView = inflater.inflate(R.layout.popup_menu, null);
+		// 把布局文件添加到popupWindow中
+		this.setContentView(popView);
+		// 设置菜单的宽度（需要和菜单于右边距的距离搭配，可以自己调到合适的位置）
+		this.setWidth(dip2px(activity, 120));
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		this.setFocusable(true);// 获取焦点
-		this.setTouchable(true); // 设置PopupWindow可触摸
-		this.setOutsideTouchable(true); // 设置非PopupWindow区域可触摸
+		// 获取焦点
+		this.setFocusable(true);
+		// 设置PopupWindow可触摸
+		this.setTouchable(true);
+		// 设置非PopupWindow区域可触摸
+		this.setOutsideTouchable(true);
 		ColorDrawable dw = new ColorDrawable(0x00000000);
 		this.setBackgroundDrawable(dw);
-		setBackgroundAlpha(1f, alpha, 240);  //设置屏幕背景
+		//设置屏幕背景
+		setBackgroundAlpha(1f, alpha, 240);
 		this.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
@@ -74,6 +90,7 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 	 *            这里的x,y值自己调整可以
 	 */
 	public void showLocation(int resourId,int xoff,int yoff) {
+		Log.d("offSetX=",""+ dip2px(activity, xoff));
 		showAsDropDown(activity.findViewById(resourId), dip2px(activity, xoff),
 				dip2px(activity, yoff));
 	}

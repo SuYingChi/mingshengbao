@@ -217,12 +217,22 @@ public class UrlUtil {
     public static final String LPG_QUERY_ALL_DELIVERY_FEE=BuildConfig.URL_LPG+"/msht/lpgDeliveryFee/getAllDeliveryFee";
     public static final String LPG_CREATE_NEW_ORDER=BuildConfig.URL_LPG+"/msht/lpgOrder/newOrder";
     public static final String LPG_CREATE_NEW_ADDRESS=BuildConfig.URL_LPG+"/msht/lpgUser/newAddress";
-    public static final String LPG_MSB_USER_INFO=BuildConfig.URL_LPG+"/msht/lpgUser/getMsbUserInfo";
+    public static final String LPG_MSB_USER_INFO=BuildConfig.URL_LPG+"/msht/lpgUser/getMsbUserInfoTmp";
     public static final String LPG_ORDER_PAY=BuildConfig.URL_LPG+"/msht/lpgOrder/pay";
     public static final String LPG_GET_ALL_ORDER=BuildConfig.URL_LPG+"/msht/lpgOrder/allOrder";
     public static final String LPG_QUERY_ORDER_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/queryOrder";
     public static final String LPG_FAIL_ORDER_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/failOrder";
     public static final String LPG_REPLACE_BOTTLE_URL=BuildConfig.URL_LPG+"/msht/lpgReplacePrice/getReplaceBottleList";
+    public static final String LPG_BOTTLE_INFO_URL=BuildConfig.URL_LPG+"/msht/lpgBottle/getBottleInfoById";
+    public static final String LPG_ALL_BINDING_USER=BuildConfig.URL_LPG+"/msht/lpgUser/getAllBingUser";
+    public static final String LPG_SWITCH_USER_URL=BuildConfig.URL_LPG+"/msht/lpgUser/switchUser";
+    public static final String LPG_DELETE_USER_URL=BuildConfig.URL_LPG+"/msht/lpgUser/removeUser";
+    public static final String LPG_QUERY_ORDER_FLOW=BuildConfig.URL_LPG+"/msht/lpgOrder/queryFlow";
+    public static final String LPG_DEPOSIT_COUNT_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/depositCount";
+    public static final String LPG_GAS_AND_DEPOSIT_URL=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/getGasAndDepositNew";
+   // public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn/msht/lpgBottle/getBottleDetail";
+    public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn";
+
     /**
      * HTML5页面
      */

@@ -34,7 +34,9 @@
     <color name="line_gray">#ffd8d8d8</color>
     <color name="color_383838">#ff383838</color>
     <color name="color_9e9e9e">#9e9e9e</color>
-
+    <color name="color_919191">#919191</color>
+    <color name="default_icon_color">#E6E6E6</color>
+    <color name="default_ring_color">#EEF3FA</color>
     <color name="light_gray">#ffe1e1e1</color>
     <color name="black_gray">#FFBFBFBF</color>
     <color name="touch_backgroud">#FFEAEAEA</color>
@@ -58,6 +60,9 @@
     <color name="qmui_config_color_background">#F4F5F7</color>
     <color name="qmui_config_color_background_pressed">#EEEFF1</color>
     <color name="qmui_config_color_red">#FA3A3A</color>
+    <color name="uncompleted_text_color">#9e9e9e</color>
+    <color name="uncompleted_color">#A3E0D9</color>
+
 
 
 </resources>

@@ -22,16 +22,19 @@
                 android:layout_height="@dimen/margin_width20"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:src="@mipmap/sousuo"/>
         </RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width20"
             android:text="当前位置"
             android:textSize="@dimen/text_width16"/>
         <RelativeLayout
+            android:id="@+id/id_layout_current"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/margin_width45"
@@ -42,6 +45,8 @@
                 android:layout_width="@dimen/margin_width20"
                 android:layout_height="@dimen/margin_width20"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:contentDescription="@string/picture_text"
                 android:layout_centerVertical="true"
                 android:src="@drawable/store_address_xh"/>
             <TextView
@@ -50,6 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/id_img"
+                android:layout_toEndOf="@+id/id_img"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:textSize="@dimen/text_width18"
                 android:textColor="@color/black"
@@ -60,7 +67,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
                 android:textSize="@dimen/text_width16"
                 android:text="重新定位"/>
             <ImageView
@@ -69,6 +78,8 @@
                 android:layout_height="@dimen/margin_width20"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/id_text"
+                android:layout_toStartOf="@+id/id_text"
+                android:layout_marginEnd="@dimen/margin_width5"
                 android:layout_marginRight="@dimen/margin_width5"
                 android:src="@drawable/setlocation_xh"/>
         </RelativeLayout>
@@ -77,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width20"
             android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:textSize="@dimen/text_width16"
             android:text="历史记录"/>
     </LinearLayout>

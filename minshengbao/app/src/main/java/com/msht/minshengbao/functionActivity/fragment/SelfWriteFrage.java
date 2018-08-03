@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -25,10 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.tableAdapter;
+import com.msht.minshengbao.adapter.tableAdapter;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.GasService.GasExpenseQuery;
-import com.msht.minshengbao.FunctionActivity.GasService.SelectCustomerno;
+import com.msht.minshengbao.functionActivity.GasService.GasExpenseQuery;
+import com.msht.minshengbao.functionActivity.GasService.SelectCustomerno;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

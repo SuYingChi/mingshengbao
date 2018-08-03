@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Activity;
@@ -6,14 +6,12 @@ import android.app.Dialog;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.WaterIncomeAdapter;
+import com.msht.minshengbao.adapter.WaterIncomeAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

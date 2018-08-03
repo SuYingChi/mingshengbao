@@ -1,5 +1,5 @@
 
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

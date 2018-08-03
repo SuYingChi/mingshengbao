@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -22,8 +22,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import com.msht.minshengbao.Adapter.GethouseAdapter;
-import com.msht.minshengbao.FunctionActivity.GasService.GasExpenseQuery;
+import com.msht.minshengbao.adapter.GethouseAdapter;
+import com.msht.minshengbao.functionActivity.GasService.GasExpenseQuery;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;

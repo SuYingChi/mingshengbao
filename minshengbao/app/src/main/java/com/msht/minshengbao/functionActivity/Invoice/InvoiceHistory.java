@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Invoice;
+package com.msht.minshengbao.functionActivity.Invoice;
 
 import android.app.Dialog;
 import android.os.Handler;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.InvoiceAdapter;
+import com.msht.minshengbao.adapter.InvoiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;

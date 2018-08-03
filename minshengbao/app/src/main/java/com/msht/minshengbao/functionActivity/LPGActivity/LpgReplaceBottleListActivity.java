@@ -17,6 +17,8 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -30,23 +32,20 @@ import java.util.HashMap;
  * @author hong
  * @date 2018/7/13  
  */
-public class ReplaceBottleListActivity extends BaseActivity {
+public class LpgReplaceBottleListActivity extends BaseActivity {
     private LpgBottleReplaceAdapter mAdapter;
     private CustomDialog customDialog;
-
     private String orderId;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-
     private final RequestHandler requestHandler=new RequestHandler(this);
-
     private static class RequestHandler extends Handler {
-        private WeakReference<ReplaceBottleListActivity> mWeakReference;
-        public RequestHandler(ReplaceBottleListActivity activity) {
-            mWeakReference = new WeakReference<ReplaceBottleListActivity>(activity);
+        private WeakReference<LpgReplaceBottleListActivity> mWeakReference;
+        public RequestHandler(LpgReplaceBottleListActivity activity) {
+            mWeakReference = new WeakReference<LpgReplaceBottleListActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final ReplaceBottleListActivity activity=mWeakReference.get();
+            final LpgReplaceBottleListActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -56,13 +55,12 @@ public class ReplaceBottleListActivity extends BaseActivity {
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                            //JSONObject jsonObject =object.optJSONObject("data");
-                            activity.onReceiveBottleData();
+                            JSONArray jsonArray =object.optJSONArray("data");
+                            activity.onReceiveBottleData(jsonArray);
                         }else {
                             activity.onFailure(error);
                         }
@@ -79,9 +77,35 @@ public class ReplaceBottleListActivity extends BaseActivity {
             super.handleMessage(msg);
         }
     }
-
-    private void onReceiveBottleData() {
-
+    private void onReceiveBottleData(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                String orderId=json.optString("orderId");
+                String bottleWeight = json.getString("bottleWeight");
+                String bottleCount=json.optString("bottleCount");
+                String replacePrice=json.getString("replacePrice");
+                String totalAmount=json.optString("totalAmount");
+                String bottleYear=json.optString("bottleYear");
+                String years=json.optString("years");
+                String corrosionType=json.getString("corrosionType");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("orderId",orderId);
+                map.put("bottleWeight", bottleWeight);
+                map.put("bottleCount",bottleCount);
+                map.put("replacePrice",replacePrice);
+                map.put("totalAmount",totalAmount);
+                map.put("bottleYear",bottleYear);
+                map.put("years",years);
+                map.put("corrosionType",corrosionType);
+                mList.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (mList.size()!=0){
+            mAdapter.notifyDataSetChanged();
+        }
     }
     private void onFailure(String error) {
 
@@ -112,10 +136,8 @@ public class ReplaceBottleListActivity extends BaseActivity {
         mAdapter=new LpgBottleReplaceAdapter(context,mList);
         mListView.setAdapter(mAdapter);
         initData();
-
     }
     private void initData() {
-
         customDialog.show();
         String validateURL= UrlUtil.LPG_REPLACE_BOTTLE_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();

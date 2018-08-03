@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.MyActivity.Mysetting">
+    tools:context="com.msht.minshengbao.functionActivity.MyActivity.Mysetting">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
                 android:id="@+id/id_setting_portrait_layout"
@@ -27,7 +27,8 @@
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"/>
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"/>
                 <com.msht.minshengbao.ViewUI.CircleImageView
                     android:id="@+id/id_portraitview"
                     android:layout_width="@dimen/margin_width60"
@@ -37,15 +38,20 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/potrait"
                     android:layout_toLeftOf="@+id/id_img1"
+                    android:layout_toStartOf="@+id/id_img1"
                     android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     />
                 <ImageView
                     android:id="@+id/id_img1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -67,7 +73,8 @@
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"/>
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"/>
                 <TextView
                     android:id="@+id/id_tv_nickname"
                     android:layout_width="wrap_content"
@@ -76,14 +83,18 @@
                     android:textSize="@dimen/text_width14"
                     android:textColor="@color/color_9e9e9e"
                     android:layout_toLeftOf="@+id/id_img2"
-                    android:layout_marginRight="@dimen/margin_width6"/>
+                    android:layout_toStartOf="@+id/id_img2"
+                    android:layout_marginRight="@dimen/margin_width6"
+                    android:layout_marginEnd="@dimen/margin_width6"/>
                 <ImageView
                     android:id="@+id/id_img2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -100,7 +111,8 @@
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"/>
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"/>
                 <TextView
                     android:id="@+id/id_tv_sex"
                     android:layout_width="wrap_content"
@@ -109,6 +121,8 @@
                     android:textSize="@dimen/text_width14"
                     android:textColor="@color/color_9e9e9e"
                     android:layout_toLeftOf="@+id/id_img3"
+                    android:layout_toStartOf="@+id/id_img3"
+                    android:layout_marginEnd="@dimen/margin_width6"
                     android:layout_marginRight="@dimen/margin_width6"/>
                 <ImageView
                     android:id="@+id/id_img3"
@@ -116,7 +130,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -137,17 +153,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/id_img_phone"
+                    android:layout_toStartOf="@+id/id_img_phone"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:textColor="@color/color_9e9e9e"
                     android:textSize="@dimen/text_width14"
-                    android:layout_marginRight="@dimen/margin_width6"/>
+                    android:layout_marginRight="@dimen/margin_width6"
+                    android:layout_marginEnd="@dimen/margin_width6"/>
                 <ImageView
                     android:id="@+id/id_img_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/margin_width15"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginRight="@dimen/margin_width15"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -163,14 +185,17 @@
                     android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"/>
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"/>
                 <ImageView
                     android:id="@+id/id_img4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     android:src="@drawable/forward_m"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>

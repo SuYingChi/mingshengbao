@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Public.PayFeeWayActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectVoucherActivity;
+import com.msht.minshengbao.functionActivity.Public.PayFeeWayActivity;
+import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,12 +11,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.PayWayAdapter;
+import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.WaterAppBean;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity">
+    tools:context="com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity">
     <RelativeLayout
         android:id="@+id/id_header"
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_10"
-            android:src="@drawable/message2x"
+            android:src="@drawable/right_top_img"
             android:visibility="gone"/>
     </RelativeLayout>
     <FrameLayout

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Public;
+package com.msht.minshengbao.functionActivity.Public;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +14,13 @@ import com.google.zxing.client.android.AnimeViewCallback;
 import com.google.zxing.client.android.AutoScannerView;
 import com.google.zxing.client.android.BaseCaptureActivity;
 import com.google.zxing.client.android.FlowLineView;
-import com.msht.minshengbao.FunctionActivity.GasService.IcCardExpense;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.FunctionActivity.WaterApp.ScanCodeResultActivity;
+import com.msht.minshengbao.functionActivity.GasService.IcCardExpense;
+import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebView;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.ScanCodeResultActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -29,6 +31,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
     private SurfaceView surfaceView;
     private AutoScannerView autoScannerView;
     private FlowLineView flowLineView;
+    private int codeType=0;
     private boolean isPause = false;
     private static final String PAGE_NAME="二维码";
     private Context context;
@@ -64,6 +67,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
                 isPause=false;
                 flowLineView.setVisibility(View.GONE);
                 autoScannerView.setVisibility(View.VISIBLE);
+                codeType=0;
                 reScan();
             }
         });
@@ -73,6 +77,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
                 isPause=true;
                 flowLineView.setVisibility(View.VISIBLE);
                 autoScannerView.setVisibility(View.GONE);
+                codeType=1;
                 reScan();
             }
         });
@@ -99,7 +104,18 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
             flowLineView.Pause();
         }
         playBeepSoundAndVibrate(true, true);
-        resultActions(rawResult.getText());
+        if (codeType==0){
+            resultActions(rawResult.getText());
+        }else {
+            onBarCodeOperation(rawResult.getText());
+        }
+
+    }
+    private void onBarCodeOperation(String text) {
+        String mUrl=UrlUtil.LPG_QR_CODE_SCAN_URL+"?id="+text;
+        Intent intent=new Intent(context, LpgBottleWebView.class);
+        intent.putExtra("url",mUrl);
+        startActivity(intent);
     }
     private void resultActions(String result) {
         String downloadUrl="http://msbapp.cn/download/success.html?QRCodeJson=";
@@ -148,9 +164,16 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
             }catch (JSONException e){
                 e.printStackTrace();
             }
+        }else if (result.contains(UrlUtil.LPG_QR_CODE_SCAN_URL)){
+            startBottleWebView(result);
         }else {
             makeMistakes("1");
         }
+    }
+    private void startBottleWebView(String result) {
+        Intent intent=new Intent(context, LpgBottleWebView.class);
+        intent.putExtra("url",result);
+        startActivity(intent);
     }
     private void goHtmlWeb(String url) {
         Intent intent=new Intent(context, ShopActivity.class);

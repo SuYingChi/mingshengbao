@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.msht.minshengbao.FunctionActivity.fragment.RecommendFragment">
+    tools:context="com.msht.minshengbao.functionActivity.fragment.RecommendFragment">
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"

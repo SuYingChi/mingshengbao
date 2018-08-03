@@ -1,6 +1,5 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,8 +155,8 @@ public class LpgDepositOrderListAdapter extends BaseAdapter {
                 holder.tvCancel.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_SIX:
-                holder.tvStatus.setText("待收货");
-                holder.tvCancel.setVisibility(View.GONE);
+                holder.tvStatus.setText("待验瓶");
+                holder.tvCancel.setVisibility(View.VISIBLE);
                 break;
             case VariableUtil.VALUE_SEVER:
                 holder.tvStatus.setText("已收货");

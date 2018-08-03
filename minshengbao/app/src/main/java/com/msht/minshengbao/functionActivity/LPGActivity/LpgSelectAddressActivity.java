@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -10,8 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.AddressAdapter;
-import com.msht.minshengbao.Adapter.MapAddressAdapter;
+import com.msht.minshengbao.adapter.AddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -71,6 +69,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
                     try {
+                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String msgError = object.optString("msg");
@@ -204,6 +203,20 @@ public class LpgSelectAddressActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case 1:
+                addressList.clear();
+                mAdapter.notifyDataSetChanged();
+                initAddressData(1);
+                break;
+                default:
+                    break;
+        }
+    }
+
     private void onGetData(int position) {
         String siteId=addressList.get(position).get("siteId");
         String addressName=addressList.get(position).get("address");
@@ -248,8 +261,6 @@ public class LpgSelectAddressActivity extends BaseActivity {
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initHeaderView() {
-        View layoutHeader =findViewById(R.id.id_re_layout);
-        layoutHeader.setBackgroundResource(R.color.colorOrange);
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
         tvRightText.setVisibility(View.VISIBLE);
         tvRightText.setText("管理");
@@ -258,5 +269,13 @@ public class LpgSelectAddressActivity extends BaseActivity {
         layoutView =findViewById(R.id.id_re_nodata);
         layoutBtnNew =findViewById(R.id.id_re_new_address);
         mListView=(LoadMoreListView)findViewById(R.id.id_address_view);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

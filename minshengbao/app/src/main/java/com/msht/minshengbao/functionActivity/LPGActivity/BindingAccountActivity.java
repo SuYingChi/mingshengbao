@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -43,6 +43,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
     private Button    btnCode;
     private TimeCount time;
     private String    mPhone;
+    private int flag;
     private int       requestCode=0;
     private CustomDialog customDialog;
     private RequestHandler requestHandler=new RequestHandler(this);
@@ -65,7 +66,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-                        String error = object.optString("error");
+                        String error = object.optString("msg");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==1){
                                 activity.displayDialog("您已绑定成功");
@@ -112,13 +113,20 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
+                        if (flag!=1){
+                            startMyAccount();
+                        }
                         dialog.dismiss();
                         finish();
                     }
                 }).show();
+    }
+    private void startMyAccount() {
+        Intent intent=new Intent(context, LpgMyAccountActivity.class);
+        startActivity(intent);
+        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +134,10 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_lpg_binding_account);
         context=this;
         setCommonHeader("绑定账户");
+        Intent data=getIntent();
+        if (data!=null){
+            flag=data.getIntExtra("flag",0);
+        }
         customDialog=new CustomDialog(this, "正在加载");
         initFindViewById();
         time=new TimeCount(60000,1000);
@@ -161,7 +173,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
     }
 
     private void onCreateNewCustomer() {
-        Intent intent=new Intent(context,NewUserActivity.class);
+        Intent intent=new Intent(context,LpgNewUserActivity.class);
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,16 +6,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PayWayAdapter;
+import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Public.PayFeeWayActivity;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
-import com.msht.minshengbao.FunctionActivity.repairService.RepairPayment;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -34,7 +31,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -46,6 +42,7 @@ import java.util.Map;
 public class LpgPayOrderActivity extends BaseActivity {
     private Button btnSend;
     private String userId;
+    private String msbUserId;
     private String password;
     private String payChannel;
     private String orderId;
@@ -84,6 +81,7 @@ public class LpgPayOrderActivity extends BaseActivity {
                                 activity.jsonArray =object.getJSONArray("data");
                                 activity.onGetPayWayData();
                             }else if (activity.requestCode==2){
+
                                 JSONObject jsonObject=object.optJSONObject("data");
                                 activity.onChargePayWay(jsonObject);
                             }else if (activity.requestCode==3){
@@ -142,8 +140,6 @@ public class LpgPayOrderActivity extends BaseActivity {
         }else {
             Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","5");
-
-
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
@@ -236,7 +232,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         customDialog.show();
         String validateURL= UrlUtil.LPG_ORDER_PAY;
         HashMap<String, String> textParams = new HashMap<String, String>();
-        textParams.put("userId",userId);
+        textParams.put("msbUserId",userId);
         textParams.put("Id",orderId);
         textParams.put("payChannel",payChannel);
         OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
@@ -273,16 +269,16 @@ public class LpgPayOrderActivity extends BaseActivity {
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             //if (requestCode == REQUEST_CODE_PAYMENT){
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
+                String result=data.getStringExtra("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
                  * "fail"    - payment failed
-                 * "cancel"  - user canceld
+                 * "cancel"  - user canceled
                  * "invalid" - payment plugin not installed
                  */
                 // 错误信息
-                String errorMsg = data.getExtras().getString("error_msg");
-                String extraMsg = data.getExtras().getString("extra_msg");
+                String errorMsg = data.getStringExtra("error_msg");
+                String extraMsg = data.getStringExtra("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }

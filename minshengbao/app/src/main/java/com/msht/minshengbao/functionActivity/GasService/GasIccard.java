@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.IccardViewAdapter;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.adapter.IccardViewAdapter;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;

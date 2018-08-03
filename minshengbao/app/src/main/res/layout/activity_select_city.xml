@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity">
+    tools:context="com.msht.minshengbao.functionActivity.Public.SelectCityActivity">
     <include layout="@layout/layout_header"/>
     <ListView
         android:id="@+id/id_city_view"

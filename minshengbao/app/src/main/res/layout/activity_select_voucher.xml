@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.Public.SelectVoucherActivity">
+    tools:context="com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity">
     <include layout="@layout/layout_header"/>
     <FrameLayout
         android:layout_width="match_parent"

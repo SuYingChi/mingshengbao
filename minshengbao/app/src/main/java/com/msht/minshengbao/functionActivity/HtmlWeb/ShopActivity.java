@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.HtmlWeb;
+package com.msht.minshengbao.functionActivity.HtmlWeb;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -31,8 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.PublicPayWayActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.Public.PublicPayWayActivity;
 import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AppPackageUtil;

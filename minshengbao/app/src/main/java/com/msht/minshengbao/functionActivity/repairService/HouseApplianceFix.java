@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.repairService;
+package com.msht.minshengbao.functionActivity.repairService;
 
 import android.content.Intent;
 import android.os.Build;
@@ -13,10 +13,10 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.HouseApplianceFixAdapter;
+import com.msht.minshengbao.adapter.HouseApplianceFixAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

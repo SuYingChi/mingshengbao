@@ -1,11 +1,10 @@
-package com.msht.minshengbao.FunctionActivity.LPGActivity;
+package com.msht.minshengbao.functionActivity.LPGActivity;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Electricvehicle.ReplaceAddress;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddress;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -24,7 +23,6 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.ActionSheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.MySheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -55,6 +53,8 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
     private String   mAddressShort;
     private String   mAddress;
     private String   mLon,mLat;
+    private String   mArea;
+    private String   mCity;
     private String   lpgUserName;
     private String   lpgMobile;
     private String   lpgUserId;
@@ -88,6 +88,7 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.requestCode=1;
                             activity.displayDialog("地址添加完成");
+                            activity.setResult(1);
                         }else {
                             activity.requestCode=0;
                             activity.displayDialog(error);
@@ -172,6 +173,8 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
                 if (resultCode==SELECT_ADDRESS_CODE){
                     mLat=data.getStringExtra("lat");
                     mLon=data.getStringExtra("lon");
+                    mArea=data.getStringExtra("area");
+                    mCity=data.getStringExtra("city");
                     mAddress=data.getStringExtra("mAddress");
                     mAddressShort=data.getStringExtra("title");
                     tvAddress.setText(mAddress);
@@ -219,6 +222,7 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
     }
     private void requestService() {
 
+        customDialog.show();
         String requestUrl= UrlUtil.LPG_CREATE_NEW_ADDRESS;
         String mFloor=etFloor.getText().toString().trim();
         String mRidgepole=etRidgepole.getText().toString().trim();
@@ -231,13 +235,11 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
         textParams.put("latitude",mLat);
         textParams.put("floor",mFloor);
         textParams.put("isElevator",isElevator);
-        textParams.put("sex",isSex);
         textParams.put("unit",mRidgepole);
         textParams.put("roomNum",mRoom);
         textParams.put("city", VariableUtil.City);
         textParams.put("area","");
-        customDialog.show();
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private class MyTextWatcher implements TextWatcher {
         @Override

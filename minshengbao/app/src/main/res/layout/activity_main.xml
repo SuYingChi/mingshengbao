@@ -6,7 +6,7 @@
     android:fitsSystemWindows="false"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.FunctionActivity.MainActivity">
+    tools:context="com.msht.minshengbao.functionActivity.MainActivity">
     <FrameLayout
         android:id="@+id/rl_main"
         android:layout_width="match_parent"

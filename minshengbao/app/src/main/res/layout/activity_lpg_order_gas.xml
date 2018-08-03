@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".FunctionActivity.LPGActivity.LpgOrderGasActivity">
+    tools:context=".functionActivity.LPGActivity.LpgOrderGasActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_weight="1"
@@ -20,7 +20,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"
-                android:background="@color/colorOrange"/>
+                android:background="@drawable/shape_change_background"/>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_width70"
-                        android:background="@color/colorOrange"/>
+                        android:background="@drawable/shape_change_background"/>
                 </LinearLayout>
                 <include layout="@layout/layout_lpg_select_address_time" />
             </FrameLayout>
@@ -51,16 +51,26 @@
                 android:layout_marginEnd="@dimen/margin_width10"
                 android:background="@color/white">
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/id_transportation_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
-                    android:layout_toLeftOf="@+id/id_transportation_expense"
-                    android:layout_toStartOf="@+id/id_transportation_expense"
                     android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16"
                     android:text="@string/transportation_expense"/>
+                <ImageView
+                    android:id="@+id/id_transportation_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/id_transportation_text"
+                    android:layout_toEndOf="@+id/id_transportation_text"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:contentDescription="@string/picture_text"
+                    android:src="@drawable/attention_icon_xh"/>
                 <TextView
                     android:id="@+id/id_transportation_expense"
                     android:layout_width="wrap_content"
@@ -68,8 +78,13 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_toRightOf="@+id/id_transportation_img"
+                    android:layout_toEndOf="@+id/id_transportation_img"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
+                    android:gravity="end"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/colorOrange"
                     android:text="@string/default_value0"/>
@@ -123,8 +138,8 @@
             android:minHeight="@dimen/margin_width45"
             android:gravity="center"
             android:text="@string/send_server"
-            app:backColor="@color/colorOrange"
-            app:backColorPress="#ff33ff"
+            app:backGroundImage="@drawable/shape_change_background"
+            app:backColorPress="#F4D6CE"
             app:textColor="@android:color/white"/>
     </LinearLayout>
 </LinearLayout>

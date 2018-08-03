@@ -1,10 +1,10 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.OrderListFragment;
+import com.msht.minshengbao.functionActivity.fragment.OrderListFragment;
 
 
 /**

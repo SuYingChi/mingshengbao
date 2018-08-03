@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.repairService;
+package com.msht.minshengbao.functionActivity.repairService;
 
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;

@@ -3,7 +3,7 @@
     tools:ignore="MissingTranslation">
     <!--注册 -->
     <string name="button_extend_m_default_text">text</string>
-    <string name="phone_number">手机号</string>
+    <string name="phone_number">手机号:</string>
     <string name="verification_code">验证码</string>
     <string name="please_input_phone">请输入手机号</string>
     <string name="please_input_code">请输入验证码</string>

@@ -1,21 +1,29 @@
-package com.zaaach.toprightmenu;
+package com.msht.minshengbao.ViewUI.widget;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import com.msht.minshengbao.adapter.TopRightMenuAdapter;
+import com.msht.minshengbao.Bean.MenuItem;
+import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConvertUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
- * Author：Bro0cL on 2016/12/26.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/17  
  */
 public class TopRightMenu {
     private Activity mContext;
@@ -23,7 +31,8 @@ public class TopRightMenu {
     private RecyclerView mRecyclerView;
     private View content;
 
-    private TRMenuAdapter mAdapter;
+    private int offSetX;
+    private TopRightMenuAdapter mAdapter;
     private List<MenuItem> menuItemList;
 
     private static final int DEFAULT_HEIGHT = 480;
@@ -44,20 +53,21 @@ public class TopRightMenu {
     }
 
     private void init() {
-        content = LayoutInflater.from(mContext).inflate(R.layout.trm_popup_menu, null);
-        mRecyclerView = (RecyclerView) content.findViewById(R.id.trm_recyclerview);
+        content = LayoutInflater.from(mContext).inflate(R.layout.layout_top_right_menu, null);
+        mRecyclerView = (RecyclerView) content.findViewById(R.id.trm_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-
         menuItemList = new ArrayList<>();
-        mAdapter = new TRMenuAdapter(mContext, this, menuItemList, showIcon);
+        mAdapter = new TopRightMenuAdapter(mContext, this, menuItemList, showIcon);
     }
 
     private PopupWindow getPopupWindow(){
         mPopupWindow = new PopupWindow(mContext);
         mPopupWindow.setContentView(content);
-        mPopupWindow.setHeight(popHeight);
-        mPopupWindow.setWidth(popWidth);
+        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        // mPopupWindow.setWidth(popWidth);
         if (needAnimationStyle){
             mPopupWindow.setAnimationStyle(animationStyle <= 0 ? DEFAULT_ANIM_STYLE : animationStyle);
         }
@@ -165,16 +175,16 @@ public class TopRightMenu {
     }
 
     public TopRightMenu showAsDropDown(View anchor){
-        showAsDropDown(anchor, 0, 0);
+        menuShowAsDropDown(anchor, 0, 0);
         return this;
     }
 
-    public TopRightMenu showAsDropDown(View anchor, int xoff, int yoff){
+    public TopRightMenu menuShowAsDropDown(View anchor, int xoff, int yoff){
         if (mPopupWindow == null){
             getPopupWindow();
         }
         if (!mPopupWindow.isShowing()) {
-            mPopupWindow.showAsDropDown(anchor, xoff, yoff);
+            mPopupWindow.showAsDropDown(anchor, ConvertUtil.dip2px(mContext,xoff),ConvertUtil.dip2px(mContext,yoff));
             if (dimBackground){
                 setBackgroundAlpha(1f, alpha, 240);
             }
@@ -203,6 +213,10 @@ public class TopRightMenu {
     }
 
     public interface OnMenuItemClickListener{
+        /**
+         * 相应Item 触发回调
+         * @param position
+         */
         void onMenuItemClick(int position);
     }
 }

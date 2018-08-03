@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -17,10 +17,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.WaterOrderAdapter;
+import com.msht.minshengbao.adapter.WaterOrderAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -384,10 +384,10 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                 rechargeAmount();
                 break;
             case R.id.id_tv_detail:
-                balanceDtail();
+                balanceDetail();
                 break;
             case R.id.id_forward_img:
-                balanceDtail();
+                balanceDetail();
                 break;
             case R.id.id_scan_layout:
                 requestPermission();
@@ -441,7 +441,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         Intent intent =new Intent(context, QRCodeScanActivity.class);
         startActivity(intent);
     }
-    private void balanceDtail() {
+    private void balanceDetail() {
         Intent intent =new Intent(context,WaterBalanceDetailActivity.class);
         startActivity(intent);
     }

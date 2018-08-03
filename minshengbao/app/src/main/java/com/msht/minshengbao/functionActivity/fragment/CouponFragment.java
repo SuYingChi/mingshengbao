@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -10,12 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.CouponAdapter;
+import com.msht.minshengbao.adapter.CouponAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

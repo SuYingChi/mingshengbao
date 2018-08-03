@@ -1,4 +1,4 @@
-package com.zaaach.toprightmenu;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,19 +10,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.msht.minshengbao.Bean.MenuItem;
+import com.msht.minshengbao.R;
+import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
 
+import java.util.List;
 /**
- * Author：Bro0cL on 2016/12/26.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/18  
  */
-public class TRMenuAdapter extends RecyclerView.Adapter<TRMenuAdapter.TRMViewHolder> {
+public class TopRightMenuAdapter extends RecyclerView.Adapter<TopRightMenuAdapter.TRMViewHolder> {
     private Context mContext;
     private List<MenuItem> menuItemList;
     private boolean showIcon;
     private TopRightMenu mTopRightMenu;
     private TopRightMenu.OnMenuItemClickListener onMenuItemClickListener;
 
-    public TRMenuAdapter(Context context, TopRightMenu topRightMenu, List<MenuItem> menuItemList, boolean show) {
+    public TopRightMenuAdapter(Context context, TopRightMenu topRightMenu, List<MenuItem> menuItemList, boolean show) {
         this.mContext = context;
         this.mTopRightMenu = topRightMenu;
         this.menuItemList = menuItemList;
@@ -57,13 +64,14 @@ public class TRMenuAdapter extends RecyclerView.Adapter<TRMenuAdapter.TRMViewHol
         }
         holder.text.setText(menuItem.getText());
 
-        if (position == 0){
+       /* if (position == 0){
             holder.container.setBackgroundDrawable(addStateDrawable(mContext, -1, R.drawable.trm_popup_top_pressed));
         }else if (position == menuItemList.size() - 1){
             holder.container.setBackgroundDrawable(addStateDrawable(mContext, -1, R.drawable.trm_popup_bottom_pressed));
         }else {
             holder.container.setBackgroundDrawable(addStateDrawable(mContext, -1, R.drawable.trm_popup_middle_pressed));
-        }
+        }*/
+        holder.container.setBackgroundResource(R.drawable.selector_touch_background);
         final int pos = holder.getAdapterPosition();
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.HtmlWeb;
+package com.msht.minshengbao.functionActivity.HtmlWeb;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

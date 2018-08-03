@@ -3,9 +3,9 @@
     <item>
         <shape android:shape="ring"
                android:innerRadius="10dp"
-               android:thickness="1dp"
+               android:thickness="@dimen/margin_width1"
                android:useLevel="false">
-            <size android:height="20dp" android:width="25dp"/>
+            <size android:height="15dp" android:width="20dp"/>
             <solid android:color="@color/colorPrimary"/>
         </shape>
     </item>

@@ -39,8 +39,7 @@
             android:layout_below="@+id/id_tv_address"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/color_383838"
-            android:textStyle="bold"
-            android:text="@string/default_text"/>
+            android:textStyle="bold" />
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,8 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_width14"
-                android:textColor="@color/color_383838"
-                android:text="@string/default_text"/>
+                android:textColor="@color/color_383838" />
             <TextView
                 android:id="@+id/id_tv_mobile"
                 android:layout_width="wrap_content"
@@ -65,7 +63,6 @@
                 android:layout_marginStart="@dimen/margin_width10"
                 android:textSize="@dimen/text_width14"
                 android:textColor="@color/color_383838"
-                android:text="@string/default_text"
                 />
         </RelativeLayout>
         <ImageView
@@ -92,9 +89,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width10"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginStart="@dimen/margin_width10"
+            android:gravity="center"
+            android:layout_centerInParent="true"
             android:layout_toStartOf="@+id/id_forward_time"
             android:layout_toLeftOf="@+id/id_forward_time"
             android:layout_marginRight="@dimen/margin_width5"

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Electricvehicle;
+package com.msht.minshengbao.functionActivity.Electricvehicle;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.VechicAdapter;
+import com.msht.minshengbao.adapter.VechicAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;

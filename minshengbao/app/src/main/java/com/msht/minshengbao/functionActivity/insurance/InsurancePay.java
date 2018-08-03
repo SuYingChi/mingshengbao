@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.insurance;
+package com.msht.minshengbao.functionActivity.insurance;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;

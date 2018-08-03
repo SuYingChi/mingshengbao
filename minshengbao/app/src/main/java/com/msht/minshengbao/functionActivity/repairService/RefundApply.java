@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.repairService;
+package com.msht.minshengbao.functionActivity.repairService;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.PhotoPickerAdapter;
+import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;

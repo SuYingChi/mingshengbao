@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.GasServiceAdapter;
+import com.msht.minshengbao.adapter.GasServiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

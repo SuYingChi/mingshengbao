@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.Invoice;
+package com.msht.minshengbao.functionActivity.Invoice;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,10 +14,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -415,7 +413,6 @@ public class InvoiceOpen extends BaseActivity {
         public TextView tvName;
         public TextView tvMoney;
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.DetailseviceAdapter;
+import com.msht.minshengbao.adapter.DetailseviceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;

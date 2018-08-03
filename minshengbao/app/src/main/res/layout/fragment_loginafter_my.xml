@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    tools:context="com.msht.minshengbao.FunctionActivity.fragment.LoginMyFrag">
+    tools:context="com.msht.minshengbao.functionActivity.fragment.LoginMyFrag">
     <com.msht.minshengbao.ViewUI.widget.MyScrollview
         android:id="@+id/id_scrollview"
         android:layout_width="match_parent"

@@ -1,12 +1,12 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.SelfWriteFrage;
-import com.msht.minshengbao.FunctionActivity.fragment.TableRecordFrag;
+import com.msht.minshengbao.functionActivity.fragment.SelfWriteFrage;
+import com.msht.minshengbao.functionActivity.fragment.TableRecordFrag;
 
 
 /**

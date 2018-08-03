@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.repairService;
+package com.msht.minshengbao.functionActivity.repairService;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectVoucherActivity;
+import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.Manifest;
@@ -23,10 +23,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Adapter.MyFunctionAdapter;
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.MoreSetting;
-import com.msht.minshengbao.FunctionActivity.MyActivity.ShareMenuActivity;
+import com.msht.minshengbao.adapter.MyFunctionAdapter;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.MoreSetting;
+import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;

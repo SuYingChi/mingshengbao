@@ -28,7 +28,6 @@ android {
             storeFile file(signFile)
             storePassword 'mshtmsht'
         }
-
     }
     buildTypes {
         debug {

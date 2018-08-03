@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity;
+package com.msht.minshengbao.functionActivity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -152,16 +152,17 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
                             activity.onDelectSuccess();
                         }else {
                             activity.failure(Error);
@@ -171,9 +172,6 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     activity.arraylist.clear();
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;

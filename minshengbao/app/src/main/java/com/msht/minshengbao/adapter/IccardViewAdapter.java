@@ -1,4 +1,4 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.IcCard;
-import com.msht.minshengbao.FunctionActivity.fragment.RechargeFrag;
+import com.msht.minshengbao.functionActivity.fragment.IcCard;
+import com.msht.minshengbao.functionActivity.fragment.RechargeFrag;
 
 /**
  * Created by hong on 2017/11/8.

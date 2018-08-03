@@ -32,7 +32,7 @@
                 android:textStyle="bold"
                 android:text="@string/steel_bottle_type1"/>
             <TextView
-                android:id="@+id/id_pledge_text"
+                android:id="@+id/id_pledge_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_bottle_type1"
@@ -46,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_bottle_type1"
                 android:layout_marginTop="@dimen/margin_width6"
-                android:layout_toRightOf="@+id/id_pledge_text"
-                android:layout_toEndOf="@+id/id_pledge_text"
+                android:layout_toRightOf="@+id/id_pledge_text1"
+                android:layout_toEndOf="@+id/id_pledge_text1"
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginStart="@dimen/margin_width10"
                 android:textColor="@color/color_9e9e9e"
@@ -57,7 +57,7 @@
                 android:id="@+id/id_tv_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/id_pledge_text"
+                android:layout_below="@+id/id_pledge_text1"
                 android:layout_marginTop="@dimen/margin_width10"
                 android:textColor="@color/colorOrange"
                 android:textSize="@dimen/text_width18"
@@ -84,7 +84,7 @@
             android:layout_marginRight="@dimen/margin_width5"
             android:layout_marginEnd="@dimen/margin_width10"
             android:background="@color/background_gray"
-            android:text="@string/one_value"/>
+            android:text="@string/zero_value"/>
         <Button
             android:id="@+id/id_subtract_btn1"
             android:layout_width="@dimen/margin_width25"

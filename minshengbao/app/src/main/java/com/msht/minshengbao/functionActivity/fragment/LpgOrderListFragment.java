@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Activity;
@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.LpgOrderListAdapter;
+import com.msht.minshengbao.adapter.LpgOrderListAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.FunctionActivity.LPGActivity.LpgPayOrderActivity;
-import com.msht.minshengbao.FunctionActivity.LPGActivity.LpgOrderDetailActivity;
+import com.msht.minshengbao.functionActivity.LPGActivity.LpgPayOrderActivity;
+import com.msht.minshengbao.functionActivity.LPGActivity.LpgOrderDetailActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
@@ -176,6 +176,7 @@ public class LpgOrderListFragment extends BaseFragment {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("orderId", orderId);
                 map.put("code", code);
+                map.put("orderType","1");
                 map.put("fiveBottleCount", fiveBottleCount);
                 map.put("fifteenBottleCount",fifteenBottleCount);
                 map.put("fiftyBottleCount", fiftyBottleCount);

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.insurance;
+package com.msht.minshengbao.functionActivity.insurance;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -22,7 +22,8 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
+import com.msht.minshengbao.Utils.RegularExpressionUtil;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -39,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -64,7 +64,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private int      deadline=5;
     private String   amount="300.00";
     private String   startTime, stopTime;
-    private String   idNo;
+    private String   url,navigation;
     private String   card_type="0";
     private int requestType=0;
     private static final String[] CERTIFICATE_TYPE = {"居民身份证","港澳通行证","台湾通行证"};
@@ -287,28 +287,32 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.id_re_call:
-                callHotline();
+                callHotLine();
                 break;
             case R.id.id_re_buy:
-                buyinsurance();
+                buyInsurance();
                 break;
             case R.id.id_tv_rightText:
-                callHotline();
+                callHotLine();
                 break;
             case R.id.id_text1:
-                idNo="1";
+                navigation="投保须知";
+                url="http://msbapp.cn/insurance/toubaoxuzhi.html";
                 gotoAgree();
                 break;
             case R.id.id_text2:
-                idNo="2";
+                navigation="投保声明与授权";
+                url="http://msbapp.cn/insurance/toubaoshengming.html";
                 gotoAgree();
                 break;
             case R.id.id_text3:
-                idNo="3";
+                navigation="人身意外伤害保险条例";
+                url="http://msbapp.cn/insurance/baoxiantiaokuan.html";
                 gotoAgree();
                 break;
             case R.id.id_text4:
-                idNo="6";
+                navigation="保险说明";
+                url=UrlUtil.INSURANCE_EXPLAIN_URL;;
                 gotoAgree();
                 break;
             default:
@@ -316,11 +320,12 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         }
     }
     private void gotoAgree() {
-        Intent intent=new Intent(this, AgreeTreayt.class);
-        intent.putExtra("idNo",idNo);
+        Intent intent=new Intent(this, AgreeTreaty.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigation",navigation);
         startActivity(intent);
     }
-    private void buyinsurance() {
+    private void buyInsurance() {
         name= etName.getText().toString().trim();
         idCard = etIdCard.getText().toString().trim();
         customer= etCustomer.getText().toString().trim();
@@ -329,7 +334,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         address= etAddress.getText().toString().trim();
         recommend= etRecommend.getText().toString().trim();
         if (match(name, idCard,customer,address)){
-            if (isphone(phone)&&isemailEmpty(email)){
+            if (RegularExpressionUtil.isPhone(phone)&&isEmailEmpty(email)){
                 if (checkBox.isChecked()){
                     showDialogs();
                 }else {
@@ -362,16 +367,14 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             }
         }
     }
-    private boolean isemailEmpty(String email) {
+    private boolean isEmailEmpty(String email) {
+        boolean result=true;
         if (TextUtils.isEmpty(email)){
-            return true;
+            result=true;
         }else {
-            if (isemail(email)){
-                return true;
-            }else {
-                return false;
-            }
+            result= RegularExpressionUtil.isEmail(email);
         }
+        return result;
     }
     private void showDialogs() {
         final EnsureBuy insurance=new EnsureBuy(this);
@@ -393,12 +396,12 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             public void onClick(View v) {
                 insurance.dismiss();
                 customDialog.show();
-                requestSevice();
+                requestService();
             }
         });
         insurance.show();
     }
-    private void requestSevice() {
+    private void requestService() {
         requestType=0;
         String validateURL = UrlUtil.Insurance_buy_Url;
         Map<String, String> textParams = new HashMap<String, String>();
@@ -424,23 +427,12 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             return true;
         }
     }
-    private boolean isemail(String email) {
-        String str="^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|((["+
-                "a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
-        Pattern p=Pattern.compile(str);
-        Matcher m=p.matcher(email);
-        return m.matches();
-    }
-    private boolean isphone(String phone) {
-        Matcher matcher=NUMBER_PATTERN.matcher(phone);
-        return matcher.matches();
-    }
-    private void Detail() {
+    private void onDetail() {
         Intent detail=new Intent(this,InsuranceDetail.class);
         detail.putExtra("id",id);
         startActivity(detail);
     }
-    private void callHotline() {
+    private void callHotLine() {
         final String phone = "963666";
         new PromptDialog.Builder(this)
                 .setTitle("客服电话")

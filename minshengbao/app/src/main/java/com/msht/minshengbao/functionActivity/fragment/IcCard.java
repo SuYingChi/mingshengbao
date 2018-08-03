@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.Manifest;
@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 

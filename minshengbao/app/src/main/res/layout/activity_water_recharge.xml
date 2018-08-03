@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_gray"
-    tools:context="com.msht.minshengbao.FunctionActivity.WaterApp.WaterRechargeActivity">
+    tools:context="com.msht.minshengbao.functionActivity.WaterApp.WaterRechargeActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

@@ -28,13 +28,13 @@
         android:background="@color/white"
         android:minHeight="@dimen/margin_width45">
         <TextView
-            android:id="@+id/id_tv_year"
+            android:id="@+id/id_corrosive_degree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/title_tv"
             android:textSize="@dimen/text_width16"
             android:layout_centerInParent="true"
-            android:text="@string/steel_bottle_year"/>
+            android:text="@string/corrosive_degree"/>
 
     </RelativeLayout>
     <RelativeLayout
@@ -50,7 +50,7 @@
             android:textColor="@color/title_tv"
             android:textSize="@dimen/text_width16"
             android:layout_centerInParent="true"
-            android:text="@string/steel_bottle_number"/>
+            android:text="@string/steel_bottle_count"/>
 
     </RelativeLayout>
     <RelativeLayout

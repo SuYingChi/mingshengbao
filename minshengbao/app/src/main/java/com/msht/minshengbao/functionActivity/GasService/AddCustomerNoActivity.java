@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Dialog;
 import android.os.Handler;
@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -207,12 +206,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customerNo);
-        textParams.put("address",address);
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
-    }
-    private boolean isMatcherType(String txt) {
-        Matcher matcher=NUMBER_PATTERN.matcher(txt);
-        return matcher.matches();
     }
     @Override
     protected void onDestroy() {

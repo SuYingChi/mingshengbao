@@ -8,7 +8,7 @@
     android:background="@color/background_gray"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".FunctionActivity.LPGActivity.BindingAccountActivity">
+    tools:context=".functionActivity.LPGActivity.BindingAccountActivity">
     <include layout="@layout/layout_header"/>
     <TextView
         android:layout_width="wrap_content"

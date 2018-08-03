@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.WaterApp;
+package com.msht.minshengbao.functionActivity.WaterApp;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,14 +11,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.msht.minshengbao.Adapter.PayWayAdapter;
-import com.msht.minshengbao.Adapter.WaterMealAdapter;
+import com.msht.minshengbao.adapter.PayWayAdapter;
+import com.msht.minshengbao.adapter.WaterMealAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.AgreeTreayt;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
-import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -146,7 +145,7 @@ public class WaterRechargeActivity extends BaseActivity {
                                 activity.saveData(jsonArray);
                             }else if (activity.requestType==1){
                                 activity.orderId =object.optString("data");
-                                activity.msbappPay();
+                                activity.msbAppPay();
                             }
                         }else {
                             activity.onShowDialog("提示",message);
@@ -368,27 +367,33 @@ public class WaterRechargeActivity extends BaseActivity {
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             //if (requestCode == REQUEST_CODE_PAYMENT){
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
+                String result=data.getStringExtra("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
                  * "fail"    - payment failed
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg");
-                String extraMsg = data.getExtras().getString("extra_msg");
+                String errorMsg = data.getStringExtra("error_msg");
+                String extraMsg = data.getStringExtra("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
     }
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
-        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
-            str="缴费成功";
-        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
-            str="缴费失败";
-        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
-            str="已取消缴费";
+        switch (title){
+            case SendrequestUtil.SUCCESS_VALUE:
+                str="缴费成功";
+                break;
+            case SendrequestUtil.FAILURE_VALUE:
+                str="缴费失败";
+                break;
+            case SendrequestUtil.CANCEL_VALUE:
+                str="已取消缴费";
+                break;
+                default:
+                    break;
         }
         if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
             setResult(0x002);
@@ -429,8 +434,10 @@ public class WaterRechargeActivity extends BaseActivity {
         findViewById(R.id.id_back_agree).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, AgreeTreayt.class);
-                intent.putExtra("idNo","5");
+                String url=UrlUtil.Recharge_BackAgree;
+                Intent intent=new Intent(context, AgreeTreaty.class);
+                intent.putExtra("url",url);
+                intent.putExtra("navigation","充返活动说明");
                 startActivity(intent);
             }
         });
@@ -526,7 +533,7 @@ public class WaterRechargeActivity extends BaseActivity {
         SendrequestUtil.postDataFromService(validateURL,textParams,methodHandler);
 
     }
-    private void msbappPay() {
+    private void msbAppPay() {
         String validateURL= UrlUtil.PayfeeWay_Url;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.msht.minshengbao.FunctionActivity.fragment.AllIncomeFrag">
+    tools:context="com.msht.minshengbao.functionActivity.fragment.AllIncomeFrag">
 
     <com.msht.minshengbao.ViewUI.PullRefresh.XListView
         android:id="@+id/id_income_view"

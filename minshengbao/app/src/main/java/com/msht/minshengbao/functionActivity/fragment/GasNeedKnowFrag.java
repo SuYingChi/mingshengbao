@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.msht.minshengbao.FunctionActivity.GasService.GasServerGuide;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.GasService.GasServerGuide;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.UrlUtil;

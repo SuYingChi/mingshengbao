@@ -1,12 +1,12 @@
-package com.msht.minshengbao.Adapter;
+package com.msht.minshengbao.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.FunctionActivity.fragment.CounterFrag;
-import com.msht.minshengbao.FunctionActivity.fragment.GasNeedKnowFrag;
+import com.msht.minshengbao.functionActivity.fragment.CounterFrag;
+import com.msht.minshengbao.functionActivity.fragment.GasNeedKnowFrag;
 
 /**
  * Created by hong on 2016/12/19.

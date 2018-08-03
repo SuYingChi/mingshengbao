@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.msht.minshengbao.Adapter.MyWorkOrderAdapter;
+import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.FunctionActivity.repairService.MyorderworkDetail;
-import com.msht.minshengbao.FunctionActivity.repairService.RepairEvaluate;
+import com.msht.minshengbao.functionActivity.repairService.MyorderworkDetail;
+import com.msht.minshengbao.functionActivity.repairService.RepairEvaluate;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

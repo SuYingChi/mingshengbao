@@ -25,6 +25,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.MySheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2018/6/27
  */
-public class NewUserActivity extends BaseActivity implements View.OnClickListener {
+public class LpgNewUserActivity extends BaseActivity implements View.OnClickListener {
 
     private Button   btnSend;
     private EditText etUserName;
@@ -67,13 +68,13 @@ public class NewUserActivity extends BaseActivity implements View.OnClickListene
     private static final int SELECT_ELEVATOR_CODE=3;
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<NewUserActivity> mWeakReference;
-        public RequestHandler(NewUserActivity activity) {
-            mWeakReference = new WeakReference<NewUserActivity>(activity);
+        private WeakReference<LpgNewUserActivity> mWeakReference;
+        public RequestHandler(LpgNewUserActivity activity) {
+            mWeakReference = new WeakReference<LpgNewUserActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final NewUserActivity activity=mWeakReference.get();
+            final LpgNewUserActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -169,6 +170,7 @@ public class NewUserActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.id_select_layout).setOnClickListener(this);
         findViewById(R.id.id_select_sex).setOnClickListener(this);
         findViewById(R.id.id_select_elevator).setOnClickListener(this);
+        findViewById(R.id.id_know_text).setOnClickListener(this);
         etPhoneNo=(EditText)findViewById(R.id.id_et_phone);
         etUserName=(EditText)findViewById(R.id.id_et_name);
         etFloor=(EditText)findViewById(R.id.id_et_floor);
@@ -203,10 +205,22 @@ public class NewUserActivity extends BaseActivity implements View.OnClickListene
             case R.id.id_btn_send:
                 requestService();
                 break;
+            case R.id.id_know_text:
+                startNewUserTreaty();
+                break;
             default:
                 break;
         }
     }
+
+    private void startNewUserTreaty() {
+        String url="";
+        Intent intent=new Intent(context, AgreeTreaty.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigation","居民用户办理须知");
+        startActivity(intent);
+    }
+
     private void selectElevator() {
         String[] mList=new String[]{"无电梯","有电梯"};
         String mTitle="是否带电梯";

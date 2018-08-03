@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.Manifest;
@@ -32,36 +32,35 @@ import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.msht.minshengbao.Adapter.HomeFunctionAdapter;
-import com.msht.minshengbao.Adapter.HotRepairAdapter;
-import com.msht.minshengbao.Adapter.TopModuleAdapter;
+import com.msht.minshengbao.adapter.HomeFunctionAdapter;
+import com.msht.minshengbao.adapter.HotRepairAdapter;
+import com.msht.minshengbao.adapter.TopModuleAdapter;
 import com.msht.minshengbao.Bean.ADInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
-import com.msht.minshengbao.FunctionActivity.Electricvehicle.ElectricHome;
-import com.msht.minshengbao.FunctionActivity.GasService.GasIccard;
-import com.msht.minshengbao.FunctionActivity.GasService.GasPayfee;
-import com.msht.minshengbao.FunctionActivity.GasService.GasService;
-import com.msht.minshengbao.FunctionActivity.GasService.GasWriteTable;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.IcbcHtml;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.IntelligentFarmHml;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.FunctionActivity.HtmlWeb.VegetableGentlemen;
-import com.msht.minshengbao.FunctionActivity.LPGActivity.BindingAccountActivity;
-import com.msht.minshengbao.FunctionActivity.LPGActivity.LpgMyAccountActivity;
-import com.msht.minshengbao.FunctionActivity.LPGActivity.NewUserActivity;
-import com.msht.minshengbao.FunctionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.FunctionActivity.Public.AllServiceActivity;
-import com.msht.minshengbao.FunctionActivity.Public.SelectCityActivity;
-import com.msht.minshengbao.FunctionActivity.WaterApp.WaterHomeActivity;
-import com.msht.minshengbao.FunctionActivity.insurance.InsuranceHome;
-import com.msht.minshengbao.FunctionActivity.repairService.HomeAppliancescClean;
-import com.msht.minshengbao.FunctionActivity.repairService.HouseApplianceFix;
-import com.msht.minshengbao.FunctionActivity.repairService.LampCircuit;
-import com.msht.minshengbao.FunctionActivity.repairService.OtherRepair;
-import com.msht.minshengbao.FunctionActivity.repairService.PublishOrder;
-import com.msht.minshengbao.FunctionActivity.repairService.SanitaryWare;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome;
+import com.msht.minshengbao.functionActivity.GasService.GasIccard;
+import com.msht.minshengbao.functionActivity.GasService.GasPayfee;
+import com.msht.minshengbao.functionActivity.GasService.GasService;
+import com.msht.minshengbao.functionActivity.GasService.GasWriteTable;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.IcbcHtml;
+import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHml;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemen;
+import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
+import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
+import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
+import com.msht.minshengbao.functionActivity.repairService.HomeAppliancescClean;
+import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFix;
+import com.msht.minshengbao.functionActivity.repairService.LampCircuit;
+import com.msht.minshengbao.functionActivity.repairService.OtherRepair;
+import com.msht.minshengbao.functionActivity.repairService.PublishOrder;
+import com.msht.minshengbao.functionActivity.repairService.SanitaryWare;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -469,8 +468,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         break;
                     case"all_service":
                         if (VariableUtil.loginStatus){
-                           // allServe();
-                            lpgService();
+                            allServe();
                         }else {
                             gologins();
                         }
@@ -525,26 +523,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 String codes= rightTopList.get(position).get("code");
                 Id= rightTopList.get(position).get("id");
                 switch (codes){
-                    case "shop":
+                    case ConstantUtil.SHOP:
                         shopmall();
                         break;
-                    case "gas_pay":
+                    case ConstantUtil.GAS_PAY:
                         if (VariableUtil.loginStatus){
                             gaspay();
                         }else {
                             gologins();
                         }
                         break;
-                    case "gas_meter":
+                    case ConstantUtil.GAS_METER:
                         if (VariableUtil.loginStatus){
                             gasmeter();
                         }else {
                             gologins();
                         }
                         break;
-                    case "gas_iccard":
+                    case ConstantUtil.GAS_IC_CARD:
                         if (VariableUtil.loginStatus){
                             iccard();
+                        }else {
+                            gologins();
+                        }
+                        break;
+                    case ConstantUtil.LPG_NAME:
+                        if (VariableUtil.loginStatus){
+                            lpgService();
                         }else {
                             gologins();
                         }

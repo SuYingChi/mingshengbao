@@ -16,6 +16,7 @@ public class VariableUtil {
     public static int MealPos=-1;
     public static int estatePos=-1;
     public static int messageNum=0;
+    public static int deleteFlag=0;
     public static String balance;
     public static String City="0";
     public static boolean boolSelect;

@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.GasService;
+package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.PayWayAdapter;
+import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.FunctionActivity.Public.PaySuccessActivity;
-import com.msht.minshengbao.FunctionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
+import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendrequestUtil;

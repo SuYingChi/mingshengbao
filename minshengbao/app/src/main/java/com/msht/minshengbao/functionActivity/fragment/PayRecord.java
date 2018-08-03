@@ -1,4 +1,4 @@
-package com.msht.minshengbao.FunctionActivity.fragment;
+package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Adapter.GetAddressAdapter;
-import com.msht.minshengbao.FunctionActivity.GasService.GasPayRecord;
+import com.msht.minshengbao.adapter.GetAddressAdapter;
+import com.msht.minshengbao.functionActivity.GasService.GasPayRecord;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
