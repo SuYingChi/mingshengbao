@@ -90,8 +90,8 @@ public class LookEvaluateActivity extends BaseActivity {
     private void onReceiveData(JSONObject jsonObject) {
         try{
             JSONObject objectUser=jsonObject.getJSONObject("user_eval");
-            evaluateInfo =objectUser.optString("evaluateInfo");
-            evaluateScore =objectUser.optString("evaluateScore");
+            evaluateInfo =objectUser.optString("evaluate_info");
+            evaluateScore =objectUser.optString("evaluate_score");
             if (!TextUtils.isEmpty(evaluateInfo)){
                 tvEvaluation.setText(evaluateInfo);
             }else {
@@ -119,7 +119,7 @@ public class LookEvaluateActivity extends BaseActivity {
             if (jsonObject.has("repairman_eval")){
                 layoutMaster.setVisibility(View.VISIBLE);
                 JSONObject objectMaster=jsonObject.getJSONObject("repairman_eval");
-                String evaluateInfo=objectMaster.optString("evaluateInfo");
+                String evaluateInfo=objectMaster.optString("evaluate_info");
                 tvMasterEva.setText(evaluateInfo);
             }else {
                 layoutMaster.setVisibility(View.GONE);
@@ -128,7 +128,7 @@ public class LookEvaluateActivity extends BaseActivity {
                 btnAdd.setVisibility(View.GONE);
                 layoutAdd.setVisibility(View.VISIBLE);
                 JSONObject userAddEval=jsonObject.getJSONObject("user_add_eval");
-                String userAddInfo=userAddEval.optString("evaluateInfo");
+                String userAddInfo=userAddEval.optString("evaluate_info");
                 userAddEva.setText(userAddInfo);
             }else {
                 btnAdd.setVisibility(View.VISIBLE);
@@ -200,7 +200,7 @@ public class LookEvaluateActivity extends BaseActivity {
             case ConstantUtil.VALUE_FOUR:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
                 break;
-            case ConstantUtil.VALUE_THIRTY_SIX:
+            case ConstantUtil.VALUE_FORTY_EIGHT:
                 typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
                 break;
             default:
@@ -219,7 +219,7 @@ public class LookEvaluateActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,RepairEvaluateActivity.class);
-                intent.putExtra("send_type","3");
+                intent.putExtra("sendType","3");
                 intent.putExtra("id",orderId);
                 intent.putExtra("orderNo",orderNo);
                 intent.putExtra("type",type);

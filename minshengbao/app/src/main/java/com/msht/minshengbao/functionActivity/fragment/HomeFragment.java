@@ -55,7 +55,6 @@ import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
-import com.msht.minshengbao.functionActivity.insurance.MainTest;
 import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
 import com.msht.minshengbao.functionActivity.repairService.LampCircuitActivity;
@@ -699,17 +698,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         SendRequestUtil.getDataFromServiceTwo(validateURL,geturlHandler);
     }
     private void initLocation() {
-        LocationUtils.setmLocation(mContext);
-        LocationUtils.mlocationClient.setLocationListener(this);
+        LocationUtils.setLocation(mContext);
+        LocationUtils.mLocationClient.setLocationListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 functionData();   //没权限定位默认海口
             }else {
-                LocationUtils.mlocationClient.startLocation();
+                LocationUtils.mLocationClient.startLocation();
             }
         }else {
-            LocationUtils.mlocationClient.startLocation();
+            LocationUtils.mLocationClient.startLocation();
         }
     }
     private void initView(View view) {
@@ -905,7 +904,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 }
                 VariableUtil.City=mCity;
                 tvCity.setText(mCity);
-                LocationUtils.mlocationClient.stopLocation();
+                LocationUtils.mLocationClient.stopLocation();
             }else {
                 VariableUtil.City=mCity;
                 tvCity.setText(mCity);
@@ -914,7 +913,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         + aMapLocation.getErrorInfo();
                 ToastUtil.ToastText(mContext,"获取位置信息失败");
                 if (times==2){
-                    LocationUtils.mlocationClient.stopLocation();
+                    LocationUtils.mLocationClient.stopLocation();
                     times=0;
                 }
                 times++;

@@ -52,7 +52,7 @@ public class MessageDetailActivity extends BaseActivity {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject json=object.getJSONObject("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onMessageData(json);
                         }else {
                             ToastUtil.ToastText(activity.context,error);

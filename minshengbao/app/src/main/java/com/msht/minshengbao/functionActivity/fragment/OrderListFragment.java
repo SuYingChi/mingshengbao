@@ -45,7 +45,7 @@ import java.util.HashMap;
 public class OrderListFragment extends BaseFragment {
     private MyWorkOrderAdapter myWorkOrderAdapter;
     private XListView mListView;
-    private View loyoutNoData;
+    private View layoutNoData;
     private int status =0;
     private String  userId,password;
     private int pageNo=0;
@@ -91,7 +91,7 @@ public class OrderListFragment extends BaseFragment {
         return mRootView;
     }
     private void initMyView(View mRootView) {
-        loyoutNoData =mRootView.findViewById(R.id.id_re_nodata);
+        layoutNoData =mRootView.findViewById(R.id.id_re_nodata);
         mListView=(XListView)mRootView.findViewById(R.id.id_order_view);
         mListView.setPullLoadEnable(true);
         myWorkOrderAdapter = new MyWorkOrderAdapter(getContext(),orderList);
@@ -108,14 +108,14 @@ public class OrderListFragment extends BaseFragment {
                 String parentCategoryName=orderList.get(thisposition).get("parent_category_name");
                 String amount=orderList.get(thisposition).get("amount");
                 Intent intent = new Intent(getActivity(), RepairEvaluateActivity.class);
-                intent.putExtra("send_type","1");
+                intent.putExtra("sendType","1");
                 intent.putExtra("id",orderId);
                 intent.putExtra("orderNo",orderNo);
                 intent.putExtra("type",type);
                 intent.putExtra("title",title);
-                intent.putExtra("parent_category",parentCategoryName);
-                intent.putExtra("finish_time",finishTime);
-                intent.putExtra("real_amount",amount);
+                intent.putExtra("parentCategory",parentCategoryName);
+                intent.putExtra("finishTime",finishTime);
+                intent.putExtra("realAmount",amount);
                 startActivityForResult(intent, 2);
 
             }
@@ -161,7 +161,7 @@ public class OrderListFragment extends BaseFragment {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private static class RequestHandler extends Handler{
         private WeakReference<OrderListFragment> mWeakReference;
@@ -269,9 +269,9 @@ public class OrderListFragment extends BaseFragment {
             e.printStackTrace();
         }
         if (orderList.size()==0){
-            loyoutNoData.setVisibility(View.VISIBLE);
+            layoutNoData.setVisibility(View.VISIBLE);
         }else {
-            loyoutNoData.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             myWorkOrderAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -280,7 +280,7 @@ public class OrderListFragment extends BaseFragment {
                     int positions=position-1;
                     String cid=orderList.get(positions).get("cid");
                     String ids = orderList.get(positions).get("id");
-                    Intent intent = new Intent(getActivity(), MyOrderWorkDetailActivity.class);
+                    Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
                     intent.putExtra("cid",cid);
                     intent.putExtra("id", ids);
                     intent.putExtra("pos", positions);

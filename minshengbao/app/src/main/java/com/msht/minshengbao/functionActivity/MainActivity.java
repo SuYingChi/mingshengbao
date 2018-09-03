@@ -349,7 +349,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onPermissionGranted(int code) {
                         if (code==MY_LOCATION_REQUEST){
-                            LocationUtils.mlocationClient.startLocation();
+                            LocationUtils.mLocationClient.startLocation();
                         }
                     }
                     @Override

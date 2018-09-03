@@ -68,7 +68,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String userId,password,id,cid;
     private String orderId, address,type;
     private String phone,title,orderNo, couponId="0";
-    private String repairmanId, parentCateogry;
+    private String repairmanId, parentCategory;
     private String repairmanName, repairmanPhone, guaranteeDay;
     private String serveTime,amount, realAmount;
     private String payMethod, finishTime, evaluateScore, evaluateInfo;
@@ -135,7 +135,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         address=jsonObject.optString("address");
         phone=jsonObject.optString("phone");
         title=jsonObject.optString("title");
-        parentCateogry =jsonObject.optString("parent_category");
+        parentCategory =jsonObject.optString("parent_category");
         String appointTime=jsonObject.optString("appoint_time");
         orderNo=jsonObject.optString("orderNo");
         String createTime =jsonObject.optString("create_time");
@@ -146,7 +146,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvAppointTime.setText(appointTime);
         tvOrderNo.setText(orderNo);
         tvCreateTime.setText(createTime);
-        tvType.setText(parentCateogry);
+        tvType.setText(parentCategory);
         if (TextUtils.isEmpty(info)){
             tvRemarkInfo.setVisibility(View.GONE);
         }else {
@@ -608,7 +608,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         repeat.putExtra("orderNo",orderNo);
         repeat.putExtra("type",type);
         repeat.putExtra("title",title);
-        repeat.putExtra("parent_category", parentCateogry);
+        repeat.putExtra("parentCategory", parentCategory);
         repeat.putExtra("finishTime", finishTime);
         repeat.putExtra("phone",phone);
         repeat.putExtra("address",address);
@@ -620,7 +620,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         fund.putExtra("orderNo",orderNo);
         fund.putExtra("type",type);
         fund.putExtra("title",title);
-        fund.putExtra("parent_category", parentCateogry);
+        fund.putExtra("parentCategory", parentCategory);
         fund.putExtra("finishTime", finishTime);
         fund.putExtra("realAmount", realAmount);
         startActivityForResult(fund,0x004);
@@ -711,7 +711,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         evaluate.putExtra("type",type);
         evaluate.putExtra("title",title);
         evaluate.putExtra("finishTime", finishTime);
-        evaluate.putExtra("parent_category", parentCateogry);
+        evaluate.putExtra("parentCategory", parentCategory);
         evaluate.putExtra("realAmount", realAmount);
         evaluate.putExtra("evaluateScore", evaluateScore);
         evaluate.putExtra("evaluateInfo", evaluateInfo);
@@ -756,12 +756,12 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     }
     private void onEvaluate() {
         Intent evaluate=new Intent(context,RepairEvaluateActivity.class);
-        evaluate.putExtra("send_type","1");
+        evaluate.putExtra("sendType","1");
         evaluate.putExtra("id",orderId);
         evaluate.putExtra("orderNo",orderNo);
         evaluate.putExtra("type",type);
         evaluate.putExtra("title",title);
-        evaluate.putExtra("parent_category", parentCateogry);
+        evaluate.putExtra("parentCategory", parentCategory);
         evaluate.putExtra("finishTime", finishTime);
         evaluate.putExtra("realAmount", realAmount);
         startActivityForResult(evaluate,1);

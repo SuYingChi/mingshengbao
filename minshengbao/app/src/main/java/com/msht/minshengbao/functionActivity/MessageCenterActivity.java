@@ -281,10 +281,10 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int positions=position-1;
-                String Id=mList.get(positions).get("id");
+                String mId=mList.get(positions).get("id");
                 String types=mList.get(positions).get("type");
                 Intent intent=new Intent(context,MessageDetailActivity.class);
-                intent.putExtra("id",Id);
+                intent.putExtra("id",mId);
                 intent.putExtra("type",types);
                 startActivity(intent);
             }

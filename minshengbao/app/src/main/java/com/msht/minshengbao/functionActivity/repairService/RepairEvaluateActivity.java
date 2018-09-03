@@ -204,11 +204,11 @@ public class RepairEvaluateActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 customDialog.dismiss();
-                requestSevice();
+                requestService();
             }
         });
     }
-    private void requestSevice() {
+    private void requestService() {
         String evalInfo= etEvaluation.getText().toString().trim();
         String  validateURL = UrlUtil.RepairOrder_EvalUrl;
         HashMap<String, String> textParams = new HashMap<String, String>();

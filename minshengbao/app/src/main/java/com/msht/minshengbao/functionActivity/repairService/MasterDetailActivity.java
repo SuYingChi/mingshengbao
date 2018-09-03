@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -68,7 +69,6 @@ public class MasterDetailActivity extends BaseActivity {
         public RequestHandler(MasterDetailActivity activity) {
             mWeakReference = new WeakReference<MasterDetailActivity>(activity);
         }
-
         @Override
         public void handleMessage(Message msg) {
             final MasterDetailActivity activity=mWeakReference.get();
@@ -263,8 +263,8 @@ public class MasterDetailActivity extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         masterId=data.getStringExtra("masterId");
-        initfindViewById();
-        getmasterinfo();
+        initFindViewId();
+        getMasterInfo();
         onGetEvaluation();
         initEvent();
         mAdapter=new MasterEvaluateAdapter(context,goodList);
@@ -273,11 +273,11 @@ public class MasterDetailActivity extends BaseActivity {
             @Override
             public void loadMore() {
                 pageNo++;
-                requestEvaluteInfo();
+                requestEvaluateInfo();
             }
         });
     }
-    private void initfindViewById() {
+    private void initFindViewId() {
         moreListView=(LoadMoreListView)findViewById(R.id.id_evalute_view);
         View layoutHeader =getLayoutInflater().inflate(R.layout.layout_master_detail_head,null);
         masterImg =(CircleImageView) layoutHeader.findViewById(R.id.id_img_master);
@@ -294,7 +294,7 @@ public class MasterDetailActivity extends BaseActivity {
         radioBad =(RadioButton) layoutHeader.findViewById(R.id.radio_button_bad);
         moreListView.addHeaderView(layoutHeader);
     }
-    private void getmasterinfo() {
+    private void getMasterInfo() {
         customDialog.show();
         requestCode=0;
         requestService();
@@ -302,16 +302,17 @@ public class MasterDetailActivity extends BaseActivity {
     private void onGetEvaluation() {
         customDialog.show();
         pageNo=1;
-        requestEvaluteInfo();
+        requestEvaluateInfo();
     }
-    private void requestEvaluteInfo() {
+    private void requestEvaluateInfo() {
         String validateURL = UrlUtil.Evalute_UrL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
-        textParams.put("Id",masterId);
+        textParams.put("id",masterId);
         textParams.put("type",type);
         textParams.put("size","18");
         textParams.put("page",pageNum);
+       // SendRequestUtil.postDataFromService(validateURL, textParams,evaluateHandler);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,evaluateHandler);
     }
     private void requestService() {
@@ -322,7 +323,8 @@ public class MasterDetailActivity extends BaseActivity {
             validateURL = UrlUtil.RepairMater_countUrl;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();
-        textParams.put("Id",masterId);
+        textParams.put("id",masterId);
+
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void initEvent() {
