@@ -3,6 +3,8 @@ package com.msht.minshengbao.functionActivity.LPGActivity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.RegularExpressionUtil;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddress;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
@@ -40,10 +44,11 @@ import java.util.HashMap;
  * @date 2018/6/27
  */
 public class LpgNewUserActivity extends BaseActivity implements View.OnClickListener {
-
     private Button   btnSend;
+    private Button   btnCode;
     private EditText etUserName;
     private EditText etPhoneNo;
+    private EditText etCode;
     private TextView tvSex;
     private TextView tvAddress;
     private TextView tvAddressShort;
@@ -56,6 +61,9 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
     private String   mAddressShort;
     private String   mAddress;
     private String   mLon,mLat;
+    private String   mArea;
+    private String   mCity;
+    private TimeCount time;
     private int      requestCode=0;
     private static final String PAGE_NAME="新用户申请";
     private CustomDialog customDialog;
@@ -88,8 +96,15 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                         String results=object.optString("result");
                         String error = object.optString("msg");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                            activity.requestCode=1;
-                            activity.displayDialog(error);
+                            if (activity.requestCode==0){
+                                ToastUtil.ToastText(activity.context,"验证码已发送");
+                            }else if (activity.requestCode==1){
+                                activity.onBindingAccount();
+                            }else if (activity.requestCode==2){
+                                activity.displayDialog(error);
+                            }else {
+                                activity.displayDialog(error);
+                            }
                         }else {
                             activity.requestCode=0;
                             activity.displayDialog(error);
@@ -105,10 +120,8 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                     break;
             }
             super.handleMessage(msg);
-
         }
     }
-
     private void displayDialog(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -118,14 +131,13 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        if (requestCode==1){
+                        if (requestCode==2){
                             finish();
                         }
                         dialog.dismiss();
                     }
                 }).show();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +146,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         setCommonHeader(PAGE_NAME);
         customDialog=new CustomDialog(this, "正在加载");
         initFindViewId();
+        time=new TimeCount(60000,1000);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,6 +156,8 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                 if (resultCode==SELECT_ADDRESS_CODE){
                     mLat=data.getStringExtra("lat");
                     mLon=data.getStringExtra("lon");
+                    mArea=data.getStringExtra("area");
+                    mCity=data.getStringExtra("city");
                     mAddress=data.getStringExtra("mAddress");
                     mAddressShort=data.getStringExtra("title");
                     tvAddress.setText(mAddress);
@@ -180,7 +195,10 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         tvSex=(TextView)findViewById(R.id.id_tv_sex);
         tvElevator=(TextView)findViewById(R.id.id_tv_elevator);
         btnSend=(Button)findViewById(R.id.id_btn_send);
+        etCode=(EditText)findViewById(R.id.id_et_code);
+        btnCode=(Button)findViewById(R.id.id_btn_code);
         btnSend.setEnabled(false);
+        btnCode.setOnClickListener(this);
         btnSend.setOnClickListener(this);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
         etUserName.addTextChangedListener(myTextWatcher);
@@ -208,11 +226,31 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
             case R.id.id_know_text:
                 startNewUserTreaty();
                 break;
+            case R.id.id_btn_code:
+                onGetVerification();
+                break;
             default:
                 break;
         }
     }
 
+    private void onGetVerification() {
+        String mobile=etPhoneNo.getText().toString().trim();
+        if (RegularExpressionUtil.isPhone(mobile)) {
+            btnCode.setText("正在发送...");
+            time.start();
+            onCaptchaCode(mobile);
+        }else {
+            displayDialog("您输入电话号码不正确");
+        }
+    }
+    private void onCaptchaCode(String mobile) {
+        requestCode=0;
+        String requestUrl= UrlUtil.LPG_GET_CAPTCHA_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("mobile",mobile);
+        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+    }
     private void startNewUserTreaty() {
         String url="";
         Intent intent=new Intent(context, AgreeTreaty.class);
@@ -220,7 +258,6 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         intent.putExtra("navigation","居民用户办理须知");
         startActivity(intent);
     }
-
     private void selectElevator() {
         String[] mList=new String[]{"无电梯","有电梯"};
         String mTitle="是否带电梯";
@@ -250,6 +287,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                 }).show();
     }
     private void requestService() {
+        requestCode=1;
         String requestUrl= UrlUtil.LPG_NEW_USER_URL;
         String mUserName=etUserName.getText().toString().trim();
         String mPhone=etPhoneNo.getText().toString().trim();
@@ -268,10 +306,26 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         textParams.put("sex",isSex);
         textParams.put("unit",mRidgepole);
         textParams.put("roomNum",mRoom);
-        textParams.put("city", VariableUtil.City);
-        textParams.put("area","");
+        textParams.put("city", mCity);
+        textParams.put("area",mArea);
         customDialog.show();
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+    }
+    private void onBindingAccount() {
+
+        requestCode=2;
+        String requestUrl= UrlUtil.LPG_BIND_MOBILE_URL;
+        String mPhone=etPhoneNo.getText().toString().trim();
+        String captchaCode=etCode.getText().toString().trim();
+        String msbMobile= SharedPreferencesUtil.getUserName(context, SharedPreferencesUtil.UserName, "");
+        String isApp="0";
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("mobile",mPhone);
+        textParams.put("captchaCode",captchaCode);
+        textParams.put("msbMobile",msbMobile);
+        textParams.put("isApp",isApp);
+        customDialog.show();
+        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void selectAddress() {
         Intent intent=new Intent(context,ReplaceAddress.class);
@@ -283,6 +337,16 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (TextUtils.isEmpty(etPhoneNo.getText().toString())) {
+                btnCode.setEnabled(false);
+                btnCode.setTextColor(Color.parseColor("#FF545454"));
+                btnCode.setBackgroundResource(R.drawable.shape_white_border_rectangle);
+            } else {
+                //有效点击，
+                btnCode.setEnabled(true);
+                btnCode.setTextColor(Color.parseColor("#ffffffff"));
+                btnCode.setBackgroundResource(R.drawable.shape_redorange_corners_button);
+            }
             if(TextUtils.isEmpty(etPhoneNo.getText().toString())||TextUtils.isEmpty(etUserName.getText().toString())||
                     TextUtils.isEmpty(tvSex.getText().toString())||TextUtils.isEmpty(tvAddress.getText().toString())||
                     TextUtils.isEmpty(tvElevator.getText().toString())||TextUtils.isEmpty(etFloor.getText().toString())){
@@ -293,6 +357,28 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         }
         @Override
         public void afterTextChanged(Editable s) {}
+    }
+    class TimeCount extends CountDownTimer {
+
+        public TimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+        @Override
+        public void onTick(long millisUntilFinished) {  //计时过程
+            String UntilFinished=millisUntilFinished/1000+"秒";
+            btnCode.setClickable(false);
+            btnCode.setText(UntilFinished);
+        }
+        @Override
+        public void onFinish() {
+            btnCode.setText("获取验证码");
+            btnCode.setClickable(true);
+        }
+    }
+    private void removeTimeout() {
+        if (time!=null){
+            time.cancel();
+        }
     }
     @Override
     public void onResume() {
@@ -311,6 +397,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         if (customDialog!=null&&customDialog.isShowing()){
            customDialog.dismiss();
         }
-    }
+        removeTimeout();
 
+    }
 }

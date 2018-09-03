@@ -67,9 +67,9 @@ public class PublicPayWayActivity extends BaseActivity {
         mAdapter=new PayWayAdapter(context,list);
         mForScrollView.setAdapter(mAdapter);
         initPaywayData();
-        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
+        mAdapter.setOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
-            public void ItemClick(View view, int thisPosition) {
+            public void itemClick(View view, int thisPosition) {
                 btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();

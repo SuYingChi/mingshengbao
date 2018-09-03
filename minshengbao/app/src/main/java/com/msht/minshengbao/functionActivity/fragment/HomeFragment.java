@@ -39,7 +39,7 @@ import com.msht.minshengbao.Bean.ADInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome;
 import com.msht.minshengbao.functionActivity.GasService.GasIccard;
-import com.msht.minshengbao.functionActivity.GasService.GasPayfee;
+import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasService;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTable;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
@@ -606,7 +606,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         startActivity(intent);
     }
     private void gaspay() {
-        Intent selete=new Intent(mContext,GasPayfee.class);
+        Intent selete=new Intent(mContext,GasPayFeeActivity.class);
         startActivity(selete);
     }
     private void gasmeter() {
@@ -1001,7 +1001,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
     }
     private void getHotFix() {
-        String functionUrl=UrlUtil.HotRepair_Url;
+        String functionUrl=UrlUtil.HOT_REPAIR_URL;
         String function="";
         try {
             function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8");

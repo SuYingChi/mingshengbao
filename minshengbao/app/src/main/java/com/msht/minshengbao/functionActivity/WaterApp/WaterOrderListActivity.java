@@ -254,7 +254,7 @@ public class WaterOrderListActivity extends BaseActivity {
         pageIndex =i;
         pageNo=i;
         String type="3";
-        String validateURL = UrlUtil.WaterOrder_ListUrl;
+        String validateURL = UrlUtil.WATER_ORDER_LIST_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
         textParams.put("type",type);
@@ -342,7 +342,7 @@ public class WaterOrderListActivity extends BaseActivity {
         String extParams= SecretKeyUtil.getKeyextParams(jsonresult);
         String sign= SecretKeyUtil.getKeySign(treeMap);
         customDialog.show();
-        String validateURL= UrlUtil.WaterCancel_Url;
+        String validateURL= UrlUtil.WATER_CANCEL_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);

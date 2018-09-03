@@ -191,7 +191,7 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
     }
     private void loadData(int i) {
         pageNo=i;
-        String validateURL = UrlUtil.IcRechargeSearch_Url;
+        String validateURL = UrlUtil.IC_RECHARGE_SEARCH_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

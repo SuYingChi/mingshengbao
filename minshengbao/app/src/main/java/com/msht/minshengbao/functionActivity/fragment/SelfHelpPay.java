@@ -259,9 +259,9 @@ public class SelfHelpPay extends Fragment {
         textParams.put("password",password);
         textParams.put("category","1");
         if (!requestLine){
-            validateURL = UrlUtil.SelectAddress_Url;
+            validateURL = UrlUtil.SELECT_ADDRESS_URL;
         }else {
-            validateURL = UrlUtil.Searchbill_GasUrl;
+            validateURL = UrlUtil.SEARCH_BILL_GAS_URL;
             textParams.put("CustomerNo",customerNo);
         }
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);

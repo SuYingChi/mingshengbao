@@ -266,11 +266,18 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
     }
 
+    private void removeTimeout() {
+        if (time!=null){
+            time.cancel();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+        removeTimeout();
+
     }
 }

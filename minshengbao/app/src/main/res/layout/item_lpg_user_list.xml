@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@drawable/selector_touch_background">
         <TextView
             android:id="@+id/id_phone_text"
             android:layout_width="wrap_content"
@@ -55,6 +55,7 @@
             android:layout_height="wrap_content"
             android:minWidth="@dimen/margin_width25"
             android:minHeight="@dimen/margin_width25"
+            android:clickable="false"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

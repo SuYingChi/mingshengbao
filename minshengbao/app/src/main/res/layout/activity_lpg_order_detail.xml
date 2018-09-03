@@ -486,7 +486,7 @@
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginStart="@dimen/margin_width10"
                         android:textSize="@dimen/text_width14"
-                        android:text="@string/place_time"/>
+                        android:text="@string/place_order_no"/>
                     <TextView
                         android:id="@+id/id_tv_orderNo"
                         android:layout_width="wrap_content"
@@ -512,7 +512,7 @@
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginStart="@dimen/margin_width10"
                         android:textSize="@dimen/text_width14"
-                        android:text="@string/place_order_no"/>
+                        android:text="@string/place_time"/>
                     <TextView
                         android:id="@+id/id_place_time"
                         android:layout_width="wrap_content"

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -51,7 +52,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private String mTotalAmount;
     private String mDeliveryFeeTotal="0.0";
     private String payAmount;
-    private int    weightFiveNum=1;
+    private int    weightFiveNum=0;
     private int    weightFifteenNum=0;
     private int    weightFiftyNum=0;
     private String userId;
@@ -60,6 +61,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private String lpgUserId;
     private String lpgSex;
     private String siteId;
+    private String addressId;
     private String addressName;
     private String addressShort;
     private String longitude;
@@ -171,7 +173,8 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         double fiveDeliveryFee=deliveryFeeObject.optDouble("fiveDeliveryFee");
         double fifteenDeliveryFee=deliveryFeeObject.optDouble("fifteenDeliveryFee");
         double fiftyDeliveryFee=deliveryFeeObject.optDouble("fiftyDeliveryFee");
-        double deliveryFeeTotal=fiveDeliveryFee+fifteenDeliveryFee+fiftyDeliveryFee;
+
+        double deliveryFeeTotal=fiveDeliveryFee*weightFiveNum+fifteenDeliveryFee*weightFifteenNum+fiftyDeliveryFee*weightFiftyNum;
         deliveryFeeTotal=VariableUtil.twoDecinmal2(deliveryFeeTotal);
         double totalValue=weightFiveTotal+weightFifteenTotal+weightFiftyTotal+deliveryFeeTotal;
         totalValue= VariableUtil.twoDecinmal2(totalValue);
@@ -195,9 +198,9 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         lpgSex= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.LPG_SEX,"");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         Intent data=getIntent();
-        weightFiveTotal=data.getDoubleExtra("weightFiveTotal",0);
+        /*weightFiveTotal=data.getDoubleExtra("weightFiveTotal",0);
         weightFifteenTotal=data.getDoubleExtra("weightFifteenTotal",0);
-        weightFiftyTotal=data.getDoubleExtra("weightFiftyTotal",0);
+        weightFiftyTotal=data.getDoubleExtra("weightFiftyTotal",0);*/
         weightFiveNum=data.getIntExtra("weightFiveNum",0);
         weightFifteenNum=data.getIntExtra("weightFifteenNum",0);
         weightFiftyNum=data.getIntExtra("weightFiftyNum",0);
@@ -242,9 +245,9 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         String weightFiftyTotalText="¥"+String.valueOf(VariableUtil.twoDecinmal2(weightFiftyTotal));
         double total=weightFiveTotal+weightFifteenTotal+weightFiftyTotal;
         String totalText="¥"+VariableUtil.twoDecinmal2(total);
-        tvWeightFiveAmount.setText(weightFiveTotalText);
+       /* tvWeightFiveAmount.setText(weightFiveTotalText);
         tvWeightFifteenAmount.setText(weightFifteenTotalText);
-        tvWeightFiftyAmount.setText(weightFiftyTotalText);
+        tvWeightFiftyAmount.setText(weightFiftyTotalText);*/
         mTextTotal.setText(totalText);
         findViewById(R.id.id_select_address_layout).setOnClickListener(this);
         findViewById(R.id.id_select_time_layout).setOnClickListener(this);
@@ -263,6 +266,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
                 if (resultCode==SELECT_ADDRESS_CODE){
                     if (data!=null){
                         siteId=data.getStringExtra("siteId");
+                        addressId=data.getStringExtra("addressId");
                         addressName=data.getStringExtra("addressName");
                         addressShort=data.getStringExtra("addressShort");
                         longitude=data.getStringExtra("longitude");
@@ -291,8 +295,9 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         requestCode=0;
         customDialog.show();
         String requestUrl= UrlUtil.LPG_GAS_AND_DEPOSIT_URL;
-        HashMap<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>(4);
         textParams.put("siteId",siteId);
+        textParams.put("addressId",addressId);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
@@ -384,6 +389,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         textParams.put("roomNum",roomNum);
         textParams.put("city",city);
         textParams.put("area",area);
+        String data=textParams.toString();
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onSelectTime() {

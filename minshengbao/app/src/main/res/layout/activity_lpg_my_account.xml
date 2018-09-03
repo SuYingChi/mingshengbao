@@ -8,6 +8,10 @@
     android:orientation="vertical"
     tools:context=".functionActivity.LPGActivity.LpgMyAccountActivity">
     <include layout="@layout/layout_header"/>
+    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
+        android:id="@+id/id_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,16 +24,5 @@
             android:visibility="gone">
         </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
     </LinearLayout>
-
-    <!--<ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <include layout="@layout/layout_lpg_account_header"
-                    android:id="@+id/id_header"/>
-            </LinearLayout>
-        </ScrollView>   -->
+    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
 </LinearLayout>

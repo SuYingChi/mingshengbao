@@ -275,9 +275,9 @@ public class IcCardExpense extends BaseActivity  {
         mAdapter=new PayWayAdapter(context,List);
         forScrollView.setAdapter(mAdapter);
         initIcData();
-        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
+        mAdapter.setOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
-            public void ItemClick(View view, int thisPosition) {
+            public void itemClick(View view, int thisPosition) {
                 btn_send.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
@@ -307,7 +307,7 @@ public class IcCardExpense extends BaseActivity  {
     }
     private void initIcData() {
         customDialog.show();
-        String validateURL= UrlUtil.IcRecharge_BillUrl;
+        String validateURL= UrlUtil.IC_RECHARGE_BILL_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

@@ -27,7 +27,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 public class PaySuccessActivity extends BaseActivity {
     private final int SPLASH_DISPLAY_LENGHT=10000;
     private WebView  successPage;
-    private String successUrl=UrlUtil.ApppaySuccess_Page;
+    private String successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE;
     private static final String btnUrl="http://get/event/activityBtn";
     private String activityUrl="";
     @Override
@@ -45,35 +45,36 @@ public class PaySuccessActivity extends BaseActivity {
         TextView tvNavigation=(TextView)findViewById(R.id.tv_navigation);
         Button btnKnow=(Button)findViewById(R.id.id_btn_know) ;
         View layoutMain=findViewById(R.id.id_failure_layout);
+        successPage=(WebView)findViewById(R.id.id_success_page);
         switch (type){
             case VariableUtil.VALUE_ZERO:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=gas_fee_pay_success"
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=gas_fee_pay_success"
                         +"&event_relate_id="+orderId;
                 tvNavigation.setText("燃气缴费");
                 initWebView();
                 layoutMain.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_ONE:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
                 tvNavigation.setText("维修支付");
                 initWebView();
                 layoutMain.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_TWO:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=iccard_pay_success";
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=iccard_pay_success";
                 tvNavigation.setText("IC卡充值");
                 initWebView();
                 layoutMain.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_THREE:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=wallet_recharge_pay_success"
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=wallet_recharge_pay_success"
                         +"&event_relate_id="+orderId;
                 tvNavigation.setText("钱包充值");
                 initWebView();
                 layoutMain.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_FOUR:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=water_recharge_pay_success"
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=water_recharge_pay_success"
                         +"&event_relate_id="+orderId;
                 Log.d("水宝=",successUrl);
                 tvNavigation.setText("水宝充值");
@@ -89,13 +90,13 @@ public class PaySuccessActivity extends BaseActivity {
                 successPage.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_SIX:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=shop_pay_success";
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=shop_pay_success";
                 tvNavigation.setText("商城支付");
                 initWebView();
                 layoutMain.setVisibility(View.GONE);
                 break;
             case VariableUtil.VALUE_SEVER:
-                successUrl=UrlUtil.ApppaySuccess_Page+"userId="+userId+"&event_code=lpg_order_pay_success"
+                successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=lpg_order_pay_success"
                         +"&event_relate_id="+orderId;
                 tvNavigation.setText("支付成功");
                 initWebView();
@@ -119,11 +120,10 @@ public class PaySuccessActivity extends BaseActivity {
         });
     }
     private void initWebView() {
-        successPage=(WebView)findViewById(R.id.id_success_page);
         WebSettings settings= successPage.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setAllowFileAccess(true);// 设置允许访问文件数据
+        settings.setAllowFileAccess(true);
         settings.setUseWideViewPort(true);
         settings.setDisplayZoomControls(false);
         settings.setSupportZoom(true);

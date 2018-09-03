@@ -243,7 +243,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     private void onGetCustomerNoData() {
         customDialog.show();
         requestCode=0;
-        String validateURL = UrlUtil.SelectAddress_Url;
+        String validateURL = UrlUtil.SELECT_ADDRESS_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +21,11 @@ import java.util.HashMap;
  * @author hong
  * @date 2018/7/2  
  */
-public class MyBottleAdapter extends BaseAdapter {
+public class LpgMyBottleAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> integerList = new ArrayList<HashMap<String, String>>();
-    public MyBottleAdapter(Context context, ArrayList<HashMap<String, String>> mList) {
+    public LpgMyBottleAdapter(Context context, ArrayList<HashMap<String, String>> mList) {
 
         this.mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,16 +61,33 @@ public class MyBottleAdapter extends BaseAdapter {
             holder.tvBottleNo=(TextView) convertView.findViewById(R.id.id_bottleNo);
             holder.tvBottleType=(TextView)convertView.findViewById(R.id.id_bottle_type);
             holder.tvDay=(TextView)convertView.findViewById(R.id.id_day);
+            holder.imageBottle=(ImageView)convertView.findViewById(R.id.id_bottle_image);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         String day=integerList.get(position).get("usedDate");
-        String bottleWeight=integerList.get(position).get("bottleWeight")+"kg瓶装气";
+        String bottleWeight=integerList.get(position).get("bottleWeight");
+        String bottleWeightText=bottleWeight+"kg瓶装气";
         String bottleId="编号："+integerList.get(position).get("id");
         holder.tvDay.setText(day);
-        holder.tvBottleType.setText(bottleWeight);
+        holder.tvBottleType.setText(bottleWeightText);
         holder.tvBottleNo.setText(bottleId);
+        switch (bottleWeight){
+            case ConstantUtil.VALUE_FIVE:
+                holder.imageBottle.setImageResource(R.drawable.five_weight_bottle_xh);
+                break;
+            case ConstantUtil.VALUE_FIFTEEN:
+                holder.imageBottle.setImageResource(R.drawable.fifteen_weight_bottle_xh);
+                break;
+            case ConstantUtil.VALUE_FIFTY:
+                holder.imageBottle.setImageResource(R.drawable.fifty_weight_bottle_xh);
+                break;
+            default:
+                holder.imageBottle.setImageResource(R.drawable.fifteen_weight_bottle_xh);
+                break;
+
+        }
         return convertView;
     }
     class ViewHolder {
@@ -75,6 +95,7 @@ public class MyBottleAdapter extends BaseAdapter {
          TextView tvBottleNo;
          TextView tvBottleType;
          TextView tvDay;
+         ImageView imageBottle;
 
     }
 }

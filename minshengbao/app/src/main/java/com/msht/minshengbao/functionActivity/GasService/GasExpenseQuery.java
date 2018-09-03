@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.functionActivity.Public.PayFeeWayActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
@@ -63,11 +64,11 @@ public class GasExpenseQuery extends BaseActivity {
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog.isShowing()&&activity.customDialog!=null){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog.isShowing()&&activity.customDialog!=null){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -84,9 +85,6 @@ public class GasExpenseQuery extends BaseActivity {
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (activity.customDialog.isShowing()&&activity.customDialog!=null){
-                        activity.customDialog.dismiss();
-                    }
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -127,15 +125,15 @@ public class GasExpenseQuery extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         //推送统计
         PushAgent.getInstance(context).onAppStart();
-        Intent getdata=getIntent();
-        customerNo=getdata.getStringExtra("CustomerNo");
-        allBalance=getdata.getStringExtra("all_balance");
-        name=getdata.getStringExtra("name");
-        debts=getdata.getStringExtra("debts");
-        totalNum=getdata.getStringExtra("total_num");
-        String discountFees=getdata.getStringExtra("discount_fees");
-        gasFee=getdata.getStringExtra("gas_fee");
-        lateFee=getdata.getStringExtra("late_fee");
+        Intent getData=getIntent();
+        customerNo=getData.getStringExtra("CustomerNo");
+        allBalance=getData.getStringExtra("all_balance");
+        name=getData.getStringExtra("name");
+        debts=getData.getStringExtra("debts");
+        totalNum=getData.getStringExtra("total_num");
+        String discountFees=getData.getStringExtra("discount_fees");
+        gasFee=getData.getStringExtra("gas_fee");
+        lateFee=getData.getStringExtra("late_fee");
         realFee=debts;
         initView();
         initEvent();
@@ -153,8 +151,10 @@ public class GasExpenseQuery extends BaseActivity {
                     double fee=a-b;
                     NumberFormat format=new DecimalFormat("0.##");
                     realFee=format.format(fee);
-                    tvReal.setText("¥"+realFee);
-                    tvVoucher.setText(amount+"元");
+                    String realFeeText="¥"+realFee;
+                    String mountText=amount+"元";
+                    tvReal.setText(realFeeText);
+                    tvVoucher.setText(mountText);
                 }
                 break;
             case 0x002:
@@ -169,7 +169,7 @@ public class GasExpenseQuery extends BaseActivity {
         }
     }
     private void initView() {
-        View layoutData =(LinearLayout)findViewById(R.id.id_layout_data);
+        View layoutData =findViewById(R.id.id_layout_data);
         View layoutNoData =findViewById(R.id.id_nodata_layout);
         View layoutBtn =findViewById(R.id.id_layout_btn);
         layoutVoucher =findViewById(R.id.id_re_voucher);
@@ -188,6 +188,12 @@ public class GasExpenseQuery extends BaseActivity {
         btnPayFee =(Button)findViewById(R.id.id_btn_payfees);
         tvAddress.setText(name);
         tvCustomer.setText(customerNo);
+        String allBalanceText=allBalance+"元";
+        String gasFeeText=gasFee+"元";
+        String debtsText="¥"+debts+"元";
+        String realFeeText="¥"+realFee+"元";
+        String totalNumText=totalNum+"立方米";
+        String lateFeeText=lateFee+"元";
         if (TextUtils.isEmpty(debts)||debts.equals(NULL_VALUE)){
             layoutNoData.setVisibility(View.VISIBLE);
             layoutData.setVisibility(View.GONE);
@@ -196,12 +202,12 @@ public class GasExpenseQuery extends BaseActivity {
             layoutNoData.setVisibility(View.GONE);
             layoutData.setVisibility(View.VISIBLE);
             layoutBtn.setVisibility(View.VISIBLE);
-            tvBalance.setText(allBalance+"元");
-            tvGasFee.setText(gasFee+"元");
-            tvDebts.setText("¥"+debts+"元");
-            tvReal.setText("¥"+realFee+"元");
-            tvTotalNum.setText(totalNum+"立方米");
-            tvLateFee.setText(lateFee+"元");
+            tvBalance.setText(allBalanceText);
+            tvGasFee.setText(gasFeeText);
+            tvDebts.setText(debtsText);
+            tvReal.setText(realFeeText);
+            tvTotalNum.setText(totalNumText);
+            tvLateFee.setText(lateFeeText);
         }
     }
     private void initEvent() {
@@ -255,15 +261,15 @@ public class GasExpenseQuery extends BaseActivity {
     }
     private void requestServer() {
         customDialog.show();
-        String validateURL= UrlUtil.CreateOrder_Gas;
-        Map<String, String> textParams = new HashMap<String, String>();
+        String validateURL= UrlUtil.CREATE_ORDER_GAS;
+        HashMap<String, String> textParams = new HashMap<String, String>(6);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("type","1");
         textParams.put("amount",realFee);
         textParams.put("customerNo",customerNo);
         textParams.put("couponId",voucherId);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 
     @Override

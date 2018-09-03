@@ -181,7 +181,7 @@ public class ConsultFragment extends Fragment {
     }
     private void requestService() {
         String type="7";
-        String validateURL = UrlUtil.InstallServer_Url;
+        String validateURL = UrlUtil.INSTALL_SERVER_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);

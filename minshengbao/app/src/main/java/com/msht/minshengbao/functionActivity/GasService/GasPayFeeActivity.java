@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.ViewAdapter;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
 import com.msht.minshengbao.R;
@@ -21,10 +22,17 @@ import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
 
-public class GasPayfee extends AppCompatActivity implements View.OnClickListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/20  
+ */
+public class GasPayFeeActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPagerIndicator indicator;
-    private ViewPager mviewPager;
-    private TextView  tv_price,tv_naviga;
+    private ViewPager mViewPager;
+    private TextView  tvPrice;
     private String    userId;
     private String    password;
     private Context   mContext;
@@ -48,26 +56,26 @@ public class GasPayfee extends AppCompatActivity implements View.OnClickListener
     private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String info=intent.getExtras().getString("broadcast");
-            if (info.equals("4")){
+            String info=intent.getStringExtra("broadcast");
+            if (info.equals(VariableUtil.VALUE_FOUR)){
                 finish();
             }
         }
     };
     private void initView() {
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        mviewPager=(ViewPager)findViewById(R.id.id_viewPager_fees);
+        mViewPager =(ViewPager)findViewById(R.id.id_viewPager_fees);
         findViewById(R.id.id_goback).setOnClickListener(this);
-        tv_price=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_naviga=(TextView)findViewById(R.id.tv_navigation) ;
-        tv_naviga.setText(R.string.gas_payfee);
-        tv_price.setVisibility(View.VISIBLE);
-        tv_price.setText(navigate);
+        tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
+        TextView tvNavigation=(TextView)findViewById(R.id.tv_navigation) ;
+        tvNavigation.setText(R.string.gas_payfee);
+        tvPrice.setVisibility(View.VISIBLE);
+        tvPrice.setText(navigate);
     }
     private void initEvent() {
-        tv_price.setOnClickListener(this);
-        mviewPager.setAdapter(new ViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
-        indicator.setViewPager(mviewPager,0);
+        tvPrice.setOnClickListener(this);
+        mViewPager.setAdapter(new ViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
+        indicator.setViewPager(mViewPager,0);
     }
     @Override
     public void onClick(View v) {

@@ -15,7 +15,7 @@ import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome;
 import com.msht.minshengbao.functionActivity.GasService.GasIccard;
 import com.msht.minshengbao.functionActivity.GasService.GasInstall;
 import com.msht.minshengbao.functionActivity.GasService.GasIntroduce;
-import com.msht.minshengbao.functionActivity.GasService.GasPayfee;
+import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepair;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTable;
 import com.msht.minshengbao.functionActivity.GasService.Gasqianxian;
@@ -234,7 +234,7 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(card);
     }
     private void gaspay() {
-        Intent selete=new Intent(context,GasPayfee.class);
+        Intent selete=new Intent(context,GasPayFeeActivity.class);
         startActivity(selete);
     }
     private void gasMeter() {
@@ -296,42 +296,42 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(intent);
     }
     private void sterilizer() {
-        String shop_url=UrlUtil.Shop_Disinfectioncabinet;
+        String shop_url=UrlUtil.SHOP_DISINFECTIONCABINET;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
     private void electricwater() {
-        String shop_url=UrlUtil.Shop_Heatercalorifier;
+        String shop_url=UrlUtil.SHOP_HEATERCALORIFIER;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
     private void lampblackmachine() {
-        String shop_url=UrlUtil.Shop_Lampblack;
+        String shop_url=UrlUtil.SHOP_LAMPBLACK;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
     private void gasstove() {
-        String shop_url=UrlUtil.Shop_Gasstove;
+        String shop_url=UrlUtil.SHOP_GAS_STOVE;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
     private void waterheater() {
-        String shop_url=UrlUtil.Shop_GasHeater;
+        String shop_url=UrlUtil.SHOP_GAS_HEATER;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);
         startActivity(intent);
     }
     private void redwind() {
-        String shop_url=UrlUtil.Shop_IMPORT_FOODSTUFF;
+        String shop_url=UrlUtil.SHOP_IMPORT_FOODSTUFF;
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",shop_url);
         intent.putExtra("first",1);

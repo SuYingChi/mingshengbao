@@ -217,7 +217,7 @@ public class WaterIncomeFra extends BaseFragment {
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;
-        String validateURL = UrlUtil.WaterOrder_ListUrl;
+        String validateURL = UrlUtil.WATER_ORDER_LIST_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("account",userAccount);

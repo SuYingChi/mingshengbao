@@ -178,7 +178,7 @@ public class InvoiceHistory extends BaseActivity {
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;
-        String validateURL = UrlUtil.Insurance_history_Url;
+        String validateURL = UrlUtil.INSURANCE_HISTORY_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);

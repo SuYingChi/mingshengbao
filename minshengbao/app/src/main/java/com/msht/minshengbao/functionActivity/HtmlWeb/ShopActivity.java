@@ -65,9 +65,9 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     private int First=0;
     private Context mContext;
     private final String mPageName ="商城";
-    private String loginUrl=UrlUtil.Shop_Login;
-    private String targetUrl=UrlUtil.Shop_HomeUrl;
-    private String loginHtml=UrlUtil.Shop_LoginHtml;
+    private String loginUrl=UrlUtil.SHOP_LOGIN;
+    private String targetUrl=UrlUtil.SHOP_HOME_URL;
+    private String loginHtml=UrlUtil.SHOP_LOGIN_HTML;
     private byte[] bytes;
     private Intent mSourceIntent;
     private ValueCallback<Uri> mUploadMessage;
@@ -403,7 +403,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==PAY_CODE){
             if (resultCode==PAY_CODE){
-                shopWeb.loadUrl(UrlUtil.Shop_OrderList);
+                shopWeb.loadUrl(UrlUtil.SHOP_ORDER_LIST);
             }
         }
         if (resultCode != Activity.RESULT_OK) {

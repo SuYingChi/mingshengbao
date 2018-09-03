@@ -13,11 +13,17 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/18 
+ */
 public class GasIntroduce extends AppCompatActivity {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
-    private TextView  tv_naviga;
+    private TextView  tvNavigation;
     private Context   mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +36,8 @@ public class GasIntroduce extends AppCompatActivity {
     }
     private void initView() {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        tv_naviga=(TextView)findViewById(R.id.tv_navigation) ;
-        tv_naviga.setText(R.string.gas_introduce);
+        tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
+        tvNavigation.setText(R.string.gas_introduce);
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
     }
     private void initEvent() {

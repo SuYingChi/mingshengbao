@@ -241,9 +241,6 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
     }
     private void onNextActivity() {
         Intent intent=new Intent(context,LpgOrderGasActivity.class);
-        intent.putExtra("weightFiveTotal",weightFiveTotal);
-        intent.putExtra("weightFifteenTotal",weightFifteenTotal);
-        intent.putExtra("weightFiftyTotal",weightFiftyTotal);
         intent.putExtra("weightFiveNum",mBottleNum1);
         intent.putExtra("weightFifteenNum",mBottleNum2);
         intent.putExtra("weightFiftyNum",mBottleNum3);
@@ -260,7 +257,7 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
          mButtonNum1.setText(String.valueOf(mBottleNum1));
          mButtonNum2.setText(String.valueOf(mBottleNum2));
          mButtonNum3.setText(String.valueOf(mBottleNum3));
-         mTextTotal.setText(mTotalAmount);
+         mTextTotal.setText(String.valueOf(mBottleTotalCount));
     }
     @Override
     protected void onDestroy() {

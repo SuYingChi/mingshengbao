@@ -341,9 +341,9 @@ public class WaterRechargeActivity extends BaseActivity {
         gridView.setAdapter(waterMealAdapter);
         initBalance();
         initData();
-        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
+        mAdapter.setOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
-            public void ItemClick(View view, int thisPosition) {
+            public void itemClick(View view, int thisPosition) {
                 btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
@@ -420,7 +420,7 @@ public class WaterRechargeActivity extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String validateURL= UrlUtil.WaterRecharge_Meal;
+        String validateURL= UrlUtil.WATER_RECHARGE_MEAL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("type","1");
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
@@ -434,7 +434,7 @@ public class WaterRechargeActivity extends BaseActivity {
         findViewById(R.id.id_back_agree).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url=UrlUtil.Recharge_BackAgree;
+                String url=UrlUtil.RECHARGE_BACK_AGREE;
                 Intent intent=new Intent(context, AgreeTreaty.class);
                 intent.putExtra("url",url);
                 intent.putExtra("navigation","充返活动说明");
@@ -475,7 +475,7 @@ public class WaterRechargeActivity extends BaseActivity {
     private void requestService() {
         String sign=getSign();
         String extParams=getExtParams();;
-        String validateURL= UrlUtil.WaterCard_Recharge;
+        String validateURL= UrlUtil.WATER_CARD_RECHARGE;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);

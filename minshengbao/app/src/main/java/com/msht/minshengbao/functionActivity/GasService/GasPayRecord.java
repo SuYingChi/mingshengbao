@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.PayRecordAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -25,7 +27,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -40,10 +41,9 @@ public class GasPayRecord extends BaseActivity {
     private String    customerNo;
     private String    address;
     private String    urlType;
-    private String    size="16";
     private String    validateURL = UrlUtil.PayRecors_HistoryUrl;
     private XListView mListView;
-    private TextView tv_nodata;
+    private TextView  tvNoData;
     private int refreshType;
     private JSONArray jsonArray;
     private PayRecordAdapter adapter;
@@ -124,27 +124,27 @@ public class GasPayRecord extends BaseActivity {
                 String amount = jsonObject.getString("amount");
                 String address = jsonObject.getString("address");
                 String state = jsonObject.getString("state");
-                String pay_method=jsonObject.getString("pay_method");
-                String pay_time=jsonObject.getString("pay_time");
-                String writecard_state="0";
+                String payMethod=jsonObject.getString("pay_method");
+                String payTime=jsonObject.getString("pay_time");
+                String writeCardState="0";
                 if (jsonObject.has("writecard_state")){
-                    writecard_state=jsonObject.getString("writecard_state");
+                    writeCardState=jsonObject.getString("writecard_state");
                 }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("customerNo", customerNo);
                 map.put("amount", amount);
                 map.put("address", address);
                 map.put("state", state);
-                map.put("pay_method",pay_method);
-                map.put("pay_time",pay_time);
-                map.put("writecard_state",writecard_state);
+                map.put("pay_method",payMethod);
+                map.put("pay_time",payTime);
+                map.put("writecard_state",writeCardState);
                 recordList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
         if (recordList.size()==0){
-            tv_nodata.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }else {
             adapter.notifyDataSetChanged();
@@ -159,7 +159,7 @@ public class GasPayRecord extends BaseActivity {
         customerNo=getIntent().getStringExtra("customerNo");
         address=getIntent().getStringExtra("address");
         urlType=getIntent().getStringExtra("urlType");
-        if (urlType.equals("1")){
+        if (urlType.equals(VariableUtil.VALUE_ONE)){
             setCommonHeader("充值记录");
 
         }else {
@@ -168,7 +168,7 @@ public class GasPayRecord extends BaseActivity {
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         initHeader();
-        inittView();
+        initView();
         initdata();
     }
     private void initHeader() {
@@ -182,23 +182,24 @@ public class GasPayRecord extends BaseActivity {
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;
-        if (urlType.equals("0")){
+        String size="16";
+        if (urlType.equals(VariableUtil.VALUE_ZERO)){
             validateURL = UrlUtil.PayRecors_HistoryUrl;
-        }else if (urlType.equals("1")){
-            validateURL = UrlUtil.IcRechargeHistory_Url;
+        }else if (urlType.equals(VariableUtil.VALUE_ONE)){
+            validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
         }
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customerNo);
         textParams.put("page",pageNum);
         textParams.put("size",size);
-        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
-    private void inittView() {
-        tv_nodata=(TextView)findViewById(R.id.id_tv_nodata);
-        tv_nodata.setText("当前没有交费记录");
+    private void initView() {
+        tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
+        tvNoData.setText("当前没有交费记录");
         mListView=(XListView)findViewById(R.id.id_payrecord_listview);
         mListView.setPullLoadEnable(true);
         adapter = new PayRecordAdapter(context,recordList);
@@ -216,7 +217,6 @@ public class GasPayRecord extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

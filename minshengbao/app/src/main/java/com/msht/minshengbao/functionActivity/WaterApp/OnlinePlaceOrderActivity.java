@@ -152,7 +152,7 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
     private void initData() {
         customDialog.show();
         requestCode=0;
-        String validateURL= UrlUtil.WaterPrice_Url;
+        String validateURL= UrlUtil.WATER_PRICE_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         SendrequestUtil.postDataFromService(validateURL,textParams,priceHandler);
     }
@@ -274,7 +274,7 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
         String extParams=getExtParams();
         customDialog.show();
         requestCode=1;
-        String validateURL= UrlUtil.WaterCreate_Url;
+        String validateURL= UrlUtil.WATER_CREATE_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);

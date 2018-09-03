@@ -85,11 +85,11 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             if (reference == null||reference.isFinishing()) {
                 return;
             }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -109,9 +109,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
@@ -275,7 +272,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private void requestServer() {
         requestType=1;
         customer= etCustomer.getText().toString().trim();
-        String validateURL = UrlUtil.GethouseAddress_Url;
+        String validateURL = UrlUtil.GET_HOUSE_ADDRESS_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("customerNo",customer);
         SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
@@ -403,7 +400,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     }
     private void requestService() {
         requestType=0;
-        String validateURL = UrlUtil.Insurance_buy_Url;
+        String validateURL = UrlUtil.INSURANCE_BUY_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("insurance_id",id);
         textParams.put("customer_no",customer);

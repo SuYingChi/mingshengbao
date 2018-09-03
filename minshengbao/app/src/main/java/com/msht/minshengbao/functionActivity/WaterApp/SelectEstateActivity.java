@@ -197,7 +197,7 @@ public class SelectEstateActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void afterTextChanged(Editable s) {}
     private void doSearchQuery(String keyWord) {
-        String validateURL= UrlUtil.SearchEstate_Url;
+        String validateURL= UrlUtil.SEARCH_ESTATE_URL;
         String pageNo=String.valueOf(page);
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("keyword",keyWord);

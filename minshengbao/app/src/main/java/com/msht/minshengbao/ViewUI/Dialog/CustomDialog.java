@@ -7,19 +7,25 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
-
 /**
+ * Demo class
+ * 〈一句话功能简述〉
  * 自定义透明的dialog
+ * @author hong
+ * @date 2017/7/2  
  */
 public class CustomDialog extends Dialog{
     private String content;
-
+    private TextView tvContent;
     public CustomDialog(Context context, String content) {
         super(context, R.style.CustomDialog);
         this.content=content;
         initView();
     }
-
+    public void setDialogContent(String content){
+        this.content=content;
+        tvContent.setText(content);
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode){
@@ -33,10 +39,10 @@ public class CustomDialog extends Dialog{
         }
         return true;
     }
-
     private void initView(){
         setContentView(R.layout.refresh_dialog_view);
-        ((TextView)findViewById(R.id.tvcontent)).setText(content);
+        tvContent=(TextView)findViewById(R.id.tvcontent);
+        tvContent.setText(content);
         setCanceledOnTouchOutside(true);
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.alpha=0.9f;

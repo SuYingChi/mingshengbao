@@ -219,6 +219,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
 
     private void onGetData(int position) {
         String siteId=addressList.get(position).get("siteId");
+        String addressId=addressList.get(position).get("id");
         String addressName=addressList.get(position).get("address");
         String addressShort=addressList.get(position).get("name");
         String longitude=addressList.get(position).get("longitude");
@@ -231,6 +232,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
         String area=addressList.get(position).get("area");
         Intent intent=new Intent();
         intent.putExtra("siteId",siteId);
+        intent.putExtra("addressId",addressId);
         intent.putExtra("addressName",addressName);
         intent.putExtra("addressShort",addressShort);
         intent.putExtra("longitude",longitude);

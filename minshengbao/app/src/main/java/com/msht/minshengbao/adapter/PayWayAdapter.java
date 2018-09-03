@@ -23,11 +23,16 @@ public class PayWayAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     public OnRadioItemClickListener listener;
-    public void SetOnItemClickListener(OnRadioItemClickListener listener){
+    public void setOnItemClickListener(OnRadioItemClickListener listener){
         this.listener=listener;
     }
     public interface OnRadioItemClickListener{
-        void ItemClick(View view, int thisPosition);
+        /**
+         * 选择类型
+         * @param view  视图
+         * @param thisPosition  下标
+         */
+        void itemClick(View view, int thisPosition);
     }
     public PayWayAdapter(Context context, ArrayList<HashMap<String, String>> list) {
         super();
@@ -103,7 +108,7 @@ public class PayWayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (listener!=null){
-                    listener.ItemClick(v,thisposition);
+                    listener.itemClick(v,thisposition);
                 }
             }
         });

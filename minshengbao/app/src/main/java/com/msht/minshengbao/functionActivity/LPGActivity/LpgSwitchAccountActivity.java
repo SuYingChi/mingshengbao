@@ -69,7 +69,6 @@ public class LpgSwitchAccountActivity extends BaseActivity {
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String msgError = object.optString("msg");
@@ -79,6 +78,8 @@ public class LpgSwitchAccountActivity extends BaseActivity {
                             }else if (activity.requestCode==1){
                                activity.onSwitchResult();
                             }else if (activity.requestCode==2){
+                                activity.mList.clear();
+                                activity.mAdapter.notifyDataSetChanged();
                                 activity.onDeleteSuccess(msgError);
                             }
                         }else {
@@ -250,6 +251,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
 
     }
     private void onDeleteUser(String lpgUserId) {
+        customDialog.show();
         requestCode=2;
         String requestUrl= UrlUtil.LPG_DELETE_USER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
@@ -258,6 +260,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onSwitchUser(String lpgUserId) {
+        customDialog.show();
         requestCode=1;
         String requestUrl= UrlUtil.LPG_SWITCH_USER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();

@@ -177,7 +177,7 @@ public class GasService extends BaseActivity {
         });
     }
     private void payfee() {
-        Intent selete=new Intent(context,GasPayfee.class);
+        Intent selete=new Intent(context,GasPayFeeActivity.class);
         startActivity(selete);
     }
 

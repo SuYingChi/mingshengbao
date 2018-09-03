@@ -80,6 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:text="充值余额 (元)"/>
                     <TextView
@@ -88,6 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/id_text2"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:textColor="@color/black1"
                         android:textSize="@dimen/text_width18"
@@ -107,6 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:text="赠送余额 (元)"/>
                     <TextView
@@ -115,6 +118,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/id_text3"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:textColor="@color/black1"
                         android:textSize="@dimen/text_width18"
@@ -128,6 +132,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="true"
                 android:background="@color/white"
                 android:orientation="horizontal">
                 <RelativeLayout
@@ -142,6 +147,7 @@
                         android:layout_height="@dimen/margin_width55"
                         android:layout_marginTop="@dimen/margin_width15"
                         android:layout_centerHorizontal="true"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/scan_buywater_xh"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -189,6 +195,7 @@
                         android:layout_width="@dimen/margin_width55"
                         android:layout_height="@dimen/margin_width55"
                         android:layout_marginTop="@dimen/margin_width15"
+                        android:contentDescription="@string/picture_text"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/recharge_value_xh"/>
                     <TextView
@@ -217,6 +224,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_centerVertical="true"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16"
@@ -231,6 +239,7 @@
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
                     android:src="@drawable/forward_2x"
+                    android:contentDescription="@string/picture_text"
                     />
                 <TextView
                     android:id="@+id/id_tv_more"

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -40,7 +41,6 @@ import java.util.Map;
  * @date 2016/10/31
  */
 public class PayFeeWayActivity extends BaseActivity implements View.OnClickListener {
-
     private Button btnSend;
     private TextView tvRealAmount;
     private TextView tvSubtract;
@@ -337,9 +337,9 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         forScrollView.setAdapter(mAdapter);
         initSubtract();
         initData();
-        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
+        mAdapter.setOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
-            public void ItemClick(View view, int thisPosition) {
+            public void itemClick(View view, int thisPosition) {
                 btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
@@ -369,7 +369,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private void initSubtract() {
         customDialog.show();
         String validateURL= UrlUtil.PaySubtract_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        Map<String, String> textParams = new HashMap<String, String>(3);
         textParams.put("userId",userId);
         textParams.put("event_code","gas_pay_before");
         textParams.put("event_relate_id", payId);
@@ -378,19 +378,19 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         requestCode=0;
         String validateURL= UrlUtil.Mywallet_balanceUrl;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>(2);
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,balanceHandler);
     }
 
     private void onPayWayData() {
         String source="";
         customDialog.show();
         String validateURL= UrlUtil.PAY_METHOD_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onClick(View view) {
@@ -427,8 +427,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 .show();
     }
     private void requestService() {
-        String validateURL= UrlUtil.GasExpense_Pay;
-        Map<String, String> textParams = new HashMap<String, String>();
+        String validateURL= UrlUtil.GAS_EXPENSE_PAY;
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id", payId);
@@ -436,16 +436,26 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("amount", realAmount);
         textParams.put("discountAmt",discountAmt);
         textParams.put("channel",channels);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,balanceHandler);
     }
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
-        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
-            str="缴费成功";
-        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
-            str="缴费失败";
-        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
-            str="已取消缴费";
+        switch (title){
+            case SendrequestUtil.SUCCESS_VALUE:
+                str="缴费成功";
+                setResult(0x002);
+                requestResult();
+                break;
+            case SendrequestUtil.FAILURE_VALUE:
+                str="缴费失败";
+                onShowDialogs(str);
+                break;
+            case SendrequestUtil.CANCEL_VALUE:
+                str="已取消缴费";
+                onShowDialogs(str);
+                break;
+                default:
+                    break;
         }
         /*if (null !=msg1 && msg1.length() != 0) {
             str += "\n" + msg1;
@@ -453,12 +463,6 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         if (null !=msg2 && msg2.length() != 0) {
             str += "\n" + msg2;
         }*/
-        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
-            setResult(0x002);
-            requestResult();
-        }else {
-            onShowDialogs(str);
-        }
     }
     private void onShowDialogs(String str) {
         new PromptDialog.Builder(this)
@@ -478,15 +482,15 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
+                String result = data.getStringExtra("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
                  * "fail"    - payment failed
                  * "cancel"  - user canceld
                  * "invalid" - payment plugin not installed
                  */
-                String errorMsg = data.getExtras().getString("error_msg");
-                String extraMsg = data.getExtras().getString("extra_msg");
+                String errorMsg = data.getStringExtra("error_msg");
+                String extraMsg = data.getStringExtra("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
@@ -494,13 +498,12 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private void requestResult() {
         requestCode=2;
         String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",orderId);
-        SendrequestUtil.postDataFromService(validateURL,textParams, requestHandler);
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

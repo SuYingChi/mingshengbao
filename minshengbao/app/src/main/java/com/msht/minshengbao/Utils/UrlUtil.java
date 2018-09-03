@@ -22,7 +22,7 @@ public class UrlUtil {
      * 电动车域名
       */
 
-    public static final String URL_Repair="http://repairshop.msbapp.cn:17080";
+    public static final String URL_REPAIR ="http://repairshop.msbapp.cn:17080";
     /**
      * LAUNCHER_IMG_URL 启动页广告图链接
      */
@@ -33,37 +33,37 @@ public class UrlUtil {
     public static final String PAY_RESULT_NOTARIZE =BuildConfig.URL_HEADS+"/Gas/payment/queryOrder";
     //电动车
 
-    public static final String ELECTRIC_LIST_URL =URL_Repair+"/repairshop/shop/searchByLocate";
-    public static final String STORE_DETAIL =URL_Repair+"/repairshop/shop/get";
-    public static final String SEARCH_HISTORY =URL_Repair+"/repairshop/searchHistory/list";
-    public static final String CLEAR_HISTORY =URL_Repair+"/repairshop/searchHistory/clear";
+    public static final String ELECTRIC_LIST_URL = URL_REPAIR +"/repairshop/shop/searchByLocate";
+    public static final String STORE_DETAIL = URL_REPAIR +"/repairshop/shop/get";
+    public static final String SEARCH_HISTORY = URL_REPAIR +"/repairshop/searchHistory/list";
+    public static final String CLEAR_HISTORY = URL_REPAIR +"/repairshop/searchHistory/clear";
     /**
      * 水宝
      */
     public static final String PAY_METHOD_URL =BuildConfig.URL_HEADS+"/api/app/pay_method";
-    public static final String SearchEstate_Url=BuildConfig.URL_MSSB+"/community/search";
+    public static final String SEARCH_ESTATE_URL =BuildConfig.URL_MSSB+"/community/search";
     public static final String SCAN_CODE_BUY=BuildConfig.URL_MSSB+"/order/appScanNotice";
-    public static final String WaterAccount_Url=BuildConfig.URL_MSSB+"/member/get";
-    public static final String WaterCard_Recharge=BuildConfig.URL_MSSB+"/order/recharge";
-    public static final String WaterCard_PayUrl=BuildConfig.URL_MSSB+"/order/payNotice";
-    public static final String WaterOrder_ListUrl=BuildConfig.URL_MSSB+"/order/list";
-    public static final String WaterRecharge_Meal=BuildConfig.URL_MSSB+"/pack/list";
-    public static final String WaterPrice_Url=BuildConfig.URL_MSSB+"/order/getPrice";
-    public static final String WaterCreate_Url=BuildConfig.URL_MSSB+"/order/create";
-    public static final String WaterCancel_Url=BuildConfig.URL_MSSB+"/order/oper";
+    public static final String WATER_ACCOUNT_URL =BuildConfig.URL_MSSB+"/member/get";
+    public static final String WATER_CARD_RECHARGE =BuildConfig.URL_MSSB+"/order/recharge";
+    public static final String WATER_CARD_PAY_URL =BuildConfig.URL_MSSB+"/order/payNotice";
+    public static final String WATER_ORDER_LIST_URL =BuildConfig.URL_MSSB+"/order/list";
+    public static final String WATER_RECHARGE_MEAL =BuildConfig.URL_MSSB+"/pack/list";
+    public static final String WATER_PRICE_URL =BuildConfig.URL_MSSB+"/order/getPrice";
+    public static final String WATER_CREATE_URL =BuildConfig.URL_MSSB+"/order/create";
+    public static final String WATER_CANCEL_URL =BuildConfig.URL_MSSB+"/order/oper";
     /**
      * 商城
      */
-    public static final String Shop_LoginHtml=BuildConfig.URL_SHOP+"/wap/tmpl/member/login.html";
-    public static final String Shop_HomeUrl= BuildConfig.URL_SHOP +"/wap/index.html";
-    public static final String Shop_Login= BuildConfig.URL_SHOP +"/mobile/index.php?act=login&op=appindex";
-    public static final String Shop_IMPORT_FOODSTUFF=BuildConfig.URL_SHOP +"/wap/tmpl/class_list.html?gc_id=1246";
-    public static final String Shop_Disinfectioncabinet=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1059";
-    public static final String Shop_Heatercalorifier=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1060";
-    public static final String Shop_Lampblack=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1063";
-    public static final String Shop_Gasstove=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
-    public static final String Shop_GasHeater=BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
-    public static final String Shop_OrderList=BuildConfig.URL_SHOP+"/wap/tmpl/member/order_list.html";
+    public static final String SHOP_LOGIN_HTML =BuildConfig.URL_SHOP+"/wap/tmpl/member/login.html";
+    public static final String SHOP_HOME_URL = BuildConfig.URL_SHOP +"/wap/index.html";
+    public static final String SHOP_LOGIN = BuildConfig.URL_SHOP +"/mobile/index.php?act=login&op=appindex";
+    public static final String SHOP_IMPORT_FOODSTUFF =BuildConfig.URL_SHOP +"/wap/tmpl/class_list.html?gc_id=1246";
+    public static final String SHOP_DISINFECTIONCABINET =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1059";
+    public static final String SHOP_HEATERCALORIFIER =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1060";
+    public static final String SHOP_LAMPBLACK =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1063";
+    public static final String SHOP_GAS_STOVE =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
+    public static final String SHOP_GAS_HEATER =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
+    public static final String SHOP_ORDER_LIST =BuildConfig.URL_SHOP+"/wap/tmpl/member/order_list.html";
     /**
      * 首页功能
      */
@@ -84,23 +84,23 @@ public class UrlUtil {
     /**
      * 燃气服务模块
      */
-    public static final String InstallServer_Url=BuildConfig. URL_HEADS +"/Gas/workOrder/add";
-    public static final String InstallType_Url= BuildConfig.URL_HEADS +"/Gas/app/gas_install_type";
-    public static final String GetTable_Url= BuildConfig.URL_HEADS +"/Gas/meter/rqb";
-    public static final String GasTable_data= BuildConfig.URL_HEADS +"/Gas/meter/list";
-    public static final String SendTable_dataUrl= BuildConfig.URL_HEADS +"/Gas/meter/add";
-    public static final String Searchbill_GasUrl= BuildConfig.URL_HEADS +"/Gas/debts/search";
-    public static final String SelectAddress_Url= BuildConfig.URL_HEADS +"/Gas/usedHouse/list";
-    public static final String CreateOrder_Gas=BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/createOrder";
-    public static final String GasExpense_Pay=BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/pay";
+    public static final String INSTALL_SERVER_URL =BuildConfig. URL_HEADS +"/Gas/workOrder/add";
+    public static final String INSTALL_TYPE_URL = BuildConfig.URL_HEADS +"/Gas/app/gas_install_type";
+    public static final String GET_TABLE_URL = BuildConfig.URL_HEADS +"/Gas/meter/rqb";
+    public static final String GAS_TABLE_DATA = BuildConfig.URL_HEADS +"/Gas/meter/list";
+    public static final String SEND_TABLE_DATA_URL = BuildConfig.URL_HEADS +"/Gas/meter/add";
+    public static final String SEARCH_BILL_GAS_URL = BuildConfig.URL_HEADS +"/Gas/debts/search";
+    public static final String SELECT_ADDRESS_URL = BuildConfig.URL_HEADS +"/Gas/usedHouse/list";
+    public static final String CREATE_ORDER_GAS =BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/createOrder";
+    public static final String GAS_EXPENSE_PAY =BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/pay";
     /**
      * ic卡
      */
-    public static final String IcRecharge_BillUrl=BuildConfig.URL_HEADS+"/Gas/payment/icRecharge";
-    public static final String IcRechargeSearch_Url=BuildConfig.URL_HEADS+"/Gas/payment/icRechargeSearch";
-    public static final String IcRechargeHistory_Url=BuildConfig.URL_HEADS+"/Gas/payment/icRechargeHistory";
-    //抢险
-    public static final String GasQiangxian_Url= BuildConfig.URL_HEADS +"/Gas/app/rescue";
+    public static final String IC_RECHARGE_BILL_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRecharge";
+    public static final String IC_RECHARGE_SEARCH_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRechargeSearch";
+    public static final String IC_RECHARGE_HISTORY_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRechargeHistory";
+    /**抢险  **/
+    public static final String GAS_QIANGXIAN_URL = BuildConfig.URL_HEADS +"/Gas/app/rescue";
     /**
      * HTML5Web
       */
@@ -150,9 +150,9 @@ public class UrlUtil {
     /**
      *  保险
     */
-    public static final String Insurance_buy_Url=BuildConfig.URL_HEADS +"/Gas/insurance/create_order";
-    public static final String Insurance_history_Url= BuildConfig.URL_HEADS +"/Gas/invoice/history";
-    public static final String GethouseAddress_Url="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
+    public static final String INSURANCE_BUY_URL =BuildConfig.URL_HEADS +"/Gas/insurance/create_order";
+    public static final String INSURANCE_HISTORY_URL = BuildConfig.URL_HEADS +"/Gas/invoice/history";
+    public static final String GET_HOUSE_ADDRESS_URL ="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
     public static final String INSURANCE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/views/insurance/pay.html";
     /**
      *myView
@@ -182,9 +182,9 @@ public class UrlUtil {
     /**
      *发票
      */
-    public static final String Invoice_explain= BuildConfig.URL_HEADS +"/repair_h5/invoice_note.html";
-    public static final String Invoice_applyUrl=BuildConfig. URL_HEADS +"/Gas/invoice/apply";
-    public static final String Invoice_getUrl= BuildConfig.URL_HEADS +"/Gas/invoice/uninvoce_list";
+    public static final String INVOICE_EXPLAIN = BuildConfig.URL_HEADS +"/repair_h5/invoice_note.html";
+    public static final String INVOICE_APPLY_URL =BuildConfig. URL_HEADS +"/Gas/invoice/apply";
+    public static final String INVOICE_GET_URL = BuildConfig.URL_HEADS +"/Gas/invoice/uninvoce_list";
     /**
      * 维修服务
     */
@@ -204,7 +204,7 @@ public class UrlUtil {
     /**
      * 热门维修
      */
-    public static final String HotRepair_Url= BuildConfig.URL_HEADS +"/api/serve_city/hot_repair";
+    public static final String HOT_REPAIR_URL = BuildConfig.URL_HEADS +"/api/serve_city/hot_repair";
     /** LPG 接口 **/
     public static final String LPG_NEW_USER_URL=BuildConfig.URL_LPG+"/msht/lpgUser/newUser";
     public static final String LPG_GET_CAPTCHA_URL=BuildConfig.URL_LPG+"/msht/lpgUser/getCaptcha";
@@ -230,15 +230,14 @@ public class UrlUtil {
     public static final String LPG_QUERY_ORDER_FLOW=BuildConfig.URL_LPG+"/msht/lpgOrder/queryFlow";
     public static final String LPG_DEPOSIT_COUNT_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/depositCount";
     public static final String LPG_GAS_AND_DEPOSIT_URL=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/getGasAndDepositNew";
-   // public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn/msht/lpgBottle/getBottleDetail";
-    public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn";
+    public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn/msht/lpgBottle/getBottleDetail";
 
     /**
      * HTML5页面
      */
-    public static final String ApppaySuccess_Page=BuildConfig.URL_HEADS+"/Gas/app/app_pay_success_page?";
+    public static final String APP_PAY_SUCCESS_PAGE =BuildConfig.URL_HEADS+"/Gas/app/app_pay_success_page?";
     public static final String INSURANCE_EXPLAIN_URL="http://msbapp.cn/insurance/toubaoshuoming.html";
-    public static final String Recharge_BackAgree=BuildConfig.URL_HEADS+"/water_h5/chongfanxieyi.html";
-    public static final String Replacepay_agreeUrl= BuildConfig.URL_HEADS +"/gas_h5/daikouxieyi.html";
-    public static final String Vegetable_Url="http://jsxss.net/app/index.php?i=5&c=entry&m=ewei_shopv2&do=mobile";
+    public static final String RECHARGE_BACK_AGREE =BuildConfig.URL_HEADS+"/water_h5/chongfanxieyi.html";
+    public static final String REPLACE_PAY_AGREE_URL = BuildConfig.URL_HEADS +"/gas_h5/daikouxieyi.html";
+    public static final String VEGETABLE_URL ="http://jsxss.net/app/index.php?i=5&c=entry&m=ewei_shopv2&do=mobile";
 }

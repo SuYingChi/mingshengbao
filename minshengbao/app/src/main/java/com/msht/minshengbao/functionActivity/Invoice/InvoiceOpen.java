@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,11 +73,11 @@ public class InvoiceOpen extends BaseActivity {
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -104,9 +105,6 @@ public class InvoiceOpen extends BaseActivity {
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
@@ -227,7 +225,7 @@ public class InvoiceOpen extends BaseActivity {
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;
-        String validateURL = UrlUtil.Invoice_getUrl;
+        String validateURL = UrlUtil.INVOICE_GET_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
@@ -305,7 +303,7 @@ public class InvoiceOpen extends BaseActivity {
         });
     }
     private boolean matchjudge(String idinvoice) {
-        if (idinvoice.equals("")){
+        if (TextUtils.isEmpty(idinvoice)){
             new PromptDialog.Builder(this)
                     .setTitle(R.string.my_dialog_title)
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)

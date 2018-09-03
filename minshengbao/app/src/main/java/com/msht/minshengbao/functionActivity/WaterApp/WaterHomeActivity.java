@@ -322,7 +322,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
     }
     private void initOrderData() {
         String type="3";
-        String validateURL = UrlUtil.WaterOrder_ListUrl;
+        String validateURL = UrlUtil.WATER_ORDER_LIST_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
         textParams.put("type",type);
@@ -352,7 +352,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         requestType=0;
         customDialog.show();
-        String validateURL= UrlUtil.WaterAccount_Url;
+        String validateURL= UrlUtil.WATER_ACCOUNT_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
         SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
@@ -500,7 +500,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         String sign= SecretKeyUtil.getKeySign(treeMap);
         requestType=1;
         customDialog.show();
-        String validateURL= UrlUtil.WaterCancel_Url;
+        String validateURL= UrlUtil.WATER_CANCEL_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);

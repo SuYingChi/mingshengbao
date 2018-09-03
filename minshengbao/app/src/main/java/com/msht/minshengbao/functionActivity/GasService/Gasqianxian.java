@@ -126,7 +126,7 @@ public class Gasqianxian extends BaseActivity implements View.OnClickListener {
     }
     private void initData() {
         customDialog.show();
-        String validateURL = UrlUtil.GasQiangxian_Url;
+        String validateURL = UrlUtil.GAS_QIANGXIAN_URL;
         SendrequestUtil.executeGet(validateURL, new ResultListener() {
             @Override
             public void onResultSuccess(String success) {

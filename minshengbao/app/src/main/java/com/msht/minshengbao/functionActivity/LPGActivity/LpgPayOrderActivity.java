@@ -81,7 +81,6 @@ public class LpgPayOrderActivity extends BaseActivity {
                                 activity.jsonArray =object.getJSONArray("data");
                                 activity.onGetPayWayData();
                             }else if (activity.requestCode==2){
-
                                 JSONObject jsonObject=object.optJSONObject("data");
                                 activity.onChargePayWay(jsonObject);
                             }else if (activity.requestCode==3){
@@ -130,10 +129,11 @@ public class LpgPayOrderActivity extends BaseActivity {
     private void onPayResult(JSONObject json) {
 
         String orderId=json.optString("orderId");
-        String orderStatus=json.optString("orderStatus");
-        if (orderStatus.equals(VariableUtil.VALUE_THREE)){
+        int orderStatus=json.optInt("orderStatus");
+        if (orderStatus==3){
             Intent success=new Intent(context,PaySuccessActivity.class);
             success.putExtra("type","7");
+            success.putExtra("url","");
             success.putExtra("orderId",orderId);
             startActivity(success);
             finish();
@@ -183,7 +183,6 @@ public class LpgPayOrderActivity extends BaseActivity {
     private void requestResult() {
         requestCode=3;
         String orderType="1";
-        customDialog.show();
         String validateURL= UrlUtil.LPG_QUERY_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
@@ -210,9 +209,9 @@ public class LpgPayOrderActivity extends BaseActivity {
         mAdapter=new PayWayAdapter(context,mList);
         mListView.setAdapter(mAdapter);
         initBalanceData();
-        mAdapter.SetOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
+        mAdapter.setOnItemClickListener(new PayWayAdapter.OnRadioItemClickListener() {
             @Override
-            public void ItemClick(View view, int thisPosition) {
+            public void itemClick(View view, int thisPosition) {
                 btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
@@ -229,6 +228,7 @@ public class LpgPayOrderActivity extends BaseActivity {
 
     private void onSendService() {
         requestCode=2;
+        customDialog.setDialogContent("正在加载");
         customDialog.show();
         String validateURL= UrlUtil.LPG_ORDER_PAY;
         HashMap<String, String> textParams = new HashMap<String, String>();
@@ -248,6 +248,7 @@ public class LpgPayOrderActivity extends BaseActivity {
     private void onPayWayData() {
         requestCode=1;
         String source="app_lpg_pay_method";
+        customDialog.setDialogContent("正在加载");
         customDialog.show();
         String validateURL= UrlUtil.PAY_METHOD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
@@ -289,7 +290,8 @@ public class LpgPayOrderActivity extends BaseActivity {
             case SendrequestUtil.SUCCESS_VALUE:
                 str="支付成功";
                 setResult(0x001);
-                requestResult();
+                onDelayRequest();
+               // requestResult();
                 break;
             case SendrequestUtil.FAILURE_VALUE:
                 str="支付失败";
@@ -305,7 +307,18 @@ public class LpgPayOrderActivity extends BaseActivity {
                 break;
         }
     }
-    private void onShowDialogs(String str) {
+
+    private void onDelayRequest() {
+        customDialog.setDialogContent("正在获取支付结果");
+        customDialog.show();
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                requestResult();
+            }
+        }, 2000);
+    }
+    private void onShowDialogs(final String str) {
         new PromptDialog.Builder(this)
                 .setTitle("支付提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)

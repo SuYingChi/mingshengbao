@@ -87,11 +87,12 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String resultCode=object.optString("result_code");
@@ -107,9 +108,6 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                     }
                     break;
                 case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     break;
                 default:
                     break;
@@ -322,7 +320,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 applyData();
                 break;
             case R.id.id_tv_rightText:
-                String url=UrlUtil.Invoice_explain;
+                String url=UrlUtil.INVOICE_EXPLAIN;
                 Intent intent=new Intent(this, AgreeTreaty.class);
                 intent.putExtra("url",url);
                 intent.putExtra("navigation","发票说明");
@@ -477,7 +475,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
     }
 
     private void sendService() {
-        String validateURL= UrlUtil.Invoice_applyUrl;
+        String validateURL= UrlUtil.INVOICE_APPLY_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         Map<String,File> fileParams=new HashMap<String,File>();
         textParams.put("userId", userId);
@@ -499,5 +497,13 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
             fileParams.put("business_license_img", certeFile);
         }
         SendrequestUtil.postFileToServer(textParams,fileParams,validateURL,requestHandler);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

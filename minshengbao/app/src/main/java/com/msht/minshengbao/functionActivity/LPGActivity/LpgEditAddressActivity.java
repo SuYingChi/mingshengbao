@@ -237,8 +237,8 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
         textParams.put("isElevator",isElevator);
         textParams.put("unit",mRidgepole);
         textParams.put("roomNum",mRoom);
-        textParams.put("city", VariableUtil.City);
-        textParams.put("area","");
+        textParams.put("city", mCity);
+        textParams.put("area",mArea);
         OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private class MyTextWatcher implements TextWatcher {

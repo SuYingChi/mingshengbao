@@ -31,7 +31,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField 'String', 'URL_LPG', '"http://120.76.193.86:7799"'
+            buildConfigField 'String', 'URL_LPG', '"http://192.168.0.111:7799"'
+           // buildConfigField 'String', 'URL_LPG', '"http://120.76.193.86:7799"'
             buildConfigField 'String', 'URL_HEADS', '"http://test.msbapp.cn:8080"'
             buildConfigField 'String', 'URL_MSSB', '"http://120.25.195.173:17080/rwapi"'
             buildConfigField 'String', 'URL_SHOP', '"http://dev.msbapp.cn"'

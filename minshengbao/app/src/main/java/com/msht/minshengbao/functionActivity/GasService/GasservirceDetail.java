@@ -235,7 +235,7 @@ public class GasservirceDetail extends BaseActivity {
         btn_evaluate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent assess = new Intent(context, GasEvaluateWorkorder.class);
+                Intent assess = new Intent(context, GasEvaluateWorkOrder.class);
                 assess.putExtra("id", ID);
                 startActivityForResult(assess,2);
             }

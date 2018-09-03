@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendrequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -22,49 +22,63 @@ import com.msht.minshengbao.ViewUI.RatingBar;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 
-public class GasEvaluateWorkorder extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 工单评价
+ * @author hong
+ * @date 2016/9/2  
+ */
+public class GasEvaluateWorkOrder extends BaseActivity {
     private RatingBar mRatingBar;
-    private EditText  tv_evaluation;
-    private Button    btn_sendeva;
+    private EditText tvEvaluation;
+    private Button btnSendEvaluation;
     private String evalScore="3";
-    private String evaluation;
     private String userId,password;
     private String id;
-    private final int  SUCCESS = 1;
-    private final int  FAILURE = 0;
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    private RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<GasEvaluateWorkOrder> mWeakReference;
+        public RequestHandler(GasEvaluateWorkOrder activity) {
+            mWeakReference=new WeakReference<GasEvaluateWorkOrder>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final GasEvaluateWorkOrder activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendrequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            initShow();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.initShow();
                         }else {
-                            failure(Error);
+                            activity.failure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendrequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
         }
-
-    };
+    }
     private void failure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -107,8 +121,8 @@ public class GasEvaluateWorkorder extends BaseActivity {
     }
     private void initView() {
         mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
-        tv_evaluation=(EditText)findViewById(R.id.id_tv_evaluation);
-        btn_sendeva=(Button)findViewById(R.id.id_btn_send);
+        tvEvaluation =(EditText)findViewById(R.id.id_tv_evaluation);
+        btnSendEvaluation =(Button)findViewById(R.id.id_btn_send);
     }
     private void initEvent() {
         backImg.setOnClickListener(new View.OnClickListener() {
@@ -130,43 +144,35 @@ public class GasEvaluateWorkorder extends BaseActivity {
                 new RatingBar.OnRatingChangeListener() {
                     @Override
                     public void onRatingChange(float RatingCount) {
-                        int Score=Math.round(RatingCount);
-                        evalScore = Integer.toString(Score);
+                        int score=Math.round(RatingCount);
+                        evalScore = Integer.toString(score);
                     }
                 }
         );
-        btn_sendeva.setOnClickListener(new View.OnClickListener() {
+        btnSendEvaluation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customDialog.show();
-                requestSevice();
+                requestService();
             }
         });
     }
-    private void requestSevice() {
-        evaluation=tv_evaluation.getText().toString().trim();
+    private void requestService() {
+        String evaluation= tvEvaluation.getText().toString().trim();
         String validateURL = UrlUtil.Evalute_workUrl;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
         textParams.put("evalScore",evalScore);
         textParams.put("evaluation",evaluation);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener(){
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

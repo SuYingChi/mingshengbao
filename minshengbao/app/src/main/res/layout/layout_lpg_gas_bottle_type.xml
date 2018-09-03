@@ -8,7 +8,6 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,13 +35,13 @@
         android:background="@color/transparent">
         <ImageView
             android:id="@+id/id_bottle_image"
-            android:layout_width="@dimen/margin_width80"
-            android:layout_height="@dimen/margin_width80"
+            android:layout_width="@dimen/margin_width70"
+            android:layout_height="@dimen/margin_width70"
             android:layout_margin="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:contentDescription="@string/picture_text"
-            android:src="@drawable/steel_cylinder_xh"/>
+            android:src="@drawable/five_weight_bottle_xh"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -95,7 +94,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/text_width18"
-            android:text="@string/default_value0"/>
+            />
     </RelativeLayout>
     </LinearLayout>
     <LinearLayout
@@ -110,13 +109,13 @@
         android:background="@color/transparent">
         <ImageView
             android:id="@+id/id_bottle_image2"
-            android:layout_width="@dimen/margin_width80"
-            android:layout_height="@dimen/margin_width80"
+            android:layout_width="@dimen/margin_width70"
+            android:layout_height="@dimen/margin_width70"
             android:layout_margin="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:contentDescription="@string/picture_text"
-            android:src="@drawable/steel_cylinder_xh"/>
+            android:src="@drawable/fifteen_weight_bottle_xh"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,7 +169,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/text_width18"
-            android:text="@string/default_value0"/>
+            />
     </RelativeLayout>
     </LinearLayout>
     <LinearLayout
@@ -185,13 +184,13 @@
         android:background="@color/white">
         <ImageView
             android:id="@+id/id_bottle_image3"
-            android:layout_width="@dimen/margin_width80"
-            android:layout_height="@dimen/margin_width80"
+            android:layout_width="@dimen/margin_width70"
+            android:layout_height="@dimen/margin_width70"
             android:layout_margin="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:contentDescription="@string/picture_text"
-            android:src="@drawable/steel_cylinder_xh"/>
+            android:src="@drawable/fifty_weight_bottle_xh"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -245,8 +244,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/text_width18"
-            android:text="@string/default_value0"/>
+            />
     </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

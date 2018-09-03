@@ -164,7 +164,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     private void loadData(int i) {
         pageIndex =i;
         pageNo=i;
-        String validateURL = UrlUtil.GasTable_data;
+        String validateURL = UrlUtil.GAS_TABLE_DATA;
         Map<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);

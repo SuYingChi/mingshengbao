@@ -43,12 +43,12 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
     private EditText etPhoneNumber, etCode;
     private EditText etPassword;
-    private ImageView gobackimg,clearimg,showimg;
-    private Button    btnGetCode,Btnregister;
-    private TextView  tv_treaty;
+    private ImageView goBackImg, clearImg, showImg;
+    private Button    btnGetCode, btnRegister;
+    private TextView tvTreaty;
     private TimeCount time;
-    private String    PhoneNo;
-    private String    verifycode;
+    private String    phoneNo;
+    private String    verifyCode;
     private String    password;
     private int       requestCode=0;
     private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
@@ -145,17 +145,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
     private  void initView() {
-        gobackimg=(ImageView)findViewById(R.id.id_gobackimg);
-        clearimg=(ImageView)findViewById(R.id.id_clearimg);
-        showimg=(ImageView)findViewById(R.id.id_image_show);
-        showimg.setTag(0);
+        goBackImg =(ImageView)findViewById(R.id.id_gobackimg);
+        clearImg =(ImageView)findViewById(R.id.id_clearimg);
+        showImg =(ImageView)findViewById(R.id.id_image_show);
+        showImg.setTag(0);
         btnGetCode =(Button)findViewById(R.id.id_btn_getcode);
-        Btnregister=(Button)findViewById(R.id.id_tijiao_regiser);
+        btnRegister =(Button)findViewById(R.id.id_tijiao_regiser);
         etPhoneNumber =(EditText)findViewById(R.id.id_et_phonenumber);
         etCode =(EditText)findViewById(R.id.id_et_code);
         etPassword =(EditText)findViewById(R.id.id_et_password);
-        tv_treaty=(TextView)findViewById(R.id.id_treaty);
-        Btnregister.setEnabled(false);
+        tvTreaty =(TextView)findViewById(R.id.id_treaty);
+        btnRegister.setEnabled(false);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
         etCode.addTextChangedListener(myTextWatcher);
         etPassword.addTextChangedListener(myTextWatcher);
@@ -178,24 +178,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
             if(TextUtils.isEmpty(etPhoneNumber.getText().toString())||TextUtils.isEmpty(etCode.getText().toString() )
                     ||TextUtils.isEmpty(etPassword.getText().toString())){
-                Btnregister.setEnabled(false);
+                btnRegister.setEnabled(false);
 
             }else {
-                Btnregister.setEnabled(true);
+                btnRegister.setEnabled(true);
             }
         }
         @Override
         public void afterTextChanged(Editable s) {}
     }
     private void initEvent() {
-        gobackimg.setOnClickListener(this);
-        clearimg.setOnClickListener(this);
-        tv_treaty.setOnClickListener(this);
+        goBackImg.setOnClickListener(this);
+        clearImg.setOnClickListener(this);
+        tvTreaty.setOnClickListener(this);
         btnGetCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhoneNo = etPhoneNumber.getText().toString().trim();
-                if (isPhone(PhoneNo)) {
+                phoneNo = etPhoneNumber.getText().toString().trim();
+                if (isPhone(phoneNo)) {
                     btnGetCode.setText("正在发送...");
                     time.start();
                     requestCode=0;
@@ -203,7 +203,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         });
-        Btnregister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customDialog.show();
@@ -211,18 +211,18 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 requestService();
             }
         });
-        showimg.setOnClickListener(new View.OnClickListener() {
+        showImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int tag=(Integer)v.getTag();
                 switch (tag){
                     case 0:
-                        showimg.setImageResource(R.drawable.password_red);
+                        showImg.setImageResource(R.drawable.password_red);
                         etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         v.setTag(1);
                         break;
                     case 1:
-                        showimg.setImageResource(R.drawable.password_gray);
+                        showImg.setImageResource(R.drawable.password_gray);
                         etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         v.setTag(0);
                         break;
@@ -235,15 +235,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void requestService() {
         String validateURL="";
         Map<String, String> textParams = new HashMap<String, String>();
-        textParams.put("username",PhoneNo);
+        textParams.put("username", phoneNo);
         if (requestCode==0){
             validateURL= UrlUtil.Captcha_CodeUrl;
         }else if (requestCode==1){
-            verifycode= etCode.getText().toString().trim();
+            verifyCode = etCode.getText().toString().trim();
             password= etPassword.getText().toString().trim();
             validateURL=UrlUtil.Register_Url;
             textParams.put("password",password);
-            textParams.put("code",verifycode);
+            textParams.put("code", verifyCode);
         }
         SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }

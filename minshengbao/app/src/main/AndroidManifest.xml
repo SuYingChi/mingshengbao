@@ -28,14 +28,11 @@
         android:name="oem.permission.SENDMAIL"
         android:protectionLevel="normal" />
     <permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -50,7 +47,6 @@
             android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -73,7 +69,7 @@
         <activity android:name=".functionActivity.HtmlWeb.HtmlPage" />
         <activity android:name=".functionActivity.GasService.GasServerGuide" />
         <activity android:name=".functionActivity.GasService.Gasqianxian" />
-        <activity android:name=".functionActivity.GasService.GasPayfee" />
+        <activity android:name=".functionActivity.GasService.GasPayFeeActivity" />
         <activity android:name=".functionActivity.Public.SelectVoucherActivity" />
         <activity android:name=".functionActivity.Public.PayFeeWayActivity" />
         <activity android:name=".functionActivity.GasService.BillDetailActivity" />
@@ -203,7 +199,7 @@
         <activity android:name=".functionActivity.HtmlWeb.ReplacePayAgree" />
         <activity android:name=".functionActivity.MyActivity.AboutMine" />
         <activity android:name=".functionActivity.MyActivity.ShareMenuActivity" />
-        <activity android:name=".functionActivity.GasService.GasEvaluateWorkorder" />
+        <activity android:name=".functionActivity.GasService.GasEvaluateWorkOrder" />
         <activity android:name=".functionActivity.MessageCenterActivity" />
         <activity android:name=".functionActivity.MessageDetailActivity" />
         <activity android:name=".functionActivity.repairService.MyorderworkDetail" />

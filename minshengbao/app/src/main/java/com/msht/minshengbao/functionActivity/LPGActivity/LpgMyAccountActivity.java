@@ -8,12 +8,16 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.adapter.MyBottleAdapter;
+import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
+import com.msht.minshengbao.adapter.LpgMyBottleAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
@@ -30,6 +34,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
+import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebView;
 import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
 import com.umeng.analytics.MobclickAgent;
 
@@ -56,8 +61,9 @@ public class LpgMyAccountActivity extends BaseActivity  {
     private String   siteId;
     private int pageIndex=0;
     private LoadMoreListView moreListView;
+    private VerticalSwipeRefreshLayout mSwipeRefresh;
     private ImageView rightImage;
-    private MyBottleAdapter myBottleAdapter;
+    private LpgMyBottleAdapter myBottleAdapter;
     private TextView tvBottleCount;
     private static final String PAGE_NAME="我的账户(lpg)";
     private  ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
@@ -90,12 +96,18 @@ public class LpgMyAccountActivity extends BaseActivity  {
                         String error = object.optString("msg");
                         JSONObject dataObject=object.optJSONObject("data");
                         if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                            activity.mSwipeRefresh.setRefreshing(false);
                             activity.onReceiveData(dataObject);
                         }else {
-                            boolean isRegister=object.optBoolean("isRegister");
-                            if (!isRegister){
-                                activity.moreListView.setVisibility(View.VISIBLE);
-                                activity.goBindingAccount();
+                            if (object.has("isRegister")){
+                                boolean isRegister=object.optBoolean("isRegister");
+                                if (!isRegister){
+                                    activity.moreListView.setVisibility(View.VISIBLE);
+                                    activity.goBindingAccount();
+                                }else {
+                                    activity.moreListView.setVisibility(View.GONE);
+                                    activity.onFailure(error);
+                                }
                             }else {
                                 activity.moreListView.setVisibility(View.GONE);
                                 activity.onFailure(error);
@@ -106,6 +118,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
                     }
                     break;
                 case SendrequestUtil.FAILURE:
+                    activity.mSwipeRefresh.setRefreshing(false);
                     activity.moreListView.setVisibility(View.GONE);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
@@ -196,7 +209,8 @@ public class LpgMyAccountActivity extends BaseActivity  {
         setCommonHeader("我的账户");
         customDialog=new CustomDialog(this, "正在加载");
         initFindViewId();
-        myBottleAdapter=new MyBottleAdapter(context,mList);
+        initRefresh();
+        myBottleAdapter=new LpgMyBottleAdapter(context,mList);
         moreListView.setAdapter(myBottleAdapter);
         moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -237,6 +251,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
         View layoutHeader =findViewById(R.id.id_re_layout);
         layoutHeader.setBackgroundResource(R.color.colorOrange);
         View layoutAccountHeader=getLayoutInflater().inflate(R.layout.layout_lpg_account_header,null);
+        mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
         moreListView=(LoadMoreListView)findViewById(R.id.id_bottle_list);
         tvAddress=(TextView)layoutAccountHeader.findViewById(R.id.id_tv_address);
         tvPhone=(TextView)layoutAccountHeader.findViewById(R.id.id_tv_phone);
@@ -294,7 +309,42 @@ public class LpgMyAccountActivity extends BaseActivity  {
             }
         });
     }
-
+    private void initRefresh() {
+        mSwipeRefresh.setProgressViewEndTarget(false,100);
+        mSwipeRefresh.setProgressViewOffset(false,2,20);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        mSwipeRefresh.setEnabled(true);
+        mSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.transparent_Orange);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(1);
+            }
+        });
+        /** SwipeRefreshLayout 与ListView滑动冲突  **/
+        moreListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) { }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                boolean enable = false;
+                if(moreListView != null && moreListView.getChildCount() > 0){
+                    // check if the first item of the list is visible
+                    boolean firstItemVisible = moreListView.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = moreListView.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                mSwipeRefresh.setEnabled(enable);
+            }
+        });
+    }
     private void onTopRightMenuView() {
         TopRightMenu mTopRightMenu = new TopRightMenu(LpgMyAccountActivity.this);
         //添加菜单项
@@ -341,9 +391,13 @@ public class LpgMyAccountActivity extends BaseActivity  {
         startActivity(intent);
     }
     private void goBottleInfo(String bottleId) {
-        Intent intent=new Intent(context,LpgSteelBottleQueryActivity.class);
-        intent.putExtra("bottleId",bottleId);
+        String mUrl=UrlUtil.LPG_QR_CODE_SCAN_URL+"?id="+bottleId;
+        Intent intent=new Intent(context, LpgBottleWebView.class);
+        intent.putExtra("url",mUrl);
         startActivity(intent);
+        /*Intent intent=new Intent(context,LpgSteelBottleQueryActivity.class);
+        intent.putExtra("bottleId",bottleId);
+        startActivity(intent);*/
     }
     private void goReturnBottle() {
 
