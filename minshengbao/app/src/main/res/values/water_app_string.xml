@@ -6,7 +6,15 @@
     <string name="result_notice1">请继续操作设备，完成订单</string>
     <string name="result_notice2">网络开小差了，请稍后再试或使用IC卡</string>
     <string name="result_notice3">其他异常，敬请谅解</string>
-    <string name="scan_result1">扫码成功</string>
-    <string name="scan_result2">售水机网络异常</string>
-    <string name="scan_result3">售水机设备异常</string>
+    <string name="result_notice4">首次使用，请您充值注册</string>
+    <string name="result_notice5">您充值后，可继续使用！</string>
+    <string name="result_notice6">设备制水中，请稍后！</string>
+    <string name="scan_result0">扫码成功</string>
+    <string name="scan_result9">您的账户无效</string>
+    <string name="scan_result10">售水机设备异常</string>
+    <string name="scan_result11">账户余额不足</string>
+    <string name="scan_result12">您的账户无效</string>
+    <string name="scan_result1008">售水机网络异常</string>
+    <string name="scan_result1009">当前水量不足</string>
+
 </resources>

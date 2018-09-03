@@ -28,11 +28,14 @@
         android:name="oem.permission.SENDMAIL"
         android:protectionLevel="normal" />
     <permission android:name="android.permission.CAMERA" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -47,6 +50,7 @@
             android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,21 +58,21 @@
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".functionActivity.GasService.GasService" />
+        <activity android:name=".functionActivity.GasService.GasServiceActivity" />
         <activity android:name=".functionActivity.MyActivity.LoginActivity" />
         <activity android:name=".functionActivity.MyActivity.RegisterActivity" />
         <activity android:name=".functionActivity.MyActivity.FindPasswordActivity" />
-        <activity android:name=".functionActivity.GasService.GasRepair" />
-        <activity android:name=".functionActivity.GasService.SelectCustomerno" />
-        <activity android:name=".functionActivity.GasService.ServerSuccess" />
+        <activity android:name=".functionActivity.GasService.GasRepairActivity" />
+        <activity android:name=".functionActivity.GasService.SelectCustomerNo" />
+        <activity android:name=".functionActivity.GasService.ServerSuccessActivity" />
         <activity android:name=".functionActivity.GasService.AddCustomerNoActivity" />
-        <activity android:name=".functionActivity.GasService.GasWriteTable" />
-        <activity android:name=".functionActivity.GasService.GasExpenseQuery" />
-        <activity android:name=".functionActivity.GasService.GasInstall" />
-        <activity android:name=".functionActivity.GasService.GasIntroduce" />
-        <activity android:name=".functionActivity.HtmlWeb.HtmlPage" />
-        <activity android:name=".functionActivity.GasService.GasServerGuide" />
-        <activity android:name=".functionActivity.GasService.Gasqianxian" />
+        <activity android:name=".functionActivity.GasService.GasWriteTableActivity" />
+        <activity android:name=".functionActivity.GasService.GasExpenseQueryActivity" />
+        <activity android:name=".functionActivity.GasService.GasInstallAcitivity" />
+        <activity android:name=".functionActivity.GasService.GasIntroduceActivity" />
+        <activity android:name=".functionActivity.HtmlWeb.HtmlPageActivity" />
+        <activity android:name=".functionActivity.GasService.GasServerGuideActivity" />
+        <activity android:name=".functionActivity.GasService.GasEmergencyRescueActivity" />
         <activity android:name=".functionActivity.GasService.GasPayFeeActivity" />
         <activity android:name=".functionActivity.Public.SelectVoucherActivity" />
         <activity android:name=".functionActivity.Public.PayFeeWayActivity" />
@@ -185,68 +189,67 @@
         <activity android:name=".functionActivity.MyActivity.Mysetting" />
         <activity android:name=".functionActivity.MyActivity.SettingSex" />
         <activity android:name=".functionActivity.MyActivity.SettingNickname" />
-        <activity android:name=".functionActivity.GasService.GasServerOrder" />
-        <activity android:name=".functionActivity.GasService.GasservirceDetail" />
+        <activity android:name=".functionActivity.GasService.GasServerOrderActivity" />
+        <activity android:name=".functionActivity.GasService.GasServiceDetailActivity" />
         <activity android:name=".functionActivity.Invoice.InvoiceOpen" />
         <activity android:name=".functionActivity.Invoice.ApplyInvoice" />
         <activity android:name=".functionActivity.Invoice.InvoiceHistory" />
-        <activity android:name=".functionActivity.HtmlWeb.AgreeTreaty" />
+        <activity android:name=".functionActivity.HtmlWeb.AgreeTreatyActivity" />
         <activity android:name=".functionActivity.MyActivity.MyWalletActivity" />
         <activity android:name=".functionActivity.MyActivity.DiscountCoupon" />
         <activity android:name=".functionActivity.MyActivity.RechargeValue" />
         <activity android:name=".functionActivity.MyActivity.AutomatePay" />
         <activity android:name=".functionActivity.MyActivity.IncomeExpense" />
-        <activity android:name=".functionActivity.HtmlWeb.ReplacePayAgree" />
+        <activity android:name=".functionActivity.HtmlWeb.ReplacePayAgreeActivity" />
         <activity android:name=".functionActivity.MyActivity.AboutMine" />
         <activity android:name=".functionActivity.MyActivity.ShareMenuActivity" />
-        <activity android:name=".functionActivity.GasService.GasEvaluateWorkOrder" />
+        <activity android:name=".functionActivity.GasService.GasEvaluateWorkOrderActivity" />
         <activity android:name=".functionActivity.MessageCenterActivity" />
         <activity android:name=".functionActivity.MessageDetailActivity" />
-        <activity android:name=".functionActivity.repairService.MyorderworkDetail" />
+        <activity android:name=".functionActivity.repairService.MyOrderWorkDetailActivity" />
         <activity android:name=".functionActivity.MyActivity.AddressManageActivity" />
         <activity android:name=".functionActivity.MyActivity.AddAddressActivity" />
         <activity android:name=".functionActivity.Public.SelectAddressActivity" />
         <activity android:name=".functionActivity.Public.MoveSelectAddress" />
         <activity android:name=".functionActivity.MyActivity.ModifyAddress" />
-        <activity android:name=".functionActivity.repairService.HomeAppliancescClean" />
-        <activity android:name=".functionActivity.repairService.HouseApplianceFix" />
-        <activity android:name=".functionActivity.repairService.SanitaryWare" />
-        <activity android:name=".functionActivity.repairService.LampCircuit" />
-        <activity android:name=".functionActivity.repairService.OtherRepair" />
+        <activity android:name=".functionActivity.repairService.HomeApplianceCleanActivity" />
+        <activity android:name=".functionActivity.repairService.HouseApplianceFixActivity" />
+        <activity android:name=".functionActivity.repairService.SanitaryWareActivity" />
+        <activity android:name=".functionActivity.repairService.LampCircuitActivity" />
+        <activity android:name=".functionActivity.repairService.OtherRepairActivity" />
         <activity android:name=".functionActivity.insurance.InsurancePurchase" />
         <activity android:name=".functionActivity.insurance.InsuranceDetail" />
         <activity android:name=".functionActivity.insurance.InsurancePay" />
         <activity android:name=".functionActivity.MyActivity.RegisterSeccess" />
         <activity android:name=".functionActivity.MyActivity.ConsultRecommend" />
-        <activity android:name=".functionActivity.repairService.PublishOrder" />
+        <activity android:name=".functionActivity.repairService.PublishOrderActivity" />
         <activity android:name=".functionActivity.repairService.EnlargePicActivity" />
-        <activity android:name=".functionActivity.HtmlWeb.PriceMenu" />
-        <activity android:name=".functionActivity.repairService.PublishSuccess" />
-        <activity android:name=".functionActivity.repairService.RepairEvaluate" />
-        <activity android:name=".functionActivity.repairService.LookEvaluate" />
-        <activity android:name=".functionActivity.repairService.RepairPayment" />
-        <activity android:name=".functionActivity.repairService.MasterDetail" />
-        <activity android:name=".functionActivity.repairService.Warrantycard" />
-        <activity android:name=".functionActivity.repairService.RefundApply" />
-        <activity android:name=".functionActivity.repairService.RepeatFix" />
+        <activity android:name=".functionActivity.HtmlWeb.PriceMenuActivity" />
+        <activity android:name=".functionActivity.repairService.PublishSuccessActivity" />
+        <activity android:name=".functionActivity.repairService.RepairEvaluateActivity" />
+        <activity android:name=".functionActivity.repairService.LookEvaluateActivity" />
+        <activity android:name=".functionActivity.repairService.RepairPaymentActivity" />
+        <activity android:name=".functionActivity.repairService.MasterDetailActivity" />
+        <activity android:name=".functionActivity.repairService.WarrantyCardActivity" />
+        <activity android:name=".functionActivity.repairService.RefundApplyActivity" />
+        <activity android:name=".functionActivity.repairService.RepeatFixActivity" />
         <activity android:name=".functionActivity.MyActivity.MoreSetting" />
         <activity android:name=".functionActivity.Public.PaySuccessActivity" />
-        <activity android:name=".functionActivity.GasService.GasPayRecord" />
+        <activity android:name=".functionActivity.GasService.GasPayRecordActivity" />
         <activity android:name=".Base.BaseActivity" />
-        <activity android:name=".functionActivity.GasService.PreexistenceDetail" />
-        <activity android:name=".functionActivity.GasService.IcCardExpense" />
+        <activity android:name=".functionActivity.GasService.PreexistenceDetailActivity" />
+        <activity android:name=".functionActivity.GasService.IcCardExpenseActivity" />
         <activity android:name=".functionActivity.HtmlWeb.IcbcHtml" />
         <activity android:name=".functionActivity.Public.QrCodeErrorActivity" />
-        <activity android:name=".functionActivity.GasService.GasIccard" />
+        <activity android:name=".functionActivity.GasService.GasIccardActivity" />
         <activity android:name=".functionActivity.Public.AllServiceActivity" />
-        <activity android:name=".functionActivity.Electricvehicle.ElectricHome" />
-        <activity android:name=".functionActivity.Electricvehicle.ElectricMap" />
-        <activity android:name=".functionActivity.WaterApp.WaterPaymethod" />
-        <activity android:name=".functionActivity.Electricvehicle.ElectricsStoreDetail" />
-        <activity android:name=".functionActivity.Electricvehicle.StoreMap" />
-        <activity android:name=".functionActivity.Electricvehicle.SearchStore" />
-        <activity android:name=".functionActivity.Electricvehicle.ReplaceAddress" />
-        <activity android:name=".functionActivity.Electricvehicle.ElectricPicture" />
+        <activity android:name=".functionActivity.Electricvehicle.ElectricHomeActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.ElectricMapActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.ElectricsStoreDetailActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.StoreMapActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.SearchStoreActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.ReplaceAddressActivity" />
+        <activity android:name=".functionActivity.Electricvehicle.ElectricPictureActivity" />
         <activity android:name=".functionActivity.WaterApp.ScanCodeResultActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterHomeActivity" />
         <activity android:name=".functionActivity.WaterApp.OnlinePlaceOrderActivity" />
@@ -254,16 +257,16 @@
         <activity android:name=".functionActivity.WaterApp.WaterBalanceDetailActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterSuccessActivity" />
         <activity
-            android:name=".functionActivity.HtmlWeb.VegetableGentlemen"
+            android:name=".functionActivity.HtmlWeb.VegetableGentlemenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".functionActivity.HtmlWeb.IntelligentFarmHml" />
+        <activity android:name=".functionActivity.HtmlWeb.IntelligentFarmHmlActivity" />
         <activity
             android:name=".functionActivity.insurance.InsuranceHome"
             android:screenOrientation="portrait" />
         <activity android:name=".functionActivity.WaterApp.SelectEstateActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterOrderListActivity" />
         <activity
-            android:name=".functionActivity.Public.QRCodeScanActivity"
+            android:name=".functionActivity.Public.QrCodeScanActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".functionActivity.MyActivity.PasswordActivity" />
         <activity android:name=".functionActivity.Public.PublicPayWayActivity" />
@@ -279,12 +282,13 @@
         <activity android:name=".functionActivity.LPGActivity.LpgOrderDetailActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgReplaceBottleListActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgDepositOrderActvity" />
-        <activity android:name=".functionActivity.LPGActivity.LpgSteelBottleQueryActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgSwitchAccountActivity" />
-        <activity android:name=".functionActivity.HtmlWeb.LpgBottleWebView" />
+        <activity android:name=".functionActivity.HtmlWeb.LpgBottleWebViewActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgDeliveryInformationActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgDepositOrderDetailActivity" />
-        <activity android:name=".functionActivity.LPGActivity.LpgDepositReturnActivity"></activity>
+        <activity android:name=".functionActivity.LPGActivity.LpgDepositReturnActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterEquipmentMapActivity" />
+        <activity android:name=".functionActivity.insurance.MainTest"></activity>
     </application>
 
 </manifest>

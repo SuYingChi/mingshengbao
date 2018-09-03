@@ -22,7 +22,7 @@ import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.CacheUtil;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -60,7 +60,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -69,7 +69,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE) ){
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE) ){
                             activity.onReceiveVersionData();
                         }else {
                             activity.showDialog(error);
@@ -78,7 +78,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -245,8 +245,8 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
     private void checkVersion() {
         customDialog.show();
         int device=2;
-        String validateURL = UrlUtil.App_versionUrl+"?device="+device;
-        SendrequestUtil.getDataFromService(validateURL,requestHandler);
+        String validateURL = UrlUtil.APP_VERSION_URL +"?device="+device;
+        SendRequestUtil.getDataFromService(validateURL,requestHandler);
     }
     private void goAboutMine() {
         Intent intent=new Intent(context, AboutMine.class);

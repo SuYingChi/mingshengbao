@@ -9,15 +9,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -55,6 +56,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
     private TextView tvRetrieveAmount;
     private TextView tvTransportationAmount;
     private TextView tvRealAmount;
+    private TextView tvDeliveryText;
     private ButtonM  btnCancel,btnPayFee;
     private View     layoutDelivery;
     private View     layoutPayAmount;
@@ -70,6 +72,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
     private int requestCode=0;
     private static final int PAY_SUCCESS_CODE=0x001;
     private static final int PAY_CANCEL_CODE=0X002;
+    private static final String PAGE_NAME="订单详情(LPG)";
     private CustomDialog customDialog;
     private final RequestHandler requestHandler=new RequestHandler(this);
 
@@ -88,12 +91,12 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 JSONObject jsonObject =object.optJSONObject("data");
                                 activity.onReceiveOrderData(jsonObject);
@@ -107,7 +110,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -245,6 +248,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         }
         switch (orderStatus){
             case 0:
+                tvDeliveryText.setText("您的订单已送达，请完成支付...");
                 tvStatus.setText("待支付");
                 btnCancel.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.VISIBLE);
@@ -257,13 +261,15 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
                 layoutDelivery.setVisibility(View.GONE);
                 break;
             case 2:
+                tvDeliveryText.setText("您的订单正在配送途中，请您准备查收...");
                 tvStatus.setText("已发货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
                 layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 3:
-                tvStatus.setText("已退款");
+                tvDeliveryText.setText("感谢您使用瓶装气业务，期待您再次使用！");
+                tvStatus.setText("已完成");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
                 layoutDelivery.setVisibility(View.VISIBLE);
@@ -281,12 +287,14 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
                 layoutDelivery.setVisibility(View.GONE);
                 break;
             case 6:
+                tvDeliveryText.setText("您的订单正在配送途中，请您准备查收...");
                 tvStatus.setText("待收货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
                 layoutDelivery.setVisibility(View.VISIBLE);
                 break;
             case 7:
+                tvDeliveryText.setText("您的订单已送达，请完成支付...");
                 tvStatus.setText("已收货");
                 btnPayFee.setVisibility(View.GONE);
                 layoutPayAmount.setVisibility(View.GONE);
@@ -296,7 +304,6 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
                     break;
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -349,6 +356,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         tvTransportationAmount= (TextView) findViewById(R.id.id_transportation_amount);
         tvRetrieveAmount=(TextView)findViewById(R.id.id_retrieveAmount);
         tvRealAmount= (TextView) findViewById(R.id.id_real_amount);
+        tvDeliveryText=(TextView)findViewById(R.id.id_delivery_status);
         btnCancel=(ButtonM)findViewById(R.id.id_btn_cancel);
         btnPayFee=(ButtonM)findViewById(R.id.id_btn_pay);
         layoutDelivery=findViewById(R.id.id_layout_delivery);
@@ -373,7 +381,7 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
         textParams.put("orderType",orderType);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onClick(View v) {
@@ -398,8 +406,8 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         }
     }
     private void startHtmlWebView() {
-        String url="";
-        Intent intent=new Intent(context, HtmlPage.class);
+        String url=UrlUtil.LPG_TRANSPORTATION_EXPENSE;
+        Intent intent=new Intent(context, HtmlPageActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","运费说明");
         startActivity(intent);
@@ -446,6 +454,24 @@ public class LpgOrderDetailActivity extends BaseActivity implements View.OnClick
         String validateURL= UrlUtil.LPG_FAIL_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

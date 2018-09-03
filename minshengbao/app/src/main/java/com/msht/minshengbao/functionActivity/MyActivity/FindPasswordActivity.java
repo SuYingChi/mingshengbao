@@ -18,7 +18,7 @@ import android.widget.ImageView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -56,12 +56,12 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results = object.optString("result");
                         String error = object.optString("error");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode == 1) {
                                 activity.onDisplayDialog("密码重置成功，返回登录界面");
                             }
@@ -76,7 +76,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -245,7 +245,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
             textParams.put("password", newPassword);
             textParams.put("code", verifyCode);
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
     /**

@@ -22,6 +22,7 @@ public class VariableUtil {
     public static boolean boolSelect;
     public static boolean BoolCode;
     public static boolean loginStatus=false;
+    public static boolean networkStatus=true;
     public static boolean isCurrent=false;
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";

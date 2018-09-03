@@ -10,17 +10,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHml;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -61,7 +61,7 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
     private int      mBottleNum3=0;
     private int      mBottleTotalCount;
     private String   siteId;
-
+    private static final String PAGE_NAME="下单(LPG)";
     private CustomDialog customDialog;
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
@@ -79,12 +79,12 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject objectInfo = object.optJSONObject("data");
                             activity.onReceiveData(objectInfo);
 
@@ -95,7 +95,7 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -158,7 +158,7 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
         String requestUrl= UrlUtil.LPG_QUERY_GAS_DEPOSIT_PRICE;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("siteId",siteId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void initFindViewId() {
         mTextPrice1=(TextView)findViewById(R.id.id_tv_amount);
@@ -233,8 +233,8 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
     }
 
     private void startHtmlWebView() {
-        String url="";
-        Intent intent=new Intent(context, HtmlPage.class);
+        String url=UrlUtil.LPG_DISCOUNT_TABLE;
+        Intent intent=new Intent(context, HtmlPageActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","折价说明");
         startActivity(intent);
@@ -258,6 +258,16 @@ public class LpgPlaceOrderActivity extends BaseActivity implements View.OnClickL
          mButtonNum2.setText(String.valueOf(mBottleNum2));
          mButtonNum3.setText(String.valueOf(mBottleNum3));
          mTextTotal.setText(String.valueOf(mBottleTotalCount));
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
     }
     @Override
     protected void onDestroy() {

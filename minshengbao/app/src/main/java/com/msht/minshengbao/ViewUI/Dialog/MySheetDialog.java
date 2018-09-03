@@ -23,7 +23,7 @@ import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
  * @author hong
  * @date 2018/7/10 
  */
-public class MySheetDialog {
+public class  MySheetDialog {
     private Context context;
     private Dialog dialog;
     private Display display;

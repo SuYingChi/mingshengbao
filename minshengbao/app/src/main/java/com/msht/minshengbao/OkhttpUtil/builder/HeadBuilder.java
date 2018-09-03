@@ -1,8 +1,9 @@
-package com.zhy.http.okhttp.builder;
+package com.msht.minshengbao.OkhttpUtil.builder;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.request.OtherRequest;
-import com.zhy.http.okhttp.request.RequestCall;
+
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
+import com.msht.minshengbao.OkhttpUtil.request.OtherRequest;
+import com.msht.minshengbao.OkhttpUtil.request.RequestCall;
 
 /**
  * Created by zhy on 16/3/2.
@@ -12,6 +13,6 @@ public class HeadBuilder extends GetBuilder
     @Override
     public RequestCall build()
     {
-        return new OtherRequest(null, null, OkHttpUtils.METHOD.HEAD, url, tag, params, headers,id).build();
+        return new OtherRequest(null, null, OkHttpManager.METHOD.HEAD, url, tag, params, headers,id).build();
     }
 }

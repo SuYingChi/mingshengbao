@@ -1,8 +1,8 @@
 package com.msht.minshengbao.functionActivity.fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +22,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
-import com.msht.minshengbao.adapter.GethouseAdapter;
-import com.msht.minshengbao.functionActivity.GasService.GasExpenseQuery;
+import com.msht.minshengbao.adapter.GetHouseAdapter;
+import com.msht.minshengbao.functionActivity.GasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -71,9 +71,9 @@ public class SelfHelpPay extends Fragment {
     private String validateURL;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
-    private GethouseAdapter adapter ;
+    private GetHouseAdapter adapter ;
     private final String mPageName ="燃气缴费";
-    private Context context;
+    private Activity activity;
     private ArrayList<HashMap<String,  String>> houseList = new ArrayList<HashMap<String,  String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     public SelfHelpPay() {
@@ -88,20 +88,20 @@ public class SelfHelpPay extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             final SelfHelpPay reference=mWeakReference.get();
-            if (reference==null||reference.isDetached()){
+            if (reference==null||reference.isDetached()||reference.activity.isFinishing()){
                 return;
             }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (!reference.requestLine){
                                 reference.jsonArray =object.optJSONArray("data");
                                 reference.onCustomerAddressData();
@@ -112,16 +112,15 @@ public class SelfHelpPay extends Fragment {
                         }else {
                             //清空原来数据
                             reference.customerNo="";
-                            reference.displayDialog(error);
+                            if (!reference.activity.isFinishing()){
+                                reference.displayDialog(error);
+                            }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
+                case SendRequestUtil.FAILURE:
                     //清空原来数据
                     reference.customerNo="";
                     reference.displayDialog(msg.obj.toString());
@@ -199,7 +198,7 @@ public class SelfHelpPay extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Intent payFees=new Intent(context, GasExpenseQuery.class);
+        Intent payFees=new Intent(activity, GasExpenseQueryActivity.class);
         payFees.putExtra("name", name);
         payFees.putExtra("CustomerNo", customerNum);
         payFees.putExtra("all_balance",allBalance);
@@ -211,7 +210,7 @@ public class SelfHelpPay extends Fragment {
         startActivity(payFees);
     }
     private void displayDialog(String s) {
-        new PromptDialog.Builder(context)
+        new PromptDialog.Builder(activity)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
@@ -227,7 +226,8 @@ public class SelfHelpPay extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_selfhelp_pay, container, false);
-        context=getActivity();
+      //  context=getActivity();
+        activity=getActivity();
         customDialog=new CustomDialog(getActivity(), "正在加载");
         Bundle bundle=getArguments();
         userId=bundle.getString("id");
@@ -241,9 +241,9 @@ public class SelfHelpPay extends Fragment {
         btnPayQuery =(Button)view.findViewById(R.id.id_btn_payquery);
         btnPayQuery.setEnabled(false);
         VariableUtil.mPos=-1;
-        adapter=new GethouseAdapter(getActivity(),houseList);
+        adapter=new GetHouseAdapter(getActivity(),houseList);
         mLstView.setAdapter(adapter);
-        if (NetWorkUtil.IsNetWorkEnable(getActivity())){
+        if (NetWorkUtil.isNetWorkEnable(getActivity())){
             customDialog.show();
             initData();
         }else {
@@ -264,10 +264,10 @@ public class SelfHelpPay extends Fragment {
             validateURL = UrlUtil.SEARCH_BILL_GAS_URL;
             textParams.put("CustomerNo",customerNo);
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void noNetwork() {
-        new PromptDialog.Builder(context)
+        new PromptDialog.Builder(activity)
                 .setTitle("当前网络不可用")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("请检查你的网络设置")
@@ -276,7 +276,7 @@ public class SelfHelpPay extends Fragment {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-                        getActivity().finish();
+                        activity.finish();
                     }
                 }).show();
     }
@@ -314,7 +314,6 @@ public class SelfHelpPay extends Fragment {
         });
 
     }
-
     private void editAction() {
         etCustomer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -363,7 +362,6 @@ public class SelfHelpPay extends Fragment {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
     }
-
     @Override
     public void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

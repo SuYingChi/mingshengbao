@@ -10,10 +10,15 @@ import com.msht.minshengbao.ViewUI.widget.BannerLayout;
 
 import java.util.ArrayList;
 
-public class ElectricPicture extends BaseActivity{
-    private View layout_header;
-    private BannerLayout mBanner;
-    private ArrayList<String> Imgurl = new ArrayList<>();
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/10/18  
+ */
+public class ElectricPictureActivity extends BaseActivity{
+    private ArrayList<String> imageUrl = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +27,14 @@ public class ElectricPicture extends BaseActivity{
         context=this;
         setCommonHeader("图片详情");
         Bundle bundle=getIntent().getBundleExtra("url");
-        Imgurl=bundle.getStringArrayList("image");
+        imageUrl =bundle.getStringArrayList("image");
         initView();
     }
     private void initView() {
-        layout_header=findViewById(R.id.id_re_layout);
-        layout_header.setBackgroundResource(R.color.black);
-        mBanner=(BannerLayout)findViewById(R.id.id_banner);
+        View layoutHeader =findViewById(R.id.id_re_layout);
+        layoutHeader.setBackgroundResource(R.color.black);
+        BannerLayout mBanner=(BannerLayout)findViewById(R.id.id_banner);
         mBanner.setImageLoader(new PictureImageLoader());
-        mBanner.setViewUrls(Imgurl);
+        mBanner.setViewUrls(imageUrl);
     }
 }

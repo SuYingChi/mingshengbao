@@ -19,11 +19,11 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.WaterOrderAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
-import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -77,7 +77,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -85,7 +85,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String message = object.optString("message");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestType==0){
                                 activity.mSwipeRefresh.setRefreshing(false);
                                 JSONObject json =object.optJSONObject("data");
@@ -100,7 +100,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.mSwipeRefresh.setRefreshing(false);
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
@@ -125,7 +125,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog.isShowing()&&activity.customDialog!=null){
                         activity.customDialog.dismiss();
                     }
@@ -137,7 +137,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                         boolean firstPage=jsonObject.optBoolean("firstPage");
                         boolean lastPage=jsonObject.optBoolean("lastPage");
                         JSONArray jsonArray=jsonObject.optJSONArray("list");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.mSwipeRefresh.setRefreshing(false);
                             if(jsonArray.length()>0){
                                 if (activity.pageNo==1){
@@ -152,7 +152,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -226,7 +226,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         tvTotalAmount.setText(totalAmount);
     }
     private void onShowDialog(String title, String s) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle(title)
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
@@ -328,7 +328,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         textParams.put("type",type);
         textParams.put("page","1");
         textParams.put("pageSize","20");
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -355,7 +355,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         String validateURL= UrlUtil.WATER_ACCOUNT_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("account",account);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     private void initView() {
         mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
@@ -432,13 +432,13 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
     }
     private void waterHelp() {
         String url="http://msbapp.cn/water_h5/sbtips.html";
-        Intent intent =new Intent(context, HtmlPage.class);
+        Intent intent =new Intent(context, HtmlPageActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","帮助");
         startActivity(intent);
     }
     private void scanQrCode() {
-        Intent intent =new Intent(context, QRCodeScanActivity.class);
+        Intent intent =new Intent(context, QrCodeScanActivity.class);
         startActivity(intent);
     }
     private void balanceDetail() {
@@ -450,9 +450,9 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         startActivityForResult(intent,2);
     }
     private void placeOrder() {
-        onShowDialog("民生宝","近期上线");
-        /*Intent intent=new Intent(context,OnlinePlaceOrderActivity.class);
-        startActivityForResult(intent,1);*/
+        //onShowDialog("民生宝","近期上线");
+        Intent intent=new Intent(context,WaterEquipmentMapActivity.class);
+        startActivityForResult(intent,1);
     }
     private void dialogTip(final String orderNo) {
         final WaterDialog waterDialog=new WaterDialog(context);
@@ -504,7 +504,7 @@ public class WaterHomeActivity extends BaseActivity implements View.OnClickListe
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

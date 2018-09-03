@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -51,7 +51,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -59,7 +59,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String Error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject data=object.getJSONObject("data");
                             String balance=data.optString("balance");
                             activity.tvBalance.setText(balance);
@@ -70,7 +70,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -95,12 +95,12 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONArray jsonArray =object.optJSONArray("data");
                             if (jsonArray.length()==0){
                                 activity.noticeDialogs();
@@ -112,7 +112,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -181,14 +181,14 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initBinding() {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         String validateURL = UrlUtil.AutomataPay_Url;
-        SendrequestUtil.postDataFromService(validateURL,textParams,bindingHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,bindingHandler);
     }
     @Override
     public void onClick(View v) {

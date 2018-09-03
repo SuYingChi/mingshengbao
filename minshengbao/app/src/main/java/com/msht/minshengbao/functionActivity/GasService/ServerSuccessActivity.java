@@ -9,7 +9,14 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 
-public class ServerSuccess extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/9/15  
+ */
+public class ServerSuccessActivity extends BaseActivity {
     private static final int SPLASH_DISPLAY_TIME=4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,7 @@ public class ServerSuccess extends BaseActivity {
             if (firstSever){
                 findViewById(R.id.id_layout_second).setVisibility(View.GONE);
                 findViewById(R.id.id_re_first).setVisibility(View.VISIBLE);
-                SharedPreferencesUtil.putBoolean(ServerSuccess.this, SharedPreferencesUtil.First_server, false);
+                SharedPreferencesUtil.putBoolean(ServerSuccessActivity.this, SharedPreferencesUtil.First_server, false);
             }else {
                 findViewById(R.id.id_layout_second).setVisibility(View.VISIBLE);
                 findViewById(R.id.id_re_first).setVisibility(View.GONE);
@@ -43,7 +50,7 @@ public class ServerSuccess extends BaseActivity {
 
             @Override
             public void run() {
-                ServerSuccess.this.finish();
+                ServerSuccessActivity.this.finish();
             }
         }, SPLASH_DISPLAY_TIME);
     }

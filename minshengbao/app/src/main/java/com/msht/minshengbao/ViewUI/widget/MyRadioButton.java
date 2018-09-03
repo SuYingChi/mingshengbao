@@ -21,10 +21,12 @@ import android.widget.RelativeLayout;
 import com.msht.minshengbao.R;
 
 /**
- * Created by hong on 2018/3/7.
+ *
+ * @author hong
+ * @date 2018/3/7
  */
 
-public class MyRadioButton extends MyRelativeLayout implements Checkable {
+public class MyRadioButton extends RelativeLayout implements Checkable {
 
     private static final int[] CHECKED_STATE_SET = {
             android.R.attr.state_checked
@@ -85,13 +87,13 @@ public class MyRadioButton extends MyRelativeLayout implements Checkable {
 
         mTextView3 =new CheckedTextView(context);
         mTextView3.setId(ID_TEXT3);
-        mMainLayout =new MyRelativeLayout(context);
+        mMainLayout =new RelativeLayout(context);
         mLayout1 = new RelativeLayout(context);
         mLayout2 =new RelativeLayout(context);
         mLayout2.setId(ID_LAYOUT);
         addView(mMainLayout);
         LayoutParams mainparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        mainparams.addRule(MyRelativeLayout.CENTER_IN_PARENT);
+        mainparams.addRule(RelativeLayout.CENTER_IN_PARENT);
         mMainLayout.setLayoutParams(mainparams);
         LayoutParams params1 = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params1.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -146,7 +148,6 @@ public class MyRadioButton extends MyRelativeLayout implements Checkable {
         doWithGravity(gravity);
     }
     private void doWithGravity(int gravity) {
-        System.out.println("gravity="+gravity);
         RelativeLayout.LayoutParams textParam1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams textParam2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams textParam3 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -199,6 +200,10 @@ public class MyRadioButton extends MyRelativeLayout implements Checkable {
         } else if(parent == null) {
            // LogUtil.log("parent is null");
         }
+        /*if (isChecked != checked) {
+           // refreshDrawableState();
+        }*/
+        refreshDrawableState();
     }
     @Override
     public boolean isChecked() {
@@ -209,11 +214,14 @@ public class MyRadioButton extends MyRelativeLayout implements Checkable {
         if (!isChecked) {
             setChecked(!isChecked);
         }
+       // setChecked(!isChecked);
+       // setChecked(!isChecked);
+       // isChecked = !isChecked;
+        refreshDrawableState();
     }
     @Override
     public boolean performClick() {
         toggle();
-
         final boolean handled = super.performClick();
         if (!handled) {
             // View only makes a sound effect if the onClickListener was

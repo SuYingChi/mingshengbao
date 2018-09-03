@@ -18,7 +18,7 @@ import com.msht.minshengbao.adapter.WaterOrderAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -69,7 +69,7 @@ public class WaterOrderListActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -78,7 +78,7 @@ public class WaterOrderListActivity extends BaseActivity {
                         boolean firstPage=jsonObject.optBoolean("firstPage");
                         boolean lastPage=jsonObject.optBoolean("lastPage");
                         JSONArray jsonArray=jsonObject.optJSONArray("list");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.refreshType==0){
                                 activity.mListView.stopRefresh(true);
                             }else if (activity.refreshType==1){
@@ -102,7 +102,7 @@ public class WaterOrderListActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -128,12 +128,12 @@ public class WaterOrderListActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
                         String message = object.optString("message");
-                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(Results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.showDialog("提示","订单已取消");
                         }else {
                             ToastUtil.ToastText(activity.context,message);
@@ -142,7 +142,7 @@ public class WaterOrderListActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -260,7 +260,7 @@ public class WaterOrderListActivity extends BaseActivity {
         textParams.put("type",type);
         textParams.put("page","1");
         textParams.put("pageSize","20");
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void requestPermission(final String phone) {
 
@@ -346,7 +346,7 @@ public class WaterOrderListActivity extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        SendrequestUtil.postDataFromService(validateURL,textParams,cancelHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,cancelHandler);
     }
 
     private void initOrderData() {

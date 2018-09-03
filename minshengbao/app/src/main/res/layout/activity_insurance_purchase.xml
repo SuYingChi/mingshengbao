@@ -53,6 +53,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:inputType="textPersonName"
                         android:gravity="end"
                         android:maxLength="20"
                         android:textSize="@dimen/text_width16"
@@ -69,36 +70,51 @@
                     android:background="@color/line_gray">
                 </View>
                 <RelativeLayout
+                    android:id="@+id/id_customerNo_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
-                        android:id="@+id/id_tv_customerNo"
+                        android:id="@+id/id_customerNo_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="燃气用户号"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_customerNo"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/id_tv_customerNo"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/id_customerNo_text"
+                        android:layout_toEndOf="@+id/id_customerNo_text"
                         android:layout_marginRight="@dimen/margin_width10"
-                        android:layout_alignParentRight="true"
-                        android:layout_toRightOf="@+id/id_tv_customerNo"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:layout_toStartOf="@+id/id_forward_img"
+                        android:layout_toLeftOf="@+id/id_forward_img"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:textColor="@color/color_9e9e9e"
                         android:gravity="end"
                         android:maxLength="18"
-                        android:inputType="number"
                         android:textSize="@dimen/text_width16"
                         android:layout_centerVertical="true"
-                        android:background="@null"
-                        android:hint="请输8-10位数字" />
+                        android:hint="请选择燃气用户号" />
+                    <ImageView
+                        android:id="@+id/id_forward_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:src="@drawable/forward_2x"
+                        android:contentDescription="@string/picture_text"/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -117,6 +133,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginStart="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:maxLength="5"
                         android:layout_centerVertical="true"
                         android:text="@string/certificate_type"
                         android:textColor="@color/color_383838"
@@ -125,14 +144,16 @@
                         android:id="@+id/spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="@dimen/margin_width35"
                         android:layout_margin="@dimen/margin_width10"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
+                        android:gravity="end"
                         app:ms_dropdown_max_height="350dp"
                         app:ms_dropdown_height="wrap_content"
                         app:ms_background_color="@color/white"
                         app:ms_text_color="@color/color_9e9e9e"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:layout_centerVertical="true"
                         />
                 </RelativeLayout>
@@ -153,6 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="证件号"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
@@ -232,7 +254,7 @@
                     android:orientation="horizontal"
                     android:minHeight="@dimen/margin_width45">
                     <TextView
-                        android:id="@+id/id_tv_address"
+                        android:id="@+id/id_address_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
@@ -241,13 +263,13 @@
                         android:text="地址"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_address"
+                    <TextView
+                        android:id="@+id/id_tv_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/id_tv_address"
-                        android:layout_toEndOf="@+id/id_tv_address"
+                        android:layout_toRightOf="@+id/id_address_text"
+                        android:layout_toEndOf="@+id/id_address_text"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"

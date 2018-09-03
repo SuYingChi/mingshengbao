@@ -11,9 +11,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -22,10 +20,14 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.functionActivity.GasService.SelectCustomerNo;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -39,8 +41,6 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Demo class
@@ -52,10 +52,10 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private CheckBox checkBox;
     private TextView tvConsult;
     private TextView tvAgree1, tvAgree2, tvAgree3;
-    private TextView tvRealAmount;
-    private EditText etName, etIdCard, etCustomer;
+    private TextView tvCustomerNo,tvAddress;
+    private EditText etName, etIdCard;
     private EditText etPhone, etEmail;
-    private EditText etAddress, etRecommend;
+    private EditText etRecommend;
     private MaterialSpinner spinner;
     private String   name, idCard,customer,phone,email;
     private String   address,recommend;
@@ -65,17 +65,17 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private String   amount="300.00";
     private String   startTime, stopTime;
     private String   url,navigation;
-    private String   card_type="0";
+    private String   cardType="0";
+    private String   userId;
     private int requestType=0;
     private static final String[] CERTIFICATE_TYPE = {"居民身份证","港澳通行证","台湾通行证"};
     private CustomDialog customDialog;
-    private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
-    private final GetinsuranceHandler getinsuranceHandler=new GetinsuranceHandler(this);
-    private static class GetinsuranceHandler extends Handler{
+    private final GetInsuranceHandler getinsuranceHandler=new GetInsuranceHandler(this);
+    private static class GetInsuranceHandler extends Handler{
 
         private WeakReference<InsurancePurchase> mWeakReference;
-        public GetinsuranceHandler(InsurancePurchase reference) {
+        private GetInsuranceHandler(InsurancePurchase reference) {
             mWeakReference = new WeakReference<InsurancePurchase>(reference);
         }
         @Override
@@ -89,26 +89,24 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 reference.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestType==0){
                                 reference.initShow(jsonObject);
-                            }else if (reference.requestType==1){
-                                reference.getHouse(jsonObject);
                             }
                         }else {
-                            reference.faifure(error);
+                            reference.failure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
@@ -116,13 +114,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             }
             super.handleMessage(msg);
         }
-    }
-    private void getHouse(JSONObject jsonObject) {
-        String customerName= jsonObject.optString("customerName");
-        String customerType= jsonObject.optString("customerType");
-        String address= jsonObject.optString("address");
-        String room= jsonObject.optString("room");
-        etAddress.setText(address);
     }
     private void initShow(JSONObject jsonObject) {
         String url= jsonObject.optString("url");
@@ -133,8 +124,8 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         intent.putExtra("params",params);
         startActivity(intent);
     }
-    private void faifure(String error) {
-        new PromptDialog.Builder(this)
+    private void failure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -158,6 +149,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         id=getIntent().getStringExtra("insurance_Id");
         deadline=getIntent().getIntExtra("vDeadLines",5);
         insuranceAmount =getIntent().getStringExtra("vSecuritys");
+        userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         initHeader();
         initView();
         initEvent();
@@ -169,33 +161,26 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         tvConsult.setText("咨询");
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case 1:
-                if (resultCode==1){
-                    if (data!=null){
-                        id=data.getStringExtra("Id");
-                        amount=data.getStringExtra("amount");
-                        insuranceAmount =data.getStringExtra("insurance");
-                        tvRealAmount.setText(amount);
-                       // int time=Integer.valueOf(deadline).intValue();
-                        int time=deadline;
-                        SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM-dd");
-                        Calendar calendar=Calendar.getInstance();
-                        Calendar start=Calendar.getInstance();
-                        start.add(Calendar.DAY_OF_MONTH,1);
-                        startTime =formats.format(start.getTime());
-                        calendar.add(Calendar.YEAR,time);
-                        stopTime =formats.format(calendar.getTime());
+            //获取昵称设置返回数据
+            case ConstantUtil.REQUEST_CODE_ONE:
+                if(data!=null){
+                    if (resultCode==ConstantUtil.REQUEST_CODE_TWO){
+                        String addressName=data.getStringExtra("addressname");
+                        customer=data.getStringExtra("customerNo");
+                        tvAddress.setText(addressName);
+                        tvCustomerNo.setText(customer);
                     }
                 }
-                default:
-                    break;
+                break;
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-
     }
     private void initEvent() {
+        findViewById(R.id.id_customerNo_layout).setOnClickListener(this);
         layoutBuy.setOnClickListener(this);
         tvConsult.setOnClickListener(this);
         tvAgree1.setOnClickListener(this);
@@ -217,13 +202,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 if (position==0){
-                    card_type="0";
+                    cardType="0";
                 }else if (position==1){
-                    card_type="4";
+                    cardType="4";
                 }else if (position==2){
-                    card_type="5";
+                    cardType="5";
                 }else {
-                    card_type="0";
+                    cardType="0";
                 }
 
             }
@@ -237,13 +222,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         tvAgree2 =(TextView)findViewById(R.id.id_text2);
         tvAgree3 =(TextView)findViewById(R.id.id_text3);
         findViewById(R.id.id_text4).setOnClickListener(this);
-        tvRealAmount =(TextView)findViewById(R.id.id_buy_amount);
+        TextView tvRealAmount =(TextView)findViewById(R.id.id_buy_amount);
         etName =(EditText)findViewById(R.id.id_et_name);
         etIdCard =(EditText) findViewById(R.id.id_et_idcard);
-        etCustomer =(EditText)findViewById(R.id.id_et_customerNo);
+        tvCustomerNo =(TextView) findViewById(R.id.id_tv_customerNo);
         etPhone =(EditText)findViewById(R.id.id_et_phone);
         etEmail =(EditText)findViewById(R.id.id_et_email);
-        etAddress =(EditText)findViewById(R.id.id_et_address);
+        tvAddress =(TextView) findViewById(R.id.id_tv_address);
         etRecommend =(EditText)findViewById(R.id.id_et_recommend);
         tvRealAmount.setText(amount);
         spinner = (MaterialSpinner)findViewById(R.id.spinner);
@@ -255,27 +240,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         startTime =formats.format(start.getTime());
         calendar.add(Calendar.YEAR,deadline);
         stopTime =formats.format(calendar.getTime());
-        etCustomer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length()==8||s.length()==10){
-                    requestServer();
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
 
-    }
-    private void requestServer() {
-        requestType=1;
-        customer= etCustomer.getText().toString().trim();
-        String validateURL = UrlUtil.GET_HOUSE_ADDRESS_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
-        textParams.put("customerNo",customer);
-        SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
     }
     @Override
     public void onClick(View v) {
@@ -291,6 +256,9 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.id_tv_rightText:
                 callHotLine();
+                break;
+            case R.id.id_customerNo_layout:
+                onSelectCustomerNo();
                 break;
             case R.id.id_text1:
                 navigation="投保须知";
@@ -316,8 +284,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 break;
         }
     }
+
+    private void onSelectCustomerNo() {
+        Intent select=new Intent(context,SelectCustomerNo.class);
+        startActivityForResult(select, ConstantUtil.REQUEST_CODE_ONE);
+    }
     private void gotoAgree() {
-        Intent intent=new Intent(this, AgreeTreaty.class);
+        Intent intent=new Intent(this, AgreeTreatyActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigation",navigation);
         startActivity(intent);
@@ -325,17 +298,17 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private void buyInsurance() {
         name= etName.getText().toString().trim();
         idCard = etIdCard.getText().toString().trim();
-        customer= etCustomer.getText().toString().trim();
+        customer= tvCustomerNo.getText().toString().trim();
         phone= etPhone.getText().toString().trim();
         email= etEmail.getText().toString().trim();
-        address= etAddress.getText().toString().trim();
+        address= tvAddress.getText().toString().trim();
         recommend= etRecommend.getText().toString().trim();
         if (match(name, idCard,customer,address)){
             if (RegularExpressionUtil.isPhone(phone)&&isEmailEmpty(email)){
                 if (checkBox.isChecked()){
                     showDialogs();
                 }else {
-                    new PromptDialog.Builder(this)
+                    new PromptDialog.Builder(context)
                             .setTitle("民生宝")
                             .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                             .setMessage("请您先勾选保险协议")
@@ -349,7 +322,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                             }).show();
                 }
             }else {
-                new PromptDialog.Builder(this)
+                new PromptDialog.Builder(context)
                         .setTitle("民生宝")
                         .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                         .setMessage("手机或邮箱格式不正确")
@@ -401,12 +374,13 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private void requestService() {
         requestType=0;
         String validateURL = UrlUtil.INSURANCE_BUY_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
         textParams.put("insurance_id",id);
         textParams.put("customer_no",customer);
         textParams.put("amount",amount);
         textParams.put("name",name);
-        textParams.put("card_type",card_type);
+        textParams.put("card_type",cardType);
         textParams.put("id_card", idCard);
         textParams.put("phone",phone);
         textParams.put("email",email);
@@ -414,7 +388,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         textParams.put("start_date", startTime);
         textParams.put("end_date", stopTime);
         textParams.put("recommend",recommend);
-        SendrequestUtil.postDataFromService(validateURL,textParams,getinsuranceHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,getinsuranceHandler);
     }
     private boolean match(String name, String idcard, String customer, String address) {
         if (TextUtils.isEmpty(name)||TextUtils.isEmpty(idcard)||TextUtils.isEmpty(customer)||TextUtils.isEmpty(address)){
@@ -431,7 +405,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     }
     private void callHotLine() {
         final String phone = "963666";
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("客服电话")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(phone)
@@ -489,8 +463,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

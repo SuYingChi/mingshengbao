@@ -1,9 +1,10 @@
-package com.zhy.http.okhttp.request;
+package com.msht.minshengbao.OkhttpUtil.request;
 
 import android.text.TextUtils;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.utils.Exceptions;
+
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
+import com.msht.minshengbao.OkhttpUtil.utils.Exceptions;
 
 import java.util.Map;
 
@@ -51,19 +52,19 @@ public class OtherRequest extends OkHttpRequest
     @Override
     protected Request buildRequest(RequestBody requestBody)
     {
-        if (method.equals(OkHttpUtils.METHOD.PUT))
+        if (method.equals(OkHttpManager.METHOD.PUT))
         {
             builder.put(requestBody);
-        } else if (method.equals(OkHttpUtils.METHOD.DELETE))
+        } else if (method.equals(OkHttpManager.METHOD.DELETE))
         {
             if (requestBody == null)
                 builder.delete();
             else
                 builder.delete(requestBody);
-        } else if (method.equals(OkHttpUtils.METHOD.HEAD))
+        } else if (method.equals(OkHttpManager.METHOD.HEAD))
         {
             builder.head();
-        } else if (method.equals(OkHttpUtils.METHOD.PATCH))
+        } else if (method.equals(OkHttpManager.METHOD.PATCH))
         {
             builder.patch(requestBody);
         }

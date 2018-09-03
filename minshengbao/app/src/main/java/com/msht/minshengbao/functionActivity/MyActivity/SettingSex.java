@@ -12,7 +12,7 @@ import android.widget.RadioGroup;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -41,12 +41,12 @@ public class SettingSex extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
                             activity.onReceivePersionalData();
                         }else {
                             activity.onFailure(error);
@@ -55,7 +55,7 @@ public class SettingSex extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -148,6 +148,6 @@ public class SettingSex extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("sex", gender);
-        SendrequestUtil.postDataFromService(validateURL,textParams,sexHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,sexHandler);
     }
 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -13,9 +12,9 @@ import android.widget.TextView;
 import com.msht.minshengbao.adapter.LpgOrderListAdapter;
 import com.msht.minshengbao.adapter.LpgUserListAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -67,12 +66,12 @@ public class LpgSwitchAccountActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String msgError = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 activity.onReceiveData(object);
                             }else if (activity.requestCode==1){
@@ -89,7 +88,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -257,7 +256,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("msbMobile",userName);
         textParams.put("userId",lpgUserId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onSwitchUser(String lpgUserId) {
         customDialog.show();
@@ -266,7 +265,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("msbMobile",userName);
         textParams.put("userId",lpgUserId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 
     private void initUserListData() {
@@ -277,6 +276,7 @@ public class LpgSwitchAccountActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode==BINDING_SUCCESS_CODE){
+            setResult(2);
             initUserListData();
         }
     }
@@ -290,10 +290,8 @@ public class LpgSwitchAccountActivity extends BaseActivity {
         textParams.put("msbMobile",userName);
         textParams.put("pageNum",pageNum);
         textParams.put("pageSize",pageSize);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -303,5 +301,12 @@ public class LpgSwitchAccountActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(PAGE_NAME);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

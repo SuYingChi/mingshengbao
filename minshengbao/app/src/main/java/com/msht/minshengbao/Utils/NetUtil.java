@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -90,6 +92,23 @@ public class NetUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * //获取域名
+	 * @param url
+	 * @return
+	 */
+	public static String getDomain(String url){
+		URL urls=null;
+		String p="";
+		try{
+			urls=new URL(url);
+			p=urls.getHost();
+		}catch (MalformedURLException e){
+			e.printStackTrace();
+		}
+		return p;
 	}
 
 }

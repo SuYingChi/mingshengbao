@@ -19,11 +19,8 @@ import java.util.List;
 
 public class GuideActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPager mVp;
-    private GuideViewPagerAdapter mAdapter;
-    private List<View> views;
-    private Button startBtn;
     // 引导页图片资源
-    private static final int[] pics = { R.layout.guide_view1,
+    private static final int[] PICS = { R.layout.guide_view1,
             R.layout.guide_view2, R.layout.guide_view3,R.layout.guide_view4};
     private ImageView[] dots;
     // 记录当前选中位置
@@ -32,18 +29,18 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
-        views = new ArrayList<View>();
-        for (int i = 0; i < pics.length; i++) {
-            View view = LayoutInflater.from(this).inflate(pics[i], null);
-            if (i == pics.length - 1) {
-                startBtn = (Button) view.findViewById(R.id.btn_enter);
+        List<View> views = new ArrayList<View>();
+        for (int i = 0; i < PICS.length; i++) {
+            View view = LayoutInflater.from(this).inflate(PICS[i], null);
+            if (i == PICS.length - 1) {
+                Button startBtn = (Button) view.findViewById(R.id.btn_enter);
                 startBtn.setTag("enter");
                 startBtn.setOnClickListener(this);
             }
             views.add(view);
         }
         mVp = (ViewPager) findViewById(R.id.vp_guide);
-        mAdapter= new GuideViewPagerAdapter(views);
+        GuideViewPagerAdapter mAdapter= new GuideViewPagerAdapter(views);
         mVp.setAdapter(mAdapter);
         mVp.addOnPageChangeListener(new PageChangeListener());
         initDots();
@@ -51,17 +48,19 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
     private void initDots() {
         LinearLayout ll = (LinearLayout) findViewById(R.id.ll);
-        dots = new ImageView[pics.length];
+        dots = new ImageView[PICS.length];
         // 循环取得小点图片
-        for (int i = 0; i < pics.length; i++) {
+        for (int i = 0; i < PICS.length; i++) {
             // 得到一个LinearLayout下面的每一个子元素
             dots[i] = (ImageView) ll.getChildAt(i);
-            dots[i].setEnabled(false);// 都设为灰色
+            dots[i].setEnabled(false);
             dots[i].setOnClickListener(this);
-            dots[i].setTag(i);// 设置位置tag，方便取出与当前位置对应
+            // 设置位置tag，方便取出与当前位置对应
+            dots[i].setTag(i);
         }
         currentIndex = 0;
-        dots[currentIndex].setEnabled(true); // 设置为白色，即选中状态
+        // 设置为白色，即选中状态
+        dots[currentIndex].setEnabled(true);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
     private void setCurDot(int position) {
-        if (position < 0 || position > pics.length || currentIndex == position) {
+        if (position < 0 || position > PICS.length || currentIndex == position) {
             return;
         }
         dots[position].setEnabled(true);
@@ -90,7 +89,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         currentIndex = position;
     }
     private void setCurView(int position) {
-        if (position < 0 || position >= pics.length) {
+        if (position < 0 || position >= PICS.length) {
             return;
         }
         mVp.setCurrentItem(position);

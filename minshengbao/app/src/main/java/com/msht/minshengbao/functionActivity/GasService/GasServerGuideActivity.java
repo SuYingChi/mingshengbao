@@ -6,11 +6,18 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.UrlUtil;
 
-public class GasServerGuide extends BaseActivity implements View.OnClickListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/9/19  
+ */
+public class GasServerGuideActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout Rwangdian,Rbaoxiuyewu;
     private RelativeLayout Rjiaona,Rpromise,Rnotopen;
     @Override
@@ -61,7 +68,7 @@ public class GasServerGuide extends BaseActivity implements View.OnClickListener
     private void wangdian() {
         String navigate="营业网点";
         String url= UrlUtil.YingyeSite_Url;
-        Intent yingye=new Intent(GasServerGuide.this,HtmlPage.class);
+        Intent yingye=new Intent(GasServerGuideActivity.this,HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);
@@ -69,7 +76,7 @@ public class GasServerGuide extends BaseActivity implements View.OnClickListener
     private void baoxiuyewu() {
         String navigate="居民燃气报装业务";
         String url= UrlUtil.GasYeWu_Url;
-        Intent yingye=new Intent(GasServerGuide.this,HtmlPage.class);
+        Intent yingye=new Intent(GasServerGuideActivity.this,HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);
@@ -77,7 +84,7 @@ public class GasServerGuide extends BaseActivity implements View.OnClickListener
     private void jiaona() {
         String navigate="气费缴纳";
         String url= UrlUtil.GasJiaoNa_Url;
-        Intent yingye=new Intent(GasServerGuide.this,HtmlPage.class);
+        Intent yingye=new Intent(GasServerGuideActivity.this,HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);
@@ -85,7 +92,7 @@ public class GasServerGuide extends BaseActivity implements View.OnClickListener
     private void promise() {
         String navigate="服务承诺";
         String url= UrlUtil.ServicePromise_Url;
-        Intent yingye=new Intent(GasServerGuide.this,HtmlPage.class);
+        Intent yingye=new Intent(GasServerGuideActivity.this,HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);
@@ -93,7 +100,7 @@ public class GasServerGuide extends BaseActivity implements View.OnClickListener
     private void notopen() {
         String navigate="常见未能正常开通情况";
         String url= UrlUtil.uninstall_Url;
-        Intent yingye=new Intent(GasServerGuide.this,HtmlPage.class);
+        Intent yingye=new Intent(GasServerGuideActivity.this,HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);

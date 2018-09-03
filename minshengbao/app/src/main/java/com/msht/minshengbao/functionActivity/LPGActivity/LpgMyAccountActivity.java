@@ -9,22 +9,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 import com.msht.minshengbao.adapter.LpgMyBottleAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -34,8 +34,8 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
-import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebView;
-import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebViewActivity;
+import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
@@ -89,16 +89,17 @@ public class LpgMyAccountActivity extends BaseActivity  {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
                         JSONObject dataObject=object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.mSwipeRefresh.setRefreshing(false);
                             activity.onReceiveData(dataObject);
                         }else {
+                            activity.mSwipeRefresh.setRefreshing(false);
                             if (object.has("isRegister")){
                                 boolean isRegister=object.optBoolean("isRegister");
                                 if (!isRegister){
@@ -117,7 +118,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.mSwipeRefresh.setRefreshing(false);
                     activity.moreListView.setVisibility(View.GONE);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
@@ -163,6 +164,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
             goBindingAccount();
         }
     }
+
     private void onFillData(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -170,8 +172,10 @@ public class LpgMyAccountActivity extends BaseActivity  {
                 String id=jsonObject.optString("id");
                 String bottleWeight=jsonObject.optString("bottleWeight");
                 String usedDate=jsonObject.optString("usedDate");
+                String bottleCode=jsonObject.optString("bottleCode");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
+                map.put("bottleCode",bottleCode);
                 map.put("bottleWeight", bottleWeight);
                 map.put("usedDate", usedDate);
                 mList.add(map);
@@ -183,9 +187,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
     }
     private void goBindingAccount() {
         Intent intent=new Intent(context,BindingAccountActivity.class);
-        intent.putExtra("flag",0);
         startActivityForResult(intent,BINDING_SUCCESS_CODE);
-        finish();
     }
     private void onFailure(String error) {
         new PromptDialog.Builder(context)
@@ -217,7 +219,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position!=0){
                     int pos=position-1;
-                    String bottleId=mList.get(pos).get("id");
+                    String bottleId=mList.get(pos).get("bottleCode");
                     goBottleInfo(bottleId);
                 }
             }
@@ -232,14 +234,22 @@ public class LpgMyAccountActivity extends BaseActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
+        switch (requestCode){
             case BINDING_SUCCESS_CODE:
-                initListData();
+                if (resultCode==BINDING_SUCCESS_CODE){
+                    mList.clear();
+                    myBottleAdapter.notifyDataSetChanged();
+                    initListData();
+                }else {
+                    finish();
+                }
                 break;
             case SWITCH_SUCCESS_CODE:
-                mList.clear();
-                myBottleAdapter.notifyDataSetChanged();
-                initListData();
+                if (resultCode==SWITCH_SUCCESS_CODE){
+                    mList.clear();
+                    myBottleAdapter.notifyDataSetChanged();
+                    initListData();
+                }
                 break;
                 default:
                     break;
@@ -379,7 +389,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
     }
 
     private void goScanCode() {
-        Intent intent =new Intent(context, QRCodeScanActivity.class);
+        Intent intent =new Intent(context, QrCodeScanActivity.class);
         startActivity(intent);
     }
     private void startSwitchUser() {
@@ -388,19 +398,15 @@ public class LpgMyAccountActivity extends BaseActivity  {
     }
     private void goNewUserActivity() {
         Intent intent=new Intent(context,LpgNewUserActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ConstantUtil.BIND_SUCCESS);
     }
     private void goBottleInfo(String bottleId) {
         String mUrl=UrlUtil.LPG_QR_CODE_SCAN_URL+"?id="+bottleId;
-        Intent intent=new Intent(context, LpgBottleWebView.class);
+        Intent intent=new Intent(context, LpgBottleWebViewActivity.class);
         intent.putExtra("url",mUrl);
         startActivity(intent);
-        /*Intent intent=new Intent(context,LpgSteelBottleQueryActivity.class);
-        intent.putExtra("bottleId",bottleId);
-        startActivity(intent);*/
     }
     private void goReturnBottle() {
-
         Intent intent=new Intent(context,LpgDepositOrderActvity.class);
         startActivity(intent);
     }
@@ -448,7 +454,7 @@ public class LpgMyAccountActivity extends BaseActivity  {
         textParams.put("msbMobile",userName);
         textParams.put("pageNum",pageNum);
         textParams.put("pageSize",pageSize);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     @Override
     public void onResume() {

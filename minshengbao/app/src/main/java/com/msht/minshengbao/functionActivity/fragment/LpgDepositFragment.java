@@ -15,15 +15,16 @@ import com.msht.minshengbao.adapter.LpgDepositOrderListAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgDepositOrderDetailActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgDepositReturnActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,12 +54,11 @@ public class LpgDepositFragment extends BaseFragment {
     private int pageIndex=0;
     private int refreshType=0;
     private int requestCode=0;
-    private final String mPageName ="lpg订单";
+    private final String mPageName ="退瓶订单";
     private LpgDepositOrderListAdapter mAdapter;
     private Activity mActivity ;
     private JSONArray jsonArray;
     private CustomDialog customDialog;
-    private static final int CALL_BACK_CODE=0;
     private static final int SEND_SUCCESS_CODE=0x001;
     private static final int ORDER_CANCEL_CODE=0X002;
     private final RequestHandler requestHandler=new RequestHandler(this);
@@ -98,12 +98,12 @@ public class LpgDepositFragment extends BaseFragment {
                 reference.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 boolean firstPage=object.optBoolean("isStartPage");
                                 boolean lastPage=object.optBoolean("isEndPage");
@@ -138,7 +138,7 @@ public class LpgDepositFragment extends BaseFragment {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     reference.mListView.stopLoadMore();
                     reference.mListView.stopRefresh(false);
                     reference.showNotify(msg.obj.toString());
@@ -324,7 +324,7 @@ public class LpgDepositFragment extends BaseFragment {
         String validateURL= UrlUtil.LPG_FAIL_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
-        OkHttpRequestManager.getInstance(mContext).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void loadData(int i) {
         requestCode=0;
@@ -338,11 +338,28 @@ public class LpgDepositFragment extends BaseFragment {
         textParams.put("orderStatus",orderStatus);
         textParams.put("pageNum",pageNum);
         textParams.put("pageSize","16");
-        OkHttpRequestManager.getInstance(mActivity).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void initData() {
         customDialog.show();
         loadData(1);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

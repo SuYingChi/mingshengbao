@@ -14,10 +14,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.GetAddressAdapter;
-import com.msht.minshengbao.functionActivity.GasService.GasPayRecord;
+import com.msht.minshengbao.functionActivity.GasService.GasPayRecordActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -31,10 +32,16 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ */
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/2  
  */
 public class PayRecord extends Fragment implements XListView.IXListViewListener {
     private String    userId;
@@ -64,13 +71,13 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.mListView.stopRefresh(true);
                             }else if (reference.refreshType==1){
@@ -89,7 +96,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
@@ -100,7 +107,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
         }
     }
     private void onFailure(String error) {
-        new PromptDialog.Builder(getActivity())
+        new PromptDialog.Builder(mContext)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -157,7 +164,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                 adapter.notifyDataSetChanged();
                 String customerNo=recordList.get(pos).get("customerNo");
                 String address=recordList.get(pos).get("name");
-                Intent name=new Intent(mContext, GasPayRecord.class);
+                Intent name=new Intent(mContext, GasPayRecordActivity.class);
                 name.putExtra("customerNo",customerNo);
                 name.putExtra("address",address);
                 name.putExtra("urlType","0");
@@ -170,7 +177,7 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                 adapter.notifyDataSetChanged();
                 String customerNo=recordList.get(position).get("customerNo");
                 String address=recordList.get(position).get("name");
-                Intent name=new Intent(mContext, GasPayRecord.class);
+                Intent name=new Intent(mContext, GasPayRecordActivity.class);
                 name.putExtra("customerNo",customerNo);
                 name.putExtra("address",address);
                 name.putExtra("urlType","0");
@@ -197,10 +204,10 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
     private void loadData(int i) {
         pageNo=i;
         String validateURL = UrlUtil.PayCustomerNo_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
     @Override
     public void onResume() {

@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.functionActivity.repairService.MyorderworkDetail;
-import com.msht.minshengbao.functionActivity.repairService.RepairEvaluate;
+import com.msht.minshengbao.functionActivity.repairService.MyOrderWorkDetailActivity;
+import com.msht.minshengbao.functionActivity.repairService.RepairEvaluateActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -29,16 +30,22 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by hong on 2017/3/14.
  */
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/2  
+ */
 public class OrderListFragment extends BaseFragment {
     private MyWorkOrderAdapter myWorkOrderAdapter;
     private XListView mListView;
-    private View loyoutNodata;
+    private View loyoutNoData;
     private int status =0;
     private String  userId,password;
     private int pageNo=0;
@@ -84,7 +91,7 @@ public class OrderListFragment extends BaseFragment {
         return mRootView;
     }
     private void initMyView(View mRootView) {
-        loyoutNodata =mRootView.findViewById(R.id.id_re_nodata);
+        loyoutNoData =mRootView.findViewById(R.id.id_re_nodata);
         mListView=(XListView)mRootView.findViewById(R.id.id_order_view);
         mListView.setPullLoadEnable(true);
         myWorkOrderAdapter = new MyWorkOrderAdapter(getContext(),orderList);
@@ -97,19 +104,19 @@ public class OrderListFragment extends BaseFragment {
                 String orderNo=orderList.get(thisposition).get("orderNo");
                 String type=orderList.get(thisposition).get("type");
                 String title=orderList.get(thisposition).get("title");
-                String finish_time=orderList.get(thisposition).get("time");
-                String parent_cateogry=orderList.get(thisposition).get("parent_category_name");
+                String finishTime=orderList.get(thisposition).get("time");
+                String parentCategoryName=orderList.get(thisposition).get("parent_category_name");
                 String amount=orderList.get(thisposition).get("amount");
-                Intent servece = new Intent(getActivity(), RepairEvaluate.class);
-                servece.putExtra("send_type","1");
-                servece.putExtra("id",orderId);
-                servece.putExtra("orderNo",orderNo);
-                servece.putExtra("type",type);
-                servece.putExtra("title",title);
-                servece.putExtra("parent_category",parent_cateogry);
-                servece.putExtra("finish_time",finish_time);
-                servece.putExtra("real_amount",amount);
-                startActivityForResult(servece, 2);
+                Intent intent = new Intent(getActivity(), RepairEvaluateActivity.class);
+                intent.putExtra("send_type","1");
+                intent.putExtra("id",orderId);
+                intent.putExtra("orderNo",orderNo);
+                intent.putExtra("type",type);
+                intent.putExtra("title",title);
+                intent.putExtra("parent_category",parentCategoryName);
+                intent.putExtra("finish_time",finishTime);
+                intent.putExtra("real_amount",amount);
+                startActivityForResult(intent, 2);
 
             }
         });
@@ -146,7 +153,7 @@ public class OrderListFragment extends BaseFragment {
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.maintainservise_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         String statuses=String.valueOf(status);
         textParams.put("userId",userId);
@@ -154,7 +161,7 @@ public class OrderListFragment extends BaseFragment {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private static class RequestHandler extends Handler{
         private WeakReference<OrderListFragment> mWeakReference;
@@ -171,7 +178,7 @@ public class OrderListFragment extends BaseFragment {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (reference.customDialog!=null&&reference.customDialog.isShowing()){
                         reference.customDialog.dismiss();
                     }
@@ -180,7 +187,7 @@ public class OrderListFragment extends BaseFragment {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals("success")) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.mListView.stopRefresh(true);
                             }else if (reference.refreshType==1){
@@ -194,13 +201,13 @@ public class OrderListFragment extends BaseFragment {
                             reference.initShow();
                         }else {
                             reference.mListView.stopRefresh(false);
-                            reference.faifure(error);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (reference.customDialog!=null&&reference.customDialog.isShowing()){
                         reference.customDialog.dismiss();
                     }
@@ -213,8 +220,8 @@ public class OrderListFragment extends BaseFragment {
             super.handleMessage(msg);
         }
     }
-    private void faifure(String error) {
-        new PromptDialog.Builder(getActivity())
+    private void onFailure(String error) {
+        new PromptDialog.Builder(mContext)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -232,9 +239,9 @@ public class OrderListFragment extends BaseFragment {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id=jsonObject.optString("id");
                 String cid=jsonObject.optString("cid");
-                String parent_category_name=jsonObject.optString("parent_category_name");
-                String category_name=jsonObject.optString("category_name");
-                String category_code=jsonObject.optString("category_code");
+                String parentCategoryName=jsonObject.optString("parent_category_name");
+                String categoryName=jsonObject.optString("category_name");
+                String categoryCode=jsonObject.optString("category_code");
                 String orderNo=jsonObject.optString("orderNo");
                 String title = jsonObject.getString("title");
                 String type = jsonObject.getString("type");
@@ -247,9 +254,9 @@ public class OrderListFragment extends BaseFragment {
                 map.put("id", id);
                 map.put("orderNo",orderNo);
                 map.put("cid",cid);
-                map.put("parent_category_name",parent_category_name);
-                map.put("category_name",category_name);
-                map.put("category_code",category_code);
+                map.put("parent_category_name",parentCategoryName);
+                map.put("category_name",categoryName);
+                map.put("category_code",categoryCode);
                 map.put("type", type);
                 map.put("title", title);
                 map.put("status", status);
@@ -262,23 +269,22 @@ public class OrderListFragment extends BaseFragment {
             e.printStackTrace();
         }
         if (orderList.size()==0){
-            loyoutNodata.setVisibility(View.VISIBLE);
+            loyoutNoData.setVisibility(View.VISIBLE);
         }else {
-            loyoutNodata.setVisibility(View.GONE);
+            loyoutNoData.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             myWorkOrderAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     int positions=position-1;
-                    int pos = positions;
                     String cid=orderList.get(positions).get("cid");
                     String ids = orderList.get(positions).get("id");
-                    Intent servece = new Intent(getActivity(), MyorderworkDetail.class);
-                    servece.putExtra("cid",cid);
-                    servece.putExtra("id", ids);
-                    servece.putExtra("pos", pos);
-                    startActivityForResult(servece, 1);
+                    Intent intent = new Intent(getActivity(), MyOrderWorkDetailActivity.class);
+                    intent.putExtra("cid",cid);
+                    intent.putExtra("id", ids);
+                    intent.putExtra("pos", positions);
+                    startActivityForResult(intent, 1);
                 }
             });
         }

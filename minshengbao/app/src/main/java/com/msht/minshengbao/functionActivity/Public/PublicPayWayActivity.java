@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -119,7 +119,7 @@ public class PublicPayWayActivity extends BaseActivity {
         }
         requestCode=1;
         customDialog.show();
-        SendrequestUtil.getDataFromService(validateURL,mHandler);
+        SendRequestUtil.getDataFromService(validateURL,mHandler);
     }
     private void initPaywayData() {
         String source="app_shop_pay_method";
@@ -128,7 +128,7 @@ public class PublicPayWayActivity extends BaseActivity {
         String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.postDataFromService(validateURL, textParams,mHandler);
+        SendRequestUtil.postDataFromService(validateURL, textParams,mHandler);
     }
     private static class PayWayHandler extends Handler {
 
@@ -144,7 +144,7 @@ public class PublicPayWayActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (reference.customDialog!=null&&reference.customDialog.isShowing()){
                         reference.customDialog.dismiss();
                     }
@@ -152,7 +152,7 @@ public class PublicPayWayActivity extends BaseActivity {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 JSONArray jsonArray =object.getJSONArray("data");
                                 reference.payWayShow(jsonArray);
@@ -171,7 +171,7 @@ public class PublicPayWayActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (reference.customDialog!=null&&reference.customDialog.isShowing()){
                         reference.customDialog.dismiss();
                     }
@@ -259,14 +259,14 @@ public class PublicPayWayActivity extends BaseActivity {
     }
     private void showMsg(String title, String errorMsg, String extraMsg) {
         String str = title;
-        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
+        if (str.equals(SendRequestUtil.SUCCESS_VALUE)){
             str="支付成功";
-        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
+        }else if (str.equals(SendRequestUtil.FAILURE_VALUE)){
             str="支付失败";
-        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
+        }else if (str.equals(SendRequestUtil.CANCEL_VALUE)){
             str="已取消支付";
         }
-        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
+        if (title.equals(SendRequestUtil.SUCCESS_VALUE)){
             setResult(PAY_CODE);
             requestResult();
         }else {
@@ -307,7 +307,7 @@ public class PublicPayWayActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",orderId);
-        SendrequestUtil.postDataFromService(validateURL,textParams,mHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,mHandler);
     }
     @Override
     protected void onDestroy() {

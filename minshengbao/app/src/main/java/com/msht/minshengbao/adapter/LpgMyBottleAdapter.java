@@ -69,7 +69,7 @@ public class LpgMyBottleAdapter extends BaseAdapter {
         String day=integerList.get(position).get("usedDate");
         String bottleWeight=integerList.get(position).get("bottleWeight");
         String bottleWeightText=bottleWeight+"kg瓶装气";
-        String bottleId="编号："+integerList.get(position).get("id");
+        String bottleId="编号："+integerList.get(position).get("bottleCode");
         holder.tvDay.setText(day);
         holder.tvBottleType.setText(bottleWeightText);
         holder.tvBottleNo.setText(bottleId);

@@ -2,6 +2,7 @@ package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,10 +19,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.functionActivity.GasService.ServerSuccess;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.functionActivity.GasService.ServerSuccessActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -31,68 +32,78 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ * @author hong
  */
 public class RecommendFragment extends Fragment {
-    private EditText complait,details;
-    private TextView tv_num;
-    private Button comfirm;
+    private EditText complain,details;
+    private TextView tvNum;
+    private Button confirm;
     private String userId;
     private String password;
-    private String Title,description;
+    private String mTitle,description;
     private int num=100;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private MaterialSpinner spinner;
-    private String installtype="1";
+    private String installType ="1";
     private final String mPageName ="咨询建议";
-    private static final String[] severType = {"燃气服务","维修服务","商城"};
+    private static final String[] SEVER_TYPE = {"燃气服务","维修服务","商城"};
+    private Context mContext;
     private CustomDialog customDialog;
     public RecommendFragment() {}
-    Handler repairHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<RecommendFragment> mWeakReference;
+        public RequestHandler(RecommendFragment reference) {
+            mWeakReference = new WeakReference<RecommendFragment>(reference);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+
+            final RecommendFragment reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            showsuccess();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            reference.onShowSuccess();
                         }else {
-                            showfaiture(Error);
+                            reference.onShowFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    showfaiture(msg.obj.toString());
+                case SendRequestUtil.FAILURE:
+                    reference.onShowFailure(msg.obj.toString());
                     break;
                 default:
                     break;
+
             }
+            super.handleMessage(msg);
         }
-    };
-    private void showsuccess() {
-        String navigation="咨询投诉";
-        Intent success=new Intent(getActivity(),ServerSuccess.class);
-        success.putExtra("navigation",navigation);
-        startActivity(success);
-        getActivity().finish();
     }
-    private void showfaiture(String Error) {
+    private void onShowFailure(String error) {
         new PromptDialog.Builder(getActivity())
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(Error)
+                .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
+
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
@@ -100,31 +111,39 @@ public class RecommendFragment extends Fragment {
                     }
                 }).show();
     }
+    private void onShowSuccess() {
+        String navigation="咨询投诉";
+        Intent success=new Intent(getActivity(),ServerSuccessActivity.class);
+        success.putExtra("navigation",navigation);
+        startActivity(success);
+        getActivity().finish();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_recommend, container, false);
+        mContext=getActivity();
         customDialog=new CustomDialog(getActivity(), "正在加载");
         userId= SharedPreferencesUtil.getUserId(getActivity(), SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(getActivity(), SharedPreferencesUtil.Password,"");
         spinner = (MaterialSpinner)view.findViewById(R.id.spinner);
-        spinner.setItems(severType);
-        intfindViewByid(view);
+        spinner.setItems(SEVER_TYPE);
+        initFindViewId(view);
         initEvent();
         return view;
     }
     private void initEvent() {
-        complait.addTextChangedListener(new TextWatcher() {
+        complain.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(complait.getText().toString()) || TextUtils.isEmpty(details.getText().toString())
+                if (TextUtils.isEmpty(complain.getText().toString()) || TextUtils.isEmpty(details.getText().toString())
                         ) {
-                    comfirm.setEnabled(false);
+                    confirm.setEnabled(false);
                 } else {
-                    comfirm.setEnabled(true);
+                    confirm.setEnabled(true);
                 }
             }
             @Override
@@ -135,33 +154,33 @@ public class RecommendFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(complait.getText().toString()) || TextUtils.isEmpty(details.getText().toString())
+                if (TextUtils.isEmpty(complain.getText().toString()) || TextUtils.isEmpty(details.getText().toString())
                         ) {
-                    comfirm.setEnabled(false);
+                    confirm.setEnabled(false);
                 } else {
-                    comfirm.setEnabled(true);
+                    confirm.setEnabled(true);
                 }
             }
             @Override
             public void afterTextChanged(Editable s) {
-                int number=num-s.length();    //记录显示可输入字数
-                String Wnum=String.valueOf(number);
-                tv_num.setText(Wnum);
+                int number=num-s.length();
+                String mNum=String.valueOf(number);
+                tvNum.setText(mNum);
             }
         });
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                int Stype=position+1;
-                installtype=String.valueOf(Stype);
+                int sType=position+1;
+                installType =String.valueOf(sType);
             }
         });
-        comfirm.setOnClickListener(new View.OnClickListener() {
+        confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Title = complait.getText().toString().trim();
+                mTitle = complain.getText().toString().trim();
                 description = details.getText().toString().trim();
-                if (matchtitleMsg(Title)) {
+                if (ismMatchTitleMsg(mTitle)) {
                     customDialog.show();
                     requestService();
                 }
@@ -171,32 +190,17 @@ public class RecommendFragment extends Fragment {
     private void requestService() {
         String type="6";
         String validateURL = UrlUtil.INSTALL_SERVER_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("title",Title);
+        textParams.put("title", mTitle);
         textParams.put("description",description);
         textParams.put("type",type);
-        textParams.put("installType",installtype);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                repairHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                repairHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("installType", installType);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-    private boolean matchtitleMsg(String title) {
-        if(title.equals(""))
+    private boolean ismMatchTitleMsg(String title) {
+        if(TextUtils.isEmpty(title))
         {
             new PromptDialog.Builder(getActivity())
                     .setTitle("民生宝")
@@ -214,14 +218,14 @@ public class RecommendFragment extends Fragment {
         }
         return true;
     }
-    private void intfindViewByid(View view) {
-        comfirm=(Button)view.findViewById(R.id.id_comfirm);
-        complait=(EditText)view.findViewById(R.id.id_complait_question);
+    private void initFindViewId(View view) {
+        confirm =(Button)view.findViewById(R.id.id_comfirm);
+        complain =(EditText)view.findViewById(R.id.id_complait_question);
         details=(EditText)view.findViewById(R.id.id_complait_details);
-        tv_num=(TextView)view.findViewById(R.id.id_tv_num);
-        Title= complait.getText().toString().trim();
+        tvNum =(TextView)view.findViewById(R.id.id_tv_num);
+        mTitle = complain.getText().toString().trim();
         description= details.getText().toString().trim();
-        comfirm.setEnabled(false);
+        confirm.setEnabled(false);
     }
     @Override
     public void onResume() {
@@ -232,5 +236,13 @@ public class RecommendFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

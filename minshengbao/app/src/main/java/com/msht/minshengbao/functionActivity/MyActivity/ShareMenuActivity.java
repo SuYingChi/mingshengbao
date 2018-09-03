@@ -10,8 +10,9 @@ import android.view.View;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Defaultcontent;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -24,14 +25,12 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.ShareBoardConfig;
 import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.Log;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ShareMenuActivity extends BaseActivity {
     private String userId,password;
@@ -50,12 +49,12 @@ public class ShareMenuActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onShareSuccess();
                         }else {
                             activity.onFailure(error);
@@ -64,7 +63,7 @@ public class ShareMenuActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -126,7 +125,6 @@ public class ShareMenuActivity extends BaseActivity {
                     }
                 });
     }
-
     private void initView() {
         findViewById(R.id.share_menu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,17 +159,16 @@ public class ShareMenuActivity extends BaseActivity {
     };
     private void shareEnsure() {
         String validateURL = UrlUtil.Shara_appUrl;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /** attention to this below ,must add this**/
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        Log.d("result","onActivityResult");
     }
 
     /**

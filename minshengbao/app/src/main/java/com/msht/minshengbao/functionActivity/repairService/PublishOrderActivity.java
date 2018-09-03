@@ -24,13 +24,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.adapter.appointAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.PriceMenu;
+import com.msht.minshengbao.functionActivity.HtmlWeb.PriceMenuActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -59,27 +60,33 @@ import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
-public class PublishOrder extends BaseActivity implements View.OnClickListener {
-    private EditText  et_recommand,Eneed;
-    private Button    Bsendorder;
-    private TextView  tv_name,tv_phone;
-    private TextView  tv_address;
-    private TextView  appointment_data,appointment_time;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/6/19  
+ */
+public class PublishOrderActivity extends BaseActivity implements View.OnClickListener {
+    private EditText etRecommend;
+    private EditText etNeed;
+    private Button   btnSendOrder;
+    private TextView ttvName, tvPhone;
+    private TextView tvAddress;
+    private TextView appointmentData, appointmentTime;
     private MultiLineChooseLayout multiChoose;
-    private DatePicker datePicker;
-    private View     pickview;
     private String   textString="",recommend;
-    private String   reid,userId,password,phone,id,userphone;
-    private String   maintype,type,address,info,appoint_time;
-    private String   source="1",raw_order_id="",username,city_id="";
+    private String   reid,userId,password,phone,id, userPhone;
+    private String   mMainType,type,address,info, appointDate;
+    private String   username, rawOrderId="",cityId="";
     private String   longitude="",latitude="";
-    private GridView photogridview;
+    private GridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private int k=0;
     private int pos=-1;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private int thisPosition =-1;
-    private int requesttype=0;
+    private int requestType =0;
     private JSONObject jsonObject;
     private JSONArray jsonArray;
     private static final String CITY_NAME="海口";
@@ -94,28 +101,28 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     private final RequestHandler requestHandler=new RequestHandler(this);
     private final BitmapHandler bitmapHandler=new BitmapHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<PublishOrder> mWeakReference;
-        public RequestHandler(PublishOrder activity) {
-            mWeakReference = new WeakReference<PublishOrder>(activity);
+        private WeakReference<PublishOrderActivity> mWeakReference;
+        public RequestHandler(PublishOrderActivity activity) {
+            mWeakReference = new WeakReference<PublishOrderActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final PublishOrder activity=mWeakReference.get();
+            final PublishOrderActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String  results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
-                            if (activity.requesttype==0){
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestType ==0){
                                 activity.customDialog.dismiss();
                                 activity.jsonArray=object.optJSONArray("data");
                                 activity.questionData();
-                            }else if (activity.requesttype==1){
+                            }else if (activity.requestType ==1){
                                 activity.jsonObject =object.optJSONObject("data");
                                 activity.initShow();
                             }
@@ -123,13 +130,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                                 activity.customDialog.dismiss();
                             }
-                            activity.faifure(error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -142,45 +149,45 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private static class BitmapHandler extends Handler{
-        private WeakReference<PublishOrder> mWeakReference;
-        public BitmapHandler(PublishOrder activity) {
-            mWeakReference = new WeakReference<PublishOrder>(activity);
+        private WeakReference<PublishOrderActivity> mWeakReference;
+        private BitmapHandler(PublishOrderActivity activity) {
+            mWeakReference = new WeakReference<PublishOrderActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final PublishOrder activity=mWeakReference.get();
+            final PublishOrderActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
                         String error=jsonObject.optString("error");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
                             activity.k++;
                             if(activity.k==activity.imgPaths.size()){
                                 if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                                     activity.customDialog.dismiss();
                                 }
                                 String navigation="发布订单";
-                                Intent success=new Intent(activity.context,PublishSuccess.class);
+                                Intent success=new Intent(activity.context,PublishSuccessActivity.class);
                                 success.putExtra("navigation",navigation);
                                 activity.startActivity(success);
-                                activity.Bsendorder.setEnabled(true);
+                                activity.btnSendOrder.setEnabled(true);
                                 activity.finish();
                             }
                         }else {
-                            activity.Bsendorder.setEnabled(true);
-                            activity.faifure(error);
+                            activity.btnSendOrder.setEnabled(true);
+                            activity.onFailure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
-                    activity.Bsendorder.setEnabled(true);
+                case SendRequestUtil.FAILURE:
+                    activity.btnSendOrder.setEnabled(true);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -189,8 +196,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
             super.handleMessage(msg);
         }
     }
-    private void faifure(String error) {
-        new PromptDialog.Builder(this)
+    private void onFailure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -225,10 +232,10 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }else {
             customDialog.dismiss();
             String navigation="发布订单";
-            Intent success=new Intent(PublishOrder.this,PublishSuccess.class);
+            Intent success=new Intent(context,PublishSuccessActivity.class);
             success.putExtra("navigation",navigation);
             startActivity(success);
-            Bsendorder.setEnabled(true);
+            btnSendOrder.setEnabled(true);
             finish();
         }
     }
@@ -247,7 +254,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                     public void onError(Throwable e) {
                         // TODO 当压缩过去出现问题时调用
                         uploadImage(files);
-                        Toast.makeText(PublishOrder.this,"图片压缩失败!",
+                        Toast.makeText(PublishOrderActivity.this,"图片压缩失败!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }).launch();
@@ -255,12 +262,12 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     private void uploadImage(File file) {
         String validateURL = UrlUtil.UploadImage_Url;
         Map<String, String> textParams = new HashMap<String, String>();
-        Map<String, File> fileparams = new HashMap<String, File>();
+        Map<String, File> fileParams = new HashMap<String, File>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id", id);
-        fileparams.put("img",file);
-        SendrequestUtil.postFileToServer(textParams,fileparams,validateURL,bitmapHandler);
+        fileParams.put("img",file);
+        SendRequestUtil.postFileToServer(textParams,fileParams,validateURL,bitmapHandler);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,11 +278,11 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         context=this;
         setCommonHeader("发布订单");
         reid=data.getStringExtra("id");
-        maintype=data.getStringExtra("maintype");
+        mMainType =data.getStringExtra("mMainType");
         type=data.getStringExtra("name");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        userphone=SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
+        userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         //状态栏View
         findViewById(R.id.id_status_view).setVisibility(View.GONE);
         initJudge();
@@ -304,13 +311,16 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 String mAddress=data.getStringExtra("mAddress");
                 String name=data.getStringExtra("name");
                 String phone=data.getStringExtra("phone");
+               // cityId=data.getStringExtra("cityId");
+               // latitude=data.getStringExtra("latitude");
+               // longitude=data.getStringExtra("longitude");
                 if (TextUtils.isEmpty(name)){
-                    tv_name.setText(phone);
+                    ttvName.setText(phone);
                 }else {
-                    tv_name.setText(name);
+                    ttvName.setText(name);
                 }
-                tv_phone.setText(phone);
-                tv_address.setText(mAddress);
+                tvPhone.setText(phone);
+                tvAddress.setText(mAddress);
             }
         }
     }
@@ -322,13 +332,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private static class NoticeHandler extends Handler{
-        private WeakReference<PublishOrder> mWeakReference;
-        public NoticeHandler(PublishOrder activity) {
-            mWeakReference = new WeakReference<PublishOrder>(activity);
+        private WeakReference<PublishOrderActivity> mWeakReference;
+        private NoticeHandler(PublishOrderActivity activity) {
+            mWeakReference = new WeakReference<PublishOrderActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final PublishOrder activity=mWeakReference.get();
+            final PublishOrderActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -345,37 +355,37 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         }
     }
     private void initView() {
-        Bsendorder=(Button)findViewById(R.id.id_btn_sendorder);
-        et_recommand=(EditText)findViewById(R.id.id_et_recommand);
-        tv_name=(TextView)findViewById(R.id.id_tv_name);
-        tv_phone =(TextView) findViewById(R.id.id_tv_phone);
-        Eneed=(EditText)findViewById(R.id.id_et_info);
-        tv_address=(TextView) findViewById(R.id.id_tv_address);
-        ((TextView)findViewById(R.id.id_tv_project_type)).setText(maintype);
+        btnSendOrder =(Button)findViewById(R.id.id_btn_sendorder);
+        etRecommend =(EditText)findViewById(R.id.id_et_recommand);
+        ttvName =(TextView)findViewById(R.id.id_tv_name);
+        tvPhone =(TextView) findViewById(R.id.id_tv_phone);
+        etNeed =(EditText)findViewById(R.id.id_et_info);
+        tvAddress =(TextView) findViewById(R.id.id_tv_address);
+        ((TextView)findViewById(R.id.id_tv_project_type)).setText(mMainType);
         ((TextView)findViewById(R.id.id_tv_type)).setText(type);
-        tv_phone.setText(userphone);
+        tvPhone.setText(userPhone);
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
-        photogridview=(GridView)findViewById(R.id.noScrollgridview);
-        appointment_data=(TextView)findViewById(R.id.id_data);
-        appointment_time=(TextView)findViewById(R.id.id_time);
-        Bsendorder.setEnabled(false);
+        mPhotoGridView =(GridView)findViewById(R.id.noScrollgridview);
+        appointmentData =(TextView)findViewById(R.id.id_data);
+        appointmentTime =(TextView)findViewById(R.id.id_time);
+        btnSendOrder.setEnabled(false);
     }
     private void initData() {
         customDialog.show();
-        requesttype=0;
+        requestType =0;
         String validateURL = UrlUtil.RepairOrder_QuestionUrl;
-        String geturl=validateURL+"?rc_id="+reid;
-        SendrequestUtil.getDataFromService(geturl,requestHandler);
+        String getUrl=validateURL+"?rc_id="+reid;
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(getUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
     }
     private void initExecute() {
         mAdapter = new PhotoPickerAdapter(imgPaths);
-        photogridview.setAdapter(mAdapter);
-        photogridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPhotoGridView.setAdapter(mAdapter);
+        mPhotoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     thisPosition =position;
-                    initphoto(position);
+                    onRequestLimitPhoto(position);
                 } else {
                     if (position == imgPaths.size()) {
                         PhotoPicker.builder()
@@ -384,12 +394,12 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                                 .setSelected(imgPaths)
                                 .setShowGif(true)
                                 .setPreviewEnabled(true)
-                                .start(PublishOrder.this, PhotoPicker.REQUEST_CODE);
+                                .start(PublishOrderActivity.this, PhotoPicker.REQUEST_CODE);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("imgPaths", imgPaths);
                         bundle.putInt("position", position);
-                        Intent intent = new Intent(PublishOrder.this, EnlargePicActivity.class);
+                        Intent intent = new Intent(PublishOrderActivity.this, EnlargePicActivity.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, position);
                     }
@@ -398,7 +408,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         });
 
     }
-    private void initphoto(int position) {
+    private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
                     .requestCode(MY_PERMISSIONS_REQUEST)
@@ -413,18 +423,18 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                         .setSelected(imgPaths)
                         .setShowGif(true)
                         .setPreviewEnabled(true)
-                        .start(PublishOrder.this, PhotoPicker.REQUEST_CODE);
+                        .start(PublishOrderActivity.this, PhotoPicker.REQUEST_CODE);
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("imgPaths",imgPaths);
                 bundle.putInt("position",position);
-                Intent intent=new Intent(PublishOrder.this, EnlargePicActivity.class);
+                Intent intent=new Intent(PublishOrderActivity.this, EnlargePicActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent,position);
             }
         }
     }
-    private void showphoto() {
+    private void onShowPhoto() {
         if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
                     .setPhotoCount(4)
@@ -432,12 +442,12 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                     .setSelected(imgPaths)
                     .setShowGif(true)
                     .setPreviewEnabled(true)
-                    .start(PublishOrder.this, PhotoPicker.REQUEST_CODE);
+                    .start(PublishOrderActivity.this, PhotoPicker.REQUEST_CODE);
         } else {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("imgPaths",imgPaths);
             bundle.putInt("position", thisPosition);
-            Intent intent=new Intent(PublishOrder.this, EnlargePicActivity.class);
+            Intent intent=new Intent(PublishOrderActivity.this, EnlargePicActivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, thisPosition);
         }
@@ -450,35 +460,36 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         @Override
         public void onSucceed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                showphoto();
+                onShowPhoto();
             }
         }
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Toast.makeText(PublishOrder.this,"授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"授权失败");
             }
         }
     };
     private void initEvent() {
         findViewById(R.id.id_re_price).setOnClickListener(this);
         findViewById(R.id.id_re_selectaddre).setOnClickListener(this);
-        Bsendorder.setOnClickListener(this);
-        appointment_data.setOnClickListener(this);
-        appointment_time.setOnClickListener(this);
+        btnSendOrder.setOnClickListener(this);
+        appointmentData.setOnClickListener(this);
+        appointmentTime.setOnClickListener(this);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
-        tv_phone.addTextChangedListener(myTextWatcher);
-        tv_address.addTextChangedListener(myTextWatcher);
+        tvPhone.addTextChangedListener(myTextWatcher);
+        tvAddress.addTextChangedListener(myTextWatcher);
         multiChoose.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
             @Override
             public void onItemClick(int position, String text) {
+                StringBuilder sb=new StringBuilder();
                 multiResult=multiChoose.getAllItemSelectedTextWithListArray();
                 if (multiResult!=null&&multiResult.size()>0){
-                    String textselect ="";
                     for (int i=0;i<multiResult.size();i++){
-                        textselect +=multiResult.get(i)+",";
+                        sb.append(multiResult.get(i));
+                        sb.append(",");
                     }
-                    textString=textselect;
+                    textString=sb.toString();
                 }else {
                     textString="";
                 }
@@ -490,10 +501,10 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(tv_address.getText().toString())||TextUtils.isEmpty(tv_phone.getText().toString())) {
-                Bsendorder.setEnabled(false);
+            if (TextUtils.isEmpty(tvAddress.getText().toString())||TextUtils.isEmpty(tvPhone.getText().toString())) {
+                btnSendOrder.setEnabled(false);
             }else {
-                Bsendorder.setEnabled(true);
+                btnSendOrder.setEnabled(true);
             }
         }
         @Override
@@ -503,16 +514,16 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_price:
-                pricetable();
+                onStartPriceTable();
                 break;
             case R.id.id_data:
-                selectdata();
+                onSelectData();
                 break;
             case R.id.id_time:
-                selecttime();
+                onSelectTime();
                 break;
             case R.id.id_re_selectaddre:
-                selectAddr();
+                onSelectAddress();
                 break;
             case R.id.id_btn_sendorder:
                 //非海口地区业务未开通
@@ -520,24 +531,24 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                     noticeDialog.show();
                     mHandler.sendEmptyMessageDelayed(1, SPLASH_DELAY_MILLIS);
                 }else {
-                    ordersend();
+                    onOrderSend();
                 }
                 break;
             default:
                 break;
         }
     }
-    private void pricetable() {
-        Intent price=new Intent(context,PriceMenu.class);
+    private void onStartPriceTable() {
+        Intent price=new Intent(context,PriceMenuActivity.class);
         price.putExtra("reid",reid);
         startActivity(price);
     }
-    private void selectdata() {
+    private void onSelectData() {
         LayoutInflater l = LayoutInflater.from(this);
-        pickview= l.inflate(R.layout.item_pickerdata_dialog, null);
-        datePicker=(DatePicker) pickview.findViewById(R.id.datepicker);
-        Calendar mcurrent=Calendar.getInstance();
-        datePicker.init(mcurrent.get(Calendar.YEAR), mcurrent.get(Calendar.MONTH),  mcurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+        View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
+        DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
+        Calendar mCurrent=Calendar.getInstance();
+        datePicker.init(mCurrent.get(Calendar.YEAR), mCurrent.get(Calendar.MONTH),  mCurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {//滑动日期进行对日期的方位进行判断
@@ -552,11 +563,12 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
+        final String appointmentDataText=datePicker.getYear() + "-"+ (datePicker.getMonth()+1) + "-"
+                + datePicker.getDayOfMonth();
         new PromptDialog.Builder(this)
                 .setTitle("选择预约日期")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                //.setMessage("2016年")
-                .setView(pickview)
+                .setView(mPickView)
                 .setButton1("取消", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
@@ -566,10 +578,8 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 .setButton2("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        appointment_data.setText(datePicker.getYear() + "-"
-                                + (datePicker.getMonth()+1) + "-"
-                                + datePicker.getDayOfMonth());
-                        appointment_time.setText("08:30-11:30");
+                        appointmentData.setText(appointmentDataText);
+                        appointmentTime.setText("08:30-11:30");
                         dialog.dismiss();
                     }
                 })
@@ -580,11 +590,7 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         Calendar mCalendar = Calendar.getInstance();
         Calendar temCalendar = Calendar.getInstance();
         temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
-        if (temCalendar.before(mCalendar)) {
-            return true;
-        } else {
-            return false;
-        }
+        return temCalendar.before(mCalendar);
     }
     private boolean isDateAfter(DatePicker tempView) {
         Calendar mCalendar=Calendar.getInstance();
@@ -592,17 +598,13 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
         Calendar temCalendar=Calendar.getInstance();
         temCalendar.add(Calendar.DAY_OF_MONTH,6);
         temCalendar.set(tempView.getYear(),tempView.getMonth(),tempView.getDayOfMonth(),0,0,0);
-        if (temCalendar.after(mCalendar)){
-            return true;
-        }else {
-            return false;
-        }
+        return temCalendar.after(mCalendar);
     }
-    private void selecttime() {
+    private void onSelectTime() {
         final SelectTable selectTable=new SelectTable(context);
-        final TextView tv_title=(TextView)selectTable.getTitle();
+        final TextView tvTitle=(TextView)selectTable.getTitle();
         final ListView mListView=(ListView) selectTable.getListview();
-        tv_title.setText("选择时间");
+        tvTitle.setText("选择时间");
         final appointAdapter adapter=new appointAdapter(context,appointTime,pos);
         mListView.setAdapter(adapter);
         selectTable.show();
@@ -618,29 +620,29 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
                 pos=position;
                 adapter.notifyDataSetChanged();
                 String time=appointTime[position];
-                appointment_time.setText(time);
+                appointmentTime.setText(time);
                 selectTable.dismiss();
             }
         });
     }
-    private void selectAddr() {
+    private void onSelectAddress() {
         Intent intent=new Intent(context, SelectAddressActivity.class);
         startActivityForResult(intent,4);
     }
-    private void ordersend() {
-        String date=appointment_data.getText().toString().trim();
-        String time=appointment_time.getText().toString().trim();
-        String otherinfo=Eneed.getText().toString().trim();
-        username=tv_name.getText().toString().trim();
-        recommend=et_recommand.getText().toString().trim();
-        phone= tv_phone.getText().toString().trim();
-        address=tv_address.getText().toString().trim();
-        appoint_time=date+"  "+time;
-        info=textString+otherinfo;
+    private void onOrderSend() {
+        String date= appointmentData.getText().toString().trim();
+        String time= appointmentTime.getText().toString().trim();
+        String otherInfo= etNeed.getText().toString().trim();
+        username= ttvName.getText().toString().trim();
+        recommend= etRecommend.getText().toString().trim();
+        phone= tvPhone.getText().toString().trim();
+        address= tvAddress.getText().toString().trim();
+        appointDate =date+"  "+time;
+        info=textString+otherInfo;
         final EnsurePublish ensurePublish=new EnsurePublish(this);
         ensurePublish.setTitleText("确认信息");
         ensurePublish.setNameText(username);
-        ensurePublish.setTypeText(maintype);
+        ensurePublish.setTypeText(mMainType);
         ensurePublish.setPhoneText(phone);
         ensurePublish.setAddressText(address);
         ensurePublish.setOnNegativeListener(new View.OnClickListener() {
@@ -654,33 +656,33 @@ public class PublishOrder extends BaseActivity implements View.OnClickListener {
             public void onClick(View v) {
                 ensurePublish.dismiss();
                 customDialog.show();
-                requesttype=1;
-                Bsendorder.setEnabled(false);
-                requstSevices();
+                requestType =1;
+                btnSendOrder.setEnabled(false);
+                requestService();
             }
         });
         ensurePublish.show();
     }
-    private void requstSevices() {
+    private void requestService() {
+        String source="";
         String validateURL = UrlUtil.PublishOrder_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("cid",reid);
         textParams.put("phone",phone);
         textParams.put("address",address);
         textParams.put("info",info);
-        textParams.put("appoint_time",appoint_time);
+        textParams.put("appointDate", appointDate);
         textParams.put("recommend_code",recommend);
         textParams.put("source",source);
-        textParams.put("raw_order_id",raw_order_id);
+        textParams.put("rawOrderId", rawOrderId);
         textParams.put("username",username);
-        textParams.put("city_id",city_id);
+        textParams.put("cityId", cityId);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

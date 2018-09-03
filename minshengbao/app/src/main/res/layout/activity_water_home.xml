@@ -172,7 +172,8 @@
                         android:layout_height="@dimen/margin_width55"
                         android:layout_marginTop="@dimen/margin_width15"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/send_water_xh"/>
+                        android:contentDescription="@string/picture_text"
+                        android:src="@drawable/water_map_xh"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,7 +182,7 @@
                         android:layout_below="@+id/id_sendwater_img"
                         android:layout_marginBottom="@dimen/margin_width15"
                         android:textSize="@dimen/text_width16"
-                        android:text="@string/send_water"
+                        android:text="@string/equipment_map"
                         android:textColor="@color/black1"/>
                 </RelativeLayout>
                 <RelativeLayout

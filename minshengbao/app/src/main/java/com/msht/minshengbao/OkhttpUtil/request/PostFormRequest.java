@@ -1,8 +1,10 @@
-package com.zhy.http.okhttp.request;
+package com.msht.minshengbao.OkhttpUtil.request;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.builder.PostFormBuilder;
-import com.zhy.http.okhttp.callback.Callback;
+
+
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
+import com.msht.minshengbao.OkhttpUtil.builder.PostFormBuilder;
+import com.msht.minshengbao.OkhttpUtil.callback.Callback;
 
 import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
@@ -66,7 +68,7 @@ public class PostFormRequest extends OkHttpRequest
             public void onRequestProgress(final long bytesWritten, final long contentLength)
             {
 
-                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
+                OkHttpManager.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()

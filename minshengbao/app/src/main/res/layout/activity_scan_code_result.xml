@@ -31,6 +31,7 @@
                         android:layout_height="@dimen/margin_width126"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_width40"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/pay_success_xh"/>
                     <TextView
                         android:id="@+id/id_scan_result"

@@ -12,7 +12,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.R;
 
-public class PriceMenu extends BaseActivity {
+public class PriceMenuActivity extends BaseActivity {
     private WebView priceview;
     private String url;
     private String workId;

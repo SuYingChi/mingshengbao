@@ -19,7 +19,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
  * @author hong
  * @date 2016/7/2  
  */
-public class AgreeTreaty extends BaseActivity {
+public class AgreeTreatyActivity extends BaseActivity {
     private String myUrl = UrlUtil.AgreeTreayt_Url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

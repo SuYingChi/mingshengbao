@@ -9,10 +9,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.SelectCityAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -26,6 +27,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/8/17  
+ */
 public class SelectCityActivity extends BaseActivity {
 
     private SelectCityAdapter  mAdapter;
@@ -34,7 +42,7 @@ public class SelectCityActivity extends BaseActivity {
     private final CityHandler cityHandler=new CityHandler(this);
     private static class CityHandler extends Handler{
         private WeakReference<SelectCityActivity> mWeakReference;
-        public CityHandler(SelectCityActivity activity) {
+        private CityHandler(SelectCityActivity activity) {
             mWeakReference=new WeakReference<SelectCityActivity>(activity);
         }
         @Override
@@ -44,13 +52,13 @@ public class SelectCityActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveCityData();
                         }else {
                             activity.onFailure(error);
@@ -59,7 +67,7 @@ public class SelectCityActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -117,19 +125,19 @@ public class SelectCityActivity extends BaseActivity {
                 VariableUtil.cityPos =position;
                 String mCity=cityList.get(position).get("name");
                 String flag=cityList.get(position).get("flag");
-                String Id=cityList.get(position).get("id");
+                String cityId=cityList.get(position).get("id");
                 Intent name=new Intent();
                 name.putExtra("mCity",mCity);
-                name.putExtra("Id",Id);
+                name.putExtra("Id",cityId);
                 name.putExtra("flag",flag);
                 setResult(2, name);
                 finish();
             }
         });
-        requestserver();
+        requestServer();
     }
-    private void requestserver() {
+    private void requestServer() {
         String cityUrl= UrlUtil.SelectCity_Url;
-        SendrequestUtil.getDataFromService(cityUrl,cityHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(cityUrl, OkHttpRequestUtil.TYPE_GET,null,cityHandler);
     }
 }

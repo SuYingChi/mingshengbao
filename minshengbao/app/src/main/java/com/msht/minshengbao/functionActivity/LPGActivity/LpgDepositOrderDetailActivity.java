@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -71,12 +69,12 @@ public class LpgDepositOrderDetailActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 JSONObject jsonObject =object.optJSONObject("data");
                                 activity.onReceiveOrderData(jsonObject);
@@ -90,7 +88,7 @@ public class LpgDepositOrderDetailActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -194,7 +192,7 @@ public class LpgDepositOrderDetailActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
         textParams.put("orderType",orderType);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initFindViewId() {
         tvOrderNo=(TextView)findViewById(R.id.id_tv_orderNo);
@@ -237,7 +235,7 @@ public class LpgDepositOrderDetailActivity extends BaseActivity {
         String validateURL= UrlUtil.LPG_FAIL_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onResume() {

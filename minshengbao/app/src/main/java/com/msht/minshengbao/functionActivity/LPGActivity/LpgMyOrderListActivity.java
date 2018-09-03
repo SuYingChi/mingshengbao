@@ -44,6 +44,6 @@ public class LpgMyOrderListActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
          MobclickAgent.onPageEnd(mPageName);
-        MobclickAgent.onPause(context);
+         MobclickAgent.onPause(context);
     }
 }

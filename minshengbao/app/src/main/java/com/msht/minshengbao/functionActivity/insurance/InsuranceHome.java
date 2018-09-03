@@ -20,6 +20,13 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.CustomRadioGroup;
 import com.msht.minshengbao.ViewUI.widget.MyRadioButton;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 保险首页
+ * @author hong
+ * @date 2017/5/2  
+ */
 public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnCheckChangedListener {
     private CustomRadioGroup radioGroup;
     private MyRadioButton radioOne, radioTwo;
@@ -134,10 +141,10 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
     public void onCheckedChanged(CustomRadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.radio_button_one:
-                radioOne.setBackgroundResource(R.drawable.radio_button_back_one);
+               /* radioOne.setBackgroundResource(R.drawable.radio_button_back_one);
                 radioTwo.setBackgroundResource(R.color.colorOrange_one);
                 radioThree.setBackgroundResource(R.color.colorOrange_two);
-                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                radioFour.setBackgroundResource(R.color.colorOrange_three);*/
                 mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="300.00";
                 vSecuritys="94.2万";
@@ -145,10 +152,10 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
                 vDeadLines=5;
                 break;
             case R.id.radio_button_two:
-                radioOne.setBackgroundResource(R.color.colorOrange);
+                /*radioOne.setBackgroundResource(R.color.colorOrange);
                 radioTwo.setBackgroundResource(R.drawable.radio_button_back_two);
                 radioThree.setBackgroundResource(R.color.colorOrange_two);
-                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                radioFour.setBackgroundResource(R.color.colorOrange_three);*/
                 mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="200.00";
                 vSecuritys="85.6万";
@@ -156,10 +163,10 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
                 vDeadLines=3;
                 break;
             case R.id.radio_button_three:
-                radioOne.setBackgroundResource(R.color.colorOrange);
+                /*radioOne.setBackgroundResource(R.color.colorOrange);
                 radioTwo.setBackgroundResource(R.color.colorOrange_one);
                 radioThree.setBackgroundResource(R.drawable.radio_button_back_three);;
-                radioFour.setBackgroundResource(R.color.colorOrange_three);
+                radioFour.setBackgroundResource(R.color.colorOrange_three);*/
                 mFamilyHelp.setVisibility(View.VISIBLE);
                 vAmountNum="100.00";
                 vSecuritys="115.6万元";
@@ -167,10 +174,10 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
                 vDeadLines=1;
                 break;
             case R.id.radio_button_four:
-                radioOne.setBackgroundResource(R.color.colorOrange);
+                /*radioOne.setBackgroundResource(R.color.colorOrange);
                 radioTwo.setBackgroundResource(R.color.colorOrange_one);
                 radioThree.setBackgroundResource(R.color.colorOrange_two);;
-                radioFour.setBackgroundResource(R.drawable.radio_button_back_four);
+                radioFour.setBackgroundResource(R.drawable.radio_button_back_four);*/
                 mFamilyHelp.setVisibility(View.GONE);
                 vAmountNum="30.00";
                 vSecuritys="30.36万元";

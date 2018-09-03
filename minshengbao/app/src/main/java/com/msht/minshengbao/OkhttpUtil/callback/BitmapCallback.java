@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp.callback;
+package com.msht.minshengbao.OkhttpUtil.callback;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

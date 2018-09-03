@@ -7,13 +7,13 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PreexistenceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -24,58 +24,74 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class PreexistenceDetail extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/5/26 
+ */
+public class PreexistenceDetailActivity extends BaseActivity {
     private XListView mListView;
-    private TextView  tv_customer;
-    private TextView  Address;
-    private TextView  tv_nodata;
-    private String    CustomerNo;
+    private TextView  tvNoData;
+    private String    mCustomerNo;
     private String    name;
     private String    userId;
     private String    password;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private JSONArray jsonArray;//数据解析
+    private JSONArray jsonArray;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
     private PreexistenceAdapter adapter;
-    Handler payrecordHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<PreexistenceDetailActivity> mWeakReference;
+        public RequestHandler(PreexistenceDetailActivity activity) {
+            mWeakReference = new WeakReference<PreexistenceDetailActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final PreexistenceDetailActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject jsonObject =object.optJSONObject("data");
-                            jsonArray=jsonObject.getJSONArray("historyList");
-                            mListView.stopRefresh(true);
-                            recordList.clear();
-                            initShow();
+                            activity.jsonArray=jsonObject.getJSONArray("historyList");
+                            activity.mListView.stopRefresh(true);
+                            activity.recordList.clear();
+                            activity.adapter.notifyDataSetChanged();
+                            activity.onReceiveData();
                         }else {
-                            mListView.stopRefresh(false);
-                            failure(Error);
+                            activity.mListView.stopRefresh(false);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    mListView.stopRefresh(false);
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    activity.mListView.stopRefresh(false);
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void failure(String error) {
+    }
+    private void onFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -88,8 +104,7 @@ public class PreexistenceDetail extends BaseActivity {
                     }
                 }).show();
     }
-
-    private void initShow() {
+    private void onReceiveData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -110,9 +125,9 @@ public class PreexistenceDetail extends BaseActivity {
             e.printStackTrace();
         }
         if (recordList.size()==0){
-            tv_nodata.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.VISIBLE);
         }else {
-            tv_nodata.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
         }
     }
@@ -123,26 +138,26 @@ public class PreexistenceDetail extends BaseActivity {
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         setCommonHeader("燃气预存款明细");
-        Intent getdata=getIntent();
+        Intent data=getIntent();
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
-        CustomerNo=getdata.getStringExtra("CustomerNo");
-        name=getdata.getStringExtra("name");
+        mCustomerNo =data.getStringExtra("mCustomerNo");
+        name=data.getStringExtra("name");
         initView();
-        initdata();
+        initData();
 
     }
 
-    private void initdata() {
+    private void initData() {
         loadData();
     }
 
     private void initView() {
-        tv_customer=(TextView)findViewById(R.id.id_customerText);
-        Address=(TextView)findViewById(R.id.id_address);
-        tv_nodata=(TextView)findViewById(R.id.id_tv_nodata);
-        Address.setText(name);
-        tv_customer.setText(CustomerNo);
+        TextView tvCustomer =(TextView)findViewById(R.id.id_customerText);
+        TextView tvAddress =(TextView)findViewById(R.id.id_address);
+        tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
+        tvAddress.setText(name);
+        tvCustomer.setText(mCustomerNo);
         mListView=(XListView)findViewById(R.id.id_preexistence_view);
         adapter = new PreexistenceAdapter(context,recordList);
         mListView.setAdapter(adapter);
@@ -158,26 +173,11 @@ public class PreexistenceDetail extends BaseActivity {
         });
     }
     private void loadData() {
-        String validateURL = UrlUtil.Pre_deposit_history;
-        Map<String, String> textParams = new HashMap<String, String>();
+        String validateURL = UrlUtil.PRE_DEPOSIT_HISTORY;
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("customerNo",CustomerNo);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                payrecordHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                payrecordHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("customerNo", mCustomerNo);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 }

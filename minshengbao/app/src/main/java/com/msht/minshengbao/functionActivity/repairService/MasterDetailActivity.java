@@ -10,16 +10,16 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.msht.minshengbao.adapter.MasterEvaluteAdapter;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.adapter.MasterEvaluateAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -31,121 +31,146 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class MasterDetail extends BaseActivity {
-    private View layout_header;
-    private RadioGroup radio_evaluate;
-    private RadioButton radio_all,radio_good;
-    private RadioButton radio_meddle,radio_bad;
-    private ImageView statusimg;
-    private CircleImageView masterimg;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/7/12  
+ */
+public class MasterDetailActivity extends BaseActivity {
+    private RadioGroup radioEvaluate;
+    private RadioButton radioAll, radioGood;
+    private RadioButton radioMeddle, radioBad;
+    private ImageView statusImg;
+    private CircleImageView masterImg;
     private LoadMoreListView  moreListView;
-    private MasterEvaluteAdapter mAdapter;
-    private TextView tv_mastername;
-    private TextView tv_workno,tv_serve_times,tv_experience_year;
-    private TextView tv_totaluser;
+    private MasterEvaluateAdapter mAdapter;
+    private TextView tvMasterName;
+    private TextView tvWorkNo, tvServeTimes, tvExperienceYear;
+    private TextView tvTotalUser;
     private String masterId;
     private int   requestCode=0;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
-    private String type = "0";//默认为0全部评价
-    private int pageNo=1;//当前页数
-    private String size = "18";//每页加载的大小
-    private JSONObject jsonbject,json;   //数据解析
-    private JSONArray jsonArray;   //数据解析
+    private String type = "0";
+    private int pageNo=1;
+    private JSONObject jsonObject,json;
+    private JSONArray jsonArray;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> goodList = new ArrayList<HashMap<String, String>>();
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private final EvaluateHandler evaluateHandler=new EvaluateHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<MasterDetailActivity> mWeakReference;
+        public RequestHandler(MasterDetailActivity activity) {
+            mWeakReference = new WeakReference<MasterDetailActivity>(activity);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+            final MasterDetailActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestCode==0){
-                                jsonbject =object.optJSONObject("data");
-                                initShow();
-                            }else if (requestCode==1){
-                                json=object.optJSONObject("data");
-                                showCount();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestCode==0){
+                                activity.jsonObject =object.optJSONObject("data");
+                                activity.initShow();
+                            }else if (activity.requestCode==1){
+                                activity.json=object.optJSONObject("data");
+                                activity.onShowCount();
                             }
                         }else {
-                            faifure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(MasterDetail.this, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
-        }
 
-    };
-    Handler evaluteHandler = new Handler() {
+            super.handleMessage(msg);
+        }
+    }
+    private static class EvaluateHandler extends Handler{
+        private WeakReference<MasterDetailActivity> mWeakReference;
+        private EvaluateHandler(MasterDetailActivity activity) {
+            mWeakReference = new WeakReference<MasterDetailActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final MasterDetailActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
 
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            if (pageNo==1){
-                                goodList.clear();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonArray =object.optJSONArray("data");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (activity.pageNo==1){
+                                activity.goodList.clear();
                             }
-                            initShowEvalute();
-                            if(jsonArray.length()==0){
-                                 moreListView.loadComplete(false);
+                            activity.initShowEvaluate();
+                            if(activity.jsonArray.length()==0){
+                                activity.moreListView.loadComplete(false);
                             }else {
-                                moreListView.loadComplete(true);
+                                activity.moreListView.loadComplete(true);
                             }
                         }else {
-                            faifure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void initShowEvalute() {
+    }
+    private void initShowEvaluate() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String avatar = jsonObject.getString("avatar");
                 String username= jsonObject.getString("username");
-                String eval_score = jsonObject.getString("eval_score");
-                String eval_info =jsonObject.optString("eval_info");
+                String evalScore = jsonObject.getString("eval_score");
+                String evalInfo =jsonObject.optString("eval_info");
                 String time = jsonObject.getString("time");
-
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("avatar", avatar);
                 map.put("username", username);
-                map.put("eval_score", eval_score);
-                map.put("eval_info",eval_info);
+                map.put("eval_score", evalScore);
+                map.put("eval_info",evalInfo);
                 map.put("time",time);
                 goodList.add(map);
             }
@@ -154,7 +179,7 @@ public class MasterDetail extends BaseActivity {
         }
         mAdapter.notifyDataSetChanged();
     }
-    private void faifure(String error) {
+    private void onFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -171,62 +196,62 @@ public class MasterDetail extends BaseActivity {
 
     private void initShow() {
         intCount();
-        String avatar=jsonbject.optString("avatar");
-        String name=jsonbject.optString("name");
-        String star=jsonbject.optString("star");
-        String promise_fee=jsonbject.optString("promise_fee");
-        String valid=jsonbject.optString("valid");
-        String workno=jsonbject.optString("no");
-        String serve_times=jsonbject.optString("serve_times");
-        String experience_year=jsonbject.optString("experience_year");
-        String phone=jsonbject.optString("phone");
-        String skill=jsonbject.optString("skill");
-        tv_mastername.setText(name);
+        String avatar= jsonObject.optString("avatar");
+        String name= jsonObject.optString("name");
+        String star= jsonObject.optString("star");
+        String promiseFee= jsonObject.optString("promise_fee");
+        String valid= jsonObject.optString("valid");
+        String workNo= jsonObject.optString("no");
+        String serveTimes= jsonObject.optString("serve_times");
+        String experienceYear= jsonObject.optString("experience_year");
+        String phone= jsonObject.optString("phone");
+        String skill= jsonObject.optString("skill");
+        tvMasterName.setText(name);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.error(R.drawable.potrait);
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
-        Glide.with(this)
+        Glide.with(context)
                 .load(avatar)
-                .apply(requestOptions).into(masterimg);
-        tv_workno.setText(workno);
-        tv_serve_times.setText(serve_times+"次");
-        tv_experience_year.setText(experience_year);
+                .apply(requestOptions).into(masterImg);
+        tvWorkNo.setText(workNo);
+        tvServeTimes.setText(serveTimes+"次");
+        tvExperienceYear.setText(experienceYear);
     }
     private void intCount() {
         requestCode=1;
-        requesService();
+        requestService();
     }
-    private void showCount() {
+    private void onShowCount() {
         String total=json.optString("total");
-        String total_user=json.optString("total_user");
-        String per_scores=json.optString("per_score");
-        float  per_score=json.optLong("per_score");
+        String totalUser=json.optString("total_user");
+        String perScore=json.optString("per_score");
+        float  perScore1=json.optLong("per_score");
         String good=json.optString("good");
         String bad=json.optString("bad");
         String middle=json.optString("middle");
-        tv_totaluser.setText(total_user+"位用户");
-        radio_good.setText("好评("+good+"）");
-        radio_meddle.setText("中评("+middle+")");
-        radio_bad.setText("差评("+bad+")");
-        if (per_score<1.5){
-            statusimg.setImageResource(R.drawable.star_one_h);
-        }else if (per_score>=1.5&&per_score<2.0){
-            statusimg.setImageResource(R.drawable.star_onehalf_h);
-        }else if (per_score>=2.0&&per_score<2.5){
-            statusimg.setImageResource(R.drawable.star_two_h);
-        }else if (per_score>=2.5&&per_score<3.0){
-            statusimg.setImageResource(R.drawable.star_twohalf_h);
-        }else if (per_score>=3.0&&per_score<3.5){
-            statusimg.setImageResource(R.drawable.star_three_h);
-        }else if (per_score>=3.5&&per_score<4.0){
-            statusimg.setImageResource(R.drawable.star_threehalf_h);
-        }else if (per_score>=4.0&&per_score<4.5){
-            statusimg.setImageResource(R.drawable.star_four_h);
-        }else if (per_score>=4.5&&per_score<5.0){
-            statusimg.setImageResource(R.drawable.star_fourhalf_h);
-        }else if (per_score==5.0){
-            statusimg.setImageResource(R.drawable.star_five_h);
+        tvTotalUser.setText(totalUser+"位用户");
+        radioGood.setText("好评("+good+"）");
+        radioMeddle.setText("中评("+middle+")");
+        radioBad.setText("差评("+bad+")");
+        if (perScore1<1.5){
+            statusImg.setImageResource(R.drawable.star_one_h);
+        }else if (perScore1>=1.5&&perScore1<2.0){
+            statusImg.setImageResource(R.drawable.star_onehalf_h);
+        }else if (perScore1>=2.0&&perScore1<2.5){
+            statusImg.setImageResource(R.drawable.star_two_h);
+        }else if (perScore1>=2.5&&perScore1<3.0){
+            statusImg.setImageResource(R.drawable.star_twohalf_h);
+        }else if (perScore1>=3.0&&perScore1<3.5){
+            statusImg.setImageResource(R.drawable.star_three_h);
+        }else if (perScore1>=3.5&&perScore1<4.0){
+            statusImg.setImageResource(R.drawable.star_threehalf_h);
+        }else if (perScore1>=4.0&&perScore1<4.5){
+            statusImg.setImageResource(R.drawable.star_four_h);
+        }else if (perScore1>=4.5&&perScore1<5.0){
+            statusImg.setImageResource(R.drawable.star_fourhalf_h);
+        }else if (perScore1==5.0){
+            statusImg.setImageResource(R.drawable.star_five_h);
         }
     }
     @Override
@@ -240,9 +265,9 @@ public class MasterDetail extends BaseActivity {
         masterId=data.getStringExtra("masterId");
         initfindViewById();
         getmasterinfo();
-        getevalution();
+        onGetEvaluation();
         initEvent();
-        mAdapter=new MasterEvaluteAdapter(context,goodList);
+        mAdapter=new MasterEvaluateAdapter(context,goodList);
         moreListView.setAdapter(mAdapter);
         moreListView.setLoadMoreListener(new ILoadMoreCallback() {
             @Override
@@ -254,84 +279,54 @@ public class MasterDetail extends BaseActivity {
     }
     private void initfindViewById() {
         moreListView=(LoadMoreListView)findViewById(R.id.id_evalute_view);
-        layout_header=getLayoutInflater().inflate(R.layout.layout_master_detail_head,null);
-        masterimg=(CircleImageView)layout_header.findViewById(R.id.id_img_master);
-        statusimg=(ImageView)layout_header.findViewById(R.id.id_img_evalute);
-        tv_mastername=(TextView)layout_header.findViewById(R.id.id_tv_master);
-        tv_workno=(TextView)layout_header.findViewById(R.id.id_workno);
-        tv_serve_times=(TextView)layout_header.findViewById(R.id.id_sever_times);
-        tv_experience_year=(TextView)layout_header.findViewById(R.id.id_experience_year);;
-        tv_totaluser=(TextView)layout_header.findViewById(R.id.id_total_user);
-        radio_evaluate = (RadioGroup)layout_header. findViewById(R.id.radio_evaluate);
-        radio_all=(RadioButton)layout_header.findViewById(R.id.radio_button_all);
-        radio_good=(RadioButton)layout_header.findViewById(R.id.radio_button_good);
-        radio_meddle=(RadioButton)layout_header.findViewById(R.id.radio_button_middle);
-        radio_bad=(RadioButton)layout_header.findViewById(R.id.radio_button_bad);
-        moreListView.addHeaderView(layout_header);
+        View layoutHeader =getLayoutInflater().inflate(R.layout.layout_master_detail_head,null);
+        masterImg =(CircleImageView) layoutHeader.findViewById(R.id.id_img_master);
+        statusImg =(ImageView) layoutHeader.findViewById(R.id.id_img_evalute);
+        tvMasterName =(TextView) layoutHeader.findViewById(R.id.id_tv_master);
+        tvWorkNo =(TextView) layoutHeader.findViewById(R.id.id_workno);
+        tvServeTimes =(TextView) layoutHeader.findViewById(R.id.id_sever_times);
+        tvExperienceYear =(TextView) layoutHeader.findViewById(R.id.id_experience_year);;
+        tvTotalUser =(TextView) layoutHeader.findViewById(R.id.id_total_user);
+        radioEvaluate = (RadioGroup) layoutHeader. findViewById(R.id.radio_evaluate);
+        radioAll =(RadioButton) layoutHeader.findViewById(R.id.radio_button_all);
+        radioGood =(RadioButton) layoutHeader.findViewById(R.id.radio_button_good);
+        radioMeddle =(RadioButton) layoutHeader.findViewById(R.id.radio_button_middle);
+        radioBad =(RadioButton) layoutHeader.findViewById(R.id.radio_button_bad);
+        moreListView.addHeaderView(layoutHeader);
     }
     private void getmasterinfo() {
         customDialog.show();
         requestCode=0;
-        requesService();
+        requestService();
     }
-    private void getevalution() {
+    private void onGetEvaluation() {
         customDialog.show();
         pageNo=1;
         requestEvaluteInfo();
     }
     private void requestEvaluteInfo() {
         String validateURL = UrlUtil.Evalute_UrL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("Id",masterId);
         textParams.put("type",type);
-        textParams.put("size",size);
+        textParams.put("size","18");
         textParams.put("page",pageNum);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                evaluteHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                evaluteHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,evaluateHandler);
     }
-    private void requesService() {
+    private void requestService() {
         String validateURL ="";
         if (requestCode==0){
             validateURL = UrlUtil.MasterDetail_Url;
         }else if (requestCode==1){
             validateURL = UrlUtil.RepairMater_countUrl;
         }
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("Id",masterId);
-        SendrequestUtil.executepostTwo(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void initEvent() {
-        radio_evaluate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioEvaluate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
@@ -350,8 +345,7 @@ public class MasterDetail extends BaseActivity {
                     default:
                         break;
                 }
-
-                getevalution();
+                onGetEvaluation();
             }
         });
     }

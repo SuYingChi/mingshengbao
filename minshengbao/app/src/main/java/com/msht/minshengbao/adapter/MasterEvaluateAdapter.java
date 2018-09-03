@@ -21,11 +21,11 @@ import java.util.HashMap;
  * Created by hong on 2017/5/31.
  */
 
-public class MasterEvaluteAdapter extends BaseAdapter {
+public class MasterEvaluateAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> goodList = new ArrayList<HashMap<String, String>>();
-    public MasterEvaluteAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public MasterEvaluateAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         super();
         this.context = context;
         mInflater = (LayoutInflater) context

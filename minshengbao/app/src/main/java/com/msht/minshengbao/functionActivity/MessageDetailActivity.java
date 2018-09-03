@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -43,7 +43,7 @@ public class MessageDetailActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -61,7 +61,7 @@ public class MessageDetailActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -111,12 +111,12 @@ public class MessageDetailActivity extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String messageUrl= UrlUtil.Inform_detail;
+        String messageUrl= UrlUtil.INFORM_DETAIL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        SendrequestUtil.postDataFromService(messageUrl,textParams,messageHandler);
+        SendRequestUtil.postDataFromService(messageUrl,textParams,messageHandler);
     }
 
     @Override

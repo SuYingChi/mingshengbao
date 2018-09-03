@@ -7,7 +7,7 @@
     android:background="@drawable/shape_change_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.repairService.PublishOrder">
+    tools:context="com.msht.minshengbao.functionActivity.repairService.PublishOrderActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

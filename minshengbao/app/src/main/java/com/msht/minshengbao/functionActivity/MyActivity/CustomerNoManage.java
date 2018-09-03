@@ -14,17 +14,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.SwipeAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.GasService.AddCustomerNoActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.EnsureAddress;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 
@@ -35,18 +35,24 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/6/7  
+ */
 public class CustomerNoManage extends BaseActivity implements View.OnClickListener {
     private SwipeAdapter adapter;
-    private View views;
-    private Button btnAddress;
-    private TextView tvNoData, tvRightText;
-    private String password,userId;
-    private String houseId,customerNum, addressText;
+    private View     views;
+    private Button   btnAddress;
+    private TextView tvNoData,tvRightText;
+    private String   password,userId;
+    private String   houseId;
     private ListViewForScrollView mListView;
-    private int   requestCode=0;
-    private JSONArray jsonArray;
+    private int          requestCode=0;
+    private JSONArray    jsonArray;
     private CustomDialog customDialog;
     private static final int ADDRESS_CODE=3;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
@@ -63,7 +69,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -74,7 +80,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                         if (activity.requestCode==0){
                             activity.jsonArray =object.optJSONArray("data");
                         }
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0) {
                                 if (activity.jsonArray.length() == 0) {
                                     activity.tvNoData.setVisibility(View.VISIBLE);
@@ -98,7 +104,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -157,7 +163,9 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.self_make_dialog,null);
         final Dialog dialog=new AlertDialog.Builder(CustomerNoManage.this).create();
         dialog.show();
-        dialog.getWindow().setContentView(layout);
+        if (dialog.getWindow()!=null){
+            dialog.getWindow().setContentView(layout);
+        }
         final TextView text=(TextView)layout.findViewById(R.id.id_text1);
         final RelativeLayout btnDelete=(RelativeLayout)layout.findViewById(R.id.id_query_layout);
         text.setText("删除燃气用户号");
@@ -179,7 +187,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        initfindViewByid();
+        initFindViewId();
         VariableUtil.boolSelect =false;
         adapter = new SwipeAdapter(this,houseList);
         mListView.setAdapter(adapter);
@@ -189,7 +197,6 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             @Override
             public void onButtonClick(View v, int position) {
                 houseId=houseList.get(position).get("id");
-                addressText =houseList.get(position).get("name");
                 deleteCustomerNo();
             }
         });
@@ -231,7 +238,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
-    private void initfindViewByid() {
+    private void initFindViewId() {
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
         tvRightText.setVisibility(View.VISIBLE);
         tvRightText.setText("编辑");
@@ -244,22 +251,22 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
         customDialog.show();
         requestCode=0;
         String validateURL = UrlUtil.SELECT_ADDRESS_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void requestService(){
         customDialog.show();
         String validateURL="";
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("houseId",houseId);
         if (requestCode==1){
             validateURL = UrlUtil.Address_delectUrl;
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initEvent() {
         btnAddress.setOnClickListener(this);
@@ -287,40 +294,18 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
             }
         });
     }
-    private void EnsureDialog() {
-        final EnsureAddress ensureAddress=new EnsureAddress(this);
-        ensureAddress.setTitleText("请详细查看");
-        ensureAddress.setAddressText(addressText);
-        ensureAddress.setCustomerText(customerNum);
-        ensureAddress.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensureAddress.dismiss();
-            }
-        });
-        ensureAddress.setOnpositiveListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensureAddress.dismiss();
-                requestCode=2;
-                requestService();
-            }
-        });
-        ensureAddress.show();
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_btn_customer:
-                Intent addaddress=new Intent(CustomerNoManage.this,AddCustomerNoActivity.class);
-                addaddress.putExtra("addresscode", ADDRESS_CODE);
-                startActivityForResult(addaddress, 3);
+                Intent addAddress=new Intent(CustomerNoManage.this,AddCustomerNoActivity.class);
+                addAddress.putExtra("addresscode", ADDRESS_CODE);
+                startActivityForResult(addAddress, 3);
                 break;
             default:
                 break;
         }
     }
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

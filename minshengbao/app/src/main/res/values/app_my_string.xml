@@ -16,6 +16,7 @@
     <string name="doorplate">门牌号</string>
     <string name="default_text">XXXXXX</string>
     <string name="default_value0">0.0</string>
+    <string name="equipment_map">设备地图</string>
     <string name="balance_explain">(账户余额只能用于缴纳燃气费)</string>
     <string name="account_recharge">账号充值</string>
     <string name="self_payfee">自动燃气缴费</string>

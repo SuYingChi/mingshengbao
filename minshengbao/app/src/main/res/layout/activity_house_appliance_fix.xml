@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.repairService.HouseApplianceFix">
+    tools:context="com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

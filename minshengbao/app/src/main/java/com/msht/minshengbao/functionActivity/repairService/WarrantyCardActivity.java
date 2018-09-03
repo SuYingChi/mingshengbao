@@ -7,7 +7,14 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 
-public class Warrantycard extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/6/17  
+ */
+public class WarrantyCardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,14 +23,14 @@ public class Warrantycard extends BaseActivity {
         Intent data=getIntent();
         String title=data.getStringExtra("title");
         String orderNo=data.getStringExtra("orderNo");
-        String guarantee_day=data.getStringExtra("guarantee_day");
-        String mastername=data.getStringExtra("mastername");
-        String serve_time=data.getStringExtra("serve_time");
+        String guaranteeDay=data.getStringExtra("guarantee_day");
+        String masterName=data.getStringExtra("mastername");
+        String serveTime=data.getStringExtra("serve_time");
         setCommonHeader("保修卡");
         ((TextView)findViewById(R.id.id_maintype)).setText(title);
         ((TextView)findViewById(R.id.id_tv_orderno)).setText(orderNo);
-        ((TextView)findViewById(R.id.id_gurantee_day)).setText(guarantee_day+"天");
-        ((TextView)findViewById(R.id.id_tv_mastername)).setText(mastername);
-        ((TextView)findViewById(R.id.id_repair_date)).setText(serve_time);
+        ((TextView)findViewById(R.id.id_gurantee_day)).setText(guaranteeDay+"天");
+        ((TextView)findViewById(R.id.id_tv_mastername)).setText(masterName);
+        ((TextView)findViewById(R.id.id_repair_date)).setText(serveTime);
     }
 }

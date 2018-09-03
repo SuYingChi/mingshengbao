@@ -15,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -26,14 +25,15 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.msht.minshengbao.adapter.VechicAdapter;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.adapter.VehicleAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
 import com.msht.minshengbao.MoveSelectAddress.GeoCoderUtil;
 import com.msht.minshengbao.MoveSelectAddress.LatLngEntity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
@@ -46,18 +46,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.OnRefreshListener, AMapLocationListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/10/16  
+ */
+public class ElectricHomeActivity extends BaseActivity implements MySwipeRefreshLayout.OnRefreshListener, AMapLocationListener {
     private MySwipeRefreshLayout refreshView;
     private LoadMoreListView moreListView;
-    private VechicAdapter mAdapter;
+    private VehicleAdapter mAdapter;
     private TextView mHint;
-    private TextView tv_address;
-    private View layout_addr;
-    private ImageView right_img;
+    private TextView tvAddress;
+    private View layoutAddress;
+    private ImageView rightImage;
     private MapView mMapView = null;
     private AMap aMap;
     private AMapLocationClient locationClient;
@@ -67,49 +74,56 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
     private String areaCode="",areaName="";
     private String address="";
     private int pageNo=1;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private static  final int MY_LOCATION_REQUEST=0;
     private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-    Handler sendmeterHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class  RequestHandler extends Handler{
+        private WeakReference<ElectricHomeActivity> mWeakReference;
+        public RequestHandler(ElectricHomeActivity activity) {
+            mWeakReference=new WeakReference<ElectricHomeActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final ElectricHomeActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("code");
-                        if(Results.equals("success")) {
+                        String result=object.optString("result");
+                        String error = object.optString("code");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject jsonObject=object.optJSONObject("data");
                             boolean lastPage=jsonObject.getBoolean("lastPage");
-                            jsonArray=jsonObject.getJSONArray("list");
-                            if(jsonArray.length()!=0&&jsonArray!=null){
-                                initshowdata();
+                            activity.jsonArray=jsonObject.getJSONArray("list");
+                            if(activity.jsonArray.length()!=0&&activity.jsonArray!=null){
+                                activity.initShowData();
                             }
                             if (lastPage){
-                                moreListView.loadComplete(false);  //最后一页
+                                activity.moreListView.loadComplete(false);
                             }else {
-                                moreListView.loadComplete(true);
+                                activity.moreListView.loadComplete(true);
                             }
                         }else {
-                            showfaiture(Error);
+                            activity.onShowFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-    private void initshowdata() {
+    }
+    private void initShowData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
@@ -126,7 +140,6 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
                 String imgUrl=obj.optString("imgUrl");
                 String distance=obj.optString("distance");
                 String lastModifyTime=obj.optString("lastModifyTime");
-
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("name", name);
@@ -150,13 +163,12 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void showfaiture(String error) {
+    private void onShowFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
@@ -171,7 +183,7 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         context=this;
         setCommonHeader("电动车");
         initView(savedInstanceState);
-        mAdapter=new VechicAdapter(context,mList);
+        mAdapter=new VehicleAdapter(context,mList);
         moreListView.setAdapter(mAdapter);
         locationClient = ALocationClientFactory.createLocationClient(this, ALocationClientFactory.createDefaultOption(),this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -199,10 +211,10 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String store_id=mList.get(position).get("id");
+                String storeId=mList.get(position).get("id");
                 String distance=mList.get(position).get("distance");
-                Intent intent=new Intent(context,ElectricsStoreDetail.class);
-                intent.putExtra("store_id",store_id);
+                Intent intent=new Intent(context,ElectricsStoreDetailActivity.class);
+                intent.putExtra("store_id",storeId);
                 intent.putExtra("distance",distance);
                 startActivity(intent);
             }
@@ -218,10 +230,10 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
                     lat=data.getStringExtra("lat");
                     lon=data.getStringExtra("lon");
                     address=data.getStringExtra("mAddress");
-                    tv_address.setText(address);
-                    double Latitude=Double.valueOf(lat);
-                    double Longitude=Double.valueOf(lon);
-                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Latitude, Longitude), 40));
+                    tvAddress.setText(address);
+                    double latitude=Double.valueOf(lat);
+                    double longitude=Double.valueOf(lon);
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
                 }
                 break;
             default:
@@ -229,10 +241,10 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         }
     }
     private void initEvent() {
-        right_img.setOnClickListener(new View.OnClickListener() {
+        rightImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,SearchStore.class);
+                Intent intent=new Intent(context,SearchStoreActivity.class);
                 intent.putExtra("lat",lat);
                 intent.putExtra("lon",lon);
                 intent.putExtra("areaCode",areaCode);
@@ -243,26 +255,26 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
                 startActivity(intent);
             }
         });
-        layout_addr.setOnClickListener(new View.OnClickListener() {
+        layoutAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,ReplaceAddress.class);
+                Intent intent=new Intent(context,ReplaceAddressActivity.class);
                 startActivityForResult(intent,1);
             }
         });
         findViewById(R.id.id_layout_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ElectricHome.this.startActivity(new Intent(context,ElectricMap.class));
+                ElectricHomeActivity.this.startActivity(new Intent(context,ElectricMapActivity.class));
                 overridePendingTransition(R.anim.in_from_top, 0);
             }
         });
     }
     private void initView(Bundle savedInstanceState) {
-        MyOncameraChange myOncameraChange=new MyOncameraChange();
-        right_img=(ImageView)findViewById(R.id.id_right_img);
-        tv_address=(TextView)findViewById(R.id.id_tv_address);
-        layout_addr=findViewById(R.id.id_layout_addr);
+        MyOnCameraChange myOncameraChange=new MyOnCameraChange();
+        rightImage =(ImageView)findViewById(R.id.id_right_img);
+        tvAddress =(TextView)findViewById(R.id.id_tv_address);
+        layoutAddress =findViewById(R.id.id_layout_addr);
         moreListView=(LoadMoreListView)findViewById(R.id.id_more_info);
         mHint = (TextView) findViewById(R.id.hint);
         refreshView=(MySwipeRefreshLayout) findViewById(R.id.id_refresh_view);
@@ -271,9 +283,9 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         // 此方法必须重写
         mMapView.onCreate(savedInstanceState);
         aMap = mMapView.getMap();
-        aMap.setOnCameraChangeListener(myOncameraChange); // 添加移动地图事件监听器
+        aMap.setOnCameraChangeListener(myOncameraChange);
         UiSettings uiSettings = aMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(false);  //隐藏缩放按钮
+        uiSettings.setZoomControlsEnabled(false);
         //滑动冲突
         moreListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -302,7 +314,7 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
     public void onRefresh() {
         refreshView.setRefreshing(false);
         refreshView.stopRefresh();
-        ElectricHome.this.startActivity(new Intent(context,ElectricMap.class));
+        ElectricHomeActivity.this.startActivity(new Intent(context,ElectricMapActivity.class));
         overridePendingTransition(R.anim.in_from_top, R.anim.out_from_top);
     }
     @Override
@@ -317,8 +329,8 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
             areaCode=aMapLocation.getAdCode();
             areaName=aMapLocation.getDistrict();
             address=aMapLocation.getAddress();
-            String M=aMapLocation.getPoiName();
-            tv_address.setText(M);
+            String mPoiName=aMapLocation.getPoiName();
+            tvAddress.setText(mPoiName);
             lat=String.valueOf(latitude);
             lon=String.valueOf(longitude);
             mList.clear();
@@ -327,22 +339,22 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
 
         }
     }
-    private class MyOncameraChange implements AMap.OnCameraChangeListener{
+    private class MyOnCameraChange implements AMap.OnCameraChangeListener{
         @Override
         public void onCameraChange(CameraPosition cameraPosition) {}
         @Override
         public void onCameraChangeFinish(final CameraPosition cameraPosition) {
             LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
             //地理反编码工具类，代码在后面
-            GeoCoderUtil.getInstance(ElectricHome.this).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
+            GeoCoderUtil.getInstance(ElectricHomeActivity.this).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
                 @Override
                 public void onAddressResult(String result) {
                     if (result.contains("区")&&result.length()>=2){
                         int len=result.indexOf("区");
                         String address=result.substring(len+1);
-                        tv_address.setText(address);
+                        tvAddress.setText(address);
                     }else {
-                        tv_address.setText(result);
+                        tvAddress.setText(result);
                     }
                 }
             });
@@ -357,29 +369,14 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         }
     }
     private void initData() {
-        String dataurl = UrlUtil.ELECTRIC_LIST_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        String dataUrl = UrlUtil.ELECTRIC_LIST_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("type","0");
         textParams.put("latitude",lat);
         textParams.put("longitude",lon);
         textParams.put("pageNo",pageNum);
-        SendrequestUtil.executepost(dataurl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                sendmeterHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                sendmeterHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -395,7 +392,7 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_LOCATION_REQUEST) {
-                Toast.makeText(context,"获取位置授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"获取位置授权失败");
             }
         }
     };
@@ -403,19 +400,16 @@ public class ElectricHome extends BaseActivity implements MySwipeRefreshLayout.O
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-
     }
     @Override
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
-
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
-
     }
     @Override
     protected void onDestroy() {

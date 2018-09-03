@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -32,10 +33,10 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ * @author hong
  */
 public class CouponFragment extends BaseFragment {
     private String userId;
@@ -82,17 +83,17 @@ public class CouponFragment extends BaseFragment {
             if (reference == null||reference.isDetached()) {
                 return;
             }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
+                        String result=object.optString("result");
+                        String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(Results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.xListView.stopRefresh(true);
                             }else if (reference.refreshType==1){
@@ -105,16 +106,13 @@ public class CouponFragment extends BaseFragment {
                             }
                             reference.onGetCouponData();
                         }else {
-                            reference.onFaifure(Error);
+                            reference.onFaifure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
@@ -127,27 +125,26 @@ public class CouponFragment extends BaseFragment {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                int ID = jsonObject.optInt("id");
-                String id=Integer.toString(ID);
+                String id=jsonObject.optString("id");
                 String name=jsonObject.optString("name");
                 String scope = jsonObject.getString("scope");
                 String amount = jsonObject.getString("amount");
-                String use_limit = jsonObject.getString("use_limit");
-                String start_date = jsonObject.getString("start_date");
-                String end_date= jsonObject.getString("end_date");
-                String remainder_days="";
+                String useLimit = jsonObject.getString("use_limit");
+                String startDate = jsonObject.getString("start_date");
+                String endDate= jsonObject.getString("end_date");
+                String remainderDays="";
                 if (jsonObject.has("remainder_days")){
-                    remainder_days=jsonObject.optString("remainder_days");
+                    remainderDays=jsonObject.optString("remainder_days");
                 }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("name",name);
                 map.put("scope", scope);
                 map.put("amount", amount);
-                map.put("use_limit", use_limit);
-                map.put("start_date",start_date);
-                map.put("end_date", end_date);
-                map.put("remainder_days",remainder_days);
+                map.put("use_limit", useLimit);
+                map.put("start_date",startDate);
+                map.put("end_date", endDate);
+                map.put("remainder_days",remainderDays);
                 map.put("type",status);
                 couponList.add(map);
             }
@@ -237,13 +234,13 @@ public class CouponFragment extends BaseFragment {
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.Counpon_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("status",status);
         textParams.put("page",pageNum);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onResume() {
@@ -256,7 +253,6 @@ public class CouponFragment extends BaseFragment {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
     }
-
     @Override
     public void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -27,7 +28,7 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.BitmapUtil;
 import com.msht.minshengbao.Utils.FileUtil;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -123,7 +124,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     Bitmap bitmap  = (Bitmap)msg.obj;
                     if (bitmap==null||bitmap.isRecycled()){
                         reference.circleImageView.setImageResource(R.drawable.potrait);
@@ -132,7 +133,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         reference.mCache.put("avatarimg", bitmap);
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
@@ -171,7 +172,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         if (mAvatar !=null){
             circleImageView.setImageBitmap(mAvatar);
         }else {
-            SendrequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
+            SendRequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
         }
     }
     private void initfindViewByid() {
@@ -336,7 +337,9 @@ public class Mysetting extends BaseActivity implements OnClickListener {
             // 直接从相册获取
             case REQUEST_CODE_PICK:
                 try {
-                    startCrop(data.getData());
+                    if (data!=null){
+                        startCrop(data.getData());
+                    }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -399,20 +402,22 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         Uri   outputUri = Uri.fromFile(new File(mCacheFile.getPath()));
         String url = FileUtil.getPath(context, uri);
         Intent intent = new Intent("com.android.camera.action.CROP");
-        //sdk>=24
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            //通过FileProvider创建一个content类型的Uri
-            Uri imageUri = FileProvider.getUriForFile(Mysetting.this, "com.msht.minshengbao.fileProvider", new File(url));
-            //去除默认的人脸识别，否则和剪裁匡重叠
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra("noFaceDetection", true);
-            intent.setDataAndType(imageUri, "image/*");
-            //19=<sdk<24
-        }else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT&&android.os.Build.VERSION.SDK_INT<Build.VERSION_CODES.N) {
-            intent.setDataAndType(Uri.fromFile(new File(url)), "image/*");
-            //sdk<19
-        }else {
-            intent.setDataAndType(uri, "image/*");
+        if (!TextUtils.isEmpty(url)){
+            //sdk>=24
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                //通过FileProvider创建一个content类型的Uri
+                Uri imageUri = FileProvider.getUriForFile(context, "com.msht.minshengbao.fileProvider", new File(url));
+                //去除默认的人脸识别，否则和剪裁匡重叠
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra("noFaceDetection", true);
+                intent.setDataAndType(imageUri, "image/*");
+                //19=<sdk<24
+            }else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT&&android.os.Build.VERSION.SDK_INT<Build.VERSION_CODES.N) {
+                intent.setDataAndType(Uri.fromFile(new File(url)), "image/*");
+                //sdk<19
+            }else {
+                intent.setDataAndType(uri, "image/*");
+            }
         }
         intent.putExtra("crop", true);
         //比例
@@ -433,7 +438,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
         textParams.put("userId",userId);
         textParams.put("password",password);
         stringFileHashMap.put("avatar", file);
-        SendrequestUtil.postFileToServer(textParams,stringFileHashMap,validateURL,myHandler);
+        SendRequestUtil.postFileToServer(textParams,stringFileHashMap,validateURL,myHandler);
     }
     private static class MyHandler extends Handler{
         private WeakReference<Mysetting> mWeakReference;
@@ -447,7 +452,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -457,7 +462,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         String error=jsonObject.optString("error");
                         JSONObject objectInfo = jsonObject.optJSONObject("data");
                         String avatarUrl=objectInfo.optString("avatar");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)){
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
                             //清除原有数据
                             activity.mCache.remove("avatarimg");
                             activity.mCache.put("avatarimg", activity.bitmap);
@@ -470,7 +475,7 @@ public class Mysetting extends BaseActivity implements OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }

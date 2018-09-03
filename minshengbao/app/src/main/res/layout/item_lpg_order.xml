@@ -201,7 +201,7 @@
             android:id="@+id/id_btn_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_width30"
+            android:minHeight="@dimen/margin_width25"
             android:minWidth="@dimen/margin_width60"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -211,7 +211,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:gravity="center"
             android:visibility="gone"
-            android:textSize="@dimen/text_width14"
+            android:textSize="@dimen/text_width12"
             android:textColor="@color/colorOrange"
             android:text="@string/pay_fee"
             app:backGroundImage="@drawable/shape_orange_corner_button"
@@ -229,11 +229,11 @@
             android:layout_marginBottom="@dimen/margin_width10"
             android:layout_marginRight="@dimen/margin_width10"
             android:layout_marginEnd="@dimen/margin_width10"
-            android:textSize="@dimen/text_width16"
-            android:textColor="@color/color_383838"
+            android:background="@drawable/selector_touch_button_change"
+            android:textSize="@dimen/text_width12"
+            android:textColor="@color/white"
             android:text="@string/cancel_order"
             android:visibility="gone"/>
     </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

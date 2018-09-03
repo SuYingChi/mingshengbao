@@ -22,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
-import com.msht.minshengbao.functionActivity.GasService.GasServerOrder;
+import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.Invoice.InvoiceOpen;
 import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
@@ -37,7 +37,7 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -99,7 +99,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     reference.myAvatar = (Bitmap)msg.obj;
                     if (reference.myAvatar ==null){
                         reference.circleImageView.setImageResource(R.drawable.potrait);
@@ -108,7 +108,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                         reference.mCache.put("avatarimg", reference.myAvatar);
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
@@ -248,7 +248,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivity(login);
     }
     private void onGetAvatar() {
-        SendrequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
+        SendRequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
     }
     private void initListeners() {
         ViewTreeObserver vto = layoutMySetting.getViewTreeObserver();
@@ -360,7 +360,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivity(intent);
     }
     private void goGasServer() {
-        Intent intent=new Intent(mContext, GasServerOrder.class);
+        Intent intent=new Intent(mContext, GasServerOrderActivity.class);
         startActivity(intent);
     }
     private void goSetting() {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.ViewAdapter;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
@@ -92,7 +92,7 @@ public class GasPayFeeActivity extends AppCompatActivity implements View.OnClick
     }
     private void gasprice() {
         String url= UrlUtil.Gasprice_Url;
-        Intent price=new Intent(mContext,HtmlPage.class);
+        Intent price=new Intent(mContext,HtmlPageActivity.class);
         price.putExtra("navigate",navigate);
         price.putExtra("url",url);
         startActivity(price);

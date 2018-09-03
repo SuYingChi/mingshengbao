@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.AddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -22,6 +22,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +51,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
     private CustomDialog customDialog;
     private int pageNo=1;
     private int pageIndex=0;
+    private static final String PAGE_NAME="选择地址(LPG)";
     private ArrayList<HashMap<String, String>> addressList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
@@ -67,14 +69,14 @@ public class LpgSelectAddressActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String msgError = object.optString("msg");
                         JSONObject jsonObject=object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             boolean isEndPage=jsonObject.optBoolean("isEndPage");
                             activity.jsonArray =jsonObject.optJSONArray("addressLists");
                             if (activity.jsonArray.length() == 0) {
@@ -98,7 +100,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -260,7 +262,7 @@ public class LpgSelectAddressActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("pageNum",pageNum);
         textParams.put("pageSize","16");
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initHeaderView() {
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
@@ -272,7 +274,16 @@ public class LpgSelectAddressActivity extends BaseActivity {
         layoutBtnNew =findViewById(R.id.id_re_new_address);
         mListView=(LoadMoreListView)findViewById(R.id.id_address_view);
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

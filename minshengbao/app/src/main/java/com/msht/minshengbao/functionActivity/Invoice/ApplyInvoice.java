@@ -24,11 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.BitmapUtil;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -60,7 +60,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
     private EditText etRecipients, etPhone;
     private EditText etTaxpayerNum, etBank, etBankcard;
     private EditText etCompanyTel, etCompanyAddress;
-    private TextView tvTitle, tvAmount;
+    private TextView tvTitle;
     private TextView tvRightText;
     private RelativeLayout layoutDistrict;
     private String  userId,password,type="1";
@@ -91,14 +91,13 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
-
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String resultCode=object.optString("result_code");
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onSuccess();
                         } else {
                             activity.noticeDialog(error);
@@ -107,7 +106,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     break;
                 default:
                     break;
@@ -189,7 +188,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         etBankcard =(EditText)findViewById(R.id.id_et_bankcard);
         etCompanyTel =(EditText)findViewById(R.id.id_et_company_tel);
         etCompanyAddress =(EditText)findViewById(R.id.id_et_company_addr);
-        tvAmount =(TextView)findViewById(R.id.id_amount);
+        TextView tvAmount =(TextView)findViewById(R.id.id_amount);
         tvAmount.setText(amount);
         btnSend.setEnabled(false);
     }
@@ -321,7 +320,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.id_tv_rightText:
                 String url=UrlUtil.INVOICE_EXPLAIN;
-                Intent intent=new Intent(this, AgreeTreaty.class);
+                Intent intent=new Intent(this, AgreeTreatyActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("navigation","发票说明");
                 startActivity(intent);
@@ -496,7 +495,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
         if (certeFile !=null){
             fileParams.put("business_license_img", certeFile);
         }
-        SendrequestUtil.postFileToServer(textParams,fileParams,validateURL,requestHandler);
+        SendRequestUtil.postFileToServer(textParams,fileParams,validateURL,requestHandler);
     }
 
     @Override

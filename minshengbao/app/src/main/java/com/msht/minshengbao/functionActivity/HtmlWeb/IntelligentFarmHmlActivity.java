@@ -19,7 +19,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
 
-public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
     private WebView mWebview;
     private String    Url,naviga;
     @Override
@@ -66,7 +66,7 @@ public class IntelligentFarmHml extends BaseActivity implements MyWebChomeClient
             }
         });
 
-        mWebview.setWebChromeClient(new MyWebChomeClient(IntelligentFarmHml.this));
+        mWebview.setWebChromeClient(new MyWebChomeClient(IntelligentFarmHmlActivity.this));
     }
     private void initEvent() {
         backImg.setOnClickListener(new View.OnClickListener() {

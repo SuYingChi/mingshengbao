@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
@@ -14,8 +15,8 @@ import com.google.zxing.client.android.AnimeViewCallback;
 import com.google.zxing.client.android.AutoScannerView;
 import com.google.zxing.client.android.BaseCaptureActivity;
 import com.google.zxing.client.android.FlowLineView;
-import com.msht.minshengbao.functionActivity.GasService.IcCardExpense;
-import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebView;
+import com.msht.minshengbao.functionActivity.GasService.IcCardExpenseActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebViewActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.ScanCodeResultActivity;
 import com.msht.minshengbao.R;
@@ -26,8 +27,14 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-public class QRCodeScanActivity extends BaseCaptureActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/3/10  
+ */
+public class QrCodeScanActivity extends BaseCaptureActivity {
     private SurfaceView surfaceView;
     private AutoScannerView autoScannerView;
     private FlowLineView flowLineView;
@@ -113,7 +120,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
     }
     private void onBarCodeOperation(String text) {
         String mUrl=UrlUtil.LPG_QR_CODE_SCAN_URL+"?id="+text;
-        Intent intent=new Intent(context, LpgBottleWebView.class);
+        Intent intent=new Intent(context, LpgBottleWebViewActivity.class);
         intent.putExtra("url",mUrl);
         startActivity(intent);
     }
@@ -153,7 +160,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
                 String payId  = object.getString("payId");
                 String payTime=object.getString("payTime");
                 if (payType.equals(VariableUtil.VALUE_ONE)){
-                    Intent intent=new Intent(QRCodeScanActivity.this, IcCardExpense.class);
+                    Intent intent=new Intent(QrCodeScanActivity.this, IcCardExpenseActivity.class);
                     intent.putExtra("payId",payId);
                     intent.putExtra("payTime",payTime);
                     startActivity(intent);
@@ -166,12 +173,13 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
             }
         }else if (result.contains(UrlUtil.LPG_QR_CODE_SCAN_URL)){
             startBottleWebView(result);
+            Log.d("result=",result);
         }else {
             makeMistakes("1");
         }
     }
     private void startBottleWebView(String result) {
-        Intent intent=new Intent(context, LpgBottleWebView.class);
+        Intent intent=new Intent(context, LpgBottleWebViewActivity.class);
         intent.putExtra("url",result);
         startActivity(intent);
     }
@@ -182,7 +190,7 @@ public class QRCodeScanActivity extends BaseCaptureActivity {
         startActivity(intent);
     }
     private void makeMistakes(String s) {
-        Intent error=new Intent(QRCodeScanActivity.this,QrCodeErrorActivity.class);
+        Intent error=new Intent(QrCodeScanActivity.this,QrCodeErrorActivity.class);
         error.putExtra("error_type",s);
         startActivity(error);
     }

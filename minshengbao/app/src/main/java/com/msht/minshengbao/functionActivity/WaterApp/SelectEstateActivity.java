@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.adapter.EstateAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -58,13 +58,13 @@ public class SelectEstateActivity extends BaseActivity implements View.OnClickLi
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String message = object.optString("message");
                         JSONObject jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             boolean lastPage=jsonObject.optBoolean("lastPage");
                             if (lastPage){
                                 activity.searchData.loadComplete(false);
@@ -79,7 +79,7 @@ public class SelectEstateActivity extends BaseActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -203,6 +203,6 @@ public class SelectEstateActivity extends BaseActivity implements View.OnClickLi
         textParams.put("keyword",keyWord);
         textParams.put("pageNo",pageNo);
         textParams.put("pageSize","50");
-        SendrequestUtil.postDataFromService(validateURL,textParams,communityHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,communityHandler);
     }
 }

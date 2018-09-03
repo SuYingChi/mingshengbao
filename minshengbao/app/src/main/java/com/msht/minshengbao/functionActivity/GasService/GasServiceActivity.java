@@ -6,18 +6,19 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GasServiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.umeng.analytics.MobclickAgent;
 
 
 import org.json.JSONArray;
@@ -25,51 +26,67 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GasService extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/26  
+ */
+public class GasServiceActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private GasServiceAdapter homeAdapter;
     private String pid="null";
     private String cityId="null";
-    private   boolean lstate=false;
-    private static final int SUCCESS=1;
-    private static final int FAILURE=2;
+    private   boolean loginState =false;
     private CustomDialog customDialog;
-    private static final String my_url= UrlUtil.Service_noteUrl;
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
-    Handler getfunctionhandler= new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler  extends Handler{
+        private WeakReference<GasServiceActivity > mWeakReference;
+        public RequestHandler(GasServiceActivity activity) {
+            mWeakReference = new WeakReference<GasServiceActivity >(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final GasServiceActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
-                        String Error = object.optString("error");
+                        String error = object.optString("error");
                         JSONArray json =object.getJSONArray("data");
-                        if(result.equals("success")) {
-                            initFunction(json);
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.initFunction(json);
                         }else {
-                            Toast.makeText(context, Error,
-                                    Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
+
         }
-    };
+    }
     private void initFunction(JSONArray json) {
         try {
             for (int i = 0; i < json.length(); i++) {
@@ -88,8 +105,6 @@ public class GasService extends BaseActivity {
         }
         if (functionList.size() != 0) {
             homeAdapter.notifyDataSetChanged();
-        } else {
-
         }
     }
 
@@ -99,7 +114,7 @@ public class GasService extends BaseActivity {
         setContentView(R.layout.activity_gas_service);
         context=this;
         setCommonHeader("燃气业务");
-        lstate= SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
+        loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
@@ -115,26 +130,26 @@ public class GasService extends BaseActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (lstate){
+                if (loginState){
                     String codes=functionList.get(position).get("code");
                     switch (codes){
                         case "gas_repair":
-                            gasrepair();
+                            onGasRepair();
                             break;
                         case "gas_meter":
-                            writetable();
+                            onWriteTable();
                             break;
                         case "gas_pay":
-                            payfee();
+                            onPayFee();
                             break;
                         case "gas_install":
                             installDevice();
                             break;
                         case "gas_rescue":
-                            qianxian();
+                            onQianXian();
                             break;
                         case "gas_introduce":
-                            introduce();
+                            onIntroduce();
                             break;
                         default:
                             break;
@@ -159,46 +174,49 @@ public class GasService extends BaseActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendrequestUtil.executeGetTwo(function, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                getfunctionhandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj = fail;
-                getfunctionhandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
     }
-    private void payfee() {
-        Intent selete=new Intent(context,GasPayFeeActivity.class);
-        startActivity(selete);
+    private void onPayFee() {
+        Intent select=new Intent(context,GasPayFeeActivity.class);
+        startActivity(select);
     }
 
-    private void qianxian() {
-        Intent selete=new Intent(context,Gasqianxian.class);
-        startActivity(selete);
+    private void onQianXian() {
+        Intent select=new Intent(context,GasEmergencyRescueActivity.class);
+        startActivity(select);
     }
-    private void introduce() {
-        Intent selete=new Intent(context,GasIntroduce.class);
-        startActivity(selete);
+    private void onIntroduce() {
+        Intent select=new Intent(context,GasIntroduceActivity.class);
+        startActivity(select);
     }
-    private void gasrepair() {
-        Intent selete=new Intent(context,GasRepair.class);
-        startActivity(selete);
+    private void onGasRepair() {
+        Intent select=new Intent(context,GasRepairActivity.class);
+        startActivity(select);
     }
-    private void writetable() {
-        Intent selete=new Intent(context,GasWriteTable.class);
-        startActivity(selete);
+    private void onWriteTable() {
+        Intent select=new Intent(context,GasWriteTableActivity.class);
+        startActivity(select);
     }
     private void installDevice() {
-        Intent selete=new Intent(context,GasInstall.class);
-        startActivity(selete);
+        Intent select=new Intent(context,GasInstallAcitivity.class);
+        startActivity(select);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

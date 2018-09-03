@@ -5,15 +5,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.WaterIncomeAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -27,10 +27,16 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ */
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/6/10 
  */
 public class WaterIncomeFra extends BaseFragment {
 
@@ -81,7 +87,7 @@ public class WaterIncomeFra extends BaseFragment {
                 reference.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -90,7 +96,7 @@ public class WaterIncomeFra extends BaseFragment {
                         boolean firstPage=reference.jsonObject.optBoolean("firstPage");
                         boolean lastPage=reference.jsonObject.optBoolean("lastPage");
                         reference.jsonArray=reference.jsonObject.optJSONArray("list");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.mListView.stopRefresh(true);
                             }else if (reference.refreshType==1){
@@ -116,7 +122,7 @@ public class WaterIncomeFra extends BaseFragment {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     reference.mListView.stopLoadMore();
                     reference.mListView.stopRefresh(false);
                     reference.showNotify(msg.obj.toString());
@@ -218,13 +224,13 @@ public class WaterIncomeFra extends BaseFragment {
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.WATER_ORDER_LIST_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("account",userAccount);
         textParams.put("type",type);
         textParams.put("pageNo",pageNum);
         textParams.put("pageSize","16");
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void initData() {

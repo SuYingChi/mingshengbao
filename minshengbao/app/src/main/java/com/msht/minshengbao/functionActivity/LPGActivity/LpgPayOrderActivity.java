@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -23,6 +23,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public class LpgPayOrderActivity extends BaseActivity {
     private String payChannel;
     private String orderId;
     private String realAmount;
+    private static final String PAGE_NAME="支付订单(LPG)";
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private PayWayAdapter mAdapter;
     private CustomDialog customDialog;
@@ -68,12 +70,12 @@ public class LpgPayOrderActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 JSONObject jsonObject =object.optJSONObject("data");
                                 activity.onGetBalanceData(jsonObject);
@@ -94,7 +96,7 @@ public class LpgPayOrderActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -187,7 +189,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
         textParams.put("orderType",orderType);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
 
     }
     @Override
@@ -235,7 +237,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         textParams.put("msbUserId",userId);
         textParams.put("Id",orderId);
         textParams.put("payChannel",payChannel);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initBalanceData() {
         requestCode=0;
@@ -243,7 +245,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onPayWayData() {
         requestCode=1;
@@ -253,7 +255,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         String validateURL= UrlUtil.PAY_METHOD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initFindViewId() {
         TextView tvOrderId=(TextView)findViewById(R.id.id_tv_order);
@@ -287,17 +289,17 @@ public class LpgPayOrderActivity extends BaseActivity {
     private void showMsg(String result, String errorMsg, String extraMsg) {
         String str;
         switch (result){
-            case SendrequestUtil.SUCCESS_VALUE:
+            case SendRequestUtil.SUCCESS_VALUE:
                 str="支付成功";
                 setResult(0x001);
                 onDelayRequest();
                // requestResult();
                 break;
-            case SendrequestUtil.FAILURE_VALUE:
+            case SendRequestUtil.FAILURE_VALUE:
                 str="支付失败";
                 onShowDialogs(str);
                 break;
-            case SendrequestUtil.CANCEL_VALUE:
+            case SendRequestUtil.CANCEL_VALUE:
                 str="已取消支付";
                 onShowDialogs(str);
                 break;
@@ -330,6 +332,17 @@ public class LpgPayOrderActivity extends BaseActivity {
                         finish();
                     }
                 }).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
     }
     @Override
     protected void onDestroy() {

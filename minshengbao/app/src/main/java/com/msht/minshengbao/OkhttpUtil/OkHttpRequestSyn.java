@@ -37,7 +37,7 @@ public class OkHttpRequestSyn {
     public static OkHttpRequestSyn getInstance(Context context, OkHttpClient okHttpClient) {
         OkHttpRequestSyn inst = mInstance;
         if (inst == null) {
-            synchronized (OkHttpRequestManager.class) {
+            synchronized (OkHttpRequestUtil.class) {
                 inst = mInstance;
                 if (inst == null) {
                     inst = new OkHttpRequestSyn(context,okHttpClient);
@@ -100,7 +100,8 @@ public class OkHttpRequestSyn {
             final Response response = call.execute();
             if (response.isSuccessful()) {
                 //获取返回数据 可以是String，bytes ,byteStream
-                reqCallBack.onRequestServiceSuccess(response.body().string());
+                reqCallBack.onRequestSuccess(response.body().string());
+               // reqCallBack.onRequestServiceSuccess(response.body().string());
             }
         } catch (Exception e) {
             reqCallBack.onRequestFailed(e.toString());
@@ -137,7 +138,8 @@ public class OkHttpRequestSyn {
             //请求执行成功
             if (response.isSuccessful()) {
                 //获取返回数据 可以是String，bytes ,byteStream
-                reqCallBack.onRequestServiceSuccess(response.body().string());
+                reqCallBack.onRequestSuccess(response.body().string());
+               // reqCallBack.onRequestServiceSuccess(response.body().string());
             }
         } catch (Exception e) {
             reqCallBack.onRequestFailed(e.toString());
@@ -166,7 +168,8 @@ public class OkHttpRequestSyn {
             //执行同步请求
             Response response = call.execute();
             if (response.isSuccessful()) {
-                reqCallBack.onRequestServiceSuccess(response.body().string());
+               // reqCallBack.onRequestServiceSuccess(response.body().string());
+                reqCallBack.onRequestSuccess(response.body().string());
             }
         } catch (Exception e) {
             reqCallBack.onRequestFailed(e.toString());

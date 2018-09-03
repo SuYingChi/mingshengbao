@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -77,7 +77,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -85,7 +85,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 activity.jsonArray =object.getJSONArray("data");
                                 activity.onGetPayWayData();
@@ -100,7 +100,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -124,7 +124,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -132,7 +132,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         JSONObject optJSONObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onSubtractAmount(optJSONObject);
                         }else {
                             activity.realAmount =activity.amount;
@@ -143,7 +143,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -169,7 +169,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -178,7 +178,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 activity.onGetBalanceData();
                             }else if (activity.requestCode==1){
@@ -191,7 +191,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -373,7 +373,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("userId",userId);
         textParams.put("event_code","gas_pay_before");
         textParams.put("event_relate_id", payId);
-        SendrequestUtil.postDataFromService(validateURL,textParams,subtractHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,subtractHandler);
     }
     private void initData() {
         requestCode=0;
@@ -381,7 +381,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         HashMap<String, String> textParams = new HashMap<String, String>(2);
         textParams.put("userId",userId);
         textParams.put("password",password);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,balanceHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,balanceHandler);
     }
 
     private void onPayWayData() {
@@ -390,7 +390,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         String validateURL= UrlUtil.PAY_METHOD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onClick(View view) {
@@ -436,21 +436,21 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("amount", realAmount);
         textParams.put("discountAmt",discountAmt);
         textParams.put("channel",channels);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,balanceHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,balanceHandler);
     }
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
         switch (title){
-            case SendrequestUtil.SUCCESS_VALUE:
+            case SendRequestUtil.SUCCESS_VALUE:
                 str="缴费成功";
                 setResult(0x002);
                 requestResult();
                 break;
-            case SendrequestUtil.FAILURE_VALUE:
+            case SendRequestUtil.FAILURE_VALUE:
                 str="缴费失败";
                 onShowDialogs(str);
                 break;
-            case SendrequestUtil.CANCEL_VALUE:
+            case SendRequestUtil.CANCEL_VALUE:
                 str="已取消缴费";
                 onShowDialogs(str);
                 break;
@@ -502,7 +502,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",orderId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onDestroy() {

@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.AutomaticPayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.ReplacePayAgree;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ReplacePayAgreeActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -40,8 +40,6 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
     private String Id,customerNum,addr;
     private int pos=-1;
     private ListView mListView;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private int   requestCode=0;
     private JSONArray jsonArray;
     private CustomDialog customDialog;
@@ -60,7 +58,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -68,7 +66,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0) {
                                 activity.jsonArray =object.optJSONArray("data");
                                 if (activity.jsonArray.length() == 0) {
@@ -80,8 +78,8 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                                     activity.tvNoData.setVisibility(View.GONE);
                                 }
                             }else if (activity.requestCode==1){
-                                JSONObject ObjectInfo = object.optJSONObject("data");
-                                activity.addr = ObjectInfo.optString("address");
+                                JSONObject objectInfo = object.optJSONObject("data");
+                                activity.addr = objectInfo.optString("address");
                                 activity.requestCode=2;
                                 activity.showDialogs("再仔细瞧瞧哦！");
                             }else if (activity.requestCode==2){
@@ -97,7 +95,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -223,7 +221,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
             validateURL = UrlUtil.DelectAutopay_AddUrl;
             textParams.put("id",Id);
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     public void onClick(View v) {
@@ -232,7 +230,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.id_tv_rightText:
-                Intent intent=new Intent(context, ReplacePayAgree.class);
+                Intent intent=new Intent(context, ReplacePayAgreeActivity.class);
                 startActivityForResult(intent,1);
                 // showInputDialog();
                 break;
@@ -242,8 +240,8 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
     }
     private void showInputDialog() {
         final InputCustomerNo input=new InputCustomerNo(context);
-        final TextView tv_title=(TextView)input.getTitle();
-        final EditText et_customer=(EditText)input.getEditCustomer();
+        final TextView tvTitle=(TextView)input.getTitle();
+        final EditText etCustomer=(EditText)input.getEditCustomer();
         input.show();
         input.setOnNegativeListener(new View.OnClickListener() {
             @Override
@@ -254,7 +252,7 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
         input.setOnNextListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customerNum=et_customer.getText().toString().trim();
+                customerNum=etCustomer.getText().toString().trim();
                 requestCode=1;
                 requestSevice();
                 input.dismiss();

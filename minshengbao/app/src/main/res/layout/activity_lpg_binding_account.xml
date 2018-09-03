@@ -53,6 +53,7 @@
                 android:layout_marginRight="@dimen/margin_width10"
                 android:layout_marginEnd="@dimen/margin_width10"
                 android:background="@null"
+                android:maxLength="11"
                 android:hint="@string/please_input_phone"/>
         </RelativeLayout>
         <View

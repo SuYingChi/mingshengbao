@@ -81,6 +81,8 @@ public class TopModuleAdapter extends BaseAdapter {
             holder.imgFunction.setImageResource(R.drawable.home_insurance_xh);
         }else if (code.equals(ConstantUtil.LPG_NAME)){
             holder.imgFunction.setImageResource(R.drawable.lpg_home_xh);
+        }else {
+            holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
         }
         return convertView;
     }

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -74,12 +74,12 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String message = object.optString("message");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 JSONObject json =object.optJSONObject("data");
                                 activity.initPriceData(json);
@@ -93,7 +93,7 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -154,7 +154,7 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
         requestCode=0;
         String validateURL= UrlUtil.WATER_PRICE_URL;
         Map<String, String> textParams = new HashMap<String, String>();
-        SendrequestUtil.postDataFromService(validateURL,textParams,priceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,priceHandler);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -278,7 +278,7 @@ public class OnlinePlaceOrderActivity extends BaseActivity implements View.OnCli
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        SendrequestUtil.postDataFromService(validateURL,textParams,priceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,priceHandler);
 
     }
     private String getSign() {

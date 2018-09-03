@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -170,7 +170,7 @@ public class PaySuccessActivity extends BaseActivity {
     }
 
     private void startAction() {
-        Intent success=new Intent(context,HtmlPage.class);
+        Intent success=new Intent(context,HtmlPageActivity.class);
         success.putExtra("navigate","活动");
         success.putExtra("url",activityUrl);
         startActivity(success);

@@ -1,4 +1,4 @@
-package com.msht.mshtLpg.mshtLpgMaster.util;
+package com.msht.minshengbao.OkhttpUtil;
 
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;

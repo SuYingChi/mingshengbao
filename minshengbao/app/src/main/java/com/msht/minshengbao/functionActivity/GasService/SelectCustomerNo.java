@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GetAddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -24,53 +24,67 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class SelectCustomerno extends BaseActivity {
-    private Button btn_address;
-    private ListViewForScrollView addresslist;
+/**
+  * Demo class
+  * 〈一句话功能简述〉
+  * 〈功能详细描述〉
+  * @author hong
+  * @date 2016/8/12 
+  */
+public class SelectCustomerNo extends BaseActivity {
+    private Button btnAddress;
+    private ListViewForScrollView addressList;
     private String userId,password;
     private int pos=-1;
-    private JSONArray jsonArray;//数据解析
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    private JSONArray jsonArray;
     private static final int ADDRESS_CODE=1;
     private GetAddressAdapter adapter;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
-
-    Handler gethouseHandler = new Handler() {
+    private final  RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<SelectCustomerNo> mWeakReference;
+        public RequestHandler(SelectCustomerNo activity) {
+            mWeakReference = new WeakReference<SelectCustomerNo>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SelectCustomerNo activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        jsonArray =object.optJSONArray("data");
-                        if(Results.equals("success")) {
-                            initShow();
+                        String results=object.optString("result");
+                        String error = object.optString("error");
+                        activity.jsonArray =object.optJSONArray("data");
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.onReceiveData();
                         }else {
-                            failure(Error);
+                            if (!activity.isFinishing()){
+                                activity.onFailure(error);
+                            }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT)
-                            .show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-
-    private void failure(String error) {
-        new PromptDialog.Builder(this)
+    }
+    private void onFailure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -81,14 +95,14 @@ public class SelectCustomerno extends BaseActivity {
                     }
                 }).show();
     }
-    private void initShow() {
+    private void onReceiveData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
                 String name = jsonObject.getString("name");
                 String customerNo = jsonObject.getString("customerNo");
-                HashMap<String, String> map = new HashMap<String, String>();
+                HashMap<String, String> map = new HashMap<String, String>(3);
                 map.put("id", id);
                 map.put("name", name);
                 map.put("customerNo", customerNo);
@@ -109,20 +123,20 @@ public class SelectCustomerno extends BaseActivity {
         setCommonHeader("选择燃气用户号");
         userId = SharedPreferencesUtil.getUserId(context, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password, "");
-        initfindViewByid();
+        initFindViewById();
         initEvent();
         adapter=new GetAddressAdapter(this, houseList,pos);
-        addresslist.setAdapter(adapter);
-        addresslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        addressList.setAdapter(adapter);
+        addressList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 pos=position;
                 adapter.notifyDataSetChanged();
-                String addressname=houseList.get(position).get("name");
+                String addressName=houseList.get(position).get("name");
                 String customerNo=houseList.get(position).get("customerNo");
                 String houseId=houseList.get(position).get("id");
                 Intent name=new Intent();
-                name.putExtra("addressname",addressname);
+                name.putExtra("addressname",addressName);
                 name.putExtra("houseId",houseId);
                 name.putExtra("customerNo",customerNo);
                 setResult(2, name);
@@ -134,70 +148,54 @@ public class SelectCustomerno extends BaseActivity {
             public void onRadioButtonClick(View v, int position) {
                 pos=position;
                 adapter.notifyDataSetChanged();
-                String addressname=houseList.get(position).get("name");
+                String addressName=houseList.get(position).get("name");
                 String customerNo=houseList.get(position).get("customerNo");
                 String houseId=houseList.get(position).get("id");
                 Intent name=new Intent();
-                name.putExtra("addressname",addressname);
+                name.putExtra("addressname",addressName);
                 name.putExtra("houseId",houseId);
                 name.putExtra("customerNo",customerNo);
                 setResult(2, name);
                 finish();
             }
         });
-        initrequest();
+        requestServer();
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ADDRESS_CODE://获取昵称设置返回数据
+            case ADDRESS_CODE:
                 if(resultCode==1) {
-                    houseList.clear();  ///清除原来数据
-                    initrequest();
+                    /*清除原来数据  **/
+                    houseList.clear();
+                    adapter.notifyDataSetChanged();
+                    requestServer();
                 }
                 break;
+                default:
+                    break;
         }
     }
-    private void initfindViewByid() {
-        btn_address=(Button)findViewById(R.id.id_btn_add_address);
-        addresslist = (ListViewForScrollView)findViewById(R.id.id_listview);
+    private void initFindViewById() {
+        btnAddress =(Button)findViewById(R.id.id_btn_add_address);
+        addressList = (ListViewForScrollView)findViewById(R.id.id_listview);
     }
-
     private void initEvent() {
-        btn_address.setOnClickListener(new View.OnClickListener() {
+        btnAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addaddress=new Intent(context,AddCustomerNoActivity.class);
-                addaddress.putExtra("addresscode", ADDRESS_CODE);
-                startActivityForResult(addaddress, 1);
+                Intent intent=new Intent(context,AddCustomerNoActivity.class);
+                intent.putExtra("addresscode", ADDRESS_CODE);
+                startActivityForResult(intent, 1);
             }
         });
-
     }
-
-    private void initrequest() {
-        String type="5";
+    private void requestServer() {
         String validateURL = UrlUtil.SELECT_ADDRESS_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                gethouseHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                gethouseHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(context.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 }

@@ -4,17 +4,15 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -23,6 +21,7 @@ import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.ActionSheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -91,12 +90,12 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 activity.onReceiveData(object);
                             }else if (activity.requestCode==1){
@@ -113,7 +112,7 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.requestCode==0){
                         activity.mButtonSend.setEnabled(false);
                     }
@@ -213,7 +212,7 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
         String requestUrl= UrlUtil.LPG_DEPOSIT_COUNT_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",lpgUserId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initFindViewId() {
         tvDeliveryTime=(TextView)findViewById(R.id.id_delivery_time);
@@ -353,7 +352,7 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
         textParams.put("roomNum",roomNum);
         textParams.put("city",city);
         textParams.put("area",area);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onOperationResult() {
         totalCount=mBottleNum1+mBottleNum2+mBottleNum3;
@@ -364,6 +363,16 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
         tvDepositCount.setText(totalCountText);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

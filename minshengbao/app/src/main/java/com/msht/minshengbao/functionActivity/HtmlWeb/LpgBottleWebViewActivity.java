@@ -1,14 +1,10 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JsResult;
@@ -22,17 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
-import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.LPGActivity.LpgSelectAddressActivity;
 import com.umeng.analytics.MobclickAgent;
-
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Demo class
@@ -41,7 +29,7 @@ import java.lang.ref.WeakReference;
  * @author hong
  * @date 2018/7/23  
  */
-public class LpgBottleWebView extends BaseActivity  {
+public class LpgBottleWebViewActivity extends BaseActivity  {
     private String    mUrl;
     private WebView mWebView;
     private static final String PAGE_NAME="钢瓶查询";

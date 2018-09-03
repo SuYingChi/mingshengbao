@@ -22,14 +22,14 @@ import okhttp3.Response;
 /**
  * Created by zhy on 15/8/17.
  */
-public class OkHttpUtils
+public class OkHttpManager
 {
     public static final long DEFAULT_MILLISECONDS = 10_000L;
-    private volatile static OkHttpUtils mInstance;
+    private volatile static OkHttpManager mInstance;
     private OkHttpClient mOkHttpClient;
     private Platform mPlatform;
 
-    public OkHttpUtils(OkHttpClient okHttpClient)
+    public OkHttpManager(OkHttpClient okHttpClient)
     {
         if (okHttpClient == null)
         {
@@ -43,22 +43,22 @@ public class OkHttpUtils
     }
 
 
-    public static OkHttpUtils initClient(OkHttpClient okHttpClient)
+    public static OkHttpManager initClient(OkHttpClient okHttpClient)
     {
         if (mInstance == null)
         {
-            synchronized (OkHttpUtils.class)
+            synchronized (OkHttpManager.class)
             {
                 if (mInstance == null)
                 {
-                    mInstance = new OkHttpUtils(okHttpClient);
+                    mInstance = new OkHttpManager(okHttpClient);
                 }
             }
         }
         return mInstance;
     }
 
-    public static OkHttpUtils getInstance()
+    public static OkHttpManager getInstance()
     {
         return initClient(null);
     }

@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -67,7 +67,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if(reference.customDialog.isShowing()&&reference.customDialog!=null) {
                         reference.customDialog.dismiss();
                     }
@@ -75,7 +75,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==1){
                                 reference.registerRequest();
                             }
@@ -90,7 +90,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if(reference.customDialog.isShowing()&&reference.customDialog!=null) {
                         reference.customDialog.dismiss();
                     }
@@ -245,7 +245,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             textParams.put("password",password);
             textParams.put("code", verifyCode);
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private boolean isPhone(String phoneNo) {     //判断电话号码个格式
         Matcher matcher=NUMBER_PATTERN.matcher(phoneNo);
@@ -286,7 +286,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
     private void treaty() {
         String url=UrlUtil.AgreeTreayt_Url;
-        Intent treaty=new Intent(RegisterActivity.this,AgreeTreaty.class);
+        Intent treaty=new Intent(RegisterActivity.this,AgreeTreatyActivity.class);
         treaty.putExtra("navigation","注册协议书");
         treaty.putExtra("url",url);
         startActivity(treaty);

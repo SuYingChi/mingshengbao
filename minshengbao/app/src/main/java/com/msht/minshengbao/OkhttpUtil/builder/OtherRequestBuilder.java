@@ -1,7 +1,7 @@
-package com.zhy.http.okhttp.builder;
+package com.msht.minshengbao.OkhttpUtil.builder;
 
-import com.zhy.http.okhttp.request.OtherRequest;
-import com.zhy.http.okhttp.request.RequestCall;
+import com.msht.minshengbao.OkhttpUtil.request.OtherRequest;
+import com.msht.minshengbao.OkhttpUtil.request.RequestCall;
 
 import okhttp3.RequestBody;
 

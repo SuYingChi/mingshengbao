@@ -5,115 +5,141 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.RatingBar;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
-public class LookEvaluate extends BaseActivity {
-    private ImageView typeimg;
+
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/4  
+ */
+public class LookEvaluateActivity extends BaseActivity {
     private RatingBar mRatingBar;
-    private Button    btn_add;
-    private View layout_add,layout_master;
-    private TextView  tv_evaluation,tv_master_eva,user_add_eva;
-    private TextView  tv_naviga;
+    private Button btnAdd;
+    private View layoutAdd, layoutMaster;
+    private TextView  tvEvaluation, tvMasterEva, userAddEva;
     private String    userId,password,orderId;
-    private String    type,finish_time,orderNo;
-    private String    title,real_amount,parent_category;
-    private String    evaluate_score,evaluate_info;
-    private final int  SUCCESS = 1;
-    private final int  FAILURE = 0;
+    private String    type, finishTime,orderNo;
+    private String    title, realAmount, parentCategory;
+    private String evaluateScore, evaluateInfo;
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandle=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<LookEvaluateActivity> mWeakReference;
+        private RequestHandler(LookEvaluateActivity activity) {
+            mWeakReference = new WeakReference<LookEvaluateActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final LookEvaluateActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
+                        String result=object.optString("result");
+                        String error = object.optString("error");
                         JSONObject jsonObject=object.getJSONObject("data");
-                        if(Results.equals("success")) {
-                            initShow(jsonObject);
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.onReceiveData(jsonObject);
                         }else {
-                            faifure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT)
-                            .show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+
+            super.handleMessage(msg);
         }
-    };
-    private void initShow(JSONObject jsonObject) {
+    }
+    private void onReceiveData(JSONObject jsonObject) {
         try{
-            JSONObject object_user=jsonObject.getJSONObject("user_eval");
-            evaluate_info=object_user.optString("evaluate_info");
-            evaluate_score=object_user.optString("evaluate_score");
-            if (!evaluate_info.equals("")){
-                tv_evaluation.setText(evaluate_info);
+            JSONObject objectUser=jsonObject.getJSONObject("user_eval");
+            evaluateInfo =objectUser.optString("evaluateInfo");
+            evaluateScore =objectUser.optString("evaluateScore");
+            if (!TextUtils.isEmpty(evaluateInfo)){
+                tvEvaluation.setText(evaluateInfo);
             }else {
-                tv_evaluation.setHint("您当前没有评语");
+                tvEvaluation.setHint("您当前没有评语");
             }
-            if (evaluate_score.equals("1")){
-                mRatingBar.setStar(1f);
-            }else if (evaluate_score.equals("2")){
-                mRatingBar.setStar(2f);
-            }else if (evaluate_score.equals("3")){
-                mRatingBar.setStar(3f);
-            }else if (evaluate_score.equals("4")){
-                mRatingBar.setStar(4f);
-            }else if (evaluate_score.equals("5")){
-                mRatingBar.setStar(5f);
+            switch (evaluateScore){
+                case ConstantUtil.VALUE_ONE:
+                    mRatingBar.setStar(1f);
+                    break;
+                case ConstantUtil.VALUE_TWO:
+                    mRatingBar.setStar(2f);
+                    break;
+                case ConstantUtil.VALUE_THREE:
+                    mRatingBar.setStar(3f);
+                    break;
+                case ConstantUtil.VALUE_FOUR:
+                    mRatingBar.setStar(4f);
+                    break;
+                case ConstantUtil.VALUE_FIVE:
+                     mRatingBar.setStar(5f);
+                    break;
+                    default:
+                        break;
             }
             if (jsonObject.has("repairman_eval")){
-                layout_master.setVisibility(View.VISIBLE);
-                JSONObject object_master=jsonObject.getJSONObject("repairman_eval");
-                String master_info=object_master.optString("evaluate_info");
-                tv_master_eva.setText(master_info);
+                layoutMaster.setVisibility(View.VISIBLE);
+                JSONObject objectMaster=jsonObject.getJSONObject("repairman_eval");
+                String evaluateInfo=objectMaster.optString("evaluateInfo");
+                tvMasterEva.setText(evaluateInfo);
             }else {
-                layout_master.setVisibility(View.GONE);
+                layoutMaster.setVisibility(View.GONE);
             }
             if (jsonObject.has("user_add_eval")){
-                btn_add.setVisibility(View.GONE);
-                layout_add.setVisibility(View.VISIBLE);
-                JSONObject object_add=jsonObject.getJSONObject("user_add_eval");
-                String user_add_info=object_add.optString("evaluate_info");
-                user_add_eva.setText(user_add_info);
+                btnAdd.setVisibility(View.GONE);
+                layoutAdd.setVisibility(View.VISIBLE);
+                JSONObject userAddEval=jsonObject.getJSONObject("user_add_eval");
+                String userAddInfo=userAddEval.optString("evaluateInfo");
+                userAddEva.setText(userAddInfo);
             }else {
-                btn_add.setVisibility(View.VISIBLE);
-                layout_add.setVisibility(View.GONE);
+                btnAdd.setVisibility(View.VISIBLE);
+                layoutAdd.setVisibility(View.GONE);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    private void faifure(String error) {
-        new PromptDialog.Builder(this)
+    private void onFailure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -138,39 +164,47 @@ public class LookEvaluate extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         orderId=data.getStringExtra("id");
         type= data.getStringExtra("type");
-        parent_category=data.getStringExtra("parent_category");
+        parentCategory =data.getStringExtra("parentCategory");
         title=data.getStringExtra("title");
-        finish_time=data.getStringExtra("finish_time");
-        real_amount=data.getStringExtra("real_amount");
-        evaluate_score=data.getStringExtra("evaluate_score");
-        evaluate_info=data.getStringExtra("evaluate_info");
+        finishTime =data.getStringExtra("finishTime");
+        realAmount =data.getStringExtra("realAmount");
+        evaluateScore =data.getStringExtra("evaluateScore");
+        evaluateInfo =data.getStringExtra("evaluateInfo");
         initfindViewById();
         initData();
     }
     private void initfindViewById() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
-        ((TextView)findViewById(R.id.id_tv_type)).setText(parent_category);
-        ((TextView)findViewById(R.id.id_tv_amount)).setText(real_amount);
-        ((TextView)findViewById(R.id.id_create_time)).setText(finish_time);
+        ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
+        ((TextView)findViewById(R.id.id_tv_amount)).setText(realAmount);
+        ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
         ((TextView)findViewById(R.id.id_tv_title)).setText(title);
-        tv_master_eva=(TextView)findViewById(R.id.id_master_massage);
-        user_add_eva=(TextView)findViewById(R.id.id_again_massage);
-        typeimg=(ImageView)findViewById(R.id.id_img_type);
+        tvMasterEva =(TextView)findViewById(R.id.id_master_massage);
+        userAddEva =(TextView)findViewById(R.id.id_again_massage);
+        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
         mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
-        tv_evaluation=(TextView) findViewById(R.id.id_tv_evaluation);
-        btn_add=(Button)findViewById(R.id.id_btn_add);
-        layout_add=findViewById(R.id.id_li_add);
-        layout_master=findViewById(R.id.id_li_master);
-        if (type.equals("1")){
-            typeimg.setImageResource(R.drawable.home_sanitary_xh);
-        }else if (type.equals("2")){
-            typeimg.setImageResource(R.drawable.home_appliance_fix_xh);
-        }else if (type.equals("3")){
-            typeimg.setImageResource(R.drawable.home_lanterns_xh);
-        }else if (type.equals("4")){
-            typeimg.setImageResource(R.drawable.home_otherfix_xh);
-        }else if (type.equals("36")){
-            typeimg.setImageResource(R.drawable.home_appliance_clean_xh);
+        tvEvaluation =(TextView) findViewById(R.id.id_tv_evaluation);
+        btnAdd =(Button)findViewById(R.id.id_btn_add);
+        layoutAdd =findViewById(R.id.id_li_add);
+        layoutMaster =findViewById(R.id.id_li_master);
+        switch (type){
+            case ConstantUtil.VALUE_ONE:
+                typeImg.setImageResource(R.drawable.home_sanitary_xh);
+                break;
+            case ConstantUtil.VALUE_TWO:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.VALUE_THREE:
+                typeImg.setImageResource(R.drawable.home_lanterns_xh);
+                break;
+            case ConstantUtil.VALUE_FOUR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.VALUE_THIRTY_SIX:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            default:
+                break;
         }
         mRatingBar.setStarEmptyDrawable(getResources().getDrawable(R.drawable.star_empty));
         mRatingBar.setStarFillDrawable(getResources().getDrawable(R.drawable.star_full));
@@ -181,18 +215,18 @@ public class LookEvaluate extends BaseActivity {
         mRatingBar.setImagePadding(35);
         mRatingBar.setmClickable(false);
         mRatingBar.setEnabled(false);
-        btn_add.setOnClickListener(new View.OnClickListener() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,RepairEvaluate.class);
+                Intent intent=new Intent(context,RepairEvaluateActivity.class);
                 intent.putExtra("send_type","3");
                 intent.putExtra("id",orderId);
                 intent.putExtra("orderNo",orderNo);
                 intent.putExtra("type",type);
                 intent.putExtra("title",title);
-                intent.putExtra("parent_category",parent_category);
-                intent.putExtra("finish_time",finish_time);
-                intent.putExtra("real_amount",real_amount);
+                intent.putExtra("parentCategory", parentCategory);
+                intent.putExtra("finishTime", finishTime);
+                intent.putExtra("realAmount", realAmount);
                 startActivityForResult(intent,0x003);
             }
         });
@@ -214,26 +248,27 @@ public class LookEvaluate extends BaseActivity {
     private void initData() {
         customDialog.show();
         String validateURL =UrlUtil.LookEvalute_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id", orderId);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener(){
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
-
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,requestHandle);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

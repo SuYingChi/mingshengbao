@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -20,6 +20,13 @@ import com.umeng.message.PushAgent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/6  
+ */
 public class BillDetailActivity extends BaseActivity {
     private static ArrayList<HashMap<String,  String>> List = new ArrayList<HashMap<String,  String>>();
     @Override
@@ -48,7 +55,7 @@ public class BillDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 String navigate="气价说明";
                 String url= UrlUtil.Gasprice_Url;
-                Intent price=new Intent(context,HtmlPage.class);
+                Intent price=new Intent(context,HtmlPageActivity.class);
                 price.putExtra("navigate",navigate);
                 price.putExtra("url",url);
                 startActivity(price);

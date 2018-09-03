@@ -129,22 +129,22 @@ public class NetWorkUtil {
      * @param context
      * @return
      */
-    public static boolean IsNetWorkEnable(Context context) {
+    public static boolean isNetWorkEnable(Context context) {
         boolean netState=false;
         try {
             ConnectivityManager connectivity = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo=connectivity.getActiveNetworkInfo();
-            if (networkInfo != null) {
-               if (networkInfo.isAvailable()&&networkInfo.isConnected()){
-                   netState=true;
-               }
+            if (connectivity!=null){
+                NetworkInfo networkInfo=connectivity.getActiveNetworkInfo();
+                if (networkInfo != null) {
+                    if (networkInfo.isAvailable()&&networkInfo.isConnected()){
+                        netState=true;
+                    }
+                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //ToastUtil.showMessage(context, "无法连接网络");
         return netState;
     }
     public static int getNetWorkState(Context context) {

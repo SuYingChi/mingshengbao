@@ -1,9 +1,10 @@
-package com.zhy.http.okhttp.builder;
+package com.msht.minshengbao.OkhttpUtil.builder;
 
 import android.net.Uri;
 
-import com.zhy.http.okhttp.request.GetRequest;
-import com.zhy.http.okhttp.request.RequestCall;
+
+import com.msht.minshengbao.OkhttpUtil.request.GetRequest;
+import com.msht.minshengbao.OkhttpUtil.request.RequestCall;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

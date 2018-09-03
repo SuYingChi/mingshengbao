@@ -21,21 +21,22 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.adapter.appointAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectTable;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
+import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -53,28 +55,25 @@ import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
-public class RepeatFix extends BaseActivity implements View.OnClickListener {
-    private String reid,orderId,status, statusInfo;
+public class RepeatFixActivity extends BaseActivity implements View.OnClickListener {
+    private String reid,orderId;
     private String address,type,info, parentCategory;
     private String phone,title,orderNo, finishTime;
     private String appointDate;
     private String textString="";
-    private String source="4",repeatId;
+    private String repeatId;
     private String userId,password;
     private int pos=-1;
     private int thisPosition =-1;
     private Button btnSend;
     private TextView appointmentData, appointmentTime;
     private TextView etProblem;
-    private DatePicker datePicker;
     private GridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private MultiLineChooseLayout multiChoose;
     private int k=0;
     private JSONObject jsonObject;
     private JSONArray jsonArray;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private int requestType =0;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private ArrayList<String>multiResult=new ArrayList<>();
@@ -82,75 +81,101 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
     private ArrayList<String> mDataList=new ArrayList<>();
     private String[] appointTime={"08:30-11:30","11:30-14:30","14:30-17:30","17:30-20:30","20:30-23:30"};
     private CustomDialog customDialog;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private final BitmapHandler bitmapHandler=new BitmapHandler(this);
+    private static class  RequestHandler extends Handler{
+        private WeakReference<RepeatFixActivity> mWeakReference;
+        public RequestHandler(RepeatFixActivity activity) {
+            mWeakReference = new WeakReference<RepeatFixActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final RepeatFixActivity reference =mWeakReference.get();
+            if (reference == null||reference.isFinishing()) {
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestType ==0){
-                                customDialog.dismiss();
-                                jsonArray=object.optJSONArray("data");
-                                questionData();
-                            }else if (requestType ==1){
-                                jsonObject =object.optJSONObject("data");
-                                initShow();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        reference.jsonObject =object.optJSONObject("data");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (reference.requestType ==0){
+                                reference.jsonArray=object.optJSONArray("data");
+                                reference.questionData();
+                            }else if (reference.requestType ==1){
+                                reference.jsonObject =object.optJSONObject("data");
+                                reference.initShow();
                             }
                         }else {
-                            customDialog.dismiss();
-                            faifure(Error);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler Bitmaphandler= new Handler() {
+    }
+    private static class BitmapHandler extends Handler{
+        private WeakReference<RepeatFixActivity> mWeakReference;
+        private BitmapHandler(RepeatFixActivity activity) {
+            mWeakReference = new WeakReference<RepeatFixActivity>(activity);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+            final RepeatFixActivity reference =mWeakReference.get();
+            if (reference == null||reference.isFinishing()) {
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
                         String error=jsonObject.optString("error");
-                        if (results.equals("success")){
-                            k++;
-                            if(k==imgPaths.size()){
-                                customDialog.dismiss();
-                                btnSend.setEnabled(true);
-                                showDialogs("您的返修申请已经提交");
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
+                            reference.k++;
+                            if(reference.k==reference.imgPaths.size()){
+                                if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                                    reference.customDialog.dismiss();
+                                }
+                                reference.btnSend.setEnabled(true);
+                                reference.onShowDialog("您的返修申请已经提交");
                             }
                         }else {
-                            customDialog.dismiss();
-                            btnSend.setEnabled(true);
-                            faifure(error);
+                            reference.btnSend.setEnabled(true);
+                            reference.onFailure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    btnSend.setEnabled(true);
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendRequestUtil.FAILURE:
+                    reference.btnSend.setEnabled(true);
+                    ToastUtil.ToastText(reference.context, msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
+    }
     private void questionData() {
         try{
             for (int i=0;i<jsonArray.length();i++){
@@ -161,7 +186,7 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        multiChoose.setList(mDataList);      //显示数据
+        multiChoose.setList(mDataList);
     }
     private void initShow() {
         repeatId= jsonObject.optString("id");
@@ -173,14 +198,14 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         }else {
             customDialog.dismiss();
             btnSend.setEnabled(true);
-            showDialogs("您的返修申请已经提交");
+            onShowDialog("您的返修申请已经提交");
         }
     }
     private void compressImg(final File files) {
-        Luban.with(this)
-                .load(files)                     //传人要压缩的图片
-               // .putGear(Luban.THIRD_GEAR)      //设定压缩档次，默认三挡
-                .setCompressListener(new OnCompressListener() { //设置回调
+        Luban.with(context)
+                .load(files)
+               // .putGear(Luban.THIRD_GEAR)
+                .setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {}
                     @Override
@@ -191,8 +216,7 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
                     public void onError(Throwable e) {
                         // TODO 当压缩过去出现问题时调用
                         uploadImage(files);
-                        Toast.makeText(context,"图片压缩失败!",
-                                Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(context,"图片压缩失败!");
                     }
                 }).launch();
     }
@@ -205,24 +229,9 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         textParams.put("password",password);
         textParams.put("id", repeatId);
         fileparams.put("img",files);
-        SendrequestUtil.multipleFileParameters(validateURL, textParams, fileparams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                Bitmaphandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj =fail;
-                Bitmaphandler.sendMessage(msg);
-            }
-        });
+        SendRequestUtil.postFileToServer(textParams, fileparams,validateURL,bitmapHandler);
     }
-    private void showDialogs(String s) {
+    private void onShowDialog(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -236,8 +245,8 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
                     }
                 }).show();
     }
-    private void faifure(String error) {
-        new PromptDialog.Builder(this)
+    private void onFailure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -276,23 +285,8 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         customDialog.show();
         requestType =0;
         String validateURL = UrlUtil.RepairOrder_QuestionUrl;
-        String geturl=validateURL+"?rc_id="+reid;
-        SendrequestUtil.executeGet(geturl, new ResultListener(){
-            @Override
-            public void onResultSuccess(String success) {
-                Message message = new Message();
-                message.what = SUCCESS;
-                message.obj = success;
-                requestHandler.sendMessage(message);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message message = new Message();
-                message.what = FAILURE;
-                message.obj = fail;
-                requestHandler.sendMessage(message);
-            }
-        });
+        String getUrl=validateURL+"?rc_id="+reid;
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(getUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
     }
     private void initView() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
@@ -341,7 +335,7 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     thisPosition =position;
-                    initphoto(position);
+                    onRequestLimitPhoto(position);
                 } else {
                     if (position == imgPaths.size()) {
                         PhotoPicker.builder()
@@ -350,12 +344,12 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
                                 .setSelected(imgPaths)
                                 .setShowGif(true)
                                 .setPreviewEnabled(true)
-                                .start(RepeatFix.this, PhotoPicker.REQUEST_CODE);
+                                .start(RepeatFixActivity.this, PhotoPicker.REQUEST_CODE);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("imgPaths", imgPaths);
                         bundle.putInt("position", position);
-                        Intent intent = new Intent(RepeatFix.this, EnlargePicActivity.class);
+                        Intent intent = new Intent(RepeatFixActivity.this, EnlargePicActivity.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, position);
                     }
@@ -395,7 +389,7 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void initphoto(int position) {
+    private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
                     .requestCode(MY_PERMISSIONS_REQUEST)
@@ -410,12 +404,12 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
                         .setSelected(imgPaths)
                         .setShowGif(true)
                         .setPreviewEnabled(true)
-                        .start(RepeatFix.this, PhotoPicker.REQUEST_CODE);
+                        .start(RepeatFixActivity.this, PhotoPicker.REQUEST_CODE);
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("imgPaths",imgPaths);
                 bundle.putInt("position",position);
-                Intent intent=new Intent(RepeatFix.this, EnlargePicActivity.class);
+                Intent intent=new Intent(RepeatFixActivity.this, EnlargePicActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent,position);
             }
@@ -430,17 +424,17 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         @Override
         public void onSucceed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                showphoto();
+                onShowPhoto();
             }
         }
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Toast.makeText(RepeatFix.this,"授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"授权失败");
             }
         }
     };
-    private void showphoto() {
+    private void onShowPhoto() {
         if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
                     .setPhotoCount(4)
@@ -448,12 +442,12 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
                     .setSelected(imgPaths)
                     .setShowGif(true)
                     .setPreviewEnabled(true)
-                    .start(RepeatFix.this, PhotoPicker.REQUEST_CODE);
+                    .start(RepeatFixActivity.this, PhotoPicker.REQUEST_CODE);
         } else {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("imgPaths",imgPaths);
             bundle.putInt("position", thisPosition);
-            Intent intent=new Intent(RepeatFix.this, EnlargePicActivity.class);
+            Intent intent=new Intent(RepeatFixActivity.this, EnlargePicActivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, thisPosition);
         }
@@ -462,16 +456,16 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_data:
-                selectdate();
+                onsSelectDate();
                 break;
             case R.id.id_time:
                 onSelectTime();
                 break;
             case R.id.id_btn_send:
                 if (TextUtils.isEmpty(appointmentData.getText().toString())){
-                    faifure("请选择预约时间");
+                    onFailure("请选择预约时间");
                 }else {
-                    ordersend();
+                    onOrderSend();
                 }
                 break;
             default:
@@ -479,10 +473,10 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void selectdate() {
+    private void onsSelectDate() {
         LayoutInflater l = LayoutInflater.from(this);
         View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
-        datePicker=(DatePicker) mPickView.findViewById(R.id.datepicker);
+        DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
         Calendar mCurrent=Calendar.getInstance();
         datePicker.init(mCurrent.get(Calendar.YEAR), mCurrent.get(Calendar.MONTH),  mCurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
             @Override
@@ -527,11 +521,7 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         Calendar mCalendar = Calendar.getInstance();
         Calendar temCalendar = Calendar.getInstance();
         temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
-        if (temCalendar.before(mCalendar)) {     //2016年9月21 后
-            return true;
-        } else {
-            return false;
-        }
+        return temCalendar.before(mCalendar);
     }
 
     private boolean isDateAfter(DatePicker tempView) {
@@ -544,9 +534,9 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
     }
     private void onSelectTime() {
         final SelectTable selectTable=new SelectTable(context);
-        final TextView tv_title=(TextView)selectTable.getTitle();
+        final TextView tvTitle=(TextView)selectTable.getTitle();
         final ListView mListView=(ListView) selectTable.getListview();
-        tv_title.setText("选择时间");
+        tvTitle.setText("选择时间");
         final appointAdapter adapter=new appointAdapter(context,appointTime,pos);
         mListView.setAdapter(adapter);
         selectTable.show();
@@ -567,20 +557,21 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
             }
         });
     }
-    private void ordersend() {
+    private void onOrderSend() {
         String date= appointmentData.getText().toString().trim();
         String time= appointmentTime.getText().toString().trim();
-        String otherinfo= etProblem.getText().toString().trim();
+        String otherInfo= etProblem.getText().toString().trim();
         appointDate =date+"  "+time;
-        info=textString+otherinfo;
+        info=textString+otherInfo;
         customDialog.show();
         requestType =1;
         btnSend.setEnabled(false);
-        requstSevices();
+        requestService();
     }
-    private void requstSevices() {
+    private void requestService() {
+        String source="4";
         String validateURL = UrlUtil.PublishOrder_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("cid",reid);
@@ -590,24 +581,24 @@ public class RepeatFix extends BaseActivity implements View.OnClickListener {
         textParams.put("appointDate", appointDate);
         textParams.put("source",source);
         textParams.put("raw_order_id",orderId);
-        String FF="userId="+userId+"password="+password+"cid="+reid+"phone="+phone
-                +"address="+address+"info="+info+"appointDate="+ appointDate
-                +"source="+source+"raw_order_id="+orderId;
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

@@ -7,51 +7,54 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.adapter.ViewPageWriteTable;
+import com.msht.minshengbao.adapter.ViewPagerGasIntroduce;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
-
-public class GasWriteTable extends AppCompatActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/18 
+ */
+public class GasIntroduceActivity extends AppCompatActivity {
     private ViewPagerIndicator indicator;
-    private ViewPager mviewPager;
-    private Context mContext;
+    private ViewPager mViewPager;
+    private TextView  tvNavigation;
+    private Context   mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gas_write_table);
+        setContentView(R.layout.activity_gas_introduce);
         mContext=this;
         StatusBarCompat.setStatusBar(this);
-        PushAgent.getInstance(mContext).onAppStart();   //推送统计
-        initHeader();
         initView();
         initEvent();
     }
-    private void initHeader() {
-        ((TextView)findViewById(R.id.tv_navigation)).setText("自助抄表") ;
+    private void initView() {
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
+        tvNavigation.setText(R.string.gas_introduce);
+        indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
+    }
+    private void initEvent() {
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-    }
-    private void initView() {
-        indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        mviewPager=(ViewPager)findViewById(R.id.id_viewPager_record);
-    }
-    private void initEvent() {
-        mviewPager.setAdapter(new ViewPageWriteTable(getSupportFragmentManager(), getApplicationContext()));
-        indicator.setViewPager(mviewPager,0);
+        mViewPager.setAdapter(new ViewPagerGasIntroduce(getSupportFragmentManager(), getApplicationContext()));
+        indicator.setViewPager(mViewPager,0);
     }
     @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(mContext);
-        //ZhugeSDK.getInstance().init(getApplicationContext());
+       // ZhugeSDK.getInstance().init(getApplicationContext());
     }
     @Override
     protected void onPause() {

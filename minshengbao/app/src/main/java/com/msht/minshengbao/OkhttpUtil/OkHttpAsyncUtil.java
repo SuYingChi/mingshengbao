@@ -1,4 +1,4 @@
-package com.msht.minshengbao.OkhttpUtil.utils;
+package com.msht.minshengbao.OkhttpUtil;
 
 import android.content.Context;
 
@@ -12,9 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lzz on 2017/6/6.
+ *
+ * @author lzz
+ * @date 2017/6/6
  */
-public class OkHttpUtil {
+public class OkHttpAsyncUtil {
 
     public static final String TAG = "OkHttpUtil";
 

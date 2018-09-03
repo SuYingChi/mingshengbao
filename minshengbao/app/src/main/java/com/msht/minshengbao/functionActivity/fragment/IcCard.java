@@ -13,9 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 
@@ -51,31 +51,29 @@ public class IcCard extends Fragment {
                 MPermissionUtils.requestPermissionsResult(this, MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted(int Code) {
-                        GoScanActivity();
+                        goScanActivity();
                     }
                     @Override
                     public void onPermissionDenied(int Code) {
-                        Toast.makeText(mContext,"没有权限您将无法进行扫描操作！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.ToastText(mContext,"没有权限您将无法进行扫描操作！");
                     }
                 });
 
             }else {
-                GoScanActivity();
+                goScanActivity();
             }
         }else {
-            GoScanActivity();
+            goScanActivity();
         }
     }
-    private void GoScanActivity() {
-        Intent intent =new Intent(getActivity(), QRCodeScanActivity.class);
+    private void goScanActivity() {
+        Intent intent =new Intent(getActivity(), QrCodeScanActivity.class);
         startActivity(intent);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode==MY_CAMERA_REQUEST){
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }else {
-
         }
     }
 

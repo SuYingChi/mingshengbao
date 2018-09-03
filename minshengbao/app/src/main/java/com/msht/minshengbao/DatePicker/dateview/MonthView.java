@@ -289,11 +289,9 @@ public class MonthView extends View {
     }
 
     private void drawBGCircle(Canvas canvas) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            for (String s : cirDpr.keySet()) {
-                BGCircle circle = cirDpr.get(s);
-                drawBGCircle(canvas, circle);
-            }
+        for (String s : cirDpr.keySet()) {
+            BGCircle circle = cirDpr.get(s);
+            drawBGCircle(canvas, circle);
         }
         for (String s : cirApr.keySet()) {
             BGCircle circle = cirApr.get(s);
@@ -352,8 +350,12 @@ public class MonthView extends View {
         if (info.isToday && isTodayDisplay) {
             drawBGToday(canvas, rect);
         } else {
-            if (isHolidayDisplay) drawBGHoliday(canvas, rect, info.isHoliday);
-            if (isDeferredDisplay) drawBGDeferred(canvas, rect, info.isDeferred);
+            if (isHolidayDisplay){
+                drawBGHoliday(canvas, rect, info.isHoliday);
+            }
+            if (isDeferredDisplay) {
+                drawBGDeferred(canvas, rect, info.isDeferred);
+            }
         }
     }
 
@@ -364,13 +366,16 @@ public class MonthView extends View {
 
     private void drawBGHoliday(Canvas canvas, Rect rect, boolean isHoliday) {
         mPaint.setColor(mTManager.colorHoliday());
-        if (isHoliday) canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+        if (isHoliday) {
+            canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+        }
     }
 
     private void drawBGDeferred(Canvas canvas, Rect rect, boolean isDeferred) {
         mPaint.setColor(mTManager.colorDeferred());
-        if (isDeferred)
+        if (isDeferred){
             canvas.drawCircle(rect.centerX(), rect.centerY(), circleRadius / 2F, mPaint);
+        }
     }
 
     private void drawGregorian(Canvas canvas, Rect rect, String str, boolean isWeekend) {
@@ -381,8 +386,9 @@ public class MonthView extends View {
             mPaint.setColor(mTManager.colorG());
         }
         float y = rect.centerY();
-        if (!isFestivalDisplay)
+        if (!isFestivalDisplay){
             y = rect.centerY() + Math.abs(mPaint.ascent()) - (mPaint.descent() - mPaint.ascent()) / 2F;
+        }
         canvas.drawText(str, rect.centerX(), y, mPaint);
     }
 
@@ -758,6 +764,9 @@ public class MonthView extends View {
     }
 
     private enum SlideMode {
+        /**
+         *
+         */
         VER,
         HOR
     }

@@ -16,11 +16,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.adapter.LpgDeliveryInfoAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -29,6 +29,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.DeliveryInfoDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +61,7 @@ public class LpgDeliveryInformationActivity extends BaseActivity {
     private String  employeeId;
     private String  sendForMeCount;
     private String  employeeHeadUrl;
+    private static final String PAGE_NAME="配送信息";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private LpgDeliveryInfoAdapter mAdapter;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
@@ -80,12 +82,12 @@ public class LpgDeliveryInformationActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONArray jsonArray=object.optJSONArray("lists");
                             activity.onReceiveData(object);
                             activity.onReceiveFlowList(jsonArray);
@@ -96,7 +98,7 @@ public class LpgDeliveryInformationActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -250,7 +252,18 @@ public class LpgDeliveryInformationActivity extends BaseActivity {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
         textParams.put("userId",lpgUserId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
     }
     @Override
     protected void onDestroy() {

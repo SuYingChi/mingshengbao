@@ -19,10 +19,10 @@ import java.util.HashMap;
  * Created by hong on 2017/3/21.
  */
 
-public class GethouseAdapter extends BaseAdapter {
+public class GetHouseAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String,  String>> houseList = new ArrayList<HashMap<String,  String>>();
-    public GethouseAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public GetHouseAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         super();
         this.houseList=List;
         mInflater = (LayoutInflater) context

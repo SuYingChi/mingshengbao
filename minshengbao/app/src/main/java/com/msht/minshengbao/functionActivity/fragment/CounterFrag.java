@@ -26,8 +26,7 @@ import com.umeng.analytics.MobclickAgent;
  * @date 2016/7/2  
  */
 public class CounterFrag extends Fragment implements View.OnClickListener {
-    private WebView WebCounter;
-    private static final String my_url= UrlUtil.Guitai_Url;
+    private static final String MY_URL = UrlUtil.Guitai_Url;
     private final String mPageName ="燃气介绍";
     public CounterFrag() {
         // Required empty public constructor
@@ -48,14 +47,14 @@ public class CounterFrag extends Fragment implements View.OnClickListener {
 
     }
     private void initWebView(View view) {
-        WebCounter=(WebView)view.findViewById(R.id.id_web_counter);
-        WebCounter.loadUrl(my_url);
-        WebSettings settings=WebCounter.getSettings();
+        WebView mWebCounter =(WebView)view.findViewById(R.id.id_web_counter);
+        mWebCounter.loadUrl(MY_URL);
+        WebSettings settings= mWebCounter.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        WebCounter.requestFocusFromTouch();
-        WebCounter.setWebViewClient(new WebViewClient() {
+        mWebCounter.requestFocusFromTouch();
+        mWebCounter.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);

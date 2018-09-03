@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.PayRecordAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -35,7 +35,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/7/2  
  */
-public class GasPayRecord extends BaseActivity {
+public class GasPayRecordActivity extends BaseActivity {
     private String    userId;
     private String    password;
     private String    customerNo;
@@ -53,13 +53,13 @@ public class GasPayRecord extends BaseActivity {
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
     private final PayRecordHandler payRecordHandler=new PayRecordHandler(this);
     private static class PayRecordHandler  extends Handler{
-        private WeakReference<GasPayRecord> mWeakReference;
-        public PayRecordHandler(GasPayRecord gasPayRecord) {
-            mWeakReference = new WeakReference<GasPayRecord>(gasPayRecord);
+        private WeakReference<GasPayRecordActivity> mWeakReference;
+        public PayRecordHandler(GasPayRecordActivity gasPayRecord) {
+            mWeakReference = new WeakReference<GasPayRecordActivity>(gasPayRecord);
         }
         @Override
         public void handleMessage(Message msg) {
-            final GasPayRecord activity=mWeakReference.get();
+            final GasPayRecordActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -67,13 +67,14 @@ public class GasPayRecord extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
+
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.refreshType==0){
                                 activity.mListView.stopRefresh(true);
                             }else if (activity.refreshType==1){
@@ -93,7 +94,7 @@ public class GasPayRecord extends BaseActivity {
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
@@ -195,7 +196,7 @@ public class GasPayRecord extends BaseActivity {
         textParams.put("customerNo",customerNo);
         textParams.put("page",pageNum);
         textParams.put("size",size);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,payRecordHandler);
+        OkHttpRequestUtil.getInstance(context.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
     private void initView() {
         tvNoData =(TextView)findViewById(R.id.id_tv_nodata);

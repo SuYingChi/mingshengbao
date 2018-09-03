@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome">
+    tools:context="com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity">
     <com.msht.minshengbao.ViewUI.widget.MySwipeRefreshLayout
         android:id="@+id/id_refresh_view"
         android:layout_width="match_parent"

@@ -1,8 +1,10 @@
-package com.zhy.http.okhttp.request;
+package com.msht.minshengbao.OkhttpUtil.request;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
-import com.zhy.http.okhttp.utils.Exceptions;
+
+
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
+import com.msht.minshengbao.OkhttpUtil.callback.Callback;
+import com.msht.minshengbao.OkhttpUtil.utils.Exceptions;
 
 import java.io.File;
 import java.util.Map;
@@ -53,7 +55,7 @@ public class PostFileRequest extends OkHttpRequest
             public void onRequestProgress(final long bytesWritten, final long contentLength)
             {
 
-                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
+                OkHttpManager.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()

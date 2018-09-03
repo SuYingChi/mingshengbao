@@ -17,8 +17,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -35,7 +36,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class InvoiceOpen extends BaseActivity {
     private XListView  mListView;
@@ -77,13 +77,13 @@ public class InvoiceOpen extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.refreshType==0){
                                 activity.mListView.stopRefresh(true);
                             }else if (activity.refreshType==1){
@@ -104,7 +104,7 @@ public class InvoiceOpen extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
@@ -226,12 +226,12 @@ public class InvoiceOpen extends BaseActivity {
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.INVOICE_GET_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("page",pageNum);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initEvent() {
         tvHistory.setOnClickListener(new View.OnClickListener() {

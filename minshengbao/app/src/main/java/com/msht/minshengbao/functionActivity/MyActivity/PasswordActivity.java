@@ -17,7 +17,7 @@ import android.widget.EditText;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -52,7 +52,7 @@ public class PasswordActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String Results=object.optString("result");
@@ -68,7 +68,7 @@ public class PasswordActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     reference.showNotify("提示",msg.obj.toString());
                     break;
                 default:
@@ -191,7 +191,7 @@ public class PasswordActivity extends BaseActivity {
         textParams.put("password",password);
         textParams.put("oldPassword",oldPassword);
         textParams.put("newPassword",newPassword);
-        SendrequestUtil.postDataFromService(Url, textParams,methodHandler);
+        SendRequestUtil.postDataFromService(Url, textParams,methodHandler);
     }
 
 }

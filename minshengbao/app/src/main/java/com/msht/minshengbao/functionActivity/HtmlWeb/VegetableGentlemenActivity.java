@@ -28,7 +28,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
-public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class VegetableGentlemenActivity extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
     private WebView mWebView;
     private ImageView backImage;
     private ProgressBar progressBar;
@@ -99,7 +99,7 @@ public class VegetableGentlemen extends AppCompatActivity implements MyWebChomeC
                super.doUpdateVisitedHistory(view, url, isReload);
            }
         });
-        mWebView.setWebChromeClient(new MyWebChomeClient(VegetableGentlemen.this));
+        mWebView.setWebChromeClient(new MyWebChomeClient(VegetableGentlemenActivity.this));
     }
     private void settingWeb() {
         WebSettings settings= mWebView.getSettings();

@@ -8,15 +8,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.functionActivity.Public.PayFeeWayActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -29,9 +28,15 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.Map;
 
-public class GasExpenseQuery extends BaseActivity {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/2  
+ */
+public class GasExpenseQueryActivity extends BaseActivity {
     private TextView tvBill;
     private TextView tvVoucher;
     private TextView tvReal;
@@ -53,14 +58,14 @@ public class GasExpenseQuery extends BaseActivity {
     private boolean placeStatus=true;
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<GasExpenseQuery> mWeakReference;
-        public RequestHandler(GasExpenseQuery activity) {
-            mWeakReference=new WeakReference<GasExpenseQuery>(activity);
+        private WeakReference<GasExpenseQueryActivity> mWeakReference;
+        public RequestHandler(GasExpenseQueryActivity activity) {
+            mWeakReference=new WeakReference<GasExpenseQueryActivity>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            final GasExpenseQuery activity=mWeakReference.get();
+            final GasExpenseQueryActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -68,12 +73,12 @@ public class GasExpenseQuery extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject json=object.getJSONObject("data");
                             activity.id=json.optString("id");
                             activity.onQueryResult(activity.id);
@@ -84,7 +89,7 @@ public class GasExpenseQuery extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onFailure(msg.obj.toString());
                     break;
                 default:
@@ -101,7 +106,7 @@ public class GasExpenseQuery extends BaseActivity {
         startActivityForResult(amount,0x002);
     }
     private void onFailure(String s) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("缴费提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
@@ -243,7 +248,7 @@ public class GasExpenseQuery extends BaseActivity {
         layoutReversed1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,PreexistenceDetail.class);
+                Intent intent=new Intent(context,PreexistenceDetailActivity.class);
                 intent.putExtra("CustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
@@ -252,7 +257,7 @@ public class GasExpenseQuery extends BaseActivity {
         layoutReversed2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,PreexistenceDetail.class);
+                Intent intent=new Intent(context,PreexistenceDetailActivity.class);
                 intent.putExtra("CustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
@@ -269,7 +274,7 @@ public class GasExpenseQuery extends BaseActivity {
         textParams.put("amount",realFee);
         textParams.put("customerNo",customerNo);
         textParams.put("couponId",voucherId);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 
     @Override

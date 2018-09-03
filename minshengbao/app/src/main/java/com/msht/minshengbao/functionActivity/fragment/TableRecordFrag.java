@@ -12,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.GetRecordAdapter;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -29,10 +30,16 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ */
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/8/9  
  */
 public class TableRecordFrag extends Fragment implements XListView.IXListViewListener {
     private String    userId;
@@ -53,7 +60,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
     }
     private static class PayRecordHandler extends Handler{
         private WeakReference<TableRecordFrag> mWeakReference;
-        public PayRecordHandler(TableRecordFrag tableRecordFrag) {
+        private PayRecordHandler(TableRecordFrag tableRecordFrag) {
             mWeakReference = new WeakReference<TableRecordFrag>(tableRecordFrag);
         }
         @Override
@@ -64,13 +71,13 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.refreshType==0){
                                 reference.mListView.stopRefresh(true);
                             }else if (reference.refreshType==1){
@@ -90,7 +97,7 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext, msg.obj.toString());
                     break;
@@ -154,10 +161,10 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         mListView.setPullLoadEnable(true);
         adapter = new GetRecordAdapter(getActivity(),writeList);
         mListView.setAdapter(adapter);
-        initdata();
+        initReceiveData();
         return view;
     }
-    private void initdata() {
+    private void initReceiveData() {
         loadData(1);
         mListView.setXListViewListener(this);
     }
@@ -165,12 +172,12 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.GAS_TABLE_DATA;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("page",pageNum);
-        SendrequestUtil.postDataFromService(validateURL,textParams,payRecordHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
     @Override
     public void onRefresh() {

@@ -29,6 +29,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.MapAddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Base.RecordSQLiteOpenHelper;
@@ -48,32 +49,23 @@ import java.util.HashMap;
  * @author hong
  * @date 2017/10/16  
  */
-public class ReplaceAddress extends BaseActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener {
+public class ReplaceAddressActivity extends BaseActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener {
     private String mCity="";
     private String mArea;
     private String addressName;
     private String shortAddress;
     private String mLat,mLon;
-    private int currentPage = 0;
     private View layoutHistory;
     private View layoutClear;
     private View layoutAddress;
-    private View layout_search;
-    private View layoutPart;
+    private View layoutSearch;
     private TextView tvLocation;
     private ImageView imgLocation;
     private EditText etSearch;
     private ListViewForScrollView mListView;
     private ListViewForScrollView historyListView;
     private MapAddressAdapter addressAdapter;
-    private BaseAdapter adapter;
-    private int mActivityMode=0;
     private AMapLocationClient locationClient;
-    /** Poi查询条件类 **/
-    private PoiSearch.Query query;
-    /** POI搜索  **/
-    private PoiSearch poiSearch;
-
     /** 用于存放历史搜索记录 **/
     private RecordSQLiteOpenHelper helper ;
     private SQLiteDatabase db;
@@ -85,7 +77,7 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replace_address);
         context=this;
-        mActivityMode=getIntent().getIntExtra("mode",0);
+        int mActivityMode=getIntent().getIntExtra("mode",0);
         if (mActivityMode!=1){
             setCommonHeader("切换地址");
         }else {
@@ -177,7 +169,7 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
     }
 
     private void initEvent() {
-        layout_search.setOnClickListener(new View.OnClickListener() {
+        layoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 layoutHistory.setVisibility(View.GONE);
@@ -201,8 +193,7 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
         });
     }
     private void initView() {
-        layoutPart =findViewById(R.id.id_layout_uppart);
-        layout_search=findViewById(R.id.id_search_view);
+        layoutSearch =findViewById(R.id.id_search_view);
         layoutAddress =findViewById(R.id.id_layout_address);
         layoutHistory =findViewById(R.id.id_layout_history);
         layoutClear =findViewById(R.id.id_layout_clear);
@@ -223,12 +214,9 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
                 // 每次输入后，模糊查询数据库 & 显示
                 // 注：若搜索框为空,则模糊搜索空字符 = 显示所有的搜索历史
                 String tempName = etSearch.getText().toString().trim();
-                if (tempName.length() <= 0) {
-                    return;
-                }else {
+                if (tempName.length()>0) {
                     doSearchQuery(tempName);
                 }
-               // queryData(tempName); // ->>关注1
 
             }
         });
@@ -237,24 +225,22 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
     private void doSearchQuery(String keyWord) {
         int currentPage = 0;
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
-        query = new PoiSearch.Query(keyWord, "", mCity);
+        PoiSearch.Query query = new PoiSearch.Query(keyWord, "", mCity);
         // 设置每页最多返回多少条poiitem
         query.setPageSize(16);
         // 设置查第一页
         query.setPageNum(currentPage);
         query.setCityLimit(true);
-        poiSearch = new PoiSearch(this, query);
+        PoiSearch poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
     }
-
     private void queryData(String tempName) {
-
         // 1. 模糊搜索
         Cursor cursor = helper.getReadableDatabase().rawQuery(
                 "select id as _id,name from records where name like '%" + tempName + "%' order by id desc ", null);
         // 2. 创建adapter适配器对象 & 装入模糊搜索的结果
-        adapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
+        BaseAdapter adapter = new SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, cursor, new String[] { "name" },
                 new int[] { android.R.id.text1 }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         // 3. 设置适配器
         historyListView.setAdapter(adapter);
@@ -286,7 +272,6 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
         //  判断是否有下一个
         return cursor.moveToNext();
     }
-
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
@@ -354,11 +339,10 @@ public class ReplaceAddress extends BaseActivity implements AMapLocationListener
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_LOCATION_REQUEST) {
-                Toast.makeText(context,"获取位置授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"获取位置授权失败");
             }
         }
     };
-
     @Override
     protected void onDestroy() {
         if (locationClient != null) {

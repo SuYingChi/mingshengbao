@@ -1,13 +1,12 @@
-package net.shopnc.b2b2c.android.util;
+package com.msht.minshengbao.Callback;
 
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.zhy.http.okhttp.callback.Callback;
+import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.callback.Callback;
+import com.msht.minshengbao.Utils.ToastUtil;
 
-import net.shopnc.b2b2c.android.base.BaseActivity;
-import net.shopnc.b2b2c.android.common.MyShopApplication;
-import net.shopnc.b2b2c.android.custom.TToast;
 
 import org.json.JSONObject;
 
@@ -52,9 +51,13 @@ public abstract class BeanCallback<T> extends Callback<String> {
     @Override
     public void onResponse(String resp, int i) {
 //        Log.d(TAG, "onResponse: activity = " + activity + " , resp = " + resp);
-        if (resp == null) return;
-        if (activity == null)
+        if (resp == null){
+            return;
+        }
+        if (activity == null){
             throw new RuntimeException("activity must not be null");
+
+        }
         try {
             JSONObject jsonObject = new JSONObject(resp);
             int code = jsonObject.optInt("code");
@@ -64,11 +67,15 @@ public abstract class BeanCallback<T> extends Callback<String> {
                 if (code == 200) {
                     if (type == String.class) {
                         if (!act.isOnDestroy())
+                        {
                             response((T) datas);
+                        }
                     } else {
                         T fromJson = new Gson().fromJson(datas, type);
                         if (!act.isOnDestroy())
+                        {
                             response(fromJson);
+                        }
                     }
                 } else if (code == 401) {
                     clearToken();
@@ -76,7 +83,9 @@ public abstract class BeanCallback<T> extends Callback<String> {
                     JSONObject object = new JSONObject(datas);
                     String error = object.optString("error");
                     if (!act.isOnDestroy())
+                    {
                         fail(error);
+                    }
                 }
             } else {
                 if (code == 200) {
@@ -110,12 +119,13 @@ public abstract class BeanCallback<T> extends Callback<String> {
 
     //code!=200时的处理方法
     public void fail(String error) {
-        TToast.showShort(activity, error);
+        ToastUtil.ToastText(activity, error);
     }
 
     //code==401时的处理方法
     public void clearToken() {
-        MyShopApplication.getInstance().setMemberInfo(null);
+        ToastUtil.ToastText(activity, "http未授权");
+        //MyShopApplication.getInstance().setMemberInfo(null);
     }
 
     public void error(Call call, Exception e, int i) {

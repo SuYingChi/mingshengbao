@@ -17,19 +17,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddress;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddressActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.MySheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
@@ -90,12 +90,12 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 ToastUtil.ToastText(activity.context,"验证码已发送");
                             }else if (activity.requestCode==1){
@@ -113,7 +113,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -132,6 +132,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         if (requestCode==2){
+                            setResult(ConstantUtil.BIND_SUCCESS);
                             finish();
                         }
                         dialog.dismiss();
@@ -249,11 +250,11 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         String requestUrl= UrlUtil.LPG_GET_CAPTCHA_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("mobile",mobile);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void startNewUserTreaty() {
-        String url="";
-        Intent intent=new Intent(context, AgreeTreaty.class);
+        String url=UrlUtil.LPG_OPEN_TREATY;
+        Intent intent=new Intent(context, AgreeTreatyActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigation","居民用户办理须知");
         startActivity(intent);
@@ -273,7 +274,7 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
                 }).show();
     }
     private void selectSex() {
-        String[] mList=new String[]{"女","男"};
+        String[] mList=new String[]{"男","女",};
         String mTitle="请选择性别";
         new MySheetDialog(this,mTitle,mList).builder()
                 .setCancelable(false)
@@ -309,10 +310,9 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         textParams.put("city", mCity);
         textParams.put("area",mArea);
         customDialog.show();
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void onBindingAccount() {
-
         requestCode=2;
         String requestUrl= UrlUtil.LPG_BIND_MOBILE_URL;
         String mPhone=etPhoneNo.getText().toString().trim();
@@ -325,10 +325,10 @@ public class LpgNewUserActivity extends BaseActivity implements View.OnClickList
         textParams.put("msbMobile",msbMobile);
         textParams.put("isApp",isApp);
         customDialog.show();
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void selectAddress() {
-        Intent intent=new Intent(context,ReplaceAddress.class);
+        Intent intent=new Intent(context,ReplaceAddressActivity.class);
         intent.putExtra("mode",1);
         startActivityForResult(intent,SELECT_ADDRESS_CODE);
     }

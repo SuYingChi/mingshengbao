@@ -1,8 +1,8 @@
 package com.msht.minshengbao.functionActivity.fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,16 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.tableAdapter;
-import com.msht.minshengbao.Callback.ResultListener;
-import com.msht.minshengbao.functionActivity.GasService.GasExpenseQuery;
-import com.msht.minshengbao.functionActivity.GasService.SelectCustomerno;
+import com.msht.minshengbao.functionActivity.GasService.GasExpenseQueryActivity;
+import com.msht.minshengbao.functionActivity.GasService.SelectCustomerNo;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -43,188 +42,158 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
+ * @author hong
  */
-public class SelfWriteFrage extends Fragment implements View.OnClickListener {
 
-    private RelativeLayout mselecttable,mselectaddr;
-    private Button verifysend;
-    private TextView Tvselectaddr;
-    private EditText Eselecttable;
-    private EditText EttableNum,Etlast;
-    private String customerNo;
-    private String customer="";
-    private String userId;
-    private String password;
-    private String tableId;
-    private String tableAddress;
-    private String tableBh;
-    private String lastNumber;
+public class SelfWriteFrag extends Fragment implements View.OnClickListener {
 
-    private String name;
-    private String CustomerNum,all_balance;
-    private String debts="";
-    private String total_num;
-    private String discount_fees;
-    private String late_fee;
-    private String Etm2;
-    private String Stlast;
-
+    private View     mSelectTable;
+    private View     mSelectAddress;
+    private Button   verifySend;
+    private TextView tvSelectAddress;
+    private EditText etSelectTable;
+    private EditText etTableNum, etLast;
+    private String   customerNo;
+    private String   userId;
+    private String   password;
+    private String   tableId;
+    private String   tableAddress;
+    private String   tableBh;
+    private String   lastNumber;
+    private String   mMeter2;
     private tableAdapter adapter;
     private int pos=-1;
     private int    requestType= 0;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private String validateURL;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> tableList = new ArrayList<HashMap<String, String>>();
-    private Context mContext;
+    private Activity activity;
     private final String mPageName ="自助抄表";
-    private static final int REQUESTCOODE=1;
-    public SelfWriteFrage() {
-        // Required empty public constructor
-    }
-    Handler gethouseHandler = new Handler() {
+    private static final int REQUEST_CODE =1;
+    public SelfWriteFrag() {  /** Required empty public constructor **/}
+    private final RequestHandler requestHandler =new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<SelfWriteFrag> mWeakReference;
+        public RequestHandler(SelfWriteFrag reference) {
+            mWeakReference=new WeakReference<SelfWriteFrag>(reference);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SelfWriteFrag reference=mWeakReference.get();
+            if (reference==null||reference.isDetached()||reference.activity.isFinishing()){
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            if (requestType==0){
-                                jsonArray =object.optJSONArray("data");
-                                showDialogs();
-                            }else if (requestType==1){
-                                jsonObject =object.optJSONObject("data");
-                                initshowdata();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (reference.requestType==0){
+                                reference.jsonArray =object.optJSONArray("data");
+                                reference.onShowDialogs();
+                            }else if (reference.requestType==1){
+                                reference.jsonObject =object.optJSONObject("data");
+                                reference.onReceiveData();
+                            }else if (reference.requestType==2){
+                                reference.onShowSuccess();
                             }
                         }else {
-                            showfaiture(Error);
+                            if (!reference.activity.isFinishing()){
+                                reference.onShowFailure(error);
+                            }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(mContext, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.activity,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-
-    Handler sendmeterHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            showsuccess();
-                        }else {
-                            showfaiture(Error);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    showfaiture(msg.obj.toString());
-                    break;
-                default:
-                    break;
-
-            }
-        }
-    };
-
-    private void showsuccess() {
+    }
+    private void onShowSuccess() {
         requestType=1;
         validateURL = UrlUtil.SEARCH_BILL_GAS_URL;
         VariableUtil.detailList.clear();//清除账单明细数据
         customDialog.show();
-        requesSevice();
+        requestService();
     }
-    private void showfaiture(String error) {
-        new PromptDialog.Builder(mContext)
+    private void onShowFailure(String error) {
+        new PromptDialog.Builder(activity)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-
                     }
                 }).show();
     }
-    private void initshowdata() {
-        name=jsonObject.optString("name");
-        CustomerNum=jsonObject.optString("customerNo");
-        all_balance=jsonObject.optString("balance");
-        debts=jsonObject.optString("debts");
-        total_num=jsonObject.optString("total_num");
-        String gas_fee=jsonObject.optString("gas_fee");
-        discount_fees=jsonObject.optString("discount_fee");
-        late_fee=jsonObject.optString("late_fee");
+    private void onReceiveData() {
+        String name=jsonObject.optString("name");
+        String customerNum =jsonObject.optString("customerNo");
+        String allBalance =jsonObject.optString("balance");
+        String debts=jsonObject.optString("debts");
+        String totalNum =jsonObject.optString("totalNum");
+        String gasFee=jsonObject.optString("gas_fee");
+        String discountFees =jsonObject.optString("discount_fee");
+        String lateFees =jsonObject.optString("lateFee");
         JSONArray json=jsonObject.optJSONArray("detail_list");
         try {
             for (int i = 0; i < json.length(); i++) {
-                JSONObject Object = json.getJSONObject(i);
-                String date = Object.getString("date");
-                String num = Object.getString("num");
-                String amount = Object.getString("amount");
-                String balance=Object.getString("balance");
-                String gas_fees = Object.getString("gas_fee");
-                String discount_fee=Object.getString("discount_fee");
-                String late_fee=Object.getString("late_fee");
+                JSONObject object = json.getJSONObject(i);
+                String date = object.getString("date");
+                String num = object.getString("num");
+                String amount = object.getString("amount");
+                String balance=object.getString("balance");
+                String gasFees = object.getString("gas_fee");
+                String discountFee=object.getString("discount_fee");
+                String lateFee=object.getString("lateFee");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("date", date);
                 map.put("num", num);
                 map.put("amounts",amount);
                 map.put("balance",balance);
-                map.put("gas_fees", gas_fees);
-                map.put("discount_fee", discount_fee);
-                map.put("late_fee", late_fee);
+                map.put("gas_fees", gasFees);
+                map.put("discount_fee", discountFee);
+                map.put("lateFee", lateFee);
                 VariableUtil.detailList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Intent payfees=new Intent(getActivity(), GasExpenseQuery.class);
+        Intent payfees=new Intent(getActivity(), GasExpenseQueryActivity.class);
         payfees.putExtra("name", name);
-        payfees.putExtra("CustomerNo", CustomerNum);
-        payfees.putExtra("all_balance",all_balance);
+        payfees.putExtra("CustomerNo", customerNum);
+        payfees.putExtra("allBalance", allBalance);
         payfees.putExtra("debts", debts);
-        payfees.putExtra("total_num", total_num);
-        payfees.putExtra("gas_fee",gas_fee);
-        payfees.putExtra("discount_fees", discount_fees);
-        payfees.putExtra("late_fee", late_fee);
+        payfees.putExtra("totalNum", totalNum);
+        payfees.putExtra("gas_fee",gasFee);
+        payfees.putExtra("discountFees", discountFees);
+        payfees.putExtra("lateFee", lateFees);
         startActivity(payfees);
-
     }
-    private void showDialogs() {
+    private void onShowDialogs() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -242,9 +211,9 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        mselecttable.setEnabled(true);
-        Eselecttable.setText(tableList.get(0).get("address"));
-        Etlast.setText(tableList.get(0).get("lastNum"));
+        mSelectTable.setEnabled(true);
+        etSelectTable.setText(tableList.get(0).get("address"));
+        etLast.setText(tableList.get(0).get("lastNum"));
         tableBh =tableList.get(0).get("bh");
         tableId=tableList.get(0).get("id");
     }
@@ -253,10 +222,10 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_self_write_frage, container, false);
-        mContext=getActivity();
-        customDialog=new CustomDialog(mContext, "正在加载...");
-        userId= SharedPreferencesUtil.getUserId(mContext, SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(mContext, SharedPreferencesUtil.Password,"");
+        activity=getActivity();
+        customDialog=new CustomDialog(activity, "正在加载...");
+        userId= SharedPreferencesUtil.getUserId(activity, SharedPreferencesUtil.UserId,"");
+        password=SharedPreferencesUtil.getPassword(activity, SharedPreferencesUtil.Password,"");
         initView(view);
         iniEvent();
         return view;
@@ -264,15 +233,16 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case REQUESTCOODE://获取昵称设置返回数据
+            //获取昵称设置返回数据
+            case REQUEST_CODE:
                 if(data!=null){
                     if (resultCode==2){
-                        String addressname=data.getStringExtra("addressname");
-                        customer=data.getStringExtra("customerNo");
-                        Tvselectaddr.setText(addressname);
+                        String addressName=data.getStringExtra("addressname");
+                        String customer=data.getStringExtra("customerNo");
+                        tvSelectAddress.setText(addressName);
                         customerNo=customer;
                         tableList.clear();
-                        tablepickers();
+                        tablePickers();
                     }
                 }
                 break;
@@ -281,103 +251,72 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private void tablepickers() {
+    private void tablePickers() {
         validateURL = UrlUtil.GET_TABLE_URL;
         requestType=0;
-        requesSevice();
+        requestService();
     }
-    private void requesSevice() {
-        Map<String, String> textParams = new HashMap<String, String>();
+    private void requestService() {
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("CustomerNo",customerNo);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                gethouseHandler .sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                gethouseHandler .sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(activity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     private void initView(View view) {
-        mselecttable=(RelativeLayout) view.findViewById(R.id.id_select_table);
-        mselectaddr=(RelativeLayout)view.findViewById(R.id.id_re_select);
-        verifysend=(Button)view.findViewById(R.id.id_btn_verify);
-        Eselecttable=(EditText) view.findViewById(R.id.id_tv_selecttable);
-        Tvselectaddr=(TextView) view.findViewById(R.id.id_select_address);
-        EttableNum=(EditText)view.findViewById(R.id.id_reading_tble);
-        Etlast=(EditText)view.findViewById(R.id.id_last_table);
-        Etlast.setInputType(InputType.TYPE_NULL);
-        Eselecttable.setInputType(InputType.TYPE_NULL);
-        mselecttable.setEnabled(false);
-        verifysend.setEnabled(false);
+        mSelectTable =view.findViewById(R.id.id_select_table);
+        mSelectAddress =view.findViewById(R.id.id_re_select);
+        verifySend =(Button)view.findViewById(R.id.id_btn_verify);
+        etSelectTable =(EditText) view.findViewById(R.id.id_tv_selecttable);
+        tvSelectAddress =(TextView) view.findViewById(R.id.id_select_address);
+        etTableNum =(EditText)view.findViewById(R.id.id_reading_tble);
+        etLast =(EditText)view.findViewById(R.id.id_last_table);
+        etLast.setInputType(InputType.TYPE_NULL);
+        etSelectTable.setInputType(InputType.TYPE_NULL);
+        mSelectTable.setEnabled(false);
+        verifySend.setEnabled(false);
     }
     private void iniEvent() {
-        mselecttable.setOnClickListener(this);
-        mselectaddr.setOnClickListener(this);
-        verifysend.setOnClickListener(this);
-        Eselecttable.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        mSelectTable.setOnClickListener(this);
+        mSelectAddress.setOnClickListener(this);
+        verifySend.setOnClickListener(this);
+        MyTextWatcher myTextWatcher = new MyTextWatcher();
+        etSelectTable.addTextChangedListener(myTextWatcher);
+        etTableNum.addTextChangedListener(myTextWatcher);
+    }
+    private class MyTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if ( TextUtils.isEmpty(etSelectTable.getText().toString())||
+                    TextUtils.isEmpty(etTableNum.getText().toString())) {
+                verifySend.setEnabled(false);
+            } else {
+                verifySend.setEnabled(true);
             }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ( TextUtils.isEmpty(Eselecttable.getText().toString())||
-                        TextUtils.isEmpty(EttableNum.getText().toString())
-                        ) {
-                    verifysend.setEnabled(false);
-                } else {
-                    verifysend.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        EttableNum.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(Eselecttable.getText().toString()) ||
-                        TextUtils.isEmpty(EttableNum.getText().toString())) {
-                    verifysend.setEnabled(false);
-                } else {
-                    verifysend.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        }
+        @Override
+        public void afterTextChanged(Editable s) {}
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_select_table:
-                selecttable();
+                onSelectTable();
                 break;
             case R.id.id_re_select:
-                selectaddr();
+                onSelectAddress();
                 break;
             case R.id.id_btn_verify:
-                Verifysend();//提交抄表
+                onVerifySend();//提交抄表
                 break;
             default:
                 break;
         }
     }
-    private void selecttable() {
-        final SelectTable selectTable=new SelectTable(mContext);
+    private void onSelectTable() {
+        final SelectTable selectTable=new SelectTable(activity);
         final TextView tvTitle=(TextView)selectTable.getTitle();
         final ListView mListView=(ListView) selectTable.getListview();
         tvTitle.setText("选择表具");
@@ -399,37 +338,39 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
                 tableAddress = tableList.get(position).get("address");
                 tableBh = tableList.get(position).get("bh");
                 lastNumber = tableList.get(position).get("lastNum");
-                Eselecttable.setText(tableAddress);//显示地址
-                Etlast.setText(lastNumber);
+                etSelectTable.setText(tableAddress);
+                etLast.setText(lastNumber);
                 selectTable.dismiss();
             }
         });
     }
-    private void selectaddr() {
-        Intent selete=new Intent(getActivity(),SelectCustomerno.class);
-        startActivityForResult(selete,REQUESTCOODE);
+    private void onSelectAddress() {
+        Intent select=new Intent(activity,SelectCustomerNo.class);
+        startActivityForResult(select, REQUEST_CODE);
     }
-    private void Verifysend() {
-        String etTable=Eselecttable.getText().toString().trim();
-        Stlast=Etlast.getText().toString().trim();
-        Etm2=EttableNum.getText().toString().trim();
+    private void onVerifySend() {
+        String etTable= etSelectTable.getText().toString().trim();
+        String mLast = etLast.getText().toString().trim();
+        mMeter2 = etTableNum.getText().toString().trim();
         SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日");
         Date curData=new Date(System.currentTimeMillis());
         String time=format.format(curData) ;
-        LayoutInflater inflater=LayoutInflater.from(mContext);
+        LayoutInflater inflater=LayoutInflater.from(activity);
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.item_read_table,null);
-        final Dialog dialog=new AlertDialog.Builder(mContext).create();
+        final Dialog dialog=new AlertDialog.Builder(activity).create();
         dialog.show();
-        dialog.getWindow().setContentView(layout);
+        if (dialog.getWindow()!=null){
+            dialog.getWindow().setContentView(layout);
+        }
         final TextView readtime = (TextView)layout.findViewById(R.id.id_read_time);
         final TextView readaddr = (TextView)layout.findViewById(R.id.id_read_address);
         final TextView lastnum = (TextView)layout.findViewById(R.id.id_last_Num);
         final TextView readnum = (TextView)layout.findViewById(R.id.id_read_Num);
         final  Button btnCancel=(Button)layout.findViewById(R.id.id_cancel);
         readtime.setText(time);
-        readaddr.setText(Tvselectaddr.getText().toString());
-        lastnum.setText(Stlast);
-        readnum.setText(Etm2);
+        readaddr.setText(tvSelectAddress.getText().toString());
+        lastnum.setText(mLast);
+        readnum.setText(mMeter2);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -441,39 +382,22 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 customDialog.show();
-                sendtableNum();
+                onSendTableNum();
                 dialog.dismiss();
             }
         });
-
-
     }
-    private void sendtableNum() {
-        String dataurl =UrlUtil.SEND_TABLE_DATA_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+    private void onSendTableNum() {
+        requestType=2;
+        String requestUrl =UrlUtil.SEND_TABLE_DATA_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("CustomerNo",customerNo);
         textParams.put("rqbId",tableId);
-        textParams.put("meter",Etm2);
-        SendrequestUtil.executepost(dataurl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                sendmeterHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                sendmeterHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("meter", mMeter2);
+        OkHttpRequestUtil.getInstance(activity.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -483,5 +407,13 @@ public class SelfWriteFrage extends Fragment implements View.OnClickListener {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

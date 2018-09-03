@@ -14,11 +14,11 @@ import android.widget.EditText;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.adapter.WaterMealAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreaty;
+import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -89,12 +89,12 @@ public class WaterRechargeActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject json =object.optJSONObject("data");
                             if (activity.requestCode==0){
                                 activity.onShowBalance(json);
@@ -110,7 +110,7 @@ public class WaterRechargeActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onShowDialog("提示",msg.obj.toString());
                     break;
                 default:
@@ -134,12 +134,12 @@ public class WaterRechargeActivity extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String message = object.optString("message");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestType==0){
                                 JSONArray jsonArray =object.optJSONArray("data");
                                 activity.saveData(jsonArray);
@@ -154,7 +154,7 @@ public class WaterRechargeActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onShowDialog("提示",msg.obj.toString());
                     break;
                 default:
@@ -175,12 +175,12 @@ public class WaterRechargeActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONArray array =object.getJSONArray("data");
                             activity.onPayWayShow(array);
                         }else {
@@ -190,7 +190,7 @@ public class WaterRechargeActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onShowDialog("提示",msg.obj.toString());
                     break;
                 default:
@@ -383,19 +383,19 @@ public class WaterRechargeActivity extends BaseActivity {
     private void showMsg(String title, String msg1, String msg2) {
         String str = title;
         switch (title){
-            case SendrequestUtil.SUCCESS_VALUE:
+            case SendRequestUtil.SUCCESS_VALUE:
                 str="缴费成功";
                 break;
-            case SendrequestUtil.FAILURE_VALUE:
+            case SendRequestUtil.FAILURE_VALUE:
                 str="缴费失败";
                 break;
-            case SendrequestUtil.CANCEL_VALUE:
+            case SendRequestUtil.CANCEL_VALUE:
                 str="已取消缴费";
                 break;
                 default:
                     break;
         }
-        if (title.equals(SendrequestUtil.SUCCESS_VALUE)){
+        if (title.equals(SendRequestUtil.SUCCESS_VALUE)){
             setResult(0x002);
             requestResult();
         }else {
@@ -416,14 +416,14 @@ public class WaterRechargeActivity extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     private void initData() {
         customDialog.show();
         String validateURL= UrlUtil.WATER_RECHARGE_MEAL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("type","1");
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initView() {
         etRecommend=(EditText)findViewById(R.id.id_et_recommend);
@@ -435,7 +435,7 @@ public class WaterRechargeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String url=UrlUtil.RECHARGE_BACK_AGREE;
-                Intent intent=new Intent(context, AgreeTreaty.class);
+                Intent intent=new Intent(context, AgreeTreatyActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("navigation","充返活动说明");
                 startActivity(intent);
@@ -479,7 +479,7 @@ public class WaterRechargeActivity extends BaseActivity {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
 }
     private String getExtParams() {
         long time= DateUtils.getCurTimeLong();
@@ -530,7 +530,7 @@ public class WaterRechargeActivity extends BaseActivity {
         String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.postDataFromService(validateURL,textParams,methodHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,methodHandler);
 
     }
     private void msbAppPay() {
@@ -542,7 +542,7 @@ public class WaterRechargeActivity extends BaseActivity {
         textParams.put("type",payType);
         textParams.put("orderId",orderId);
         textParams.put("channel",channels);
-        SendrequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,balanceHandler);
     }
     private void requestResult() {
         requestCode=2;
@@ -551,7 +551,7 @@ public class WaterRechargeActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        SendrequestUtil.postDataFromServiceTwo(validateURL,textParams,balanceHandler);
+        SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,balanceHandler);
     }
 
 

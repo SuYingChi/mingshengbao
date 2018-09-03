@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,8 +19,13 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -39,12 +45,14 @@ public class LaunchActivity extends AppCompatActivity {
     private CountDownTimer   timer;
     private static final int GO_HOME = 1;
     private static final int GO_GUIDE = 2;
+    private boolean touchStatus=true;
+    private String contentUrl;
     private static final long SPLASH_DELAY_MILLIS = 3000;
     private final  GuideHandler mHandler=new GuideHandler(this);
     private final  GetImageHandler getImageHandler=new GetImageHandler(this);
     private static  class GuideHandler extends Handler{
         private WeakReference<LaunchActivity> mWeakReference;
-        public GuideHandler(LaunchActivity launchActivity) {
+        private GuideHandler(LaunchActivity launchActivity) {
             mWeakReference = new WeakReference<LaunchActivity>(launchActivity);
         }
         @Override
@@ -68,7 +76,7 @@ public class LaunchActivity extends AppCompatActivity {
     }
     private static class GetImageHandler extends Handler{
         private WeakReference<LaunchActivity> mWeakReference;
-        public GetImageHandler(LaunchActivity launchActivity) {
+        private GetImageHandler(LaunchActivity launchActivity) {
             mWeakReference = new WeakReference<LaunchActivity>(launchActivity);
         }
         @Override
@@ -78,18 +86,19 @@ public class LaunchActivity extends AppCompatActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject jsonObject =object.optJSONObject("data");
-                        if(results.equals("success")) {
-                            String logourl=jsonObject.optString("url");
-                            if (logourl!=null&&!(logourl.equals("null"))){
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.contentUrl=jsonObject.optString("content_url");
+                            String logoUrl=jsonObject.optString("url");
+                            if ((!TextUtils.isEmpty(logoUrl))&&(!logoUrl.equals(ConstantUtil.NULL_VALUE))){
                                 activity.layoutFrame.setVisibility(View.VISIBLE);
                                 activity.logoBottom.setVisibility(View.VISIBLE);
-                                activity.onShowAdimage(logourl);
+                                activity.onShowAdImage(logoUrl);
                             }
                         }else {
                             activity.init();   //计时
@@ -100,7 +109,7 @@ public class LaunchActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.init();   //计时
                     activity.layoutFrame.setVisibility(View.GONE);
                     activity.logoBottom.setVisibility(View.GONE);
@@ -111,9 +120,23 @@ public class LaunchActivity extends AppCompatActivity {
             super.handleMessage(msg);
         }
     }
-    private void onShowAdimage(String logourl) {    //支持动画
-        startCountDownTime(4);
-        Uri uri = Uri.parse(logourl);
+    private void onStartWebActivity(String contentUrl) {
+        Intent intent=new Intent(mContext, HtmlPageActivity.class);
+        intent.putExtra("url",contentUrl);
+        intent.putExtra("navigate","民生宝");
+        startActivity(intent);
+        finish();
+    }
+    private void onStartShopActivity(String contentUrl) {
+        Intent intent=new Intent(mContext, ShopActivity.class);
+        intent.putExtra("url",contentUrl);
+        intent.putExtra("first",1);
+        startActivity(intent);
+        finish();
+    }
+    private void onShowAdImage(String logoUrl) {    //支持动画
+        startCountDownTime(5);
+        Uri uri = Uri.parse(logoUrl);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)
                 .setAutoPlayAnimations(true)
@@ -141,9 +164,11 @@ public class LaunchActivity extends AppCompatActivity {
         drawView = (SimpleDraweeView) findViewById(R.id.id_logo_top);
         logoBottom =(ImageView)findViewById(R.id.id_logo_bottom);
         layoutFrame =findViewById(R.id.id_frame_layout);
-        if (NetWorkUtil.IsNetWorkEnable(mContext)){
+        if (NetWorkUtil.isNetWorkEnable(mContext)){
+            layoutFrame.setEnabled(true);
             initAd();
         }else {
+            layoutFrame.setEnabled(false);
             init();   //计时
         }
         tvTime.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +179,21 @@ public class LaunchActivity extends AppCompatActivity {
                     goGuide();
                 }else {
                     goHome();
+                }
+            }
+        });
+        layoutFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((!TextUtils.isEmpty(contentUrl))&&(!contentUrl.equals(ConstantUtil.NULL_VALUE))){
+                    touchStatus=false;
+                    if (NetUtil.getDomain(contentUrl).equals(ConstantUtil.SHOP_DOMAIN)){
+                        goHome();
+                        onStartShopActivity(contentUrl);
+                    }else{
+                        goHome();
+                        onStartWebActivity(contentUrl);
+                    }
                 }
             }
         });
@@ -171,22 +211,25 @@ public class LaunchActivity extends AppCompatActivity {
         timer=new CountDownTimer(time*1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                tvTime.setText(millisUntilFinished/1000+"秒");
+                String timeText=millisUntilFinished/1000+"秒";
+                tvTime.setText(timeText);
             }
             @Override
             public void onFinish() {
-                if (isFirstOpen){
-                    goGuide();
-                }else {
-                    goHome();
+                if (touchStatus){
+                    if (isFirstOpen){
+                        goGuide();
+                    }else {
+                        goHome();
+                    }
                 }
             }
         };
         timer.start();
     }
     private void initAd() {
-        String avatarurl= UrlUtil.LAUNCHER_IMG_URL;
-        SendrequestUtil.ShortTimeGet(avatarurl,getImageHandler);
+        String requestUrl= UrlUtil.LAUNCHER_IMG_URL;
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,getImageHandler);
     }
     private void init() {
         boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);

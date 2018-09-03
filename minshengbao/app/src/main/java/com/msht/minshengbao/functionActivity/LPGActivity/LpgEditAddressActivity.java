@@ -15,10 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddress;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ReplaceAddressActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -80,12 +80,12 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.requestCode=1;
                             activity.displayDialog("地址添加完成");
                             activity.setResult(1);
@@ -97,7 +97,7 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -202,7 +202,7 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
         }
     }
     private void selectAddress() {
-        Intent intent=new Intent(context,ReplaceAddress.class);
+        Intent intent=new Intent(context,ReplaceAddressActivity.class);
         intent.putExtra("mode",1);
         startActivityForResult(intent,SELECT_ADDRESS_CODE);
     }
@@ -239,7 +239,7 @@ public class LpgEditAddressActivity extends BaseActivity implements View.OnClick
         textParams.put("roomNum",mRoom);
         textParams.put("city", mCity);
         textParams.put("area",mArea);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private class MyTextWatcher implements TextWatcher {
         @Override

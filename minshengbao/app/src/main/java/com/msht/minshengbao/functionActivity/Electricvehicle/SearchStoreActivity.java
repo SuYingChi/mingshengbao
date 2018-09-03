@@ -10,13 +10,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.VehicleAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -28,101 +28,119 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-public class SearchStore extends BaseActivity {
-    private EditText et_search;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/10/24  
+ */
+public class SearchStoreActivity extends BaseActivity {
+    private EditText etSearch;
     private MultiLineChooseLayout chooseLayout;
     private LoadMoreListView moreListView;
-    private View layout_history;
+    private View layoutHistory;
     private VehicleAdapter mStoreAdapter;
     private ArrayList<String> mDataList=new ArrayList<>();
-    private ArrayList<HashMap<String, String>> StoreList = new ArrayList<HashMap<String, String>>();
-    private int pageNo=1;//当前页数
-    private int pageIndex=0;
-    private String size = "100";//每页加载的大小
+    private ArrayList<HashMap<String, String>> mStoreList = new ArrayList<HashMap<String, String>>();
     private String keyword="";
     private String cityCode="",cityName="";
     private String areaCode="",areaName="";
     private String address="";
-    private String userphone="";
-    private double longitude=0.0,latitude=0.0;
-    private String Longitude="0.0";
-    private String Latitude="0.0";
-    private final int  SUCCESS = 1;
-    private final int  FAILURE = 0;
+    private String userPhone ="";
+    private String mLongitude ="0.0";
+    private String mLatitude ="0.0";
     private JSONArray jsonArray;
     private int requestType=0;
-
-    Handler sendmeterHandler = new Handler() {
+    private final RequestHandler requestHandler =new RequestHandler(this);
+    private final SendMeterHandler sendMeterHandler=new SendMeterHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<SearchStoreActivity> mWeakReference;
+        public RequestHandler(SearchStoreActivity activity) {
+            mWeakReference=new WeakReference<SearchStoreActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final SearchStoreActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("message");
-                        if(Results.equals("success")) {
+                        String result=object.optString("result");
+                        String error = object.optString("message");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (activity.requestType==0){
+                                JSONArray  dataArray=object.optJSONArray("data");
+                                activity.onQuestionData(dataArray);
+                            }else {
+                                activity.layoutHistory.setVisibility(View.GONE);
+                            }
+                        }else {
+                            activity.onShowFailure(error);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    private static class SendMeterHandler extends Handler{
+        private WeakReference<SearchStoreActivity> mWeakReference;
+        private SendMeterHandler(SearchStoreActivity activity) {
+            mWeakReference=new WeakReference<SearchStoreActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final SearchStoreActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            switch (msg.what) {
+                case SendRequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String result=object.optString("result");
+                        String error = object.optString("message");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject jsonObject=object.optJSONObject("data");
-                            jsonArray=jsonObject.getJSONArray("list");
-                            if(jsonArray.length()==0){
-                                moreListView.loadComplete(false);
+                            activity.jsonArray=jsonObject.getJSONArray("list");
+                            if(activity.jsonArray.length()==0){
+                                activity.moreListView.loadComplete(false);
                             }else {
-                                moreListView.loadComplete(true);
+                                activity.moreListView.loadComplete(true);
                             }
-                            initshowdata();
+                            activity.onReceiveData();
                         }else {
-                            showfaiture(Error);
+                            activity.onShowFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-    Handler requestHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("message");
-                        if(Results.equals("success")) {
-                            if (requestType==0){
-                                JSONArray  Array=object.optJSONArray("data");
-                                questionData(Array);
-                            }else {
-                                layout_history.setVisibility(View.GONE);
-                            }
-                        }else {
-                            showfaiture(Error);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case FAILURE:
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    private void questionData(JSONArray array) {
+    }
+    private void onQuestionData(JSONArray array) {
         try{
             for (int i=0;i<array.length();i++){
                 JSONObject json = array.getJSONObject(i);
@@ -132,10 +150,10 @@ public class SearchStore extends BaseActivity {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        layout_history.setVisibility(View.VISIBLE);
-        chooseLayout.setList(mDataList);      //显示数据
+        layoutHistory.setVisibility(View.VISIBLE);
+        chooseLayout.setList(mDataList);
     }
-    private void initshowdata() {
+    private void onReceiveData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
@@ -167,19 +185,16 @@ public class SearchStore extends BaseActivity {
                 map.put("imgUrl",imgUrl);
                 map.put("distance",distance);
                 map.put("lastModifyTime",lastModifyTime);
-                StoreList.add(map);
+                mStoreList.add(map);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (StoreList.size()!=0&&StoreList!=null){
+        if (mStoreList.size()!=0&& mStoreList !=null){
             mStoreAdapter.notifyDataSetChanged();
-            //mNodataText.setVisibility(View.GONE);
-        }else {
-           // mNodataText.setVisibility(View.VISIBLE);
         }
     }
-    private void showfaiture(String error) {
+    private void onShowFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -198,10 +213,10 @@ public class SearchStore extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_store);
         context=this;
-        userphone= SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
+        userPhone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         Intent data=getIntent();
-        Latitude=data.getStringExtra("lat");
-        Longitude=data.getStringExtra("lon");
+        mLatitude =data.getStringExtra("lat");
+        mLongitude =data.getStringExtra("lon");
         areaCode=data.getStringExtra("areaCode");
         areaName=data.getStringExtra("areaName");
         cityCode=data.getStringExtra("cityCode");
@@ -209,16 +224,16 @@ public class SearchStore extends BaseActivity {
         address=data.getStringExtra("address");
         initView();
         initData();
-        mStoreAdapter=new VehicleAdapter(context,StoreList);
+        mStoreAdapter=new VehicleAdapter(context, mStoreList);
         moreListView.loadComplete(false);
         moreListView.setAdapter(mStoreAdapter);
         moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String store_id=StoreList.get(position).get("id");
-                String distance=StoreList.get(position).get("distance");
-                Intent intent=new Intent(context,ElectricsStoreDetail.class);
-                intent.putExtra("store_id",store_id);
+                String storeId= mStoreList.get(position).get("id");
+                String distance= mStoreList.get(position).get("distance");
+                Intent intent=new Intent(context,ElectricsStoreDetailActivity.class);
+                intent.putExtra("store_id",storeId);
                 intent.putExtra("distance",distance);
                 startActivity(intent);
             }
@@ -233,64 +248,47 @@ public class SearchStore extends BaseActivity {
 
     }
     private void initData() {
-        String dataurl="";
+        String dataUrl="";
         if (requestType==0){
-            dataurl= UrlUtil.SEARCH_HISTORY;
+            dataUrl= UrlUtil.SEARCH_HISTORY;
         }else if (requestType==1){
-            dataurl= UrlUtil.CLEAR_HISTORY;
+            dataUrl= UrlUtil.CLEAR_HISTORY;
         }
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("type","1");
-        textParams.put("searchBy",userphone);
-        SendrequestUtil.executepost(dataurl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
-
-
+        textParams.put("searchBy", userPhone);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initView() {
-        et_search=(EditText)findViewById(R.id.et_search);
-        layout_history=findViewById(R.id.id_re_history);
+        etSearch =(EditText)findViewById(R.id.et_search);
+        layoutHistory =findViewById(R.id.id_re_history);
         chooseLayout=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
         moreListView=(LoadMoreListView)findViewById(R.id.id_view_data);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
-        et_search.addTextChangedListener(myTextWatcher);
+        etSearch.addTextChangedListener(myTextWatcher);
         findViewById(R.id.id_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout_history.setVisibility(View.GONE);
-                StoreList.clear();
+                layoutHistory.setVisibility(View.GONE);
+                mStoreList.clear();
                 mStoreAdapter.notifyDataSetChanged();
-                keyword=et_search.getText().toString().trim();
+                keyword= etSearch.getText().toString().trim();
                 requestSever(1);
             }
         });
         findViewById(R.id.id_delete_history).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActionDialog();
+                onActionDialog();
             }
         });
         chooseLayout.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
             @Override
             public void onItemClick(int position, String text) {
                 keyword=text;
-                et_search.setText(text);
-                layout_history.setVisibility(View.GONE);
-                StoreList.clear();
+                etSearch.setText(text);
+                layoutHistory.setVisibility(View.GONE);
+                mStoreList.clear();
                 mStoreAdapter.notifyDataSetChanged();
                 requestSever(1);
             }
@@ -302,8 +300,8 @@ public class SearchStore extends BaseActivity {
             }
         });
     }
-    private void ActionDialog() {
-        new PromptDialog.Builder(this)
+    private void onActionDialog() {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("确认是否删除记录")
@@ -325,39 +323,22 @@ public class SearchStore extends BaseActivity {
 
     }
     private void requestSever(int i) {
-        pageIndex =i;
-        pageNo=i;
-        String dataurl = UrlUtil.ELECTRIC_LIST_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
-        String pageNum=String.valueOf(pageNo);
+        String dataUrl = UrlUtil.ELECTRIC_LIST_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        String pageNum=String.valueOf(i);
         textParams.put("type","1");
         textParams.put("keyword",keyword);
-        textParams.put("latitude",Latitude);
-        textParams.put("longitude",Longitude);
+        textParams.put("latitude", mLatitude);
+        textParams.put("longitude", mLongitude);
         textParams.put("areaCode",areaCode);
         textParams.put("areaName",areaName);
         textParams.put("cityCode",cityCode);
         textParams.put("cityName",cityName);
         textParams.put("address",address);
-        textParams.put("searchBy",userphone);
+        textParams.put("searchBy", userPhone);
         textParams.put("pageNo",pageNum);
-        textParams.put("pageSize",size);
-        SendrequestUtil.executepost(dataurl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                sendmeterHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                sendmeterHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("pageSize","100");
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,sendMeterHandler);
     }
     private class MyTextWatcher implements TextWatcher{
         @Override
@@ -373,5 +354,4 @@ public class SearchStore extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {}
     }
-
 }

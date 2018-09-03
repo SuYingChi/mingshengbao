@@ -58,6 +58,7 @@
                     android:contentDescription="@string/picture_text"
                     android:src="@drawable/expressage_vehicle_xh"/>
                 <TextView
+                    android:id="@+id/id_delivery_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

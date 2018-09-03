@@ -1,17 +1,16 @@
 package com.msht.minshengbao;
 
 import android.app.Application;
+import android.app.Notification;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
+import com.msht.minshengbao.OkhttpUtil.SSLSocketClient;
+import com.msht.minshengbao.OkhttpUtil.log.LoggerInterceptor;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.receiver.NetBroadcastReceiver;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -20,11 +19,22 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengNotificationClickHandler;
+import com.umeng.message.entity.UMessage;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+
 /**
- * Created by hong on 2016/8/29.
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/4/2  
  */
 public class MyApplication extends Application {
     @Override
@@ -45,8 +55,24 @@ public class MyApplication extends Application {
             .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
             .discCacheFileNameGenerator(new Md5FileNameGenerator()).tasksProcessingOrder(QueueProcessingType.LIFO).build();
         ImageLoader.getInstance().init(config);
+        /** okHttp默认的配置生成OkHttpClient*/
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new LoggerInterceptor("TAG"))
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+                .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
+                .build();
+
+        OkHttpManager.initClient(okHttpClient);
+        initUPush();
+    }
+
+    private void initUPush() {
         PushAgent mPushAgent = PushAgent.getInstance(this);
-       // mPushAgent.setDebugMode(false);
+        /*通知栏按数量显示 **/
+        mPushAgent.setDisplayNotificationNumber(10);
+        // mPushAgent.setDebugMode(false);
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
@@ -54,12 +80,49 @@ public class MyApplication extends Application {
                 SharedPreferencesUtil.putDeviceData(getApplicationContext(),SharedPreferencesUtil.DeviceToken,deviceToken);
             }
             @Override
-            public void onFailure(String s, String s1) {
-
-            }
+            public void onFailure(String s, String s1) { }
         });
-}
-     {
+
+        UmengMessageHandler messageHandler = new UmengMessageHandler() {
+            @Override
+            public void dealWithNotificationMessage(Context context, UMessage uMessage) {
+                super.dealWithNotificationMessage(context, uMessage);
+            }
+
+            @Override
+            public Notification getNotification(Context context, UMessage uMessage) {
+                return super.getNotification(context, uMessage);
+            }
+        };
+        mPushAgent.setMessageHandler(messageHandler);
+        /**
+         * 自定义行为的回调处理，参考文档：高级功能-通知的展示及提醒-自定义通知打开动作
+         * UmengNotificationClickHandler是在BroadcastReceiver中被调用，故
+         * 如果需启动Activity，需添加Intent.FLAG_ACTIVITY_NEW_TASK
+         * */
+        UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+            @Override
+            public void launchApp(Context context, UMessage msg) {
+                super.launchApp(context, msg);
+            }
+            @Override
+            public void openUrl(Context context, UMessage msg) {
+                super.openUrl(context, msg);
+            }
+            @Override
+            public void openActivity(Context context, UMessage msg) {
+                super.openActivity(context, msg);
+            }
+            @Override
+            public void dealWithCustomAction(Context context, UMessage msg) {
+                Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
+            }
+        };
+        /* 使用自定义的NotificationHandler**/
+        mPushAgent.setNotificationClickHandler(notificationClickHandler);
+    }
+
+    {
     PlatformConfig.setWeixin("wx33f335ace862eca1", "38e97727e3226f7141c3c647736bdb68");
     //新浪微博
     PlatformConfig.setSinaWeibo("4049059641", "22c648140a8ac43032e26bb3bcec71b3","http://sns.whalecloud.com/sina2/callback");

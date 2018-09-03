@@ -15,15 +15,17 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -46,6 +48,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
     private int flag;
     private int       requestCode=0;
     private CustomDialog customDialog;
+    private static final String PAGE_NAME="绑定账户";
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
         private WeakReference<BindingAccountActivity> mWeakReference;
@@ -62,12 +65,12 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==1){
                                 activity.displayDialog("您已绑定成功");
                                 activity.setResult(1);
@@ -83,7 +86,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -92,7 +95,6 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
             super.handleMessage(msg);
         }
     }
-
     private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -115,18 +117,11 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
                 .setButton1("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        if (flag!=1){
-                            startMyAccount();
-                        }
+                        setResult(1);
                         dialog.dismiss();
                         finish();
                     }
                 }).show();
-    }
-    private void startMyAccount() {
-        Intent intent=new Intent(context, LpgMyAccountActivity.class);
-        startActivity(intent);
-        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,14 +129,11 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_lpg_binding_account);
         context=this;
         setCommonHeader("绑定账户");
-        Intent data=getIntent();
-        if (data!=null){
-            flag=data.getIntExtra("flag",0);
-        }
         customDialog=new CustomDialog(this, "正在加载");
         initFindViewById();
         time=new TimeCount(60000,1000);
     }
+
     private void initFindViewById() {
         etPhone=(EditText)findViewById(R.id.id_et_phone);
         etCode=(EditText)findViewById(R.id.id_et_code);
@@ -155,6 +147,16 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         btnCode.setOnClickListener(this);
         btnEnsure.setOnClickListener(this);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode== ConstantUtil.BIND_SUCCESS){
+            setResult(ConstantUtil.BIND_SUCCESS);
+            finish();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -174,7 +176,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
 
     private void onCreateNewCustomer() {
         Intent intent=new Intent(context,LpgNewUserActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,ConstantUtil.BIND_SUCCESS);
     }
 
     private void onGetVerification() {
@@ -185,21 +187,9 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
             requestCode=0;
             requestService();
         }else {
-            new PromptDialog.Builder(context)
-                    .setTitle("民生宝")
-                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                    .setMessage("您输入电话号码不正确")
-                    .setButton1("确定", new PromptDialog.OnClickListener() {
-
-                        @Override
-                        public void onClick(Dialog dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    }).show();
+            onFailure("您输入电话号码不正确");
         }
     }
-
     private class MyTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -246,7 +236,7 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         String mobile=etPhone.getText().toString().trim();
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("mobile",mobile);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
 
     }
     private void onBindMobile() {
@@ -263,13 +253,23 @@ public class BindingAccountActivity extends BaseActivity implements View.OnClick
         textParams.put("msbMobile",msbMobile);
         textParams.put("isApp",isApp);
         customDialog.show();
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_GET,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
 
     private void removeTimeout() {
         if (time!=null){
             time.cancel();
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
     }
     @Override
     protected void onDestroy() {

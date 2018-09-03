@@ -23,10 +23,9 @@ import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 
-public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class HtmlPageActivity extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
     private VerticalSwipeRefreshLayout mRefresh;
-    private WebView   mWebview;
-    private View      headLayout;
+    private WebView mWebView;
     private String    mUrl, mNavigation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +47,8 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mWebview.canGoBack()){
-                    mWebview.goBack();
+                if(mWebView.canGoBack()){
+                    mWebView.goBack();
                 }else {
                     finish();
                 }
@@ -63,10 +62,9 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        headLayout =findViewById(R.id.id_re_second);
-        mWebview=(WebView)findViewById(R.id.id_web_html);
-        mWebview.loadUrl(mUrl);
-        WebSettings settings= mWebview.getSettings();
+        mWebView =(WebView)findViewById(R.id.id_web_html);
+        mWebView.loadUrl(mUrl);
+        WebSettings settings= mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setUseWideViewPort(true);
@@ -77,8 +75,8 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        mWebview.requestFocusFromTouch();
-        mWebview.setWebViewClient(new WebViewClient() {
+        mWebView.requestFocusFromTouch();
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
@@ -90,30 +88,30 @@ public class HtmlPage extends BaseActivity implements MyWebChomeClient.OpenFileC
             }
         });
 
-        mWebview.setWebChromeClient(new MyWebChomeClient(HtmlPage.this));
+        mWebView.setWebChromeClient(new MyWebChomeClient(HtmlPageActivity.this));
     }
     private void initEvent() {
 
        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
            @Override
            public void onRefresh() {
-               mWebview.loadUrl(mUrl);
+               mWebView.loadUrl(mUrl);
            }
        });
         mRefresh.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
             @Override
             public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-                return mWebview.getScrollY()>0;
+                return mWebView.getScrollY()>0;
             }
         });
-        mWebview.setOnKeyListener(new View.OnKeyListener() {
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (keyCode == KeyEvent.KEYCODE_BACK ) {
                         //这里处理返回键事件
-                        if(mWebview.canGoBack()){
-                            mWebview.goBack();
+                        if(mWebView.canGoBack()){
+                            mWebView.goBack();
                             return true;
                         }else {
                             finish();

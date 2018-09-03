@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -46,12 +46,12 @@ public class SettingNickname extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if (results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onUpdateNickname(results);
                         }else {
                             activity.onFailure(error);
@@ -60,7 +60,7 @@ public class SettingNickname extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -136,7 +136,7 @@ public class SettingNickname extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("nickname", mNickname);
-        SendrequestUtil.postDataFromService(validateURL,textParams,nickHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,nickHandler);
     }
     private boolean matchNicknameMsg() {
         if(TextUtils.isEmpty(mNickname)){

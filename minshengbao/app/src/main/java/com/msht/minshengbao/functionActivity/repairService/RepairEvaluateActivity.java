@@ -11,74 +11,87 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.RatingBar;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 
-public class RepairEvaluate extends BaseActivity {
-    private ImageView  typeimg;
-    private RatingBar  mRatingBar;
-    private EditText   et_evaluation;
-    private Button     btn_sendeva;
-    private TextView   tv_type,tv_amount,tv_tmie;
-    private TextView   tv_title,tv_orderNo;
-    private String     orderNo;
-    private String     evalScore="0";   
-    private String     userId,password;
-    private String     id,parent_category;
-    private String     type,finish_time;
-    private String     title,real_amount;
-    private String     send_type;
-    private final int  SUCCESS = 1;
-    private final int  FAILURE = 0;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/7/2  
+ */
+public class RepairEvaluateActivity extends BaseActivity {
+    private RatingBar mRatingBar;
+    private EditText  etEvaluation;
+    private Button btnSendEva;
+    private String orderNo;
+    private String evalScore="0";
+    private String userId,password;
+    private String id, parentCategory;
+    private String type, finishTime;
+    private String title, realAmount;
+    private String sendType;
     private CustomDialog customDialog;
     private Context context;
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<RepairEvaluateActivity> mWeakReference;
+        public RequestHandler(RepairEvaluateActivity activity) {
+            mWeakReference = new WeakReference<RepairEvaluateActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+
+            final RepairEvaluateActivity activity =mWeakReference.get();
+            if (activity == null||activity.isFinishing()) {
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals("success")) {
-                            initShow();    //提示评价成功
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.initShow();    //提示评价成功
                         }else {
-                            failure(Error);
+                            activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-
-
-    };
+    }
     private void initShow() {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("评价成功")
@@ -91,7 +104,7 @@ public class RepairEvaluate extends BaseActivity {
                     }
                 }).show();
     }
-    private void failure(String error) {
+    private void onFailure(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -111,53 +124,62 @@ public class RepairEvaluate extends BaseActivity {
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
-        send_type=data.getStringExtra("send_type");
+        sendType =data.getStringExtra("sendType");
         id=data.getStringExtra("id");
         orderNo=data.getStringExtra("orderNo");
         type= data.getStringExtra("type");
         title=data.getStringExtra("title");
-        finish_time=data.getStringExtra("finish_time");
-        parent_category=data.getStringExtra("parent_category");
-        real_amount=data.getStringExtra("real_amount");
+        finishTime =data.getStringExtra("finishTime");
+        parentCategory =data.getStringExtra("parentCategory");
+        realAmount =data.getStringExtra("realAmount");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        initfindViewById();
+        initFindViewId();
         initEvent();
     }
-    private void initfindViewById() {
-        typeimg=(ImageView)findViewById(R.id.id_img_type);
-        tv_type=(TextView)findViewById(R.id.id_tv_type);
-        tv_amount=(TextView)findViewById(R.id.id_tv_amount);
-        tv_tmie=(TextView)findViewById(R.id.id_create_time);
-        tv_title=(TextView)findViewById(R.id.id_tv_title);
-        tv_orderNo=(TextView)findViewById(R.id.id_orderNo);
+    private void initFindViewId() {
+        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
+        TextView tvType =(TextView)findViewById(R.id.id_tv_type);
+        TextView tvAmount =(TextView)findViewById(R.id.id_tv_amount);
+        TextView tvTime =(TextView)findViewById(R.id.id_create_time);
+        TextView tvTitle =(TextView)findViewById(R.id.id_tv_title);
+        TextView tvOrderNo =(TextView)findViewById(R.id.id_orderNo);
         mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
-        et_evaluation=(EditText)findViewById(R.id.id_tv_evaluation);
-        btn_sendeva=(Button)findViewById(R.id.id_btn_send);
-        if (send_type.equals("3")){
+        etEvaluation =(EditText)findViewById(R.id.id_tv_evaluation);
+        btnSendEva =(Button)findViewById(R.id.id_btn_send);
+        if (sendType.equals(ConstantUtil.VALUE_THREE)){
             findViewById(R.id.id_layout_star).setVisibility(View.GONE);
             setCommonHeader("追加评价");
-            et_evaluation.setHint("您当前还没有填写评论哦！");
+            etEvaluation.setHint("您当前还没有填写评论哦！");
         }else {
             setCommonHeader("维修评价");
             findViewById(R.id.id_layout_star).setVisibility(View.VISIBLE);
         }
-        if (type.equals("1")){
-            typeimg.setImageResource(R.drawable.home_sanitary_xh);
-        }else if (type.equals("2")){
-            typeimg.setImageResource(R.drawable.home_appliance_fix_xh);
-        }else if (type.equals("3")){
-            typeimg.setImageResource(R.drawable.home_lanterns_xh);
-        }else if (type.equals("4")){
-            typeimg.setImageResource(R.drawable.home_otherfix_xh);
-        }else if (type.equals("36")){
-            typeimg.setImageResource(R.drawable.home_appliance_clean_xh);
+        switch (type){
+            case ConstantUtil.VALUE_ONE:
+                typeImg.setImageResource(R.drawable.home_sanitary_xh);
+                break;
+            case ConstantUtil.VALUE_TWO:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.VALUE_THREE:
+                typeImg.setImageResource(R.drawable.home_lanterns_xh);
+                break;
+            case ConstantUtil.VALUE_FOUR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.VALUE_FORTY_EIGHT:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
         }
-        tv_orderNo.setText(orderNo);
-        tv_title.setText(title);
-        tv_type.setText(parent_category);
-        tv_amount.setText(real_amount);
-        tv_tmie.setText(finish_time);
+        tvOrderNo.setText(orderNo);
+        tvTitle.setText(title);
+        tvType.setText(parentCategory);
+        tvAmount.setText(realAmount);
+        tvTime.setText(finishTime);
     }
     private void initEvent() {
         mRatingBar.setStarEmptyDrawable(getResources().getDrawable(R.drawable.star_empty));
@@ -172,13 +194,13 @@ public class RepairEvaluate extends BaseActivity {
         mRatingBar.setOnRatingChangeListener(
                 new RatingBar.OnRatingChangeListener() {
                     @Override
-                    public void onRatingChange(float RatingCount) {
-                        int Score=Math.round(RatingCount);
-                        evalScore = Integer.toString(Score);
+                    public void onRatingChange(float ratingCount) {
+                        int score=Math.round(ratingCount);
+                        evalScore = Integer.toString(score);
                     }
                 }
         );
-        btn_sendeva.setOnClickListener(new View.OnClickListener() {
+        btnSendEva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customDialog.dismiss();
@@ -187,30 +209,33 @@ public class RepairEvaluate extends BaseActivity {
         });
     }
     private void requestSevice() {
-        String evalInfo=et_evaluation.getText().toString().trim();
+        String evalInfo= etEvaluation.getText().toString().trim();
         String  validateURL = UrlUtil.RepairOrder_EvalUrl;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password", password);
         textParams.put("id",id);
-        textParams.put("type",send_type);
+        textParams.put("type", sendType);
         textParams.put("evalScore",evalScore);
         textParams.put("evalInfo",evalInfo);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener(){
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

@@ -11,10 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.functionActivity.Public.MoveSelectAddress;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -25,7 +26,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,16 +65,16 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0) {
                                 activity.setResult(0x001);
                                 activity.finish();
@@ -89,10 +89,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -249,7 +246,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         customDialog.show();
         requestCode=0;
         String validateURL = UrlUtil.NewAddAddress_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("city_id",cityId);
@@ -258,7 +255,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         textParams.put("latitude",latitude);
         textParams.put("name",mName);
         textParams.put("phone",mPhone);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 
 

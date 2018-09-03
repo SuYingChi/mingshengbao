@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zhy.http.okhttp.utils;
+package com.msht.minshengbao.OkhttpUtil.utils;
 
 import android.os.Build;
 import android.os.Handler;

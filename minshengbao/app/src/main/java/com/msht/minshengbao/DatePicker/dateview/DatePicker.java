@@ -25,15 +25,19 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * @author AigeStudio 2015-06-29
  */
 public class DatePicker extends LinearLayout {
-    private DPTManager mTManager;// 主题管理器
-    private DPLManager mLManager;// 语言管理器
+    /** 主题管理器 */
+    private DPTManager mTManager;
+    /**语言管理器 */
+    private DPLManager mLManager;
+    /** 月视图 */
+    private MonthView monthView;
+    /** 年份 月份显示 */
+    private TextView tvYear, tvMonth;
+    /** 确定按钮显示*/
+    private TextView tvEnsure;
 
-    private MonthView monthView;// 月视图
-    private TextView tvYear, tvMonth;// 年份 月份显示
-    private TextView tvEnsure;// 确定按钮显示
-
-
-    private OnDateSelectedListener onDateSelectedListener;// 日期多选后监听
+    /** 日期多选后监听 */
+    private OnDateSelectedListener onDateSelectedListener;
 
     /**
      * 日期单选监听器
@@ -46,6 +50,10 @@ public class DatePicker extends LinearLayout {
      * 日期多选监听器
      */
     public interface OnDateSelectedListener {
+        /**
+         * 选择日期回调
+         * @param date
+         */
         void onDateSelected(List<String> date);
     }
 

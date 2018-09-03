@@ -11,9 +11,9 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -29,10 +29,11 @@ import com.amap.api.maps.model.MultiPointOverlay;
 import com.amap.api.maps.model.MultiPointOverlayOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -43,26 +44,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener {
-    private View layout_near;
-    private ImageView right_img;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/10/17  
+ */
+public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener {
+    private View layoutNear;
+    private ImageView rightImage;
     private String lat;
     private String lon;
     private String cityCode="",cityName="";
     private String areaCode="",areaName="";
     private String address="";
-    private int pageNo=1;
-    private String pageSize="100";
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
     private MapView mMapView = null;
     private AMap aMap;
-    private boolean First=true;
+    private boolean mFirst =true;
     private AMapLocationClient locationClient;
     private MyLocationStyle myLocationStyle;
     private MultiPointOverlayOptions overlayOptions;
@@ -70,41 +75,49 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
     private static  final int MY_LOCATION_REQUEST=0;
     private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-
     private CustomDialog customDialog;
-    Handler sendmeterHandler = new Handler() {
+    private final RequestHandler requestHandler =new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<ElectricMapActivity> mWeakReference;
+        public RequestHandler(ElectricMapActivity activity) {
+            mWeakReference=new WeakReference<ElectricMapActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final ElectricMapActivity activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
-                    customDialog.dismiss();
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("code");
-                        if(Results.equals("success")) {
+                        String result=object.optString("result");
+                        String error = object.optString("code");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject jsonObject=object.optJSONObject("data");
-                            jsonArray=jsonObject.getJSONArray("list");
-                            initshowdata();
+                            activity.jsonArray=jsonObject.getJSONArray("list");
+                            activity.initShowData();
                         }else {
-                            showfaiture(Error);
+                            activity.onShowFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-
-    };
-
-    private void initshowdata() {
+    }
+    private void initShowData() {
         List<MultiPointItem> list = new ArrayList<MultiPointItem>();
         String pos="0";
         try {
@@ -142,7 +155,7 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
                 pos=String.valueOf(i);
                 double lat =obj.getDouble("latitude");
                 double lon = obj.getDouble("longitude");
-                LatLng latLng = new LatLng(lat, lon, false);//保证经纬度没有问题的时候可以填false
+                LatLng latLng = new LatLng(lat, lon, false);
                 MultiPointItem multiPointItem = new MultiPointItem(latLng);
                 multiPointItem.setTitle(pos);
                 list.add(multiPointItem);
@@ -157,7 +170,7 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
             }
         }
     }
-    private void showfaiture(String error) {
+    private void onShowFailure(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -171,7 +184,6 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
                     }
                 }).show();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,11 +191,11 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         setCommonHeader("");
-        setlocation();
+        onSetLocation();
         initView(savedInstanceState);
         initEvent();
     }
-    private void setlocation() {
+    private void onSetLocation() {
         locationClient = ALocationClientFactory.createLocationClient(this, ALocationClientFactory.createDefaultOption(),this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -204,50 +216,36 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
     private void initData() {
         String dataUrl = UrlUtil.ELECTRIC_LIST_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
+        int pageNo=1;
         String pageNum=String.valueOf(pageNo);
         textParams.put("type","0");
         textParams.put("latitude",lat);
         textParams.put("longitude",lon);
         textParams.put("pageNo",pageNum);
-        textParams.put("pageSize",pageSize);
-        SendrequestUtil.executepost(dataUrl,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                sendmeterHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                sendmeterHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("pageSize","100");
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initEvent() {
         aMap.setOnMultiPointClickListener(new AMap.OnMultiPointClickListener() {
             @Override
             public boolean onPointClick(MultiPointItem multiPointItem) {
                 String pos=multiPointItem.getTitle();
-                if ((!pos.equals(""))&&pos!=null){
-                    int position=Integer.valueOf(pos).intValue();
-                    String store_id=mList.get(position).get("id");
+                if (!TextUtils.isEmpty(pos)){
+                    int position=Integer.parseInt(pos);
+                    String storeId=mList.get(position).get("id");
                     String distance=mList.get(position).get("distance");
-                    Intent intent=new Intent(context,ElectricsStoreDetail.class);
-                    intent.putExtra("store_id",store_id);
+                    Intent intent=new Intent(context,ElectricsStoreDetailActivity.class);
+                    intent.putExtra("store_id",storeId);
                     intent.putExtra("distance",distance);
                     startActivity(intent);
                 }
                 return false;
             }
         });
-        right_img.setOnClickListener(new View.OnClickListener() {
+        rightImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,SearchStore.class);
+                Intent intent=new Intent(context,SearchStoreActivity.class);
                 intent.putExtra("lat",lat);
                 intent.putExtra("lon",lon);
                 intent.putExtra("areaCode",areaCode);
@@ -258,7 +256,7 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
                 startActivity(intent);
             }
         });
-        layout_near.setOnClickListener(new View.OnClickListener() {
+        layoutNear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -266,8 +264,8 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
         });
     }
     private void initView(Bundle savedInstanceState) {
-        layout_near=findViewById(R.id.id_layout_near);
-        right_img=(ImageView)findViewById(R.id.id_right_img);
+        layoutNear =findViewById(R.id.id_layout_near);
+        rightImage =(ImageView)findViewById(R.id.id_right_img);
         mMapView = (MapView) findViewById(R.id.id_mapView);
         mMapView.onCreate(savedInstanceState); // 此方法必须重写
         aMap = mMapView.getMap();
@@ -285,7 +283,7 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
     }
     private void initMultiPoint() {
         overlayOptions = new MultiPointOverlayOptions();
-        overlayOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.store_setaddr_xh));//设置图标
+        overlayOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.store_setaddr_xh));
         overlayOptions.anchor(0.5f,0.5f);
     }
     private void setLocationStyle() {
@@ -305,13 +303,13 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
         if ( location != null ) {
             lat=String.valueOf(location.getLatitude());
             lon=String.valueOf(location.getLongitude());
-            if (First){
+            if (mFirst){
                 customDialog.show();
-                First=false;
+                mFirst =false;
             }
             initData();
         } else {
-            Toast.makeText(context,"定位失败",Toast.LENGTH_SHORT).show();
+            ToastUtil.ToastText(context,"定位失败");
         }
     }
     @Override
@@ -344,7 +342,7 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_LOCATION_REQUEST) {
-                Toast.makeText(context,"获取位置授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"获取位置授权失败");
             }
         }
     };
@@ -379,6 +377,9 @@ public class ElectricMap extends BaseActivity implements AMap.OnMyLocationChange
         if (locationClient != null) {
             locationClient.stopLocation();
             locationClient.onDestroy();
+        }
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
         }
     }
 }

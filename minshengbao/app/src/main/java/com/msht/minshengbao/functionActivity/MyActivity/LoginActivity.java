@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -65,7 +65,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         String result=object.optString("result");
                         String error = object.optString("error");
                         JSONObject objectInfo = object.optJSONObject("data");
-                        if (result.equals(SendrequestUtil.SUCCESS_VALUE)){
+                        if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
                             activity.onReceivePersionalData(objectInfo);
                         }else {
                             activity.tvResult.setText(error);
@@ -74,7 +74,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("username",username);
         textParams.put("password", mPassword);
-        SendrequestUtil.postDataFromService(validateURL,textParams,logonHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,logonHandler);
     }
 
     private boolean matchLoginMsg(String name, String word) {

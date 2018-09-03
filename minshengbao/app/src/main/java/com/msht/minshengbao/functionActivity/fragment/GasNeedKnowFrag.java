@@ -2,6 +2,7 @@ package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.msht.minshengbao.functionActivity.GasService.GasServerGuide;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.GasService.GasServerGuideActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -21,13 +22,14 @@ import com.umeng.analytics.MobclickAgent;
 
 /**
  * A simple {@link Fragment} subclass.
+ * @author hong
  */
 public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
     private RelativeLayout Rprofile;
     private RelativeLayout Rusersafety,Rtooluse;
     private RelativeLayout Rgassafety;
     private final String mPageName ="燃气介绍";
-
+    private Context mContext;
     public GasNeedKnowFrag() {
         // Required empty public constructor
     }
@@ -38,6 +40,7 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_gas_need_know, container, false);
+        mContext=getActivity();
         Rprofile=(RelativeLayout)view.findViewById(R.id.id_layout_profile);
         Rusersafety=(RelativeLayout)view.findViewById(R.id.id_layout_usersafety);
         Rtooluse=(RelativeLayout)view.findViewById(R.id.id_layout_tooluse);
@@ -52,32 +55,31 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
         Rtooluse.setOnClickListener(this);
         Rgassafety.setOnClickListener(this);
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_layout_profile:
-                if (NetWorkUtil.IsNetWorkEnable(getActivity())){
+                if (NetWorkUtil.isNetWorkEnable(getActivity())){
                     gongsigaikuang();
                 }else {
-                    Nonetwork();
+                    onNoNetwork();
                 }
                 break;
             case R.id.id_layout_usersafety:
                 usersafety();
                 break;
             case R.id.id_layout_tooluse:
-                if (NetWorkUtil.IsNetWorkEnable(getActivity())){
-                    ToolUse();
+                if (NetWorkUtil.isNetWorkEnable(getActivity())){
+                    onToolUse();
                 }else {
-                    Nonetwork();
+                    onNoNetwork();
                 }
                 break;
             case R.id.id_layout_safety:
-                if (NetWorkUtil.IsNetWorkEnable(getActivity())){
+                if (NetWorkUtil.isNetWorkEnable(mContext)){
                     gassafety();
                 }else {
-                    Nonetwork();
+                    onNoNetwork();
                 }
                 break;
             default:
@@ -85,8 +87,8 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void Nonetwork() {
-        new PromptDialog.Builder(getActivity())
+    private void onNoNetwork() {
+        new PromptDialog.Builder(mContext)
                 .setTitle("无网络连接")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("当前网络不可用")
@@ -101,19 +103,19 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
     private void  gongsigaikuang() {    //营业网点
         String navigate="公司概况";
         String url= UrlUtil.Companyprofile_Url;
-        Intent yingye=new Intent(getActivity(),HtmlPage.class);
+        Intent yingye=new Intent(getActivity(),HtmlPageActivity.class);
         yingye.putExtra("navigate",navigate);
         yingye.putExtra("url",url);
         startActivity(yingye);
     }
     private void usersafety() {    //用户安全
-        Intent safety=new Intent(getActivity(),GasServerGuide.class);
+        Intent safety=new Intent(getActivity(),GasServerGuideActivity.class);
         startActivity(safety);
     }
-    private void ToolUse() {
+    private void onToolUse() {
         String navigate="燃气具使用";
         String url= UrlUtil.GasToolUse_Url;
-        Intent use=new Intent(getActivity(),HtmlPage.class);
+        Intent use=new Intent(getActivity(),HtmlPageActivity.class);
         use.putExtra("navigate",navigate);
         use.putExtra("url",url);
         startActivity(use);
@@ -121,7 +123,7 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
     private void  gassafety() {
         String navigate="燃气安全";
         String url= UrlUtil.GasSafety_Url;
-        Intent price=new Intent(getActivity(),HtmlPage.class);
+        Intent price=new Intent(getActivity(),HtmlPageActivity.class);
         price.putExtra("navigate",navigate);
         price.putExtra("url",url);
         startActivity(price);

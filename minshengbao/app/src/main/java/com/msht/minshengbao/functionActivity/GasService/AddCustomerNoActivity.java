@@ -12,8 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -26,8 +27,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Demo class
@@ -44,7 +43,6 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
     private String customerNo;
     private String address;
     private int   requestCode=0;
-    private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private CustomDialog customDialog;
     private final  RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
@@ -62,12 +60,12 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)){
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)){
                             if (activity.requestCode==0){
                                 JSONObject jsonObject = object.optJSONObject("data");
                                 String address = jsonObject.optString("address");
@@ -82,7 +80,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -92,7 +90,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         }
     }
     private void showDialogs(String addr) {
-        final EnsureAddress ensureAddress=new EnsureAddress(this);
+        final EnsureAddress ensureAddress=new EnsureAddress(context);
         ensureAddress.setAddressText(addr);
         ensureAddress.setCustomerText(customerNo);
         ensureAddress.setOnNegativeListener(new View.OnClickListener() {
@@ -112,7 +110,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         ensureAddress.show();
     }
     private void onAddSuccess() {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("添加地址成功")
@@ -126,7 +124,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                 }).show();
     }
     private void onErrorTipDialog(String error) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -148,10 +146,10 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        initFindViewByid();
+        initFindViewId();
         initEvent();
     }
-    private void initFindViewByid() {
+    private void initFindViewId() {
         addAddress =(Button)findViewById(R.id.id_btn_add_address);
         etCustomerNo =(EditText)findViewById(R.id.id_customerNo);
         addAddress.setEnabled(false);
@@ -202,11 +200,11 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         }else if (requestCode==1){
             validateURL =UrlUtil.ADD_ADDRESS_URL;
         }
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customerNo);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onDestroy() {

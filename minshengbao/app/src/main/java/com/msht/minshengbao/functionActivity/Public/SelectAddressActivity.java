@@ -16,11 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddress;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -34,7 +35,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -68,17 +68,17 @@ public class SelectAddressActivity extends BaseActivity {
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.jsonArray.length() == 0) {
                                 activity.layoutView.setVisibility(View.VISIBLE);
                             } else {
@@ -92,10 +92,7 @@ public class SelectAddressActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -170,10 +167,16 @@ public class SelectAddressActivity extends BaseActivity {
                 String mAddress=addrList.get(position).get("address");
                 String name=addrList.get(position).get("name");
                 String phone=addrList.get(position).get("phone");
+                String cityId=addrList.get(position).get("city_id");
+                String longitude=addrList.get(position).get("longitude");
+                String latitude=addrList.get(position).get("latitude");;
                 Intent intent=new Intent();
                 intent.putExtra("mAddress",mAddress);
                 intent.putExtra("name",name);
                 intent.putExtra("phone",phone);
+                intent.putExtra("cityId",cityId);
+                intent.putExtra("longitude",longitude);
+                intent.putExtra("latitude",latitude);
                 setResult(1,intent);
                 finish();
             }
@@ -225,10 +228,10 @@ public class SelectAddressActivity extends BaseActivity {
     private void initData() {
         customDialog.show();
         String validateURL = UrlUtil.AddressManage_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 
     private class AddressAdapter extends BaseAdapter {

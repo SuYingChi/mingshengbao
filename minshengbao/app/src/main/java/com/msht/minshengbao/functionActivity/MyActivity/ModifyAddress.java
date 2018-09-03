@@ -16,7 +16,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.MoveSelectAddress;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -69,7 +69,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -77,7 +77,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0) {
                                 activity.setResult(0x001);
                                 activity.finish();
@@ -92,7 +92,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -303,7 +303,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
         }else if (requestCode==1){
             validateURL = UrlUtil.DelectAddress_Url;
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
     @Override

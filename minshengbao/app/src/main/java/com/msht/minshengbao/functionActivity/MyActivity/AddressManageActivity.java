@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import com.msht.minshengbao.adapter.AddressManageAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -52,7 +52,7 @@ public class AddressManageActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -63,7 +63,7 @@ public class AddressManageActivity extends BaseActivity {
                         if (activity.requestCodes==0){
                             activity.jsonArray =object.optJSONArray("data");
                         }
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCodes==0) {
                                 if (activity.jsonArray.length() == 0) {
                                     activity.layoutNoData.setVisibility(View.VISIBLE);
@@ -85,7 +85,7 @@ public class AddressManageActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -268,7 +268,7 @@ public class AddressManageActivity extends BaseActivity {
             validateURL = UrlUtil.SetDefaultAddr_Url;
             textParams.put("id",addressId);
         }
-        SendrequestUtil.postDataFromService(validateURL,textParams, requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams, requestHandler);
     }
 
     @Override

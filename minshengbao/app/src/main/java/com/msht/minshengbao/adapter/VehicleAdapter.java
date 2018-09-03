@@ -27,13 +27,13 @@ import java.util.List;
  * Created by hong on 2017/11/21.
  */
 
-public class VechicAdapter extends BaseAdapter {
+public class VehicleAdapter extends BaseAdapter {
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private DisplayImageOptions options;
     private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
-    public VechicAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public VehicleAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         this.mList=List;
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

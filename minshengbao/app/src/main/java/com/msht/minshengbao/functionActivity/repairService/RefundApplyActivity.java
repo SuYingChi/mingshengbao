@@ -20,15 +20,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -36,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,90 +48,122 @@ import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
-public class RefundApply extends BaseActivity {
-    private ImageView typeimg;
-    private EditText  et_problem;
-    private Button    btn_send;
-    private GridView  photogridview;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/8/10  
+ */
+public class RefundApplyActivity extends BaseActivity {
+    private EditText etProblem;
+    private Button btnSend;
+    private GridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private Context   context;
     private String    orderNo,refundId;
     private String    userId,password;
-    private String    id,parent_category;
-    private String    type,finish_time;
-    private String    title,mdescribe;
-    private int   thisposition=-1;
-    private final int SUCCESS = 1;
-    private final int FAILURE = 0;
+    private String    id, parentCategory;
+    private String    type, finishTime;
+    private String    title;
+    private int thisPosition =-1;
     private int k=0;
-    private JSONObject jsonbject;   //数据解析
+    private JSONObject jsonObject;
     private CustomDialog customDialog;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private ArrayList<String> imgPaths = new ArrayList<>();
     private final String mPageName ="退款申请";
-    Handler requestHandler = new Handler() {
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private final BitmapHandler bitmapHandler=new BitmapHandler(this);
+    private static class  RequestHandler extends Handler{
+        private WeakReference<RefundApplyActivity> mWeakReference;
+        public RequestHandler(RefundApplyActivity activity) {
+            mWeakReference = new WeakReference<RefundApplyActivity>(activity);
+        }
+        @Override
         public void handleMessage(Message msg) {
+            final RefundApplyActivity reference =mWeakReference.get();
+            if (reference == null||reference.isFinishing()) {
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
+                        String result=object.optString("result");
                         String error = object.optString("error");
-                        jsonbject =object.optJSONObject("data");
-                        if(Results.equals("success")) {
-                            initShow();
+                        reference.jsonObject =object.optJSONObject("data");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            reference.initShow();
                         }else {
-                            faifure(error);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    customDialog.dismiss();
-                    Toast.makeText(context, msg.obj.toString(),
-                            Toast.LENGTH_SHORT).show();
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    Handler Bitmaphandler= new Handler() {
+    }
+    private static class BitmapHandler extends Handler{
+        private WeakReference<RefundApplyActivity> mWeakReference;
+        private BitmapHandler(RefundApplyActivity activity) {
+            mWeakReference = new WeakReference<RefundApplyActivity>(activity);
+        }
+
+        @Override
         public void handleMessage(Message msg) {
+            final RefundApplyActivity reference =mWeakReference.get();
+            if (reference == null||reference.isFinishing()) {
+                return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
-                case SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
                         String results = jsonObject.optString("result");
                         String error=jsonObject.optString("error");
-                        if (results.equals("success")){
-                            k++;
-                            if(k==imgPaths.size()){
-                                customDialog.dismiss();
-                                btn_send.setEnabled(true);
-                                showDialog("您的退款申请已经提交");
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
+                            reference.k++;
+                            if(reference.k==reference.imgPaths.size()){
+                                if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                                    reference.customDialog.dismiss();
+                                }
+                                reference.btnSend.setEnabled(true);
+                                reference.showDialog("您的退款申请已经提交");
                             }
                         }else {
-                            btn_send.setEnabled(true);
-                            faifure(error);
+                            reference.btnSend.setEnabled(true);
+                            reference.onFailure(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
-                case FAILURE:
-                    btn_send.setEnabled(true);
-                    Toast.makeText(context, msg.obj.toString(), Toast.LENGTH_SHORT)
-                            .show();
+                case SendRequestUtil.FAILURE:
+                    reference.btnSend.setEnabled(true);
+                    ToastUtil.ToastText(reference.context, msg.obj.toString());
                     break;
                 default:
                     break;
             }
+            super.handleMessage(msg);
         }
-    };
-    private void  faifure(String error) {
-        new PromptDialog.Builder(this)
+    }
+    private void onFailure(String error) {
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
@@ -140,7 +176,7 @@ public class RefundApply extends BaseActivity {
                 }).show();
     }
     private void showDialog(String s) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(s)
@@ -154,7 +190,7 @@ public class RefundApply extends BaseActivity {
                 }).show();
     }
     private void initShow() {
-        refundId=jsonbject.optString("id");
+        refundId= jsonObject.optString("id");
         if (imgPaths.size()!=0){
             for(int i=0;i<imgPaths.size();i++){
                 File files=new File(imgPaths.get(i));
@@ -162,15 +198,15 @@ public class RefundApply extends BaseActivity {
             }
         }else {
             customDialog.dismiss();
-            btn_send.setEnabled(true);
+            btnSend.setEnabled(true);
             showDialog("您的退款申请已经提交");
         }
     }
 
     private void compressImg(final File files) {
         Luban.with(this)
-                .load(files)                     //传人要压缩的图片
-                .setCompressListener(new OnCompressListener() { //设置回调
+                .load(files)
+                .setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {}
                     @Override
@@ -195,22 +231,7 @@ public class RefundApply extends BaseActivity {
         textParams.put("password",password);
         textParams.put("id", refundId);
         fileparams.put("img",files);
-        SendrequestUtil.multipleFileParameters(validateURL, textParams, fileparams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                Bitmaphandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.what = FAILURE;
-                msg.obj =fail;
-                Bitmaphandler.sendMessage(msg);
-            }
-        });
+        SendRequestUtil.postFileToServer(textParams,fileparams,validateURL,bitmapHandler);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,16 +247,16 @@ public class RefundApply extends BaseActivity {
         orderNo=data.getStringExtra("orderNo");
         type= data.getStringExtra("type");
         title=data.getStringExtra("title");
-        finish_time=data.getStringExtra("finish_time");
-        parent_category=data.getStringExtra("parent_category");
+        finishTime =data.getStringExtra("finishTime");
+        parentCategory =data.getStringExtra("parentCategory");
         initView();
         mAdapter = new PhotoPickerAdapter(imgPaths);
-        photogridview.setAdapter(mAdapter);
-        photogridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPhotoGridView.setAdapter(mAdapter);
+        mPhotoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 23) {
-                    thisposition=position;
+                    thisPosition =position;
                     initphoto(position);
                 } else {
                     if (position == imgPaths.size()) {
@@ -245,12 +266,12 @@ public class RefundApply extends BaseActivity {
                                 .setSelected(imgPaths)
                                 .setShowGif(true)
                                 .setPreviewEnabled(true)
-                                .start(RefundApply.this, PhotoPicker.REQUEST_CODE);
+                                .start(RefundApplyActivity.this, PhotoPicker.REQUEST_CODE);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("imgPaths", imgPaths);
                         bundle.putInt("position", position);
-                        Intent intent = new Intent(RefundApply.this, EnlargePicActivity.class);
+                        Intent intent = new Intent(RefundApplyActivity.this, EnlargePicActivity.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, position);
                     }
@@ -284,32 +305,32 @@ public class RefundApply extends BaseActivity {
         @Override
         public void onSucceed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                showphoto();
+                onShowPhoto();
             }
         }
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Toast.makeText(RefundApply.this,"授权失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(RefundApplyActivity.this,"授权失败",Toast.LENGTH_SHORT).show();
             }
         }
     };
-    private void showphoto() {
-        if (thisposition== imgPaths.size()) {
+    private void onShowPhoto() {
+        if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
                     .setPhotoCount(4)
                     .setShowCamera(true)
                     .setSelected(imgPaths)
                     .setShowGif(true)
                     .setPreviewEnabled(true)
-                    .start(RefundApply.this, PhotoPicker.REQUEST_CODE);
+                    .start(RefundApplyActivity.this, PhotoPicker.REQUEST_CODE);
         } else {
             Bundle bundle = new Bundle();
             bundle.putStringArrayList("imgPaths",imgPaths);
-            bundle.putInt("position",thisposition);
-            Intent intent=new Intent(RefundApply.this, EnlargePicActivity.class);
+            bundle.putInt("position", thisPosition);
+            Intent intent=new Intent(RefundApplyActivity.this, EnlargePicActivity.class);
             intent.putExtras(bundle);
-            startActivityForResult(intent,thisposition);
+            startActivityForResult(intent, thisPosition);
         }
     }
     private void initphoto(int position) {
@@ -327,12 +348,12 @@ public class RefundApply extends BaseActivity {
                         .setSelected(imgPaths)
                         .setShowGif(true)
                         .setPreviewEnabled(true)
-                        .start(RefundApply.this, PhotoPicker.REQUEST_CODE);
+                        .start(RefundApplyActivity.this, PhotoPicker.REQUEST_CODE);
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList("imgPaths",imgPaths);
                 bundle.putInt("position",position);
-                Intent intent=new Intent(RefundApply.this, EnlargePicActivity.class);
+                Intent intent=new Intent(RefundApplyActivity.this, EnlargePicActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent,position);
             }
@@ -340,56 +361,67 @@ public class RefundApply extends BaseActivity {
     }
     private void initView() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
-        ((TextView)findViewById(R.id.id_tv_type)).setText(parent_category);
+        ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
         ((TextView)findViewById(R.id.id_tv_title)).setText(title);
-        ((TextView)findViewById(R.id.id_create_time)).setText(finish_time);
-        et_problem=(EditText)findViewById(R.id.id_et_problem);
-        typeimg=(ImageView)findViewById(R.id.id_img_type);
-        btn_send=(Button)findViewById(R.id.id_btn_send);
-        photogridview=(GridView)findViewById(R.id.noScrollgridview);
-        if (type.equals("1")){
-            typeimg.setImageResource(R.drawable.home_sanitary_xh);
-        }else if (type.equals("2")){
-            typeimg.setImageResource(R.drawable.home_appliance_fix_xh);
-        }else if (type.equals("3")){
-            typeimg.setImageResource(R.drawable.home_lanterns_xh);
-        }else if (type.equals("4")){
-            typeimg.setImageResource(R.drawable.home_otherfix_xh);
-        }else if (type.equals("36")){
-            typeimg.setImageResource(R.drawable.home_appliance_clean_xh);
+        ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
+        etProblem =(EditText)findViewById(R.id.id_et_problem);
+        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
+        btnSend =(Button)findViewById(R.id.id_btn_send);
+        mPhotoGridView =(GridView)findViewById(R.id.noScrollgridview);
+        switch (type){
+            case ConstantUtil.VALUE_ONE:
+                typeImg.setImageResource(R.drawable.home_sanitary_xh);
+                break;
+            case ConstantUtil.VALUE_TWO:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.VALUE_THREE:
+                typeImg.setImageResource(R.drawable.home_lanterns_xh);
+                break;
+            case ConstantUtil.VALUE_FOUR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.VALUE_FORTY_EIGHT:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
         }
-        btn_send.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btn_send.setEnabled(false);
+                btnSend.setEnabled(false);
                 requestService();
             }
         });
     }
     private void requestService() {
         customDialog.show();
-        mdescribe=et_problem.getText().toString().trim();
+        String mDescribe = etProblem.getText().toString().trim();
         String validateURL = UrlUtil.RefundApply_Url;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        textParams.put("info",mdescribe);
-        SendrequestUtil.executepost(validateURL,textParams, new ResultListener() {
-            @Override
-            public void onResultSuccess(String success) {
-                Message msg = new Message();
-                msg.obj = success;
-                msg.what = SUCCESS;
-                requestHandler.sendMessage(msg);
-            }
-            @Override
-            public void onResultFail(String fail) {
-                Message msg = new Message();
-                msg.obj = fail;
-                msg.what = FAILURE;
-                requestHandler.sendMessage(msg);
-            }
-        });
+        textParams.put("info", mDescribe);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

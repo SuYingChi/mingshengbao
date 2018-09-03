@@ -18,7 +18,13 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DialogUtil;
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/5/2  
+ */
 @SuppressLint("InflateParams") public class PromptDialog extends Dialog {
 
 	private Context context;
@@ -275,7 +281,6 @@ import com.msht.minshengbao.Utils.DialogUtil;
 		 */
 		public Builder setViewStyle(int style){
 			this.viewStyle = style;
-			
 			switch (style) {
 			case VIEW_STYLE_TITLEBAR:
 				this.titlebarGravity = Gravity.LEFT;

@@ -79,7 +79,8 @@
                 android:paddingLeft="@dimen/margin_width10"
                 android:text="后天"
                 android:background="@drawable/selector_radio_background"
-                android:button="@null"/>
+                android:button="@null"
+                android:visibility="gone"/>
         </RadioGroup>
         <ScrollView
             android:layout_weight="1"
@@ -108,7 +109,7 @@
                         android:minHeight="@dimen/margin_width40"
                         android:paddingRight="@dimen/margin_width10"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="8:00-9:00"
+                        android:text="9:00-11:00"
                         android:textSize="@dimen/text_width16"
                         android:button="@null"
                         android:drawableRight="@drawable/selector_circle_radio"/>
@@ -118,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:minHeight="@dimen/margin_width40"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="9:00-10:00"
+                        android:text="11:00-13:00"
                         android:textSize="@dimen/text_width16"
                         android:paddingRight="@dimen/margin_width10"
                         android:button="@null"
@@ -130,7 +131,7 @@
                         android:minHeight="@dimen/margin_width40"
                         android:paddingRight="@dimen/margin_width10"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="10:00-11:00"
+                        android:text="13:00-15:00"
                         android:textSize="@dimen/text_width16"
                         android:button="@null"
                         android:drawableRight="@drawable/selector_circle_radio"/>
@@ -140,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:minHeight="@dimen/margin_width40"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="11:00-12:00"
+                        android:text="15:00-17:00"
                         android:textSize="@dimen/text_width16"
                         android:paddingRight="@dimen/margin_width10"
                         android:button="@null"
@@ -151,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:minHeight="@dimen/margin_width40"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="12:00-13:00"
+                        android:text="17:00-19:00"
                         android:textSize="@dimen/text_width16"
                         android:paddingRight="@dimen/margin_width10"
                         android:button="@null"
@@ -162,62 +163,7 @@
                         android:layout_height="wrap_content"
                         android:minHeight="@dimen/margin_width40"
                         android:paddingLeft="@dimen/margin_width10"
-                        android:text="14:00-15:00"
-                        android:textSize="@dimen/text_width16"
-                        android:paddingRight="@dimen/margin_width10"
-                        android:button="@null"
-                        android:drawableRight="@drawable/selector_circle_radio"/>
-                    <RadioButton
-                        android:id="@+id/id_radio_time8"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_width40"
-                        android:paddingLeft="@dimen/margin_width10"
-                        android:text="15:00-16:00"
-                        android:textSize="@dimen/text_width16"
-                        android:paddingRight="@dimen/margin_width10"
-                        android:button="@null"
-                        android:drawableRight="@drawable/selector_circle_radio"/>
-                    <RadioButton
-                        android:id="@+id/id_radio_time9"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_width40"
-                        android:paddingLeft="@dimen/margin_width10"
-                        android:text="16:00-17:00"
-                        android:textSize="@dimen/text_width16"
-                        android:paddingRight="@dimen/margin_width10"
-                        android:button="@null"
-                        android:drawableRight="@drawable/selector_circle_radio"/>
-                    <RadioButton
-                        android:id="@+id/id_radio_time10"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_width40"
-                        android:paddingLeft="@dimen/margin_width10"
-                        android:text="17:00-18:00"
-                        android:textSize="@dimen/text_width16"
-                        android:paddingRight="@dimen/margin_width10"
-                        android:button="@null"
-                        android:drawableRight="@drawable/selector_circle_radio"/>
-                    <RadioButton
-                        android:id="@+id/id_radio_time11"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_width40"
-                        android:paddingLeft="@dimen/margin_width10"
-                        android:text="18:00-19:00"
-                        android:textSize="@dimen/text_width16"
-                        android:paddingRight="@dimen/margin_width10"
-                        android:button="@null"
-                        android:drawableRight="@drawable/selector_circle_radio"/>
-                    <RadioButton
-                        android:id="@+id/id_radio_time12"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_width40"
-                        android:paddingLeft="@dimen/margin_width10"
-                        android:text="19:00-20:00"
+                        android:text="19:00-21:00"
                         android:textSize="@dimen/text_width16"
                         android:paddingRight="@dimen/margin_width10"
                         android:button="@null"

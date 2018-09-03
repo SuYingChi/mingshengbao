@@ -17,11 +17,11 @@ import java.util.HashMap;
  * Created by hong on 2017/5/5.
  */
 
-public class HomeApplianceiAdapter extends BaseAdapter {
+public class HomeApplianceAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater = null;
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
-    public HomeApplianceiAdapter(Context context, ArrayList<HashMap<String, String>> List) {
+    public HomeApplianceAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         super();
         this.mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

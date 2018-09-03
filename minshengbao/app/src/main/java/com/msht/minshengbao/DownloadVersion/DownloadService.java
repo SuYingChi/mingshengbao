@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
+
+import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -19,23 +21,35 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.functionActivity.fragment.IncomeExpenseFragment;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/4/2  
+ */
 public class DownloadService extends Service {
     public static final String DOWNLOAD_PATH =
             Environment.getExternalStorageDirectory().getAbsolutePath()+
                     "/Msbdownloads/";
     public static final String TAG = "download";
-    private String url;//下载链接
-    private int length;//文件长度
-    private String fileName=null;//文件名
-    private Notification notification;
+    /**下载链接*/
+    private String url;
+    /**文件长度*/
+    private int length;
+    /**文件名 */
+    private String fileName=null;
+    private NotificationCompat.Builder builder;
     private RemoteViews contentView;
     private NotificationManager notificationManager;
     private static final int SC_OK=200;
@@ -43,31 +57,49 @@ public class DownloadService extends Service {
     private static final int URL_ERROR = 1;
     private static final int NET_ERROR = 2;
     private static final int DOWNLOAD_SUCCESS = 3;
-    private Handler mHandler = new Handler(){
-        public void handleMessage(android.os.Message msg) {
+    private Context mContext;
+    private final RequestHandler mHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler{
+        private WeakReference<DownloadService> mWeakReference;
+        public RequestHandler(DownloadService downloadService) {
+            mWeakReference = new WeakReference<DownloadService>(downloadService);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final DownloadService reference =mWeakReference.get();
+            if (reference == null) {
+                return;
+            }
             switch (msg.what) {
                 case MSG_INIT:
-                    length = (int) msg.obj;
-                    new DownloadThread(url,length).start();
-                    createNotification();
+                    reference.length = (int) msg.obj;
+                    reference.onDownThread();
+                    reference.createNotification();
                     break;
                 case DOWNLOAD_SUCCESS:
                     //下载完成
-                    notifyNotification(100, 100);
-                    installApk(DownloadService.this,new File(DOWNLOAD_PATH,fileName));
-                    Toast.makeText(DownloadService.this, "下载完成", Toast.LENGTH_SHORT).show();
+                    reference.notifyNotification(100, 100);
+                    installApk(reference.mContext,new File(DOWNLOAD_PATH,reference.fileName));
+                    Toast.makeText(reference.mContext, "下载完成", Toast.LENGTH_SHORT).show();
                     break;
                 case URL_ERROR:
-                    Toast.makeText(DownloadService.this, "下载地址错误",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(reference.mContext, "下载地址错误",Toast.LENGTH_SHORT).show();
                     break;
                 case NET_ERROR:
-                    Toast.makeText(DownloadService.this, "连接失败，请检查网络设置",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(reference.mContext, "连接失败，请检查网络设置",Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
             }
-        };
-    };
-    public DownloadService() {
-    }
+            super.handleMessage(msg);
+        }
 
+    }
+    private void onDownThread() {
+        new DownloadThread(url,length).start();
+    }
+    public DownloadService() {}
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
@@ -77,6 +109,7 @@ public class DownloadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null){
+            mContext=this;
             url = intent.getStringExtra("url");
             if(url != null && !TextUtils.isEmpty(url)){
                 new InitThread(url).start();
@@ -93,6 +126,7 @@ public class DownloadService extends Service {
         public InitThread(String url) {
             this.url = url;
         }
+        @Override
         public void run() {
             HttpURLConnection conn= null;
             RandomAccessFile raf = null;
@@ -103,7 +137,7 @@ public class DownloadService extends Service {
                 conn.setConnectTimeout(6000);
                 conn.setRequestMethod("GET");
                 int length = -1;
-                if(conn.getResponseCode() ==SC_OK){  //200
+                if(conn.getResponseCode() ==SC_OK){
                     //获得文件长度
                     length = conn.getContentLength();
                 }
@@ -163,7 +197,8 @@ public class DownloadService extends Service {
                 raf.seek(start);
                 long mFinished = 0;
                 //开始下载
-                if(conn.getResponseCode() ==SC_OK||conn.getResponseCode()==206){ //这里判断  SC_OK=200,实为206
+                //这里判断  SC_OK=200,实为206
+                if(conn.getResponseCode() ==SC_OK||conn.getResponseCode()==206){
                     input = conn.getInputStream();
                     byte[] buffer = new byte[1024*4];
                     int len = -1;
@@ -212,41 +247,27 @@ public class DownloadService extends Service {
 
     @SuppressWarnings("deprecation")
     public void createNotification() {
-        notification = new Notification(
-                R.mipmap.ic_launcher,//应用的图标
-                "安装包正在下载...",
-                System.currentTimeMillis());
-        notification.flags = Notification.FLAG_ONGOING_EVENT;
-        //notification.flags = Notification.FLAG_AUTO_CANCEL;
-
+        builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("下载");
+        builder.setContentText("安装包正在下载...");
         /*** 自定义  Notification 的显示****/
         contentView = new RemoteViews(getPackageName(), R.layout.item_notification);
         contentView.setProgressBar(R.id.progress, 100, 0, false);
         contentView.setTextViewText(R.id.tv_progress, "0%");
         contentView.setTextViewText(R.id.id_tv_download,"安装包正在下载...");
-        notification.contentView = contentView;
-        /*updateIntent = new Intent(this, AboutActivity.class);
-      	updateIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-     	updateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-     	pendingIntent = PendingIntent.getActivity(this, 0, updateIntent, 0);
-      	notification.contentIntent = pendingIntent;*/
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        builder.setContent(contentView);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //设置notification的PendingIntent
-		/*Intent intt = new Intent(this, MainActivity.class);
-		PendingIntent pi = PendingIntent.getActivity(this,100, intt,Intent.FLAG_ACTIVITY_NEW_TASK	| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-		notification.contentIntent = pi;*/
-
-        notificationManager.notify(R.layout.item_notification, notification);
+        if (notificationManager!=null){
+            notificationManager.notify(R.layout.item_notification, builder.build());
+        }
     }
     private void notifyNotification(long percent,long length){
-
         contentView.setTextViewText(R.id.tv_progress, (percent*100/length)+"%");
         contentView.setProgressBar(R.id.progress, (int)length,(int)percent, false);
         contentView.setTextViewText(R.id.id_tv_download,"安装包下载完成");
-        notification.contentView = contentView;
-        notificationManager.notify(R.layout.item_notification, notification);
+        builder.setContent(contentView);
+        notificationManager.notify(R.layout.item_notification, builder.build());
     }
     /**
      * 安装apk
@@ -255,7 +276,8 @@ public class DownloadService extends Service {
      * @param file    APK文件
      */
     public static void installApk(Context context, File file) {
-        SharedPreferencesUtil.Clear(context,"open_app");//清除原有数据
+        //清除原有数据
+        SharedPreferencesUtil.Clear(context,"open_app");
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
             Uri apkUri= FileProvider.getUriForFile(context,"com.msht.minshengbao.fileProvider",file);
             Intent install=new Intent();

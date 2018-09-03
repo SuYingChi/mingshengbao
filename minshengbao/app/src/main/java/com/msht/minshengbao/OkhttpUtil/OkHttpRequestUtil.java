@@ -3,23 +3,20 @@ package com.msht.minshengbao.OkhttpUtil;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 /**
  * Demo class
  *
  * @author hong
  * @date 2018/6/27
  */
-public class OkHttpRequestManager implements ReqCallBack{
+public class OkHttpRequestUtil implements ReqCallBack{
 
     public static final String ERROR_NETWORK = "网络连接异常，请查看网络状态";
     public static final String ERROR_SERVICE = "服务器异常，请稍后再试";
@@ -27,7 +24,7 @@ public class OkHttpRequestManager implements ReqCallBack{
     public static final int SUCCESS=1;
     public static final int FAILURE=0;
     /**单利引用 **/
-    private static volatile OkHttpRequestManager mInstance;
+    private static volatile OkHttpRequestUtil mInstance;
     /**get请求 **/
     public static final int TYPE_GET = 0;
     /**post请求参数为json **/
@@ -47,7 +44,7 @@ public class OkHttpRequestManager implements ReqCallBack{
     /**
      * 初始化RequestManager
      */
-    public OkHttpRequestManager(Context context) {
+    public OkHttpRequestUtil(Context context) {
 
         //初始化OkHttpClient
         mOkHttpClient = new OkHttpClient().newBuilder()
@@ -76,13 +73,13 @@ public class OkHttpRequestManager implements ReqCallBack{
      * 获取单例引用
      * @return
      */
-    public static OkHttpRequestManager getInstance(Context context) {
-        OkHttpRequestManager inst = mInstance;
+    public static OkHttpRequestUtil getInstance(Context context) {
+        OkHttpRequestUtil inst = mInstance;
         if (inst == null) {
-            synchronized (OkHttpRequestManager.class) {
+            synchronized (OkHttpRequestUtil.class) {
                 inst = mInstance;
                 if (inst == null) {
-                    inst = new OkHttpRequestManager(context.getApplicationContext());
+                    inst = new OkHttpRequestUtil(context.getApplicationContext());
                     mInstance = inst;
                 }
             }
@@ -163,9 +160,9 @@ public class OkHttpRequestManager implements ReqCallBack{
     }
 
     @Override
-    public void onRequestServiceSuccess(Object result) {
+    public void onRequestSuccess(String result) {
         Message msg = new Message();
-        msg.obj = result.toString();
+        msg.obj = result;
         msg.what = SUCCESS;
         reCallHandler.sendMessage(msg);
     }

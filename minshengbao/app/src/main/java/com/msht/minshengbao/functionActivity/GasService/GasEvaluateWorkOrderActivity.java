@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/9/2  
  */
-public class GasEvaluateWorkOrder extends BaseActivity {
+public class GasEvaluateWorkOrderActivity extends BaseActivity {
     private RatingBar mRatingBar;
     private EditText tvEvaluation;
     private Button btnSendEvaluation;
@@ -42,14 +42,14 @@ public class GasEvaluateWorkOrder extends BaseActivity {
     private CustomDialog customDialog;
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<GasEvaluateWorkOrder> mWeakReference;
-        public RequestHandler(GasEvaluateWorkOrder activity) {
-            mWeakReference=new WeakReference<GasEvaluateWorkOrder>(activity);
+        private WeakReference<GasEvaluateWorkOrderActivity> mWeakReference;
+        public RequestHandler(GasEvaluateWorkOrderActivity activity) {
+            mWeakReference=new WeakReference<GasEvaluateWorkOrderActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final GasEvaluateWorkOrder activity=mWeakReference.get();
+            final GasEvaluateWorkOrderActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -57,12 +57,12 @@ public class GasEvaluateWorkOrder extends BaseActivity {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
-                        if(result.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.initShow();
                         }else {
                             activity.failure(error);
@@ -71,7 +71,7 @@ public class GasEvaluateWorkOrder extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -166,7 +166,7 @@ public class GasEvaluateWorkOrder extends BaseActivity {
         textParams.put("id",id);
         textParams.put("evalScore",evalScore);
         textParams.put("evaluation",evaluation);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onDestroy() {

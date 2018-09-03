@@ -5,12 +5,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.InvoiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -25,12 +25,17 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2017/11/2  
+ */
 public class InvoiceHistory extends BaseActivity {
-    private TextView tvNavigation;
-    private XListView mListView;
-    private View      layoutNoData;
+    private XListView  mListView;
+    private View       layoutNoData;
     private String     userId,password;
     private InvoiceAdapter mAdapter;
     private JSONArray jsonArray;
@@ -45,7 +50,6 @@ public class InvoiceHistory extends BaseActivity {
         public RequestHandler(InvoiceHistory activity) {
             mWeakReference=new WeakReference<>(activity);
         }
-
         @Override
         public void handleMessage(Message msg) {
             final InvoiceHistory activity=mWeakReference.get();
@@ -53,7 +57,7 @@ public class InvoiceHistory extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -62,7 +66,7 @@ public class InvoiceHistory extends BaseActivity {
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.refreshType==0){
                                 activity.mListView.stopRefresh(true);
                             }else if (activity.refreshType==1){
@@ -82,7 +86,7 @@ public class InvoiceHistory extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -105,7 +109,6 @@ public class InvoiceHistory extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-
                     }
                 }).show();
     }
@@ -114,15 +117,14 @@ public class InvoiceHistory extends BaseActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String status = jsonObject.getString("status");
-                String waybill_num= jsonObject.getString("waybill_num");
+                String waybillNum= jsonObject.getString("waybill_num");
                 String name= jsonObject.getString("name");
                 String amount  = jsonObject.getString("amount");
                 String time    = jsonObject.getString("time");
-
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("status", status);
                 map.put("name",name);
-                map.put("waybill_num", waybill_num);
+                map.put("waybill_num", waybillNum);
                 map.put("amount",amount);
                 map.put("time",time);
                 invoiceList.add(map);
@@ -138,7 +140,6 @@ public class InvoiceHistory extends BaseActivity {
             mAdapter.notifyDataSetChanged();
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,7 +158,6 @@ public class InvoiceHistory extends BaseActivity {
     private void intView() {
         mListView=(XListView)findViewById(R.id.id_view_invoice);
         layoutNoData =findViewById(R.id.id_nodata_view);
-
     }
     private void initData() {
         customDialog.show();
@@ -179,14 +179,13 @@ public class InvoiceHistory extends BaseActivity {
         pageIndex =i;
         pageNo=i;
         String validateURL = UrlUtil.INSURANCE_HISTORY_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("page",pageNum);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

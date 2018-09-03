@@ -15,7 +15,7 @@ import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -63,7 +63,7 @@ public class RechargeValue extends BaseActivity  {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -71,7 +71,7 @@ public class RechargeValue extends BaseActivity  {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject jsonObject =object.optJSONObject("data");
                             if (activity.requestCode==0){
                                 activity.onReceiveChargeData(jsonObject);
@@ -87,7 +87,7 @@ public class RechargeValue extends BaseActivity  {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
@@ -111,12 +111,12 @@ public class RechargeValue extends BaseActivity  {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONArray array =object.getJSONArray("data");
                             activity.onReceivePaywayData(array);
                         }else {
@@ -126,7 +126,7 @@ public class RechargeValue extends BaseActivity  {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onShowNotify("提示",msg.obj.toString());
                     break;
                 default:
@@ -251,7 +251,7 @@ public class RechargeValue extends BaseActivity  {
         String validateURL= UrlUtil.PAY_METHOD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
-        SendrequestUtil.postDataFromService(validateURL,textParams,methodHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,methodHandler);
     }
 
     private void initView() {
@@ -312,7 +312,7 @@ public class RechargeValue extends BaseActivity  {
         textParams.put("amount",amount);
         textParams.put("id",orderId);
         textParams.put("channel",channels);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void placeAnOrder(){
         requestCode=2;
@@ -321,7 +321,7 @@ public class RechargeValue extends BaseActivity  {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("amount",amount);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -344,14 +344,14 @@ public class RechargeValue extends BaseActivity  {
     }
     private void showMsg(String result, String errorMsg, String extraMsg) {
         String str = result;
-        if (str.equals(SendrequestUtil.SUCCESS_VALUE)){
+        if (str.equals(SendRequestUtil.SUCCESS_VALUE)){
             str="缴费成功";
-        }else if (str.equals(SendrequestUtil.FAILURE_VALUE)){
+        }else if (str.equals(SendRequestUtil.FAILURE_VALUE)){
             str="缴费失败";
-        }else if (str.equals(SendrequestUtil.CANCEL_VALUE)){
+        }else if (str.equals(SendRequestUtil.CANCEL_VALUE)){
             str="已取消缴费";
         }
-        if (result.equals(SendrequestUtil.SUCCESS_VALUE)){
+        if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
             setResult(0x005);
             requestResult();
         }else {
@@ -366,7 +366,7 @@ public class RechargeValue extends BaseActivity  {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
     private void showdialogs(String str) {

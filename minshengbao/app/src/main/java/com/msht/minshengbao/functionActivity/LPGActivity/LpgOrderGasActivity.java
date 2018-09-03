@@ -6,14 +6,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -22,7 +21,8 @@ import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
 import com.msht.minshengbao.ViewUI.Dialog.ActionSheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -74,6 +74,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private String area;
     private int requestCode=0;
     private CustomDialog customDialog;
+    private static final String PAGE_NAME="提交订单(LPG)";
     /** SELECT_ADDRESS_CODE 地址选择返回标志 */
     private static final int SELECT_ADDRESS_CODE=1;
     private RequestHandler requestHandler=new RequestHandler(this);
@@ -92,12 +93,12 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("msg");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestCode==0){
                                 JSONObject objectInfo = object.optJSONObject("data");
                                 activity.onReceiveData(objectInfo);
@@ -115,7 +116,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -224,6 +225,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         tvWeightFiveNum.setText(String.valueOf(weightFiveNum));
         tvWeightFifteenNum.setText(String.valueOf(weightFifteenNum));
         tvWeightFiftyNum.setText(String.valueOf(weightFiftyNum));
+        findViewById(R.id.id_transportation_img).setOnClickListener(this);
         if (weightFiveNum!=0){
             findViewById(R.id.id_layout_five).setVisibility(View.VISIBLE);
         }else {
@@ -300,7 +302,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         textParams.put("addressId",addressId);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onGetDeliveryFee() {
         requestCode=1;
@@ -308,7 +310,8 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         String requestUrl= UrlUtil.LPG_QUERY_ALL_DELIVERY_FEE;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("floors",floors);
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        textParams.put("isElevator",isElevator);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     public void onClick(View v) {
@@ -335,8 +338,8 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void startHtmlWebView() {
-        String url="";
-        Intent intent=new Intent(context, HtmlPage.class);
+        String url=UrlUtil.LPG_TRANSPORTATION_EXPENSE;
+        Intent intent=new Intent(context, HtmlPageActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","运费说明");
         startActivity(intent);
@@ -390,7 +393,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         textParams.put("city",city);
         textParams.put("area",area);
         String data=textParams.toString();
-        OkHttpRequestManager.getInstance(context).requestAsyn(requestUrl,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onSelectTime() {
         new ActionSheetDialog(this)
@@ -407,5 +410,23 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
     private void onGoSelectAddress() {
         Intent intent=new Intent(context,LpgSelectAddressActivity.class);
         startActivityForResult(intent,SELECT_ADDRESS_CODE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(PAGE_NAME);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(PAGE_NAME);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

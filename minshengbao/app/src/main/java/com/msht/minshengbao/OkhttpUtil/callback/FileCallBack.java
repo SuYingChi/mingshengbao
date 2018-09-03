@@ -1,6 +1,8 @@
-package com.zhy.http.okhttp.callback;
+package com.msht.minshengbao.OkhttpUtil.callback;
 
-import com.zhy.http.okhttp.OkHttpUtils;
+
+
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,7 +65,7 @@ public abstract class FileCallBack extends Callback<File>
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
-                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
+                OkHttpManager.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
                     public void run()

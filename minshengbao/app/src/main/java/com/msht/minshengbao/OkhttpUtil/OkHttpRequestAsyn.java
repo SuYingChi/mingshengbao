@@ -1,16 +1,8 @@
 package com.msht.minshengbao.OkhttpUtil;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.msht.minshengbao.Utils.NetUtil;
-import com.msht.minshengbao.Utils.ToastUtil;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -25,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager.ERROR_SERVICE;
+import static com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil.ERROR_SERVICE;
 
 /**
  * Created by hong on 2016/11/9.
@@ -64,7 +56,7 @@ public class OkHttpRequestAsyn {
     public static OkHttpRequestAsyn getInstance(Context context, OkHttpClient okHttpClient) {
         OkHttpRequestAsyn inst = mInstance;
         if (inst == null) {
-            synchronized (OkHttpRequestManager.class) {
+            synchronized (OkHttpRequestUtil.class) {
                 inst = mInstance;
                 if (inst == null) {
                     inst = new OkHttpRequestAsyn(context,okHttpClient);
@@ -132,7 +124,8 @@ public class OkHttpRequestAsyn {
                         if (response.body()!=null){
                             string = response.body().string();
                         }
-                        reqCallBack.onRequestServiceSuccess(string);
+                      //  reqCallBack.onRequestServiceSuccess(string);
+                        reqCallBack.onRequestSuccess(string);
                     } else {
                         reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
                     }
@@ -180,7 +173,8 @@ public class OkHttpRequestAsyn {
                         if (response.body()!=null){
                             string = response.body().string();
                         }
-                        reqCallBack.onRequestServiceSuccess(string);
+                        reqCallBack.onRequestSuccess(string);
+                      //  reqCallBack.onRequestServiceSuccess(string);
                     } else {
                         reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
                     }
@@ -222,7 +216,7 @@ public class OkHttpRequestAsyn {
                         if (response.body()!=null){
                             string = response.body().string();
                         }
-                        reqCallBack.onRequestServiceSuccess(string);
+                        reqCallBack.onRequestSuccess(string);
                     } else {
                         reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
                     }
@@ -264,7 +258,8 @@ public class OkHttpRequestAsyn {
                         if (response.body()!=null){
                             string = response.body().string();
                         }
-                        reqCallBack.onRequestServiceSuccess(string);
+                        reqCallBack.onRequestSuccess(string);
+                       // reqCallBack.onRequestServiceSuccess(string);
                     } else {
                         reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
                     }

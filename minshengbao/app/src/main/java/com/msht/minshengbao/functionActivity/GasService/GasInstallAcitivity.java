@@ -13,16 +13,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.adapter.repairAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Callback.ResultListener;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
@@ -37,7 +35,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -46,7 +43,7 @@ import java.util.Map;
  * @author hong
  * @date 2016/7/18 
  */
-public class GasInstall extends BaseActivity implements View.OnClickListener {
+public class GasInstallAcitivity extends BaseActivity implements View.OnClickListener {
     private Button   btnSelectAddress, btnVerify;
     private TextView tvInstallType;
     private View layoutType;
@@ -72,14 +69,14 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
     private CustomDialog customDialog;
     private final  RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<GasInstall> mWeakReference;
-        public RequestHandler(GasInstall activity ) {
-            mWeakReference=new WeakReference<GasInstall>(activity);
+        private WeakReference<GasInstallAcitivity> mWeakReference;
+        public RequestHandler(GasInstallAcitivity activity ) {
+            mWeakReference=new WeakReference<GasInstallAcitivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final GasInstall activity=mWeakReference.get();
+            final GasInstallAcitivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -87,7 +84,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
                 activity.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
@@ -95,7 +92,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
                         if (activity.requestType ==0){
                             activity.jsonArray =object.optJSONArray("data");
                         }
-                        if(result.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestType ==0){
                                 activity.onSaveData();
                             }else {
@@ -108,7 +105,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     activity.onShowFailure(msg.obj.toString());
                     break;
                 default:
@@ -135,7 +132,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
     }
     private void onShowSuccess() {
         String navigation="报装通气";
-        Intent success=new Intent(context,ServerSuccess.class);
+        Intent success=new Intent(context,ServerSuccessActivity.class);
         success.putExtra("navigation",navigation);
         success.putExtra("boolean",true);
         startActivity(success);
@@ -189,7 +186,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
         etPhone =(EditText)findViewById(R.id.id_et_phone);
         btnSelectAddress =(Button)findViewById(R.id.id_btn_selectaddress);
         btnVerify =(Button)findViewById(R.id.id_btn_verify);
-        layoutType =(RelativeLayout)findViewById(R.id.id_install_layout);
+        layoutType =findViewById(R.id.id_install_layout);
         etAddress =(EditText)findViewById(R.id.id_select_address);
         tvInstallType =(TextView) findViewById(R.id.id_install_type);
         etInstallTopic =(EditText)findViewById(R.id.id_install_topic);
@@ -200,7 +197,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
         customDialog.show();
         requestType =0;
         String validateURL = UrlUtil.INSTALL_TYPE_URL;
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
     }
     private void iniEvent() {
         etAddress.addTextChangedListener(new TextWatcher() {
@@ -280,7 +277,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
         }
     }
     private void selectAddress() {
-        Intent select=new Intent(context,SelectCustomerno.class);
+        Intent select=new Intent(context,SelectCustomerNo.class);
         startActivityForResult(select,REQUESTCOODE);
     }
     private void installPicker() {
@@ -331,7 +328,7 @@ public class GasInstall extends BaseActivity implements View.OnClickListener {
         textParams.put("phone",phone);
         textParams.put("address",mAddress);
         textParams.put("installType", typeNum);
-        OkHttpRequestManager.getInstance(context).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onDestroy() {

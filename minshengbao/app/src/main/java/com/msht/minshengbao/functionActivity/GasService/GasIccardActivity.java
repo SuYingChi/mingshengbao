@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.IccardViewAdapter;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPage;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
@@ -17,10 +17,17 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-public class GasIccard extends AppCompatActivity implements View.OnClickListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/9/22  
+ */
+public class GasIccardActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPagerIndicator indicator;
-    private ViewPager mviewPager;
-    private TextView  tv_price,tv_naviga;
+    private ViewPager mViewPager;
+    private TextView tvPrice, tvNavigation;
     private String    userId;
     private String    password;
     private String navigate="气价说明";
@@ -40,18 +47,18 @@ public class GasIccard extends AppCompatActivity implements View.OnClickListener
     }
     private void initView() {
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        mviewPager=(ViewPager)findViewById(R.id.id_viewPager_fees);
+        mViewPager =(ViewPager)findViewById(R.id.id_viewPager_fees);
         findViewById(R.id.id_goback).setOnClickListener(this);
-        tv_price=(TextView)findViewById(R.id.id_tv_rightText);
-        tv_naviga=(TextView)findViewById(R.id.tv_navigation) ;
-        tv_naviga.setText(mPageName);
-        tv_price.setVisibility(View.VISIBLE);
-        tv_price.setText(navigate);
+        tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
+        tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
+        tvNavigation.setText(mPageName);
+        tvPrice.setVisibility(View.VISIBLE);
+        tvPrice.setText(navigate);
     }
     private void initEvent() {
-        tv_price.setOnClickListener(this);
-        mviewPager.setAdapter(new IccardViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
-        indicator.setViewPager(mviewPager,0);
+        tvPrice.setOnClickListener(this);
+        mViewPager.setAdapter(new IccardViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
+        indicator.setViewPager(mViewPager,0);
     }
     @Override
     public void onClick(View v) {
@@ -68,7 +75,7 @@ public class GasIccard extends AppCompatActivity implements View.OnClickListener
     }
     private void gasprice() {
         String url= UrlUtil.Gasprice_Url;
-        Intent price=new Intent(mContext,HtmlPage.class);
+        Intent price=new Intent(mContext,HtmlPageActivity.class);
         price.putExtra("navigate",navigate);
         price.putExtra("url",url);
         startActivity(price);
@@ -79,7 +86,6 @@ public class GasIccard extends AppCompatActivity implements View.OnClickListener
         super.onResume();
         //MobclickAgent.onPageStart(mPageName);
         MobclickAgent.onResume(mContext);
-        //ZhugeSDK.getInstance().init(getApplicationContext());
     }
     @Override
     protected void onPause() {

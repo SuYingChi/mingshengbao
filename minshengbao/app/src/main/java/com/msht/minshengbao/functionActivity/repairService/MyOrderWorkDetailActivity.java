@@ -12,18 +12,19 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -44,7 +45,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2017/3/28
  */
-public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListener {
+public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView typeImg, forwardImg;
     private ImageView evaluateImg;
     private TextView tvTitle, tvType, tvOrderNo, tvPhone;
@@ -80,13 +81,13 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private final DetailHandler requestHandler = new DetailHandler(this);
     private static class DetailHandler extends Handler{
-        private WeakReference<MyOrderWorkDetail> mWeakReference;
-        public DetailHandler(MyOrderWorkDetail reference) {
-            mWeakReference = new WeakReference<MyOrderWorkDetail>(reference);
+        private WeakReference<MyOrderWorkDetailActivity> mWeakReference;
+        public DetailHandler(MyOrderWorkDetailActivity reference) {
+            mWeakReference = new WeakReference<MyOrderWorkDetailActivity>(reference);
         }
         @Override
         public void handleMessage(Message msg) {
-            final MyOrderWorkDetail reference =mWeakReference.get();
+            final MyOrderWorkDetailActivity reference =mWeakReference.get();
             if (reference == null||reference.isFinishing()) {
                 return;
             }
@@ -94,12 +95,12 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                 reference.customDialog.dismiss();
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 reference.jsonObject =object.optJSONObject("data");
                                 reference.onReceiveData();
@@ -113,7 +114,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(reference.context,msg.obj.toString());
                     break;
                 default:
@@ -129,7 +130,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         orderId=jsonObject.optString("id");
         type=jsonObject.optString("type");
         String status=jsonObject.optString("status");
-        String statusInfo =jsonObject.optString("statusInfo");
+        String statusInfo =jsonObject.optString("status_info");
         String info=jsonObject.optString("info");
         address=jsonObject.optString("address");
         phone=jsonObject.optString("phone");
@@ -137,7 +138,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         parentCateogry =jsonObject.optString("parent_category");
         String appointTime=jsonObject.optString("appoint_time");
         orderNo=jsonObject.optString("orderNo");
-        String createTime =jsonObject.optString("createTime");
+        String createTime =jsonObject.optString("create_time");
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
@@ -194,10 +195,10 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                 onStatusSeven();
                 break;
             case ConstantUtil.VALUE_EIGHT:
-                if (jsonObject.has("evaluateScore")){
+                if (jsonObject.has("evaluate_score")){
                     layoutEvaluate.setVisibility(View.VISIBLE);
-                    evaluateScore =jsonObject.optString("evaluateScore");
-                    evaluateInfo =jsonObject.optString("evaluateInfo");
+                    evaluateScore =jsonObject.optString("evaluate_score");
+                    evaluateInfo =jsonObject.optString("evaluate_info");
                 }else {
                     layoutEvaluate.setVisibility(View.GONE);
                 }
@@ -212,10 +213,10 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                 reasonTitle.setText("拒单提示：");
                 break;
             case ConstantUtil.VALUE_TEN:
-                if (jsonObject.has("evaluateScore")){
+                if (jsonObject.has("evaluate_score")){
                     layoutEvaluate.setVisibility(View.VISIBLE);
-                    evaluateScore =jsonObject.optString("evaluateScore");
-                    evaluateInfo =jsonObject.optString("evaluateInfo");
+                    evaluateScore =jsonObject.optString("evaluate_score");
+                    evaluateInfo =jsonObject.optString("evaluate_info");
                 }else {
                     layoutEvaluate.setVisibility(View.GONE);
                 }
@@ -245,11 +246,11 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
     }
     private void onStatusSix() {
         layoutButton.setVisibility(View.GONE);
-        serveTime =jsonObject.optString("serveTime");
+        serveTime =jsonObject.optString("serve_time");
         String couponFlag=jsonObject.optString("coupon_flag");
-        guaranteeDay =jsonObject.optString("guaranteeDay");
-        repairmanId =jsonObject.optString("repairmanId");
-        repairmanName =jsonObject.optString("repairmanName");
+        guaranteeDay =jsonObject.optString("guarantee_day");
+        repairmanId =jsonObject.optString("repairman_id");
+        repairmanName =jsonObject.optString("repairman_name");
         JSONArray jsonDiscount=jsonObject.optJSONArray("coupon");
         viewPayAmount.setVisibility(View.VISIBLE);
         onSetCouponFlag(couponFlag,jsonDiscount.length());
@@ -265,13 +266,13 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
     }
     private void onStatusSeven() {
         layoutButton.setVisibility(View.VISIBLE);
-        serveTime =jsonObject.optString("serveTime");
-        realAmount =jsonObject.optString("realAmount");
-        payMethod =jsonObject.optString("payMethod");
-        finishTime =jsonObject.optString("finishTime");
-        guaranteeDay =jsonObject.optString("guaranteeDay");
-        repairmanId =jsonObject.optString("repairmanId");
-        repairmanName =jsonObject.optString("repairmanName");
+        serveTime =jsonObject.optString("serve_time");
+        realAmount =jsonObject.optString("real_amount");
+        payMethod =jsonObject.optString("pay_method");
+        finishTime =jsonObject.optString("finish_time");
+        guaranteeDay =jsonObject.optString("guarantee_day");
+        repairmanId =jsonObject.optString("repairman_id");
+        repairmanName =jsonObject.optString("repairman_name");
         String couponAmount=jsonObject.optString("coupon_amount");
         viewFixCard.setVisibility(View.VISIBLE);
         layoutPayWay.setVisibility(View.VISIBLE);
@@ -347,12 +348,12 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
     }
 
     private void finishInfo() {
-        serveTime =jsonObject.optString("serveTime");
-        realAmount =jsonObject.optString("realAmount");
-        payMethod =jsonObject.optString("payMethod");
-        guaranteeDay =jsonObject.optString("guaranteeDay");
-        repairmanId =jsonObject.optString("repairmanId");
-        repairmanName =jsonObject.optString("repairmanName");
+        serveTime =jsonObject.optString("serve_time");
+        realAmount =jsonObject.optString("real_amount");
+        payMethod =jsonObject.optString("pay_method");
+        guaranteeDay =jsonObject.optString("guarantee_day");
+        repairmanId =jsonObject.optString("repairman_id");
+        repairmanName =jsonObject.optString("repairman_name");
         String couponAmount=jsonObject.optString("coupon_amount");
         tvPayWay.setText(payMethod);
         tvGuaranteeDay.setText(guaranteeDay);
@@ -367,7 +368,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         }else {
             tvTotalCoupon.setText(couponAmount);
         }
-        finishTime =jsonObject.optString("finishTime");
+        finishTime =jsonObject.optString("finish_time");
         viewPayAmount.setVisibility(View.GONE);
         if (evaluateInfo.equals(ConstantUtil.VALUE_ONE)){
             evaluateImg.setImageResource(R.drawable.star_one_h);
@@ -393,10 +394,10 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         tvServeFee.setText(serveFee);
     }
     private void onJsonMaster() {
-        String distributeTime =jsonObject.optString("distributeTime");
-        repairmanId =jsonObject.optString("repairmanId");
-        repairmanName =jsonObject.optString("repairmanName");
-        repairmanPhone =jsonObject.optString("repairmanPhone");
+        String distributeTime =jsonObject.optString("distribute_time");
+        repairmanId =jsonObject.optString("repairman_id");
+        repairmanName =jsonObject.optString("repairman_name");
+        repairmanPhone =jsonObject.optString("repairman_phone");
         layoutMaster.setVisibility(View.VISIBLE);
         tvMasterName.setText(repairmanName);
 
@@ -441,10 +442,10 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                     finish();
                 }else if (resultCode==3){
                     couponId=data.getStringExtra("vouid");
-                    String diamount=data.getStringExtra("amount");
-                    tvUseCoupon.setText(diamount+"元");
+                    String disAmount=data.getStringExtra("amount");
+                    tvUseCoupon.setText(disAmount+"元");
                     tvUseCoupon.setTextColor(0xff555555);
-                    double couponAmount =Double.parseDouble(diamount);
+                    double couponAmount =Double.parseDouble(disAmount);
                     double doubleAmount=Double.parseDouble(amount);
                     double doubleRealAmount=doubleAmount- couponAmount;
                     NumberFormat format=new DecimalFormat("0.##");
@@ -601,7 +602,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         startActivity(intent);
     }
     private void repeatFix() {
-        Intent repeat=new Intent(context,RepeatFix.class);
+        Intent repeat=new Intent(context,RepeatFixActivity.class);
         repeat.putExtra("reid",cid);
         repeat.putExtra("id",orderId);
         repeat.putExtra("orderNo",orderNo);
@@ -647,14 +648,14 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (MyOrderWorkDetail.this.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            if (MyOrderWorkDetailActivity.this.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                                 callIntent.setData(Uri.parse("tel:" + repairmanPhone));
                                 callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(callIntent);
                             } else {
                                 phoneNo= repairmanPhone;
-                                ActivityCompat.requestPermissions(MyOrderWorkDetail.this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                                ActivityCompat.requestPermissions(MyOrderWorkDetailActivity.this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
                             }
                         } else {
                             Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -696,7 +697,7 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         startActivity(master);
     }
     private void onPayOrder() {
-        Intent pay=new Intent(context,RepairPayment.class);
+        Intent pay=new Intent(context,RepairPaymentActivity.class);
         pay.putExtra("realMoney", realMoney);
         pay.putExtra("orderNo",orderNo);
         pay.putExtra("orderId",orderId);
@@ -751,10 +752,10 @@ public class MyOrderWorkDetail extends BaseActivity implements View.OnClickListe
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        OkHttpRequestManager.getInstance(getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onEvaluate() {
-        Intent evaluate=new Intent(context,RepairEvaluate.class);
+        Intent evaluate=new Intent(context,RepairEvaluateActivity.class);
         evaluate.putExtra("send_type","1");
         evaluate.putExtra("id",orderId);
         evaluate.putExtra("orderNo",orderNo);

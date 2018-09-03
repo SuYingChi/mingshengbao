@@ -37,13 +37,17 @@
                 android:layout_width="@dimen/margin_width25"
                 android:layout_height="@dimen/margin_width25"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/picture_text"
                 android:src="@drawable/network_sign_xh"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/id_img_error"
+                android:layout_toEndOf="@+id/id_img_error"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:layout_centerVertical="true"
                 android:textSize="@dimen/text_width14"
                 android:textColor="@color/white"
@@ -56,7 +60,8 @@
     <!-- 底部tab -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
     <RadioGroup
         android:id="@+id/radiogroup_main"
         android:gravity="center_vertical"
@@ -64,7 +69,8 @@
         android:background="@color/white"
         android:baselineAligned="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_width56">
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width56">
         <RadioButton
             android:id="@+id/radio_home"
             android:layout_width="0dp"
@@ -72,7 +78,7 @@
             android:gravity="center"
             android:button="@null"
             android:textColor="@drawable/radio_home_textcolor"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_width12"
             android:checked="true"
             android:drawableTop="@drawable/radio_home_button"
             android:text="首页"
@@ -83,7 +89,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:button="@null"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_width12"
             android:textColor="@drawable/radio_home_textcolor"
             android:drawableTop="@drawable/radio_mall_button"
             android:text="商城"
@@ -95,7 +101,7 @@
             android:gravity="center"
             android:button="@null"
             android:background="@null"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_width12"
             android:textColor="@drawable/radio_home_textcolor"
             android:drawableTop="@drawable/radio_order_button"
             android:drawablePadding="3dp"
@@ -104,7 +110,7 @@
         <RadioButton
             android:id="@+id/radio_me"
             android:layout_width="0dp"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_width12"
             android:layout_weight="1"
             android:textColor="@drawable/radio_home_textcolor"
             android:gravity="center"

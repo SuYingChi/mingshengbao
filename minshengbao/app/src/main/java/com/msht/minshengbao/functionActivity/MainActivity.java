@@ -26,15 +26,16 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.functionActivity.Public.QRCodeScanActivity;
+import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.msht.minshengbao.functionActivity.fragment.HomeFragment;
 import com.msht.minshengbao.functionActivity.fragment.LoginMyFrag;
 import com.msht.minshengbao.functionActivity.fragment.MyFragment;
 import com.msht.minshengbao.functionActivity.fragment.OrderFragment;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.NetWorkUtil;
@@ -111,13 +112,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.objectJson=object.getJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onPersonalInformation();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
@@ -126,7 +127,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -147,20 +148,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onUnreadMassage(json);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     break;
                 default:
                     break;
@@ -181,19 +182,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        if(!results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(!results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -215,13 +216,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveVersion();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
@@ -230,7 +231,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -330,7 +331,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         initRequestPermission();
         if (VariableUtil.loginStatus){
-            if (NetWorkUtil.IsNetWorkEnable(this)){
+            if (NetWorkUtil.isNetWorkEnable(this)){
                 onGetMessage();
             }
             initGetInformation();
@@ -384,16 +385,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
     private void checkVerSion() {
         int device=2;
-        String validateURL = UrlUtil.App_versionUrl+"?device="+device;
-        SendrequestUtil.getDataFromService(validateURL,versionHandler);
+        String validateURL = UrlUtil.APP_VERSION_URL +"?device="+device;
+        SendRequestUtil.getDataFromService(validateURL,versionHandler);
     }
     private void onGetMessage() {
-        String validateURL = UrlUtil.Message_unreadUrl;
+        String validateURL = UrlUtil.MESSAGE_UNREAD_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
+        SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
     }
     private void initBroadcast() {
         IntentFilter filter=new IntentFilter();
@@ -545,7 +546,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void goScanActivity() {
-        Intent intent=new Intent(context, QRCodeScanActivity.class);
+        Intent intent=new Intent(context, QrCodeScanActivity.class);
         startActivity(intent);
     }
     private void goMessage() {
@@ -566,7 +567,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
     }
     private void clickTab2Layout() {
-        if (networkStatus){
+        if (VariableUtil.networkStatus){
             Intent intent=new Intent(context, ShopActivity.class);
             startActivityForResult(intent, clickCode);
         }
@@ -616,20 +617,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
     private void pushMessage() {
         String deviceData=SharedPreferencesUtil.getDeviceData(this,SharedPreferencesUtil.DeviceToken,"");
-        String validateURL = UrlUtil.pushDeviceToken;
+        String validateURL = UrlUtil.PUSH_DEVICE_TOKEN;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("deviceType","2");
         textParams.put("token",deviceData);
-        SendrequestUtil.postDataFromServiceThree(validateURL,textParams,pushHandler);
+        SendRequestUtil.postDataFromServiceThree(validateURL,textParams,pushHandler);
     }
     private void initGetInformation() {
-        String validateURL = UrlUtil.Userinfo_GasUrl;
+        String validateURL = UrlUtil.USER_INFO_GAS_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendrequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void loadMsbApk(String url) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -687,9 +688,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initNetBroadcast();
     }
     @Override
-    public void onNetChange(boolean netMobile) {
-        super.onNetChange(netMobile);
-        if (netMobile){
+    public void onNetWorkEventBus(NetWorkEvent netMobile) {
+        super.onNetWorkEventBus(netMobile);
+        if (netMobile.getMessage()){
             networkLayout.setVisibility(View.GONE);
         }else {
             networkLayout.setVisibility(View.VISIBLE);
@@ -721,7 +722,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         MobclickAgent.onKillProcess(context);
                        // ZhugeSDK.getInstance().flush(getApplicationContext());//诸葛数据
                         finish();
-                        System.exit(0);
+                      //  System.exit(0);
                     }
                 })
                 .show();

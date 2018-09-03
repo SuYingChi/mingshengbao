@@ -1,36 +1,69 @@
 package com.msht.minshengbao.Base;
 
 import android.content.Context;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.msht.minshengbao.Interface.NetEvent;
+import com.androidadvance.topsnackbar.TSnackbar;
+import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.events.NetWorkEvent;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
-public class BaseActivity extends AppCompatActivity implements NetEvent {
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-    public static NetEvent event;
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2016/3/10  
+ */
+public class BaseActivity extends AppCompatActivity  {
     protected ImageView backImg;
     protected ImageView rightImg;
     protected TextView  tvNavigationTile;
     protected Context   context;
     protected String    mPageName;
-    protected boolean   networkStatus=false;
+    /**是否拒绝网络请求的响应；true表示拒绝；false表示接收，默认false，在onDestroy中设置为true。*/
+    protected boolean isOnDestroy;
+    private TSnackbar snackBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarCompat.setStatusBar(this);
-        event=this;
+        /**
+         * 友盟统计
+         */
+        PushAgent.getInstance(context).onAppStart();
+        EventBus.getDefault().register(this);
+        setSnackBar();
+        if (!VariableUtil.networkStatus){
+            snackBar.show();
+        }else {
+            snackBar.dismiss();
+        }
+    }
+    private void setSnackBar() {
+        snackBar = TSnackbar
+                .make(findViewById(android.R.id.content), "网络连接失败,请检查您的网络设置", TSnackbar.LENGTH_LONG)
+                .setIconLeft(R.drawable.network_sign_xh, 20);
+
+        View snackBarView = snackBar.getView();
+        TextView tvSnackBarText = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        tvSnackBarText.setTextColor(Color.WHITE);
+        //设置左侧icon
+        snackBarView.setBackgroundColor(Color.parseColor("#A0333333"));
     }
     protected void setCommonHeader(String title) {
         mPageName=title;
@@ -47,6 +80,23 @@ public class BaseActivity extends AppCompatActivity implements NetEvent {
         });
         tvNavigationTile.setText(title);
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetWorkEventBus(NetWorkEvent netMobile) {
+        VariableUtil.networkStatus=netMobile.getMessage();
+        if (netMobile.getMessage()){
+            snackBar.dismiss();
+        }else {
+            snackBar.show();
+        }
+    }
+
+    public boolean isOnDestroy() {
+        return isOnDestroy;
+    }
+
+    public void setOnDestroy(boolean onDestroy) {
+        isOnDestroy = onDestroy;
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -60,7 +110,14 @@ public class BaseActivity extends AppCompatActivity implements NetEvent {
         MobclickAgent.onPause(context);
     }
     @Override
-    public void onNetChange(boolean netMobile) {
-        networkStatus=netMobile;
+    protected void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        //1.取消请求
+        OkHttpManager.getInstance().cancelTag(this);
+        //2.拒绝响应
+        setOnDestroy(true);
     }
 }

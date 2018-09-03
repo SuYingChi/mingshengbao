@@ -51,6 +51,7 @@ public class UrlUtil {
     public static final String WATER_PRICE_URL =BuildConfig.URL_MSSB+"/order/getPrice";
     public static final String WATER_CREATE_URL =BuildConfig.URL_MSSB+"/order/create";
     public static final String WATER_CANCEL_URL =BuildConfig.URL_MSSB+"/order/oper";
+    public static final String WATER_EQUIPMENT_SEARCH=BuildConfig.URL_MSSB+"/equip/search";
     /**
      * 商城
      */
@@ -67,20 +68,20 @@ public class UrlUtil {
     /**
      * 首页功能
      */
-    public static final String App_versionUrl= BuildConfig.URL_HEADS +"/Gas/app/version";
-    public static final String AllServeCatalog_Url=BuildConfig.URL_HEADS+"/api/serve_city/user_app_all_serve";
-    public static final String Function_Url= BuildConfig.URL_HEADS +"/api/serve_city/user_app_serve";
-    public static final String HomeFunction_Url=BuildConfig.URL_HEADS+"/api/serve_city/user_app_homepage";
-    public static final String Weather_QueryUrl= BuildConfig.URL_HEADS +"/pis/weather/query";
-    public static final String Inform_Url= BuildConfig.URL_HEADS +"/Gas/message/list";
-    public static final String Inform_delect= BuildConfig.URL_HEADS +"/Gas/message/delete";
-    public static final String Inform_detail= BuildConfig.URL_HEADS +"/Gas/message/detail";
-    public static final String Message_unreadUrl= BuildConfig.URL_HEADS +"/Gas/message/unRead";
-    public static final String pushDeviceToken= BuildConfig.URL_HEADS +"/Gas/user/pushDeviceToken";
-    public static final String Userinfo_GasUrl= BuildConfig.URL_HEADS +"/Gas/user/info";
-    public static final String Read_searchUserhouse=BuildConfig. URL_HEADS +"/Gas/usedHouse/search";
-    public static final String Pre_deposit_history= BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
-    public static final String SpecialTopic_Url=BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
+    public static final String APP_VERSION_URL = BuildConfig.URL_HEADS +"/Gas/app/version";
+    public static final String ALL_SERVE_CATALOG_URL =BuildConfig.URL_HEADS+"/api/serve_city/user_app_all_serve";
+    public static final String FUNCTION_URL = BuildConfig.URL_HEADS +"/api/serve_city/user_app_serve";
+    public static final String HOME_FUNCTION_URL =BuildConfig.URL_HEADS+"/api/serve_city/user_app_homepage";
+    public static final String WEATHER_QUERY_URL = BuildConfig.URL_HEADS +"/pis/weather/query";
+    public static final String INFORM_URL = BuildConfig.URL_HEADS +"/Gas/message/list";
+    public static final String INFORM_DELETE = BuildConfig.URL_HEADS +"/Gas/message/delete";
+    public static final String INFORM_DETAIL = BuildConfig.URL_HEADS +"/Gas/message/detail";
+    public static final String MESSAGE_UNREAD_URL = BuildConfig.URL_HEADS +"/Gas/message/unRead";
+    public static final String PUSH_DEVICE_TOKEN= BuildConfig.URL_HEADS +"/Gas/user/pushDeviceToken";
+    public static final String USER_INFO_GAS_URL = BuildConfig.URL_HEADS +"/Gas/user/info";
+    public static final String READ_SEARCH_USER_HOUSE =BuildConfig. URL_HEADS +"/Gas/usedHouse/search";
+    public static final String PRE_DEPOSIT_HISTORY = BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
+    public static final String SPECIAL_TOPIC_URL =BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
     /**
      * 燃气服务模块
      */
@@ -231,7 +232,9 @@ public class UrlUtil {
     public static final String LPG_DEPOSIT_COUNT_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/depositCount";
     public static final String LPG_GAS_AND_DEPOSIT_URL=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/getGasAndDepositNew";
     public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn/msht/lpgBottle/getBottleDetail";
-
+    public static final String LPG_TRANSPORTATION_EXPENSE="http://msbapp.cn/lpg_h5/peisongshuoming.html";
+    public static final String LPG_OPEN_TREATY="http://msbapp.cn/lpg_h5/kaihuxieyi.html";
+    public static final String LPG_DISCOUNT_TABLE="http://msbapp.cn/lpg_h5/huishouzhejia.html";
     /**
      * HTML5页面
      */

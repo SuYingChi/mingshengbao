@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp.https;
+package com.msht.minshengbao.OkhttpUtil.https;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,7 +90,7 @@ public class HttpsUtils
         @Override
         public X509Certificate[] getAcceptedIssuers()
         {
-            return new java.security.cert.X509Certificate[]{};
+            return new X509Certificate[]{};
         }
     }
 

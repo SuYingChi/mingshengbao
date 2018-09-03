@@ -23,6 +23,7 @@
                     android:layout_width="130dp"
                     android:layout_centerInParent="true"
                     android:layout_height="130dp"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/alarm2x"/>
             </RelativeLayout>
             <RelativeLayout
@@ -33,116 +34,132 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="服务热线"
-                    android:textSize="@dimen/text_22"
+                    android:textSize="@dimen/text_width20"
                     android:textColor="@color/colorOrange"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30dp"/>
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"/>
                 <TextView
                     android:id="@+id/id_tv_tel0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="963666"
-                    android:textSize="@dimen/text_22"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="@color/colorOrange"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="180dp"/>
+                   android:layout_centerInParent="true"/>
                 <ImageView
                     android:id="@+id/id_phone_img1"
-                    android:layout_width="@dimen/margin_30"
-                    android:layout_height="@dimen/margin_30"
-                    android:layout_marginRight="@dimen/margin_30"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_marginRight="@dimen/margin_width30"
+                    android:layout_marginEnd="@dimen/margin_width30"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/phone"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_tv2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_22"
+                    android:textSize="@dimen/text_width20"
                     android:textColor="#e54a16"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:text="0898-66255555"
+                    android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel1" />
                 <ImageView
                     android:id="@+id/id_phone_img2"
-                    android:layout_width="@dimen/margin_30"
-                    android:layout_height="@dimen/margin_30"
-                    android:layout_marginRight="@dimen/margin_30"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_marginRight="@dimen/margin_width30"
+                    android:layout_marginEnd="@dimen/margin_width30"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/phone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_tv3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_22"
+                    android:textSize="@dimen/text_width20"
                     android:textColor="#e54a16"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     android:layout_centerVertical="true"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:text="0898-36204455"
+                    android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel2" />
                 <ImageView
                     android:id="@+id/id_phone_img3"
-                    android:layout_width="@dimen/margin_30"
-                    android:layout_height="@dimen/margin_30"
-                    android:layout_marginRight="@dimen/margin_30"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_marginRight="@dimen/margin_width30"
+                    android:layout_marginEnd="@dimen/margin_width30"
+                    android:contentDescription="@string/picture_text"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/phone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_tv4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_22"
+                    android:textSize="@dimen/text_width20"
                     android:textColor="#e54a16"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     android:layout_centerVertical="true"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:text="0898-83359393"
+                    android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel3" />
                 <ImageView
                     android:id="@+id/id_phone_img4"
-                    android:layout_width="@dimen/margin_30"
-                    android:layout_height="@dimen/margin_30"
-                    android:layout_marginRight="@dimen/margin_30"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_marginRight="@dimen/margin_width30"
+                    android:layout_marginEnd="@dimen/margin_width30"
+                    android:contentDescription="@string/picture_text"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/phone"/>
             </RelativeLayout>

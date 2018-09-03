@@ -11,29 +11,29 @@ import com.google.gson.Gson;
 import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
-import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHome;
-import com.msht.minshengbao.functionActivity.GasService.GasIccard;
-import com.msht.minshengbao.functionActivity.GasService.GasInstall;
-import com.msht.minshengbao.functionActivity.GasService.GasIntroduce;
+import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasInstallAcitivity;
+import com.msht.minshengbao.functionActivity.GasService.GasIntroduceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasRepair;
-import com.msht.minshengbao.functionActivity.GasService.GasWriteTable;
-import com.msht.minshengbao.functionActivity.GasService.Gasqianxian;
-import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHml;
+import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemen;
+import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
-import com.msht.minshengbao.functionActivity.repairService.HomeAppliancescClean;
-import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFix;
-import com.msht.minshengbao.functionActivity.repairService.LampCircuit;
-import com.msht.minshengbao.functionActivity.repairService.OtherRepair;
-import com.msht.minshengbao.functionActivity.repairService.SanitaryWare;
+import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
+import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
+import com.msht.minshengbao.functionActivity.repairService.LampCircuitActivity;
+import com.msht.minshengbao.functionActivity.repairService.OtherRepairActivity;
+import com.msht.minshengbao.functionActivity.repairService.SanitaryWareActivity;
 import com.msht.minshengbao.Model.AllServiceModel;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
-import com.msht.minshengbao.Utils.SendrequestUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -65,11 +65,11 @@ public class AllServiceActivity extends BaseActivity {
                 return;
             }
             switch (msg.what) {
-                case SendrequestUtil.SUCCESS:
+                case SendRequestUtil.SUCCESS:
                     try {
                         Gson gson = new Gson();
                         AllServiceModel model = gson.fromJson(msg.obj.toString(), AllServiceModel.class);
-                        if (model.result.equals(SendrequestUtil.SUCCESS_VALUE)) {
+                        if (model.result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             ArrayList<AllServiceModel.MainCategory.ServeCategory> data = model.data.serve;
                             activity.categories=data;
                             activity.allServerAdapter.clear();
@@ -79,7 +79,7 @@ public class AllServiceActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     break;
-                case SendrequestUtil.FAILURE:
+                case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context, msg.obj.toString());
                     break;
                 default:
@@ -215,7 +215,7 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(intent);
     }
     private void vegetableScxs() {
-        Intent intent=new Intent(context, VegetableGentlemen.class);
+        Intent intent=new Intent(context, VegetableGentlemenActivity.class);
         startActivity(intent);
     }
     private void drinkingWater() {
@@ -224,13 +224,13 @@ public class AllServiceActivity extends BaseActivity {
     }
     private void intelligentFarm() {
         String url=UrlUtil.Intelligent_FarmUrl;
-        Intent intent=new Intent(context, IntelligentFarmHml.class);
+        Intent intent=new Intent(context, IntelligentFarmHmlActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","智慧农贸");
         startActivity(intent);
     }
     private void gasIcCard() {
-        Intent card=new Intent(context,GasIccard.class);
+        Intent card=new Intent(context,GasIccardActivity.class);
         startActivity(card);
     }
     private void gaspay() {
@@ -238,57 +238,57 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(selete);
     }
     private void gasMeter() {
-        Intent selete=new Intent(context,GasWriteTable.class);
+        Intent selete=new Intent(context,GasWriteTableActivity.class);
         startActivity(selete);
     }
     private void gasRepair() {
-        Intent selete=new Intent(context,GasRepair.class);
+        Intent selete=new Intent(context,GasRepairActivity.class);
         startActivity(selete);
     }
     private void gasInstall() {
-        Intent selete=new Intent(context,GasInstall.class);
+        Intent selete=new Intent(context,GasInstallAcitivity.class);
         startActivity(selete);
     }
     private void gasRescue() {
-        Intent selete=new Intent(context,Gasqianxian.class);
+        Intent selete=new Intent(context,GasEmergencyRescueActivity.class);
         startActivity(selete);
     }
     private void gasIntroduce() {
-        Intent selete=new Intent(context,GasIntroduce.class);
+        Intent selete=new Intent(context,GasIntroduceActivity.class);
         startActivity(selete);
     }
     private void householdrepair() {
-        Intent intent=new Intent(context, HouseApplianceFix.class);
+        Intent intent=new Intent(context, HouseApplianceFixActivity.class);
         intent.putExtra("pid",serveId);
         intent.putExtra("city_id",cityId);
         startActivity(intent);
     }
     private void sanitaryware() {
-        Intent intent=new Intent(context, SanitaryWare.class);
+        Intent intent=new Intent(context, SanitaryWareActivity.class);
         intent.putExtra("pid",serveId);
         intent.putExtra("city_id",cityId);
         startActivity(intent);
     }
     private void lampcircuit() {
-        Intent intent=new Intent(context,LampCircuit.class);
+        Intent intent=new Intent(context,LampCircuitActivity.class);
         intent.putExtra("pid",serveId);
         intent.putExtra("city_id",cityId);
         startActivity(intent);
     }
     private void otherRepair() {
-        Intent intent=new Intent(context,OtherRepair.class);
+        Intent intent=new Intent(context,OtherRepairActivity.class);
         intent.putExtra("pid",serveId);
         intent.putExtra("city_id",cityId);
         startActivity(intent);
     }
     private void householdclean() {
-        Intent intent=new Intent(context, HomeAppliancescClean.class);
+        Intent intent=new Intent(context, HomeApplianceCleanActivity.class);
         intent.putExtra("pid",serveId);
         intent.putExtra("city_id",cityId);
         startActivity(intent);
     }
     private void vehiclerepair() {
-        Intent selete=new Intent(context,ElectricHome.class);
+        Intent selete=new Intent(context,ElectricHomeActivity.class);
         startActivity(selete);
     }
     private void insurance() {
@@ -338,13 +338,13 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(intent);
     }
     private void intData() {
-        String functionUrl= UrlUtil.AllServeCatalog_Url;
+        String functionUrl= UrlUtil.ALL_SERVE_CATALOG_URL;
         String function="";
         try {
             function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendrequestUtil.getDataFromService(function,serverTypeHandler);
+        SendRequestUtil.getDataFromService(function,serverTypeHandler);
     }
 }

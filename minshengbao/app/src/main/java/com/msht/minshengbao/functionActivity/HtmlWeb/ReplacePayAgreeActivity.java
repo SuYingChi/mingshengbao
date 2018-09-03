@@ -13,7 +13,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.UrlUtil;
 
-public class ReplacePayAgree extends BaseActivity {
+public class ReplacePayAgreeActivity extends BaseActivity {
     private Button btn_agree,btn_refuse;
     private WebView mWebView;
 

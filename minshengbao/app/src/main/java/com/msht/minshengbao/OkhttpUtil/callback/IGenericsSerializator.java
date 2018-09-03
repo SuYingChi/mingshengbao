@@ -1,4 +1,4 @@
-package com.zhy.http.okhttp.callback;
+package com.msht.minshengbao.OkhttpUtil.callback;
 
 /**
  * Created by JimGong on 2016/6/23.

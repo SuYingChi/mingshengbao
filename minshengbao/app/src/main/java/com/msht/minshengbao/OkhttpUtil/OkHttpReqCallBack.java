@@ -1,4 +1,4 @@
-package com.example.jim.okhttptest.okttputils;
+package com.msht.minshengbao.OkhttpUtil;
 
 /**
  * Created by Jim on 2016/11/9.
@@ -7,11 +7,19 @@ package com.example.jim.okhttptest.okttputils;
 public interface OkHttpReqCallBack<T> {
     /**
      * 响应成功
+     * @param result
+     * void onReqSuccess(T result);
      */
-    void onReqSuccess(T result);
+
 
     /**
      * 响应失败
      */
     void onReqFailed(String errorMsg);
+
+    /**
+     * 响应成功
+     * @param result
+     */
+    void onRequestSuccess(String result);
 }
