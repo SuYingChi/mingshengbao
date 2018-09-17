@@ -38,6 +38,10 @@ public class BaseActivity extends AppCompatActivity  {
     /**是否拒绝网络请求的响应；true表示拒绝；false表示接收，默认false，在onDestroy中设置为true。*/
     protected boolean isOnDestroy;
     private TSnackbar snackBar;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
