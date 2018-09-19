@@ -51,7 +51,13 @@ android {
     configurations {
         all*.exclude group: 'com.umeng.analytics:analytics:latest.integration', module: 'analytics-6.1.0'
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -96,5 +102,11 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.androidadvance:topsnackbar:1.0.0'//顶部snackBar
     compile 'org.greenrobot:eventbus:3.0.0'
-
+    //suyingchi shop
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
+    compile(name: 'okhttputils', ext: 'aar')
+    compile 'cn.bingoogolapple:bga-swipebacklayout:1.1.8@aar'
+    compile 'com.gyf.barlibrary:barlibrary:2.3.0'
 }
