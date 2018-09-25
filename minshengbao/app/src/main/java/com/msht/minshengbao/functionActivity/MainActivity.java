@@ -25,9 +25,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
+import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.msht.minshengbao.functionActivity.fragment.HomeFragment;
@@ -45,7 +48,6 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.PopupMenu;
 import com.msht.minshengbao.receiver.NetBroadcastReceiver;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -56,7 +58,9 @@ import com.yanzhenjie.permission.PermissionListener;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,7 +70,6 @@ import java.util.Map;
  * @date 2016/4/10
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    private RadioButton radioButton;
     private TextView    tvNavigation, tvMassageNum;
     private Fragment    homeFrag, myFrag,myNewFrag;
     private Fragment    orderFrag,currentFragment;
@@ -74,7 +77,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View        hearLayout;
     private String      userId;
     private String      password;
-    private String      messageCount="0";
     private String      urls;
     private boolean     versionState;
     private JSONObject  objectJson;
@@ -282,6 +284,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
     private void onUnreadMassage(JSONObject json) {
         VariableUtil.messageNum=json.optInt("num");
+        String messageCount;
         if ( VariableUtil.messageNum!=0){
             if (VariableUtil.messageNum>MAX_MASSAGE){
                 messageCount=String.valueOf(MAX_MASSAGE);
@@ -423,7 +426,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tvMassageNum =(TextView)findViewById(R.id.id_main_messnum);
         hearLayout=findViewById(R.id.id_head_view);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
-        radioButton =(RadioButton)findViewById(R.id.radio_me);
         ImageView messageImg =(ImageView)findViewById(R.id.id_massage_img);
         messageImg.setOnClickListener(this);
         findViewById(R.id.id_right_massage).setOnClickListener(this);
@@ -506,21 +508,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void messageCenter() {
-        String[] abs = new String[]{"扫一扫", "消息"};
-        PopupMenu mPopupMenu = new PopupMenu(this,abs);
-        // 设置弹出菜单弹出的位置
-        mPopupMenu.showLocation(R.id.id_massage_img,-90,10);
-        // 设置回调监听，获取点击事件
-        mPopupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
-            @Override
-            public void onClick(PopupMenu.MENUITEM item, int position) {
-                if (position==0){
-                    goScanCode();
-                }else if (position==1){
-                    goMessage();
-                }
-            }
-        });
+        TopRightMenu mTopRightMenu = new TopRightMenu(this);
+        //添加菜单项
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem(R.mipmap.scan_pic, "扫一扫"));
+        menuItems.add(new MenuItem(R.mipmap.bell, "消息"));
+        mTopRightMenu
+                //显示菜单图标，默认为true
+                .showIcon(true)
+                //背景变暗，默认为true
+                .dimBackground(true)
+                //显示动画，默认为true
+                .needAnimationStyle(true)
+                .setAnimationStyle(R.style.TRM_ANIM_STYLE)
+                .addMenuList(menuItems)
+                .setOnMenuItemClickListener(new TopRightMenu.OnMenuItemClickListener() {
+                    @Override
+                    public void onMenuItemClick(int position) {
+                        if (position==0){
+                            goScanCode();
+                        }else if (position==1){
+                            goMessage();
+                        }else {
+                            goScanCode();
+                        }
+                    }
+
+                })
+                //带偏移量
+                .setShowAsDropDown(findViewById(R.id.id_massage_img), getResources().getDimensionPixelOffset(R.dimen.margin_width_70), getResources().getDimensionPixelOffset(R.dimen.margin_width10));
     }
     private void goScanCode() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -705,7 +721,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return super.onKeyDown(keyCode, event);
     }
     private void showTips() {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage("是否要退出民生宝")

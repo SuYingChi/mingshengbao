@@ -312,8 +312,8 @@ public class MasterDetailActivity extends BaseActivity {
         textParams.put("type",type);
         textParams.put("size","18");
         textParams.put("page",pageNum);
-       // SendRequestUtil.postDataFromService(validateURL, textParams,evaluateHandler);
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,evaluateHandler);
+        SendRequestUtil.postDataFromService(validateURL, textParams,evaluateHandler);
+       // OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,evaluateHandler);
     }
     private void requestService() {
         String validateURL ="";
@@ -324,7 +324,6 @@ public class MasterDetailActivity extends BaseActivity {
         }
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",masterId);
-
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_GET,textParams,requestHandler);
     }
     private void initEvent() {

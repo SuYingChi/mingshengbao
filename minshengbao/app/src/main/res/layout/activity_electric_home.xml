@@ -35,12 +35,14 @@
                     <com.amap.api.maps.MapView
                         android:id="@+id/id_mapView"
                         android:clickable="true"
+                        android:focusable="true"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                     <ImageView
-                        android:layout_width="@dimen/margin_20"
-                        android:layout_height="36dp"
+                        android:layout_width="@dimen/margin_width20"
+                        android:layout_height="@dimen/margin_width36"
                         android:layout_gravity="center"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/search_addr_xh"
                         android:translationY="-10dp" />
                     <RelativeLayout
@@ -56,6 +58,8 @@
                             android:layout_width="@dimen/margin_width18"
                             android:layout_height="@dimen/margin_width18"
                             android:layout_marginLeft="@dimen/margin_width5"
+                            android:layout_marginStart="@dimen/margin_width5"
+                            android:contentDescription="@string/picture_text"
                             android:layout_centerVertical="true"
                             android:src="@drawable/store_address_xh"/>
                         <TextView
@@ -64,13 +68,15 @@
                             android:layout_height="wrap_content"
                             android:maxWidth="@dimen/margin_width126"
                             android:layout_toRightOf="@+id/id_addr_img"
+                            android:layout_toEndOf="@+id/id_addr_img"
                             android:layout_marginRight="@dimen/margin_width10"
+                            android:layout_marginEnd="@dimen/margin_width10"
                             android:layout_marginLeft="@dimen/margin_width5"
+                            android:layout_marginStart="@dimen/margin_width5"
                             android:layout_centerVertical="true"
                             android:maxLines="1"
                             android:ellipsize="end"
-                            android:textColor="@color/black"
-                            android:text="诚田大厦"/>
+                            android:textColor="@color/black" />
                     </RelativeLayout>
                 </FrameLayout>
                 <RelativeLayout
@@ -94,7 +100,7 @@
                         android:layout_marginTop="@dimen/margin_width15"
                         android:layout_marginBottom="@dimen/margin_width10"
                         android:text="附近维修店"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>

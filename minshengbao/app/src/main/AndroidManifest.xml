@@ -68,7 +68,7 @@
         <activity android:name=".functionActivity.GasService.AddCustomerNoActivity" />
         <activity android:name=".functionActivity.GasService.GasWriteTableActivity" />
         <activity android:name=".functionActivity.GasService.GasExpenseQueryActivity" />
-        <activity android:name=".functionActivity.GasService.GasInstallAcitivity" />
+        <activity android:name=".functionActivity.GasService.GasInstallActivity" />
         <activity android:name=".functionActivity.GasService.GasIntroduceActivity" />
         <activity android:name=".functionActivity.HtmlWeb.HtmlPageActivity" />
         <activity android:name=".functionActivity.GasService.GasServerGuideActivity" />
@@ -191,9 +191,9 @@
         <activity android:name=".functionActivity.MyActivity.SettingNickname" />
         <activity android:name=".functionActivity.GasService.GasServerOrderActivity" />
         <activity android:name=".functionActivity.GasService.GasServiceDetailActivity" />
-        <activity android:name=".functionActivity.Invoice.InvoiceOpen" />
-        <activity android:name=".functionActivity.Invoice.ApplyInvoice" />
-        <activity android:name=".functionActivity.Invoice.InvoiceHistory" />
+        <activity android:name=".functionActivity.Invoice.InvoiceOpenActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceRepairApplyActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceHistoryActivity" />
         <activity android:name=".functionActivity.HtmlWeb.AgreeTreatyActivity" />
         <activity android:name=".functionActivity.MyActivity.MyWalletActivity" />
         <activity android:name=".functionActivity.MyActivity.DiscountCoupon" />
@@ -241,7 +241,7 @@
         <activity android:name=".functionActivity.GasService.IcCardExpenseActivity" />
         <activity android:name=".functionActivity.HtmlWeb.IcbcHtml" />
         <activity android:name=".functionActivity.Public.QrCodeErrorActivity" />
-        <activity android:name=".functionActivity.GasService.GasIccardActivity" />
+        <activity android:name=".functionActivity.GasService.GasIcCardActivity" />
         <activity android:name=".functionActivity.Public.AllServiceActivity" />
         <activity android:name=".functionActivity.Electricvehicle.ElectricHomeActivity" />
         <activity android:name=".functionActivity.Electricvehicle.ElectricMapActivity" />
@@ -288,6 +288,17 @@
         <activity android:name=".functionActivity.LPGActivity.LpgDepositOrderDetailActivity" />
         <activity android:name=".functionActivity.LPGActivity.LpgDepositReturnActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterEquipmentMapActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceHomeActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceCustomerNoActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceGasListActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceGasApplyActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceGasHistoryActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceGasDetailActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceSendSuccessActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceRepairDetailActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceLogisticsInformationActivity" />
+        <activity android:name=".functionActivity.Invoice.InvoiceRepairOrderActivity" />
+        <activity android:name=".functionActivity.Invoice.AndroidPdfViewActivity"></activity>
     </application>
 
 </manifest>

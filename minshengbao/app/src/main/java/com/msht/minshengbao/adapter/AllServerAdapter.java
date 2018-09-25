@@ -16,7 +16,9 @@ import com.msht.minshengbao.Model.AllServiceModel;
 import com.msht.minshengbao.R;
 
 /**
- * Created by hei on 2016/12/30.
+ *
+ * @author hei
+ * @date 2016/12/30
  * 技能列表的适配器
  */
 

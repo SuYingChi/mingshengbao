@@ -1,6 +1,7 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -19,11 +21,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 
-public class HtmlPageActivity extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
+public class HtmlPageActivity extends BaseActivity {
     private VerticalSwipeRefreshLayout mRefresh;
     private WebView mWebView;
     private String    mUrl, mNavigation;
@@ -88,10 +98,9 @@ public class HtmlPageActivity extends BaseActivity implements MyWebChomeClient.O
             }
         });
 
-        mWebView.setWebChromeClient(new MyWebChomeClient(HtmlPageActivity.this));
+        mWebView.setWebChromeClient(new MyWebChromeClient());
     }
     private void initEvent() {
-
        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
            @Override
            public void onRefresh() {
@@ -123,19 +132,37 @@ public class HtmlPageActivity extends BaseActivity implements MyWebChomeClient.O
         });
     }
 
-    @Override
-    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {}
-    @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
-        if (newProgress==100){
-            mRefresh.setRefreshing(false);
+    private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message,
+                                 final JsResult result) {
+            new PromptDialog.Builder(context)
+                    .setTitle(R.string.my_dialog_title)
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage(message)
+                    .setButton1("我知道了", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            result.cancel();
+                            dialog.dismiss();
+                        }
+                    }).show();
+            return true;
+        }
+
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+        }
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+            if (newProgress==100){
+                mRefresh.setRefreshing(false);
+            }
         }
     }
-    @Override
-    public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
-        return false;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

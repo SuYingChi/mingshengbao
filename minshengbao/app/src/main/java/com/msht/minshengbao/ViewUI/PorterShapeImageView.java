@@ -1,4 +1,4 @@
-package com.msht.master.UIView;
+package com.msht.minshengbao.ViewUI;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,8 +9,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
-import com.github.siyamed.shapeimageview.R;
+import com.msht.minshengbao.R;
 
+
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/9/11  
+ */
 public class PorterShapeImageView extends PorterImageView {
     private Drawable shape;
     private Matrix matrix;

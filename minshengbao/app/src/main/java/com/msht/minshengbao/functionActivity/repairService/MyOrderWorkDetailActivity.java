@@ -597,7 +597,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         intent.putExtra("title",title);
         intent.putExtra("orderNo",orderNo);
         intent.putExtra("guaranteeDay", guaranteeDay);
-        intent.putExtra("mastername", repairmanName);
+        intent.putExtra("masterName", repairmanName);
         intent.putExtra("serveTime", serveTime);
         startActivity(intent);
     }

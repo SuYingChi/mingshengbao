@@ -37,7 +37,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InvoiceOpen extends BaseActivity {
+public class InvoiceOpenActivity extends BaseActivity {
     private XListView  mListView;
     private View       layoutNoData;
     private TextView   tvTotal;
@@ -63,13 +63,13 @@ public class InvoiceOpen extends BaseActivity {
     private ArrayList<HashMap<String, String>> invoiceList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<InvoiceOpen> mWeakReference;
-        public RequestHandler(InvoiceOpen activity) {
-            mWeakReference=new WeakReference<InvoiceOpen>(activity);
+        private WeakReference<InvoiceOpenActivity> mWeakReference;
+        public RequestHandler(InvoiceOpenActivity activity) {
+            mWeakReference=new WeakReference<InvoiceOpenActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final InvoiceOpen activity=mWeakReference.get();
+            final InvoiceOpenActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -237,7 +237,7 @@ public class InvoiceOpen extends BaseActivity {
         tvHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,InvoiceHistory.class);
+                Intent intent=new Intent(context,InvoiceHistoryActivity.class);
                 startActivity(intent);
             }
         });
@@ -261,7 +261,7 @@ public class InvoiceOpen extends BaseActivity {
                 }
                 idinvoice=result.toString();
                 if (matchjudge(idinvoice)){
-                    Intent intent=new Intent(context,ApplyInvoice.class);
+                    Intent intent=new Intent(context,InvoiceRepairApplyActivity.class);
                     intent.putExtra("idinvoice",idinvoice);
                     intent.putExtra("total_amount",totalAmount);
                     startActivityForResult(intent,1);

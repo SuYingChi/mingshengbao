@@ -25,8 +25,8 @@ import android.widget.TextView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
-import com.msht.minshengbao.adapter.appointAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -55,6 +55,13 @@ import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class RepeatFixActivity extends BaseActivity implements View.OnClickListener {
     private String reid,orderId;
     private String address,type,info, parentCategory;
@@ -63,8 +70,8 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private String textString="";
     private String repeatId;
     private String userId,password;
-    private int pos=-1;
     private int thisPosition =-1;
+    private int mPosition=-1;
     private Button btnSend;
     private TextView appointmentData, appointmentTime;
     private TextView etProblem;
@@ -79,6 +86,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<String>multiResult=new ArrayList<>();
     private ArrayList<String> imgPaths = new ArrayList<>();
     private ArrayList<String> mDataList=new ArrayList<>();
+    private ArrayList<HashMap<String,String>> mList = new ArrayList<HashMap<String, String>>();
     private String[] appointTime={"08:30-11:30","11:30-14:30","14:30-17:30","17:30-20:30","20:30-23:30"};
     private CustomDialog customDialog;
     private final RequestHandler requestHandler=new RequestHandler(this);
@@ -278,9 +286,21 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         address=data.getStringExtra("address");
         parentCategory =data.getStringExtra("parentCategory");
         initView();
+        initTimeData();
         initData();
         initEvent();
     }
+
+    private void initTimeData() {
+        for (String appointTimeText : appointTime) {
+            String moduleType ="3";
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("moduleType", moduleType);
+            map.put("name", appointTimeText);
+            mList.add(map);
+        }
+    }
+
     private void initData() {
         customDialog.show();
         requestType =0;
@@ -472,7 +492,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
     }
-
     private void onsSelectDate() {
         LayoutInflater l = LayoutInflater.from(this);
         View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
@@ -516,14 +535,12 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                 })
                 .show();
     }
-
     private boolean isDateBefore(DatePicker tempView) {
         Calendar mCalendar = Calendar.getInstance();
         Calendar temCalendar = Calendar.getInstance();
         temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
         return temCalendar.before(mCalendar);
     }
-
     private boolean isDateAfter(DatePicker tempView) {
         Calendar mCalendar=Calendar.getInstance();
         mCalendar.add(Calendar.DAY_OF_MONTH,6);
@@ -533,29 +550,19 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         return temCalendar.after(mCalendar);
     }
     private void onSelectTime() {
-        final SelectTable selectTable=new SelectTable(context);
-        final TextView tvTitle=(TextView)selectTable.getTitle();
-        final ListView mListView=(ListView) selectTable.getListview();
-        tvTitle.setText("选择时间");
-        final appointAdapter adapter=new appointAdapter(context,appointTime,pos);
-        mListView.setAdapter(adapter);
-        selectTable.show();
-        selectTable.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectTable.dismiss();
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position;
-                adapter.notifyDataSetChanged();
-                String time=appointTime[position];
-                appointmentTime.setText(time);
-                selectTable.dismiss();
-            }
-        });
+        new SelectDialog(context,mList,mPosition).builder()
+                .setTitleText("选择时间")
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setOnSheetItemClickListener(new SelectDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        mPosition=position;
+                        String time=mList.get(position).get("name");
+                        appointmentTime.setText(time);
+                    }
+                })
+                .show();
     }
     private void onOrderSend() {
         String date= appointmentData.getText().toString().trim();
@@ -583,7 +590,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         textParams.put("raw_order_id",orderId);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     @Override
     public void onResume() {
         super.onResume();

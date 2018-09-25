@@ -385,7 +385,8 @@ public class LpgMyAccountActivity extends BaseActivity  {
 
                 })
                 //带偏移量
-                .menuShowAsDropDown(rightImage, -90, 0);
+                .setShowAsDropDown(rightImage, getResources().getDimensionPixelOffset(R.dimen.margin_width_80), 0);
+
     }
 
     private void goScanCode() {

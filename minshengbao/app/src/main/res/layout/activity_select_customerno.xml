@@ -30,7 +30,8 @@
             <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
                 android:id="@+id/id_listview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:divider="@null">
             </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout

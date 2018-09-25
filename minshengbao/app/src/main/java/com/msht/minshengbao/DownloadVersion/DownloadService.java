@@ -1,6 +1,5 @@
 package com.msht.minshengbao.DownloadVersion;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.functionActivity.fragment.IncomeExpenseFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -277,7 +275,7 @@ public class DownloadService extends Service {
      */
     public static void installApk(Context context, File file) {
         //清除原有数据
-        SharedPreferencesUtil.Clear(context,"open_app");
+        SharedPreferencesUtil.clearPreference(context,"open_app");
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
             Uri apkUri= FileProvider.getUriForFile(context,"com.msht.minshengbao.fileProvider",file);
             Intent install=new Intent();

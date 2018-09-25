@@ -132,13 +132,13 @@ public class GasExpenseQueryActivity extends BaseActivity {
         PushAgent.getInstance(context).onAppStart();
         Intent getData=getIntent();
         customerNo=getData.getStringExtra("CustomerNo");
-        allBalance=getData.getStringExtra("all_balance");
+        allBalance=getData.getStringExtra("allBalance");
         name=getData.getStringExtra("name");
         debts=getData.getStringExtra("debts");
-        totalNum=getData.getStringExtra("total_num");
-        String discountFees=getData.getStringExtra("discount_fees");
-        gasFee=getData.getStringExtra("gas_fee");
-        lateFee=getData.getStringExtra("late_fee");
+        totalNum=getData.getStringExtra("totalNum");
+        String discountFees=getData.getStringExtra("discountFees");
+        gasFee=getData.getStringExtra("gasFee");
+        lateFee=getData.getStringExtra("lateFee");
         realFee=debts;
         initView();
         initEvent();
@@ -249,7 +249,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,PreexistenceDetailActivity.class);
-                intent.putExtra("CustomerNo",customerNo);
+                intent.putExtra("mCustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
             }
@@ -258,7 +258,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,PreexistenceDetailActivity.class);
-                intent.putExtra("CustomerNo",customerNo);
+                intent.putExtra("mCustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
             }

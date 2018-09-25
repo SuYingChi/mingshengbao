@@ -1,7 +1,9 @@
 package com.msht.minshengbao.OkhttpUtil;
 
 /**
- * Created by Jim on 2016/11/9.
+ *
+ * @author Jim
+ * @date 2016/11/9
  */
 
 public interface OkHttpReqCallBack<T> {

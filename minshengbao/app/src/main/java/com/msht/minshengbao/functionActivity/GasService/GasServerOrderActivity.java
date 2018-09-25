@@ -221,7 +221,7 @@ public class GasServerOrderActivity extends BaseActivity {
         textParams.put("type","0");
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     @Override
     public void onResume() {

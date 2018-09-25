@@ -24,14 +24,14 @@ import com.umeng.analytics.MobclickAgent;
  * @author hong
  * @date 2016/9/22  
  */
-public class GasIccardActivity extends AppCompatActivity implements View.OnClickListener {
+public class GasIcCardActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
     private TextView tvPrice, tvNavigation;
     private String    userId;
     private String    password;
     private String navigate="气价说明";
-    private String mPageName="IC卡缴费";
+    private static final  String PAGE_NAME ="IC卡缴费";
     private Context mContext;
 
     @Override
@@ -51,7 +51,7 @@ public class GasIccardActivity extends AppCompatActivity implements View.OnClick
         findViewById(R.id.id_goback).setOnClickListener(this);
         tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
         tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
-        tvNavigation.setText(mPageName);
+        tvNavigation.setText(PAGE_NAME);
         tvPrice.setVisibility(View.VISIBLE);
         tvPrice.setText(navigate);
     }
@@ -84,13 +84,13 @@ public class GasIccardActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-        //MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onPageStart(PAGE_NAME);
         MobclickAgent.onResume(mContext);
     }
     @Override
     protected void onPause() {
         super.onPause();
-       // MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPageEnd(PAGE_NAME);
         MobclickAgent.onPause(mContext);
     }
 }

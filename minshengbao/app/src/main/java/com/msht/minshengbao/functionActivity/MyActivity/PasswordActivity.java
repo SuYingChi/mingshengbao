@@ -93,7 +93,7 @@ public class PasswordActivity extends BaseActivity {
 
     private void setSuccess() {
         //清除原有数据
-        SharedPreferencesUtil.Clear(this,"AppData");
+        SharedPreferencesUtil.clearPreference(this,"AppData");
         mCache.remove("AVATARIMG");
         mCache.clear();
         clearCookie();

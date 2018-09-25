@@ -47,7 +47,7 @@ public class RepairEvaluateActivity extends BaseActivity {
     private String id, parentCategory;
     private String type, finishTime;
     private String title, realAmount;
-    private String sendType;
+    private String sendType="0";
     private CustomDialog customDialog;
     private Context context;
     private final RequestHandler requestHandler=new RequestHandler(this);

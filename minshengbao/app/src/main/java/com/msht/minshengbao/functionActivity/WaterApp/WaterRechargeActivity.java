@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -403,13 +404,18 @@ public class WaterRechargeActivity extends BaseActivity {
         }
     }
     private void contrastBalance(String amount) {
-        double doubleBalance=Double.valueOf(balance);
-        double doubleAmount=Double.valueOf(amount);
-        if (doubleAmount>doubleBalance){
-            VariableUtil.balance="余额不足";
+        if (!TextUtils.isEmpty(amount)){
+            double doubleBalance=Double.valueOf(balance);
+            double doubleAmount=Double.valueOf(amount);
+            if (doubleAmount>doubleBalance){
+                VariableUtil.balance="余额不足";
+            }else {
+                VariableUtil.balance=balance;
+            }
         }else {
-            VariableUtil.balance=balance;
+            VariableUtil.balance="余额不足";
         }
+
     }
     private void initBalance() {
         String validateURL= UrlUtil.Mywallet_balanceUrl;

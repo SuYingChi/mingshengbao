@@ -103,7 +103,7 @@ public class XListViewHeader extends LinearLayout {
 
         switch (state) {
             case STATE_NORMAL:
-                mArrowImageView.setImageResource(R.drawable.default_ptr_flip);
+                mArrowImageView.setImageResource(R.drawable.iconfont_downgrey);
                 if (mState == STATE_READY) {
                     mArrowImageView.startAnimation(mRotateDownAnim);
                 }

@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/3/17.
+ *
+ * @author hong
+ * @date 2017/3/17
  */
 public class GetAddressAdapter extends BaseAdapter {
     private Context mContext;

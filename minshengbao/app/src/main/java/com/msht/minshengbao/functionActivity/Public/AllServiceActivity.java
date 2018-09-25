@@ -12,8 +12,8 @@ import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasInstallAcitivity;
+import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasInstallActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIntroduceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
@@ -230,7 +230,7 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(intent);
     }
     private void gasIcCard() {
-        Intent card=new Intent(context,GasIccardActivity.class);
+        Intent card=new Intent(context,GasIcCardActivity.class);
         startActivity(card);
     }
     private void gaspay() {
@@ -246,7 +246,7 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(selete);
     }
     private void gasInstall() {
-        Intent selete=new Intent(context,GasInstallAcitivity.class);
+        Intent selete=new Intent(context,GasInstallActivity.class);
         startActivity(selete);
     }
     private void gasRescue() {

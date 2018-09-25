@@ -54,6 +54,9 @@
     <dimen name="margin_width3">6dp</dimen>
     <dimen name="margin_width2">4dp</dimen>
     <dimen name="margin_width_200">-200dp</dimen>
+    <dimen name="margin_width_70">-140dp</dimen>
+    <dimen name="margin_width_80">-160dp</dimen>
+    <dimen name="margin_width_90">-180dp</dimen>
     <dimen name="text_width8">16sp</dimen>
     <dimen name="text_width10">20sp</dimen>
     <dimen name="text_width12">24sp</dimen>

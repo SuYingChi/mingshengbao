@@ -25,8 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
-import com.msht.minshengbao.adapter.appointAdapter;
+
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.PriceMenuActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
@@ -83,7 +84,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private GridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private int k=0;
-    private int pos=-1;
+    private int mPosition=-1;
     private static  final int MY_PERMISSIONS_REQUEST=1;
     private int thisPosition =-1;
     private int requestType =0;
@@ -93,6 +94,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private ArrayList<String> mDataList=new ArrayList<>();
     private ArrayList<String>multiResult=new ArrayList<>();
     private ArrayList<String> imgPaths = new ArrayList<>();
+    private ArrayList<HashMap<String,String>> mList = new ArrayList<HashMap<String, String>>();
     private String[] appointTime={"08:30-11:30","11:30-14:30","14:30-17:30","17:30-20:30","20:30-23:30"};
     private static final long SPLASH_DELAY_MILLIS = 30000;
     private NoticeDialog noticeDialog;
@@ -287,9 +289,19 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.id_status_view).setVisibility(View.GONE);
         initJudge();
         initView();
+        initTimeData();
         initData();
         initExecute();
         initEvent();
+    }
+    private void initTimeData() {
+        for (String appointTimeText : appointTime) {
+            String moduleType ="3";
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("moduleType", moduleType);
+            map.put("name", appointTimeText);
+            mList.add(map);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -546,7 +558,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private void onSelectData() {
         LayoutInflater l = LayoutInflater.from(this);
         View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
-        DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
+        final  DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
         Calendar mCurrent=Calendar.getInstance();
         datePicker.init(mCurrent.get(Calendar.YEAR), mCurrent.get(Calendar.MONTH),  mCurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
             @Override
@@ -563,8 +575,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
-        final String appointmentDataText=datePicker.getYear() + "-"+ (datePicker.getMonth()+1) + "-"
-                + datePicker.getDayOfMonth();
         new PromptDialog.Builder(this)
                 .setTitle("选择预约日期")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -578,6 +588,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 .setButton2("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
+                        String appointmentDataText=datePicker.getYear() + "-"+ (datePicker.getMonth()+1) + "-"
+                                + datePicker.getDayOfMonth();
                         appointmentData.setText(appointmentDataText);
                         appointmentTime.setText("08:30-11:30");
                         dialog.dismiss();
@@ -601,29 +613,19 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         return temCalendar.after(mCalendar);
     }
     private void onSelectTime() {
-        final SelectTable selectTable=new SelectTable(context);
-        final TextView tvTitle=(TextView)selectTable.getTitle();
-        final ListView mListView=(ListView) selectTable.getListview();
-        tvTitle.setText("选择时间");
-        final appointAdapter adapter=new appointAdapter(context,appointTime,pos);
-        mListView.setAdapter(adapter);
-        selectTable.show();
-        selectTable.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectTable.dismiss();
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position;
-                adapter.notifyDataSetChanged();
-                String time=appointTime[position];
-                appointmentTime.setText(time);
-                selectTable.dismiss();
-            }
-        });
+        new SelectDialog(context,mList,mPosition).builder()
+                .setCancelable(false)
+                .setTitleText("选择时间")
+                .setCanceledOnTouchOutside(true)
+                .setOnSheetItemClickListener(new SelectDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        mPosition=position;
+                        String time=mList.get(position).get("name");
+                        appointmentTime.setText(time);
+                    }
+                })
+                .show();
     }
     private void onSelectAddress() {
         Intent intent=new Intent(context, SelectAddressActivity.class);
@@ -673,12 +675,12 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         textParams.put("phone",phone);
         textParams.put("address",address);
         textParams.put("info",info);
-        textParams.put("appointDate", appointDate);
+        textParams.put("appoint_time", appointDate);
         textParams.put("recommend_code",recommend);
         textParams.put("source",source);
-        textParams.put("rawOrderId", rawOrderId);
+        textParams.put("raw_order_id", rawOrderId);
         textParams.put("username",username);
-        textParams.put("cityId", cityId);
+        textParams.put("city_id", cityId);
         textParams.put("longitude",longitude);
         textParams.put("latitude",latitude);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);

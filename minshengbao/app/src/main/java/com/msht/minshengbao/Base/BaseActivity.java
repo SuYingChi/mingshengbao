@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
-import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -116,7 +115,7 @@ public class BaseActivity extends AppCompatActivity  {
             EventBus.getDefault().unregister(this);
         }
         //1.取消请求
-        OkHttpManager.getInstance().cancelTag(this);
+       // OkHttpManager.getInstance().cancelTag(this);
         //2.拒绝响应
         setOnDestroy(true);
     }

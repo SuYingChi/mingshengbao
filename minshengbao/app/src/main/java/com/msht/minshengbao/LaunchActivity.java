@@ -158,7 +158,7 @@ public class LaunchActivity extends AppCompatActivity {
         mContext = this;
         final boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
         if (isFirstOpen){
-            SharedPreferencesUtil.Clear(this,"AppData");
+            SharedPreferencesUtil.clearPreference(this,"AppData");
         }
         tvTime =(TextView)findViewById(R.id.id_tv_time);
         drawView = (SimpleDraweeView) findViewById(R.id.id_logo_top);

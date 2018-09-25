@@ -201,12 +201,12 @@ public class SelfHelpPay extends Fragment {
         Intent payFees=new Intent(activity, GasExpenseQueryActivity.class);
         payFees.putExtra("name", name);
         payFees.putExtra("CustomerNo", customerNum);
-        payFees.putExtra("all_balance",allBalance);
+        payFees.putExtra("allBalance",allBalance);
         payFees.putExtra("debts", debts);
-        payFees.putExtra("total_num", totalNum);
-        payFees.putExtra("discount_fees", discountFees);
-        payFees.putExtra("gas_fee",gasFee);
-        payFees.putExtra("late_fee", lateFee);
+        payFees.putExtra("totalNum", totalNum);
+        payFees.putExtra("discountFees", discountFees);
+        payFees.putExtra("gasFee",gasFee);
+        payFees.putExtra("lateFee", lateFee);
         startActivity(payFees);
     }
     private void displayDialog(String s) {

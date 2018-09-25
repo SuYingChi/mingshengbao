@@ -105,7 +105,7 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
         }
     }
     private void displayDialog(String string) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(string)

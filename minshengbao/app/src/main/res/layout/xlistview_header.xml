@@ -8,10 +8,10 @@
     <RelativeLayout
         android:id="@+id/xlistview_header_content"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="@dimen/margin_width60">
         <RelativeLayout
             android:id="@+id/xlistview_header_text"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/margin_width150"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:orientation="vertical">
@@ -42,14 +42,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="80dp"
-            android:src="@drawable/default_ptr_flip" />
+            android:layout_marginLeft="@dimen/margin_width80"
+            android:src="@drawable/iconfont_downgrey" />
         <com.msht.minshengbao.ViewUI.PullRefresh.LoadView
             android:id="@+id/xlistview_header_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="@dimen/margin_width80"
             android:layout_toLeftOf="@+id/xlistview_header_text"
             android:visibility="invisible" />
     </RelativeLayout>

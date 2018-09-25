@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
@@ -24,45 +25,54 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_width18"
             android:layout_toRightOf="@+id/id_checkBox"
+            android:layout_toEndOf="@+id/id_checkBox"
             android:layout_toLeftOf="@+id/id_inform_time"
+            android:layout_toStartOf="@+id/id_inform_time"
             android:layout_marginRight="@dimen/margin_width5"
             android:layout_marginEnd="@dimen/margin_width5"
             android:layout_marginLeft="@dimen/margin_width15"
             android:layout_marginStart="@dimen/margin_width15"
             android:layout_marginTop="@dimen/margin_10"
-            android:textColor="@color/black1"
-            android:text="我的消息" />
+            android:textColor="@color/color_383838" />
         <TextView
             android:id="@+id/id_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/id_item_title"
-            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_width10"
             android:layout_toRightOf="@+id/id_checkBox"
+            android:layout_toEndOf="@+id/id_checkBox"
             android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:layout_toLeftOf="@+id/id_forward_img"
+            android:layout_toStartOf="@+id/id_forward_img"
             android:layout_marginRight="@dimen/margin_width5"
             android:layout_marginEnd="@dimen/margin_width5"
             android:paddingBottom="@dimen/margin_10"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="内容"
-            android:textSize="@dimen/text_16"/>
+            android:textColor="@color/title_tv"
+            android:textSize="@dimen/text_width16"/>
         <TextView
             android:id="@+id/id_inform_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_15"
-            android:layout_marginTop="@dimen/margin_5"
-            android:text="时间"
-            android:textSize="@dimen/text_width14"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/margin_width15"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginTop="@dimen/margin_width1"
+            android:textSize="@dimen/text_width14"
+            android:textColor="@color/color_9e9e9e"/>
         <ImageView
             android:id="@+id/id_forward_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:contentDescription="@string/picture_text"
             android:layout_centerVertical="true"
             android:src="@drawable/forward_2x"/>
     </RelativeLayout>

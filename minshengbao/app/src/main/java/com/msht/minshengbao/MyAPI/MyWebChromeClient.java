@@ -1,7 +1,6 @@
 package com.msht.minshengbao.MyAPI;
 
 import android.net.Uri;
-import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -20,7 +19,7 @@ public class MyWebChromeClient extends WebChromeClient {
     }
     @Override
     public void onProgressChanged(WebView view, int newProgress) {
-        mOpenFileChooserCallBack.onProgressChangeds(view,newProgress);
+        mOpenFileChooserCallBack.onProgressChanged(view,newProgress);
     }
     public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
         mOpenFileChooserCallBack.openFileChooserCallBack(uploadMsg, acceptType);
@@ -36,27 +35,33 @@ public class MyWebChromeClient extends WebChromeClient {
 
     @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
-                                     FileChooserParams fileChooserParams) {
+                                     MyWebChromeClient.FileChooserParams fileChooserParams) {
         return mOpenFileChooserCallBack.openFileChooserCallBackAndroid5(webView, filePathCallback, fileChooserParams);
     }
 
     public interface OpenFileChooserCallBack {
         /**
-         *
+         *文件
          * @param uploadMsg
          * @param acceptType
          */
         void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType);
-        void onProgressChangeds(WebView view, int newProgress);
 
         /**
-         *
+         * 文件
+         * @param view
+         * @param newProgress
+         */
+        void onProgressChanged(WebView view, int newProgress);
+
+        /**
+         *文件
          * @param webView
          * @param filePathCallback
          * @param fileChooserParams
          * @return
          */
         boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback,
-                                                FileChooserParams fileChooserParams);
+                                                MyWebChromeClient.FileChooserParams fileChooserParams);
     }
 }

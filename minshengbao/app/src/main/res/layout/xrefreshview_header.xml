@@ -38,7 +38,7 @@
                 android:id="@+id/xrefreshview_header_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/default_ptr_flip" />
+                android:src="@drawable/iconfont_downgrey" />
 
             <ProgressBar
                 android:id="@+id/xrefreshview_header_progressbar"

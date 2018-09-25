@@ -47,7 +47,14 @@ import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
-public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
+public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnClickListener {
     private ImageView licenseImage;
     private LinearLayout layoutView;
     private LinearLayout layoutTaxpayer;
@@ -77,13 +84,13 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
     private CustomDialog customDialog;
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<ApplyInvoice> mWeakReference;
-        public RequestHandler(ApplyInvoice activity) {
-            mWeakReference=new WeakReference<ApplyInvoice>(activity);
+        private WeakReference<InvoiceRepairApplyActivity> mWeakReference;
+        public RequestHandler(InvoiceRepairApplyActivity activity) {
+            mWeakReference=new WeakReference<InvoiceRepairApplyActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final ApplyInvoice activity=mWeakReference.get();
+            final InvoiceRepairApplyActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -147,7 +154,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_apply_invoice);
+        setContentView(R.layout.activity_invoice_repair_apply);
         context=this;
         setCommonHeader("发票申请");
         customDialog=new CustomDialog(this, "正在加载");
@@ -306,8 +313,8 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.id_license_img:
                 if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(ApplyInvoice.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(ApplyInvoice.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CALL_CAMERE);
+                    if (ContextCompat.checkSelfPermission(InvoiceRepairApplyActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(InvoiceRepairApplyActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CALL_CAMERE);
                     }else {
                         receivePhoto();
                     }
@@ -337,7 +344,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
             if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
                 receivePhoto();
             }else {
-                Toast.makeText(ApplyInvoice.this,"授权失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(InvoiceRepairApplyActivity.this,"授权失败",Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -349,7 +356,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                 .setShowCamera(true)
                 .setShowGif(true)
                 .setPreviewEnabled(true)
-                .start(ApplyInvoice.this, PhotoPicker.REQUEST_CODE);
+                .start(InvoiceRepairApplyActivity.this, PhotoPicker.REQUEST_CODE);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -392,7 +399,7 @@ public class ApplyInvoice extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onError(Throwable e) {
                         // TODO 当压缩过去出现问题时调用
-                        Toast.makeText(ApplyInvoice.this,"图片压缩失败!",
+                        Toast.makeText(InvoiceRepairApplyActivity.this,"图片压缩失败!",
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }

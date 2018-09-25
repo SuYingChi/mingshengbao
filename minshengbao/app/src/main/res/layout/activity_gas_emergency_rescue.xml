@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_marginTop="@dimen/margin_20"
@@ -55,6 +55,7 @@
                     android:layout_height="@dimen/margin_width30"
                     android:layout_marginRight="@dimen/margin_width30"
                     android:layout_marginEnd="@dimen/margin_width30"
+                    android:contentDescription="@string/picture_text"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
@@ -81,6 +82,11 @@
                     android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
                     android:text="0898-66255555"
+                    android:gravity="center"
+                    android:layout_toEndOf="@+id/id_tv2"
+                    android:layout_toRightOf="@+id/id_tv2"
+                    android:layout_toStartOf="@+id/id_phone_img2"
+                    android:layout_toLeftOf="@+id/id_phone_img2"
                     android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel1" />
                 <ImageView
@@ -115,6 +121,11 @@
                     android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
                     android:text="0898-36204455"
+                    android:gravity="center"
+                    android:layout_toEndOf="@+id/id_tv3"
+                    android:layout_toRightOf="@+id/id_tv3"
+                    android:layout_toStartOf="@+id/id_phone_img3"
+                    android:layout_toLeftOf="@+id/id_phone_img3"
                     android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel2" />
                 <ImageView
@@ -144,11 +155,16 @@
                     android:layout_centerVertical="true"
                     />
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_width18"
                     android:textColor="#e54a16"
                     android:text="0898-83359393"
+                    android:gravity="center"
+                    android:layout_toEndOf="@+id/id_tv4"
+                    android:layout_toRightOf="@+id/id_tv4"
+                    android:layout_toStartOf="@+id/id_phone_img4"
+                    android:layout_toLeftOf="@+id/id_phone_img4"
                     android:layout_centerInParent="true"
                     android:id="@+id/id_tv_tel3" />
                 <ImageView

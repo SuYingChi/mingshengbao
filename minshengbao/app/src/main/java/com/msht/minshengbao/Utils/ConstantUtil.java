@@ -14,6 +14,17 @@ public class ConstantUtil {
     public static final int REQUEST_CODE_TWO =2;
     public static final int REQUEST_CODE_SEVEN =7;
     public static final int MY_LOCATION_REQUEST=0;
+    public static final int VALUE1=1;
+    public static final int VALUE2=2;
+    public static final int VALUE3=3;
+    public static final int VALUE4=4;
+    public static final int VALUE5=5;
+    public static final int VALUE6=6;
+    public static final int VALUE7=7;
+    public static final int VALUE8=8;
+    public static final int VALUE9=9;
+    public static final int VALUE10=10;
+    public static final int VALUE11=11;
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
     public static final  String VALUE_ONE=  "1";

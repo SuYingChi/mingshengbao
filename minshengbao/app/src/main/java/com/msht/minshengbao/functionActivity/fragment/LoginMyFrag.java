@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
 import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
-import com.msht.minshengbao.functionActivity.Invoice.InvoiceOpen;
+import com.msht.minshengbao.functionActivity.Invoice.InvoiceHomeActivity;
 import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ConsultRecommend;
@@ -356,7 +356,8 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivityForResult(intent,0x004);
     }
     private void goInvoice() {
-        Intent intent=new Intent(mContext, InvoiceOpen.class);
+       // Intent intent=new Intent(mContext, InvoiceOpen.class);
+        Intent intent=new Intent(mContext, InvoiceHomeActivity.class);
         startActivity(intent);
     }
     private void goGasServer() {

@@ -218,7 +218,7 @@ public class RechargeValue extends BaseActivity  {
             startActivity(success);
         }else if (status.equals(VariableUtil.VALUE_THREE)){
             setResult(1);
-            showdialogs("正在支付");
+            onShowDialogs("正在支付");
         }
     }
     @Override
@@ -328,7 +328,7 @@ public class RechargeValue extends BaseActivity  {
 
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
+                String result = data.getStringExtra("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
                  * "fail"    - payment failed
@@ -336,8 +336,8 @@ public class RechargeValue extends BaseActivity  {
                  * "invalid" - payment plugin not installed
                  */
                 // 错误信息
-                String errorMsg = data.getExtras().getString("error_msg");
-                String extraMsg = data.getExtras().getString("extra_msg");
+                String errorMsg = data.getStringExtra("error_msg");
+                String extraMsg = data.getStringExtra("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }
@@ -355,7 +355,7 @@ public class RechargeValue extends BaseActivity  {
             setResult(0x005);
             requestResult();
         }else {
-            showdialogs(str);
+            onShowDialogs(str);
         }
     }
 
@@ -369,8 +369,8 @@ public class RechargeValue extends BaseActivity  {
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
 
-    private void showdialogs(String str) {
-        new PromptDialog.Builder(this)
+    private void onShowDialogs(String str) {
+        new PromptDialog.Builder(context)
                 .setTitle("充值提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(str)

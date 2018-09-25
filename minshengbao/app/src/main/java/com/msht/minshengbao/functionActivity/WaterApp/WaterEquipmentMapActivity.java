@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -33,8 +35,11 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MultiPointItem;
 import com.amap.api.maps.model.MultiPointOverlay;
 import com.amap.api.maps.model.MultiPointOverlayOptions;
@@ -75,28 +80,25 @@ import java.util.List;
  * @author hong
  * @date 2018/8/16  
  */
-public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener, PoiSearch.OnPoiSearchListener {
+public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener, PoiSearch.OnPoiSearchListener, AMap.InfoWindowAdapter {
     private View layoutMap;
     private View layoutSearch;
     private ImageView locationImg;
-    private boolean First=true;
+    private boolean mFirst =true;
     private EditText autoText;
     private MapView mMapView = null;
     private AMap aMap;
     private double lat,lon;
     private AMapLocationClient locationClient;
     private MyLocationStyle myLocationStyle;
-    private MultiPointOverlayOptions overlayOptions;
-    private MultiPointOverlay multiPointOverlay;
     private PoiSearchAdapter searchAdapter;
     private Context context;
     private TextView tvCancel;
     private CustomDialog customDialog;
     private String mCity;
-    private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<MarkerOptions> markerOptionsArrayList=new ArrayList<MarkerOptions>();
     private ArrayList<HashMap<String, String>>  addressList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
-
     private static class RequestHandler extends Handler{
         private WeakReference<WaterEquipmentMapActivity> mWeakReference;
         public RequestHandler(WaterEquipmentMapActivity activity) {
@@ -114,7 +116,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             switch (msg.what){
                 case  SendRequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("message");
@@ -150,7 +151,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 }).show();
     }
     private void onReceiveData(JSONArray dataArray) {
-        List<MultiPointItem> list = new ArrayList<MultiPointItem>();
         try {
             for (int i = 0; i < dataArray.length(); i++) {
                 JSONObject obj = dataArray.getJSONObject(i);
@@ -159,30 +159,23 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 String communityName=obj.optString("communityName");
                 String latitude=obj.optString("latitude");
                 String longitude=obj.optString("longitude");
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("address",address);
-                map.put("latitude",latitude);
-                map.put("longitude", longitude);
-                map.put("equipmentNo",equipmentNo);
-                map.put("communityName",communityName);
-                mList.add(map);
-                String pos=String.valueOf(i);
                 double lat =obj.optDouble("latitude");
                 double lon = obj.optDouble("longitude");
                 //保证经纬度没有问题的时候可以填false
                 LatLng latLng = new LatLng(lat, lon, true);
-                MultiPointItem multiPointItem = new MultiPointItem(latLng);
-                multiPointItem.setTitle(pos);
-                list.add(multiPointItem);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.visible(true);
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.location_water_xh));
+                markerOptions.icon(bitmapDescriptor);
+                markerOptions.position(latLng);
+                markerOptions.title(address);
+                markerOptionsArrayList.add(markerOptions);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (mList.size()!=0&&mList!=null){
-            if(multiPointOverlay != null) {
-                multiPointOverlay.setItems(list);
-                multiPointOverlay.setEnable(true);
-            }
+        if (markerOptionsArrayList!=null&&markerOptionsArrayList.size()!=0){
+            aMap.addMarkers(markerOptionsArrayList,false);
         }
     }
 
@@ -231,14 +224,13 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         //隐藏缩放按钮
         uiSettings.setZoomControlsEnabled(false);
         setLocationStyle();
-        setMultiPoint();
-        multiPointOverlay = aMap.addMultiPointOverlay(overlayOptions);
         //设置定位蓝点的Style
         aMap.setMyLocationStyle(myLocationStyle);
         // 设置为true表示启动显示定位蓝点。
         aMap.setMyLocationEnabled(true);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(100));
         aMap.setOnMyLocationChangeListener(this);
+        aMap.setInfoWindowAdapter(this);
         tvCancel.setEnabled(false);
         tvCancel.setOnClickListener(this);
         ivBack.setOnClickListener(this);
@@ -289,19 +281,14 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         myLocationStyle.strokeColor(0xfff96331);
         myLocationStyle.radiusFillColor(0x40f96331);
     }
-    private void setMultiPoint() {
-        overlayOptions = new MultiPointOverlayOptions();
-        overlayOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.location_water_xh));
-        overlayOptions.anchor(0.5f,0.5f);
-    }
     @Override
     public void onMyLocationChange(Location location) {
         if (location != null ) {
             lat=location.getLatitude();
             lon=location.getLongitude();
-            if (First){
+            if (mFirst){
                 customDialog.show();
-                First=false;
+                mFirst =false;
             }
             initEquipmentData();
         } else {
@@ -430,7 +417,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         @Override
         public void onFailed(int requestCode) {
             if(requestCode==ConstantUtil.MY_LOCATION_REQUEST) {
-                Toast.makeText(context,"获取位置授权失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.ToastText(context,"获取位置授权失败");
             }
         }
     };
@@ -444,6 +431,24 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             }
             locationClient.stopLocation();
         }
+    }
+    View infoWindow=null;
+    @Override
+    public View getInfoWindow(Marker marker) {
+        if (infoWindow == null) {
+            infoWindow = LayoutInflater.from(this).inflate(
+                    R.layout.custom_info_window, null);
+        }
+        render(marker, infoWindow);
+    return infoWindow;
+    }
+    private void render(Marker marker, View infoWindow) {
+        TextView name=(TextView)infoWindow.findViewById(R.id.title);
+        name.setText(marker.getTitle());
+    }
+    @Override
+    public View getInfoContents(Marker marker) {
+        return null;
     }
     @Override
     protected void onPause() {

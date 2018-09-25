@@ -32,6 +32,6 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dip"
         android:layout_toLeftOf="@id/refresh_des"
-        android:src="@drawable/default_ptr_flip" />
+        android:src="@drawable/iconfont_downgrey" />
 
 </merge>

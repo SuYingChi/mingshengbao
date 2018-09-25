@@ -39,7 +39,7 @@
                 android:layout_marginStart="@dimen/margin_width10"
                 android:textColor="@color/color_383838"
                 android:textSize="@dimen/text_width16"
-                android:text="@string/phone_number"/>
+                android:text="@string/my_phone"/>
             <EditText
                 android:id="@+id/id_et_phone"
                 android:layout_width="match_parent"

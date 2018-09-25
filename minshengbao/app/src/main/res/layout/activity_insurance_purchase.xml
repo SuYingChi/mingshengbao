@@ -70,7 +70,6 @@
                     android:background="@color/line_gray">
                 </View>
                 <RelativeLayout
-                    android:id="@+id/id_customerNo_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -86,35 +85,48 @@
                         android:text="燃气用户号"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
-                    <TextView
-                        android:id="@+id/id_tv_customerNo"
+                    <EditText
+                        android:id="@+id/id_et_customerNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_customerNo_text"
                         android:layout_toEndOf="@+id/id_customerNo_text"
                         android:layout_marginRight="@dimen/margin_width10"
                         android:layout_marginEnd="@dimen/margin_width10"
-                        android:layout_toStartOf="@+id/id_forward_img"
-                        android:layout_toLeftOf="@+id/id_forward_img"
+                        android:layout_toStartOf="@+id/id_customerNo_layout"
+                        android:layout_toLeftOf="@+id/id_customerNo_layout"
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:background="@null"
                         android:textColor="@color/color_9e9e9e"
+                        android:inputType="number"
                         android:gravity="end"
-                        android:maxLength="18"
+                        android:maxLength="10"
                         android:textSize="@dimen/text_width16"
                         android:layout_centerVertical="true"
-                        android:hint="请选择燃气用户号" />
-                    <ImageView
-                        android:id="@+id/id_forward_img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:hint="@string/please_input_customerNo" />
+                    <RelativeLayout
+                        android:id="@+id/id_customerNo_layout"
+                        android:layout_width="@dimen/margin_width50"
+                        android:background="@color/white"
+                        android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginEnd="@dimen/margin_width10"
-                        android:layout_marginRight="@dimen/margin_width10"
-                        android:src="@drawable/forward_2x"
-                        android:contentDescription="@string/picture_text"/>
+                        android:layout_marginRight="@dimen/margin_width10">
+                        <ImageView
+                            android:id="@+id/id_forward_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="@dimen/margin_width10"
+                            android:layout_marginRight="@dimen/margin_width10"
+                            android:src="@drawable/forward_2x"
+                            android:contentDescription="@string/picture_text"/>
+                    </RelativeLayout>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"

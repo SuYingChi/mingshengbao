@@ -58,13 +58,13 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-                        String Error = object.optString("error");
+                        String error = object.optString("error");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONObject data=object.getJSONObject("data");
                             String balance=data.optString("balance");
                             activity.tvBalance.setText(balance);
                         }else {
-                            activity.displayDialog(Error);
+                            activity.displayDialog(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -122,7 +122,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
     }
     private void displayDialog(String error) {
-        new PromptDialog.Builder(this)
+        new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)

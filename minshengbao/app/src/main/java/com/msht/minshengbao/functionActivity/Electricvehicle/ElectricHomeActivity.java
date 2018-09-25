@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -231,9 +232,13 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
                     lon=data.getStringExtra("lon");
                     address=data.getStringExtra("mAddress");
                     tvAddress.setText(address);
-                    double latitude=Double.valueOf(lat);
-                    double longitude=Double.valueOf(lon);
-                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
+                    if(!TextUtils.isEmpty(lat)&&!TextUtils.isEmpty(lon)){
+                        lat=lat.trim();
+                        lon=lon.trim();
+                        double latitude=Double.valueOf(lat);
+                        double longitude=Double.valueOf(lon);
+                        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
+                    }
                 }
                 break;
             default:

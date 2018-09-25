@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.PublicPayWayActivity;
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.ImageUtil;
@@ -52,7 +52,7 @@ import java.io.UnsupportedEncodingException;
  * @author hong
  * @date 2016/05/20
  */
-public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class ShopActivity extends AppCompatActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     private View layoutNavigation;
     private WebView shopWeb;
     private ProgressBar progressBar;
@@ -63,6 +63,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
     private boolean loginState;
     private boolean shopState;
     private int First=0;
+    private String mFirst="0";
     private Context mContext;
     private final String mPageName ="商城";
     private String loginUrl=UrlUtil.SHOP_LOGIN;
@@ -98,6 +99,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         initWebView();
         initEvent();
+       // Log.d("mFirst=",String.valueOf(First)+","+urls);
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,7 +202,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
             }
         });
         fixDirPath();
-        shopWeb.setWebChromeClient(new MyWebChomeClient(ShopActivity.this));
+        shopWeb.setWebChromeClient(new MyWebChromeClient(ShopActivity.this));
     }
     private void fixDirPath() {
         String path = ImageUtil.getDirPath();
@@ -224,7 +226,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         return shopUrl;
     }
     @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
+    public void onProgressChanged(WebView view, int newProgress) {
         if (newProgress==100){
             progressBar.setVisibility(View.GONE);
 
@@ -404,7 +406,11 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
         if (requestCode==PAY_CODE){
             if (resultCode==PAY_CODE){
                 shopWeb.loadUrl(UrlUtil.SHOP_ORDER_LIST);
+            }else {
+                /*下单未支付成功*/
+                shopWeb.loadUrl(UrlUtil.SHOP_ORDER_DATA_STATE);
             }
+
         }
         if (resultCode != Activity.RESULT_OK) {
             if (mUploadMessage != null) {
@@ -424,7 +430,6 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         }
                         String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
                         if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).exists()) {
-                            Log.e("ShopActivity", "sourcePath empty or not exists.");
                             break;
                         }
                         Uri uri = Uri.fromFile(new File(sourcePath));
@@ -447,7 +452,6 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         }else {
                             String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
                             if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).exists()) {
-                                Log.e("ShopActivity", "sourcePath empty or not exists.");
                                 break;
                             }
                             Uri uri = Uri.fromFile(new File(sourcePath));
@@ -468,7 +472,6 @@ public class ShopActivity extends AppCompatActivity implements MyWebChomeClient.
                         }
                         String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
                         if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).exists()) {
-                            Log.e("ShopActivity", "sourcePath empty or not exists.");
                             break;
                         }
                         Uri uri = Uri.fromFile(new File(sourcePath));

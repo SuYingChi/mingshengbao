@@ -1,13 +1,19 @@
 package com.msht.minshengbao.functionActivity.Invoice;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.icu.text.LocaleDisplayNames;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.adapter.InvoiceAdapter;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -16,7 +22,7 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
+import com.msht.minshengbao.adapter.InvoiceHistoryAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,11 +39,11 @@ import java.util.HashMap;
  * @author hong
  * @date 2017/11/2  
  */
-public class InvoiceHistory extends BaseActivity {
-    private XListView  mListView;
+public class InvoiceHistoryActivity extends BaseActivity {
+    private XRecyclerView mRecyclerView;
+    private InvoiceHistoryAdapter mAdapter;
     private View       layoutNoData;
     private String     userId,password;
-    private InvoiceAdapter mAdapter;
     private JSONArray jsonArray;
     private int       pageNo    = 1;
     private int pageIndex=0;
@@ -46,32 +52,32 @@ public class InvoiceHistory extends BaseActivity {
     private ArrayList<HashMap<String, String>> invoiceList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<InvoiceHistory>mWeakReference;
-        public RequestHandler(InvoiceHistory activity) {
+        private WeakReference<InvoiceHistoryActivity>mWeakReference;
+        public RequestHandler(InvoiceHistoryActivity activity) {
             mWeakReference=new WeakReference<>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final InvoiceHistory activity=mWeakReference.get();
+            final InvoiceHistoryActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
+            if (activity.refreshType==0){
+                activity.mRecyclerView.refreshComplete();
+            }else if (activity.refreshType==1){
+                activity.mRecyclerView.loadMoreComplete();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
                         activity.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (activity.refreshType==0){
-                                activity.mListView.stopRefresh(true);
-                            }else if (activity.refreshType==1){
-                                activity.mListView.stopLoadMore();
-                            }
                             if(activity.jsonArray.length()>0){
                                 if (activity.pageNo==1){
                                     activity.invoiceList .clear();
@@ -79,7 +85,6 @@ public class InvoiceHistory extends BaseActivity {
                             }
                             activity.onReceiveHistoryData();
                         }else {
-                            activity.mListView.stopRefresh(false);
                             activity.onFailure(error);
                         }
                     }catch (Exception e){
@@ -87,10 +92,6 @@ public class InvoiceHistory extends BaseActivity {
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
-                    activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -119,14 +120,33 @@ public class InvoiceHistory extends BaseActivity {
                 String status = jsonObject.getString("status");
                 String waybillNum= jsonObject.getString("waybill_num");
                 String name= jsonObject.getString("name");
+                String invoiceType=jsonObject.optString("invoiceType");
                 String amount  = jsonObject.getString("amount");
                 String time    = jsonObject.getString("time");
+                String invoiceId=jsonObject.optString("invoiceId");
+                String statusDes="";
+                String invoiceTypeName="纸质发票";
+                switch (status){
+                    case ConstantUtil.VALUE_ONE:
+                        statusDes="待寄出";
+                        break;
+                    case ConstantUtil.VALUE_TWO:
+                        statusDes="已寄出";
+                        break;
+                    default:
+                        statusDes="未知状态";
+                        break;
+                }
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("status", status);
+                map.put("statusDes",statusDes);
                 map.put("name",name);
+                map.put("content",name);
                 map.put("waybill_num", waybillNum);
                 map.put("amount",amount);
                 map.put("time",time);
+                map.put("invoiceId",invoiceId);
+                map.put("invoiceType",invoiceType);
+                map.put("invoiceTypeName",invoiceTypeName);
                 invoiceList.add(map);
             }
         }catch (JSONException e){
@@ -134,8 +154,8 @@ public class InvoiceHistory extends BaseActivity {
         }
         if (invoiceList.size()==0){
             layoutNoData.setVisibility(View.VISIBLE);
+            mAdapter.notifyDataSetChanged();
         }else {
-            mListView.setVisibility(View.VISIBLE);
             layoutNoData.setVisibility(View.GONE);
             mAdapter.notifyDataSetChanged();
         }
@@ -143,26 +163,43 @@ public class InvoiceHistory extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invoice_history);
+        setContentView(R.layout.activity_invoice_gas_history);
         customDialog=new CustomDialog(this, "正在加载");
         context=this;
         setCommonHeader("发票历史");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         intView();
-        mListView.setPullLoadEnable(true);
-        mAdapter = new InvoiceAdapter(this,invoiceList);
-        mListView.setAdapter(mAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        mAdapter=new InvoiceHistoryAdapter(invoiceList);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.refresh();
+        mRecyclerView.setPullRefreshEnabled(true);
+        mRecyclerView.setLoadingMoreEnabled(true);
         initData();
+        mAdapter.setClickCallBack(new InvoiceHistoryAdapter.ItemClickCallBack() {
+            @Override
+            public void onItemClick(int pos) {
+                String invoiceId=invoiceList.get(pos).get("invoiceId");
+                Intent intent=new Intent(context,InvoiceRepairDetailActivity.class);
+                intent.putExtra("invoiceId",invoiceId);
+                startActivity(intent);
+            }
+        });
     }
     private void intView() {
-        mListView=(XListView)findViewById(R.id.id_view_invoice);
+        mRecyclerView=(XRecyclerView)findViewById(R.id.id_view_invoice);
         layoutNoData =findViewById(R.id.id_nodata_view);
     }
     private void initData() {
         customDialog.show();
         loadData(1);
-        mListView.setXListViewListener(new XListView.IXListViewListener() {
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 refreshType=0;

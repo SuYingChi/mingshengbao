@@ -23,9 +23,9 @@ public class WarrantyCardActivity extends BaseActivity {
         Intent data=getIntent();
         String title=data.getStringExtra("title");
         String orderNo=data.getStringExtra("orderNo");
-        String guaranteeDay=data.getStringExtra("guarantee_day");
-        String masterName=data.getStringExtra("mastername");
-        String serveTime=data.getStringExtra("serve_time");
+        String guaranteeDay=data.getStringExtra("guaranteeDay");
+        String masterName=data.getStringExtra("masterName");
+        String serveTime=data.getStringExtra("serveTime");
         setCommonHeader("保修卡");
         ((TextView)findViewById(R.id.id_maintype)).setText(title);
         ((TextView)findViewById(R.id.id_tv_orderno)).setText(orderNo);

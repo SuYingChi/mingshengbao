@@ -11,6 +11,8 @@ public class SharedPreferencesUtil {
     private static final String spFileName = "AppData";
     private static final String spVersion="spversion";
     private static final String Device="Device";
+    private static final String CONTROL="control";
+    public static final String CONTROL_TYPE="CONTROL_TYPE";
     public static final String FIRST_OPEN = "first_open";
     public static final String First_server="first_sever";
     public static final String UserId="userId";
@@ -35,8 +37,7 @@ public class SharedPreferencesUtil {
                                        Boolean strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFist, Context.MODE_PRIVATE);
-        Boolean result = setPreferences.getBoolean(strKey, strDefault);
-        return result;
+        return setPreferences.getBoolean(strKey, strDefault);
     }
     public static void putBoolean(Context context, String strKey,
                                   Boolean strData) {
@@ -44,14 +45,13 @@ public class SharedPreferencesUtil {
                 spFist, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putBoolean(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getUserId(Context context, String strKey,
                                  String strData){
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putUserId(Context context, String strKey,
                                   String strData) {
@@ -66,7 +66,7 @@ public class SharedPreferencesUtil {
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
         String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putAvatarUrl(Context context, String strKey,
                                  String strData) {
@@ -74,14 +74,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getPassword(Context context, String strKey,
                                       String strData){
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putPassword(Context context, String strKey,
                                     String strData) {
@@ -89,14 +88,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getNickName(Context context, String strKey,
                                      String strData){
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putNickName(Context context, String strKey,
                                    String strData) {
@@ -104,14 +102,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getUserName(Context context, String strKey,
                                      String strData){
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putUserName(Context context, String strKey,
                                    String strData) {
@@ -119,14 +116,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getpassw(Context context, String strKey,
                                      String strData){
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strData);
-        return result;
+        return setPreferences.getString(strKey, strData);
     }
     public static void putpassw(Context context, String strKey,
                                    String strData) {
@@ -134,15 +130,14 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
 
     public static Boolean getLstate(Context context, String strKey,
                                      Boolean strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        Boolean result = setPreferences.getBoolean(strKey, strDefault);
-        return result;
+        return setPreferences.getBoolean(strKey, strDefault);
     }
 
     public static void putLstate(Context context, String strKey,
@@ -151,14 +146,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putBoolean(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getSex(Context context, String strKey,
                                     String strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strDefault);
-        return result;
+        return setPreferences.getString(strKey, strDefault);
     }
 
     public static void putSex(Context context, String strKey,
@@ -167,14 +161,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getPhoneNumber(Context context, String strKey,
                                 String strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strDefault);
-        return result;
+        return setPreferences.getString(strKey, strDefault);
     }
 
     public static void putPhoneNumber(Context context, String strKey,
@@ -183,14 +176,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getStringData(Context context, String strKey,
                                         String strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 spFileName, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strDefault);
-        return result;
+        return setPreferences.getString(strKey, strDefault);
     }
     public static void putStringData(Context context, String strKey,
                                       String strData) {
@@ -198,14 +190,13 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getDeviceData(Context context, String strKey,
                                         String strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
         SharedPreferences setPreferences = context.getSharedPreferences(
                 Device, Context.MODE_PRIVATE);
-        String result = setPreferences.getString(strKey, strDefault);
-        return result;
+        return setPreferences.getString(strKey, strDefault);
     }
 
     public static void putDeviceData(Context context, String strKey,
@@ -214,12 +205,25 @@ public class SharedPreferencesUtil {
                 Device, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
-    public static void Clear(Context context, String strKey){
+    public static int getControlType(Context context, String strKey, int strDefault){
+        SharedPreferences setPreferences = context.getSharedPreferences(
+                CONTROL, Context.MODE_PRIVATE);
+        return setPreferences.getInt(strKey, strDefault);
+    }
+    public static void putControlType(Context context,String strKey,int strData){
+        SharedPreferences activityPreferences = context.getSharedPreferences(
+                CONTROL, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = activityPreferences.edit();
+        editor.putInt(strKey, strData);
+        editor.apply();
+    }
+
+    public static void clearPreference(Context context, String strKey){
         SharedPreferences activityPreferences= context.getSharedPreferences(strKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=activityPreferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 }

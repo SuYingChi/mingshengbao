@@ -267,7 +267,8 @@ public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocati
         layoutNear =findViewById(R.id.id_layout_near);
         rightImage =(ImageView)findViewById(R.id.id_right_img);
         mMapView = (MapView) findViewById(R.id.id_mapView);
-        mMapView.onCreate(savedInstanceState); // 此方法必须重写
+        // 此方法必须重写
+        mMapView.onCreate(savedInstanceState);
         aMap = mMapView.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);

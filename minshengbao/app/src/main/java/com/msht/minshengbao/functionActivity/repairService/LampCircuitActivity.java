@@ -141,7 +141,7 @@ public class LampCircuitActivity extends BaseActivity {
                     Intent intent=new Intent(context,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",mName);
-                    intent.putExtra("maintype",mPageName);
+                    intent.putExtra("mMainType",mPageName);
                     startActivity(intent);
                 }else {
                     Intent login=new Intent(context, LoginActivity.class);

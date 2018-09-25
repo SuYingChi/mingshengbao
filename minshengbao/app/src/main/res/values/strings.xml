@@ -2,6 +2,7 @@
     <string name="app_name">民生宝</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="ensure_send">确认提交</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home_tab_my">我的</string>
     <string name="home_tab_mail">商城</string>
@@ -11,9 +12,13 @@
     <string name="my_nick_name">昵称</string>
     <string name="my_sex">性别</string>
     <string name="my_phonenumber">手机</string>
+    <string name="my_phone">手机号</string>
     <string name="my_login">登录</string>
     <string name="my_register">注册</string>
     <string name="my_dialog_title">民生宝</string>
+    <string name="please_input_password">请输入至少6位数的密码</string>
+    <string name="please_input_register_phone">请填写注册时的手机号</string>
+    <string name="reset_password">重置密码</string>
     <string name="gas_payfee">燃气缴费</string>
     <string name="gas_introduce">燃气介绍</string>
     <string name="gas_company_profile">公司概况</string>
@@ -52,9 +57,10 @@
     <string name="xrefreshview_refresh_days_ago">%1s天之前刷新</string>
     <string name="i_know">我知道了</string>
     <string name="re_recharge">请重新支付！</string>
+    <string name="address_text">地址</string>
     <string name="cancel_order">取消订单</string>
     <string name="cancel_text">取消</string>
-
+    <string name="city_text">城市</string>
     <!--保险   -->
     <string name="total_text">共计:</string>
     <!--水宝  -->

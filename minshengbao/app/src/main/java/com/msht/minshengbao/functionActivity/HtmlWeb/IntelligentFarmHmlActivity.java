@@ -16,10 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 
-public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     private WebView mWebview;
     private String    Url,naviga;
     @Override
@@ -66,7 +66,7 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebCho
             }
         });
 
-        mWebview.setWebChromeClient(new MyWebChomeClient(IntelligentFarmHmlActivity.this));
+        mWebview.setWebChromeClient(new MyWebChromeClient(IntelligentFarmHmlActivity.this));
     }
     private void initEvent() {
         backImg.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +101,7 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebCho
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {}
     @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
+    public void onProgressChanged(WebView view, int newProgress) {
         if (newProgress==100){
 
         }

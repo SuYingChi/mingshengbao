@@ -14,6 +14,7 @@
     <string name="user_address">用户地址</string>
     <string name="elevator_house">电梯房</string>
     <string name="doorplate">门牌号</string>
+    <string name="recipient_man">收货人</string>
     <string name="default_text">XXXXXX</string>
     <string name="default_value0">0.0</string>
     <string name="equipment_map">设备地图</string>
@@ -46,16 +47,67 @@
     <!--地址 -->
     <string name="delect_text">删除</string>
     <string name="edit_text">编辑</string>
-    <!-- 燃气维修  -->
-    <string name="add_customer_no">添加燃气用户号</string>
+    <!-- 燃气业务  -->
+    <string name="add_customer_no">新增燃气用户号</string>
     <string name="not_add_customerNo">当前没有添加燃气用户号</string>
     <string name="connection_phone">联系电话</string>
     <string name="connection_server">联系客服</string>
+    <string name="gas_please_input_address">请输入或选择地址</string>
+    <string name="please_select">请选择</string>
+    <string name="gas_install_type">报装类型</string>
+    <string name="gas_install_topic">报装主题</string>
+    <string name="gas_detail_describe">详细描述</string>
+    <string name="gas_please_select_install_type">请选择报装类型</string>
+    <string name="gas_please_input_topic">请输入报装主题</string>
+    <string name="gas_please_input_tel_phone">请输入电话号码</string>
+    <string name="gas_please_input_detail_describe">请写下详细需求描述</string>
+    <string name="gas_emergency_tip">漏气等紧急情况请使用“燃气抢险”功能</string>
+    <string name="gas_write_table_tip">用户号可查看抄表单或致电963666</string>
+    <string name="gas_add_new_address">添加新地址</string>
     <!--家电维修 -->
     <string name="not_have_address">当前没有添加地址</string>
     <string name="not_have_data">当前没有数据</string>
     <!--保险  -->
     <string name="certificate_type">证件类型</string>
+    <string name="please_input_customerNo">请输入或选择燃气用户号</string>
+    <!--发票 -->
+    <string name="connection_phone_text">联系电话:</string>
+    <string name="connection_address_text">联系地址:</string>
+    <string name="recipient_text">收   件   人:</string>
+    <string name="normal_use_gas">民用天然气</string>
+    <string name="gas_invoice_apply">燃气缴费发票申请</string>
+    <string name="repair_invoice_apply">维修发票申请</string>
+    <string name="Email">电子邮箱:</string>
+    <string name="please_input_email">请输入电子邮箱</string>
+    <string name="receive_information">接收信息</string>
+    <string name="normal_information">基本信息</string>
+    <string name="invoice_type">发票类型:</string>
+    <string name="invoice_name">发票抬头:</string>
+    <string name="taxpayer_No">纳税号码:</string>
+    <string name="invoice_content">发票内容:</string>
+    <string name="invoice_amount">发票金额:</string>
+    <string name="enterprise_information">企业信息</string>
+    <string name="open_bank">开户银行:</string>
+    <string name="open_account">开户账号:</string>
+    <string name="enterprise_tel">企业电话:</string>
+    <string name="location_address">所在地址:</string>
+    <string name="enterprise_address">企业地址:</string>
+    <string name="look_invoice">查看发票</string>
+    <string name="send_success">提交成功</string>
+    <string name="open_invoice">开具发票</string>
+    <string name="invoice_history">开票历史</string>
+    <string name="enterprise_text">企业</string>
+    <string name="Personal_text">个人</string>
+    <string name="look_delivery_information">查看物流</string>
+    <string name="ticket_information">票据信息</string>
+    <string name="order_ticket_detail">单据信息</string>
+    <string name="business_license">营业执照扫描件</string>
+
+    <string name="please_ensure_email">请确认邮箱无误</string>
+    <string name="please_input_open_bank">请输入您的开户银行</string>
+    <string name="please_input_open_account">请输入您的开户账户</string>
+    <string name="please_input_taxpayerNo">请输入您的纳税人识别号(必填)</string>
+    <string name="email_tip_explain">电子发票将在系统开具后发至您的邮箱，请注意查收</string>
     <!--数值  -->
     <string name="zero_value">0</string>
     <string name="one_value">1</string>
@@ -64,5 +116,7 @@
     <!--符号 -->
     <string name="subtract_symbol">-</string>
     <string name="add_symbol">+</string>
+    <!--单位 -->
+    <string name="RMB_YUAN">元</string>
 
 </resources>

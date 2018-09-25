@@ -217,7 +217,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
     }
     private void exitLogin() {
         //清除原有数据
-        SharedPreferencesUtil.Clear(this,"AppData");
+        SharedPreferencesUtil.clearPreference(this,"AppData");
         mCache.remove("avatarimg");
         mCache.clear();
         //清除网页Cookie

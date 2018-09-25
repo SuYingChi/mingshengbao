@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
     tools:context=".functionActivity.Invoice.InvoiceSendSuccessActivity">
-
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/layout_header"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent">
+                <ImageView
+                    android:id="@+id/id_success_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_width40"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/picture_text"
+                    android:src="@drawable/pay_success_xh"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/id_success_img"
+                    android:layout_marginTop="@dimen/margin_width20"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="@dimen/text_width25"
+                    android:textColor="@color/green_light"
+                    android:text="@string/send_success"/>
+            </RelativeLayout>
+            <Button
+                android:id="@+id/id_btn_open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width45"
+                android:layout_marginRight="@dimen/margin_width40"
+                android:layout_marginEnd="@dimen/margin_width40"
+                android:layout_marginStart="@dimen/margin_width40"
+                android:layout_marginLeft="@dimen/margin_width40"
+                android:layout_marginTop="@dimen/margin_width40"
+                android:layout_marginBottom="@dimen/margin_width10"
+                android:background="@drawable/selector_touch_button_change"
+                android:textSize="@dimen/text_width18"
+                android:textColor="@color/white"
+                android:text="@string/open_invoice"/>
+            <Button
+                android:id="@+id/id_btn_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width45"
+                android:layout_marginRight="@dimen/margin_width40"
+                android:layout_marginEnd="@dimen/margin_width40"
+                android:layout_marginStart="@dimen/margin_width40"
+                android:layout_marginLeft="@dimen/margin_width40"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:layout_marginBottom="@dimen/margin_width10"
+                android:background="@drawable/shape_orange_corner_boder_inwithte"
+                android:textSize="@dimen/text_width18"
+                android:textColor="@color/colorOrange"
+                android:text="@string/invoice_history"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

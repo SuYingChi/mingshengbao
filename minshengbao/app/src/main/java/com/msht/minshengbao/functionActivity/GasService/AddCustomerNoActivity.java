@@ -41,7 +41,6 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
     private EditText etCustomerNo;
     private String userId,password;
     private String customerNo;
-    private String address;
     private int   requestCode=0;
     private CustomDialog customDialog;
     private final  RequestHandler requestHandler=new RequestHandler(this);
@@ -68,8 +67,10 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)){
                             if (activity.requestCode==0){
                                 JSONObject jsonObject = object.optJSONObject("data");
-                                String address = jsonObject.optString("address");
-                                activity.showDialogs(address);
+                                if (jsonObject!=null){
+                                    String address = jsonObject.optString("address");
+                                    activity.showDialogs(address);
+                                }
                             }else if (activity.requestCode==1){
                                 activity.onAddSuccess();
                             }
@@ -186,7 +187,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                 String txt= etCustomerNo.getText().toString().trim();
                 requestCode=0;
                 customerNo= txt;
-                address="";
+              //  address="";
                 addHouseAddress();
                 break;
             default:

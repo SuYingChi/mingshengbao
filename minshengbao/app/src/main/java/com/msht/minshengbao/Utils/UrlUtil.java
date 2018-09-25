@@ -65,6 +65,7 @@ public class UrlUtil {
     public static final String SHOP_GAS_STOVE =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1058";
     public static final String SHOP_GAS_HEATER =BuildConfig.URL_SHOP+"/wap/tmpl/class_list.html?gc_id=1057";
     public static final String SHOP_ORDER_LIST =BuildConfig.URL_SHOP+"/wap/tmpl/member/order_list.html";
+    public static final String SHOP_ORDER_DATA_STATE=BuildConfig.URL_SHOP+"/wap/tmpl/member/order_list.html?data-state=state_new";
     /**
      * 首页功能
      */
@@ -186,6 +187,16 @@ public class UrlUtil {
     public static final String INVOICE_EXPLAIN = BuildConfig.URL_HEADS +"/repair_h5/invoice_note.html";
     public static final String INVOICE_APPLY_URL =BuildConfig. URL_HEADS +"/Gas/invoice/apply";
     public static final String INVOICE_GET_URL = BuildConfig.URL_HEADS +"/Gas/invoice/uninvoce_list";
+    public static final String INVOICE_GAS_CUSTOMER_LIST=BuildConfig.URL_HEADS+"/Gas/invoice/gas_customer_list";
+    public static final String INVOICE_GAS_NOT_OPEN_LIST=BuildConfig.URL_HEADS+"/Gas/invoice/gas_uninvoice_list";
+    public static final String INVOICE_GAS_APPLY=BuildConfig.URL_HEADS+"/Gas/invoice/gas_apply";
+    public static final String INVOICE_GAS_HISTORY=BuildConfig.URL_HEADS+"/Gas/invoice/gas_history";
+    public static final String INVOICE_GAS_DETAIL=BuildConfig.URL_HEADS+"/Gas/invoice/gas_history_detail";
+    public static final String INVOICE_REPAIR_DETAIL=BuildConfig.URL_HEADS+"/Gas/invoice/repair_invoice_detail";
+    public static final String INVOICE_EXPRESS_INFORMATION=BuildConfig.URL_HEADS+"/Gas/invoice/repair_invoice_expressInfo";
+    public static final String INVOICE_REPAIR_ORDER=BuildConfig.URL_HEADS+"/Gas/invoice/invoice_order_list";
+    public static final String INVOICE_CONTROL_URL=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_hide";
+
     /**
      * 维修服务
     */

@@ -2,12 +2,14 @@ package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,8 +26,15 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class PaySuccessActivity extends BaseActivity {
-    private final int SPLASH_DISPLAY_LENGHT=10000;
+    private static final int SPLASH_DISPLAY_LENGHT=10000;
     private WebView  successPage;
     private String successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE;
     private static final String btnUrl="http://get/event/activityBtn";
@@ -150,7 +159,7 @@ public class PaySuccessActivity extends BaseActivity {
             }
         });
     }
-    class MyWebChromeClient extends WebChromeClient {
+    private class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onJsAlert(WebView view, String url, String message,
                                  final JsResult result) {
@@ -167,8 +176,11 @@ public class PaySuccessActivity extends BaseActivity {
                     }).show();
             return true;
         }
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+        }
     }
-
     private void startAction() {
         Intent success=new Intent(context,HtmlPageActivity.class);
         success.putExtra("navigate","活动");

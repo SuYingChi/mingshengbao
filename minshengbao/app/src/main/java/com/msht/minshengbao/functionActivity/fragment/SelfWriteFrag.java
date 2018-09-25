@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.adapter.tableAdapter;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.functionActivity.GasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.functionActivity.GasService.SelectCustomerNo;
 import com.msht.minshengbao.R;
@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,8 +70,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
     private String   tableBh;
     private String   lastNumber;
     private String   mMeter2;
-    private tableAdapter adapter;
-    private int pos=-1;
+    private int mPosition=-1;
     private int    requestType= 0;
     private String validateURL;
     private JSONArray jsonArray;
@@ -157,7 +157,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         String totalNum =jsonObject.optString("totalNum");
         String gasFee=jsonObject.optString("gas_fee");
         String discountFees =jsonObject.optString("discount_fee");
-        String lateFees =jsonObject.optString("lateFee");
+        String lateFees =jsonObject.optString("late_fee");
         JSONArray json=jsonObject.optJSONArray("detail_list");
         try {
             for (int i = 0; i < json.length(); i++) {
@@ -168,7 +168,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
                 String balance=object.getString("balance");
                 String gasFees = object.getString("gas_fee");
                 String discountFee=object.getString("discount_fee");
-                String lateFee=object.getString("lateFee");
+                String lateFee=object.getString("late_fee");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("date", date);
                 map.put("num", num);
@@ -176,22 +176,22 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
                 map.put("balance",balance);
                 map.put("gas_fees", gasFees);
                 map.put("discount_fee", discountFee);
-                map.put("lateFee", lateFee);
+                map.put("late_fee", lateFee);
                 VariableUtil.detailList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        Intent payfees=new Intent(getActivity(), GasExpenseQueryActivity.class);
-        payfees.putExtra("name", name);
-        payfees.putExtra("CustomerNo", customerNum);
-        payfees.putExtra("allBalance", allBalance);
-        payfees.putExtra("debts", debts);
-        payfees.putExtra("totalNum", totalNum);
-        payfees.putExtra("gas_fee",gasFee);
-        payfees.putExtra("discountFees", discountFees);
-        payfees.putExtra("lateFee", lateFees);
-        startActivity(payfees);
+        Intent payFees=new Intent(getActivity(), GasExpenseQueryActivity.class);
+        payFees.putExtra("name", name);
+        payFees.putExtra("CustomerNo", customerNum);
+        payFees.putExtra("allBalance", allBalance);
+        payFees.putExtra("debts", debts);
+        payFees.putExtra("totalNum", totalNum);
+        payFees.putExtra("gasFee",gasFee);
+        payFees.putExtra("discountFees", discountFees);
+        payFees.putExtra("lateFee", lateFees);
+        startActivity(payFees);
     }
     private void onShowDialogs() {
         try {
@@ -200,10 +200,12 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
                 String id = jsonObject.getString("id");
                 String address = jsonObject.getString("address");
                 String bh = jsonObject.getString("bh");
+                String moduleType="2";
                 String lastNum = jsonObject.getString("lastNum");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
-                map.put("address", address);
+                map.put("moduleType",moduleType);
+                map.put("name", address);
                 map.put("bh", bh);
                 map.put("lastNum",lastNum);
                 tableList.add(map);
@@ -212,7 +214,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         mSelectTable.setEnabled(true);
-        etSelectTable.setText(tableList.get(0).get("address"));
+        etSelectTable.setText(tableList.get(0).get("name"));
         etLast.setText(tableList.get(0).get("lastNum"));
         tableBh =tableList.get(0).get("bh");
         tableId=tableList.get(0).get("id");
@@ -316,33 +318,23 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         }
     }
     private void onSelectTable() {
-        final SelectTable selectTable=new SelectTable(activity);
-        final TextView tvTitle=(TextView)selectTable.getTitle();
-        final ListView mListView=(ListView) selectTable.getListview();
-        tvTitle.setText("选择表具");
-        adapter=new tableAdapter(getActivity(),tableList,pos);
-        mListView.setAdapter(adapter);
-        selectTable.show();
-        selectTable.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectTable.dismiss();
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position;
-                adapter.notifyDataSetChanged();
-                tableId = tableList.get(position).get("id");
-                tableAddress = tableList.get(position).get("address");
-                tableBh = tableList.get(position).get("bh");
-                lastNumber = tableList.get(position).get("lastNum");
-                etSelectTable.setText(tableAddress);
-                etLast.setText(lastNumber);
-                selectTable.dismiss();
-            }
-        });
+        new SelectDialog(activity,tableList,mPosition).builder()
+                .setTitleText("选择表具")
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setOnSheetItemClickListener(new SelectDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        mPosition=position;
+                        tableId = tableList.get(position).get("id");
+                        tableAddress = tableList.get(position).get("name");
+                        tableBh = tableList.get(position).get("bh");
+                        lastNumber = tableList.get(position).get("lastNum");
+                        etSelectTable.setText(tableAddress);
+                        etLast.setText(lastNumber);
+                    }
+                })
+                .show();
     }
     private void onSelectAddress() {
         Intent select=new Intent(activity,SelectCustomerNo.class);
@@ -352,7 +344,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         String etTable= etSelectTable.getText().toString().trim();
         String mLast = etLast.getText().toString().trim();
         mMeter2 = etTableNum.getText().toString().trim();
-        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
         Date curData=new Date(System.currentTimeMillis());
         String time=format.format(curData) ;
         LayoutInflater inflater=LayoutInflater.from(activity);

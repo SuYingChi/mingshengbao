@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/transparent"
+    android:padding="@dimen/margin_width30"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/shape_white_layout">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_width45">
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/colorOrange"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorOrange"/>
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/id_XRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+        <include layout="@layout/layout_line_gray"/>
+        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            android:id="@+id/cancelBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/margin_width40"
+            android:layout_marginBottom="@dimen/margin_width6"
+            android:layout_marginRight="@dimen/margin_width5"
+            android:layout_marginEnd="@dimen/margin_width5"
+            android:layout_marginStart="@dimen/margin_width5"
+            android:layout_marginLeft="@dimen/margin_width5"
+            android:text="@string/cancel_text"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width16"
+            android:gravity="center"
+            app:backColor="@color/white"
+            app:backColorPress="@color/background_gray"
+            app:textColor="@color/light_blue"/>
+    </LinearLayout>
 </LinearLayout>

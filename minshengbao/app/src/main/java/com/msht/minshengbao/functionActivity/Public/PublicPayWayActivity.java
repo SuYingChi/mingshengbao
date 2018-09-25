@@ -81,7 +81,7 @@ public class PublicPayWayActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getExtras().getString("pay_result");
+                String result = data.getStringExtra("pay_result");
                 /* 处理返回值
                  * "success" - payment succeed
                  * "fail"    - payment failed
@@ -89,8 +89,8 @@ public class PublicPayWayActivity extends BaseActivity {
                  * "invalid" - payment plugin not installed
                  */
                 // 错误信息
-                String errorMsg = data.getExtras().getString("error_msg");
-                String extraMsg = data.getExtras().getString("extra_msg");
+                String errorMsg = data.getStringExtra("error_msg");
+                String extraMsg = data.getStringExtra("extra_msg");
                 showMsg(result, errorMsg, extraMsg);
             }
         }

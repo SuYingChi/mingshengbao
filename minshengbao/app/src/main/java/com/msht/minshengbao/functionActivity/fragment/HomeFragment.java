@@ -40,7 +40,7 @@ import com.msht.minshengbao.adapter.TopModuleAdapter;
 import com.msht.minshengbao.Bean.ADInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
@@ -509,7 +509,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                     Intent intent=new Intent(mContext,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",name);
-                    intent.putExtra("maintype","家电维修");
+                    intent.putExtra("mMainType","家电维修");
                     startActivity(intent);
                 }else {
                     Intent login=new Intent(mContext, LoginActivity.class);
@@ -614,7 +614,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         startActivity(selete);
     }
     private void iccard() {
-        Intent card=new Intent(mContext,GasIccardActivity.class);
+        Intent card=new Intent(mContext,GasIcCardActivity.class);
         startActivity(card);
     }
     private void gologins() {
@@ -875,14 +875,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         Intent intent=new Intent(mContext,PublishOrderActivity.class);
         intent.putExtra("id","33");
         intent.putExtra("name","空调清洗");
-        intent.putExtra("maintype","家电清洗");
+        intent.putExtra("mMainType","家电清洗");
         startActivity(intent);
     }
     private void hoodsClean() {
         Intent intent=new Intent(mContext,PublishOrderActivity.class);
         intent.putExtra("id","10");
         intent.putExtra("name","燃气灶维修");
-        intent.putExtra("maintype","家电维修");
+        intent.putExtra("mMainType","家电维修");
         startActivity(intent);
     }
     @Override

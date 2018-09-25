@@ -1,4 +1,4 @@
-package com.msht.master.UIView;
+package com.msht.minshengbao.ViewUI;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,8 +15,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.github.siyamed.shapeimageview.R;
+import com.msht.minshengbao.R;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 @SuppressWarnings("WeakerAccess")
 public abstract class PorterImageView extends AppCompatImageView {
     private static final String TAG = PorterImageView.class.getSimpleName();
@@ -112,7 +119,7 @@ public abstract class PorterImageView extends AppCompatImageView {
                     if (drawable != null) {
                         invalidated = false;
                         Matrix imageMatrix = getImageMatrix();
-                        if (imageMatrix == null){// && mPaddingTop == 0 && mPaddingLeft == 0) {
+                        if (imageMatrix == null){
                             drawable.draw(drawableCanvas);
                         } else {
                             int drawableSaveCount = drawableCanvas.getSaveCount();

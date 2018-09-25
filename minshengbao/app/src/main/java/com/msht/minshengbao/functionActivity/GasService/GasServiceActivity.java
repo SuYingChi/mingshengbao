@@ -41,8 +41,8 @@ import java.util.HashMap;
 public class GasServiceActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private GasServiceAdapter homeAdapter;
-    private String pid="null";
-    private String cityId="null";
+    private String pid="";
+    private String cityId="";
     private   boolean loginState =false;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
@@ -198,7 +198,7 @@ public class GasServiceActivity extends BaseActivity {
         startActivity(select);
     }
     private void installDevice() {
-        Intent select=new Intent(context,GasInstallAcitivity.class);
+        Intent select=new Intent(context,GasInstallActivity.class);
         startActivity(select);
     }
 

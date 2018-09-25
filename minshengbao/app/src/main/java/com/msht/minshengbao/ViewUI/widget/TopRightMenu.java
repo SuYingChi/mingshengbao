@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -184,6 +185,7 @@ public class TopRightMenu {
             getPopupWindow();
         }
         if (!mPopupWindow.isShowing()) {
+            Log.d("xoff=",String.valueOf(ConvertUtil.dip2px(mContext,xoff)));
             mPopupWindow.showAsDropDown(anchor, ConvertUtil.dip2px(mContext,xoff),ConvertUtil.dip2px(mContext,yoff));
             if (dimBackground){
                 setBackgroundAlpha(1f, alpha, 240);
@@ -192,6 +194,18 @@ public class TopRightMenu {
         return this;
     }
 
+    public TopRightMenu setShowAsDropDown(View anchor, int xoff, int yoff){
+        if (mPopupWindow == null){
+            getPopupWindow();
+        }
+        if (!mPopupWindow.isShowing()) {
+            mPopupWindow.showAsDropDown(anchor, xoff,yoff);
+            if (dimBackground){
+                setBackgroundAlpha(1f, alpha, 240);
+            }
+        }
+        return this;
+    }
     private void setBackgroundAlpha(float from, float to, int duration) {
         final WindowManager.LayoutParams lp = mContext.getWindow().getAttributes();
         ValueAnimator animator = ValueAnimator.ofFloat(from, to);

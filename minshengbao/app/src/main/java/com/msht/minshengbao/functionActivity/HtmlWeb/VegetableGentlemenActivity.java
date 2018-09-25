@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.MD5;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -28,7 +28,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.umeng.analytics.MobclickAgent;
 
-public class VegetableGentlemenActivity extends AppCompatActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class VegetableGentlemenActivity extends AppCompatActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     private WebView mWebView;
     private ImageView backImage;
     private ProgressBar progressBar;
@@ -99,7 +99,7 @@ public class VegetableGentlemenActivity extends AppCompatActivity implements MyW
                super.doUpdateVisitedHistory(view, url, isReload);
            }
         });
-        mWebView.setWebChromeClient(new MyWebChomeClient(VegetableGentlemenActivity.this));
+        mWebView.setWebChromeClient(new MyWebChromeClient(VegetableGentlemenActivity.this));
     }
     private void settingWeb() {
         WebSettings settings= mWebView.getSettings();
@@ -151,7 +151,7 @@ public class VegetableGentlemenActivity extends AppCompatActivity implements MyW
     @Override
     public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {}
     @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
+    public void onProgressChanged(WebView view, int newProgress) {
         if (newProgress==100){
             progressBar.setVisibility(View.GONE);
 

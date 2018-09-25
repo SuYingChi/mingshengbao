@@ -5,22 +5,22 @@
     android:layout_height="60dp">
     <ImageView
         android:id="@+id/id_icon_img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_width="@dimen/margin_width40"
+        android:layout_height="@dimen/margin_width40"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/picture_text"
         android:background="@mipmap/ic_launcher"/>
-
     <LinearLayout
         android:layout_toRightOf="@+id/id_icon_img"
-        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_toEndOf="@+id/id_icon_img"
+        android:layout_marginLeft="@dimen/margin_width10"
+        android:layout_marginStart="@dimen/margin_width10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/id_tv_download"
                 android:layout_centerVertical="true"
@@ -28,23 +28,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="安装包正在下载..."
-                />
+                android:textColor="@color/white"/>
             <TextView
                 android:id="@+id/tv_progress"
                 android:layout_alignParentRight="true"
-                android:padding="5dp"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/margin_width5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0%"
-                />
+                android:textColor="@color/white"/>
         </RelativeLayout>
-
         <ProgressBar
-            android:padding="5dp"
+            android:padding="@dimen/margin_width3"
             android:id="@+id/progress"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_width10"
+            android:progressDrawable="@drawable/shape_progressbar"/>
     </LinearLayout>
-
 </RelativeLayout>

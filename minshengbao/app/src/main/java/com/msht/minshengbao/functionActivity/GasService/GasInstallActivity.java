@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,8 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
-import com.msht.minshengbao.adapter.repairAdapter;
+import com.msht.minshengbao.ViewUI.Dialog.MySheetDialog;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -43,40 +46,36 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/7/18 
  */
-public class GasInstallAcitivity extends BaseActivity implements View.OnClickListener {
+public class GasInstallActivity extends BaseActivity implements View.OnClickListener {
     private Button   btnSelectAddress, btnVerify;
     private TextView tvInstallType;
     private View layoutType;
     private EditText etInstallTopic;
     private EditText etDetail, etAddress;
     private EditText etPhone;
-    //地址标志
-    private static final int REQUESTCOODE=2;
-    private repairAdapter adapter;
     private ArrayList<HashMap<String, String>> typeList = new ArrayList<HashMap<String, String>>();
     /**安装类型 **/
     private String typeNum;
     /**客户号**/
-    private String customerNo;
+    private String customerNo="";
     /**房屋ID **/
-    private String houseId;
+    private String houseId="";
     private String userId;
     private String password;
-    private String phone;
     private int requestType =0;
-    private int pos=-1;
+    private int mPosition=-1;
     private JSONArray jsonArray;
     private CustomDialog customDialog;
     private final  RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<GasInstallAcitivity> mWeakReference;
-        public RequestHandler(GasInstallAcitivity activity ) {
-            mWeakReference=new WeakReference<GasInstallAcitivity>(activity);
+        private WeakReference<GasInstallActivity> mWeakReference;
+        public RequestHandler(GasInstallActivity activity ) {
+            mWeakReference=new WeakReference<GasInstallActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final GasInstallAcitivity activity=mWeakReference.get();
+            final GasInstallActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -119,7 +118,9 @@ public class GasInstallAcitivity extends BaseActivity implements View.OnClickLis
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String name     =jsonObject.getString("name");
                 String installType = jsonObject.getString("installType");
+                String moduleType="1";
                 HashMap<String, String> map = new HashMap<String, String>();
+                map.put("moduleType",moduleType);
                 map.put("name", name);
                 map.put("installType", installType);
                 typeList.add(map);
@@ -167,13 +168,13 @@ public class GasInstallAcitivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case REQUESTCOODE:
+            case ConstantUtil.REQUEST_CODE_TWO:
                 if(data!=null){
                     if (resultCode==2){
-                        String addressname=data.getStringExtra("addressname");
+                        String addressName=data.getStringExtra("addressname");
                         customerNo=data.getStringExtra("customerNo");
                         houseId=data.getStringExtra("houseId");
-                        etAddress.setText(addressname);
+                        etAddress.setText(addressName);
                     }
                 }
                 break;
@@ -278,33 +279,23 @@ public class GasInstallAcitivity extends BaseActivity implements View.OnClickLis
     }
     private void selectAddress() {
         Intent select=new Intent(context,SelectCustomerNo.class);
-        startActivityForResult(select,REQUESTCOODE);
+        startActivityForResult(select,ConstantUtil.REQUEST_CODE_TWO);
     }
     private void installPicker() {
-        final SelectTable selectTable=new SelectTable(context);
-        final TextView tvTitle=(TextView)selectTable.getTitle();
-        final ListView mListView=(ListView) selectTable.getListview();
-        tvTitle.setText("选择报装类型");
-        adapter=new repairAdapter(this,typeList,pos);
-        mListView.setAdapter(adapter);
-        selectTable.show();
-        selectTable.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectTable.dismiss();
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position;
-                adapter.notifyDataSetChanged();
-                typeNum =typeList.get(position).get("installType");
-                String openType=typeList.get(position).get("name");
-                tvInstallType.setText(openType);
-                selectTable.dismiss();
-            }
-        });
+        new SelectDialog(this,typeList,mPosition).builder()
+                .setTitleText("选择报装类型")
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setOnSheetItemClickListener(new SelectDialog.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        mPosition=position;
+                        typeNum =typeList.get(position).get("installType");
+                        String openType=typeList.get(position).get("name");
+                        tvInstallType.setText(openType);
+                    }
+                })
+                .show();
 
     }
     private void verifyInstall() {
@@ -328,7 +319,9 @@ public class GasInstallAcitivity extends BaseActivity implements View.OnClickLis
         textParams.put("phone",phone);
         textParams.put("address",mAddress);
         textParams.put("installType", typeNum);
-        OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+
+        //OkHttpRequestUtil.getInstance(context).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
     protected void onDestroy() {

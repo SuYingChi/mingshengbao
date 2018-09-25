@@ -89,6 +89,5 @@ public class EnlargePicActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mAttacher.cleanup();
-        //  ButterKnife.unbind(this);
     }
 }

@@ -7,9 +7,7 @@ import android.support.multidex.MultiDex;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
 import com.msht.minshengbao.OkhttpUtil.SSLSocketClient;
-import com.msht.minshengbao.OkhttpUtil.log.LoggerInterceptor;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -37,9 +35,11 @@ import okhttp3.OkHttpClient;
  * @date 2016/4/2  
  */
 public class MyApplication extends Application {
+    public static Context instances;
     @Override
     public void onCreate() {
         super.onCreate();
+        instances=this;
         Fresco.initialize(this);
         UMShareAPI.get(this);
         CrashReport.initCrashReport(getApplicationContext(), "118eae5408", false);
@@ -56,15 +56,6 @@ public class MyApplication extends Application {
             .discCacheFileNameGenerator(new Md5FileNameGenerator()).tasksProcessingOrder(QueueProcessingType.LIFO).build();
         ImageLoader.getInstance().init(config);
         /** okHttp默认的配置生成OkHttpClient*/
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new LoggerInterceptor("TAG"))
-                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-                .readTimeout(10000L, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
-                .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
-                .build();
-
-        OkHttpManager.initClient(okHttpClient);
         initUPush();
     }
 
@@ -131,5 +122,9 @@ public class MyApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    public static Context getContext() {
+        return instances;
     }
 }
