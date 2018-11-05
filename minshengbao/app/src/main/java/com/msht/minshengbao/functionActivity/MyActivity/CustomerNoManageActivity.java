@@ -43,7 +43,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/6/7  
  */
-public class CustomerNoManage extends BaseActivity implements View.OnClickListener {
+public class CustomerNoManageActivity extends BaseActivity implements View.OnClickListener {
     private SwipeAdapter adapter;
     private View     views;
     private Button   btnAddress;
@@ -58,13 +58,13 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<CustomerNoManage> mWeakReference;
-        public RequestHandler(CustomerNoManage activity) {
-            mWeakReference = new WeakReference<CustomerNoManage>(activity);
+        private WeakReference<CustomerNoManageActivity> mWeakReference;
+        public RequestHandler(CustomerNoManageActivity activity) {
+            mWeakReference = new WeakReference<CustomerNoManageActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final CustomerNoManage activity=mWeakReference.get();
+            final CustomerNoManageActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -161,7 +161,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     private void onDeleteData() {
         LayoutInflater inflater=LayoutInflater.from(this);
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.self_make_dialog,null);
-        final Dialog dialog=new AlertDialog.Builder(CustomerNoManage.this).create();
+        final Dialog dialog=new AlertDialog.Builder(CustomerNoManageActivity.this).create();
         dialog.show();
         if (dialog.getWindow()!=null){
             dialog.getWindow().setContentView(layout);
@@ -298,7 +298,7 @@ public class CustomerNoManage extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_btn_customer:
-                Intent addAddress=new Intent(CustomerNoManage.this,AddCustomerNoActivity.class);
+                Intent addAddress=new Intent(CustomerNoManageActivity.this,AddCustomerNoActivity.class);
                 addAddress.putExtra("addresscode", ADDRESS_CODE);
                 startActivityForResult(addAddress, 3);
                 break;

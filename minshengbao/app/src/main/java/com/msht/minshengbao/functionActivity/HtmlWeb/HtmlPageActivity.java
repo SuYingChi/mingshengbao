@@ -1,12 +1,15 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,6 +26,10 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.CallPhoneUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.MPermissionUtils;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 
@@ -49,7 +56,6 @@ public class HtmlPageActivity extends BaseActivity {
         initWeBView();
         initEvent();
     }
-
     private void initHeader() {
         backImg = (ImageView) findViewById(R.id.id_goback);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
@@ -81,23 +87,32 @@ public class HtmlPageActivity extends BaseActivity {
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setSupportZoom(true);
-        //settings.setBuiltInZoomControls(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         mWebView.requestFocusFromTouch();
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-                    view.loadUrl(request.getUrl().toString());
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                String tag="tel";
+                if (url.contains(tag)){
+                    String mobile=url.substring(url.lastIndexOf("/")+1);
+                    Intent mIntent=new Intent(Intent.ACTION_CALL);
+                    Uri data=Uri.parse(mobile);
+                    mIntent.setData(data);
+                    if (ActivityCompat.checkSelfPermission(HtmlPageActivity.this, Manifest.permission.CALL_PHONE)== PackageManager.PERMISSION_GRANTED){
+                        startActivity(mIntent);
+                        return true;
+                    }else {
+                        ActivityCompat.requestPermissions(HtmlPageActivity.this,new String[]{Manifest.permission.CALL_PHONE},1);
+                        return true;
+                    }
                 }else {
-                    view.loadUrl(request.toString());
+                    view.loadUrl(url);
                 }
                 return true;
             }
         });
-
         mWebView.setWebChromeClient(new MyWebChromeClient());
     }
     private void initEvent() {
@@ -131,7 +146,6 @@ public class HtmlPageActivity extends BaseActivity {
             }
         });
     }
-
     private class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onJsAlert(WebView view, String url, String message,
@@ -149,12 +163,10 @@ public class HtmlPageActivity extends BaseActivity {
                     }).show();
             return true;
         }
-
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
             return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
         }
-
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);

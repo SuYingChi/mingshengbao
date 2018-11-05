@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -36,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,13 +52,13 @@ import java.util.HashMap;
 public class MessageCenterActivity extends BaseActivity implements View.OnClickListener {
     private XListView mListView;
     private ListViewAdapter mAdapter;
-    private RelativeLayout relayout;
-    private LinearLayout layoutOrderType, layoutNotice;
+    private View relayout;
+    private View layoutOrderType, layoutNotice;
     private View rNotData;
     private View view1,view2;
-    private RelativeLayout layoutDelect;
-    private RelativeLayout layoutCancel;
-    private ImageView imgEdit;
+    private Button   btnDelete;
+    private CheckBox selectBox;
+    private TextView rightText;
     private TextView tvType1, tvType2;
     private String  userId, password,type="1";
     private boolean refreshType=false;
@@ -70,11 +74,12 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
     private int pageNo;
     private int pageIndex=0;
     private int pos=-1;
+    private int unreadPos=-1;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-    private ArrayList<String> arraylist=new ArrayList<String>() ;
+    private ArrayList<String> arrayList =new ArrayList<String>() ;
     private ArrayList<HashMap<String, Boolean>> checkList = new ArrayList<HashMap<String, Boolean>>();
     private String idLIst="";
-    private final ListInformationHandler listinformHandler=new ListInformationHandler(this);
+    private final ListInformationHandler listInformationHandler =new ListInformationHandler(this);
     private final DeleteHandler deleteHandler=new DeleteHandler(this);
     private static class ListInformationHandler extends Handler{
         private WeakReference<MessageCenterActivity> mWeakReference;
@@ -87,11 +92,11 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -121,7 +126,7 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                                     activity.checkList.clear();
                                 }
                             }
-                            activity.onInfomationData();
+                            activity.onInformationData();
                         }else {
                             ToastUtil.ToastText(activity.context,error);
                         }
@@ -130,9 +135,6 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -160,19 +162,20 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
 
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String Results=object.optString("result");
-                        String Error = object.optString("error");
-                        if(Results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onDelectSuccess();
+                        String result=object.optString("result");
+                        String error = object.optString("error");
+                        if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.onDeleteSuccess();
                         }else {
-                            activity.failure(Error);
+                            activity.arrayList.clear();
+                            activity.failure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    activity.arraylist.clear();
+                    activity.arrayList.clear();
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -193,17 +196,22 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                     }
                 }).show();
     }
-    private void onDelectSuccess() {
+    private void onDeleteSuccess() {
         idLIst="";
         if (isMulChoice){
-            arraylist.clear();
+            arrayList.clear();
+            mList.clear();
+            checkList.clear();
+            mAdapter.notifyDataSetChanged();
             loadData(1);
         }else {
             mList.remove(pos);
+            checkList.remove(pos);
             mAdapter.notifyDataSetChanged();
+            loadData(1);
         }
     }
-    private void onInfomationData() {
+    private void onInformationData() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -221,7 +229,11 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                 map.put("content", content);
                 map.put("flag",flag);
                 map.put("time", time);
-                check.put("ischeck",false);
+                if (selectBox.isChecked()){
+                    check.put("isCheck",true);
+                }else {
+                    check.put("isCheck",false);
+                }
                 mList.add(map);
                 checkList.add(check);
             }
@@ -241,7 +253,7 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                 int positions=position-1;
                 idLIst = mList.get(positions).get("id");
                 pos = positions;
-                showdelete();
+                onShowDeleteDialog();
                 return true;
             }
         });
@@ -255,10 +267,10 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(context, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password,"");
-        imgEdit =(ImageView)findViewById(R.id.id_right_img);
-        imgEdit.setVisibility(View.VISIBLE);
-        imgEdit.setImageResource(R.drawable.delete2x);
-        relayout=(RelativeLayout)findViewById(R.id.id_layout_edit);
+        rightText =(TextView)findViewById(R.id.id_tv_rightText);
+        rightText.setVisibility(View.VISIBLE);
+        rightText.setText("编辑");
+        relayout=findViewById(R.id.id_layout_edit);
         rNotData =findViewById(R.id.id_nodata_view);
         view1=findViewById(R.id.id_view1);
         view2=findViewById(R.id.id_view2);
@@ -266,10 +278,10 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
         tvType2 =(TextView)findViewById(R.id.id_type2);
         TextView tvNotData =(TextView)findViewById(R.id.id_tv_nodata);
         tvNotData.setText("亲，您还没有消息哦！");
-        layoutDelect =(RelativeLayout)findViewById(R.id.id_re_delect);
-        layoutCancel =(RelativeLayout)findViewById(R.id.id_re_cancel);
-        layoutOrderType =(LinearLayout)findViewById(R.id.id_li_ordertype);
-        layoutNotice =(LinearLayout)findViewById(R.id.id_li_gonggao);
+        btnDelete=(Button)findViewById(R.id.id_btn_delete);
+        selectBox=(CheckBox)findViewById(R.id.id_select_checkBox);
+        layoutOrderType=findViewById(R.id.id_li_ordertype);
+        layoutNotice =findViewById(R.id.id_li_gonggao);
         mListView = (XListView) findViewById(R.id.lv_swipe_listview);
         mAdapter= new ListViewAdapter(this);
         mListView.setAdapter(mAdapter);
@@ -281,14 +293,24 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int positions=position-1;
+                unreadPos=positions;
                 String mId=mList.get(positions).get("id");
                 String types=mList.get(positions).get("type");
                 Intent intent=new Intent(context,MessageDetailActivity.class);
                 intent.putExtra("id",mId);
                 intent.putExtra("type",types);
-                startActivity(intent);
+                startActivityForResult(intent,ConstantUtil.VALUE1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==ConstantUtil.VALUE1){
+            mList.get(unreadPos).put("flag","1");
+            mAdapter.notifyDataSetChanged();
+        }
     }
     private void initData() {
        customDialog.show();
@@ -317,32 +339,69 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
         textParams.put("password",password);
         textParams.put("type",type);
         textParams.put("page",pageNum);
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,listinformHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams, listInformationHandler);
     }
     private void initEvent() {
-        imgEdit.setOnClickListener(this);
-        layoutDelect.setOnClickListener(this);
-        layoutCancel.setOnClickListener(this);
         layoutNotice.setOnClickListener(this);
         layoutOrderType.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
+        rightText.setTag(0);
+        rightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag=(Integer)v.getTag();
+                switch (tag){
+                    case 0:
+                        v.setTag(1);
+                        rightText.setText("完成");
+                        onSetEditLayout();
+                        break;
+                    case 1:
+                        v.setTag(0);
+                        rightText.setText("编辑");
+                        onSetFinishLayout();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        selectBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    for (int i=0;i<checkList.size();i++){
+                        checkList.get(i).put("isCheck",true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }else {
+                    for (int i=0;i<checkList.size();i++){
+                        checkList.get(i).put("isCheck",false);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+    private void onSetFinishLayout() {
+        relayout.setVisibility(View.GONE);
+        visibleCheck = false;
+        if (selectBox.isChecked()){
+            selectBox.setChecked(false);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+    private void onSetEditLayout() {
+        if (!type.equals(ConstantUtil.VALUE_TWO)){
+            relayout.setVisibility(View.VISIBLE);
+            visibleCheck = true;
+            mAdapter.notifyDataSetChanged();
+        }
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.id_right_img:
-                relayout.setVisibility(View.VISIBLE);
-                visibleCheck = true;
-                mAdapter.notifyDataSetChanged();
-                break;
-            case R.id.id_re_cancel:
-                relayout.setVisibility(View.GONE);
-                visibleCheck = false;
-                for (int i=0;i<mList.size();i++){
-                    checkList.get(i).put("ischeck",false);
-                }
-                mAdapter.notifyDataSetChanged();
-                break;
-            case R.id.id_re_delect:
+            case R.id.id_btn_delete:
                 isMulChoice=true;
                 onDeleteItem();
                 break;
@@ -352,7 +411,7 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.id_li_gonggao:
                 type="2";
-                onSetTypeTwo();
+                onSetType();
                 break;
             default:
                 break;
@@ -361,30 +420,29 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
 
     private void onSetType() {
         customDialog.show();
-        dataType=true;
-        view1.setBackgroundResource(R.color.colorOrange);
-        view2.setBackgroundResource(R.color.white);
-        tvType1.setTextColor(0xfff96331);
-        tvType2.setTextColor(0xff555555);
+        if (type.equals(ConstantUtil.VALUE_ONE)){
+            dataType=true;
+            view1.setBackgroundResource(R.color.colorOrange);
+            view2.setBackgroundResource(R.color.white);
+            tvType1.setTextColor(0xfff96331);
+            tvType2.setTextColor(0xff555555);
+        }else {
+            dataType=true;
+            view1.setBackgroundResource(R.color.white);
+            view2.setBackgroundResource(R.color.colorOrange);
+            tvType1.setTextColor(0xff555555);
+            tvType2.setTextColor(0xfff96331);
+        }
         loadData(1);
     }
-
-    private void onSetTypeTwo() {
-        customDialog.show();
-        dataType=true;
-        view1.setBackgroundResource(R.color.white);
-        view2.setBackgroundResource(R.color.colorOrange);
-        tvType1.setTextColor(0xff555555);
-        tvType2.setTextColor(0xfff96331);
-        loadData(1);
-    }
-
-    private void showdelete() {
+    private void onShowDeleteDialog() {
         LayoutInflater inflater=LayoutInflater.from(this);
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.self_make_dialog,null);
         final Dialog dialog=new AlertDialog.Builder(context).create();
+        if (dialog.getWindow()!=null){
+            dialog.getWindow().setContentView(layout);
+        }
         dialog.show();
-        dialog.getWindow().setContentView(layout);
         final RelativeLayout btnDelete=(RelativeLayout)layout.findViewById(R.id.id_query_layout);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,13 +455,13 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
     }
     private void onDeleteItem() {
         for (int i=0;i<checkList.size();i++){
-            if (checkList.get(i).get("ischeck")){
-                arraylist.add(mList.get(i).get("id"));
+            if (checkList.get(i).get("isCheck")){
+                arrayList.add(mList.get(i).get("id"));
             }
         }
         StringBuilder result=new StringBuilder();
         boolean flag=false;
-        for (String string : arraylist) {
+        for (String string : arrayList) {
             if (flag) {
                 result.append(",");
             }else {
@@ -412,12 +470,13 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             result.append(string);
         }
         idLIst=result.toString();
-        if (matchjudge(idLIst)){
+        if (onIsHaveData(idLIst)){
             onDeleteData();
         }
     }
-    private boolean matchjudge(String idLIst) {
-        if (TextUtils.isEmpty(idLIst)||idLIst.equals("")){
+    private boolean onIsHaveData(String idLIst) {
+        idLIst=idLIst.trim();
+        if (TextUtils.isEmpty(idLIst)){
             new PromptDialog.Builder(this)
                     .setTitle("民生宝")
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -452,11 +511,20 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
         }
         @Override
         public int getCount() {
-            return mList.size();
+            if (mList!=null){
+                return mList.size();
+            }else {
+                return 0;
+            }
+
         }
         @Override
         public Object getItem(int position) {
-            return mList.get(position);
+            if (mList!=null){
+                return mList.get(position);
+            }else {
+                return null;
+            }
         }
         @Override
         public long getItemId(int position) {
@@ -464,7 +532,6 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
         }
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final int i=position;
             ViewHolder item;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_message_view, parent, false);
@@ -473,8 +540,9 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
                 item.itemLeftTxt = (TextView) convertView.findViewById(R.id.id_item_title);
                 item.itemContent =(TextView)convertView.findViewById(R.id.id_item_content);
                 item.itemCb =(CheckBox)convertView.findViewById(R.id.id_checkBox);
+                item.flagImg=(ImageView)convertView.findViewById(R.id.id_flag_img);
                 convertView.setTag(item);
-            } else {                // 有直接获得ViewHolder
+            } else {
                 item = (ViewHolder) convertView.getTag();
             }
             if(visibleCheck){
@@ -482,20 +550,32 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             }else{
                 item.itemCb.setVisibility(View.GONE);
             }
+            String flag=mList.get(position).get("flag");
+            if (flag.equals(ConstantUtil.VALUE_ZERO)){
+                item.flagImg.setVisibility(View.VISIBLE);
+            }else {
+                item.flagImg.setVisibility(View.GONE);
+            }
             item.itemContent.setText(mList.get(position).get("content"));
             item.itemLeftTxt.setText(mList.get(position).get("title"));
             item.itemTime.setText(mList.get(position).get("time"));
             item.itemCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    checkList.get(position).put("ischeck",isChecked);
+                    checkList.get(position).put("isCheck",isChecked);
+                    if (checkList.size()>0){
+                        checkList.get(position).put("isCheck",isChecked);
+                    }
                 }
             });
-            item.itemCb.setChecked( checkList.get(position).get("ischeck"));
+            if (checkList.size()>0){
+                item.itemCb.setChecked(checkList.get(position).get("isCheck"));
+            }
             return convertView;
         }
         private class ViewHolder {
             CheckBox itemCb;
+            ImageView flagImg;
             TextView itemLeftTxt;
             TextView itemContent;
             TextView itemTime;

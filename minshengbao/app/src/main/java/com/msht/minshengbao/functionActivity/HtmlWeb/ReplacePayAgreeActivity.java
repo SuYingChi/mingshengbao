@@ -12,11 +12,14 @@ import android.widget.Button;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.UrlUtil;
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/10/8  
+ */
 public class ReplacePayAgreeActivity extends BaseActivity {
-    private Button btn_agree,btn_refuse;
-    private WebView mWebView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,16 +30,16 @@ public class ReplacePayAgreeActivity extends BaseActivity {
         initEvent();
     }
     private void initEvent() {
-        btn_refuse=(Button)findViewById(R.id.id_btn_refuse);
-        btn_agree=(Button)findViewById(R.id.id_btn_agree);
-        btn_agree.setOnClickListener(new View.OnClickListener() {
+        Button btnRefuse =(Button)findViewById(R.id.id_btn_refuse);
+        Button btnAgree =(Button)findViewById(R.id.id_btn_agree);
+        btnAgree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(1);
                 finish();
             }
         });
-        btn_refuse.setOnClickListener(new View.OnClickListener() {
+        btnRefuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(0);
@@ -45,9 +48,9 @@ public class ReplacePayAgreeActivity extends BaseActivity {
         });
     }
     private void initWebView() {
-        String my_url= UrlUtil.REPLACE_PAY_AGREE_URL;
-        mWebView=(WebView)findViewById(R.id.id_webview);
-        mWebView.loadUrl(my_url);
+        String payAgreeUrl= UrlUtil.REPLACE_PAY_AGREE_URL;
+        WebView mWebView=(WebView)findViewById(R.id.id_webview);
+        mWebView.loadUrl(payAgreeUrl);
         WebSettings settings= mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);

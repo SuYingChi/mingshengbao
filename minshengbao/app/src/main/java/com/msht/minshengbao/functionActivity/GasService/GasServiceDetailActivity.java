@@ -197,7 +197,7 @@ public class GasServiceDetailActivity extends BaseActivity {
             case ConstantUtil.VALUE_SEVER:
                 btnStatus.setTextColor(Color.parseColor("#ffbfbfbf"));
                 btnStatus.setText("已完成");
-                btnStatus.setBackgroundResource(R.drawable.shape_gray_corner_boder_inwhite);
+                btnStatus.setBackgroundResource(R.drawable.shape_gray_corner_border_inwhite);
                 btnCancel.setVisibility(View.GONE);
                 btnEvaluate.setVisibility(View.GONE);
                 break;

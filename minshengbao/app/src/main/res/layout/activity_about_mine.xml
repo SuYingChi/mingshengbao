@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.MyActivity.AboutMine">
+    tools:context="com.msht.minshengbao.functionActivity.MyActivity.AboutMineActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="@dimen/margin_width180">
         <ImageView
             android:id="@+id/id_img"
             android:layout_width="120dp"
@@ -23,14 +23,14 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/id_img"
-            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_width10"
             android:textColor="@color/title_tv"
-            android:textSize="@dimen/text_16"/>
+            android:textSize="@dimen/text_width16"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_10">
+        android:layout_marginTop="@dimen/margin_width10">
         <TextView
             android:id="@+id/id_tv1"
             android:layout_width="wrap_content"

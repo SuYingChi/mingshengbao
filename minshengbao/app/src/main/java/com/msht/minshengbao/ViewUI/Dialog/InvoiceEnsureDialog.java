@@ -97,8 +97,6 @@ public class InvoiceEnsureDialog {
         }
         return this;
     }
-
-
     public InvoiceEnsureDialog setInvoiceName(String name){
         tvName.setText(name);
         return this;

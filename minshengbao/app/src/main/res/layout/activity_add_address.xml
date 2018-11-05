@@ -4,7 +4,7 @@
     android:id="@+id/activity_add_address"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_gray"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
@@ -18,13 +18,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_width10"
         android:background="@drawable/selector_touch_background"
         android:minHeight="@dimen/margin_width48">
         <TextView
             android:id="@+id/id_text5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/recipient_man"
+            android:text="@string/connection_person"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginStart="@dimen/margin_width10"
             android:layout_centerVertical="true"
@@ -40,9 +41,11 @@
             android:inputType="textPersonName"
             android:layout_toRightOf="@+id/id_text5"
             android:layout_toEndOf="@+id/id_text5"
-            android:layout_marginLeft="@dimen/margin_width20"
-            android:layout_marginStart="@dimen/margin_width20"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:gravity="end"
             android:layout_centerVertical="true"
+            android:hint="@string/please_input_connection_person"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
     </RelativeLayout>
@@ -80,6 +83,8 @@
             android:layout_marginLeft="@dimen/margin_width20"
             android:layout_marginStart="@dimen/margin_width20"
             android:layout_centerVertical="true"
+            android:gravity="end"
+            android:hint="@string/please_input_connection_phone"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
     </RelativeLayout>
@@ -134,61 +139,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:src="@drawable/forward_2x"/>
     </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:layout_height="0.5dp"
-            android:background="@color/line_gray"/>
-        <RelativeLayout
-            android:id="@+id/id_re_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_48"
-            android:background="@drawable/selector_touch_background">
-            <TextView
-                android:id="@+id/id_text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/address_text"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginStart="@dimen/margin_width10"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/text_width16"
-                android:textColor="@color/title_tv"/>
-            <TextView
-                android:id="@+id/id_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/id_text2"
-                android:layout_toEndOf="@+id/id_text2"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_toLeftOf="@+id/id_forward"
-                android:layout_toStartOf="@+id/id_forward"
-                android:layout_marginRight="@dimen/margin_10"
-                android:layout_centerVertical="true"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textSize="@dimen/text_width16"
-                android:textColor="@color/title_tv"/>
-            <ImageView
-                android:id="@+id/id_forward"
-                android:layout_width="@dimen/margin_16"
-                android:layout_height="@dimen/margin_16"
-                android:contentDescription="@string/picture_text"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:layout_marginEnd="@dimen/margin_width10"
-                android:src="@drawable/forward_2x"/>
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:layout_height="0.5dp"
-            android:background="@color/line_gray"/>
+        <include layout="@layout/layout_line_interval"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -198,24 +149,27 @@
             android:id="@+id/id_text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/doorplate"
+            android:text="@string/detail_address"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginStart="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
         <EditText
-            android:id="@+id/id_et_doorplate"
-            android:layout_width="wrap_content"
+            android:id="@+id/id_et_address"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/id_text4"
             android:inputType="textPersonName"
             android:layout_toEndOf="@+id/id_text4"
-            android:layout_marginStart="@dimen/margin_width20"
-            android:layout_marginLeft="@dimen/margin_width20"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:gravity="end"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:hint="例：6号楼502室"
+            android:hint="@string/please_input_detail_address"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
     </RelativeLayout>

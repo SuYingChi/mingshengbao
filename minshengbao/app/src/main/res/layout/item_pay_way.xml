@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width56"
         android:background="@color/white">
         <ImageView
             android:id="@+id/id_pay_img"
             android:layout_width="@dimen/margin_35"
             android:layout_height="@dimen/margin_35"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:contentDescription="@string/picture_text"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:src="@drawable/balance_pay_xh" />
         <TextView
             android:id="@+id/id_pay_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_20"
+            android:layout_marginLeft="@dimen/margin_width20"
+            android:layout_marginStart="@dimen/margin_width20"
             android:layout_toRightOf="@+id/id_pay_img"
-            android:text="余额支付"
-            android:textColor="#444444"
-            android:textSize="@dimen/text_18" />
-
+            android:layout_toEndOf="@+id/id_pay_img"
+            android:textColor="@color/title_tv"
+            android:textSize="@dimen/text_width16" />
         <TextView
             android:id="@+id/id_tv_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_3"
+            android:gravity="start"
+            android:layout_marginLeft="@dimen/margin_width3"
+            android:layout_marginStart="@dimen/margin_width3"
+            android:layout_toStartOf="@+id/id_radio_balance"
+            android:layout_toLeftOf="@+id/id_radio_balance"
             android:layout_toRightOf="@+id/id_pay_name"
-            android:textColor="#444444"
-            android:textSize="@dimen/text_18" />
+            android:layout_toEndOf="@+id/id_pay_name"
+            android:textColor="@color/title_tv"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/default_value0"/>
         <RadioButton
             android:id="@+id/id_radio_balance"
             android:layout_width="wrap_content"
@@ -52,17 +63,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width5"
             android:layout_toRightOf="@+id/id_pay_name"
-            android:layout_marginLeft="@dimen/margin_width5">
+            android:layout_toEndOf="@+id/id_pay_name"
+            android:layout_marginLeft="@dimen/margin_width5"
+            android:layout_marginStart="@dimen/margin_width5">
             <ImageView
                 android:id="@+id/id_tip_img"
                 android:layout_width="@dimen/margin_width15"
                 android:layout_height="@dimen/margin_width15"
+                android:contentDescription="@string/picture_text"
                 android:src="@drawable/flame"/>
             <TextView
                 android:id="@+id/id_tv_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/id_tip_img"
+                android:layout_toEndOf="@+id/id_tip_img"
                 android:layout_centerVertical="true"
                 android:textColor="@color/red"
                 android:textSize="@dimen/text_width12"

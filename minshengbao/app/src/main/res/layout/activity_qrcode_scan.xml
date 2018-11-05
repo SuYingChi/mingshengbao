@@ -30,53 +30,50 @@
         android:minHeight="@dimen/margin_width60"
         android:layout_gravity="bottom"
         android:background="#A0000000">
-        <RelativeLayout
+        <RadioButton
+            android:id="@+id/id_qr_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_width45">
-            <ImageView
-                android:id="@+id/id_erwei"
-                android:layout_width="@dimen/margin_width30"
-                android:layout_height="@dimen/margin_width30"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/qscode_xh"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_erwei"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_width6"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_width14"
-                android:text="二维码"/>
-        </RelativeLayout>
-        <RelativeLayout
+            android:layout_marginLeft="@dimen/margin_width45"
+            android:layout_marginStart="@dimen/margin_width45"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_qr_code_check"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width14"
+            android:text="@string/qrCode_text"/>
+        <CheckBox
+            android:id="@+id/id_flash_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_flash_light_check"
+            android:textSize="@dimen/text_width14"
+            android:textColor="@color/white"
+            android:text="@string/flashlight_text"/>
+        <RadioButton
+            android:id="@+id/id_bar_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_width45"
+            android:layout_marginEnd="@dimen/margin_width45"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true">
-            <ImageView
-                android:id="@+id/id_ar"
-                android:layout_width="@dimen/margin_width30"
-                android:layout_height="@dimen/margin_width30"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/qscode_ar_xh"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_ar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_width6"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_width14"
-                android:text="条形码"/>
-        </RelativeLayout>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_bar_code_check"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width14"
+            android:text="@string/barCode_text"/>
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,6 +94,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/picture_text"
                 android:background="?android:selectableItemBackground"
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginStart="@dimen/margin_width10"
@@ -105,9 +103,8 @@
                 android:id="@+id/tv_navigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title在代码中更改"
                 android:layout_centerInParent="true"
-                android:textSize="@dimen/text_18"
+                android:textSize="@dimen/text_width18"
                 android:textColor="#ffffffff"/>
             <TextView
                 android:id="@+id/id_tv_rightText"
@@ -119,8 +116,7 @@
                 android:layout_marginEnd="@dimen/margin_width10"
                 android:layout_marginRight="@dimen/margin_10"
                 android:background="?android:selectableItemBackground"
-                android:text="代码中更改"
-                android:textSize="@dimen/text_18"
+                android:textSize="@dimen/text_width16"
                 android:textColor="@color/white"
                 android:visibility="gone"/>
             <ImageView

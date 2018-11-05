@@ -56,7 +56,7 @@ import java.util.Map;
  * @author hong
  * @date 2016/10/31
  */
-public class MySetting extends BaseActivity implements OnClickListener {
+public class MySettingActivity extends BaseActivity implements OnClickListener {
     private RelativeLayout settingPortrait;
     private RelativeLayout settingNickname;
     private RelativeLayout layoutSettingSex;
@@ -108,13 +108,13 @@ public class MySetting extends BaseActivity implements OnClickListener {
     private final MyHandler myHandler=new MyHandler(this);
     private final GetImageHandler getImageHandler=new GetImageHandler(this);
     private static class GetImageHandler extends Handler{
-        private WeakReference<MySetting> mWeakReference;
-        public GetImageHandler(MySetting activity) {
-            mWeakReference = new WeakReference<MySetting>(activity);
+        private WeakReference<MySettingActivity> mWeakReference;
+        public GetImageHandler(MySettingActivity activity) {
+            mWeakReference = new WeakReference<MySettingActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final MySetting reference =mWeakReference.get();
+            final MySettingActivity reference =mWeakReference.get();
             // the referenced object has been cleared
             if (reference == null||reference.isFinishing()) {
                 return;
@@ -253,12 +253,12 @@ public class MySetting extends BaseActivity implements OnClickListener {
     }
     private void setSexInfo() {
         String sexValue= tvSex.getText().toString();
-        Intent sex=new Intent(this,SettingSex.class);
+        Intent sex=new Intent(this,SettingSexActivity.class);
         sex.putExtra("SEX",sexValue);
         startActivityForResult(sex, REQUEST_CODE_SEX);
     }
     private void setNickname() {
-        Intent nick=new Intent(this,SettingNickname.class);
+        Intent nick=new Intent(this,SettingNicknameActivity.class);
         startActivityForResult(nick, REQUEST_CODE_NICK);
     }
     private void onSettingPortraits() {
@@ -297,7 +297,7 @@ public class MySetting extends BaseActivity implements OnClickListener {
             File mCurrentPhotoFile = new File(PHOTO_DIR, imageFileName);
             Intent intentC = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Uri imageUri = FileProvider.getUriForFile(MySetting.this, "com.msht.minshengbao.fileProvider", mCurrentPhotoFile);
+                Uri imageUri = FileProvider.getUriForFile(MySettingActivity.this, "com.msht.minshengbao.fileProvider", mCurrentPhotoFile);
                 intentC.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intentC.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 
@@ -441,13 +441,13 @@ public class MySetting extends BaseActivity implements OnClickListener {
         SendRequestUtil.postFileToServer(textParams,stringFileHashMap,validateURL,myHandler);
     }
     private static class MyHandler extends Handler{
-        private WeakReference<MySetting> mWeakReference;
-        public MyHandler(MySetting activity) {
-            mWeakReference = new WeakReference<MySetting>(activity);
+        private WeakReference<MySettingActivity> mWeakReference;
+        public MyHandler(MySettingActivity activity) {
+            mWeakReference = new WeakReference<MySettingActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final MySetting activity=mWeakReference.get();
+            final MySettingActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }

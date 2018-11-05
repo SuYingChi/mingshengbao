@@ -284,7 +284,7 @@ public class OrderListFragment extends BaseFragment {
                     intent.putExtra("cid",cid);
                     intent.putExtra("id", ids);
                     intent.putExtra("pos", positions);
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 2);
                 }
             });
         }

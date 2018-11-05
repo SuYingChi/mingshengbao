@@ -10,8 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bestpay.app.PaymentTask;
+import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Model.YiPayModel;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ParamsUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
@@ -25,9 +31,11 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.functionActivity.repairService.RepairPaymentActivity;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
 import com.umeng.analytics.MobclickAgent;
+import com.unionpay.UPPayAssistEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -188,12 +196,56 @@ public class IcCardExpenseActivity extends BaseActivity  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channels.equals(VariableUtil.VALUE_ONE)||channels.equals(VariableUtil.VALUE_THREE)||channels.equals(VariableUtil.VALUE_FIVE)||channels.equals(VariableUtil.VALUE_SEVER))
-        {
-            Pingpp.createPayment(IcCardExpenseActivity.this, charge);
-        }else {
-            setResult(0x002);
-            requestResult();
+        switch (channels){
+            case VariableUtil.VALUE_ONE:
+                Pingpp.createPayment(IcCardExpenseActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_THREE:
+                Pingpp.createPayment(IcCardExpenseActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_FIVE:
+                Pingpp.createPayment(IcCardExpenseActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_SEVER:
+                Pingpp.createPayment(IcCardExpenseActivity.this, charge);
+                break;
+            case ConstantUtil.VALUE_TEN:
+                if (purchaseAmount.equals(VariableUtil.VALUE_ZERO1)|| purchaseAmount.equals(VariableUtil.VALUE_ZERO2)
+                        || purchaseAmount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x002);
+                    onStartSuccess("","2");
+                  //  requestResult();
+                }else {
+                    /**
+                     * channels=10
+                     * 云闪付
+                     */
+                    String mode= BuildConfig.PAY_MODE;
+                    int ret = UPPayAssistEx.startPay(this, null, null, charge, mode);
+                }
+                break;
+            case ConstantUtil.VALUE_TWELVE:
+                /**
+                 * channels=12
+                 * 翼支付
+                 */
+                if (purchaseAmount.equals(VariableUtil.VALUE_ZERO1)|| purchaseAmount.equals(VariableUtil.VALUE_ZERO2)
+                        || purchaseAmount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x002);
+                    onStartSuccess("","2");
+                   // requestResult();
+                }else {
+                    Gson gson = new Gson();
+                    YiPayModel model = gson.fromJson(charge, YiPayModel.class);
+                    PaymentTask mPaymentTask = new PaymentTask(this);
+                    mPaymentTask.pay(ParamsUtil.buildPayParams(model));
+                }
+                break;
+            default:
+                setResult(0x002);
+                onStartSuccess("","2");
+               // requestResult();
+                break;
         }
     }
     private void onShowFailure(String s) {
@@ -244,7 +296,6 @@ public class IcCardExpenseActivity extends BaseActivity  {
             e.printStackTrace();
         }
         initData();
-
     }
     private void onShowBalance() {
         double doubleBalance=jsonObject.optDouble("balance");
@@ -258,7 +309,6 @@ public class IcCardExpenseActivity extends BaseActivity  {
     }
     private void onPayResult(JSONObject json) {
         String status=json.optString("status");
-        String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
         switch (status){
             case ConstantUtil.VALUE_ZERO:
@@ -277,7 +327,6 @@ public class IcCardExpenseActivity extends BaseActivity  {
                     break;
         }
     }
-
     private void onStartSuccess(String lottery, String type) {
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("type",type);
@@ -298,6 +347,7 @@ public class IcCardExpenseActivity extends BaseActivity  {
         payId=getIntent().getStringExtra("payId");
         payTime=getIntent().getStringExtra("payTime");
         type="6";
+        VariableUtil.payPos =-1;
         initView();
         mAdapter=new PayWayAdapter(context, mList);
         forScrollView.setAdapter(mAdapter);
@@ -341,7 +391,6 @@ public class IcCardExpenseActivity extends BaseActivity  {
         textParams.put("payId",payId);
         textParams.put("payTime",payTime);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams,expenseHandler);
-
     }
     private void initData() {
         requestCode=0;
@@ -401,11 +450,7 @@ public class IcCardExpenseActivity extends BaseActivity  {
         long time2= DateUtils.getCurTimeLong();
         long time=time2-time1;
         long second=time/1000;
-        if (second<overtime){
-            return true;
-        }else {
-            return false;
-        }
+        return second<overtime;
     }
     private void requestService() {
         String validateURL= UrlUtil.PayfeeWay_Url;
@@ -434,26 +479,50 @@ public class IcCardExpenseActivity extends BaseActivity  {
                 String errorMsg = data.getStringExtra("error_msg");
                 // 错误信息
                 String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result, errorMsg, extraMsg);
+                showMsg(result);
+            }
+        }else {
+            if (data!=null){
+                if (channels.equals(ConstantUtil.VALUE_TEN)){
+                    String result = data.getStringExtra("pay_result");
+                    showMsg(result);
+                }else {
+                    switch (resultCode){
+                        case ConstantUtil.VALUE_MINUS1:
+                            setResult(0x002);
+                            onStartSuccess("","2");
+                           // requestResult();
+                            break;
+                        case ConstantUtil.VALUE0:
+                            onShowDialogs("取消支付");
+                            break;
+                        case ConstantUtil.VALUE1:
+                            onShowDialogs("支付失败");
+                            break;
+                        default:
+                            String result = data.getStringExtra("result");
+                            ToastUtil.ToastText(context,result);
+                            break;
+                    }
+                }
             }
         }
     }
-    private void showMsg(String result, String errorMsg, String extraMsg) {
-        String str = result;
+    private void showMsg(String result) {
         switch (result){
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x002);
-                requestResult();
+                onStartSuccess("","2");
+               // requestResult();
                 break;
             case SendRequestUtil.CANCEL_VALUE:
-                str="已取消充值";
-                onShowDialogs(str);
+                onShowDialogs("已取消充值");
                 break;
             case SendRequestUtil.FAILURE_VALUE:
-                str="充值失败";
-                onShowDialogs(str);
-                  break;
+                onShowDialogs("充值失败");
+                break;
             default:
+                onShowDialogs("未知错误");
                 break;
         }
     }
@@ -478,7 +547,6 @@ public class IcCardExpenseActivity extends BaseActivity  {
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams,requestHandler);
-
     }
     private void requestResult() {
         requestCode=3;

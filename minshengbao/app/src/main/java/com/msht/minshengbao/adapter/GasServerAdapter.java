@@ -96,7 +96,7 @@ public class GasServerAdapter  extends BaseAdapter {
         }else if (status.equals("7")){
             holder.bn_status.setTextColor(Color.parseColor("#ffbfbfbf"));
             holder.bn_status.setText("已完成");
-            holder.bn_status.setBackgroundResource(R.drawable.shape_gray_corner_boder_inwhite);
+            holder.bn_status.setBackgroundResource(R.drawable.shape_gray_corner_border_inwhite);
         }else if (status.equals("8")){
             holder.bn_status.setText("待生成账单");
             holder.bn_status.setTextColor(Color.parseColor("#fff96331"));

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutomatePay extends BaseActivity implements View.OnClickListener {
+public class AutomatePayActivity extends BaseActivity implements View.OnClickListener {
     private AutomaticPayAdapter adapter;
     private View views;
     private TextView tvNoData, tvRightText;
@@ -46,14 +46,14 @@ public class AutomatePay extends BaseActivity implements View.OnClickListener {
     private ArrayList<HashMap<String, String>> autoList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler =new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<AutomatePay> mWeakReference;
-        public RequestHandler(AutomatePay activity) {
-            mWeakReference = new WeakReference<AutomatePay>(activity);
+        private WeakReference<AutomatePayActivity> mWeakReference;
+        public RequestHandler(AutomatePayActivity activity) {
+            mWeakReference = new WeakReference<AutomatePayActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
 
-            final AutomatePay activity=mWeakReference.get();
+            final AutomatePayActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }

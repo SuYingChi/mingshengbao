@@ -26,11 +26,11 @@ import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.Invoice.InvoiceHomeActivity;
 import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.ConsultRecommend;
-import com.msht.minshengbao.functionActivity.MyActivity.CustomerNoManage;
+import com.msht.minshengbao.functionActivity.MyActivity.ConsultRecommendActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.CustomerNoManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.MoreSetting;
-import com.msht.minshengbao.functionActivity.MyActivity.Mysetting;
+import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.MySettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MyWalletActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
@@ -340,7 +340,7 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 .show();
     }
     private void goConsult() {
-        Intent intent=new Intent(mContext, ConsultRecommend.class);
+        Intent intent=new Intent(mContext, ConsultRecommendActivity.class);
         startActivity(intent);
     }
     private void goShare() {
@@ -365,16 +365,16 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivity(intent);
     }
     private void goSetting() {
-        Intent intent=new Intent(mContext, Mysetting.class);
+        Intent intent=new Intent(mContext, MySettingActivity.class);
         startActivityForResult(intent,1);
     }
 
     private void goCustomerNo() {
-        Intent intent=new Intent(mContext, CustomerNoManage.class);
+        Intent intent=new Intent(mContext, CustomerNoManageActivity.class);
         startActivity(intent);
     }
     private void goMoreSetting() {
-        Intent intent=new Intent(mContext, MoreSetting.class);
+        Intent intent=new Intent(mContext, MoreSettingActivity.class);
         startActivityForResult(intent,0x005);
     }
     private void requestLimit(final String phone) {

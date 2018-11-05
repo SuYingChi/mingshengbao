@@ -12,6 +12,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bestpay.app.PaymentTask;
+import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Model.YiPayModel;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ParamsUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
@@ -25,6 +32,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
+import com.unionpay.UPPayAssistEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +49,7 @@ import java.util.Map;
  * @author hong
  * @date 2018/7/2  
  */
-public class RechargeValue extends BaseActivity  {
+public class RechargeValueActivity extends BaseActivity  {
     private EditText etValue;
     private Button   btnRecharge;
     private ListViewForScrollView mListView;
@@ -59,21 +67,21 @@ public class RechargeValue extends BaseActivity  {
     private final RequestHandler requestHandler=new RequestHandler(this);
     private final MethodHandler methodHandler=new MethodHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<RechargeValue> mWeakReference;
-        public RequestHandler(RechargeValue activity) {
-            mWeakReference = new WeakReference<RechargeValue>(activity);
+        private WeakReference<RechargeValueActivity> mWeakReference;
+        public RequestHandler(RechargeValueActivity activity) {
+            mWeakReference = new WeakReference<RechargeValueActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final RechargeValue activity =mWeakReference.get();
+            final RechargeValueActivity activity =mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -95,9 +103,6 @@ public class RechargeValue extends BaseActivity  {
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     activity.onShowNotify("充值提示",msg.obj.toString());
                     break;
                 default:
@@ -107,13 +112,13 @@ public class RechargeValue extends BaseActivity  {
         }
     }
     private static class MethodHandler extends Handler{
-        private WeakReference<RechargeValue> mWeakReference;
-        public MethodHandler(RechargeValue activity) {
-            mWeakReference = new WeakReference<RechargeValue>(activity);
+        private WeakReference<RechargeValueActivity> mWeakReference;
+        public MethodHandler(RechargeValueActivity activity) {
+            mWeakReference = new WeakReference<RechargeValueActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final RechargeValue activity =mWeakReference.get();
+            final RechargeValueActivity activity =mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -179,7 +184,57 @@ public class RechargeValue extends BaseActivity  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Pingpp.createPayment(RechargeValue.this, charge);
+        switch (channels){
+            case VariableUtil.VALUE_ONE:
+                Pingpp.createPayment(RechargeValueActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_THREE:
+                Pingpp.createPayment(RechargeValueActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_FIVE:
+                Pingpp.createPayment(RechargeValueActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_SEVER:
+                Pingpp.createPayment(RechargeValueActivity.this, charge);
+                break;
+            case ConstantUtil.VALUE_TEN:
+                if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
+                        || amount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x001);
+                    onStartActivity("","3");
+                   // requestResult();
+                }else {
+                    /**
+                     * channels=10
+                     * 云闪付
+                     */
+                    String mode= BuildConfig.PAY_MODE;
+                    int ret = UPPayAssistEx.startPay(this, null, null, charge, mode);
+                }
+                break;
+            case ConstantUtil.VALUE_TWELVE:
+                /**
+                 * channels=12
+                 * 翼支付
+                 */
+                if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
+                        || amount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x001);
+                    onStartActivity("","3");
+                   // requestResult();
+                }else {
+                    Gson gson = new Gson();
+                    YiPayModel model = gson.fromJson(charge, YiPayModel.class);
+                    PaymentTask mPaymentTask = new PaymentTask(this);
+                    mPaymentTask.pay(ParamsUtil.buildPayParams(model));
+                }
+                break;
+            default:
+                setResult(0x001);
+                onStartActivity("","3");
+               // requestResult();
+                break;
+        }
     }
     private void onShowNotify(String title , String string) {
         new PromptDialog.Builder(this)
@@ -196,37 +251,36 @@ public class RechargeValue extends BaseActivity  {
     }
 
     private void onRayResult(JSONObject jsonObject) {
-
         String status=jsonObject.optString("status");
-        String chargeId=jsonObject.optString("chargeId");
-        String lottery=jsonObject.optString("lottery");
-        if (status.equals(VariableUtil.VALUE_ZERO)){
-            //新订单
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","3");
-            success.putExtra("url",lottery);
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            setResult(1);
-            finish();
-        }else if (status.equals(VariableUtil.VALUE_ONE)){
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","3");
-            success.putExtra("url",lottery);
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            setResult(1);
-            finish();
-        }else if (status.equals(VariableUtil.VALUE_TWO)){
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","5");
-            success.putExtra("url",lottery);
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-        }else if (status.equals(VariableUtil.VALUE_THREE)){
-            setResult(1);
-            onShowDialogs("正在支付");
+        String lottery="";
+        if (jsonObject.has("lottery")){
+            lottery=jsonObject.optString("lottery");
         }
+        switch (status){
+            case VariableUtil.VALUE_ZERO:
+                onStartActivity(lottery,"3");
+                break;
+            case VariableUtil.VALUE_ONE:
+                onStartActivity(lottery,"3");
+                break;
+            case VariableUtil.VALUE_TWO:
+                onStartActivity(lottery,"5");
+                break;
+            case VariableUtil.VALUE_THREE:
+                setResult(0x001);
+                onShowDialogs("正在支付");
+                break;
+            default:
+                break;
+        }
+    }
+    private void onStartActivity(String lottery, String s) {
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url",lottery);
+        success.putExtra("type",s);
+        success.putExtra("orderId",orderId);
+        startActivity(success);
+        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,7 +340,7 @@ public class RechargeValue extends BaseActivity  {
     }
     private void showTips() {
         amount= etValue.getText().toString().trim();
-        if (matchText(amount)){
+        if (!TextUtils.isEmpty(amount)){
             new PromptDialog.Builder(this)
                     .setTitle("充值提示")
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -310,13 +364,6 @@ public class RechargeValue extends BaseActivity  {
                     .show();
         }else {
             onShowNotify("充值提示","请输入充值金额");
-        }
-    }
-    private boolean matchText(String amount) {
-        if (!TextUtils.isEmpty(amount)){
-            return true;
-        }else {
-            return false;
         }
     }
     private void requestService() {
@@ -355,27 +402,53 @@ public class RechargeValue extends BaseActivity  {
                 // 错误信息
                 String errorMsg = data.getStringExtra("error_msg");
                 String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result, errorMsg, extraMsg);
+                showMsg(result);
+            }
+        }else {
+            if (data!=null){
+                if (channels.equals(ConstantUtil.VALUE_TEN)){
+                    String result = data.getStringExtra("pay_result");
+                    showMsg(result);
+                }else {
+                    switch (resultCode){
+                        case ConstantUtil.VALUE_MINUS1:
+                            setResult(0x001);
+                            onStartActivity("","3");
+                           // requestResult();
+                            break;
+                        case ConstantUtil.VALUE0:
+                            onShowDialogs("取消支付");
+                            break;
+                        case ConstantUtil.VALUE1:
+                            onShowDialogs("支付失败");
+                            break;
+                        default:
+                            String result = data.getStringExtra("result");
+                            ToastUtil.ToastText(context,result);
+                            break;
+                    }
+                }
             }
         }
     }
-    private void showMsg(String result, String errorMsg, String extraMsg) {
-        String str = result;
-        if (str.equals(SendRequestUtil.SUCCESS_VALUE)){
-            str="缴费成功";
-        }else if (str.equals(SendRequestUtil.FAILURE_VALUE)){
-            str="缴费失败";
-        }else if (str.equals(SendRequestUtil.CANCEL_VALUE)){
-            str="已取消缴费";
-        }
-        if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
-            setResult(0x005);
-            requestResult();
-        }else {
-            onShowDialogs(str);
+    private void showMsg(String result) {
+        switch (result){
+            case SendRequestUtil.SUCCESS_VALUE:
+                setResult(0x001);
+                onStartActivity("","3");
+              //  requestResult();
+                break;
+            case SendRequestUtil.FAILURE_VALUE:
+                onShowDialogs("充值失败");
+                break;
+            case SendRequestUtil.CANCEL_VALUE:
+                onShowDialogs("已取消充值");
+                break;
+                default:
+                    onShowDialogs("未知错误");
+                    break;
         }
     }
-
     private void requestResult() {
         requestCode=1;
         String validateURL= UrlUtil.PAY_RESULT_NOTARIZE;
@@ -385,7 +458,6 @@ public class RechargeValue extends BaseActivity  {
         textParams.put("id",id);
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
-
     private void onShowDialogs(String str) {
         new PromptDialog.Builder(context)
                 .setTitle("充值提示")
@@ -401,7 +473,6 @@ public class RechargeValue extends BaseActivity  {
                     }
                 }).show();
     }
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

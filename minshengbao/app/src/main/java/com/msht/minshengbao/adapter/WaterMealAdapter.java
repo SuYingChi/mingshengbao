@@ -71,13 +71,13 @@ public class WaterMealAdapter extends BaseAdapter {
             holder.tv_giveFee.setVisibility(View.VISIBLE);
         }
         if (VariableUtil.MealPos==position){
-            holder.layout_back.setBackgroundResource(R.drawable.shape_orange_button);
+            holder.layout_back.setBackgroundResource(R.drawable.shape_blue_button);
             holder.tv_amount.setTextColor(Color.parseColor("#ffffffff"));
             holder.tv_giveFee.setTextColor(Color.parseColor("#ffffffff"));
         }else {
             holder.layout_back.setBackgroundResource(R.drawable.shape_orange_border_layout);
-            holder.tv_amount.setTextColor(Color.parseColor("#fff96331"));
-            holder.tv_giveFee.setTextColor(Color.parseColor("#fff96331"));
+            holder.tv_amount.setTextColor(Color.parseColor("#ff1C94F3"));
+            holder.tv_giveFee.setTextColor(Color.parseColor("#ff1C94F3"));
         }
         return convertView;
     }

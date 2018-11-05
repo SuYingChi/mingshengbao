@@ -8,13 +8,21 @@ import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bestpay.app.PaymentTask;
+import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Model.YiPayModel;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ParamsUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.RechargeValueActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -25,6 +33,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
+import com.unionpay.UPPayAssistEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,7 +154,6 @@ public class RepairPaymentActivity extends BaseActivity  {
     }
     private void onPayResult(JSONObject json) {
         String status=json.optString("status");
-        String chargeId=json.optString("chargeId");
         String lottery=json.optString("lottery");
         switch (status){
             case VariableUtil.VALUE_ZERO:
@@ -164,7 +172,6 @@ public class RepairPaymentActivity extends BaseActivity  {
                     break;
         }
     }
-
     private void onStartSuccess(String successType, String lottery) {
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("type",successType);
@@ -173,7 +180,6 @@ public class RepairPaymentActivity extends BaseActivity  {
         startActivity(success);
         finish();
     }
-
     private void onPayWayShow() {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -208,7 +214,7 @@ public class RepairPaymentActivity extends BaseActivity  {
     }
     private void onShowFailure(String error) {
         new PromptDialog.Builder(this)
-                .setTitle("缴费提示")
+                .setTitle("支付提示")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
@@ -225,16 +231,56 @@ public class RepairPaymentActivity extends BaseActivity  {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (channel.equals(VariableUtil.VALUE_ONE)||channel.equals(VariableUtil.VALUE_THREE)||channel.equals(VariableUtil.VALUE_FIVE)||channel.equals(VariableUtil.VALUE_SEVER)) {
-            Pingpp.createPayment(RepairPaymentActivity.this, charge);
-        }else if (channel.equals(VariableUtil.VALUE_EIGHT)||channel.equals(VariableUtil.VALUE_SIX)){
-            setResult(0x005);
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","1");
-            success.putExtra("url","");
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            finish();
+        switch (channel){
+            case VariableUtil.VALUE_ONE:
+                Pingpp.createPayment(RepairPaymentActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_THREE:
+                Pingpp.createPayment(RepairPaymentActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_FIVE:
+                Pingpp.createPayment(RepairPaymentActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_SEVER:
+                Pingpp.createPayment(RepairPaymentActivity.this, charge);
+                break;
+            case ConstantUtil.VALUE_TEN:
+                if (realMoney.equals(VariableUtil.VALUE_ZERO1)|| realMoney.equals(VariableUtil.VALUE_ZERO2)
+                        || realMoney.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x005);
+                    onStartSuccess("1","");
+                   // requestResult();
+                }else {
+                    /**
+                     * channels=10
+                     * 云闪付
+                     */
+                    String mode= BuildConfig.PAY_MODE;
+                    int ret = UPPayAssistEx.startPay(this, null, null, charge, mode);
+                }
+                break;
+            case ConstantUtil.VALUE_TWELVE:
+                /**
+                 * channels=12
+                 * 翼支付
+                 */
+                if (realMoney.equals(VariableUtil.VALUE_ZERO1)|| realMoney.equals(VariableUtil.VALUE_ZERO2)
+                        || realMoney.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x005);
+                    onStartSuccess("1","");
+                    //requestResult();
+                }else {
+                    Gson gson = new Gson();
+                    YiPayModel model = gson.fromJson(charge, YiPayModel.class);
+                    PaymentTask mPaymentTask = new PaymentTask(this);
+                    mPaymentTask.pay(ParamsUtil.buildPayParams(model));
+                }
+                break;
+            default:
+                setResult(0x005);
+                onStartSuccess("1","");
+               // requestResult();
+                break;
         }
     }
     @Override
@@ -250,6 +296,7 @@ public class RepairPaymentActivity extends BaseActivity  {
         couponId=data.getStringExtra("couponId");
         realMoney =data.getStringExtra("realMoney");
         type="2";
+        VariableUtil.payPos=-1;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initFindViewId();
@@ -266,10 +313,18 @@ public class RepairPaymentActivity extends BaseActivity  {
                 channel= mList.get(thisPosition).get("channel");
             }
         });
+        forScrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                btnSend.setEnabled(true);
+                VariableUtil.payPos =position;
+                mAdapter.notifyDataSetChanged();
+                channel= mList.get(position).get("channel");
+            }
+        });
     }
     private void initFindViewId() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
-
         TextView tvBalance =(TextView)findViewById(R.id.id_tv_balance);
         btnSend =(Button)findViewById(R.id.id_evaluate_order);
         btnSend.setEnabled(false);
@@ -293,27 +348,50 @@ public class RepairPaymentActivity extends BaseActivity  {
                 // 错误信息
                 String errorMsg = data.getStringExtra("error_msg");
                 String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result, errorMsg, extraMsg);
+                showMsg(result);
+            }
+        }else {
+            if (data!=null){
+                if (channel.equals(ConstantUtil.VALUE_TEN)){
+                    String result = data.getStringExtra("pay_result");
+                    showMsg(result);
+                }else {
+                    switch (resultCode){
+                        case ConstantUtil.VALUE_MINUS1:
+                            setResult(0x005);
+                            onStartSuccess("1","");
+                           // requestResult();
+                            break;
+                        case ConstantUtil.VALUE0:
+                            onShowDialogs("取消支付");
+                            break;
+                        case ConstantUtil.VALUE1:
+                            onShowDialogs("支付失败");
+                            break;
+                        default:
+                            String result = data.getStringExtra("result");
+                            ToastUtil.ToastText(context,result);
+                            break;
+                    }
+                }
             }
         }
     }
-    private void showMsg(String title, String msg1, String msg2) {
-        String str;
+    private void showMsg(String title) {
         switch (title){
             case SendRequestUtil.SUCCESS_VALUE:
-                str="缴费成功";
                 setResult(0x005);
-                requestResult();
+                onStartSuccess("1","");
+                //requestResult();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
-                str="缴费失败";
-                onShowDialogs(str);
+                onShowDialogs("支付失败");
                 break;
             case SendRequestUtil.CANCEL_VALUE:
-                str="已取消缴费";
-                onShowDialogs(str);
+                onShowDialogs("已取消支付");
                 break;
                 default:
+                    onShowDialogs("未知错误");
                     break;
         }
     }

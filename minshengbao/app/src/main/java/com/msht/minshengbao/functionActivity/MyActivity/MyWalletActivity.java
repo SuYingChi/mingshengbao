@@ -32,10 +32,8 @@ import java.util.Map;
  * @date 2017/6/5
  */
 public class MyWalletActivity extends BaseActivity implements View.OnClickListener {
-    private TextView tvRightText;
     private TextView tvBalance;
-    private String    password,userId;
-    public static final String MY_ACTION = "ui";
+    private String   password,userId;
     private CustomDialog customDialog;
     private final RequestHandler requestHandler=new RequestHandler(this);
     private final BindingHandler bindingHandler=new BindingHandler(this);
@@ -50,11 +48,11 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             if (activity==null||activity.isFinishing()){
                 return;
             }
+            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                activity.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -71,9 +69,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                        activity.customDialog.dismiss();
-                    }
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
@@ -84,7 +79,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     }
     private static class BindingHandler  extends Handler{
         private WeakReference<MyWalletActivity> mWeakReference;
-
         public BindingHandler(MyWalletActivity activity) {
             mWeakReference=new WeakReference<MyWalletActivity>(activity);
         }
@@ -152,7 +146,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         selfPayDialog.setOnpositiveListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent agree=new Intent(context, AutomatePay.class);
+                Intent agree=new Intent(context, AutomatePayActivity.class);
                 startActivity(agree);
             }
         });
@@ -165,7 +159,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         selfPayDialog.show();
     }
     private void initView() {
-        tvRightText =(TextView)findViewById(R.id.id_tv_rightText);
+        TextView  tvRightText =(TextView)findViewById(R.id.id_tv_rightText);
         tvRightText.setVisibility(View.VISIBLE);
         tvRightText.setText("明细");
         tvBalance =(TextView)findViewById(R.id.id_balance);
@@ -173,7 +167,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.id_layout_recharge).setOnClickListener(this);
         findViewById(R.id.id_layout_gaspayfee).setOnClickListener(this);
         findViewById(R.id.id_layout_card).setOnClickListener(this);
-
     }
     private void initData() {
         customDialog.show();
@@ -194,19 +187,19 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_layout_card:
-                Intent discount=new Intent(context, DiscountCoupon.class);
+                Intent discount=new Intent(context, DiscountCouponActivity.class);
                 startActivityForResult(discount,2);
                 break;
             case R.id.id_layout_recharge:
-                Intent recharge=new Intent(context, RechargeValue.class);
+                Intent recharge=new Intent(context, RechargeValueActivity.class);
                 startActivityForResult(recharge,1);
                 break;
             case R.id.id_layout_gaspayfee:
-                Intent agree=new Intent(context, AutomatePay.class);
+                Intent agree=new Intent(context, AutomatePayActivity.class);
                 startActivity(agree);
                 break;
             case R.id.id_tv_rightText:
-                Intent detail=new Intent(context, IncomeExpense.class);
+                Intent detail=new Intent(context, IncomeExpenseActivity.class);
                 startActivity(detail);
                 break;
             default:
@@ -234,13 +227,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private void sendBroad() {
-        Intent broadcast=new Intent();
-        broadcast.setAction(MY_ACTION);
-        broadcast.putExtra("broadcast", "3");
-        sendBroadcast(broadcast);
-    }
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

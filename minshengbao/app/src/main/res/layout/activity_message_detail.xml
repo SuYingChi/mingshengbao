@@ -4,39 +4,50 @@
     android:id="@+id/activity_message_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.MessageDetailActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
+        android:id="@+id/id_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_10">
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="@dimen/margin_width10">
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
             <TextView
                 android:id="@+id/id_message_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_width5"
                 android:textColor="@color/title_tv"
-                android:textSize="@dimen/text_16"
+                android:textSize="@dimen/text_width16"
                 />
             <TextView
                 android:id="@+id/id_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
                 android:layout_below="@+id/id_message_detail"
-                android:layout_marginTop="@dimen/margin_10"
-                android:text="时间"
-                android:textSize="@dimen/text_14"/>
+                android:layout_marginTop="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
+    <WebView
+        android:id="@+id/id_RichText_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </WebView>
 </LinearLayout>

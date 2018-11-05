@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.MoreSetting;
+import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -168,7 +168,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MyScro
     }
 
     private void GoMoreseting() {
-        Intent intent=new Intent(mContext, MoreSetting.class);
+        Intent intent=new Intent(mContext, MoreSettingActivity.class);
         startActivity(intent);
     }
     private void Hotline() {

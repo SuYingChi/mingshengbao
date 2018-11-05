@@ -13,34 +13,29 @@ import com.msht.minshengbao.Utils.BitmapUtil;
 import java.util.ArrayList;
 
 /**
- *
- */
-/**
  * Demo class
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author hong
- * @date 2018/7/2  
+ * @date 2018/10/14  
  */
-public class PhotoPickerAdapter extends BaseAdapter {
+public class WaterPhotoPickerAdapter extends BaseAdapter {
     private ArrayList<String> listPath;
-    public PhotoPickerAdapter(ArrayList<String> listPath) {
+    public WaterPhotoPickerAdapter(ArrayList<String> listPath) {
         this.listPath = listPath;
     }
     @Override
     public int getCount() {
-        if (listPath.size() == 9) {
+        if (listPath.size() == 3) {
             return listPath.size();
         } else {
             return listPath.size() + 1;
         }
     }
-
     @Override
     public Object getItem(int position) {
         return listPath.get(position);
     }
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -50,18 +45,17 @@ public class PhotoPickerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pic, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_gridview, parent, false);
             holder = new ViewHolder();
             holder.image = (ImageView) convertView
-                    .findViewById(R.id.imageView);
+                    .findViewById(R.id.id_malfunction_img);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         if (position == listPath.size()) {
-            holder.image.setImageResource(R.drawable.icon_addpic_unfocused);
-            if (position == 9) {
+            holder.image.setImageResource(R.drawable.pickphoto_default_xh);
+            if (position == 3) {
                 holder.image.setVisibility(View.GONE);
             }
         } else {
@@ -69,8 +63,6 @@ public class PhotoPickerAdapter extends BaseAdapter {
         }
         return convertView;
     }
-
-
     public static class ViewHolder {
         ImageView image;
     }

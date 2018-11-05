@@ -1,9 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".functionActivity.WaterApp.WaterScanCodeActivity">
+    <RelativeLayout
+        android:id="@+id/id_layout_erwei"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+        <com.google.zxing.client.android.AutoScannerView
+            android:id="@+id/autoscanner_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width60"
+        android:layout_gravity="bottom"
+        android:background="#A0000000">
+        <CheckBox
+            android:id="@+id/id_flash_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_flash_light_check"
+            android:textSize="@dimen/text_width14"
+            android:textColor="@color/white"
+            android:text="@string/flashlight_text"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/shape_change_background">
+        <View
+            android:id="@+id/id_status_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_width20" />
+        <RelativeLayout
+            android:id="@+id/id_re_second"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_width50">
+            <ImageView
+                android:id="@+id/id_goback"
+                android:padding="@dimen/margin_5"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/picture_text"
+                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:src="@drawable/back2x"/>
+            <TextView
+                android:id="@+id/tv_navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/text_width18"
+                android:textColor="#ffffffff"/>
+            <TextView
+                android:id="@+id/id_tv_rightText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:background="?android:selectableItemBackground"
+                android:textSize="@dimen/text_width18"
+                android:textColor="@color/white"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/id_right_img"
+                android:layout_width="@dimen/margin_width25"
+                android:layout_height="@dimen/margin_width25"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/picture_text"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:src="@drawable/right_top_img"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

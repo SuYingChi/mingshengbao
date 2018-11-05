@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_width40"
+    android:background="@color/transparent">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:background="@drawable/shape_white_layout">
+       <TextView
+           android:id="@+id/id_tv_title"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/margin_width15"
+           android:layout_gravity="center_horizontal"
+           android:textSize="@dimen/text_width16"
+           android:textColor="@color/title_tv"
+           android:visibility="gone"
+           android:text="@string/default_text"/>
+           <ImageView
+               android:id="@+id/id_view_img"
+               android:layout_width="@dimen/margin_width80"
+               android:layout_height="@dimen/margin_width80"
+               android:layout_marginTop="@dimen/margin_width20"
+               android:layout_gravity="center_horizontal"
+               android:contentDescription="@string/picture_text"
+               android:visibility="gone"
+               android:src="@drawable/pay_success_xh"/>
+       <include android:id="@+id/id_water_quality" layout="@layout/layout_water_quality_table"/>
+       <TextView
+           android:id="@+id/id_tv_notice"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="@dimen/margin_width15"
+           android:layout_marginLeft="@dimen/margin_width15"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="@dimen/margin_width20"
+           android:textColor="@color/title_tv"
+           android:visibility="gone"
+           android:textSize="@dimen/text_width14"
+           android:text="@string/default_text"/>
+       <Button
+           android:id="@+id/id_btn_ensure"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:minWidth="@dimen/margin_width100"
+           android:minHeight="@dimen/margin_width25"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="@dimen/margin_width15"
+           android:layout_marginBottom="@dimen/margin_width20"
+           android:background="@drawable/selector_change_blue_corner_background"
+           android:text="@string/i_know"
+           android:textSize="@dimen/text_width12"
+           android:textColor="@color/white"/>
+   </LinearLayout>
 
 </LinearLayout>

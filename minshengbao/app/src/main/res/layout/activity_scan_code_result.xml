@@ -7,74 +7,64 @@
     android:orientation="vertical"
     android:background="@color/background"
     tools:context="com.msht.minshengbao.functionActivity.WaterApp.ScanCodeResultActivity">
-    <include layout="@layout/layout_header" />
+    <include layout="@layout/layout_white_header" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
                 android:id="@+id/id_layout_success"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_width5">
+                android:padding="@dimen/margin_width10">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white">
-                    <ImageView
-                        android:id="@+id/id_result_img"
-                        android:layout_width="@dimen/margin_width126"
-                        android:layout_height="@dimen/margin_width126"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_width40"
-                        android:contentDescription="@string/picture_text"
-                        android:src="@drawable/pay_success_xh"/>
+                    android:background="@color/background_gray">
                     <TextView
-                        android:id="@+id/id_scan_result"
+                        android:id="@+id/id_tv_estate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_result_img"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_width20"
+                        android:layout_marginTop="@dimen/margin_width45"
+                        android:layout_marginBottom="@dimen/margin_width45"
+                        android:textSize="@dimen/text_width25"
                         android:text="@string/default_text"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_width18" />
-                    <TextView
-                        android:id="@+id/id_result_notice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_scan_result"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_width10"
-                        android:text="@string/default_text"
-                        android:textSize="@dimen/text_width14"/>
+                        android:textColor="@color/color_383838"/>
+
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:minHeight="@dimen/margin_width45">
-
                     <TextView
+                        android:id="@+id/id_number_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_10"
-                        android:text="设备编号："
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:text="@string/equipment_number"
                         android:textColor="@color/title_tv"
                         android:textSize="@dimen/text_width16" />
 
                     <TextView
                         android:id="@+id/id_tv_equipment"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:gravity="end"
+                        android:layout_toRightOf="@+id/id_number_text"
+                        android:layout_toEndOf="@+id/id_number_text"
                         android:layout_marginRight="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="@string/default_text"
                         android:textColor="@color/title_tv"
                         android:textSize="@dimen/text_width16" />
@@ -87,41 +77,143 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:minHeight="@dimen/margin_width45">
-
                     <TextView
+                        android:id="@+id/id_standard_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_10"
-                        android:text="投放小区："
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:text="@string/fee_standard"
                         android:textColor="@color/title_tv"
                         android:textSize="@dimen/text_width16" />
 
                     <TextView
-                        android:id="@+id/id_tv_estate"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/id_fee_standard"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/id_standard_text"
+                        android:layout_toEndOf="@+id/id_standard_text"
                         android:layout_marginRight="@dimen/margin_10"
+                        android:gravity="end"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="@string/default_text"
                         android:textColor="@color/title_tv"
                         android:textSize="@dimen/text_width16" />
                 </RelativeLayout>
-
                 <include layout="@layout/layout_line_gray" />
-                <Button
-                    android:id="@+id/id_btn_know"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_marginTop="@dimen/margin_width12"
-                    android:background="@drawable/selector_touch_button_change"
-                    android:minHeight="@dimen/margin_width40"
-                    android:text="@string/i_know"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_width16" />
+                    android:background="@color/white"
+                    android:minHeight="@dimen/margin_width45">
+
+                    <TextView
+                        android:id="@+id/id_TDS_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:text="@string/current_time_tds"
+                        android:textColor="@color/title_tv"
+                        android:textSize="@dimen/text_width16" />
+
+                    <TextView
+                        android:id="@+id/id_tv_TDS"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/id_TDS_text"
+                        android:layout_toEndOf="@+id/id_TDS_text"
+                        android:layout_toLeftOf="@+id/id_tds_img"
+                        android:layout_toStartOf="@+id/id_tds_img"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:gravity="end"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:text="@string/default_text"
+                        android:textColor="@color/title_tv"
+                        android:textSize="@dimen/text_width16" />
+                    <ImageView
+                        android:id="@+id/id_tds_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/picture_text"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:src="@drawable/attention_icon_xh"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_gray"
+                    android:minHeight="@dimen/margin_width56">
+                    <TextView
+                        android:id="@+id/id_result_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/red"
+                        android:text="@string/default_text"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_gray">
+                    <Button
+                        android:id="@+id/id_btn_know"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginTop="@dimen/margin_width12"
+                        android:layout_marginBottom="@dimen/margin_width5"
+                        android:background="@drawable/selector_change_blue_corner_background"
+                        android:minHeight="@dimen/margin_width40"
+                        android:text="@string/i_know"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_width16"
+                        android:visibility="gone"/>
+                    <Button
+                        android:id="@+id/id_btn_launch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginTop="@dimen/margin_width12"
+                        android:layout_marginBottom="@dimen/margin_width5"
+                        android:background="@drawable/selector_change_blue_corner_background"
+                        android:minHeight="@dimen/margin_width40"
+                        android:text="@string/launch_equipment"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_width16" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/background_gray">
+                    <TextView
+                        android:id="@+id/id_malfunction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/color_383838"
+                        android:text="@string/malfunction_text"/>
+                </RelativeLayout>
             </LinearLayout>
             <include android:id="@+id/id_layout_neterror" layout="@layout/layout_network_error"
                 android:visibility="gone"/>

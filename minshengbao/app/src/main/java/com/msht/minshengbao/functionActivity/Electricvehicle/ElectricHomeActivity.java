@@ -233,10 +233,8 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
                     address=data.getStringExtra("mAddress");
                     tvAddress.setText(address);
                     if(!TextUtils.isEmpty(lat)&&!TextUtils.isEmpty(lon)){
-                        lat=lat.trim();
-                        lon=lon.trim();
-                        double latitude=Double.valueOf(lat);
-                        double longitude=Double.valueOf(lon);
+                        double latitude=Double.parseDouble(lat);
+                        double longitude=Double.parseDouble(lon);
                         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
                     }
                 }

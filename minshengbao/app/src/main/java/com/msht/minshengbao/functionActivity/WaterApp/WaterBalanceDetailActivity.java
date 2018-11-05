@@ -13,6 +13,13 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class WaterBalanceDetailActivity extends AppCompatActivity {
     private String    mPageName="余额明细(水宝)";
     private Context mContext;

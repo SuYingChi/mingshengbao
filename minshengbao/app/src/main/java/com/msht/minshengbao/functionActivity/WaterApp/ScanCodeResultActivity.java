@@ -1,9 +1,11 @@
 package com.msht.minshengbao.functionActivity.WaterApp;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,12 +19,18 @@ import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
+import com.msht.minshengbao.ViewUI.Dialog.DeliveryInfoDialog;
+import com.msht.minshengbao.ViewUI.Dialog.WaterPublicDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Demo class
@@ -32,17 +40,20 @@ import java.util.HashMap;
  * @date 2017/1/2  
  */
 public class ScanCodeResultActivity extends BaseActivity {
-    private View layoutResult;
-    private View layoutError;
-    private ImageView resultImg;
-    private TextView tvResult;
+    private Button btnLaunch;
+    private Button btnKnow;
+    private View     layoutResult;
+    private View     layoutError;
+    private TextView tvFeeStandard;
+    private TextView tvTDS;
     private TextView tvNotice;
     private TextView tvEquipment;
     private TextView tvEstate;
     private String   equipmentNo;
     private String   userPhone ="";
     private String   sign,extParams;
-    private JSONObject jsonObject;
+    private String   waterAccount="";
+    private int      requestType=0;
     private CustomDialog customDialog;
     private final ResultHandler resultHandler=new ResultHandler(this);
     private static class ResultHandler extends Handler{
@@ -67,13 +78,26 @@ public class ScanCodeResultActivity extends BaseActivity {
                         String results=object.optString("result");
                         String error = object.optString("message");
                         String code=object.optString("code");
-                        activity.jsonObject =object.optJSONObject("data");
+
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onResultData();
-                            activity.onResultTip(code,error);
+                            if (activity.requestType==0){
+                                JSONArray jsonArray=object.optJSONArray("data");
+                                activity.onAccountData(jsonArray);
+                            }else if (activity.requestType==1){
+                                JSONObject jsonObject=object.optJSONObject("data");
+                                activity.onEquipmentData(jsonObject);
+                            }else if (activity.requestType==2){
+                                activity.onResultTip(code,error);
+                            }
                         }else {
-                            activity.onResultData();
-                            activity.onResultTip(code,error);
+                            if (activity.requestType==0){
+                                activity.onQueryFailure();
+                                activity.onGetEquipmentInformation();
+                            }else {
+                                JSONObject jsonObject=object.optJSONObject("data");
+                                activity.onResultData(jsonObject);
+                                activity.onResultTip(code,error);
+                            }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -81,8 +105,13 @@ public class ScanCodeResultActivity extends BaseActivity {
                     break;
                 case SendRequestUtil.FAILURE:
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
-                    activity.layoutResult.setVisibility(View.GONE);
-                    activity.layoutError.setVisibility(View.VISIBLE);
+                    if (activity.requestType==0){
+                        activity.onQueryFailure();
+                        activity.onGetEquipmentInformation();
+                    }else {
+                        activity.layoutResult.setVisibility(View.GONE);
+                        activity.layoutError.setVisibility(View.VISIBLE);
+                    }
                     break;
                 default:
                     break;
@@ -90,53 +119,113 @@ public class ScanCodeResultActivity extends BaseActivity {
             super.handleMessage(msg);
         }
     }
-    private void onResultTip(String code, String error) {
-        layoutResult.setVisibility(View.VISIBLE);
-        layoutError.setVisibility(View.GONE);
-        switch (code){
-            case ConstantUtil.VALUE_CODE_0000:
-                resultImg.setImageResource(R.drawable.pay_success_xh);
-                tvResult.setText(R.string.scan_result0);
-                tvNotice.setText(R.string.result_notice1);
-                break;
-            case ConstantUtil.VALUE_CODE_0009:
-                tvResult.setText(R.string.scan_result9);
-                tvNotice.setText(R.string.result_notice4);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-            case ConstantUtil.VALUE_CODE_0010:
-                tvResult.setText(R.string.scan_result10);
-                tvNotice.setText(R.string.result_notice3);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-            case ConstantUtil.VALUE_CODE_0011:
-                tvResult.setText(R.string.scan_result11);
-                tvNotice.setText(R.string.result_notice5);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-            case ConstantUtil.VALUE_CODE_0012:
-                tvResult.setText(R.string.scan_result12);
-                tvNotice.setText(R.string.result_notice4);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-            case ConstantUtil.VALUE_CODE_1008:
-                tvResult.setText(R.string.scan_result1008);
-                tvNotice.setText(R.string.result_notice2);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-            case ConstantUtil.VALUE_CODE_1009:
-                tvResult.setText(R.string.scan_result1009);
-                tvNotice.setText(R.string.result_notice6);
-                resultImg.setImageResource(R.drawable.payfailure_3xh);
-                break;
-                default:
-                    tvResult.setText(error);
-                    tvNotice.setText(R.string.result_notice3);
-                    resultImg.setImageResource(R.drawable.payfailure_3xh);
-                    break;
+    private void onQueryFailure() {
+       waterAccount=userPhone;
+    }
+    private void onAccountData(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                String account=json.optString("account");
+                int isDefault=json.optInt("isDefault");
+                if (isDefault==1){
+                    VariableUtil.waterAccount=account;
+                    waterAccount=account;
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        onGetEquipmentInformation();
+
+    }
+    private void onDataMD5() {
+        JSONObject object=new JSONObject();
+        try{
+            object.put("account",waterAccount);
+            object.put("equipmentNo",equipmentNo);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        TreeMap<String, String> treeMap = new TreeMap<String, String>();
+        treeMap.put("account",waterAccount);
+        treeMap.put("equipmentNo",equipmentNo);
+        extParams= SecretKeyUtil.getKeyextParams(object.toString());
+        sign= SecretKeyUtil.getKeySign(treeMap);
+    }
+    private void onEquipmentData(JSONObject jsonObject) {
+        String  equipment=jsonObject.optString("equipmentNo");
+        String  communityName=jsonObject.optString("communityName");
+        String  purifyWaterTds=jsonObject.optString("purifyWaterTds");
+        int     networkStatus=jsonObject.optInt("networkStatus");
+        int     workStatus=jsonObject.optInt("workStatus");
+        tvEquipment.setText(equipment);
+        tvEstate.setText(communityName);
+        tvTDS.setText(purifyWaterTds);
+        tvFeeStandard.setText("0.3元/升");
+        if (networkStatus==1){
+            if (workStatus==1){
+                btnKnow.setVisibility(View.GONE);
+                tvNotice.setVisibility(View.GONE);
+                btnLaunch.setVisibility(View.VISIBLE);
+            }else {
+                btnKnow.setVisibility(View.VISIBLE);
+                btnLaunch.setVisibility(View.GONE);
+                tvNotice.setVisibility(View.VISIBLE);
+                tvNotice.setText(R.string.result_notice7);
+            }
+        }else {
+            btnKnow.setVisibility(View.VISIBLE);
+            btnLaunch.setVisibility(View.GONE);
+            tvNotice.setVisibility(View.VISIBLE);
+            tvNotice.setText(R.string.result_notice2);
         }
     }
-    private void onResultData() {
+    private void onResultTip(String code, String error) {
+        String result=error;
+        switch (code){
+            case ConstantUtil.VALUE_CODE_0000:
+                result=context.getString(R.string.result_notice1);
+                break;
+            case ConstantUtil.VALUE_CODE_0009:
+                result=context.getString(R.string.result_notice4);
+                break;
+            case ConstantUtil.VALUE_CODE_0010:
+                result=context.getString(R.string.result_notice3);
+                break;
+            case ConstantUtil.VALUE_CODE_0011:
+                result=context.getString(R.string.result_notice5);
+                break;
+            case ConstantUtil.VALUE_CODE_0012:
+                result=context.getString(R.string.result_notice4);
+                break;
+            case ConstantUtil.VALUE_CODE_1008:
+                result=context.getString(R.string.result_notice2);
+                break;
+            case ConstantUtil.VALUE_CODE_1009:
+                result=context.getString(R.string.result_notice6);
+                break;
+                default:
+                    result=context.getString(R.string.result_notice3);
+                    break;
+        }
+        new WaterPublicDialog(context).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setButtonText("好的")
+                .setNoticeText(result)
+                .setImageVisibility(true)
+                .setViewVisibility(false)
+                .setCanceledOnTouchOutside(true)
+                .setOnPositiveClickListener(new WaterPublicDialog.OnPositiveClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                }).show();
+
+    }
+    private void onResultData(JSONObject jsonObject) {
         String  equipment=jsonObject.optString("equipmentNo");
         String  communityName=jsonObject.optString("communityName");
         tvEquipment.setText(equipment);
@@ -151,40 +240,90 @@ public class ScanCodeResultActivity extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         equipmentNo=getIntent().getStringExtra("equipmentNo");
         userPhone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
+        waterAccount= userPhone;
         WaterAppBean bean=new WaterAppBean();
-        bean.setAccount(userPhone);
+        bean.setAccount(waterAccount);
         bean.setEquipmentNo(equipmentNo);
         sign= SecretKeyUtil.getStringSign(bean);
         extParams=SecretKeyUtil.getextParams(bean);
         initView();
-        initData();
+        initAccountData();
+    }
+    private void initAccountData() {
+        requestType=0;
+        String requestUrl= UrlUtil.WATER_BIND_ACCOUNT_LIST;
+        HashMap<String, String> textParams = new HashMap<String, String>(2);
+        textParams.put("account",userPhone);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,resultHandler);
+    }
+
+    private void onGetEquipmentInformation() {
+        requestType=1;
+        customDialog.show();
+        String validateURL= UrlUtil.WATER_EQUIPMENT_INFORMATION;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("equipmentNo",equipmentNo);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,resultHandler);
     }
     private void initView() {
         layoutError =findViewById(R.id.id_layout_neterror);
         layoutResult =findViewById(R.id.id_layout_success);
-        resultImg =(ImageView)findViewById(R.id.id_result_img);
-        tvResult =(TextView)findViewById(R.id.id_scan_result) ;
+        btnKnow=(Button)findViewById(R.id.id_btn_know);
+        btnLaunch=(Button)findViewById(R.id.id_btn_launch);
+        tvFeeStandard=(TextView)findViewById(R.id.id_fee_standard) ;
+        tvTDS=(TextView)findViewById(R.id.id_tv_TDS);
         tvNotice =(TextView)findViewById(R.id.id_result_notice);
         tvEstate =(TextView)findViewById(R.id.id_tv_estate);
         tvEquipment =(TextView)findViewById(R.id.id_tv_equipment);
-        findViewById(R.id.id_btn_know).setOnClickListener(new View.OnClickListener() {
+        btnKnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        btnLaunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initData();
+            }
+        });
+        findViewById(R.id.id_tds_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onShowTDSDialog();
+            }
+        });
+        findViewById(R.id.id_malfunction).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context,WaterMalfunctionActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    private void onShowTDSDialog() {
+        new WaterPublicDialog(context).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setButtonText("我知道了")
+                .setTitleText("TDS小贴士")
+                .setImageVisibility(false)
+                .setViewVisibility(true)
+                .setCanceledOnTouchOutside(true)
+                .show();
     }
     private void initData() {
+        requestType=2;
         customDialog.show();
         String validateURL= UrlUtil.SCAN_CODE_BUY;
+        onDataMD5();
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("sign",sign);
         textParams.put("extParams",extParams);
-        textParams.put("account", userPhone);
+        textParams.put("account", waterAccount);
         textParams.put("equipmentNo",equipmentNo);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,resultHandler);
     }
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

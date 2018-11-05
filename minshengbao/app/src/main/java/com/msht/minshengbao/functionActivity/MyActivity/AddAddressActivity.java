@@ -28,15 +28,19 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class AddAddressActivity extends BaseActivity implements View.OnClickListener {
     private View      layoutCity;
-    private View      layoutAddress;
     private TextView  tvCity;
-    private TextView  tvAddress;
+    private EditText  etAddress;
     private EditText  etName;
     private EditText  etPhone;
-    private EditText  etDoorplate;
     private String    userId;
     private String    password;
     private String    mCity,cityId;
@@ -120,7 +124,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initView();
-        initEvent();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -142,7 +145,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                         String title=data.getStringExtra("title");
                         longitude=data.getStringExtra("longitude");
                         latitude=data.getStringExtra("latitude");
-                        tvAddress.setText(addressInfo);
                     }
                 }
                 break;
@@ -151,29 +153,21 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         }
     }
     private void initView() {
-        layoutCity =findViewById(R.id.id_re_city);
-        layoutAddress =findViewById(R.id.id_re_address);
+        findViewById(R.id.id_re_city).setOnClickListener(this);
         tvCity =(TextView)findViewById(R.id.id_tv_city);
-        tvAddress =(TextView)findViewById(R.id.id_address);
         etName =(EditText)findViewById(R.id.id_et_name);
         etPhone =(EditText)findViewById(R.id.id_et_phone);
-        etDoorplate =(EditText)findViewById(R.id.id_et_doorplate);
+        etAddress =(EditText)findViewById(R.id.id_et_address);
         findViewById(R.id.id_re_newaddress).setOnClickListener(this);
-    }
-    private void initEvent() {
-        layoutCity.setOnClickListener(this);
-        layoutAddress.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_newaddress:
-                String address= tvAddress.getText().toString().trim();
-                String doorplate= etDoorplate.getText().toString().trim();
-                mAddress=address+doorplate;
+                mAddress= etAddress.getText().toString().trim();
                 mName= etName.getText().toString().trim();
                 mPhone= etPhone.getText().toString().trim();
-                if (matchCity(tvCity.getText().toString())&& matchAddress(tvAddress.getText().toString())
+                if (matchCity(tvCity.getText().toString())&& matchAddress(etAddress.getText().toString())
                         &&matchName(mName)&& matchPhone(mPhone)&&isPhone(mPhone)){
                     requestService();
                 }
@@ -251,8 +245,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         textParams.put("password",password);
         textParams.put("city_id",cityId);
         textParams.put("address",mAddress);
-        textParams.put("longitude",longitude);
-        textParams.put("latitude",latitude);
         textParams.put("name",mName);
         textParams.put("phone",mPhone);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);

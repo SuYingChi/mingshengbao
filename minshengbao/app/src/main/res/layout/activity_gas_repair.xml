@@ -13,7 +13,7 @@
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -23,6 +23,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:minHeight="@dimen/margin_width50">
                     <EditText
                         android:layout_width="match_parent"
@@ -30,27 +31,31 @@
                         android:minHeight="@dimen/margin_width40"
                         android:inputType="textMultiLine"
                         android:ems="10"
-                        android:hint="请选择地址"
+                        android:hint="@string/please_select_address"
                         android:textSize="@dimen/text_width16"
                         android:background="@null"
                         android:id="@+id/id_select_address"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_btn_selectaddress"
-                        android:layout_marginRight="@dimen/margin_15"/>
+                        android:layout_toStartOf="@+id/id_btn_selectaddress"
+                        android:layout_marginRight="@dimen/margin_width15"
+                        android:layout_marginEnd="@dimen/margin_width15"/>
                     <Button
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:minHeight="@dimen/margin_width30"
                         android:layout_height="wrap_content"
-                        android:text="选择燃气用户号"
-                        android:clickable="true"
+                        android:text="@string/please_select_customerNo"
                         android:textColor="@color/white"
                         android:id="@+id/id_btn_selectaddress"
                         android:background="@drawable/shape_orange_corner_button"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/margin_width10"
-                        android:layout_alignParentRight="true" />
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
             </LinearLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -62,30 +67,35 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:minHeight="@dimen/margin_width50">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="报修主题"
+                        android:text="@string/gas_install_topic"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/color_383838"
                         android:textStyle="bold"
                         android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_marginLeft="@dimen/margin_width10"
-                        android:id="@+id/text2" />
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:id="@+id/text2"/>
 
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:ems="10"
-                        android:hint="请输入报装主题"
+                        android:hint="@string/gas_please_input_topic"
                         android:textSize="@dimen/text_width16"
                         android:background="@null"
                         android:id="@+id/id_repair_topic"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/text2"
+                        android:layout_toEndOf="@+id/text2"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:layout_marginLeft="@dimen/margin_width15"
                         />
                 </RelativeLayout>
@@ -102,7 +112,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:textStyle="bold"
@@ -113,9 +125,11 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/id_phone_text"
+                    android:layout_toEndOf="@+id/id_phone_text"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:inputType="phone"
-                    android:hint="请输入联系电话"
+                    android:hint="@string/gas_detail_describe"
                     android:background="@null"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -127,14 +141,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="详细描述"
+                    android:text=""
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:textStyle="bold"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    />
+                    android:layout_marginStart="@dimen/margin_width10" />
             </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -150,10 +165,12 @@
                     android:textSize="@dimen/text_width16"
                     android:maxLength="100"
                     android:paddingLeft="@dimen/margin_width15"
+                    android:paddingStart="@dimen/margin_width15"
+                    android:paddingEnd="@dimen/margin_width5"
                     android:paddingRight="@dimen/margin_width5"
-                    android:hint="请详细写下需求描述"
+                    android:hint="@string/gas_please_input_detail_describe"
                     android:background="@null"
-                    android:gravity="left|top" />
+                    android:gravity="start|top" />
             </LinearLayout>
             <RelativeLayout
                 android:layout_marginTop="@dimen/margin_width30"
@@ -167,9 +184,8 @@
                     android:minHeight="@dimen/margin_width45"
                     android:layout_marginLeft="@dimen/margin_width20"
                     android:layout_marginRight="@dimen/margin_width20"
-                    android:text="确认"
+                    android:text="@string/ensure_text"
                     android:textSize="@dimen/text_width18"
-                    android:clickable="true"
                     android:textColor="@color/white"
                     android:background="@drawable/selector_touch_button_change"
                     android:layout_gravity="center_horizontal"
@@ -179,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="漏气等紧急情况请使用“燃气抢险”功能"
+                    android:text="@string/gas_write_table_tip"
                     android:layout_below="@+id/id_btn_comfirm"
                     android:layout_marginTop="@dimen/margin_width25"
                     android:textColor="@color/colorAccent"

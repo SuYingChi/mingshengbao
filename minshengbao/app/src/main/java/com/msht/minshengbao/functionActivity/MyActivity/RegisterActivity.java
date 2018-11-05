@@ -295,7 +295,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         etPhoneNumber.setText("");
     }
     private void registerRequest() {
-        Intent intentSuccess=new Intent(RegisterActivity.this,RegisterSeccess.class);
+        Intent intentSuccess=new Intent(RegisterActivity.this,RegisterSuccessActivity.class);
         startActivity(intentSuccess);
         RegisterActivity.this.finish();
     }

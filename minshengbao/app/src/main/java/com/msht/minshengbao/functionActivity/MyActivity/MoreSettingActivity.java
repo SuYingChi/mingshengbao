@@ -37,7 +37,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 
-public class MoreSetting extends BaseActivity implements View.OnClickListener {
+public class MoreSettingActivity extends BaseActivity implements View.OnClickListener {
     private Button btnExit;
     private TextView tvCacheSize;
     private String  urls;
@@ -49,13 +49,13 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
     public static final String MY_ACTION = "ui";
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static  class  RequestHandler extends  Handler{
-        private WeakReference<MoreSetting> mWeakReference;
-        public RequestHandler(MoreSetting activity) {
-            mWeakReference=new WeakReference<MoreSetting>(activity);
+        private WeakReference<MoreSettingActivity> mWeakReference;
+        public RequestHandler(MoreSettingActivity activity) {
+            mWeakReference=new WeakReference<MoreSettingActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final MoreSetting activity=mWeakReference.get();
+            final MoreSettingActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }
@@ -222,14 +222,9 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         mCache.clear();
         //清除网页Cookie
         clearCookie();
+        /*水宝账户清除*/
+        VariableUtil.waterAccount="";
         VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(context, SharedPreferencesUtil.Lstate, false);
-        /*Intent broadcast=new Intent();
-        broadcast.setAction(MY_ACTION);
-        broadcast.putExtra("broadcast", "1");
-        sendBroadcast(broadcast);
-        Intent intent=new Intent(context,MainActivity.class);
-        intent.setFlags(2);
-        startActivity(intent);*/
         setResult(0x005);
         finish();
 
@@ -249,7 +244,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         SendRequestUtil.getDataFromService(validateURL,requestHandler);
     }
     private void goAboutMine() {
-        Intent intent=new Intent(context, AboutMine.class);
+        Intent intent=new Intent(context, AboutMineActivity.class);
         startActivity(intent);
     }
     private void requestLoadLimit(String url) {

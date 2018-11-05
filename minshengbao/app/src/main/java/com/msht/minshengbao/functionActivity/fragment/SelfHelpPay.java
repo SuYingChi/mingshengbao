@@ -22,6 +22,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GetHouseAdapter;
 import com.msht.minshengbao.functionActivity.GasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.R;
@@ -123,7 +124,7 @@ public class SelfHelpPay extends Fragment {
                 case SendRequestUtil.FAILURE:
                     //清空原来数据
                     reference.customerNo="";
-                    reference.displayDialog(msg.obj.toString());
+                    ToastUtil.ToastText(reference.activity,msg.obj.toString());
                     break;
                 default:
                     break;
@@ -210,16 +211,18 @@ public class SelfHelpPay extends Fragment {
         startActivity(payFees);
     }
     private void displayDialog(String s) {
-        new PromptDialog.Builder(activity)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(s)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+        if (activity!=null&&!activity.isFinishing()){
+            new PromptDialog.Builder(activity)
+                    .setTitle("民生宝")
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage(s)
+                    .setButton1("确定", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -19,7 +19,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddress;
+import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -288,7 +288,7 @@ public class SelectAddressActivity extends BaseActivity {
                     String cityId=addrList.get(thisposition).get("city_id");
                     String longitude = addrList.get(thisposition).get("longitude");
                     String latitude =addrList.get(thisposition).get("latitude");
-                    Intent intent=new Intent(mContext,ModifyAddress.class);
+                    Intent intent=new Intent(mContext,ModifyAddressActivity.class);
                     intent.putExtra("id",id);
                     intent.putExtra("address",address);
                     intent.putExtra("city_id",cityId);

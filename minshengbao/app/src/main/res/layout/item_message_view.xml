@@ -9,16 +9,31 @@
         android:id="@+id/item_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/margin_width3"
         android:background="#FFFFFF" >
         <CheckBox
             android:id="@+id/id_checkBox"
-            android:button="@drawable/selector_my_radiobutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_width12"
-            android:layout_marginStart="@dimen/margin_width12"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:padding="@dimen/margin_width5"
+            android:drawableLeft="@drawable/selector_my_radiobutton"
+            android:drawableStart="@drawable/selector_my_radiobutton"
+            android:button="@null"
             android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/id_flag_img"
+            android:layout_width="@dimen/margin_width10"
+            android:layout_height="@dimen/margin_width10"
+            android:contentDescription="@string/picture_text"
+            android:layout_toRightOf="@+id/id_checkBox"
+            android:layout_toEndOf="@+id/id_checkBox"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
+            android:layout_marginTop="@dimen/margin_width5"
+            android:src="@drawable/shape_point2"/>
         <TextView
             android:id="@+id/id_item_title"
             android:layout_width="match_parent"
@@ -26,6 +41,7 @@
             android:textSize="@dimen/text_width18"
             android:layout_toRightOf="@+id/id_checkBox"
             android:layout_toEndOf="@+id/id_checkBox"
+            android:gravity="start"
             android:layout_toLeftOf="@+id/id_inform_time"
             android:layout_toStartOf="@+id/id_inform_time"
             android:layout_marginRight="@dimen/margin_width5"
@@ -36,7 +52,7 @@
             android:textColor="@color/color_383838" />
         <TextView
             android:id="@+id/id_item_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/id_item_title"
             android:layout_marginTop="@dimen/margin_width10"
@@ -44,6 +60,7 @@
             android:layout_toEndOf="@+id/id_checkBox"
             android:layout_marginLeft="@dimen/margin_width15"
             android:layout_marginStart="@dimen/margin_width15"
+            android:gravity="start"
             android:layout_toLeftOf="@+id/id_forward_img"
             android:layout_toStartOf="@+id/id_forward_img"
             android:layout_marginRight="@dimen/margin_width5"

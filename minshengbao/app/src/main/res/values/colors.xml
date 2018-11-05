@@ -11,6 +11,7 @@
     <color name="colorOrange_one">#FFF9691D</color>
     <color name="colorOrange_two">#FFFa7F3F</color>
     <color name="colorOrange_three">#FFFF935B</color>
+    <color name="colorYellow">#FFFFC600</color>
     <color name="transparent_Orange">#00FF935B</color>
     <color name="yellow_gray">#c29457</color>
     <color name="yellow_more_gray">#8e5f23</color>
@@ -19,6 +20,7 @@
     <color name="yellow_more_light">#FAF3D7</color>
     <color name="green_light">#30A949</color>
     <color name="pink_Orange">#FFF4D6CE</color>
+    <color name="grayE4E0E1">#E4E0E1</color>
     <color name="transparent_color">@android:color/transparent</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
@@ -28,6 +30,7 @@
     <color name="title_tv">#ff555555</color>
     <color name="transparent_black">#30000000</color>
     <color name="background_gray">#f2f1f1</color>
+    <color name="gray_background">#FFE3E3E3</color>
     <color name="gray_black">#e2e2e2</color>
     <color name="line_black">#ffc8c8c8</color>
     <color name="gray_dcdcdc">#ffdcdcdc</color>
@@ -42,6 +45,9 @@
     <color name="touch_backgroud">#FFEAEAEA</color>
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="blue">#23AEEF</color>
+    <color name="blue_start">#17AEF5</color>
+    <color name="blue_center">#1C94F3</color>
+    <color name="blue_end">#1D7EF3</color>
     <color name="transparent_back">#50000000</color>
     <color name="red">#E43F3E</color>
     <color name="home_bar_text_normal">#6a6c6f</color>

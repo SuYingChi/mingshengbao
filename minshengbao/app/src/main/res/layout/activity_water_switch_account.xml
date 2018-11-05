@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical"
     tools:context=".functionActivity.WaterApp.WaterSwitchAccountActivity">
-
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/layout_white_header"/>
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:background="@color/background_gray"
+        android:layout_height="0dp">
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/id_user_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width10">
+        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+    </RelativeLayout>
+    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        android:id="@+id/id_btn_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:gravity="center"
+        android:textSize="@dimen/text_width16"
+        android:textColor="@color/white"
+        android:text="@string/update_new_user"
+        app:backColor="@color/white"
+        app:backColorPress="#F4D6CE"
+        app:fillet="true"
+        app:shape="rectangle"
+        app:textColor="@color/color_383838"/>
+</LinearLayout>

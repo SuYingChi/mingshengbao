@@ -4,7 +4,7 @@
     <solid android:color="@color/white"/>
     <stroke
         android:width="0.8dp"
-        android:color="@color/colorAccent" />
+        android:color="@color/blue_center" />
     <!-- 设置按钮的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->
     <corners android:radius="3dip" />

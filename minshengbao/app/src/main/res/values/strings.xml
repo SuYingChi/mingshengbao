@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">民生宝</string>
 
+    <string name="host_value">msht.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="ensure_send">确认提交</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -32,6 +33,34 @@
     <string name="gas_service_promise">服务承诺</string>
     <string name="NOT_OPEN_condition">常见未能正常开通情况</string>
     <string name="input_customerNo">请输入燃气用户号</string>
+    <string name="integral_satisfaction_degree">整体满意度</string>
+    <string name="please_input_evaluated_content">请输评价内容</string>
+    <!--非模块 -->
+    <string name="scan_code">扫一扫</string>
+    <string name="balance">余额</string>
+    <string name="recharge">充值</string>
+    <string name="balance_detail_text">余额明细</string>
+    <string name="flashlight_text">手电筒</string>
+    <string name="qrCode_text">二维码</string>
+    <string name="barCode_text">条形码</string>
+    <string name="select_all_text">全选</string>
+
+
+    <!--燃气模块 -->
+    <string name="bill_detail">账单明细</string>
+    <string name="coupon_text">代金劵</string>
+    <string name="customer_no_text">用户号</string>
+    <string name="gas_address">燃气地址</string>
+    <string name="gas_fee_text">燃气费:</string>
+    <string name="gas_last_fee_text">违约金:</string>
+    <string name="gas_prestore_fee">燃气预存款余额</string>
+    <string name="deduct_gas_prestore_fee_text">扣除燃气预存款:</string>
+    <string name="immediately_pay_fee">立即缴费</string>
+    <string name="please_select_address">选择地址</string>
+    <string name="please_select_customerNo">选择燃气用户号</string>
+    <string name="should_pay_fee">应缴金额</string>
+    <string name="total_gas_num">共用气</string>
+
 
     <string name="network_error">网络连接断开，请检查网络设置。</string>
     <string name="load_more_text">正在加载...</string>
@@ -67,8 +96,14 @@
     <string name="scan_buywater">扫码购水</string>
     <string name="send_water">送水到家</string>
     <string name="balance_recharge">余额充值</string>
+    <string name="recharge_amount_text">充值金额:</string>
+    <string name="recharge_account_text">充值账户:</string>
+    <string name="recharge_success_text">充值成功</string>
     <!--优惠劵  -->
     <string name="effective_date">有效期至:</string>
     <string name="use_text">使用说明:</string>
     <string name="quick_delivery">尽快配送</string>
+
+    <string name="order_message">订单消息</string>
+    <string name="notification_message">公告栏</string>
 </resources>

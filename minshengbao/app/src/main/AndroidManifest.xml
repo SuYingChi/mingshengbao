@@ -23,6 +23,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="org.simalliance.openmobileapi.SMARTCARD" />
+
+    <uses-feature android:name="android.hardware.nfc.hce" />
 
     <permission
         android:name="oem.permission.SENDMAIL"
@@ -30,7 +33,7 @@
     <permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -52,6 +55,13 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="@string/host_value"
+                    android:scheme="msht"/>
             </intent-filter>
         </activity>
         <activity android:name=".functionActivity.MainActivity" />
@@ -111,12 +121,17 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind" />
+        <!-- 翼支付 -->
+        <activity
+            android:name="com.bestpay.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateHidden|adjustResize" />
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind" />
-
         <!-- 银联支付 -->
         <uses-library
             android:name="org.simalliance.openmobileapi"
@@ -125,7 +140,11 @@
         <activity
             android:name="com.unionpay.uppay.PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize" />
-
+        <activity
+            android:name="com.unionpay.UPPayWapActivity"
+            android:configChanges="orientation|keyboardHidden|fontScale"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"></activity>
         <!-- 招行一网通 -->
         <service
             android:name="cmb.pb.cmbsafe.CmbService"
@@ -185,10 +204,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".functionActivity.Public.SelectCityActivity" />
         <activity android:name=".functionActivity.HtmlWeb.ShopActivity" />
-        <activity android:name=".functionActivity.MyActivity.CustomerNoManage" />
-        <activity android:name=".functionActivity.MyActivity.Mysetting" />
-        <activity android:name=".functionActivity.MyActivity.SettingSex" />
-        <activity android:name=".functionActivity.MyActivity.SettingNickname" />
+        <activity android:name=".functionActivity.MyActivity.CustomerNoManageActivity" />
+        <activity android:name=".functionActivity.MyActivity.MySettingActivity" />
+        <activity android:name=".functionActivity.MyActivity.SettingSexActivity" />
+        <activity android:name=".functionActivity.MyActivity.SettingNicknameActivity" />
         <activity android:name=".functionActivity.GasService.GasServerOrderActivity" />
         <activity android:name=".functionActivity.GasService.GasServiceDetailActivity" />
         <activity android:name=".functionActivity.Invoice.InvoiceOpenActivity" />
@@ -196,12 +215,12 @@
         <activity android:name=".functionActivity.Invoice.InvoiceHistoryActivity" />
         <activity android:name=".functionActivity.HtmlWeb.AgreeTreatyActivity" />
         <activity android:name=".functionActivity.MyActivity.MyWalletActivity" />
-        <activity android:name=".functionActivity.MyActivity.DiscountCoupon" />
-        <activity android:name=".functionActivity.MyActivity.RechargeValue" />
-        <activity android:name=".functionActivity.MyActivity.AutomatePay" />
-        <activity android:name=".functionActivity.MyActivity.IncomeExpense" />
+        <activity android:name=".functionActivity.MyActivity.DiscountCouponActivity" />
+        <activity android:name=".functionActivity.MyActivity.RechargeValueActivity" />
+        <activity android:name=".functionActivity.MyActivity.AutomatePayActivity" />
+        <activity android:name=".functionActivity.MyActivity.IncomeExpenseActivity" />
         <activity android:name=".functionActivity.HtmlWeb.ReplacePayAgreeActivity" />
-        <activity android:name=".functionActivity.MyActivity.AboutMine" />
+        <activity android:name=".functionActivity.MyActivity.AboutMineActivity" />
         <activity android:name=".functionActivity.MyActivity.ShareMenuActivity" />
         <activity android:name=".functionActivity.GasService.GasEvaluateWorkOrderActivity" />
         <activity android:name=".functionActivity.MessageCenterActivity" />
@@ -211,7 +230,7 @@
         <activity android:name=".functionActivity.MyActivity.AddAddressActivity" />
         <activity android:name=".functionActivity.Public.SelectAddressActivity" />
         <activity android:name=".functionActivity.Public.MoveSelectAddress" />
-        <activity android:name=".functionActivity.MyActivity.ModifyAddress" />
+        <activity android:name=".functionActivity.MyActivity.ModifyAddressActivity" />
         <activity android:name=".functionActivity.repairService.HomeApplianceCleanActivity" />
         <activity android:name=".functionActivity.repairService.HouseApplianceFixActivity" />
         <activity android:name=".functionActivity.repairService.SanitaryWareActivity" />
@@ -220,8 +239,8 @@
         <activity android:name=".functionActivity.insurance.InsurancePurchase" />
         <activity android:name=".functionActivity.insurance.InsuranceDetail" />
         <activity android:name=".functionActivity.insurance.InsurancePay" />
-        <activity android:name=".functionActivity.MyActivity.RegisterSeccess" />
-        <activity android:name=".functionActivity.MyActivity.ConsultRecommend" />
+        <activity android:name=".functionActivity.MyActivity.RegisterSuccessActivity" />
+        <activity android:name=".functionActivity.MyActivity.ConsultRecommendActivity" />
         <activity android:name=".functionActivity.repairService.PublishOrderActivity" />
         <activity android:name=".functionActivity.repairService.EnlargePicActivity" />
         <activity android:name=".functionActivity.HtmlWeb.PriceMenuActivity" />
@@ -233,7 +252,7 @@
         <activity android:name=".functionActivity.repairService.WarrantyCardActivity" />
         <activity android:name=".functionActivity.repairService.RefundApplyActivity" />
         <activity android:name=".functionActivity.repairService.RepeatFixActivity" />
-        <activity android:name=".functionActivity.MyActivity.MoreSetting" />
+        <activity android:name=".functionActivity.MyActivity.MoreSettingActivity" />
         <activity android:name=".functionActivity.Public.PaySuccessActivity" />
         <activity android:name=".functionActivity.GasService.GasPayRecordActivity" />
         <activity android:name=".Base.BaseActivity" />
@@ -251,7 +270,6 @@
         <activity android:name=".functionActivity.Electricvehicle.ReplaceAddressActivity" />
         <activity android:name=".functionActivity.Electricvehicle.ElectricPictureActivity" />
         <activity android:name=".functionActivity.WaterApp.ScanCodeResultActivity" />
-        <activity android:name=".functionActivity.WaterApp.WaterHomeActivity" />
         <activity android:name=".functionActivity.WaterApp.OnlinePlaceOrderActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterRechargeActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterBalanceDetailActivity" />
@@ -298,7 +316,16 @@
         <activity android:name=".functionActivity.Invoice.InvoiceRepairDetailActivity" />
         <activity android:name=".functionActivity.Invoice.InvoiceLogisticsInformationActivity" />
         <activity android:name=".functionActivity.Invoice.InvoiceRepairOrderActivity" />
-        <activity android:name=".functionActivity.Invoice.AndroidPdfViewActivity"></activity>
+        <activity android:name=".functionActivity.Invoice.AndroidPdfViewActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterMainActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterSwitchAccountActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterBindUserActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterBalanceActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterMalfunctionActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterScanCodeActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterPayRechargeActivity" />
+        <activity android:name=".functionActivity.WaterApp.WaterFriendShareActivity" />
+        <activity android:name=".functionActivity.HtmlWeb.PrizesGiftsActivity"></activity>
     </application>
 
 </manifest>

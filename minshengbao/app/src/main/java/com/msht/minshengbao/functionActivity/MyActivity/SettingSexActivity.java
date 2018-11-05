@@ -24,19 +24,19 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingSex extends BaseActivity {
+public class SettingSexActivity extends BaseActivity {
     private RadioGroup sexGroup;
     private String gender;
     private String mSex,password,userId;
     private final SexHandler sexHandler=new SexHandler(this);
     private static class SexHandler extends Handler{
-        private WeakReference<SettingSex>mWeakReference;
-        public SexHandler(SettingSex activity) {
-            mWeakReference=new WeakReference<SettingSex>(activity);
+        private WeakReference<SettingSexActivity>mWeakReference;
+        public SexHandler(SettingSexActivity activity) {
+            mWeakReference=new WeakReference<SettingSexActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final SettingSex activity=mWeakReference.get();
+            final SettingSexActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }

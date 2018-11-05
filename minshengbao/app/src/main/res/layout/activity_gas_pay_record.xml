@@ -17,8 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width12"
-            android:text="用户号"
+            android:text="@string/customer_no_text"
             android:textColor="@color/black1"
             android:textSize="@dimen/text_width16"/>
         <TextView
@@ -27,6 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width12"
             android:layout_toRightOf="@+id/id_text1"
+            android:layout_toEndOf="@+id/id_text1"
+           android:layout_marginStart="@dimen/margin_width30"
             android:layout_marginLeft="@dimen/margin_width30"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/black1"/>
@@ -35,10 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width12"
             android:layout_below="@+id/id_text1"
-            android:text="燃气地址"
+            android:text="@string/gas_address"
             android:textColor="@color/black1"
             android:textSize="@dimen/text_width16"/>
         <TextView
@@ -48,6 +52,8 @@
             android:layout_below="@+id/id_text1"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_toRightOf="@+id/id_text2"
+            android:layout_toEndOf="@+id/id_text2"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width12"
             android:textSize="@dimen/text_width16"

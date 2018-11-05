@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
@@ -8,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_orange_button">
+        android:background="@drawable/shape_blue_button">
         <TextView
             android:id="@+id/id_amount"
             android:layout_width="wrap_content"
@@ -18,8 +19,7 @@
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_centerHorizontal="true"
             android:textSize="@dimen/text_width16"
-            android:textColor="@color/white"
-            android:text="300元"/>
+            android:textColor="@color/white" />
         <TextView
             android:id="@+id/id_tv_giveFee"
             android:layout_width="wrap_content"
@@ -31,7 +31,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/margin_width10"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_width12"
-            android:text="送30元"/>
+            android:textSize="@dimen/text_width12" />
     </RelativeLayout>
 </LinearLayout>

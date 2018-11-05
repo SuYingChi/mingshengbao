@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.WaterApp.WaterSuccessActivity">
     <include layout="@layout/layout_header" />
@@ -12,7 +13,7 @@
         android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
             android:id="@+id/id_layout_success"
@@ -28,6 +29,7 @@
                     android:layout_width="@dimen/margin_width126"
                     android:layout_height="@dimen/margin_width126"
                     android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginTop="@dimen/margin_width40"
                     android:src="@drawable/pay_success_xh"/>
 
@@ -38,7 +40,7 @@
                     android:layout_below="@+id/id_img"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_width20"
-                    android:text="充值成功"
+                    android:text="@string/recharge_success_text"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_width18" />
             </RelativeLayout>
@@ -49,11 +51,15 @@
                 android:background="@color/white"
                 android:minHeight="@dimen/margin_width45">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:text="充值账号："
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_toStartOf="@+id/id_tv_account"
+                    android:layout_toLeftOf="@+id/id_tv_account"
+                    android:gravity="start"
+                    android:text="@string/recharge_account_text"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16" />
                 <TextView
@@ -61,9 +67,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:text="000000000"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16" />
             </RelativeLayout>
@@ -74,11 +81,15 @@
                 android:background="@color/white"
                 android:minHeight="@dimen/margin_width45">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:text="充值金额："
+                    android:layout_toStartOf="@+id/id_tv_amount"
+                    android:layout_toLeftOf="@+id/id_tv_amount"
+                    android:gravity="start"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:text="@string/recharge_amount_text"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16" />
                 <TextView
@@ -86,25 +97,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:text="000元"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16" />
             </RelativeLayout>
             <include layout="@layout/layout_line_gray" />
-            <Button
-                android:id="@+id/id_btn_know"
+            <RelativeLayout
+                android:id="@+id/id_layout_advertising"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginRight="@dimen/margin_width10"
-                android:layout_marginTop="@dimen/margin_width12"
-                android:background="@drawable/selector_touch_button_change"
-                android:minHeight="@dimen/margin_width40"
-                android:text="我知道了"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_width16" />
+                android:layout_marginTop="@dimen/margin_width30"
+                android:background="@color/background_gray">
+                <ImageView
+                    android:id="@+id/id_advertising_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/margin_width80"
+                    android:contentDescription="@string/picture_text"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/get_gift_advertising"/>
+            </RelativeLayout>
         </LinearLayout>
         <include android:id="@+id/id_layout_neterror" layout="@layout/layout_network_error"
             android:visibility="gone"/>

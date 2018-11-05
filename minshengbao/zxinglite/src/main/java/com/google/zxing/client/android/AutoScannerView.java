@@ -127,4 +127,14 @@ public class AutoScannerView extends View {
         float density = getContext().getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5f);
     }
+    public void turnOnFlashLight(){
+        if (cameraManager!=null){
+            cameraManager.openFlashlight();
+        }
+    }
+    public void  turnOffFlashLight(){
+        if (cameraManager!=null){
+            cameraManager.closeFlashlight();
+        }
+    }
 }

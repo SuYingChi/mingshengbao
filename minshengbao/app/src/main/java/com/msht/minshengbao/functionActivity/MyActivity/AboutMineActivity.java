@@ -1,6 +1,7 @@
 package com.msht.minshengbao.functionActivity.MyActivity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -8,10 +9,14 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 
-
-public class AboutMine extends BaseActivity {
-    private TextView tv_versionName;
-    private String Name="";
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
+public class AboutMineActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,10 +24,11 @@ public class AboutMine extends BaseActivity {
         context=this;
         mPageName ="关于我们";
         setCommonHeader(mPageName);
-        tv_versionName=(TextView)findViewById(R.id.id_versionName);
-        Name= AppPackageUtil.getPackageVersionName(context);
-        if (Name!=null){
-            tv_versionName.setText("版本:"+Name);
+        TextView tvVersionName=(TextView)findViewById(R.id.id_versionName);
+        String mName= AppPackageUtil.getPackageVersionName(context);
+        if (TextUtils.isEmpty(mName)&&mName!=null){
+            mName="版本:"+mName;
+            tvVersionName.setText(mName);
         }
     }
     @Override

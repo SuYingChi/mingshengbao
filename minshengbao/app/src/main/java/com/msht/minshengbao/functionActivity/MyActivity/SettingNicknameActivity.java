@@ -28,20 +28,20 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingNickname extends BaseActivity {
+public class SettingNicknameActivity extends BaseActivity {
     private EditText etNickname;
     private TextView tvEnsure;
     private String mNickname,password,userId;
     public static final String NICK_NAME = "NICK";
     private final NickHandler nickHandler=new NickHandler(this);
     private static class NickHandler extends Handler{
-        private WeakReference<SettingNickname> mWeakReference;
-        public NickHandler(SettingNickname activity) {
-            mWeakReference=new WeakReference<SettingNickname>(activity);
+        private WeakReference<SettingNicknameActivity> mWeakReference;
+        public NickHandler(SettingNicknameActivity activity) {
+            mWeakReference=new WeakReference<SettingNicknameActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final SettingNickname activity=mWeakReference.get();
+            final SettingNicknameActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }

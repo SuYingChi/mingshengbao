@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:id="@+id/id_map_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_change_background">
@@ -18,7 +19,9 @@
             android:id="@+id/lay_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/margin_14"
+            android:paddingLeft="@dimen/margin_width14"
+            android:paddingStart="@dimen/margin_width14"
+            android:paddingEnd="@dimen/margin_width8"
             android:paddingRight="@dimen/margin_width8">
             <ImageView
                 android:id="@+id/iv_back"
@@ -32,10 +35,11 @@
             android:id="@+id/id_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_width8"
+            android:layout_margin="@dimen/margin_width10"
             android:layout_toRightOf="@+id/lay_back"
             android:layout_toEndOf="@+id/lay_back"
             android:layout_toStartOf="@+id/id_cancel"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/id_cancel"
             android:background="@drawable/shape_gray_border_transparent"
             android:gravity="center"
@@ -44,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:minHeight="@dimen/margin_40">
+                android:minHeight="@dimen/margin_width40">
                 <ImageView
                     android:id="@+id/id_search_img"
                     android:layout_width="14dp"
@@ -67,7 +71,7 @@
                     android:background="@null"
                     android:hint="请输入地址信息"
                     android:textColor="#ff444444"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
         </LinearLayout>
         <TextView
@@ -81,7 +85,7 @@
             android:layout_marginEnd="@dimen/margin_width10"
             android:visibility="gone"
             android:gravity="center_vertical"
-            android:text="取消"
+            android:text="@string/cancel_text"
             android:textColor="@color/white"
             android:textSize="@dimen/text_width16"/>
     </RelativeLayout>

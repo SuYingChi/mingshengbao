@@ -159,16 +159,17 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position-1;
-                adapter.notifyDataSetChanged();
-                adapter.notifyDataSetChanged();
-                String customerNo=recordList.get(pos).get("customerNo");
-                String address=recordList.get(pos).get("name");
-                Intent name=new Intent(mContext, GasPayRecordActivity.class);
-                name.putExtra("customerNo",customerNo);
-                name.putExtra("address",address);
-                name.putExtra("urlType","0");
-                startActivity(name);
+                if (position>0){
+                    pos=position-1;
+                    adapter.notifyDataSetChanged();
+                    String customerNo=recordList.get(pos).get("customerNo");
+                    String address=recordList.get(pos).get("name");
+                    Intent name=new Intent(mContext, GasPayRecordActivity.class);
+                    name.putExtra("customerNo",customerNo);
+                    name.putExtra("address",address);
+                    name.putExtra("urlType","0");
+                    startActivity(name);
+                }
             }
         });
         adapter.setRadioButtonClickListener(new GetAddressAdapter.ItemRadioButtonClickListener() {
@@ -184,10 +185,10 @@ public class PayRecord extends Fragment implements XListView.IXListViewListener 
                 startActivity(name);
             }
         });
-        initdata();
+        requestData();
         return view;
     }
-    private void initdata() {
+    private void requestData() {
         loadData(1);
         mListView.setXListViewListener(this);
     }

@@ -37,7 +37,7 @@ public class PaySuccessActivity extends BaseActivity {
     private static final int SPLASH_DISPLAY_LENGHT=10000;
     private WebView  successPage;
     private String successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE;
-    private static final String btnUrl="http://get/event/activityBtn";
+    private static final String BTN_URL ="http://get/event/activityBtn";
     private String activityUrl="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class PaySuccessActivity extends BaseActivity {
         successPage.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.equals(btnUrl)){
+                if (url.equals(BTN_URL)){
                     if (activityUrl!=null&&(!TextUtils.isEmpty(activityUrl))){
                         startAction();
                     }else {

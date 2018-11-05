@@ -1,7 +1,10 @@
 package com.msht.minshengbao.functionActivity.repairService;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -15,14 +18,28 @@ import com.umeng.analytics.MobclickAgent;
  * @date 2018/6/20  
  */
 public class PublishSuccessActivity extends BaseActivity {
-    private final String mPageName="提交订单";
     private static final int SPLASH_DISPLAY_LENGTH =4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_success);
         context=this;
-        setCommonHeader("提交订单");
+        mPageName="提交订单";
+        TextView tvTitle=(TextView)findViewById(R.id.id_title);
+        TextView tvContent=(TextView)findViewById(R.id.id_text2);
+        ImageView successImg=(ImageView)findViewById(R.id.id_img_success);
+        int type=getIntent().getIntExtra("type",0);
+        String tvNavigation=getIntent().getStringExtra("navigation");
+        setCommonHeader(tvNavigation);
+        if (type==3){
+           tvTitle.setText("问题提交成功");
+           tvContent.setText("工作人员会及时处理！");
+           successImg.setImageResource(R.drawable.pay_success_xh);
+        }else {
+            tvTitle.setText("订单提交成功");
+            tvContent.setText("会有工作人员跟您联系！");
+            successImg.setImageResource(R.drawable.publish_success_xh);
+        }
         initEvent();
     }
     private void initEvent() {

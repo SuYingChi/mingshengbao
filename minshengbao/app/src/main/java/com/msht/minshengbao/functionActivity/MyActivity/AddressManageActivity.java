@@ -165,7 +165,7 @@ public class AddressManageActivity extends BaseActivity {
                 String phone=addrList.get(thisposition).get("phone");
                 String longitude = addrList.get(thisposition).get("longitude");
                 String latitude =addrList.get(thisposition).get("latitude");
-                Intent intent=new Intent(context,ModifyAddress.class);
+                Intent intent=new Intent(context,ModifyAddressActivity.class);
                 intent.putExtra("id",id);
                 intent.putExtra("address",address);
                 intent.putExtra("city_id",cityId);

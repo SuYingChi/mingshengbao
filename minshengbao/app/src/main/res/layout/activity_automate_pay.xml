@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.MyActivity.AutomatePay">
+    tools:context="com.msht.minshengbao.functionActivity.MyActivity.AutomatePayActivity">
     <include layout="@layout/layout_header"/>
     <ListView
         android:id="@+id/id_auto_address"

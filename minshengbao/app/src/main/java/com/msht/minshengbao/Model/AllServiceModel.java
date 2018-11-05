@@ -21,6 +21,7 @@ public class AllServiceModel extends BaseModel{
                 public int    id;
                 public String name;
                 public String code;
+                public String url;
             }
         }
     }

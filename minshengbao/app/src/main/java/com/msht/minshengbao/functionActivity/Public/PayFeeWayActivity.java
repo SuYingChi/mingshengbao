@@ -7,11 +7,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bestpay.app.PaymentTask;
+import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Model.YiPayModel;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ParamsUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -24,6 +33,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
+import com.unionpay.UPPayAssistEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +54,6 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private Button btnSend;
     private TextView tvRealAmount;
     private TextView tvSubtract;
-    private TextView tvShouldAmount;
     private ListViewForScrollView forScrollView;
     private PayWayAdapter mAdapter;
     private String userId,voucherId;
@@ -59,7 +68,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private String realAmount;
     private JSONArray jsonArray;
     private int requestCode=0;
-    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private JSONObject jsonObject;
     private CustomDialog customDialog;
     private final SubtractHandler subtractHandler=new SubtractHandler(this);
@@ -221,35 +230,34 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     }
     private void onPayResult(JSONObject json) {
         String status=json.optString("status");
-        String chargeId=json.optString("chargeId");
-        String lottery=json.optString("lottery");
-        if (status.equals(VariableUtil.VALUE_ZERO)){
-            if (lottery!=null&&(!TextUtils.isEmpty(lottery))){
-                Intent success=new Intent(context,PaySuccessActivity.class);
-                success.putExtra("url",lottery);
-                success.putExtra("type","0");
-                success.putExtra("orderId",orderId);
-                startActivity(success);
-                finish();
-            }else {
-                onShowDialogs("新订单");
-            }
-        }else if (status.equals(VariableUtil.VALUE_ONE)){
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","0");
-            success.putExtra("url",lottery);
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            finish();
-        }else if (status.equals(VariableUtil.VALUE_TWO)){
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","3");
-            success.putExtra("url",lottery);
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-        }else if (status.equals(VariableUtil.VALUE_THREE)){
-            onShowDialogs("正在支付");
+        String lottery="";
+        if (json.has("lottery")){
+            lottery=json.optString("lottery");
         }
+        switch (status){
+            case VariableUtil.VALUE_ZERO:
+                onStartActivity(lottery,"0");
+                break;
+            case VariableUtil.VALUE_ONE:
+                onStartActivity(lottery,"0");
+                break;
+            case VariableUtil.VALUE_TWO:
+                onStartActivity(lottery,"5");
+                break;
+            case VariableUtil.VALUE_THREE:
+                onShowDialogs("正在支付");
+                break;
+            default:
+                break;
+        }
+    }
+    private void onStartActivity(String lottery, String s) {
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url",lottery);
+        success.putExtra("type",s);
+        success.putExtra("orderId",orderId);
+        startActivity(success);
+        finish();
     }
     private void onGetPayWayData() {
         try {
@@ -264,12 +272,12 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 map.put("name",name);
                 map.put("code",code);
                 map.put("channel",channel);
-                List.add(map);
+                mList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (List.size()!=0){
+        if (mList.size()!=0){
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -310,14 +318,47 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
                     || realAmount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(0x002);
-                requestResult();
+                onStartActivity("","0");
+               // requestResult();
             }else {
                 Pingpp.createPayment(PayFeeWayActivity.this, charge);
             }
+        }else if (channels.equals(ConstantUtil.VALUE_TEN)){
+            if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
+                    || realAmount.equals(VariableUtil.VALUE_ZERO)){
+                setResult(0x002);
+                onStartActivity("","0");
+              //  requestResult();
+            }else {
+                /**
+                 * channels=10
+                 * 云闪付
+                 */
+                String mode= BuildConfig.PAY_MODE;
+                int ret = UPPayAssistEx.startPay(this, null, null, charge, mode);
+            }
+        }else if (channels.equals(ConstantUtil.VALUE_TWELVE)){
+            /**
+             * channels=12
+             * 翼支付
+             */
+            if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
+                    || realAmount.equals(VariableUtil.VALUE_ZERO)){
+                setResult(0x002);
+                onStartActivity("","0");
+               // requestResult();
+            }else {
+                Gson gson = new Gson();
+                YiPayModel model = gson.fromJson(charge, YiPayModel.class);
+                PaymentTask mPaymentTask = new PaymentTask(this);
+                mPaymentTask.pay(ParamsUtil.buildPayParams(model));
+            }
         }else {
             setResult(0x002);
-            requestResult();
+            onStartActivity("","0");
+           // requestResult();
         }
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,9 +372,10 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         Intent data=getIntent();
         amount=data.getStringExtra("amount");
         payId =data.getStringExtra("id");
+        VariableUtil.payPos =-1;
         type="1";
         initView();
-        mAdapter=new PayWayAdapter(context,List);
+        mAdapter=new PayWayAdapter(context, mList);
         forScrollView.setAdapter(mAdapter);
         initSubtract();
         initData();
@@ -343,7 +385,16 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                 btnSend.setEnabled(true);
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
-                channels=List.get(thisPosition).get("channel");
+                channels= mList.get(thisPosition).get("channel");
+            }
+        });
+        forScrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                btnSend.setEnabled(true);
+                VariableUtil.payPos =position;
+                mAdapter.notifyDataSetChanged();
+                channels= mList.get(position).get("channel");
             }
         });
     }
@@ -351,7 +402,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         tvRealAmount =(TextView)findViewById(R.id.id_real_fee);
         tvSubtract =(TextView)findViewById(R.id.id_subtract_amount);
-        tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
+        TextView tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
         btnSend =(Button)findViewById(R.id.id_btn_pay) ;
         tvShouldAmount.setText("¥"+amount+"元");
         tvRealAmount.setText("¥"+amount);
@@ -387,9 +438,11 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private void onPayWayData() {
         String source="";
         customDialog.show();
+        requestCode=0;
         String validateURL= UrlUtil.PAY_METHOD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("source",source);
+        textParams.put("attr","201810");
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
@@ -438,21 +491,17 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         textParams.put("channel",channels);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,balanceHandler);
     }
-    private void showMsg(String title, String msg1, String msg2) {
-        String str = title;
+    private void showMsg(String title) {
         switch (title){
             case SendRequestUtil.SUCCESS_VALUE:
-                str="缴费成功";
                 setResult(0x002);
                 requestResult();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
-                str="缴费失败";
-                onShowDialogs(str);
+                onShowDialogs("缴费失败");
                 break;
             case SendRequestUtil.CANCEL_VALUE:
-                str="已取消缴费";
-                onShowDialogs(str);
+                onShowDialogs("缴费已取消");
                 break;
                 default:
                     break;
@@ -491,7 +540,32 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                  */
                 String errorMsg = data.getStringExtra("error_msg");
                 String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result, errorMsg, extraMsg);
+                showMsg(result);
+            }
+        }else {
+            if (data!=null){
+                if (channels.equals(ConstantUtil.VALUE_TEN)){
+                    String result = data.getStringExtra("pay_result");
+                    showMsg(result);
+                }else {
+                    switch (resultCode){
+                        case ConstantUtil.VALUE_MINUS1:
+                            setResult(0x002);
+                            onStartActivity("","0");
+                           // requestResult();
+                            break;
+                        case ConstantUtil.VALUE0:
+                            onShowDialogs("取消支付");
+                            break;
+                        case ConstantUtil.VALUE1:
+                            onShowDialogs("支付失败");
+                            break;
+                            default:
+                                String result = data.getStringExtra("result");
+                                ToastUtil.ToastText(context,result);
+                                break;
+                    }
+                }
             }
         }
     }

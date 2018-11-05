@@ -40,13 +40,17 @@
     <string name="immediately_pay">立即支付</string>
     <string name="recommend_code">推荐码</string>
     <string name="select_pay_way">选择支付方式</string>
-    <string name="water_recharge_tip">提示:此约仅用于直饮水设备购水时支付使用。</string>
+    <string name="water_recharge_tip">(仅用于直饮水设备购水时支付使用)</string>
     <!--首页  -->
     <string name="updata_apk">你的版本过老，如若需使用，请点击更新</string>
 
     <!--地址 -->
     <string name="delect_text">删除</string>
     <string name="edit_text">编辑</string>
+    <string name="detail_address">详细地址</string>
+    <string name="please_input_detail_address">请输入详细地址</string>
+    <string name="please_input_connection_person">请输入联系人</string>
+    <string name="please_input_connection_phone">请输入联系电话</string>
     <!-- 燃气业务  -->
     <string name="add_customer_no">新增燃气用户号</string>
     <string name="not_add_customerNo">当前没有添加燃气用户号</string>
@@ -74,6 +78,7 @@
     <string name="connection_phone_text">联系电话:</string>
     <string name="connection_address_text">联系地址:</string>
     <string name="recipient_text">收   件   人:</string>
+    <string name="connection_person">联系人</string>
     <string name="normal_use_gas">民用天然气</string>
     <string name="gas_invoice_apply">燃气缴费发票申请</string>
     <string name="repair_invoice_apply">维修发票申请</string>

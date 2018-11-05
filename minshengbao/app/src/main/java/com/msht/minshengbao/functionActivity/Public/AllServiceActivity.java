@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
@@ -19,11 +22,12 @@ import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
-import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
 import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
@@ -67,6 +71,7 @@ public class AllServiceActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
+                        Log.d("msg.obj=",msg.obj.toString());
                         Gson gson = new Gson();
                         AllServiceModel model = gson.fromJson(msg.obj.toString(), AllServiceModel.class);
                         if (model.result.equals(SendRequestUtil.SUCCESS_VALUE)) {
@@ -107,13 +112,33 @@ public class AllServiceActivity extends BaseActivity {
             public void ItemClick(View view, int mainPosition, int secondPosition) {
                 childcategories=categories.get(mainPosition).child;
                 String code=childcategories.get(secondPosition).code;
+                String url=childcategories.get(secondPosition).url;
                 serveId=String.valueOf(childcategories.get(secondPosition).id);
-                startServer(code);
+                if (!TextUtils.isEmpty(url)){
+                    startUrl(url);
+                }else {
+                    startServer(code);
+                }
+
             }
         });
     }
+
     private void initView() {
         myRecyclerView=(MyRecyclerView)findViewById(R.id.id_serve_view);
+    }
+    private void startUrl(String url) {
+        if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)){
+            Intent intent=new Intent(context, ShopActivity.class);
+            intent.putExtra("url",url);
+            intent.putExtra("first",1);
+            startActivity(intent);
+        }else {
+            Intent other=new Intent(context, HtmlPageActivity.class);
+            other.putExtra("url",url);
+            other.putExtra("navigate","民生宝");
+            startActivity(other);
+        }
     }
     private void startServer(String code) {
         switch (code){
@@ -189,6 +214,8 @@ public class AllServiceActivity extends BaseActivity {
            case "vegetables_scxs":
                 vegetableScxs();
                 break;
+            case ConstantUtil.SHOP:
+                break;
             default:
                 showNotify("民生宝" ,"你的版本过老，如若需使用，请点击更新");
                 break;
@@ -219,7 +246,7 @@ public class AllServiceActivity extends BaseActivity {
         startActivity(intent);
     }
     private void drinkingWater() {
-        Intent serve=new Intent(context,WaterHomeActivity.class);
+        Intent serve=new Intent(context,WaterMainActivity.class);
         startActivity(serve);
     }
     private void intelligentFarm() {

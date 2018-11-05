@@ -2,13 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_enabled="true" android:state_pressed="false"
-        android:drawable="@drawable/shape_change_blue_button"
-        />
+        android:drawable="@drawable/shape_change_blue_button" />
     <item android:state_enabled="true" android:state_pressed="true"
-        android:drawable="@color/blue_end"
-        />
+        android:drawable="@drawable/shape_blue_normal_button"/>
     <item
-        android:state_enabled="false" android:drawable="@color/background_tab_pressed"
-        />
-
+        android:state_enabled="false" android:drawable="@drawable/shape_blue_normal_button" />
 </selector>

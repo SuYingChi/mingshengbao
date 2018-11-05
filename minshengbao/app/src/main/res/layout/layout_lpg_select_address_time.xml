@@ -29,7 +29,7 @@
             android:textSize="@dimen/text_width16"
             android:textColor="@color/color_383838"
             android:textStyle="bold"
-            android:hint="@string/please_select_address"/>
+            android:hint="@string/please_select_delivery_address"/>
         <TextView
             android:id="@+id/id_tv_elevator"
             android:layout_width="wrap_content"

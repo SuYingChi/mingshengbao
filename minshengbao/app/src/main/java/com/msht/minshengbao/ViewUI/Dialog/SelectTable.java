@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.msht.minshengbao.R;
 
 /**
- * Created by hong on 2017/1/9.
+ *
+ * @author hong
+ * @date 2017/1/9
  */
 public class SelectTable  extends Dialog {
     private TextView tv_title;

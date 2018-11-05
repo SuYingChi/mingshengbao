@@ -2,19 +2,19 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="ring"
-               android:innerRadius="10dp"
+               android:innerRadius="@dimen/margin_width10"
                android:thickness="@dimen/margin_width1"
                android:useLevel="false">
-            <size android:height="15dp" android:width="20dp"/>
+            <size android:height="@dimen/margin_width20" android:width="@dimen/margin_width20"/>
             <solid android:color="@color/colorPrimary"/>
         </shape>
     </item>
     <item>
         <shape android:shape="ring"
                android:innerRadius="0dp"
-               android:thickness="8dp"
+               android:thickness="@dimen/margin_width8"
                android:useLevel="false">
-            <size android:height="10dp" android:width="10dp"/>
+            <size android:height="@dimen/margin_width10" android:width="@dimen/margin_width10"/>
             <solid android:color="@color/colorPrimary"/>
         </shape>
     </item>

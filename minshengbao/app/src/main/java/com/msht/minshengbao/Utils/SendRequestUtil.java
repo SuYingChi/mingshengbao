@@ -439,4 +439,57 @@ public class SendRequestUtil {
             }
         }.start();
     }
+    public static void postSingleFileToServer( final String validateURL,final Map<String, File> fileparams, final Handler mhandler) {
+        new Thread(){
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                DataInputStream dis = null;
+                try {
+                    URL url = new URL(validateURL);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(10000);
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Charset", "UTF-8");
+                    conn.setRequestProperty("ser-Agent", "Fiddler");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
+                    OutputStream os = conn.getOutputStream();
+                    DataOutputStream ds = new DataOutputStream(os);
+                    NetUtil.writeFileParams(fileparams, ds);
+                    NetUtil.paramsEnd(ds);
+                    os.flush();
+                    os.close();
+                    conn.connect();
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream is = conn.getInputStream();
+                        String result = StreamTools.readInputStream(is);
+                        Message msg = new Message();
+                        msg.obj = result;
+                        msg.what = SUCCESS;
+                        mhandler.sendMessage(msg);
+
+                    } else {
+                        Message msg = new Message();
+                        msg.what =FAILURE;
+                        msg.obj=ERROR_SERVICE;
+                        mhandler.sendMessage(msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = FAILURE;
+                    msg.obj=ERROR_NETWORK;
+                    mhandler.sendMessage(msg);
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+            }
+        }.start();
+    }
 }

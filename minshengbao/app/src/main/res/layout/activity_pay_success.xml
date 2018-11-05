@@ -8,58 +8,62 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.Public.PaySuccessActivity">
     <include layout="@layout/layout_header"/>
-    <WebView
-        android:id="@+id/id_success_page"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </WebView>
-    <LinearLayout
-        android:id="@+id/id_failure_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <RelativeLayout
+        <WebView
+            android:id="@+id/id_success_page"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/id_pay_img"
-                android:layout_width="@dimen/margin_100"
-                android:layout_height="@dimen/margin_100"
-                android:layout_marginTop="@dimen/margin_80"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/payfailure_3xh"/>
+            android:layout_height="match_parent">
+        </WebView>
+        <LinearLayout
+            android:id="@+id/id_failure_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/id_pay_img"
+                    android:layout_width="@dimen/margin_100"
+                    android:layout_height="@dimen/margin_100"
+                    android:layout_marginTop="@dimen/margin_80"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/payfailure_3xh"/>
+                <TextView
+                    android:id="@+id/id_pay_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/id_pay_img"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:text="支付失败"
+                    android:textSize="@dimen/text_width18"
+                    android:textColor="@color/color_383838"/>
+            </RelativeLayout>
             <TextView
-                android:id="@+id/id_pay_text"
+                android:id="@+id/id_recharge_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/id_pay_img"
-                android:layout_marginTop="@dimen/margin_20"
-                android:text="支付失败"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_width20"
                 android:textSize="@dimen/text_width18"
-                android:textColor="@color/color_383838"/>
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/id_recharge_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_width20"
-            android:textSize="@dimen/text_width18"
-            android:textColor="@color/color_383838"
-            android:text="@string/re_recharge" />
-        <Button
-            android:id="@+id/id_btn_know"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_width30"
-            android:layout_marginLeft="@dimen/margin_width25"
-            android:layout_marginRight="@dimen/margin_width25"
-            android:background="@drawable/selector_touch_button_change"
-            android:minHeight="@dimen/margin_width40"
-            android:text="@string/i_know"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_width16" />
-    </LinearLayout>
+                android:textColor="@color/color_383838"
+                android:text="@string/re_recharge" />
+            <Button
+                android:id="@+id/id_btn_know"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width30"
+                android:layout_marginLeft="@dimen/margin_width25"
+                android:layout_marginRight="@dimen/margin_width25"
+                android:background="@drawable/selector_touch_button_change"
+                android:minHeight="@dimen/margin_width40"
+                android:text="@string/i_know"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_width16" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

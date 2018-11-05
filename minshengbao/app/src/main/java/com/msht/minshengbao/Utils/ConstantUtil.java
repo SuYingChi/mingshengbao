@@ -14,6 +14,10 @@ public class ConstantUtil {
     public static final int REQUEST_CODE_TWO =2;
     public static final int REQUEST_CODE_SEVEN =7;
     public static final int MY_LOCATION_REQUEST=0;
+    public static final int REQUEST_CALL_PHONE=2;
+    public static  final int MY_CAMERA_REQUEST=1;
+    public static final int VALUE_MINUS1=-1;
+    public static final int VALUE0=0;
     public static final int VALUE1=1;
     public static final int VALUE2=2;
     public static final int VALUE3=3;
@@ -25,6 +29,7 @@ public class ConstantUtil {
     public static final int VALUE9=9;
     public static final int VALUE10=10;
     public static final int VALUE11=11;
+    public static final int SPLASH_DISPLAY_LENGTH=3000;
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
     public static final  String VALUE_ONE=  "1";
@@ -38,6 +43,7 @@ public class ConstantUtil {
     public static final  String VALUE_NINE= "9";
     public static final  String VALUE_TEN=  "10";
     public static final  String VALUE_ELEVEN="11";
+    public static final  String VALUE_TWELVE="12";
     public static final  String VALUE_FOURTEEN="14";
     public static final  String VALUE_THIRTY_SIX="36";
     public static final  String VALUE_FORTY_EIGHT="48";
@@ -64,5 +70,12 @@ public class ConstantUtil {
 
     public static final String SHOP_DOMAIN="shop.msbapp.cn";
     public static final String VEGETABLE_DOMAIN="jsxss.net";
+
+
+    /**支付方式 */
+    /**银联云闪付*/
+    public static final String UPACP_DIRECT="upacp_direct";
+    /**翼支付*/
+    public static final String BEST_PAY="best_pay";
 
 }

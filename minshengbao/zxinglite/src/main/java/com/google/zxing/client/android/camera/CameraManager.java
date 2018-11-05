@@ -17,6 +17,7 @@
 package com.google.zxing.client.android.camera;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -354,6 +355,22 @@ public final class CameraManager {
 
     public void setFramingRect(Rect rect){
         this.framingRect = rect;
+    }
+
+    /* 打开手电筒 */
+    public void openFlashlight() {
+        if (flashLightAvailable()) {
+            configManager.openFlashlight(camera.getCamera());
+        }
+    }
+    public void closeFlashlight() {
+        if (flashLightAvailable()) {
+            configManager.closeFlashlight(camera.getCamera());
+        }
+    }
+
+    private boolean flashLightAvailable() {
+        return previewing && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
 }

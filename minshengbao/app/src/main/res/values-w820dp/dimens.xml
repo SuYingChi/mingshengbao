@@ -22,6 +22,7 @@
     <dimen name="margin_width122">244dp</dimen>
     <dimen name="margin_width140">280dp</dimen>
     <dimen name="margin_width100">200dp</dimen>
+    <dimen name="margin_width90">180dp</dimen>
     <dimen name="margin_width89">178dp</dimen>
     <dimen name="margin_width86">172dp</dimen>
     <dimen name="margin_width80">160dp</dimen>
@@ -61,6 +62,7 @@
     <dimen name="text_width10">20sp</dimen>
     <dimen name="text_width12">24sp</dimen>
     <dimen name="text_width14">28sp</dimen>
+    <dimen name="text_width15">30sp</dimen>
     <dimen name="text_width16">32sp</dimen>
     <dimen name="text_width18">36sp</dimen>
     <dimen name="text_width20">40sp</dimen>

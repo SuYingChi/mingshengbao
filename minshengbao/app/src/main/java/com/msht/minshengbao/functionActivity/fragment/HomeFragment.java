@@ -53,7 +53,7 @@ import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
-import com.msht.minshengbao.functionActivity.WaterApp.WaterHomeActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
 import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
@@ -586,7 +586,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         startActivity(intent);
     }
     private void drinkingWater() {
-        Intent serve=new Intent(mContext,WaterHomeActivity.class);
+        Intent serve=new Intent(mContext,WaterMainActivity.class);
         serve.putExtra("mCity",mCity);
         serve.putExtra("cityId",cityId);
         startActivity(serve);

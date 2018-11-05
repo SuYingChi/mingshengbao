@@ -14,6 +14,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -54,6 +55,7 @@ import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -178,7 +180,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             aMap.addMarkers(markerOptionsArrayList,false);
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,6 +210,8 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView(Bundle savedInstanceState) {
+        View layoutHeader=findViewById(R.id.id_map_layout);
+        layoutHeader.setBackgroundResource(R.drawable.shape_change_blue_bg);
         mMapView = (MapView) findViewById(R.id.id_mapView);
         ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
         autoText =(EditText) findViewById(R.id.et_search);
@@ -323,10 +326,34 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 40));
                 break;
             case R.id.id_scan_view:
-                onStartScanActivity();
+                onRequestLimit();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void onRequestLimit() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
+                MPermissionUtils.requestPermissionsResult(this, ConstantUtil.MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA}, new MPermissionUtils.OnPermissionListener() {
+                    @Override
+                    public void onPermissionGranted(int code) {
+                        if (code==ConstantUtil.MY_CAMERA_REQUEST){
+                            onStartScanActivity();
+                        }
+                    }
+                    @Override
+                    public void onPermissionDenied(int code) {
+                        ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
+                    }
+                });
+
+            }else {
+                onStartScanActivity();
+            }
+        }else {
+            onStartScanActivity();
         }
     }
 

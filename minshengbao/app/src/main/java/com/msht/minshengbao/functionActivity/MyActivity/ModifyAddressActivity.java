@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.functionActivity.Public.MoveSelectAddress;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -37,7 +36,7 @@ import java.util.regex.Pattern;
  * @author hong
  * @date 2018/7/2  
  */
-public class ModifyAddress extends BaseActivity implements View.OnClickListener {
+public class ModifyAddressActivity extends BaseActivity implements View.OnClickListener {
     private TextView  tvCity;
     private EditText  etAddress;
     private EditText  etName;
@@ -59,13 +58,13 @@ public class ModifyAddress extends BaseActivity implements View.OnClickListener 
     private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
-        private WeakReference<ModifyAddress>mWeakReference;
-        public RequestHandler(ModifyAddress activity) {
-            mWeakReference=new WeakReference<ModifyAddress>(activity);
+        private WeakReference<ModifyAddressActivity>mWeakReference;
+        public RequestHandler(ModifyAddressActivity activity) {
+            mWeakReference=new WeakReference<ModifyAddressActivity>(activity);
         }
         @Override
         public void handleMessage(Message msg) {
-            final ModifyAddress activity =mWeakReference.get();
+            final ModifyAddressActivity activity =mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
             }

@@ -15,135 +15,65 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <include layout="@layout/layout_head_top_tip"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background_gray"
+                android:layout_marginTop="@dimen/margin_width6"
+                android:background="@color/white"
                 android:minHeight="@dimen/margin_width45">
+                <TextView
+                    android:id="@+id/id_recharge_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/color_383838"
+                    android:text="@string/balance_recharge"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:layout_toEndOf="@+id/id_recharge_text"
+                    android:layout_toRightOf="@+id/id_recharge_text"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
-                    android:textSize="@dimen/text_width14"
-                    android:textColor="@color/title_tv"
+                    android:textSize="@dimen/text_width12"
+                    android:textColor="@color/color_9e9e9e"
                     android:text="@string/water_recharge_tip"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:background="@color/background_gray"
+                android:background="@color/white"
                 android:layout_height="wrap_content">
                 <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                     android:id="@+id/id_recharge_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/margin_width10"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginTop="@dimen/margin_width10"
+                    android:layout_margin="@dimen/margin_width10"
                     android:numColumns="3"
                     android:horizontalSpacing="@dimen/margin_width20"
                     android:verticalSpacing="@dimen/margin_width20">
                 </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_width40"
-                android:layout_marginTop="@dimen/margin_width15"
-                android:layout_marginLeft="@dimen/margin_width20"
-                android:layout_marginStart="@dimen/margin_width20"
-                android:layout_marginRight="@dimen/margin_width20"
-                android:layout_marginEnd="@dimen/margin_width20"
-                android:background="@color/white">
-                <TextView
-                    android:id="@+id/id_recommend_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/margin_width10"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginStart="@dimen/margin_width10"
-                    android:textSize="@dimen/text_width16"
-                    android:textColor="@color/color_383838"
-                    android:text="@string/recommend_code"/>
-                <EditText
-                    android:id="@+id/id_et_recommend"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:background="@null"
-                    android:layout_toRightOf="@+id/id_recommend_text"
-                    android:layout_toEndOf="@+id/id_recommend_text"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:hint="@string/please_input_recommend_code" />
-            </RelativeLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"
                 android:background="@color/background_gray"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_width45"
-                android:background="@color/white">
-                <TextView
-                    android:id="@+id/text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginStart="@dimen/margin_width10"
-                    android:text="@string/select_pay_way"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_width16"
-                    />
-            </RelativeLayout>
-            <include layout="@layout/layout_line_gray" />
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
-                android:id="@+id/id_payway_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
-            <include layout="@layout/layout_line_gray" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_width60"
-                android:layout_gravity="center_horizontal">
-                <TextView
-                    android:id="@+id/id_text1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_width12"
-                    android:text="点击立即充值表示，您已经同意"/>
-                <TextView
-                    android:id="@+id/id_back_agree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_width12"
-                    android:layout_toRightOf="@+id/id_text1"
-                    android:textColor="@color/colorAccent"
-                    android:text="@string/activity_protocol"/>
-            </RelativeLayout>
             <Button
                 android:id="@+id/id_btn_send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/margin_width45"
-                android:layout_marginTop="@dimen/margin_width10"
-                android:layout_marginLeft="@dimen/margin_width45"
-                android:layout_marginRight="@dimen/margin_width45"
-                android:layout_marginBottom="@dimen/margin_width45"
-                android:background="@drawable/selector_touch_button_change"
+                android:layout_margin="@dimen/margin_width40"
+                android:background="@drawable/selector_change_blue_corner_background"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_width16"
-                android:text="@string/immediately_recharge"/>
+                android:text="@string/ensure_text"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

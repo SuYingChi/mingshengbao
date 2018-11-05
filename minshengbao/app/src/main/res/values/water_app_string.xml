@@ -3,12 +3,13 @@
     tools:ignore="MissingTranslation">
     <string name="activity_protocol">《充返活动说明》</string>
     <string name="immediately_recharge">立即充值</string>
-    <string name="result_notice1">请继续操作设备，完成订单</string>
-    <string name="result_notice2">网络开小差了，请稍后再试或使用IC卡</string>
+    <string name="result_notice1">启动设备成功，请开始灌装吧</string>
+    <string name="result_notice2">很抱歉，此设备已离线，您可以使用IC卡购水~</string>
     <string name="result_notice3">其他异常，敬请谅解</string>
     <string name="result_notice4">首次使用，请您充值注册</string>
     <string name="result_notice5">您充值后，可继续使用！</string>
     <string name="result_notice6">设备制水中，请稍后！</string>
+    <string name="result_notice7">很抱歉，此设备暂时无法售水，请稍后再来</string>
     <string name="scan_result0">扫码成功</string>
     <string name="scan_result9">您的账户无效</string>
     <string name="scan_result10">售水机设备异常</string>
@@ -16,5 +17,39 @@
     <string name="scan_result12">您的账户无效</string>
     <string name="scan_result1008">售水机网络异常</string>
     <string name="scan_result1009">当前水量不足</string>
+
+
+    <string name="scan_code_buy_water">扫码购水</string>
+    <string name="nearby_water_machine">附近售水机</string>
+    <string name="into_look">去看看</string>
+    <string name="malfunction_response">故障上报</string>
+    <string name="service_center">客服中心</string>
+    <string name="have_award">有奖</string>
+    <string name="welcome_use_water_app">滴滴严选，守护您的饮水健康！</string>
+    <string name="friend_share">好友分享</string>
+    <string name="fee_standard">收费标准</string>
+    <string name="equipment_number">设备编号</string>
+    <string name="current_time_tds">实时TDS</string>
+    <string name="launch_equipment">启动设备购水</string>
+    <string name="malfunction_text">设备故障？点此上报 ></string>
+    <string name="water_balance_detail">明细</string>
+    <string name="water_account_text">直饮水账户总余额  (元)</string>
+    <string name="please_input_equipmentNo">扫描二维码或输入设备编号</string>
+    <string name="equipment_estate">设备所在小区</string>
+    <string name="malfunction_question_describe">故障问题描述</string>
+    <string name="upload_picture">上传照片</string>
+    <string name="click_look"><u>点击查看</u></string>
+    <string name="recharge_award_tip">充值领取大礼包，100%有奖</string>
+    <string name="recharge_meal_tip">充值800元赠送450元</string>
+    <string name="pay_fee_agree_tip">点击立即充值表示，您已经同意</string>
+    <string name="select_share_way">选择分享方式</string>
+    <string name="wei_xin">微信</string>
+    <string name="wei_xin_circle">朋友圈</string>
+    <string name="qr_code_text">二维码</string>
+    <string name="copy_link">复制链接</string>
+    <string name="share_to_weiXin">分享到微信</string>
+    <string name="water_inform_tip">即日起，水宝充值可领取大礼包！</string>
+
+
 
 </resources>

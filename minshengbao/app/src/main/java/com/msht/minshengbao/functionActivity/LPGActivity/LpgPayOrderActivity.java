@@ -7,9 +7,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bestpay.app.PaymentTask;
+import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Model.YiPayModel;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ParamsUtil;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
@@ -22,8 +30,10 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.functionActivity.repairService.RepairPaymentActivity;
 import com.pingplusplus.android.Pingpp;
 import com.umeng.analytics.MobclickAgent;
+import com.unionpay.UPPayAssistEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,23 +139,21 @@ public class LpgPayOrderActivity extends BaseActivity {
                 }).show();
     }
     private void onPayResult(JSONObject json) {
-
         String orderId=json.optString("orderId");
         int orderStatus=json.optInt("orderStatus");
         if (orderStatus==3){
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","7");
-            success.putExtra("url","");
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            finish();
+            onSuccessActivity(orderId,"7");
         }else {
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","5");
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            finish();
+            onSuccessActivity(orderId,"5");
         }
+    }
+    private void onSuccessActivity(String orderId, String s) {
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("type",s);
+        success.putExtra("url","");
+        success.putExtra("orderId",orderId);
+        startActivity(success);
+        finish();
     }
     private void onGetPayWayData() {
         try {
@@ -171,15 +179,53 @@ public class LpgPayOrderActivity extends BaseActivity {
     }
     private void onChargePayWay(JSONObject jsonObject) {
         String charge=jsonObject.optString("charge");
-        if (payChannel.equals(VariableUtil.VALUE_ONE)||payChannel.equals(VariableUtil.VALUE_THREE)||payChannel.equals(VariableUtil.VALUE_FIVE)||payChannel.equals(VariableUtil.VALUE_SEVER)) {
-            Pingpp.createPayment(LpgPayOrderActivity.this, charge);
-        }else if (payChannel.equals(VariableUtil.VALUE_EIGHT)||payChannel.equals(VariableUtil.VALUE_SIX)){
-            setResult(0x001);
-            Intent success=new Intent(context,PaySuccessActivity.class);
-            success.putExtra("type","7");
-            success.putExtra("orderId",orderId);
-            startActivity(success);
-            finish();
+        switch (payChannel){
+            case VariableUtil.VALUE_ONE:
+                Pingpp.createPayment(LpgPayOrderActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_THREE:
+                Pingpp.createPayment(LpgPayOrderActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_FIVE:
+                Pingpp.createPayment(LpgPayOrderActivity.this, charge);
+                break;
+            case VariableUtil.VALUE_SEVER:
+                Pingpp.createPayment(LpgPayOrderActivity.this, charge);
+                break;
+            case ConstantUtil.VALUE_TEN:
+                if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
+                        || realAmount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x001);
+                    onDelayRequest();
+                }else {
+                    /**
+                     * channels=10
+                     * 云闪付
+                     */
+                    String mode= BuildConfig.PAY_MODE;
+                    int ret = UPPayAssistEx.startPay(this, null, null, charge, mode);
+                }
+                break;
+            case ConstantUtil.VALUE_TWELVE:
+                /**
+                 * channels=12
+                 * 翼支付
+                 */
+                if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
+                        || realAmount.equals(VariableUtil.VALUE_ZERO)){
+                    setResult(0x001);
+                    onDelayRequest();
+                }else {
+                    Gson gson = new Gson();
+                    YiPayModel model = gson.fromJson(charge, YiPayModel.class);
+                    PaymentTask mPaymentTask = new PaymentTask(this);
+                    mPaymentTask.pay(ParamsUtil.buildPayParams(model));
+                }
+                break;
+            default:
+                setResult(0x001);
+                onDelayRequest();
+                break;
         }
     }
     private void requestResult() {
@@ -190,7 +236,6 @@ public class LpgPayOrderActivity extends BaseActivity {
         textParams.put("id",orderId);
         textParams.put("orderType",orderType);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +251,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         }
         customDialog=new CustomDialog(this, "正在加载");
         setCommonHeader("支付订单");
+        VariableUtil.payPos =-1;
         initFindViewId();
         ListViewForScrollView mListView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         mAdapter=new PayWayAdapter(context,mList);
@@ -218,6 +264,15 @@ public class LpgPayOrderActivity extends BaseActivity {
                 VariableUtil.payPos =thisPosition;
                 mAdapter.notifyDataSetChanged();
                 payChannel=mList.get(thisPosition).get("channel");
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                btnSend.setEnabled(true);
+                VariableUtil.payPos =position;
+                mAdapter.notifyDataSetChanged();
+                payChannel=mList.get(position).get("channel");
             }
         });
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -282,30 +337,48 @@ public class LpgPayOrderActivity extends BaseActivity {
                 // 错误信息
                 String errorMsg = data.getStringExtra("error_msg");
                 String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result, errorMsg, extraMsg);
+                showMsg(result);
+            }
+        }else {
+            if (data!=null){
+                if (payChannel.equals(ConstantUtil.VALUE_TEN)){
+                    String result = data.getStringExtra("pay_result");
+                    showMsg(result);
+                }else {
+                    switch (resultCode){
+                        case ConstantUtil.VALUE_MINUS1:
+                            setResult(0x001);
+                            onDelayRequest();
+                            break;
+                        case ConstantUtil.VALUE0:
+                            onShowDialogs("取消支付");
+                            break;
+                        case ConstantUtil.VALUE1:
+                            onShowDialogs("支付失败");
+                            break;
+                        default:
+                            String result = data.getStringExtra("result");
+                            ToastUtil.ToastText(context,result);
+                            break;
+                    }
+                }
             }
         }
     }
-    private void showMsg(String result, String errorMsg, String extraMsg) {
-        String str;
+    private void showMsg(String result) {
         switch (result){
             case SendRequestUtil.SUCCESS_VALUE:
-                str="支付成功";
                 setResult(0x001);
                 onDelayRequest();
-               // requestResult();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
-                str="支付失败";
-                onShowDialogs(str);
+                onShowDialogs("支付失败");
                 break;
             case SendRequestUtil.CANCEL_VALUE:
-                str="已取消支付";
-                onShowDialogs(str);
+                onShowDialogs("已取消支付");
                 break;
             default:
-                str=result;
-                onShowDialogs(str);
+                onShowDialogs("未知错误");
                 break;
         }
     }

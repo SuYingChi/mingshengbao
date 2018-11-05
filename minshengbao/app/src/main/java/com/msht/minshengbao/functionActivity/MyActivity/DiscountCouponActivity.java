@@ -9,7 +9,7 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-public class DiscountCoupon extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class DiscountCouponActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
     @Override

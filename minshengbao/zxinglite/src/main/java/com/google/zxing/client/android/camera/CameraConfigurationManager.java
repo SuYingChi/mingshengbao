@@ -31,6 +31,8 @@ import com.google.zxing.client.android.PreferencesActivity;
 import com.google.zxing.client.android.camera.open.CameraFacing;
 import com.google.zxing.client.android.camera.open.OpenCamera;
 
+import java.util.Collection;
+
 /**
  * A class which deals with reading, parsing, and setting the camera parameters which are used to
  * configure the camera hardware.
@@ -252,6 +254,41 @@ final class CameraConfigurationManager {
     if (!safeMode && !prefs.getBoolean(PreferencesActivity.KEY_DISABLE_EXPOSURE, true)) {
       CameraConfigurationUtils.setBestExposure(parameters, newSetting);
     }
+  }
+
+  void openFlashlight(Camera camera) {
+    doSetTorchs(camera, true);
+  }
+
+  void closeFlashlight(Camera camera) {
+    doSetTorchs(camera, false);
+  }
+
+  private void doSetTorchs(Camera camera, boolean newSetting) {
+    Camera.Parameters parameters = camera.getParameters();
+    String flashMode;
+    /** 是否支持闪光灯 */
+    if (newSetting) {
+      flashMode = findSettableValue(parameters.getSupportedFlashModes(), Camera.Parameters.FLASH_MODE_TORCH, Camera.Parameters.FLASH_MODE_ON);
+    } else {
+      flashMode = findSettableValue(parameters.getSupportedFlashModes(), Camera.Parameters.FLASH_MODE_OFF);
+    }
+    if (flashMode != null) {
+      parameters.setFlashMode(flashMode);
+    }
+    camera.setParameters(parameters);
+  }
+  private static String findSettableValue(Collection<String> supportedValues, String... desiredValues) {
+    String result = null;
+    if (supportedValues != null) {
+      for (String desiredValue : desiredValues) {
+        if (supportedValues.contains(desiredValue)) {
+          result = desiredValue;
+          break;
+        }
+      }
+    }
+    return result;
   }
 
 }

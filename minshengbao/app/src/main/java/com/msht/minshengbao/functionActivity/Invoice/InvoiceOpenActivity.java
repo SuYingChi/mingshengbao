@@ -37,6 +37,13 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class InvoiceOpenActivity extends BaseActivity {
     private XListView  mListView;
     private View       layoutNoData;
@@ -46,7 +53,7 @@ public class InvoiceOpenActivity extends BaseActivity {
     private CheckBox   boxAllSelect;
     private String     userId,password;
     private String     totalAmount;
-    private String     idinvoice;
+    private String     invoiceId;
     private String     text="(满400包邮)";
     private double     amount=0;
     private int        count=0;
@@ -146,7 +153,11 @@ public class InvoiceOpenActivity extends BaseActivity {
                 map.put("category", category);
                 map.put("amount",amount);
                 map.put("time",time);
-                check.put("ischeck",false);
+                if (boxAllSelect.isChecked()){
+                    check.put("isCheck",true);
+                }else {
+                    check.put("isCheck",false);
+                }
                 invoiceList.add(map);
                 checkList.add(check);
             }
@@ -160,6 +171,25 @@ public class InvoiceOpenActivity extends BaseActivity {
             layoutNoData.setVisibility(View.GONE);
             mAdapter.notifyDataSetChanged();
         }
+        onCalculateData();
+    }
+    private void onCalculateData() {
+        int preCount=0;
+        double preAmount=0;
+        for (int i=0;i<checkList.size();i++){
+            if (checkList.get(i).get("isCheck")){
+                String money=invoiceList.get(i).get("amount");
+                double a=Double.parseDouble(money);
+                preAmount=preAmount+a;
+                preCount++;
+            }
+        }
+        count=preCount;
+        amount=preAmount;
+        NumberFormat format=new DecimalFormat("0.##");
+        totalAmount=format.format(amount);
+        String longText="已选"+count+"个订单共"+totalAmount+"元"+text;
+        tvTotal.setText(longText);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,7 +275,7 @@ public class InvoiceOpenActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 for (int i=0;i<checkList.size();i++){
-                    if (checkList.get(i).get("ischeck")){
+                    if (checkList.get(i).get("isCheck")){
                         idList.add(invoiceList.get(i).get("id"));
                     }
                 }
@@ -259,10 +289,10 @@ public class InvoiceOpenActivity extends BaseActivity {
                     }
                     result.append(string);
                 }
-                idinvoice=result.toString();
-                if (matchjudge(idinvoice)){
+                invoiceId=result.toString();
+                if (matchjudge(invoiceId)){
                     Intent intent=new Intent(context,InvoiceRepairApplyActivity.class);
-                    intent.putExtra("idinvoice",idinvoice);
+                    intent.putExtra("idinvoice",invoiceId);
                     intent.putExtra("total_amount",totalAmount);
                     startActivityForResult(intent,1);
                 }
@@ -275,7 +305,7 @@ public class InvoiceOpenActivity extends BaseActivity {
                     if (isChecked){
                         amount=0;
                         for (int i=0;i<invoiceList.size();i++){
-                            checkList.get(i).put("ischeck",true);
+                            checkList.get(i).put("isCheck",true);
                             String money=invoiceList.get(i).get("amount");
                             double a=Double.parseDouble(money);
                             amount=amount+a;
@@ -288,7 +318,7 @@ public class InvoiceOpenActivity extends BaseActivity {
                         tvTotal.setText(longText);
                     }else {
                         for (int i=0;i<checkList.size();i++){
-                            checkList.get(i).put("ischeck",false);
+                            checkList.get(i).put("isCheck",false);
                         }
                         mAdapter.notifyDataSetChanged();
                         count=0;
@@ -371,7 +401,7 @@ public class InvoiceOpenActivity extends BaseActivity {
             holder.boxSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    checkList.get(position).put("ischeck",isChecked);
+                    checkList.get(position).put("isCheck",isChecked);
                     if (ignoreChange){
                         if (isChecked){
                             String money=invoiceList.get(thisposition).get("amount");
@@ -399,7 +429,7 @@ public class InvoiceOpenActivity extends BaseActivity {
                 }
             });
             ignoreChange=false;
-            holder.boxSelect.setChecked(checkList.get(position).get("ischeck"));
+            holder.boxSelect.setChecked(checkList.get(position).get("isCheck"));
             ignoreChange=true;
             return convertView;
         }

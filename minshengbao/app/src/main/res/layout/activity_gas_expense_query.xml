@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
                 android:id="@+id/item_left"
@@ -24,18 +24,23 @@
                     android:layout_height="@dimen/margin_width20"
                     android:src="@drawable/customer_xh"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_marginBottom="@dimen/margin_width10"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:contentDescription="@string/picture_text"
                     android:id="@+id/id_customerView" />
                 <TextView
                     android:id="@+id/id_customerText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_customerView"
-                    android:layout_marginLeft="@dimen/margin_6"
+                    android:layout_toEndOf="@+id/id_customerView"
+                    android:layout_marginLeft="@dimen/margin_width6"
+                    android:layout_marginStart="@dimen/margin_width6"
                     android:textSize="@dimen/text_width18"
-                    android:textColor="#000000"
+                    android:textColor="@color/color_383838"
                     android:layout_marginTop="@dimen/margin_6"
                     android:layout_alignBottom="@+id/id_customerView"
                     />
@@ -44,8 +49,11 @@
                     android:layout_height="@dimen/margin_width20"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_below="@+id/id_customerText"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/address_xh"
                     android:id="@+id/imageView8" />
                 <TextView
@@ -54,8 +62,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_width18"
-                    android:textColor="@color/black"
+                    android:textColor="@color/color_383838"
                     android:layout_toRightOf="@+id/imageView8"
+                    android:layout_toEndOf="@+id/imageView8"
+                    android:layout_marginStart="@dimen/margin_width6"
                     android:layout_marginLeft="@dimen/margin_6"
                     android:layout_below="@+id/id_customerText"
                     android:layout_marginTop="@dimen/margin_width10"
@@ -76,8 +86,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
-                        android:text="应缴金额"
+                        android:text="@string/should_pay_fee"
                         android:textSize="@dimen/text_width20"
                         android:textColor="@color/black1"/>
                     <TextView
@@ -85,10 +96,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_marginRight="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:textColor="@color/colorOrange"
-                        android:text="账单明细"
+                        android:text="@string/bill_detail"
                         android:textSize="@dimen/text_width20"
                         />
                     <TextView
@@ -113,8 +126,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
                         android:layout_centerVertical="true"
-                        android:text="共用燃气"
+                        android:text="@string/total_gas_num"
                         android:textSize="@dimen/text_18"
                         android:textColor="@color/black"/>
                     <TextView
@@ -122,7 +136,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_width18"
@@ -138,56 +154,65 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
                         android:layout_marginTop="@dimen/margin_width10"
-                        android:text="燃气费："
+                        android:text="@string/gas_fee_text"
                         android:textSize="@dimen/text_18"
-                        />
+                        android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:id="@+id/id_gas_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:textColor="@color/black1"
                         android:textSize="@dimen/text_width16"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="违约金："
+                        android:text="@string/gas_last_fee_text"
                         android:id="@+id/id_text3"
                         android:layout_below="@+id/id_text2"
                         android:layout_marginTop="@dimen/margin_width12"
                         android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
                         android:textSize="@dimen/text_width18"
-                        />
+                        android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="0.00"
                         android:id="@+id/id_lastfees"
                         android:layout_below="@+id/id_text2"
                         android:layout_marginTop="@dimen/margin_width12"
                         android:textColor="@color/black1"
                         android:textSize="@dimen/text_width18"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_width10" />
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
                         android:layout_below="@+id/id_text3"
                         android:layout_marginTop="@dimen/margin_width12"
-                        android:text="扣除燃气预存款："
-                        android:textSize="@dimen/text_18"/>
+                        android:text="@string/deduct_gas_prestore_fee_text"
+                        android:textSize="@dimen/text_18"
+                        android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:id="@+id/id_tv_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_below="@+id/id_text3"
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_marginBottom="@dimen/margin_width12"
@@ -207,15 +232,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
-                        android:text="燃气预存款余额"
+                        android:text="@string/gas_prestore_fee"
+                        android:textColor="@color/color_383838"
                         android:textSize="@dimen/text_width16"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/picture_text"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:src="@drawable/forward_2x"/>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
@@ -228,8 +258,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
-                        android:text="代金券"
+                        android:text="@string/coupon_text"
                         android:textSize="@dimen/text_width18"
                         android:textColor="@color/black1"/>
                     <TextView
@@ -238,14 +269,20 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_img_forward"
-                        android:layout_marginRight="@dimen/margin_6"
-                        />
+                        android:layout_toStartOf="@+id/id_img_forward"
+                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_marginEnd="@dimen/margin_width6"
+                        android:textColor="@color/color_9e9e9e"
+                        android:textSize="@dimen/text_width16"/>
                     <ImageView
                         android:id="@+id/id_img_forward"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_6"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_marginEnd="@dimen/margin_width6"
+                        android:contentDescription="@string/picture_text"
                         android:layout_centerVertical="true"
                         android:src="@drawable/forward_2x"/>
                 </RelativeLayout>
@@ -259,8 +296,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
-                        android:text="实付金额"
+                        android:text="@string/real_pay_amount"
                         android:textSize="@dimen/text_width18"
                         android:textColor="@color/black1"/>
                     <TextView
@@ -269,9 +307,12 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_marginRight="@dimen/margin_width10"
                         android:textSize="@dimen/text_width18"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/color_383838"/>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
             </LinearLayout>
@@ -288,7 +329,7 @@
                     android:layout_marginTop="@dimen/margin_width30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="立即缴费"
+                    android:text="@string/immediately_pay_fee"
                     android:textSize="@dimen/text_width18"
                     android:id="@+id/id_btn_payfees"
                     android:background="@drawable/selector_touch_button_change"

@@ -13,7 +13,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-public class ConsultRecommend extends AppCompatActivity {
+public class ConsultRecommendActivity extends AppCompatActivity {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
     private Context mContext;

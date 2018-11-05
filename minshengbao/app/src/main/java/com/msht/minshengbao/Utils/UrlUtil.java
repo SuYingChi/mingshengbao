@@ -21,7 +21,6 @@ public class UrlUtil {
     /**
      * 电动车域名
       */
-
     public static final String URL_REPAIR ="http://repairshop.msbapp.cn:17080";
     /**
      * LAUNCHER_IMG_URL 启动页广告图链接
@@ -40,6 +39,7 @@ public class UrlUtil {
     /**
      * 水宝
      */
+    public static final String WATER_INNER_REGISTER=BuildConfig.URL_MSSB+"/member/innerRegister";
     public static final String PAY_METHOD_URL =BuildConfig.URL_HEADS+"/api/app/pay_method";
     public static final String SEARCH_ESTATE_URL =BuildConfig.URL_MSSB+"/community/search";
     public static final String SCAN_CODE_BUY=BuildConfig.URL_MSSB+"/order/appScanNotice";
@@ -52,6 +52,19 @@ public class UrlUtil {
     public static final String WATER_CREATE_URL =BuildConfig.URL_MSSB+"/order/create";
     public static final String WATER_CANCEL_URL =BuildConfig.URL_MSSB+"/order/oper";
     public static final String WATER_EQUIPMENT_SEARCH=BuildConfig.URL_MSSB+"/equip/search";
+    public static final String WATER_BIND_ACCOUNT_LIST =BuildConfig.URL_MSSB+"/member/bindList";
+    public static final String WATER_VERIFY_CODE=BuildConfig.URL_MSSB+"/sendVerifyCode";
+    public static final String WATER_BIND_ACCOUNT_URL=BuildConfig.URL_MSSB+"/member/bindAccount";
+    public static final String WATER_UNBIND_ACCOUNT=BuildConfig.URL_MSSB+"/member/unbindAccount";
+    public static final String WATER_SWITCH_ACCOUNT=BuildConfig.URL_MSSB+"/member/switchAccount";
+    public static final String WATER_EQUIPMENT_INFORMATION=BuildConfig.URL_MSSB+"/equip/get";
+    public static final String WATER_BALANCE_DETAIL=BuildConfig.URL_MSSB+"/wallet/balanceItems";
+    public static final String WATER_IMAGE_UPLOAD=BuildConfig.URL_MSSB+"/uploadFile";
+    public static final String WATER_MALFUNCTION_UPLOAD=BuildConfig.URL_MSSB+"/failure/report";
+    public static final String WATER_PAY_ORDER_URL=BuildConfig.URL_MSSB+"/payment/payOrder";
+    public static final String WATER_PRIZES_GIFTS=BuildConfig.URL_MSSB_GIFT+"/rw_front/lqlp.html";
+    public static final String WATER_SERVICE_CENTER=BuildConfig.URL_MSSB_GIFT+"/rw_front/customer_center.html";
+    public static final String WATER_GIFTS_RECHARGE_WEB="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e0da2a76aae5110&redirect_uri=http%3a%2f%2fwx.msbapp.cn%2frw_front%2frecharge.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
     /**
      * 商城
      */

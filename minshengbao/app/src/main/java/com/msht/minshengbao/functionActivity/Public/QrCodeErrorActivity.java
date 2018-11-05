@@ -6,36 +6,38 @@ import android.widget.ImageView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class QrCodeErrorActivity extends BaseActivity {
-    private String error_type;
-    private final int SPLASH_DISPLAY_LENGHT=4000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_code_error);
         context=this;
         setCommonHeader("扫码提示");
-        error_type=getIntent().getStringExtra("error_type");
-        ImageView error_img=(ImageView)findViewById(R.id.id_error_img);
-        if (error_type.equals("0")){
-            error_img.setImageResource(R.drawable.qrcode_error);
-        }else if (error_type.equals("1")){
-            error_img.setImageResource(R.drawable.qrcode_error);
-        }else {
-
+        String errorType=getIntent().getStringExtra("error_type");
+        ImageView errorImg=(ImageView)findViewById(R.id.id_error_img);
+        if (errorType.equals("0")){
+            errorImg.setImageResource(R.drawable.qrcode_error);
+        }else if (errorType.equals("1")){
+            errorImg.setImageResource(R.drawable.qrcode_error);
         }
         initEvent();
     }
     private void initEvent() {
-
         new Handler().postDelayed(new Runnable(){
 
             @Override
             public void run() {
                 QrCodeErrorActivity.this.finish();
             }
-        }, SPLASH_DISPLAY_LENGHT);
+        }, ConstantUtil.SPLASH_DISPLAY_LENGTH);
     }
 }

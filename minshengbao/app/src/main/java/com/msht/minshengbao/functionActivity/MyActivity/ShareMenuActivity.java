@@ -9,10 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Defaultcontent;
+import com.msht.minshengbao.ShareDefaultContent;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -26,15 +25,20 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.ShareBoardConfig;
 import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.Log;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Locale;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class ShareMenuActivity extends BaseActivity {
     private String userId,password;
     private ShareAction mShareAction;
@@ -116,13 +120,13 @@ public class ShareMenuActivity extends BaseActivity {
         mShareAction=new ShareAction(ShareMenuActivity.this).setDisplayList(SHARE_MEDIA.SINA,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN_FAVORITE)
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
-                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        UMWeb web = new UMWeb(Defaultcontent.url);
-                        web.setTitle(Defaultcontent.title);
-                        web.setDescription(Defaultcontent.text+"——来自民生宝分享面板");
-                        web.setThumb(new UMImage(ShareMenuActivity.this, Defaultcontent.imageurl));
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
+                        UMWeb web = new UMWeb(ShareDefaultContent.url);
+                        web.setTitle(ShareDefaultContent.title);
+                        web.setDescription(ShareDefaultContent.text+"——来自民生宝分享面板");
+                        web.setThumb(new UMImage(ShareMenuActivity.this, ShareDefaultContent.imageurl));
                         new ShareAction(ShareMenuActivity.this).withMedia(web)
-                                .setPlatform(share_media)
+                                .setPlatform(shareMedia)
                                 .setCallback(umShareListener)
                                 .share();
                     }

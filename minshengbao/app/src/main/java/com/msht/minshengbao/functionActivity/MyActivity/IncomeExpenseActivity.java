@@ -13,7 +13,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
-public class IncomeExpense extends AppCompatActivity  {
+public class IncomeExpenseActivity extends AppCompatActivity  {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
     private Context mContext;

@@ -12,51 +12,57 @@
        android:layout_height="wrap_content"
        android:orientation="horizontal"
        android:background="@color/white"
-       android:minHeight="@dimen/margin_48">
+       android:baselineAligned="true"
+       android:minHeight="@dimen/margin_width48">
        <LinearLayout
            android:id="@+id/id_li_ordertype"
-           android:layout_weight="1"
+           android:layout_weight="0.5"
            android:layout_width="0dp"
            android:layout_height="wrap_content"
-           android:minHeight="@dimen/margin_48"
+           android:minHeight="@dimen/margin_width50"
            android:orientation="vertical">
-           <TextView
-               android:id="@+id/id_type1"
-               android:layout_weight="1"
+           <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:gravity="center"
-               android:text="订单消息"
-               android:textSize="@dimen/text_18"
-               android:textColor="@color/title_tv"/>
+               android:layout_height="@dimen/margin_width48">
+               <TextView
+                   android:id="@+id/id_type1"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_gravity="center"
+                   android:gravity="center"
+                   android:text="@string/order_message"
+                   android:textSize="@dimen/text_width16"
+                   android:textColor="@color/title_tv"/>
+           </RelativeLayout>
            <View
                android:id="@+id/id_view1"
                android:layout_width="match_parent"
-               android:layout_height="@dimen/margin_3"
+               android:layout_height="@dimen/margin_width3"
                android:background="@color/colorOrange"/>
        </LinearLayout>
        <LinearLayout
            android:id="@+id/id_li_gonggao"
-           android:layout_weight="1"
+           android:layout_weight="0.5"
            android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:minHeight="@dimen/margin_48"
+           android:layout_height="@dimen/margin_width50"
            android:orientation="vertical">
-           <TextView
-               android:id="@+id/id_type2"
-               android:layout_weight="1"
+           <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_gravity="center"
-               android:gravity="center"
-               android:text="公告栏"
-               android:textSize="@dimen/text_18"
-               android:textColor="@color/title_tv"/>
+               android:layout_height="@dimen/margin_width48">
+               <TextView
+                   android:id="@+id/id_type2"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_gravity="center"
+                   android:gravity="center"
+                   android:text="@string/notification_message"
+                   android:textSize="@dimen/text_width16"
+                   android:textColor="@color/title_tv"/>
+           </RelativeLayout>
            <View
                android:id="@+id/id_view2"
                android:layout_width="match_parent"
-               android:layout_height="@dimen/margin_3"
+               android:layout_height="@dimen/margin_width2"
                android:background="@color/white" />
        </LinearLayout>
    </LinearLayout>
@@ -72,62 +78,53 @@
         <include layout="@layout/layout_nodata_view"
             android:id="@+id/id_nodata_view"
             android:visibility="gone"/>
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/id_layout_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:background="@color/colorOrange"
+            android:layout_height="@dimen/margin_width56"
             android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="vertical"
             android:visibility="gone">
+            <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_re_cancel"
-                android:layout_width="@dimen/margin_60"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_10">
-                <ImageView
-                    android:id="@+id/id_img_cancel"
-                    android:layout_width="@dimen/margin_25"
-                    android:layout_height="@dimen/margin_25"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/repeal"/>
-                <TextView
-                    android:id="@+id/id_tv_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10">
+                <CheckBox
+                    android:id="@+id/id_select_checkBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_centerHorizontal="true"
-                    android:text="撤销"
-                    android:textColor="@color/white"
-                    android:layout_below="@+id/id_img_cancel"
-                    android:layout_marginTop="@dimen/margin_3"
-                    android:textSize="@dimen/text_12"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/id_re_delect"
-                android:layout_width="@dimen/margin_60"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10">
-                <ImageView
-                    android:id="@+id/id_img_delect"
-                    android:layout_width="@dimen/margin_25"
-                    android:layout_height="@dimen/margin_25"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/delete2x"/>
-                <TextView
-                    android:id="@+id/id_tv_delect"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:padding="@dimen/margin_width5"
+                    android:drawableLeft="@drawable/selector_my_radiobutton"
+                    android:drawableStart="@drawable/selector_my_radiobutton"
+                    android:button="@null"
+                    android:drawablePadding="@dimen/margin_width10"
+                    android:text="@string/select_all_text"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/text_width16" />
+                <Button
+                    android:id="@+id/id_btn_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="删除"
-                    android:layout_below="@+id/id_img_delect"
-                    android:layout_marginTop="@dimen/margin_3"
-                    android:textColor="@color/white"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="@dimen/text_12"/>
+                    android:minHeight="@dimen/margin_width30"
+                    android:minWidth="@dimen/margin_width60"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:background="@drawable/shape_orange_corner_boder_inwithte"
+                    android:text="@string/delect_text"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/text_width16" />
             </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

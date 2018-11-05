@@ -46,7 +46,7 @@
     <string name="send_apply">提交申请</string>
     <string name="select_buy_bottle">气瓶选购</string>
     <string name="delivery_good_tip">您的订单已配送，请完成支付</string>
-    <string name="please_select_address">请您选择配送地址</string>
+    <string name="please_select_delivery_address">请您选择配送地址</string>
     <string name="look_detail"><u>点击查看明细</u></string>
     <string name="vip_user_hint">(老用户空瓶换重瓶无需缴纳押金)</string>
     <string name="pay_fee">付款</string>

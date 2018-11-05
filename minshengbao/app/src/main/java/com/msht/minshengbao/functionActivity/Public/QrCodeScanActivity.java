@@ -2,12 +2,22 @@ package com.msht.minshengbao.functionActivity.Public;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.FeatureInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.zxing.Result;
@@ -15,6 +25,7 @@ import com.google.zxing.client.android.AnimeViewCallback;
 import com.google.zxing.client.android.AutoScannerView;
 import com.google.zxing.client.android.BaseCaptureActivity;
 import com.google.zxing.client.android.FlowLineView;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.functionActivity.GasService.IcCardExpenseActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebViewActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
@@ -38,8 +49,12 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
     private SurfaceView surfaceView;
     private AutoScannerView autoScannerView;
     private FlowLineView flowLineView;
+    private CheckBox flashLightImg;
+    private RadioButton qrCodeRadio;
+    private RadioButton barCodeRadio;
     private int codeType=0;
     private boolean isPause = false;
+    private boolean mSurfaceCreated = false;
     private static final String PAGE_NAME="二维码";
     private Context context;
     @Override
@@ -68,24 +83,51 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
         tvNavigationTitle.setText(title);
     }
     private void initView() {
-        findViewById(R.id.id_erwei).setOnClickListener(new View.OnClickListener() {
+        qrCodeRadio=(RadioButton)findViewById(R.id.id_qr_code);
+        barCodeRadio=(RadioButton) findViewById(R.id.id_bar_code);
+        qrCodeRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                isPause=false;
-                flowLineView.setVisibility(View.GONE);
-                autoScannerView.setVisibility(View.VISIBLE);
-                codeType=0;
-                reScan();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    isPause=false;
+                    flowLineView.setVisibility(View.GONE);
+                    autoScannerView.setVisibility(View.VISIBLE);
+                    codeType=0;
+                    barCodeRadio.setChecked(false);
+                    reScan();
+
+                }
             }
         });
-        findViewById(R.id.id_ar).setOnClickListener(new View.OnClickListener() {
+        barCodeRadio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                isPause=true;
-                flowLineView.setVisibility(View.VISIBLE);
-                autoScannerView.setVisibility(View.GONE);
-                codeType=1;
-                reScan();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    isPause=true;
+                    flowLineView.setVisibility(View.VISIBLE);
+                    autoScannerView.setVisibility(View.GONE);
+                    codeType=1;
+                    qrCodeRadio.setChecked(false);
+                    reScan();
+                }
+            }
+        });
+        flashLightImg=(CheckBox)findViewById(R.id.id_flash_check);
+        flashLightImg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    if (mSurfaceCreated){
+                        /**打开手电筒*/
+                        autoScannerView.turnOnFlashLight();
+                    }
+                }else {
+                    if (mSurfaceCreated){
+                        /**关闭手电筒*/
+                        autoScannerView.turnOffFlashLight();
+
+                    }
+                }
             }
         });
     }
@@ -96,9 +138,9 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
             flowLineView.StartRunning();
         }
     }
-
     @Override
     public SurfaceView getSurfaceView() {
+        mSurfaceCreated=true;
         return (surfaceView == null) ? (SurfaceView) findViewById(R.id.preview_view) : surfaceView;
     }
     @Override
@@ -123,6 +165,7 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
         Intent intent=new Intent(context, LpgBottleWebViewActivity.class);
         intent.putExtra("url",mUrl);
         startActivity(intent);
+        flashLightImg.setChecked(false);
     }
     private void resultActions(String result) {
         String downloadUrl="http://msbapp.cn/download/success.html?QRCodeJson=";
@@ -173,7 +216,6 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
             }
         }else if (result.contains(UrlUtil.LPG_QR_CODE_SCAN_URL)){
             startBottleWebView(result);
-            Log.d("result=",result);
         }else {
             makeMistakes("1");
         }
@@ -182,17 +224,21 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
         Intent intent=new Intent(context, LpgBottleWebViewActivity.class);
         intent.putExtra("url",result);
         startActivity(intent);
+        flashLightImg.setChecked(false);
     }
     private void goHtmlWeb(String url) {
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("first",1);
         startActivity(intent);
+        flashLightImg.setChecked(false);
     }
     private void makeMistakes(String s) {
+        ToastUtil.ToastText(context,"非民生宝业务二维码");
         Intent error=new Intent(QrCodeScanActivity.this,QrCodeErrorActivity.class);
         error.putExtra("error_type",s);
         startActivity(error);
+        flashLightImg.setChecked(false);
     }
     @Override
     protected void onResume() {
@@ -202,7 +248,6 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
         MobclickAgent.onPageStart(PAGE_NAME);
         MobclickAgent.onResume(context);
     }
-
     @Override
     protected void onPause() {
         super.onPause();

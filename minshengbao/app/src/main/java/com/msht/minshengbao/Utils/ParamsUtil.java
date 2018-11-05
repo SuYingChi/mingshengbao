@@ -1,20 +1,27 @@
-package com.chinatelecom.bestpaysdk.util;
+package com.msht.minshengbao.Utils;
 
 import android.util.Log;
 
-import com.chinatelecom.bestpaysdk.Model;
+import com.msht.minshengbao.Model.YiPayModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/10/23
+ */
 public class ParamsUtil {
     /**
      * 下单参数，订单金额传分
      *
      * @return
      */
-    public static String buildOrderParams(Model model, String merchantKey,String riskControlInfo) {
+    public static String buildOrderParams(YiPayModel model, String merchantKey, String riskControlInfo) {
         StringBuilder sb = new StringBuilder();
         sb.append("MERCHANTID").append("=").append(model.getMERCHANTID()).append("&")
                 .append("ORDERAMT").append("=").append(yuan2cent(model.getORDERAMOUNT())).append("&")
@@ -50,7 +57,7 @@ public class ParamsUtil {
      * @param merchantKey
      * @return
      */
-    private static String getMac(Model model, String merchantKey,String riskControlInfo) {
+    private static String getMac(YiPayModel model, String merchantKey,String riskControlInfo) {
         StringBuilder sb = new StringBuilder();
         sb.append("MERCHANTID").append("=").append(model.getMERCHANTID()).append("&")
                 .append("ORDERSEQ").append("=").append(model.getORDERSEQ()).append("&")
@@ -60,7 +67,7 @@ public class ParamsUtil {
                 .append("KEY").append("=").append(merchantKey);
         String mac = "";
         try {
-            mac = CryptUtil.md5Digest(sb.toString());
+            mac = MD5.md5Digests(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,7 +79,7 @@ public class ParamsUtil {
      *
      * @return
      */
-    public static String buildPayParams(Model model) {
+    public static String buildPayParams(YiPayModel model) {
         StringBuilder paramsSb = new StringBuilder();
         Field[] fields = model.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -90,40 +97,5 @@ public class ParamsUtil {
             paramsSb.append(name).append("=").append(value).append("&");
         }
         return paramsSb.toString().substring(0, paramsSb.length() - 1);
-    }
-
-    /**
-     * 获取进入收银台的加密串，防止参数进入收银台的途中被篡改
-     *
-     * @param model
-     * @return
-     */
-    public static String getSign(Model model, String merchantKey) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SERVICE=").append(model.getSERVICE())
-                .append("&MERCHANTID=").append(model.getMERCHANTID())
-                .append("&MERCHANTPWD=").append(model.getMERCHANTPWD())
-                .append("&SUBMERCHANTID=").append(model.getSUBMERCHANTID())
-                .append("&BACKMERCHANTURL=").append(model.getBACKMERCHANTURL())
-                .append("&ORDERSEQ=").append(model.getORDERSEQ())
-                .append("&ORDERREQTRANSEQ=").append(model.getORDERREQTRANSEQ())
-                .append("&ORDERTIME=").append(model.getORDERTIME())
-                .append("&ORDERVALIDITYTIME=").append(model.getORDERVALIDITYTIME())
-                .append("&CURTYPE=").append(model.getCURTYPE())
-                .append("&ORDERAMOUNT=").append(model.getORDERAMOUNT())
-                .append("&SUBJECT=").append(model.getSUBJECT())
-                .append("&PRODUCTID=").append(model.getPRODUCTID())
-                .append("&PRODUCTDESC=").append(model.getPRODUCTDESC())
-                .append("&CUSTOMERID=").append(model.getCUSTOMERID())
-                .append("&SWTICHACC=").append(model.getSWTICHACC())
-                .append("&KEY=").append(merchantKey);
-        Log.i("TAG", "sign加密前" + sb.toString());
-        String sign = "";
-        try {
-            sign = CryptUtil.md5Digest(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sign;
     }
 }
