@@ -5,10 +5,13 @@ package com.msht.minshengbao.Bean;
  * @version 2015年4月23日 上午11:32:53
  */
 public class ADInfo {
-	String id = "";
-	String image = "";
-	String url = "";
-	String type = "";
+	private String id = "";
+	private String type = "";
+	private String image = "";
+	private String url = "";
+	private String share;
+	private String title;
+	private String desc;
 	public String getId() {
 		return id;
 	}
@@ -33,5 +36,23 @@ public class ADInfo {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getShare() {
+		return share;
+	}
+	public void setShare(String share) {
+		this.share = share;
+	}
+	public String getDesc(){
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 }

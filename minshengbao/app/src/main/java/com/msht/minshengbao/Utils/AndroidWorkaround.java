@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 /**
- * Created by hong on 2018/2/13.
+ *
+ * @author hong
+ * @date 2018/2/13
  */
 
 public class AndroidBug54971Workaround {
@@ -27,6 +29,7 @@ public class AndroidBug54971Workaround {
         mViewObserved = viewObserving;
         //给View添加全局的布局监听器
         mViewObserved.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
             public void onGlobalLayout() {
                 resetLayoutByUsableHeight(computeUsableHeight());
             }
