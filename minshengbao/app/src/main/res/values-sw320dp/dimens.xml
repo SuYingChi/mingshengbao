@@ -2,6 +2,8 @@
 <resources>
     <dimen name="margin_banner">200dp</dimen>
     <dimen name="margin_width320">320dp</dimen>
+    <dimen name="margin_width275">242dp</dimen>
+    <dimen name="margin_width270">237.6dp</dimen>
     <dimen name="margin_width225">225dp</dimen>
     <dimen name="margin_width220">220dp</dimen>
     <dimen name="margin_width200">200dp</dimen>
@@ -18,6 +20,7 @@
     <dimen name="margin_width122">122dp</dimen>
     <dimen name="margin_width145">145dp</dimen>
     <dimen name="margin_width140">140dp</dimen>
+    <dimen name="margin_width120">105.6dp</dimen>
     <dimen name="margin_width100">100dp</dimen>
     <dimen name="margin_width90">79.2dp</dimen>
     <dimen name="margin_width89">79dp</dimen>

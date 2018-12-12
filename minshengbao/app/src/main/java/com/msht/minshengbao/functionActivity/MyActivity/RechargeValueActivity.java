@@ -201,8 +201,8 @@ public class RechargeValueActivity extends BaseActivity  {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x001);
-                    onStartActivity("","3");
-                   // requestResult();
+                   // onStartActivity("","1");
+                    requestResult();
                 }else {
                     /**
                      * channels=10
@@ -220,8 +220,8 @@ public class RechargeValueActivity extends BaseActivity  {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x001);
-                    onStartActivity("","3");
-                   // requestResult();
+                   // onStartActivity("","1");
+                    requestResult();
                 }else {
                     Gson gson = new Gson();
                     YiPayModel model = gson.fromJson(charge, YiPayModel.class);
@@ -231,8 +231,8 @@ public class RechargeValueActivity extends BaseActivity  {
                 break;
             default:
                 setResult(0x001);
-                onStartActivity("","3");
-               // requestResult();
+               // onStartActivity("","1");
+                requestResult();
                 break;
         }
     }
@@ -258,13 +258,13 @@ public class RechargeValueActivity extends BaseActivity  {
         }
         switch (status){
             case VariableUtil.VALUE_ZERO:
-                onStartActivity(lottery,"3");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_ONE:
-                onStartActivity(lottery,"3");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_TWO:
-                onStartActivity(lottery,"5");
+                onStartActivity(lottery,"0");
                 break;
             case VariableUtil.VALUE_THREE:
                 setResult(0x001);
@@ -275,10 +275,13 @@ public class RechargeValueActivity extends BaseActivity  {
         }
     }
     private void onStartActivity(String lottery, String s) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=wallet_recharge_pay_success"
+                +"&event_relate_id="+orderId;
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("url",lottery);
+        success.putExtra("pageUrl",pageUrl);
         success.putExtra("type",s);
-        success.putExtra("orderId",orderId);
+        success.putExtra("navigation","钱包充值");
         startActivity(success);
         finish();
     }
@@ -413,8 +416,8 @@ public class RechargeValueActivity extends BaseActivity  {
                     switch (resultCode){
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x001);
-                            onStartActivity("","3");
-                           // requestResult();
+                            //onStartActivity("","1");
+                            requestResult();
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialogs("取消支付");
@@ -435,8 +438,8 @@ public class RechargeValueActivity extends BaseActivity  {
         switch (result){
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x001);
-                onStartActivity("","3");
-              //  requestResult();
+               // onStartActivity("","1");
+                requestResult();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
                 onShowDialogs("充值失败");

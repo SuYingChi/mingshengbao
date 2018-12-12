@@ -97,7 +97,6 @@ public class PasswordActivity extends BaseActivity {
         mCache.remove("AVATARIMG");
         mCache.clear();
         clearCookie();
-        VariableUtil.loginStatus=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         setResult(RESET_CODE);
         Intent intent=new Intent(context,LoginActivity.class);
         startActivity(intent);

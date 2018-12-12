@@ -2,6 +2,7 @@ package com.msht.minshengbao.ViewUI.Circular;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -14,14 +15,15 @@ import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ImageView;
+
 
 import com.msht.minshengbao.R;
 
 
-public class HoverImageView extends ImageView{
+public class HoverImageView extends AppCompatImageView {
 	private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 	private static final PorterDuffXfermode duffMode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
 	
@@ -120,11 +122,7 @@ public class HoverImageView extends ImageView{
 	        rect.set(bitmapBounds);
 	        
 			int saveCount = canvas.saveLayer(rect, null,
-                    Canvas.MATRIX_SAVE_FLAG |
-                    Canvas.CLIP_SAVE_FLAG |
-                    Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
-                    Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
-                    Canvas.CLIP_TO_LAYER_SAVE_FLAG);
+                    Canvas.ALL_SAVE_FLAG );
 			getImageMatrix().mapRect(rect);
  
 	        paint.setAntiAlias(true);

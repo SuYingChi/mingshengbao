@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.adapter.GasBillAdapter;
 import com.msht.minshengbao.adapter.GetAddressAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -37,7 +41,7 @@ import java.util.HashMap;
   */
 public class SelectCustomerNo extends BaseActivity {
     private Button btnAddress;
-    private ListViewForScrollView addressList;
+    private XRecyclerView mRecyclerView;
     private String userId,password;
     private int pos=-1;
     private JSONArray jsonArray;
@@ -120,16 +124,25 @@ public class SelectCustomerNo extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_customerno);
         context=this;
-        setCommonHeader("选择燃气用户号");
+        mPageName="选择燃气用户号";
+        setCommonHeader(mPageName);
         userId = SharedPreferencesUtil.getUserId(context, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password, "");
         initFindViewById();
         initEvent();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         adapter=new GetAddressAdapter(this, houseList,pos);
-        addressList.setAdapter(adapter);
-        addressList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(false);
+        adapter.setClickCallBack(new GetAddressAdapter.ItemClickCallBack() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View v, int position) {
                 pos=position;
                 adapter.notifyDataSetChanged();
                 String addressName=houseList.get(position).get("name");
@@ -179,7 +192,7 @@ public class SelectCustomerNo extends BaseActivity {
     }
     private void initFindViewById() {
         btnAddress =(Button)findViewById(R.id.id_btn_add_address);
-        addressList = (ListViewForScrollView)findViewById(R.id.id_listview);
+        mRecyclerView=(XRecyclerView )findViewById(R.id.id_list_view);
     }
     private void initEvent() {
         btnAddress.setOnClickListener(new View.OnClickListener() {

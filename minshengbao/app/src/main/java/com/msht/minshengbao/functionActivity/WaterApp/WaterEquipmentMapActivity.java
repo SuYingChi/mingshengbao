@@ -63,8 +63,8 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -185,6 +185,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_equipment_map);
         context=this;
+        mPageName="售水机设备地图";
         customDialog=new CustomDialog(this, "正在加载");
         setLocationLimit();
         initView(savedInstanceState);
@@ -196,10 +197,21 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 AndPermission.with(this)
-                        .requestCode(ConstantUtil.MY_LOCATION_REQUEST)
+                        .runtime()
                         .permission(Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.ACCESS_COARSE_LOCATION)
-                        .send();
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                locationClient.startLocation();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许定位权限，地图定位无法使用！");
+                            }
+                        }).start();
             }else {
                 locationClient.startLocation();
             }
@@ -207,7 +219,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             locationClient.startLocation();
         }
     }
-
     @SuppressLint("ClickableViewAccessibility")
     private void initView(Bundle savedInstanceState) {
         View layoutHeader=findViewById(R.id.id_map_layout);
@@ -430,24 +441,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     public void onPoiItemSearched(PoiItem poiItem, int i) {
 
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==ConstantUtil.MY_LOCATION_REQUEST) {
-                locationClient.startLocation();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==ConstantUtil.MY_LOCATION_REQUEST) {
-                ToastUtil.ToastText(context,"获取位置授权失败");
-            }
-        }
-    };
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {

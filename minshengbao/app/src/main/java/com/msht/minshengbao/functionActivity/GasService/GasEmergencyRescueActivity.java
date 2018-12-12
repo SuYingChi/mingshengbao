@@ -129,8 +129,9 @@ public class GasEmergencyRescueActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_emergency_rescue);
         context=this;
+        mPageName="燃气抢险";
         customDialog=new CustomDialog(this, "正在加载");
-        setCommonHeader("燃气抢险");
+        setCommonHeader(mPageName);
         intiView();
         initData();
         initEvent();

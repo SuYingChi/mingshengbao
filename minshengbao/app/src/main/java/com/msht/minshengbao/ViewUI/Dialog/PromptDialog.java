@@ -295,7 +295,8 @@ import com.msht.minshengbao.Utils.DialogUtil;
 			}
 			return this;
 		}
-		@SuppressLint("InflateParams") public PromptDialog create(){
+		@SuppressLint("InflateParams")
+		public PromptDialog create(){
 
 			if(dialog == null){
 				return null;

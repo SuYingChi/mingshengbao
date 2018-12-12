@@ -22,7 +22,6 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.umeng.message.PushAgent;
 
@@ -66,7 +65,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         String error = object.optString("error");
                         JSONObject objectInfo = object.optJSONObject("data");
                         if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
-                            activity.onReceivePersionalData(objectInfo);
+                            activity.onReceivePersionelData(objectInfo);
                         }else {
                             activity.tvResult.setText(error);
                         }
@@ -86,7 +85,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             super.handleMessage(msg);
         }
     }
-    private void onReceivePersionalData(JSONObject objectInfo) {
+    private void onReceivePersionelData(JSONObject objectInfo) {
         String id = objectInfo.optString("id");
         String password = objectInfo.optString("password");
         String level = objectInfo.optString("level");
@@ -102,7 +101,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,mPassword);
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
-        VariableUtil.loginStatus=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         Intent broadcast=new Intent();
         broadcast.setAction(MY_ACTION);
         broadcast.putExtra("broadcast", "1");

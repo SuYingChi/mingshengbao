@@ -135,7 +135,7 @@ public class WaterOrderAdapter extends BaseAdapter {
             holder.btn_cancel.setVisibility(View.GONE);
             holder.Img_phone.setVisibility(View.VISIBLE);
         }else if (status.equals("8")){
-           // holder.cn_status.setTextColor(Color.parseColor("#ff000000"));
+           // holder.cnStatus.setTextColor(Color.parseColor("#ff000000"));
             holder.cn_status.setText("已完成");
             holder.btn_cancel.setVisibility(View.GONE);
             holder.Img_phone.setVisibility(View.GONE);

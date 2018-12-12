@@ -2,21 +2,26 @@ package com.msht.minshengbao.functionActivity.fragment;
 
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,35 +37,24 @@ import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.Utils.AppActivityUtil;
+import com.msht.minshengbao.Utils.DateUtils;
+import com.msht.minshengbao.ViewUI.Dialog.HomeAdvertisingDialog;
+import com.msht.minshengbao.ViewUI.widget.DragImageView;
+import com.msht.minshengbao.ViewUI.widget.MarqueeView;
 import com.msht.minshengbao.adapter.HomeFunctionAdapter;
 import com.msht.minshengbao.adapter.HotRepairAdapter;
 import com.msht.minshengbao.adapter.TopModuleAdapter;
-import com.msht.minshengbao.Bean.ADInfo;
+import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
-import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.IcbcHtml;
-import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
-import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.RichTextActivity;
+import com.msht.minshengbao.functionActivity.Public.MsbHeadLineActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
-import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
-import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
-import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
-import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
-import com.msht.minshengbao.functionActivity.repairService.LampCircuitActivity;
-import com.msht.minshengbao.functionActivity.repairService.OtherRepairActivity;
 import com.msht.minshengbao.functionActivity.repairService.PublishOrderActivity;
-import com.msht.minshengbao.functionActivity.repairService.SanitaryWareActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -72,7 +66,6 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZViewHolder;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.ImageCycleView;
 import com.msht.minshengbao.ViewUI.ImageCycleView.ImageCycleViewListener;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
@@ -87,18 +80,17 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * @author hong
  * @date 2016/04/10
  */
-public class HomeFragment extends Fragment implements View.OnClickListener, AMapLocationListener ,MyScrollview.ScrollViewListener{
+public class HomeFragment extends BaseHomeFragment implements View.OnClickListener, AMapLocationListener ,MyScrollview.ScrollViewListener{
     private View layoutNotOpen;
     private LinearLayout layoutNavigation;
     private RelativeLayout layoutSelectCity;
@@ -106,7 +98,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     private VerticalSwipeRefreshLayout mSwipeRefresh;
     private CardView  cardView;
     private View layoutHaveData;
+    private View layoutHeadLine;
     private ImageCycleView mAdView;
+    private MarqueeView marqueeView;
+    private DragImageView dragImageView;
     private MyNoScrollGridView  mGridView,mHotGrid;
     private MyNoScrollGridView  mTopModule;
     private HomeFunctionAdapter homeFunctionAdapter;
@@ -119,7 +114,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
     private String Id="null";
     private String flag;
     private int times=0;
-
+    private int requestType=0;
+    private String url;
+    private String share;
+    private String title;
+    private String desc;
+    private String backUrl;
     /**
      * bgHeight;上半身的高度
      */
@@ -129,19 +129,99 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
      * REQUEST_CODE 城市标志
      */
     private static final int REQUEST_CODE=1;
-    private Context mContext;
     private final String mPageName = "首页_民生";
-    private ArrayList<ADInfo> adInformation = new ArrayList<ADInfo>();
+    private ArrayList<AdvertisingInfo> adInformation = new ArrayList<AdvertisingInfo>();
     private ArrayList<ActivityInfo> activityInfos = new ArrayList<ActivityInfo>();
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> hotList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> rightTopList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> headLineList = new ArrayList<HashMap<String, String>>();
+    private List<CharSequence> headLineInfo = new ArrayList<>();
     private MZBannerView mMZBanner;
+    private final GetAdvertisingHandler getAdvertisingHandler=new GetAdvertisingHandler(this);
     private final GetUrlHandler geturlHandler=new GetUrlHandler(this);
     private final GetFunctionHandler getFunctionHandler=new GetFunctionHandler(this);
     private final SpecialTopicHandler specialTopicHandler =new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
+    private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
     public HomeFragment() {}
+    private static class GetAdvertisingHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+        public GetAdvertisingHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final HomeFragment reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            switch (msg.what) {
+                case SendRequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        String error=object.optString("error");
+                        JSONArray array =object.optJSONArray("data");
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (reference.requestType==0){
+                                reference.onHomeAdvertisingDialog(array);
+                                reference.requestType=1;
+                                reference.initAdvertisingData();
+                            }else {
+                                reference.onFloatingAdvertisingData(array);
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+
+    private static class GetMsbHeadLineHandler extends Handler{
+        private WeakReference<HomeFragment> mWeakReference;
+        public GetMsbHeadLineHandler(HomeFragment homeFragment) {
+            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final HomeFragment reference =mWeakReference.get();
+            // the referenced object has been cleared
+            if (reference == null||reference.isDetached()) {
+                return;
+            }
+            reference.initAdvertisingData();
+            switch (msg.what) {
+                case SendRequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String code=object.optString("code");
+                        JSONArray jsonArray=object.optJSONArray("data");
+                        if (code.equals(ConstantUtil.VALUE_ZERO)){
+                            reference.onReceiveHeadLineData(jsonArray);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
     private static class GetUrlHandler extends Handler{
         private WeakReference<HomeFragment> mWeakReference;
         private GetUrlHandler(HomeFragment homeFragment) {
@@ -200,6 +280,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
                         reference.cityId=json.optString("city_id");
+                        VariableUtil.cityId=reference.cityId;
                         int onlineFlag=json.getInt("online_flag");
                         if (onlineFlag==1){
                             reference.layoutHaveData.setVisibility(View.VISIBLE);
@@ -282,9 +363,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             if (reference == null||reference.isDetached()) {
                 return;
             }
+            reference.initMarqueeViewData();
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
+
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -312,9 +395,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                ADInfo info = new ADInfo();
+                AdvertisingInfo info = new AdvertisingInfo();
                 info.setImages(jsonObject.getString("image"));
                 info.setUrl(jsonObject.getString("url"));
+                info.setDesc(jsonObject.optString("desc"));
+                info.setTitle(jsonObject.optString("title"));
+                info.setShare(jsonObject.optString("share"));
                 adInformation.add(info);
             }
         }catch (JSONException e){
@@ -323,28 +409,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         mAdView.setImageResources(adInformation, mAdCycleViewListener);
     }
     private ImageCycleViewListener mAdCycleViewListener = new ImageCycleViewListener() {
-
         @Override
-        public void onImageClick(ADInfo info, int position, View imageView) {
+        public void onImageClick(AdvertisingInfo info, int position, View imageView) {
             String myUrl=info.getUrl();
-            if (!TextUtils.isEmpty(myUrl)){
-                if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)){
-                    Intent intent=new Intent(getActivity(), ShopActivity.class);
-                    intent.putExtra("url",myUrl);
-                    intent.putExtra("first",1);
-                    startActivity(intent);
-                }else if (NetUtil.getDomain(myUrl).equals(ConstantUtil.VEGETABLE_DOMAIN)){
-                    if (VariableUtil.loginStatus){
-                        vegetableScxs();
-                    }else {
-                        gologins();
-                    }
-                }else if(!myUrl.equals(VariableUtil.NULL_VALUE)){
-                    Intent intent=new Intent(getActivity(), HtmlPageActivity.class);
-                    intent.putExtra("url",myUrl);
-                    startActivity(intent);
-                }
-            }
+            String title=info.getTitle();
+            String share=info.getShare();
+            String desc=info.getDesc();
+            String backUrl=info.getBackUrl();
+            AppActivityUtil.onAppActivityType(mContext,myUrl,title,share,desc,"header_img",backUrl);
         }
         @Override
         public void displayImage(String imageURL, ImageView imageView) {
@@ -352,17 +424,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             ImageLoader.getInstance().displayImage(imageURL, imageView);
         }
     };
-    public static String getDomain(String url){   //获取域名
-        URL urls=null;
-        String p="";
-        try{
-            urls=new URL(url);
-            p=urls.getHost();
-        }catch (MalformedURLException e){
-            e.printStackTrace();
-        }
-        return p;
-    }
     private void onGetSpecialUrls(JSONArray array) {
         try {
             for (int i = 0; i < array.length(); i++) {
@@ -371,6 +432,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 info.setImages(jsonObject.getString("image"));
                 info.setUrl(jsonObject.getString("url"));
                 info.setTitle(jsonObject.getString("title"));
+                info.setDesc(jsonObject.optString("desc"));
+                info.setShare(jsonObject.optString("share"));
                 activityInfos.add(info);
             }
         }catch (JSONException e){
@@ -384,18 +447,74 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         });
         mMZBanner.start();
     }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_home, container, false);
-        mContext=getActivity();
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
-            view.findViewById(R.id.id_view).setVisibility(View.GONE);
+    private void onReceiveHeadLineData(JSONArray jsonArray) {
+        headLineInfo.clear();
+        headLineList.clear();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String id = jsonObject.optString("id");
+                String title="  热点    "+jsonObject.optString("title");
+                String url=jsonObject.optString("url");
+                String pic=jsonObject.optString("pic");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("id", id);
+                map.put("title",title);
+                map.put("url",url);
+                map.put("pic",pic);
+                headLineList.add(map);
+                SpannableString style = new SpannableString(title);
+                style.setSpan(new BackgroundColorSpan(Color.RED),0,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                style.setSpan(new ForegroundColorSpan(Color.WHITE), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                headLineInfo.add(style);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
         }
+        if (headLineInfo.size()>0){
+            layoutHeadLine.setVisibility(View.VISIBLE);
+            marqueeView.startWithList(headLineInfo, R.anim.anim_bottom_in, R.anim.anim_top_out);
+        }else {
+            layoutHeadLine.setVisibility(View.GONE);
+        }
+
+    }
+    private void onFloatingAdvertisingData(JSONArray array) {
+        if (array.length()>0){
+            dragImageView.setVisibility(View.VISIBLE);
+        }else {
+            dragImageView.setVisibility(View.GONE);
+        }
+        try {
+            JSONObject jsonObject = array.getJSONObject(0);
+            String image = jsonObject.getString("image");
+            share=jsonObject.getString("share");
+            title=jsonObject.getString("title");
+            desc=jsonObject.optString("desc");
+            url=jsonObject.optString("url");
+            backUrl=jsonObject.optString("back_url");
+            Uri uri = Uri.parse(image);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(uri)
+                    .setAutoPlayAnimations(true)
+                    //. 其他设置（如果有的话）
+                    .build();
+            dragImageView.setController(controller);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+    }
+    @Override
+    public View initFindView() {
+        if(mRootView==null){
+            mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_home,null,false);
+            //view = inflater.inflate(R.layout.fragment_orderlist, container, false);
+        }
+        mContext=getActivity();
         VariableUtil.cityPos =-1;
-        VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
-        initView(view);
+        initView(mRootView);
         initRefresh();
         topmoduleAdapter=new TopModuleAdapter(mContext, rightTopList);
         mTopModule.setAdapter(topmoduleAdapter);
@@ -409,7 +528,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         initData();
         initEvent();
         initListeners();
-        return view;
+        return mRootView;
+    }
+
+    private void initMarqueeViewData() {
+
+        String requestUrl=UrlUtil.HOME_MSB_APP_HEADLINE;
+        try {
+            requestUrl =requestUrl +"?num="+ URLEncoder.encode("4", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,headLineHandler);
     }
     private void initRefresh() {
         mSwipeRefresh.setProgressViewEndTarget(false,100);
@@ -437,83 +567,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String codes=functionList.get(position).get("code");
                 Id=functionList.get(position).get("id");
-                switch (codes){
-                    case "household_clean":
-                        householdclean();
-                        break;
-                    case "household_repair":
-                        householdrepair();
-                        break;
-                    case "sanitary_ware":
-                        sanitaryware();
-                        break;
-                    case "lamp_circuit":
-                        lampcircuit();
-                        break;
-                    case "other_repair":
-                        otherrepair();
-                        break;
-                    case "gas_serve":
-                        gasserve();
-                        break;
-                    case "insurance":
-                        if (VariableUtil.loginStatus){
-                            insurance();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case "electric_vehicle_repair":
-                        electricVehicle();
-                        break;
-                    case"all_service":
-                        if (VariableUtil.loginStatus){
-                            allServe();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case "intelligent_farm":
-                        if (VariableUtil.loginStatus){
-                            intelligentFarm();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case "drinking_water":
-                        if (VariableUtil.loginStatus){
-                            drinkingWater();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                   case "vegetables_scxs":
-                        if (VariableUtil.loginStatus){
-                            vegetableScxs();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    default:
-                        showNotify("民生宝" ,"已推出新版本，如果您想使用该服务，请点击更新！");
-                        break;
-                }
+                String hasNext=functionList.get(position).get("hasNext");
+                String name=functionList.get(position).get("name");
+                AppActivityUtil.startActivityCode(mContext,codes,Id,name,hasNext);
             }
         });
         mHotGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (VariableUtil.loginStatus){
+                if (isLoginState(mContext)){
                     String mId=hotList.get(position).get("id");
                     String name=hotList.get(position).get("name");
+                    String code=hotList.get(position).get("code");
                     Intent intent=new Intent(mContext,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",name);
                     intent.putExtra("mMainType","家电维修");
+                    intent.putExtra("code",code);
                     startActivity(intent);
                 }else {
-                    Intent login=new Intent(mContext, LoginActivity.class);
-                    startActivity(login);
+                    AppActivityUtil.onStartLoginActivity(mContext);
                 }
             }
         });
@@ -522,151 +595,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String codes= rightTopList.get(position).get("code");
                 Id= rightTopList.get(position).get("id");
-                switch (codes){
-                    case ConstantUtil.SHOP:
-                        shopmall();
-                        break;
-                    case ConstantUtil.GAS_PAY:
-                        if (VariableUtil.loginStatus){
-                            gaspay();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case ConstantUtil.GAS_METER:
-                        if (VariableUtil.loginStatus){
-                            gasmeter();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case ConstantUtil.GAS_IC_CARD:
-                        if (VariableUtil.loginStatus){
-                            iccard();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    case ConstantUtil.LPG_NAME:
-                        if (VariableUtil.loginStatus){
-                            lpgService();
-                        }else {
-                            gologins();
-                        }
-                        break;
-                    default:
-                        showNotify("民生宝" ,"已推出新版本，如果您想使用该服务，请点击更新！");
-                        break;
-                }
+                String name=rightTopList.get(position).get("name");
+                AppActivityUtil.startActivityTopCode(mContext,codes,Id,name);
             }
         });
-    }
-
-
-
-    private void showNotify(String title ,String string) {
-        new PromptDialog.Builder(mContext)
-                .setTitle(title)
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(string)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-
-                    }
-                }).show();
-    }
-    private void lpgService() {
-        Intent intent=new Intent(mContext, LpgMyAccountActivity.class);
-        startActivity(intent);
-    }
-    private void vegetableScxs() {
-        Intent intent=new Intent(mContext, VegetableGentlemenActivity.class);
-        startActivity(intent);
-    }
-    private void drinkingWater() {
-        Intent serve=new Intent(mContext,WaterMainActivity.class);
-        serve.putExtra("mCity",mCity);
-        serve.putExtra("cityId",cityId);
-        startActivity(serve);
-    }
-    private void electricVehicle() {
-        Intent intent=new Intent(mContext, ElectricHomeActivity.class);
-        startActivity(intent);
-    }
-    private void allServe() {
-        Intent serve=new Intent(mContext,AllServiceActivity.class);
-        serve.putExtra("mCity",mCity);
-        serve.putExtra("cityId",cityId);
-        startActivity(serve);
-    }
-    private void shopmall() {
-        Intent intent=new Intent(mContext, ShopActivity.class);
-        startActivity(intent);
-    }
-    private void gaspay() {
-        Intent selete=new Intent(mContext,GasPayFeeActivity.class);
-        startActivity(selete);
-    }
-    private void gasmeter() {
-        Intent selete=new Intent(mContext,GasWriteTableActivity.class);
-        startActivity(selete);
-    }
-    private void iccard() {
-        Intent card=new Intent(mContext,GasIcCardActivity.class);
-        startActivity(card);
-    }
-    private void gologins() {
-        Intent login=new Intent(mContext, LoginActivity.class);
-        startActivity(login);
-    }
-    private void householdclean() {
-        Intent intent=new Intent(mContext, HomeApplianceCleanActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void householdrepair() {
-        Intent intent=new Intent(mContext, HouseApplianceFixActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void sanitaryware() {
-        Intent intent=new Intent(mContext, SanitaryWareActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void lampcircuit() {
-        Intent intent=new Intent(mContext,LampCircuitActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void otherrepair() {
-        Intent intent=new Intent(mContext,OtherRepairActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void gasserve() {
-        Intent intent=new Intent(mContext,GasServiceActivity.class);
-        intent.putExtra("pid",Id);
-        intent.putExtra("city_id",cityId);
-        startActivity(intent);
-    }
-    private void insurance() {
-        Intent intent=new Intent(mContext, InsuranceHome.class);
-        startActivity(intent);
-    }
-    private void intelligentFarm() {
-        String url=UrlUtil.Intelligent_FarmUrl;
-        Intent intent=new Intent(mContext, IntelligentFarmHmlActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("navigate","智慧农贸");
-        startActivity(intent);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -677,9 +609,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 if(data!=null){
                     if (resultCode==2){
                         mCity=data.getStringExtra("mCity");
-                        VariableUtil.City=mCity;
                         flag=data.getStringExtra("flag");
                         cityId=data.getStringExtra("Id");
+                        VariableUtil.City=mCity;
+                        VariableUtil.cityId=cityId;
                         tvCity.setText(mCity);
                         functionList.clear();
                         hotList.clear();
@@ -693,7 +626,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
     }
     private void initData() {
-        String validateURL = UrlUtil.imgavatar_Url;
+        String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
        // OkHttpRequestManager.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,geturlHandler);
         SendRequestUtil.getDataFromServiceTwo(validateURL,geturlHandler);
     }
@@ -712,8 +645,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         }
     }
     private void initView(View view) {
+        marqueeView = (MarqueeView)view.findViewById(R.id.id_marqueeView);
+        layoutHeadLine=view.findViewById(R.id.id_marquee_layout);
         view.findViewById(R.id.id_layout_air).setOnClickListener(this);
         view.findViewById(R.id.id_layout_over).setOnClickListener(this);
+        view.findViewById(R.id.id_headLine_more).setOnClickListener(this);
         cardView=(CardView)view.findViewById(R.id.id_card_view);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)view.findViewById(R.id.id_swipe_refresh);
         mMZBanner = (MZBannerView) view.findViewById(R.id.banner);
@@ -729,6 +665,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
         tvCity =(TextView)view.findViewById(R.id.id_tv_city);
         tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
+        dragImageView=(DragImageView) view.findViewById(R.id.id_floating_view);
     }
     private void initCardBanner() {
         mMZBanner.setIndicatorVisible(true);
@@ -738,42 +675,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 ActivityInfo imageInfo=activityInfos.get(position);
                 String title=imageInfo.getTitle();
                 String rightUrl=imageInfo.getUrl();
-                String domain=getDomain(rightUrl);
-                if ((!TextUtils.isEmpty(rightUrl))&&(!rightUrl.equals(VariableUtil.NULL_VALUE))){
-                    switch (domain){
-                        case ConstantUtil.SHOP_DOMAIN:
-                            Intent intent=new Intent(mContext, ShopActivity.class);
-                            intent.putExtra("url",rightUrl);
-                            intent.putExtra("first",1);
-                            startActivity(intent);
-                            break;
-                        case "mims.icbc.com.cn":
-                            Intent bank1=new Intent(mContext, IcbcHtml.class);
-                            bank1.putExtra("url",rightUrl);
-                            bank1.putExtra("navigate",title);
-                            startActivity(bank1);
-                            break;
-                        case "ccclub.cmbchina.com":
-                            Intent bank2=new Intent(mContext, HtmlPageActivity.class);
-                            bank2.putExtra("url",rightUrl);
-                            bank2.putExtra("navigate",title);
-                            startActivity(bank2);
-                            break;
-                        case ConstantUtil.VEGETABLE_DOMAIN:
-                            if (VariableUtil.loginStatus){
-                                vegetableScxs();
-                            }else {
-                                gologins();
-                            }
-                            break;
-                        default:
-                            Intent other=new Intent(mContext, HtmlPageActivity.class);
-                            other.putExtra("url",rightUrl);
-                            other.putExtra("navigate",title);
-                            startActivity(other);
-                            break;
-                    }
-                }
+                String share=imageInfo.getShare();
+                String desc=imageInfo.getDesc();
+                String backUrl=imageInfo.getBackUrl();
+                AppActivityUtil.onAppActivityType(mContext,rightUrl,title,share,desc,"homepage_special_topic_activity",backUrl);
             }
         });
         mMZBanner.addPageChangeLisnter(new ViewPager.OnPageChangeListener() {
@@ -786,7 +691,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         });
     }
     private void initEvent() {
+        dragImageView.setOnClickListener(this);
         layoutSelectCity.setOnClickListener(this);
+        marqueeView.setOnItemClickListener(new MarqueeView.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, TextView textView) {
+                String id=headLineList.get(position).get("id");
+                String title=headLineList.get(position).get("title");
+                String pic=headLineList.get(position).get("pic");
+                Intent intent=new Intent(mContext,RichTextActivity.class);
+                intent.putExtra("id",id);
+                intent.putExtra("title",title);
+                intent.putExtra("pic",pic);
+                startActivity(intent);
+            }
+        });
     }
     private void initListeners() {
         ViewTreeObserver vto = mAdView.getViewTreeObserver();
@@ -795,11 +714,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             public void onGlobalLayout() {
                 mAdView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 bgHeight = mAdView.getHeight();
-                onSetListaner();
+                onSetListeners();
             }
         });
     }
-    private void onSetListaner() {
+    private void onSetListeners() {
         myScrollview.setScrollViewListener(this);
     }
     @Override
@@ -819,7 +738,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             layoutNavigation.setBackgroundResource(R.drawable.shape_change_background);
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
-
     }
     public static class BannerViewHolder implements MZViewHolder<ActivityInfo> {
         private ImageView mImageView;
@@ -830,17 +748,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             mImageView = (ImageView) view.findViewById(R.id.banner_image);
             return view;
         }
-
         @Override
         public void onBind(Context context, int position, ActivityInfo data) {
             // 数据绑定
-            String imgurl=data.getImages();
+            String imgUrl=data.getImages();
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.error(R.drawable.icon_stub);
             requestOptions.placeholder(R.drawable.icon_stub);
             requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
             requestOptions.skipMemoryCache(false);
-            Glide.with(context).load(imgurl).apply(requestOptions)
+            Glide.with(context).load(imgUrl).apply(requestOptions)
                     .thumbnail(0.5f)
                     .into(mImageView);
         }
@@ -853,29 +770,39 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 startActivityForResult(city,REQUEST_CODE);
                 break;
             case R.id.id_layout_air:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(mContext)){
                     airConditioner();
                 }else {
-                    gologins();
+                    AppActivityUtil.onStartLoginActivity(mContext);
                 }
                 break;
             case R.id.id_layout_over:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(mContext)){
                     hoodsClean();
                 }else {
-                    gologins();
+                    AppActivityUtil.onStartLoginActivity(mContext);
                 }
                 break;
+            case R.id.id_headLine_more:
+                onMoreHeadLine();
+                break;
+            case R.id.id_floating_view:
+                AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"float_activity",backUrl);
+                break;
             default:
-
                 break;
         }
+    }
+    private void onMoreHeadLine() {
+        Intent intent=new Intent(mContext,MsbHeadLineActivity.class);
+        startActivity(intent);
     }
     private void airConditioner() {
         Intent intent=new Intent(mContext,PublishOrderActivity.class);
         intent.putExtra("id","33");
         intent.putExtra("name","空调清洗");
         intent.putExtra("mMainType","家电清洗");
+        intent.putExtra("code",ConstantUtil.AIR_CONDITIONER_CLEAN);
         startActivity(intent);
     }
     private void hoodsClean() {
@@ -883,6 +810,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
         intent.putExtra("id","10");
         intent.putExtra("name","燃气灶维修");
         intent.putExtra("mMainType","家电维修");
+        intent.putExtra("code",ConstantUtil.GAS_STOVE_REPAIR);
         startActivity(intent);
     }
     @Override
@@ -925,23 +853,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
 
     private void initCardData() {
         String functionUrl=UrlUtil.SPECIAL_TOPIC_URL;
-        String function="";
         try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8");
+            functionUrl=functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendRequestUtil.getDataFromService(function,specialTopicHandler);
+        SendRequestUtil.getDataFromService(functionUrl,specialTopicHandler);
     }
     private void functionData() {
         String functionUrl=UrlUtil.HOME_FUNCTION_URL;
-        String function="";
         try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8");
+            functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201811", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,getFunctionHandler);
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,getFunctionHandler);
         //SendRequestUtil.getDataFromService(function,getFunctionHandler);
     }
     private void onTipTopModule() {
@@ -976,10 +902,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 String id = jsonObject.getString("id");
                 String name=jsonObject.getString("name");
                 String code=jsonObject.getString("code");
+                String hasNext=jsonObject.optString("has_next");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("name",name);
                 map.put("code",code);
+                map.put("hasNext",hasNext);
                 functionList.add(map);
                 if (code.equals(ConstantUtil.GAS_SERVE)){
                     VariableUtil.BoolCode=false;
@@ -1022,13 +950,69 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
             hotRepairAdapter.notifyDataSetChanged();
         }
     }
+    private void initAdvertisingData() {
+        String requestUrl=UrlUtil.ADVERTISING_URL;
+        String code="pop_up_activity";
+        if (requestType==1){
+            code="float_activity";
+        }
+        try {
+            requestUrl =requestUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&code="+URLEncoder.encode(code, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,getAdvertisingHandler);
+    }
+
+    /**
+     * 限制每天只显示一次弹框
+     * @param array 数据集
+     */
+    private void onHomeAdvertisingDialog(JSONArray array){
+        long curDate=DateUtils.getCurDateLong("MM-dd");
+        long date=SharedPreferencesUtil.getDateLong(mContext,SharedPreferencesUtil.SAVE_DATE,0);
+        if (array.length()>0){
+            try {
+                JSONObject jsonObject = array.getJSONObject(0);
+                String image = jsonObject.getString("image");
+                final String share=jsonObject.getString("share");
+                final String title=jsonObject.getString("title");
+                final String desc=jsonObject.optString("desc");
+                String url=jsonObject.optString("url");
+                final String backUrl=jsonObject.optString("back_url");
+                if (curDate!=date){
+                    new HomeAdvertisingDialog(mContext,image, url).builder()
+                            .setOnAdvertisingClickListener(new HomeAdvertisingDialog.OnAdvertisingClickListener() {
+                                @Override
+                                public void onClick(String url) {
+                                    AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"pop_up_activity",backUrl);
+                                }
+                            })
+                            .show();
+                }
+
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            SharedPreferencesUtil.putDateLong(mContext,SharedPreferencesUtil.SAVE_DATE,curDate);
+        }
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        marqueeView.startFlipping();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        marqueeView.stopFlipping();
+    }
     @Override
     public void onResume() {
         super.onResume();
         mMZBanner.start();
         MobclickAgent.onPageStart(mPageName);
-
-    };
+    }
     @Override
     public void onPause() {
         super.onPause();

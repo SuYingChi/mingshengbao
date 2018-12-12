@@ -26,11 +26,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
+import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.PriceMenuActivity;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -44,8 +48,8 @@ import com.msht.minshengbao.ViewUI.Dialog.NoticeDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectTable;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +60,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -73,7 +78,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private EditText etRecommend;
     private EditText etNeed;
     private Button   btnSendOrder;
-    private TextView ttvName, tvPhone;
+    private TextView ttvName;
+    private EditText etPhone;
     private TextView tvAddress;
     private TextView appointmentData, appointmentTime;
     private MultiLineChooseLayout multiChoose;
@@ -82,11 +88,11 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private String   mMainType,type,address,info, appointDate;
     private String   username, rawOrderId="",cityId="";
     private String   longitude="",latitude="";
-    private GridView mPhotoGridView;
+    private String   code;
+    private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private int k=0;
     private int mPosition=-1;
-    private static  final int MY_PERMISSIONS_REQUEST=1;
     private int thisPosition =-1;
     private int requestType =0;
     private JSONObject jsonObject;
@@ -174,11 +180,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                                 if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                                     activity.customDialog.dismiss();
                                 }
-                                String navigation="发布订单";
-                                Intent success=new Intent(activity.context,PublishSuccessActivity.class);
-                                success.putExtra("navigation",navigation);
-                                activity.startActivity(success);
                                 activity.btnSendOrder.setEnabled(true);
+                                activity.onPublishSuccess();
                                 activity.finish();
                             }
                         }else {
@@ -234,13 +237,20 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
             }
         }else {
             customDialog.dismiss();
-            String navigation="发布订单";
-            Intent success=new Intent(context,PublishSuccessActivity.class);
-            success.putExtra("navigation",navigation);
-            startActivity(success);
             btnSendOrder.setEnabled(true);
-            finish();
+            onPublishSuccess();
         }
+    }
+    private void onPublishSuccess() {
+        btnSendOrder.setEnabled(true);
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=repair_order_activity"+"&event_relate_id="+id;
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("navigation","发布订单");
+        success.putExtra("type","1");
+        success.putExtra("url","");
+        success.putExtra("pageUrl",pageUrl);
+        startActivity(success);
+        finish();
     }
     private void compressImg(final File files) {
         //压缩的图片
@@ -276,6 +286,10 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_order);
+        //适配华为手机虚拟键遮挡tab的问题
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         context=this;
@@ -283,11 +297,10 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         reid=data.getStringExtra("id");
         mMainType =data.getStringExtra("mMainType");
         type=data.getStringExtra("name");
+        code=data.getStringExtra("code");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
-        //状态栏View
-        findViewById(R.id.id_status_view).setVisibility(View.GONE);
         initJudge();
         initView();
         initTimeData();
@@ -332,7 +345,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 }else {
                     ttvName.setText(name);
                 }
-                tvPhone.setText(phone);
+                etPhone.setText(phone);
                 tvAddress.setText(mAddress);
             }
         }
@@ -371,14 +384,14 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         btnSendOrder =(Button)findViewById(R.id.id_btn_sendorder);
         etRecommend =(EditText)findViewById(R.id.id_et_recommand);
         ttvName =(TextView)findViewById(R.id.id_tv_name);
-        tvPhone =(TextView) findViewById(R.id.id_tv_phone);
+        etPhone =(EditText) findViewById(R.id.id_et_phone);
         etNeed =(EditText)findViewById(R.id.id_et_info);
         tvAddress =(TextView) findViewById(R.id.id_tv_address);
         ((TextView)findViewById(R.id.id_tv_project_type)).setText(mMainType);
         ((TextView)findViewById(R.id.id_tv_type)).setText(type);
-        tvPhone.setText(userPhone);
+        etPhone.setText(userPhone);
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
-        mPhotoGridView =(GridView)findViewById(R.id.noScrollgridview);
+        mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         appointmentData =(TextView)findViewById(R.id.id_data);
         appointmentTime =(TextView)findViewById(R.id.id_time);
         btnSendOrder.setEnabled(false);
@@ -424,10 +437,21 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
-                    .requestCode(MY_PERMISSIONS_REQUEST)
+                    .runtime()
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
+                    .onGranted(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            onShowPhoto();
+                        }
+                    })
+                    .onDenied(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            ToastUtil.ToastText(context,"授权失败");
+                        }
+                    }).start();
         }else {
             if (position == imgPaths.size()) {
                 PhotoPicker.builder()
@@ -465,24 +489,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
             startActivityForResult(intent, thisPosition);
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                onShowPhoto();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(context,"授权失败");
-            }
-        }
-    };
     private void initEvent() {
         findViewById(R.id.id_re_price).setOnClickListener(this);
         findViewById(R.id.id_re_selectaddre).setOnClickListener(this);
@@ -490,7 +496,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         appointmentData.setOnClickListener(this);
         appointmentTime.setOnClickListener(this);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
-        tvPhone.addTextChangedListener(myTextWatcher);
+        etPhone.addTextChangedListener(myTextWatcher);
         tvAddress.addTextChangedListener(myTextWatcher);
         multiChoose.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
             @Override
@@ -514,7 +520,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(tvAddress.getText().toString())||TextUtils.isEmpty(tvPhone.getText().toString())) {
+            if (TextUtils.isEmpty(tvAddress.getText().toString())||TextUtils.isEmpty(etPhone.getText().toString())) {
                 btnSendOrder.setEnabled(false);
             }else {
                 btnSendOrder.setEnabled(true);
@@ -530,7 +536,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 onStartPriceTable();
                 break;
             case R.id.id_data:
-                onSelectData();
+              //  onSelectData();
+                onSelectDateDay();
                 break;
             case R.id.id_time:
                 onSelectTime();
@@ -551,67 +558,28 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
-    private void onStartPriceTable() {
-        Intent price=new Intent(context,PriceMenuActivity.class);
-        price.putExtra("reid",reid);
-        startActivity(price);
-    }
-    private void onSelectData() {
-        LayoutInflater l = LayoutInflater.from(this);
-        View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
-        final  DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
-        Calendar mCurrent=Calendar.getInstance();
-        datePicker.init(mCurrent.get(Calendar.YEAR), mCurrent.get(Calendar.MONTH),  mCurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {//滑动日期进行对日期的方位进行判断
-                Calendar mAfter=Calendar.getInstance();
-                Calendar mBefore=Calendar.getInstance();
-                mAfter.add(Calendar.DAY_OF_MONTH,6);
-                if (isDateAfter(view)) {
-                    view.init(mAfter.get(Calendar.YEAR),mAfter.get(Calendar.MONTH),mAfter.get(Calendar.DAY_OF_MONTH), this);
-                }
-                if (isDateBefore(view)) {
-                    view.init(mBefore.get(Calendar.YEAR), mBefore.get(Calendar.MONTH),mBefore.get(Calendar.DAY_OF_MONTH), this);
-                }
-            }
-        });
-        new PromptDialog.Builder(this)
+    private void onSelectDateDay() {
+        new SelectDateDialog.Builder(this)
                 .setTitle("选择预约日期")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setView(mPickView)
-                .setButton1("取消", new PromptDialog.OnClickListener() {
+                .setButton1("取消", new SelectDateDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
+                    public void onClick(Dialog dialog, int which, String s) {
                         dialog.dismiss();
                     }
                 })
-                .setButton2("确定", new PromptDialog.OnClickListener() {
+                .setButton2("确定", new SelectDateDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
-                        String appointmentDataText=datePicker.getYear() + "-"+ (datePicker.getMonth()+1) + "-"
-                                + datePicker.getDayOfMonth();
-                        appointmentData.setText(appointmentDataText);
+                    public void onClick(Dialog dialog, int which, String s) {
+                        appointmentData.setText(s);
                         appointmentTime.setText("08:30-11:30");
                         dialog.dismiss();
                     }
-                })
-                .show();
-
+                }).show();
     }
-    private boolean isDateBefore(DatePicker tempView) {
-        Calendar mCalendar = Calendar.getInstance();
-        Calendar temCalendar = Calendar.getInstance();
-        temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
-        return temCalendar.before(mCalendar);
-    }
-    private boolean isDateAfter(DatePicker tempView) {
-        Calendar mCalendar=Calendar.getInstance();
-        mCalendar.add(Calendar.DAY_OF_MONTH,6);
-        Calendar temCalendar=Calendar.getInstance();
-        temCalendar.add(Calendar.DAY_OF_MONTH,6);
-        temCalendar.set(tempView.getYear(),tempView.getMonth(),tempView.getDayOfMonth(),0,0,0);
-        return temCalendar.after(mCalendar);
+    private void onStartPriceTable() {
+        Intent price=new Intent(context,PriceMenuActivity.class);
+        price.putExtra("code",code);
+        startActivity(price);
     }
     private void onSelectTime() {
         new SelectDialog(context,mList,mPosition).builder()
@@ -638,7 +606,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         String otherInfo= etNeed.getText().toString().trim();
         username= ttvName.getText().toString().trim();
         recommend= etRecommend.getText().toString().trim();
-        phone= tvPhone.getText().toString().trim();
+        phone= etPhone.getText().toString().trim();
         address= tvAddress.getText().toString().trim();
         appointDate =date+"  "+time;
         info=textString+otherInfo;

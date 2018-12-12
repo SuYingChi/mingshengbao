@@ -24,6 +24,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
@@ -37,8 +40,9 @@ import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.SelectPicPopupWindow;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+
 
 import android.view.View.OnClickListener;
 
@@ -48,6 +52,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,19 +66,16 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     private RelativeLayout settingNickname;
     private RelativeLayout layoutSettingSex;
     private TextView tvNickname, tvSex, tvPhone;
+    private SimpleDraweeView simpleDraweeView;
     private String avatarUrl;
     private String userId,password;
     private static final File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getPath() + "/Livelihool/MsbCameraCache");
     private File mCacheFile;
-    private CircleImageView circleImageView;
-    private final String mPageName ="我的设置";
     private SelectPicPopupWindow takePhotoPopWin;
     /** 
      * urlPath 图片本地路径
      */
     private String urlPath;
-    private Bitmap bitmap=null;
-    private ACache mCache;
     private static  final int MY_PERMISSIONS_REQUEST=2;
     /**
      * // 相册选图标记
@@ -106,56 +108,23 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     private static String imageFileName;
     private CustomDialog customDialog;
     private final MyHandler myHandler=new MyHandler(this);
-    private final GetImageHandler getImageHandler=new GetImageHandler(this);
-    private static class GetImageHandler extends Handler{
-        private WeakReference<MySettingActivity> mWeakReference;
-        public GetImageHandler(MySettingActivity activity) {
-            mWeakReference = new WeakReference<MySettingActivity>(activity);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final MySettingActivity reference =mWeakReference.get();
-            // the referenced object has been cleared
-            if (reference == null||reference.isFinishing()) {
-                return;
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    Bitmap bitmap  = (Bitmap)msg.obj;
-                    if (bitmap==null||bitmap.isRecycled()){
-                        reference.circleImageView.setImageResource(R.drawable.potrait);
-                    }else {
-                        reference.circleImageView.setImageBitmap(bitmap);
-                        reference.mCache.put("avatarimg", bitmap);
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(reference.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mysetting);
-        setCommonHeader("我的设置");
+        mPageName ="我的设置";
+        setCommonHeader(mPageName);
         context=getApplicationContext();
         initFindViewById();
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         avatarUrl =SharedPreferencesUtil.getAvatarUrl(context,SharedPreferencesUtil.AvatarUrl,"");
-        mCache = ACache.get(this);
         customDialog=new CustomDialog(this, "正在上传图片");
         initShowInfo();
         initEvent();
     }
     private void initShowInfo() {
         String mNickname = SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
-        Bitmap mAvatar =mCache.getAsBitmap("avatarimg");
         String mSexText =SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
         String phone=SharedPreferencesUtil.getPhoneNumber(this,SharedPreferencesUtil.PhoneNumber,"");
         if (mNickname ==null){
@@ -165,14 +134,22 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         }
         tvPhone.setText(phone);
         tvSex.setText(mSexText);
-        if (mAvatar !=null){
-            circleImageView.setImageBitmap(mAvatar);
-        }else {
-            SendRequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
-        }
+        onSetPortraitImage(avatarUrl);
     }
+
+    private void onSetPortraitImage(String url) {
+        Uri uri = Uri.parse(url);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                //. 其他设置（如果有的话）
+                .build();
+        simpleDraweeView.setController(controller);
+    }
+
     private void initFindViewById() {
-        circleImageView = (CircleImageView) findViewById(R.id.id_portraitview);
+        simpleDraweeView=(SimpleDraweeView)findViewById(R.id.id_portrait);
+       // circleImageView = (CircleImageView) findViewById(R.id.id_portraitview);
         settingPortrait =(RelativeLayout)findViewById(R.id.id_setting_portrait_layout);
         settingNickname =(RelativeLayout)findViewById(R.id.id_setting_nickname_layout);
         layoutSettingSex =(RelativeLayout)findViewById(R.id.id_setting_sex_layout);
@@ -182,7 +159,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     }
     private void initEvent() {
         findViewById(R.id.id_layout_setpwd).setOnClickListener(this);
-        circleImageView.setOnClickListener(this);
+        simpleDraweeView.setOnClickListener(this);
         tvNickname.setOnClickListener(this);
         tvSex.setOnClickListener(this);
         settingPortrait.setOnClickListener(this);
@@ -197,35 +174,10 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.id_setting_portrait_layout:
                 //适配ANDROID6.0
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
-                        AndPermission.with(this)
-                                .requestCode(MY_PERMISSIONS_REQUEST)
-                                .permission(Manifest.permission.CAMERA,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                .send();
-                    }else {
-                        onSettingPortraits();
-                    }
-                } else {
-                    onSettingPortraits();
-                }
+                onSettingPermission();
                 break;
-            case R.id.id_portraitview:
-                //适配ANDROID6.0
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
-                        AndPermission.with(this)
-                                .requestCode(MY_PERMISSIONS_REQUEST)
-                                .permission(Manifest.permission.CAMERA,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                .send();
-                    }else {
-                        onSettingPortraits();
-                    }
-                } else {
-                    onSettingPortraits();
-                }
+            case R.id.id_portrait:
+                onSettingPermission();
                 break;
             case R.id.id_setting_nickname_layout:
                 setNickname();
@@ -244,6 +196,33 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void onSettingPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                onSettingPortraits();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"授权失败");
+                            }
+                        }).start();
+            }else {
+                onSettingPortraits();
+            }
+        } else {
+            onSettingPortraits();
         }
     }
 
@@ -310,24 +289,6 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         }
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                onSettingPortraits();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(context,"授权失败");
-            }
-        }
-    };
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // 直接从相册获取
@@ -383,11 +344,8 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void getImagePicture() {
-        bitmap =BitmapUtil.decodeSampledBitmapFromFile(urlPath, 500, 500);
-        if (bitmap!=null){
-            ToastUtil.ToastText(context,urlPath);
-            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-            circleImageView.setImageDrawable(drawable);
+      //  bitmap =BitmapUtil.decodeSampledBitmapFromFile(urlPath, 500, 500);
+        if (!TextUtils.isEmpty(urlPath)){
             customDialog.show();
             requestService();
         }
@@ -403,7 +361,6 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         Intent intent = new Intent("com.android.camera.action.CROP");
         if (!TextUtils.isEmpty(url)){
             //sdk>=24
-            Log.d("picture_path=",url);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                 //通过FileProvider创建一个content类型的Uri
                 Uri imageUri = FileProvider.getUriForFile(context, "com.msht.minshengbao.fileProvider", new File(url));
@@ -463,11 +420,10 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                         JSONObject objectInfo = jsonObject.optJSONObject("data");
                         String avatarUrl=objectInfo.optString("avatar");
                         if (results.equals(SendRequestUtil.SUCCESS_VALUE)){
-                            //清除原有数据
-                            activity.mCache.remove("avatarimg");
-                            activity.mCache.put("avatarimg", activity.bitmap);
                             SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarUrl);
+                            activity.onSetPortraitImage(avatarUrl);
                             activity.onResetAvatar();//给Mynewfragment返回数据
+
                         }else {
                             activity.onFailure(error);
                         }
@@ -479,7 +435,6 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
-                   // ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;

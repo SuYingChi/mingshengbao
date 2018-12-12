@@ -49,13 +49,14 @@ public class StoreMapActivity extends BaseActivity implements  AMap.OnMyLocation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_map);
         context=this;
+        mPageName="门店地址";
         Intent data=getIntent();
         latitude=data.getDoubleExtra("latitude",0.0);
         longitude=data.getDoubleExtra("longitude",0.0);
         storeName =data.getStringExtra("storeName");
         storeAddress =data.getStringExtra("storeAddress");
         initDistance =data.getStringExtra("distance");
-        setCommonHeader("门店地址");
+        setCommonHeader(mPageName);
         initView(savedInstanceState);
         initEvent();
     }

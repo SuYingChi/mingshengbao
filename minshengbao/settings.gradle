@@ -1,1 +1,1 @@
-include ':app', ':lib:pingpp', ':PushSDK', ':zxinglite'
+include ':app', ':PushSDK', ':zxinglite', ':lib:pingpp'

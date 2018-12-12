@@ -4,15 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
@@ -45,6 +49,8 @@ public class PrizesGiftsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prizes_gifts);
+        context=this;
+        mPageName="活动抽奖";
         Intent data=getIntent();
         mUrl =data.getStringExtra("url");
         mNavigation =data.getStringExtra("navigate");
@@ -89,12 +95,18 @@ public class PrizesGiftsActivity extends BaseActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.equals(UrlUtil.WATER_GIFTS_RECHARGE_WEB)){
+                Log.d("WebViewUrl=",url);
+                if (url.contains(ConstantUtil.WEI_XIN_CHAT_REDIRECT)){
                     finish();
                 }else {
                     view.loadUrl(url);
                 }
                 return super.shouldOverrideUrlLoading(view, url);
+            }
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // 接受所有网站的证书
+                super.onReceivedSslError(view, handler, error);
             }
         });
         mWebView.setWebChromeClient(new MyWebChromeClient());

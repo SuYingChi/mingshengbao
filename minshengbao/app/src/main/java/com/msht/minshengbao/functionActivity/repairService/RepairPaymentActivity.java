@@ -163,7 +163,7 @@ public class RepairPaymentActivity extends BaseActivity  {
                 onStartSuccess("1",lottery);
                 break;
             case VariableUtil.VALUE_TWO:
-                onStartSuccess("5",lottery);
+                onStartSuccess("0",lottery);
                 break;
             case VariableUtil.VALUE_THREE:
                 onShowDialogs("正在支付");
@@ -173,10 +173,12 @@ public class RepairPaymentActivity extends BaseActivity  {
         }
     }
     private void onStartSuccess(String successType, String lottery) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("type",successType);
         success.putExtra("url",lottery);
-        success.putExtra("orderId",orderId);
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("navigation","支付成功");
         startActivity(success);
         finish();
     }
@@ -359,8 +361,8 @@ public class RepairPaymentActivity extends BaseActivity  {
                     switch (resultCode){
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x005);
-                            onStartSuccess("1","");
-                           // requestResult();
+                            //onStartSuccess("1","");
+                            requestResult();
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialogs("取消支付");
@@ -381,8 +383,8 @@ public class RepairPaymentActivity extends BaseActivity  {
         switch (title){
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x005);
-                onStartSuccess("1","");
-                //requestResult();
+               // onStartSuccess("1","");
+                requestResult();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
                 onShowDialogs("支付失败");

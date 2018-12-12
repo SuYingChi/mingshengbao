@@ -69,7 +69,6 @@ public class SelfHelpPay extends Fragment {
     private CustomDialog customDialog;
     /*****判断进入线程 ******/
     private boolean requestLine =false;
-    private String validateURL;
     private JSONArray jsonArray;
     private JSONObject jsonObject;
     private GetHouseAdapter adapter ;
@@ -244,9 +243,9 @@ public class SelfHelpPay extends Fragment {
         btnPayQuery =(Button)view.findViewById(R.id.id_btn_payquery);
         btnPayQuery.setEnabled(false);
         VariableUtil.mPos=-1;
-        adapter=new GetHouseAdapter(getActivity(),houseList);
+        adapter=new GetHouseAdapter(activity,houseList);
         mLstView.setAdapter(adapter);
-        if (NetWorkUtil.isNetWorkEnable(getActivity())){
+        if (NetWorkUtil.isNetWorkEnable(activity)){
             customDialog.show();
             initData();
         }else {
@@ -261,6 +260,7 @@ public class SelfHelpPay extends Fragment {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("category","1");
+        String validateURL="";
         if (!requestLine){
             validateURL = UrlUtil.SELECT_ADDRESS_URL;
         }else {

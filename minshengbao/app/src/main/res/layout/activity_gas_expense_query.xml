@@ -39,7 +39,7 @@
                     android:layout_toEndOf="@+id/id_customerView"
                     android:layout_marginLeft="@dimen/margin_width6"
                     android:layout_marginStart="@dimen/margin_width6"
-                    android:textSize="@dimen/text_width18"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:layout_marginTop="@dimen/margin_6"
                     android:layout_alignBottom="@+id/id_customerView"
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/text_width18"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:layout_toRightOf="@+id/imageView8"
                     android:layout_toEndOf="@+id/imageView8"
@@ -89,7 +89,7 @@
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:text="@string/should_pay_fee"
-                        android:textSize="@dimen/text_width20"
+                        android:textSize="@dimen/text_width18"
                         android:textColor="@color/black1"/>
                     <TextView
                         android:id="@+id/id_tv_bill"
@@ -102,7 +102,7 @@
                         android:layout_marginTop="@dimen/margin_width10"
                         android:textColor="@color/colorOrange"
                         android:text="@string/bill_detail"
-                        android:textSize="@dimen/text_width20"
+                        android:textSize="@dimen/text_width18"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/id_debts"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_width20"
+                        android:textSize="@dimen/text_width18"
                         android:textStyle="bold"
                         android:layout_below="@+id/id_text1"
                         android:layout_marginTop="@dimen/margin_5"
@@ -141,7 +141,7 @@
                         android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         />
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
@@ -157,7 +157,7 @@
                         android:layout_marginStart="@dimen/margin_width20"
                         android:layout_marginTop="@dimen/margin_width10"
                         android:text="@string/gas_fee_text"
-                        android:textSize="@dimen/text_18"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:id="@+id/id_gas_amount"
@@ -180,7 +180,7 @@
                         android:layout_marginTop="@dimen/margin_width12"
                         android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_marginStart="@dimen/margin_width20"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -190,7 +190,7 @@
                         android:layout_below="@+id/id_text2"
                         android:layout_marginTop="@dimen/margin_width12"
                         android:textColor="@color/black1"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
@@ -203,7 +203,7 @@
                         android:layout_below="@+id/id_text3"
                         android:layout_marginTop="@dimen/margin_width12"
                         android:text="@string/deduct_gas_prestore_fee_text"
-                        android:textSize="@dimen/text_18"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/color_9e9e9e"/>
                     <TextView
                         android:id="@+id/id_tv_balance"
@@ -217,7 +217,7 @@
                         android:layout_marginTop="@dimen/margin_12"
                         android:layout_marginBottom="@dimen/margin_width12"
                         android:textColor="@color/black1"
-                        android:textSize="@dimen/text_width18"/>
+                        android:textSize="@dimen/text_width16"/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -261,7 +261,7 @@
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:text="@string/coupon_text"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/black1"/>
                     <TextView
                         android:id="@+id/id_tv_voucher"
@@ -299,7 +299,7 @@
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:text="@string/real_pay_amount"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/black1"/>
                     <TextView
                         android:id="@+id/id_real_amount"
@@ -310,7 +310,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_marginRight="@dimen/margin_width10"
-                        android:textSize="@dimen/text_width18"
+                        android:textSize="@dimen/text_width16"
                         android:textStyle="bold"
                         android:textColor="@color/color_383838"/>
                 </RelativeLayout>

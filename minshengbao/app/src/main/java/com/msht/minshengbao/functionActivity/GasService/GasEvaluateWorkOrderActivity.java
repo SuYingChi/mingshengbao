@@ -110,7 +110,8 @@ public class GasEvaluateWorkOrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_evaluate_workorder);
         context=this;
-        setCommonHeader("燃气服务评价");
+        mPageName="燃气服务评价";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         Intent idNum=getIntent();
         id=idNum.getStringExtra("id");

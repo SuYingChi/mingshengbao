@@ -144,9 +144,9 @@ public class InvoiceGasHistoryActivity extends BaseActivity {
                         break;
                 }
                 if (invoiceType.equals(ConstantUtil.VALUE_ONE)){
-                    invoiceTypeName="纸质发票";
-                }else {
                     invoiceTypeName="电子发票";
+                }else {
+                    invoiceTypeName="纸质发票";
                 }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("statusDes", statusDes);
@@ -172,9 +172,10 @@ public class InvoiceGasHistoryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_gas_history);
-        customDialog=new CustomDialog(this, "正在加载");
         context=this;
-        setCommonHeader("发票历史");
+        mPageName="发票历史";
+        setCommonHeader(mPageName);
+        customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         intView();

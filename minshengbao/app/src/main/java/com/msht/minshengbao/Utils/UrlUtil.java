@@ -64,7 +64,7 @@ public class UrlUtil {
     public static final String WATER_PAY_ORDER_URL=BuildConfig.URL_MSSB+"/payment/payOrder";
     public static final String WATER_PRIZES_GIFTS=BuildConfig.URL_MSSB_GIFT+"/rw_front/lqlp.html";
     public static final String WATER_SERVICE_CENTER=BuildConfig.URL_MSSB_GIFT+"/rw_front/customer_center.html";
-    public static final String WATER_GIFTS_RECHARGE_WEB="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e0da2a76aae5110&redirect_uri=http%3a%2f%2fwx.msbapp.cn%2frw_front%2frecharge.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+    public static final String WATER_GIFTS_RECHARGE_WEB="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e0da2a76aae5110&redirect_uri=http%3a%2f%2fsb-fx.msbapp.cn%2frw_front%2frecharge.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
     /**
      * 商城
      */
@@ -85,6 +85,7 @@ public class UrlUtil {
     public static final String APP_VERSION_URL = BuildConfig.URL_HEADS +"/Gas/app/version";
     public static final String ALL_SERVE_CATALOG_URL =BuildConfig.URL_HEADS+"/api/serve_city/user_app_all_serve";
     public static final String FUNCTION_URL = BuildConfig.URL_HEADS +"/api/serve_city/user_app_serve";
+    public static final String HOME_ADVERTISEMENT_URL=BuildConfig.URL_HEADS+"/api/app/homepage_header_img";
     public static final String HOME_FUNCTION_URL =BuildConfig.URL_HEADS+"/api/serve_city/user_app_homepage";
     public static final String WEATHER_QUERY_URL = BuildConfig.URL_HEADS +"/pis/weather/query";
     public static final String INFORM_URL = BuildConfig.URL_HEADS +"/Gas/message/list";
@@ -96,6 +97,18 @@ public class UrlUtil {
     public static final String READ_SEARCH_USER_HOUSE =BuildConfig. URL_HEADS +"/Gas/usedHouse/search";
     public static final String PRE_DEPOSIT_HISTORY = BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
     public static final String SPECIAL_TOPIC_URL =BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
+    public static final String ADVERTISING_URL=BuildConfig.URL_HEADS+"/api/app/get_activity_by_code ";
+
+    /**分享*/
+    public static final String SUCCESS_SHARE_URL=BuildConfig.URL_HEADS+"/msht_operation_platform/app_share/app_share_success";
+
+    /**
+     * 资讯
+     */
+    public static final String HOME_MSB_APP_HEADLINE=BuildConfig.MSB_HEADLINE+"/crawler/getNumItems";
+    public static final String MSB_APP_HEADLINE_LIST=BuildConfig.MSB_HEADLINE+"/crawler/getPages";
+    public static final String MSB_APP_NEWS="http://msbapp.cn/zixunh5/index.html";
+
     /**
      * 燃气服务模块
      */
@@ -213,6 +226,7 @@ public class UrlUtil {
     /**
      * 维修服务
     */
+    public static final String HOUSEKEEPING_SERVICE_NOTE=BuildConfig.URL_HEADS+"/repair_h5/service_note_baojie.html";
     public static final String Service_noteUrl= BuildConfig.URL_HEADS +"/repair_h5/service_note.html";
     public static final String RepairOrder_detailUrl= BuildConfig.URL_HEADS +"/Gas/repairOrder/view";
     public static final String RepairOrder_cancelUrl= BuildConfig.URL_HEADS +"/Gas/repairOrder/cancel";

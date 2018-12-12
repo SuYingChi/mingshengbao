@@ -64,8 +64,8 @@
                         android:id="@+id/id_topmodule_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginTop="@dimen/margin_width7"
                         android:layout_marginBottom="@dimen/margin_width12"
                         android:numColumns="4"
@@ -73,6 +73,7 @@
                     </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
                 </android.support.v7.widget.CardView>
             </FrameLayout>
+            <include layout="@layout/layout_marquee_view" android:id="@+id/id_marquee_layout"/>
             <LinearLayout
                 android:id="@+id/id_layout_havedata"
                 android:layout_width="match_parent"
@@ -90,18 +91,21 @@
                     android:background="@color/white" >
                     <View
                         android:id="@+id/id_view0"
-                        android:layout_width="@dimen/margin_3"
+                        android:layout_width="@dimen/margin_width3"
                         android:layout_height="@dimen/margin_width18"
                         android:background="@color/colorOrange"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_view0"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_view0"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
-                        android:text="专题活动"
+                        android:text="@string/special_topic_activity"
                         android:textSize="@dimen/text_width18"
                         android:textColor="#ff4f4f4f"/>
                 </RelativeLayout>
@@ -120,8 +124,8 @@
                         app:middle_page_cover="true"
                         app:indicatorAlign="center"
                         app:indicatorPaddingTop="@dimen/margin_width10"
-                        app:indicatorPaddingLeft="10dp"
-                        app:indicatorPaddingBottom="10dp">
+                        app:indicatorPaddingLeft="@dimen/margin_width10"
+                        app:indicatorPaddingBottom="@dimen/margin_width10">
                     </com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
@@ -136,18 +140,21 @@
                     android:background="@color/white" >
                     <View
                         android:id="@+id/id_view1"
-                        android:layout_width="@dimen/margin_3"
+                        android:layout_width="@dimen/margin_width3"
                         android:layout_height="@dimen/margin_width18"
                         android:background="@color/colorOrange"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_view1"
+                        android:layout_toEndOf="@+id/id_view1"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginLeft="@dimen/margin_10"
                         android:layout_centerVertical="true"
-                        android:text="热门推荐"
+                        android:text="@string/hot_recommend"
                         android:textSize="@dimen/text_width18"
                         android:textColor="#ff4f4f4f"/>
 
@@ -381,4 +388,16 @@
                 android:textColor="@android:color/transparent"/>
         </RelativeLayout>
     </LinearLayout>
+    <com.msht.minshengbao.ViewUI.widget.DragImageView
+        android:id="@+id/id_floating_view"
+        android:layout_width="@dimen/margin_width60"
+        android:layout_height="@dimen/margin_width60"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="@dimen/margin_width10"
+        android:layout_marginRight="@dimen/margin_width10"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:visibility="gone"
+        app:actualImageResource="@drawable/floating_advertising_xh"
+        app:failureImage="@drawable/floating_advertising_xh"
+        />
 </FrameLayout>

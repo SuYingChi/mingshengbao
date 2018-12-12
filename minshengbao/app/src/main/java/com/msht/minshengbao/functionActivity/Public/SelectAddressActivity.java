@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.adapter.SelectAddressAdapter;
 import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddressActivity;
@@ -44,8 +48,10 @@ import java.util.HashMap;
  * @date 2017/7/2  
  */
 public class SelectAddressActivity extends BaseActivity {
-    private ListView mListView;
-    private AddressAdapter mAdapter;
+   // private ListView mListView;
+    private XRecyclerView mRecyclerView;
+  //  private AddressAdapter mAdapter;
+    private SelectAddressAdapter mAdapter;
     private View layoutView;
     private View layoutBtnNew;
     private TextView tvRightText;
@@ -114,6 +120,8 @@ public class SelectAddressActivity extends BaseActivity {
                 }).show();
     }
     private void onReceiveAddressData() {
+        addrList.clear();
+        mAdapter.notifyDataSetChanged();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -145,7 +153,6 @@ public class SelectAddressActivity extends BaseActivity {
             findViewById(R.id.id_re_nodata).setVisibility(View.GONE);
             findViewById(R.id.line).setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -159,11 +166,20 @@ public class SelectAddressActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initHeader();
         initView();
-        mAdapter=new AddressAdapter(this);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        mAdapter=new SelectAddressAdapter(addrList);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.refresh();
+        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(false);
+        mAdapter.setClickCallBack(new SelectAddressAdapter.ItemClickCallBack() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(int position) {
                 String mAddress=addrList.get(position).get("address");
                 String name=addrList.get(position).get("name");
                 String phone=addrList.get(position).get("phone");
@@ -181,6 +197,23 @@ public class SelectAddressActivity extends BaseActivity {
                 finish();
             }
         });
+        mAdapter.setOnItemClickListener(new SelectAddressAdapter.OnItemClickListener() {
+            @Override
+            public void onItemSelectClick(int position) {
+                String address=addrList.get(position).get("address");
+                String id = addrList.get(position).get("id");
+                String cityId=addrList.get(position).get("city_id");
+                String longitude = addrList.get(position).get("longitude");
+                String latitude =addrList.get(position).get("latitude");
+                Intent intent=new Intent(context,ModifyAddressActivity.class);
+                intent.putExtra("id",id);
+                intent.putExtra("address",address);
+                intent.putExtra("city_id",cityId);
+                intent.putExtra("longitude",longitude);
+                intent.putExtra("latitude",latitude);
+                startActivityForResult(intent,1);
+            }
+        });
         initData();
         initEvent();
     }
@@ -191,7 +224,6 @@ public class SelectAddressActivity extends BaseActivity {
         switch (requestCode){
             case 1:
                 if (resultCode==0x001||resultCode==0x002){
-                    addrList.clear();
                     initData();
                 }
                 break;
@@ -218,7 +250,7 @@ public class SelectAddressActivity extends BaseActivity {
     private void initView() {
         layoutView =findViewById(R.id.id_re_nodata);
         layoutBtnNew =findViewById(R.id.id_re_newaddress);
-        mListView=(ListView)findViewById(R.id.id_address_view);
+        mRecyclerView=(XRecyclerView)findViewById(R.id.id_address_view);
     }
     private void initHeader() {
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);

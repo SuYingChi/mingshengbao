@@ -1,5 +1,6 @@
 package com.msht.minshengbao.functionActivity.insurance;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,12 +20,14 @@ import com.msht.minshengbao.Utils.UrlUtil;
 
 public class InsurancePay extends BaseActivity {
     private ProgressBar progressBar;
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insurance_pay);
         context=this;
-        setCommonHeader("保险支付");
+        mPageName="保险支付";
+        setCommonHeader(mPageName);
         Intent data=getIntent();
         final String insuranceData=data.getStringExtra("params");
        // String  url=data.getStringExtra("url");

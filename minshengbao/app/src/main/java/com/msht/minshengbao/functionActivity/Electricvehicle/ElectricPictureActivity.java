@@ -25,7 +25,8 @@ public class ElectricPictureActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_electric_picture);
         context=this;
-        setCommonHeader("图片详情");
+        mPageName="图片详情";
+        setCommonHeader(mPageName);
         Bundle bundle=getIntent().getBundleExtra("url");
         imageUrl =bundle.getStringArrayList("image");
         initView();

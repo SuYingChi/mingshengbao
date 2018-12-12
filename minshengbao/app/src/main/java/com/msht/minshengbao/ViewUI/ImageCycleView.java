@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.msht.minshengbao.adapter.CycleViewPager;
-import com.msht.minshengbao.Bean.ADInfo;
+import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.R;
 
 
@@ -31,7 +31,8 @@ import com.msht.minshengbao.R;
  *   另外提供{@link #startImageCycle() } \ {@link #pushImageCycle() }两种方法，用于在Activity不可见之时节省资源；
  *   因为自动轮播需要进行控制，有利于内存管理
  * </pre>
- * 
+ *
+ * @author hong
  */
 public class ImageCycleView extends LinearLayout {
 
@@ -120,7 +121,7 @@ public class ImageCycleView extends LinearLayout {
 	 *
 	 * @param imageCycleViewListener
 	 */
-	public void setImageResources(ArrayList<ADInfo> infoList, ImageCycleViewListener imageCycleViewListener) {
+	public void setImageResources(ArrayList<AdvertisingInfo> infoList, ImageCycleViewListener imageCycleViewListener) {
 		// 清除所有子视图
 		mGroup.removeAllViews();
 		// 图片广告数量
@@ -205,10 +206,10 @@ public class ImageCycleView extends LinearLayout {
 
 		@Override
 		public void onPageScrollStateChanged(int state) {
-			if (state == ViewPager.SCROLL_STATE_IDLE)
+			if (state == ViewPager.SCROLL_STATE_IDLE){
 				startImageTimerTask(); // 开始下次计时
+			}
 		}
-
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
 		}
@@ -242,7 +243,7 @@ public class ImageCycleView extends LinearLayout {
 		/**
 		 * 图片资源列表
 		 */
-		private ArrayList<ADInfo> mAdList = new ArrayList<ADInfo>();
+		private ArrayList<AdvertisingInfo> mAdList = new ArrayList<AdvertisingInfo>();
 
 		/**
 		 * 广告图片点击监听器
@@ -251,7 +252,7 @@ public class ImageCycleView extends LinearLayout {
 
 		private Context mContext;
 
-		public ImageCycleAdapter(Context context, ArrayList<ADInfo> adList, ImageCycleViewListener imageCycleViewListener) {
+		public ImageCycleAdapter(Context context, ArrayList<AdvertisingInfo> adList, ImageCycleViewListener imageCycleViewListener) {
 			mContext = context;
 			mAdList = adList;
 			mImageCycleViewListener = imageCycleViewListener;
@@ -324,7 +325,7 @@ public class ImageCycleView extends LinearLayout {
 		 * @param
 		 * @param imageView
 		 */
-		public void onImageClick(ADInfo info, int postion, View imageView);
+		public void onImageClick(AdvertisingInfo info, int postion, View imageView);
 	}
 
 }

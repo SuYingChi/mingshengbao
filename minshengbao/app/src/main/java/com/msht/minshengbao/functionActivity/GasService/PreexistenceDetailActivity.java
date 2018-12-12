@@ -137,8 +137,9 @@ public class PreexistenceDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preexistence_detail);
         context=this;
+        mPageName="燃气预存款明细";
         customDialog=new CustomDialog(this, "正在加载");
-        setCommonHeader("燃气预存款明细");
+        setCommonHeader(mPageName);
         Intent data=getIntent();
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");

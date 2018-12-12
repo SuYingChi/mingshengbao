@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,7 +155,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         String customerNum =jsonObject.optString("customerNo");
         String allBalance =jsonObject.optString("balance");
         String debts=jsonObject.optString("debts");
-        String totalNum =jsonObject.optString("totalNum");
+        String totalNum =jsonObject.optString("total_num");
         String gasFee=jsonObject.optString("gas_fee");
         String discountFees =jsonObject.optString("discount_fee");
         String lateFees =jsonObject.optString("late_fee");

@@ -165,9 +165,10 @@ public class ScanCodeResultActivity extends BaseActivity {
         tvFeeStandard.setText("0.3元/升");
         if (networkStatus==1){
             if (workStatus==1){
+                initData();
                 btnKnow.setVisibility(View.GONE);
                 tvNotice.setVisibility(View.GONE);
-                btnLaunch.setVisibility(View.VISIBLE);
+                btnLaunch.setVisibility(View.GONE);
             }else {
                 btnKnow.setVisibility(View.VISIBLE);
                 btnLaunch.setVisibility(View.GONE);
@@ -284,7 +285,7 @@ public class ScanCodeResultActivity extends BaseActivity {
         btnLaunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initData();
+              //  initData();
             }
         });
         findViewById(R.id.id_tds_img).setOnClickListener(new View.OnClickListener() {

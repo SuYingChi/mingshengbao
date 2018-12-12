@@ -1,44 +1,54 @@
-package com.renny.recyclerbanner.adapter;
+package com.msht.minshengbao.adapter.uiadapter;
 
 /**
  * Created by test on 2017/11/23.
  */
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+
 import com.bumptech.glide.Glide;
-import com.example.library.banner.RecyclerViewBannerBase;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.msht.minshengbao.R;
+import com.msht.minshengbao.ViewUI.banner.AbstractRecyclerViewBannerBase;
+
 
 import java.util.List;
 
 /**
  * RecyclerView适配器
+ * @author hong
  */
 public class NormalRecyclerAdapter extends RecyclerView.Adapter<NormalRecyclerAdapter.NormalHolder> {
 
-    private RecyclerViewBannerBase.OnBannerItemClickListener onBannerItemClickListener;
+    private AbstractRecyclerViewBannerBase.OnBannerItemClickListener onBannerItemClickListener;
     private Context context;
     private List<String> urlList;
 
-    public NormalRecyclerAdapter(Context context, List<String> urlList, RecyclerViewBannerBase.OnBannerItemClickListener onBannerItemClickListener) {
+    public NormalRecyclerAdapter(Context context, List<String> urlList, AbstractRecyclerViewBannerBase.OnBannerItemClickListener onBannerItemClickListener) {
         this.context = context;
         this.urlList = urlList;
         this.onBannerItemClickListener = onBannerItemClickListener;
     }
 
+    @NonNull
     @Override
-    public NormalRecyclerAdapter.NormalHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NormalHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new NormalHolder(new ImageView(context));
     }
 
     @Override
-    public void onBindViewHolder(NormalHolder holder, final int position) {
-        if (urlList == null || urlList.isEmpty())
+    public void onBindViewHolder(@NonNull NormalHolder holder, final int position) {
+        if (urlList == null || urlList.isEmpty()){
             return;
+        }
         String url = urlList.get(position % urlList.size());
         ImageView img = (ImageView) holder.itemView;
         Glide.with(context).load(url).into(img);

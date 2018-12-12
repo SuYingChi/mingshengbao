@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity">
-
     <include layout="@layout/layout_header" />
-
     <WebView
         android:id="@+id/id_web_html"
         android:layout_width="match_parent"

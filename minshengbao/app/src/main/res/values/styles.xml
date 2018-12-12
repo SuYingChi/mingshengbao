@@ -10,6 +10,10 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="actionBarSize">@dimen/margin_width50</item>
     </style>
+    <style name="NoTranslucent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
+   </style>
     <style name="customTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="actionBarTheme">@style/actionBarTheme</item>
         <item name="colorPrimary">@color/colorPrimary</item>

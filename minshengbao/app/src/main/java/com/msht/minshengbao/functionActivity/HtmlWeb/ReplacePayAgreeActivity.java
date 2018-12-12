@@ -25,7 +25,8 @@ public class ReplacePayAgreeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replace_pay_agree);
         context=this;
-        setCommonHeader("燃气代缴协议");
+        mPageName="燃气代缴协议";
+        setCommonHeader(mPageName);
         initWebView();
         initEvent();
     }

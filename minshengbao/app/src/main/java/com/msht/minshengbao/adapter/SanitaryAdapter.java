@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,36 +58,48 @@ public class SanitaryAdapter extends BaseAdapter {
         if (convertView == null) {
             holder =new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_second_service, null);
-            holder.img_function=(ImageView)convertView.findViewById(R.id.id_function_img);
-            holder.tv_name=(TextView) convertView.findViewById(R.id.id_function_name);
+            holder.imgFunction =(ImageView)convertView.findViewById(R.id.id_function_img);
+            holder.tvName =(TextView) convertView.findViewById(R.id.id_function_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         String name=functionList.get(position).get("name");
         String code=functionList.get(position).get("code");
-        holder.tv_name.setText(name);
-        if (code.equals("water_pipe")){
-            holder.img_function.setImageResource(R.drawable.water_pipe_xh);
-        }else if (code.equals("water_tap")){
-            holder.img_function.setImageResource(R.drawable.water_tap_xh);
-        }else if (code.equals("shower")){
-            holder.img_function.setImageResource(R.drawable.shower_xh);
-        }else if (code.equals("closestool")){
-            holder.img_function.setImageResource(R.drawable.closestool_xh);
-        }else if (code.equals("bathroom_cabinet")){
-            holder.img_function.setImageResource(R.drawable.bathroom_cabinet_xh);
-        }else if (code.equals("lamp")){
-            holder.img_function.setImageResource(R.drawable.lamp_xh);
-        }else if (code.equals("switch_socket")){
-            holder.img_function.setImageResource(R.drawable.switch_socket_xh);
-        }else if (code.equals("circuit")){
-            holder.img_function.setImageResource(R.drawable.circuit_xh);
+        holder.tvName.setText(name);
+        switch (code){
+            case ConstantUtil.WATER_PIPE:
+                holder.imgFunction.setImageResource(R.drawable.water_pipe_xh);
+                break;
+            case ConstantUtil.WATER_TAP:
+                holder.imgFunction.setImageResource(R.drawable.water_tap_xh);
+                break;
+            case ConstantUtil.SHOWER:
+                holder.imgFunction.setImageResource(R.drawable.shower_xh);
+                break;
+            case ConstantUtil.CLOSESTOOL:
+                holder.imgFunction.setImageResource(R.drawable.closestool_xh);
+                break;
+            case ConstantUtil.BATHROOM:
+                holder.imgFunction.setImageResource(R.drawable.bathroom_cabinet_xh);
+                break;
+            case ConstantUtil.LAMP:
+                holder.imgFunction.setImageResource(R.drawable.lamp_xh);
+                break;
+            case ConstantUtil.SWITCH_SOCKET:
+                holder.imgFunction.setImageResource(R.drawable.switch_socket_xh);
+                break;
+            case ConstantUtil.CIRCUIT:
+                holder.imgFunction.setImageResource(R.drawable.circuit_xh);
+                break;
+                default:
+                    holder.imgFunction.setImageResource(R.drawable.circuit_xh);
+                    break;
         }
         return convertView;
     }
     class ViewHolder {
-        public ImageView img_function;
-        public TextView  tv_name;
+         ImageView imgFunction;
+         TextView tvName;
     }
 }

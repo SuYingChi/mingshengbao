@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by hong on 2016/11/10.
+ *
+ * @author hong
+ * @date 2016/11/10
  */
 public class SharedPreferencesUtil {
     private static final String spFist="open_app";
@@ -32,6 +34,7 @@ public class SharedPreferencesUtil {
     public static final String LPG_USER_NAME="lpgUserName";
     public static final String LPG_MOBILE="MOBILE";
     public static final String LPG_SEX="lpgSex";
+    public static final String SAVE_DATE="date";
 
     public static Boolean getBoolean(Context context, String strKey,
                                        Boolean strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
@@ -46,6 +49,24 @@ public class SharedPreferencesUtil {
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putBoolean(strKey, strData);
         editor.apply();
+    }
+    public static Long getDateLong(Context context,String strKey,long strDefault){
+        if (context!=null){
+            SharedPreferences setPreferences = context.getSharedPreferences(
+                    spFist, Context.MODE_PRIVATE);
+            return setPreferences.getLong(strKey, strDefault);
+        }else {
+            return null;
+        }
+    }
+    public static void putDateLong(Context context,String strKey,long strData){
+        if (context!=null){
+            SharedPreferences activityPreferences = context.getSharedPreferences(
+                    spFist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = activityPreferences.edit();
+            editor.putLong(strKey, strData);
+            editor.apply();
+        }
     }
     public static String getUserId(Context context, String strKey,
                                  String strData){

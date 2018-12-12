@@ -74,6 +74,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String payMethod, finishTime, evaluateScore, evaluateInfo;
     private String realMoney;
     private String phoneNo;
+    private String parentCode;
     private int    requestCode=0;
     private static final int  EVA_CODE=1;
     private JSONObject jsonObject;
@@ -138,7 +139,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         parentCategory =jsonObject.optString("parent_category");
         String appointTime=jsonObject.optString("appoint_time");
         orderNo=jsonObject.optString("orderNo");
-        String createTime =jsonObject.optString("create_time");
+        String createTime =jsonObject.optString("createTime");
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
@@ -152,7 +153,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }else {
             tvRemarkInfo.setText(info);
         }
-        onSetTypeImage(type);
+        //onSetTypeImage(type);
         onSetStatusView(status);
         onSetGuaranteeStopDayView();
     }
@@ -425,12 +426,40 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         Intent data=getIntent();
         cid=data.getStringExtra("cid");
         id=data.getStringExtra("id");
+        parentCode=data.getStringExtra("parentCode");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initFindViewId();
+        initSetCodeImage(parentCode);
         initData();
         initEvent();
+
     }
+
+    private void initSetCodeImage(String parentCode) {
+        switch (parentCode) {
+            case ConstantUtil.SANITARY_WARE:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.OTHER_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                typeImg.setImageResource(R.drawable.housekeeping_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -612,6 +641,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         repeat.putExtra("finishTime", finishTime);
         repeat.putExtra("phone",phone);
         repeat.putExtra("address",address);
+        repeat.putExtra("parentCode",parentCode);
         startActivityForResult(repeat,0x004);
     }
     private void onRefund() {
@@ -621,6 +651,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         fund.putExtra("type",type);
         fund.putExtra("title",title);
         fund.putExtra("parentCategory", parentCategory);
+        fund.putExtra("parentCode",parentCode);
         fund.putExtra("finishTime", finishTime);
         fund.putExtra("realAmount", realAmount);
         startActivityForResult(fund,0x004);

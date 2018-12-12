@@ -77,7 +77,6 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(GuideActivity.this,
                 MainActivity.class);
         startActivity(intent);
-        SharedPreferencesUtil.putBoolean(GuideActivity.this, SharedPreferencesUtil.FIRST_OPEN, false);
         finish();
     }
     private void setCurDot(int position) {

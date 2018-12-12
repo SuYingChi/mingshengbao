@@ -213,6 +213,7 @@ public class SearchStoreActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_store);
         context=this;
+        mPageName="搜索店铺";
         userPhone = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         Intent data=getIntent();
         mLatitude =data.getStringExtra("lat");

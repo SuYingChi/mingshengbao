@@ -1,11 +1,15 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -18,18 +22,24 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
-public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChromeClient.OpenFileChooserCallBack {
-    private WebView mWebview;
-    private String    Url,naviga;
+/**
+ * @author hong
+ */
+public class IntelligentFarmHmlActivity extends BaseActivity  {
+    private WebView mWebView;
+    private String mUrl, mNavigation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intelligent_farm_hml);
+        context=this;
+        mPageName="智慧农贸";
         Intent data=getIntent();
-        Url=data.getStringExtra("url");
-        naviga=data.getStringExtra("navigate");
-        mPageName=naviga;
+        mUrl =data.getStringExtra("url");
+        mNavigation =data.getStringExtra("navigate");
+        mPageName= mNavigation;
         initHeader();
         initWeBView();
         initEvent();
@@ -37,12 +47,12 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChr
     private void initHeader() {
         backImg = (ImageView) findViewById(R.id.id_goback);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
-        tvNavigationTile.setText(naviga);
+        tvNavigationTile.setText(mNavigation);
     }
     private void initWeBView() {
-        mWebview=(WebView)findViewById(R.id.id_web_html);
-        mWebview.loadUrl(Url);
-        WebSettings settings= mWebview.getSettings();
+        mWebView =(WebView)findViewById(R.id.id_web_html);
+        mWebView.loadUrl(mUrl);
+        WebSettings settings= mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setUseWideViewPort(true);
@@ -53,8 +63,8 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChr
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        mWebview.requestFocusFromTouch();
-        mWebview.setWebViewClient(new WebViewClient() {
+        mWebView.requestFocusFromTouch();
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
@@ -64,29 +74,34 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChr
                 }
                 return true;
             }
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // 接受所有网站的证书
+                super.onReceivedSslError(view, handler, error);
+            }
         });
+        mWebView.setWebChromeClient(new MyWebChromeClient());
 
-        mWebview.setWebChromeClient(new MyWebChromeClient(IntelligentFarmHmlActivity.this));
     }
     private void initEvent() {
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mWebview.canGoBack()){
-                    mWebview.goBack();
+                if(mWebView.canGoBack()){
+                    mWebView.goBack();
                 }else {
                     finish();
                 }
             }
         });
-        mWebview.setOnKeyListener(new View.OnKeyListener() {
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (keyCode == KeyEvent.KEYCODE_BACK ) {
                         //这里处理返回键事件
-                        if(mWebview.canGoBack()){
-                            mWebview.goBack();
+                        if(mWebView.canGoBack()){
+                            mWebView.goBack();
                             return true;
                         }else {
                             finish();
@@ -97,26 +112,38 @@ public class IntelligentFarmHmlActivity extends BaseActivity implements MyWebChr
             }
         });
     }
-
-    @Override
-    public void openFileChooserCallBack(ValueCallback<Uri> uploadMsg, String acceptType) {}
-    @Override
-    public void onProgressChanged(WebView view, int newProgress) {
-        if (newProgress==100){
-
+    private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message,
+                                 final JsResult result) {
+            new PromptDialog.Builder(context)
+                    .setTitle(R.string.my_dialog_title)
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage(message)
+                    .setButton1("我知道了", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            result.cancel();
+                            dialog.dismiss();
+                        }
+                    }).show();
+            return true;
+        }
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+        }
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
         }
     }
     @Override
-    public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
-        return false;
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWebview.stopLoading();
-        mWebview.removeAllViews();
-        mWebview.destroy();
-        mWebview = null;
+        mWebView.stopLoading();
+        mWebView.removeAllViews();
+        mWebView.destroy();
+        mWebView = null;
     }
 }

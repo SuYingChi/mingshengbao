@@ -1,2 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+    <string name="repair_type">维修类型:</string>
+    <string name="price_table">价格表</string>
+    <string name="overflow_price">超值价位</string>
+    <string name="appointment_time">预约时间</string>
+    <string name="select_appointment_date">选择预约日期</string>
+    <string name="select_appointment_time">选择预约时间</string>
+    <string name="question_describe">问题描述</string>
+    <string name="can_input_140_character">您还可以输入140个字</string>
+    <string name="upload_repair_picture">上传维修部位照片</string>
+    <string name="send_order">提交订单</string>
+    <string name="upload_most_four_picture">最多只能上传4张图片</string>
+    
+    
+</resources>

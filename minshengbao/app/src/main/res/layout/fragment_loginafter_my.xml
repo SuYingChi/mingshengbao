@@ -23,22 +23,32 @@
                     android:layout_width="@dimen/margin_width80"
                     android:layout_height="@dimen/margin_width80"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:background="@drawable/shape_circle_transparent">
-                    <com.msht.minshengbao.ViewUI.CircleImageView
-                        android:id="@+id/id_potrait"
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/id_portrait"
                         android:layout_width="@dimen/margin_width70"
                         android:layout_height="@dimen/margin_width70"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/potrait" />
+                        app:failureImage="@drawable/potrait"
+                        app:failureImageScaleType="centerInside"
+                        app:roundAsCircle="true"
+                        app:retryImage="@drawable/potrait"
+                        app:backgroundImage="@drawable/potrait"/>
                 </RelativeLayout>
                 <TextView
                     android:id="@+id/id_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:gravity="start"
                     android:layout_toRightOf="@+id/id_re_circle"
-                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_toEndOf="@+id/id_re_circle"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
+                    android:layout_toStartOf="@+id/id_right_massage"
+                    android:layout_toLeftOf="@+id/id_right_massage"
                     android:textSize="@dimen/text_width18"
                     android:textColor="@color/white"/>
                 <RelativeLayout

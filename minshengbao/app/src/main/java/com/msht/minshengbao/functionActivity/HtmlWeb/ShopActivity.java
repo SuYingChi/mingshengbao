@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -31,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.Utils.LinkUrlUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.PublicPayWayActivity;
 import com.msht.minshengbao.MyAPI.MyWebChromeClient;
@@ -99,7 +102,6 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         initWebView();
         initEvent();
-       // Log.d("mFirst=",String.valueOf(First)+","+urls);
         findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +202,11 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
             }
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // 接受所有网站的证书
+                super.onReceivedSslError(view, handler, error);
+            }
         });
         fixDirPath();
         shopWeb.setWebChromeClient(new MyWebChromeClient(ShopActivity.this));
@@ -213,17 +220,11 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     }
     private void pingPay(String shopUrl) {
         String payAmount=Uri.parse(shopUrl).getQueryParameter("pay_amount");
-        String payUrl=replace(shopUrl,"op","pay_new");
+        String payUrl=LinkUrlUtil.replaceParams(shopUrl,"op","pay_new");
         Intent pay=new Intent(mContext, PublicPayWayActivity.class);
         pay.putExtra("amount",payAmount);
         pay.putExtra("url",payUrl);
         startActivityForResult(pay,PAY_CODE);
-    }
-    private String replace(String shopUrl, String key, String value) {
-        if (!TextUtils.isEmpty(shopUrl)&&!TextUtils.isEmpty(key)){
-            shopUrl=shopUrl.replaceAll("("+key+"=[^&]*)",key+"="+value);
-        }
-        return shopUrl;
     }
     @Override
     public void onProgressChanged(WebView view, int newProgress) {

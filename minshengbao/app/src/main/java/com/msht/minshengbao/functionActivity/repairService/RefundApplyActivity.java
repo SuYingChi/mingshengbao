@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -32,8 +33,8 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.umeng.analytics.MobclickAgent;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -58,19 +60,18 @@ import top.zibin.luban.OnCompressListener;
 public class RefundApplyActivity extends BaseActivity {
     private EditText etProblem;
     private Button btnSend;
-    private GridView mPhotoGridView;
+    private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private Context   context;
     private String    orderNo,refundId;
     private String    userId,password;
     private String    id, parentCategory;
-    private String    type, finishTime;
+    private String     finishTime;
     private String    title;
     private int thisPosition =-1;
     private int k=0;
     private JSONObject jsonObject;
     private CustomDialog customDialog;
-    private static  final int MY_PERMISSIONS_REQUEST=1;
     private ArrayList<String> imgPaths = new ArrayList<>();
     private final String mPageName ="退款申请";
     private final RequestHandler requestHandler=new RequestHandler(this);
@@ -245,11 +246,12 @@ public class RefundApplyActivity extends BaseActivity {
         Intent data=getIntent();
         id=data.getStringExtra("id");
         orderNo=data.getStringExtra("orderNo");
-        type= data.getStringExtra("type");
         title=data.getStringExtra("title");
         finishTime =data.getStringExtra("finishTime");
         parentCategory =data.getStringExtra("parentCategory");
+        String parentCode=data.getStringExtra("parentCode");
         initView();
+        initSetCodeImage(parentCode);
         mAdapter = new PhotoPickerAdapter(imgPaths);
         mPhotoGridView.setAdapter(mAdapter);
         mPhotoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -281,6 +283,31 @@ public class RefundApplyActivity extends BaseActivity {
 
     }
 
+    private void initSetCodeImage(String parentCode) {
+        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
+        switch (parentCode) {
+            case ConstantUtil.SANITARY_WARE:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.OTHER_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                typeImg.setImageResource(R.drawable.housekeeping_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -297,24 +324,6 @@ public class RefundApplyActivity extends BaseActivity {
             mAdapter.notifyDataSetChanged();
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                onShowPhoto();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                Toast.makeText(RefundApplyActivity.this,"授权失败",Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
     private void onShowPhoto() {
         if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
@@ -336,10 +345,21 @@ public class RefundApplyActivity extends BaseActivity {
     private void initphoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
-                    .requestCode(MY_PERMISSIONS_REQUEST)
+                    .runtime()
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
+                    .onGranted(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            onShowPhoto();
+                        }
+                    })
+                    .onDenied(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            ToastUtil.ToastText(context,"授权失败");
+                        }
+                    }).start();
         }else {
             if (position == imgPaths.size()) {
                 PhotoPicker.builder()
@@ -365,29 +385,8 @@ public class RefundApplyActivity extends BaseActivity {
         ((TextView)findViewById(R.id.id_tv_title)).setText(title);
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
         etProblem =(EditText)findViewById(R.id.id_et_problem);
-        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
         btnSend =(Button)findViewById(R.id.id_btn_send);
-        mPhotoGridView =(GridView)findViewById(R.id.noScrollgridview);
-        switch (type){
-            case ConstantUtil.VALUE_ONE:
-                typeImg.setImageResource(R.drawable.home_sanitary_xh);
-                break;
-            case ConstantUtil.VALUE_TWO:
-                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
-                break;
-            case ConstantUtil.VALUE_THREE:
-                typeImg.setImageResource(R.drawable.home_lanterns_xh);
-                break;
-            case ConstantUtil.VALUE_FOUR:
-                typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                break;
-            case ConstantUtil.VALUE_FORTY_EIGHT:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-            default:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-        }
+        mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

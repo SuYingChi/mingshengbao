@@ -57,7 +57,6 @@ public class MessageDetailActivity extends BaseActivity {
                         activity.customDialog.dismiss();
                     }
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -97,7 +96,6 @@ public class MessageDetailActivity extends BaseActivity {
         tvMessage.setText(content);
         tvTime.setText(time);
         mWebView.loadDataWithBaseURL(null, htmlText, "text/html", "UTF-8", null);
-       // mWebView.loadData(htmlText, "text/html", "UTF-8");
         if (TextUtils.isEmpty(htmlText)||htmlText.equals(ConstantUtil.NULL_VALUE)){
             mWebView.setVisibility(View.GONE);
             layoutScroll.setVisibility(View.VISIBLE);

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -244,6 +245,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             validateURL=UrlUtil.Register_Url;
             textParams.put("password",password);
             textParams.put("code", verifyCode);
+            textParams.put("city_id",VariableUtil.City);
         }
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }

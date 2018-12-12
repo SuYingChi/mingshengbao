@@ -136,7 +136,8 @@ public class ElectricsStoreDetailActivity extends BaseActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_electrics_store_detail);
         context=this;
-        setCommonHeader("门店详情");
+        mPageName="门店详情";
+        setCommonHeader(mPageName);
         Intent data=getIntent();
         id=data.getStringExtra("store_id");
         distance=data.getStringExtra("distance");

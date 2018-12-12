@@ -1,6 +1,8 @@
 package com.msht.minshengbao.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,64 +20,55 @@ import java.util.HashMap;
  * @author hong
  * @date 2017/3/17
  */
-public class GetAddressAdapter extends BaseAdapter {
-    private Context mContext;
+public class GetAddressAdapter extends RecyclerView.Adapter<GetAddressAdapter.MyViewHolder> {
     private int thisPos;
-    private LayoutInflater mInflater = null;
+    public void setClickCallBack(ItemClickCallBack clickCallBack) {
+        this.clickCallBack = clickCallBack;
+    }
     public  ItemRadioButtonClickListener mListener = null;
     public void setRadioButtonClickListener(ItemRadioButtonClickListener listener){
         this.mListener=listener;
     }
     public interface ItemRadioButtonClickListener {
+        /**
+         * 回调
+         * @param v
+         * @param position
+         */
         void onRadioButtonClick(View v, int position);
     }
+    public interface ItemClickCallBack{
+        /**
+         * 回调
+         * @param v
+         * @param pos
+         */
+        void onItemClick(View v,int pos);
+    }
+    private ItemClickCallBack clickCallBack;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
     public GetAddressAdapter(Context context, ArrayList<HashMap<String, String>> mList, int pos) {
         super();
-        this.mContext = context;
         this.houseList=mList;
         this.thisPos =pos;
-        mInflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
+    @NonNull
     @Override
-    public int getCount() {
-        return houseList.size();
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_customerno_record,viewGroup,false);
+        return new GetAddressAdapter.MyViewHolder(view);
     }
-
     @Override
-    public Object getItem(int position) {
-        return houseList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final int thisPosition = position;
-        ViewHolder holder = null;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.item_customerno_record, null);
-            holder.radioButton=(RadioButton)convertView.findViewById(R.id.id_radio);
-            holder.addressWord = (TextView) convertView.findViewById(R.id.id_address_text);
-            holder.itemCustomerNo = (TextView) convertView.findViewById(R.id.id_customerText);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        holder.itemCustomerNo.setText(houseList.get(position).get("customerNo"));
-        holder.addressWord.setText(houseList.get(position).get("name"));
-        if (thisPos ==position){
-            holder.radioButton.setChecked(true);
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
+        final int thisPosition = i;
+        myViewHolder.itemCustomerNo.setText(houseList.get(i).get("customerNo"));
+        myViewHolder.addressWord.setText(houseList.get(i).get("name"));
+        if (thisPos ==i){
+            myViewHolder.radioButton.setChecked(true);
         }else {
-            holder.radioButton.setChecked(false);
+            myViewHolder.radioButton.setChecked(false);
         }
-        holder.radioButton.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
@@ -83,11 +76,38 @@ public class GetAddressAdapter extends BaseAdapter {
                 }
             }
         });
-        return convertView;
+        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickCallBack != null) {
+                    clickCallBack.onItemClick(view,thisPosition);
+                }
+            }
+        });
     }
-    class ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemCount() {
+        if (houseList!=null){
+            return houseList.size();
+        }else {
+            return 0;
+        }
+    }
+    class MyViewHolder extends RecyclerView.ViewHolder {
         RadioButton radioButton;
         TextView addressWord;
         TextView itemCustomerNo;
+        View itemView;
+        private MyViewHolder(View view){
+            super(view);
+            radioButton=(RadioButton)view.findViewById(R.id.id_radio);
+            addressWord = (TextView)view.findViewById(R.id.id_address_text);
+            itemCustomerNo = (TextView)view.findViewById(R.id.id_customerText);
+            itemView=view.findViewById(R.id.item_left);
+        }
     }
 }

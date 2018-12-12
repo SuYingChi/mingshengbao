@@ -31,7 +31,6 @@ public class WaterPublicDialog {
     private Context context;
     private Dialog dialog;
     private Display display;
-
     private OnPositiveClickListener callClickListener;
     public interface OnPositiveClickListener {
         /**
@@ -52,7 +51,6 @@ public class WaterPublicDialog {
             display = windowManager.getDefaultDisplay();
         }
     }
-
     public WaterPublicDialog builder() {
         // 获取Dialog布局
         View view= LayoutInflater.from(context).inflate(R.layout.dialog_water_public,null);

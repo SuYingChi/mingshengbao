@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,10 +28,13 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.GuideActivity;
+import com.msht.minshengbao.Utils.AppActivityUtil;
+import com.msht.minshengbao.Utils.AppPackageUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
-import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.msht.minshengbao.functionActivity.fragment.HomeFragment;
@@ -48,11 +52,14 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.permissionManager.RuntimeRationale;
 import com.msht.minshengbao.receiver.NetBroadcastReceiver;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+//import com.yanzhenjie.permission.PermissionListener;
 
 
 import org.json.JSONObject;
@@ -280,7 +287,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         .show();
             }
         }
-
     }
     private void onUnreadMassage(JSONObject json) {
         VariableUtil.messageNum=json.optInt("num");
@@ -316,6 +322,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         context = this;
         //推送统计
+        mPageName="首页";
         PushAgent.getInstance(context).onAppStart();
         userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -324,7 +331,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
         }
-        VariableUtil.loginStatus=SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
         if (savedInstanceState!=null){
@@ -333,15 +339,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             initTab();
         }
         initRequestPermission();
-        if (VariableUtil.loginStatus){
+        if (isLoginState(context)){
             if (NetWorkUtil.isNetWorkEnable(this)){
                 onGetMessage();
             }
             initGetInformation();
             initPush();
         }
-        checkVerSion();
+        checkVersion();
         initBroadcast();
+        /*首次进入检测通知权限*/
+        boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
+        if (isFirstOpen){
+            if (!AppPackageUtil.isNotificationManagerEnabled(getApplicationContext())){
+                AppPackageUtil.openNotificationManager(context);
+            }
+            SharedPreferencesUtil.putBoolean(this, SharedPreferencesUtil.FIRST_OPEN, false);
+        }
     }
     private void initRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -386,7 +400,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             clickTab4Layout();
         }
     }
-    private void checkVerSion() {
+    private void checkVersion() {
         int device=2;
         String validateURL = UrlUtil.APP_VERSION_URL +"?device="+device;
         SendRequestUtil.getDataFromService(validateURL,versionHandler);
@@ -440,7 +454,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         clickTab2Layout();
                         break;
                     case R.id.radio_order:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(context)){
                             clickTab3Layout();
                         }else {
                             gologinActivity();
@@ -490,14 +504,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_massage_img:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(context)){
                     messageCenter();
                 }else {
                     gologinActivity();
                 }
                 break;
             case R.id.id_right_massage:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(context)){
                     messageCenter();
                 }else {
                     gologinActivity();
@@ -603,7 +617,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         clickCode =0x003;
         tvNavigation.setText("我的");
         hearLayout.setVisibility(View.INVISIBLE);
-        if(!VariableUtil.loginStatus) {
+        if(!isLoginState(context)) {
             /*if (myFrag == null) {
                 myFrag = new MyFragment();
             }*/
@@ -621,9 +635,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 AndPermission.with(this)
-                        .requestCode(REQUEST_CODE)
+                        .runtime()
                         .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .send();
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                pushMessage();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许权限通过，部分功能将无法使用");
+                            }
+                        }).start();
             }else {
                 pushMessage();
             }
@@ -653,9 +678,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 urls=url;
                 AndPermission.with(this)
-                        .requestCode(MY_PERMISSIONS_REQUEST)
-                        .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .send();
+                        .runtime()
+                        .permission(Permission.Group.STORAGE)
+                        .rationale(new RuntimeRationale())
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许权限通过，无法更新");
+                            }
+                        })
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                downLoadApk(urls);
+                            }
+                        }).start();;
             }else {
                 downLoadApk(url);
             }
@@ -675,10 +712,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }else if (requestCode==MY_CAMERA_REQUEST){
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }else {
-            AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
+           // AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
         }
     }
-    private PermissionListener listener = new PermissionListener() {
+   /* private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode) {
             if (requestCode==MY_PERMISSIONS_REQUEST){
@@ -691,7 +728,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onFailed(int requestCode) {
             ToastUtil.ToastText(context,"获取权限失败！");
         }
-    };
+    };*/
     public void initNetBroadcast() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);

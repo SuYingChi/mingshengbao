@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.adapter.GetAddressAdapter;
 import com.msht.minshengbao.adapter.GetRecordAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -44,7 +48,7 @@ import java.util.HashMap;
 public class TableRecordFrag extends Fragment implements XListView.IXListViewListener {
     private String    userId;
     private String    password;
-    private XListView mListView;
+    private XRecyclerView mRecyclerView;
     private TextView tvNotHavaData;
     private int refreshType;
     private JSONArray jsonArray;
@@ -70,6 +74,11 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
             if (reference == null||reference.isDetached()) {
                 return;
             }
+            if (reference.refreshType==0){
+                reference.mRecyclerView.refreshComplete();
+            }else if (reference.refreshType==1){
+                reference.mRecyclerView.loadMoreComplete();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
@@ -78,11 +87,6 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference.refreshType==0){
-                                reference.mListView.stopRefresh(true);
-                            }else if (reference.refreshType==1){
-                                reference.mListView.stopLoadMore();
-                            }
                             if (reference.jsonArray.length()>0){
                                 if (reference.pageNo==1){
                                     reference.writeList.clear();
@@ -90,7 +94,6 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                                 reference.onWriteTableData();
                             }
                         }else {
-                            reference.mListView.stopRefresh(false);
                             reference.onFailure(error);
                         }
                     }catch (Exception e){
@@ -98,7 +101,6 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext, msg.obj.toString());
                     break;
                 default:
@@ -143,9 +145,10 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         }
         if (writeList.size()==0){
             tvNotHavaData.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
         }else {
             adapter.notifyDataSetChanged();
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
     @Override
@@ -157,16 +160,34 @@ public class TableRecordFrag extends Fragment implements XListView.IXListViewLis
         userId= SharedPreferencesUtil.getUserId(mContext, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(mContext, SharedPreferencesUtil.Password,"");
         tvNotHavaData =(TextView)view.findViewById(R.id.id_tv_nodata);
-        mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
-        mListView.setPullLoadEnable(true);
-        adapter = new GetRecordAdapter(getActivity(),writeList);
-        mListView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView=(XRecyclerView)view.findViewById(R.id.id_pay_record_view);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        adapter = new GetRecordAdapter(mContext,writeList);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setPullRefreshEnabled(true);
+        mRecyclerView.setLoadingMoreEnabled(true);
         initReceiveData();
         return view;
     }
     private void initReceiveData() {
         loadData(1);
-        mListView.setXListViewListener(this);
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                refreshType=0;
+                loadData(1);
+            }
+            @Override
+            public void onLoadMore() {
+                refreshType=1;
+                loadData(pageIndex + 1);
+            }
+        });
     }
     private void loadData(int i) {
         pageIndex =i;

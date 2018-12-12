@@ -3,6 +3,7 @@ package com.msht.minshengbao.Utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by hong on 2017/9/22.
@@ -15,8 +16,7 @@ public class DateUtils {
      */
     public static long getCurTimeLong(){
         Date date=new Date(System.currentTimeMillis());
-        long time=System.currentTimeMillis();
-        return time;
+        return System.currentTimeMillis();
     }
     /**
      * 获取当前时间
@@ -24,10 +24,15 @@ public class DateUtils {
      * @return
      */
     public static String getCurDate(String pattern){
-        SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
         return sDateFormat.format(new java.util.Date());
     }
 
+    public static String getCurrentDateString(String pattern){
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
+        Date date=new Date(System.currentTimeMillis());
+        return sDateFormat.format(date);
+    }
     /**
      * 时间戳转换成字符窜
      * @param milSecond
@@ -36,10 +41,19 @@ public class DateUtils {
      */
     public static String getDateToString(long milSecond, String pattern) {
         Date date = new Date(milSecond);
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        SimpleDateFormat format = new SimpleDateFormat(pattern,Locale.CHINA);
         return format.format(date);
     }
 
+    /**
+     * 获取系统日期戳
+     * @return
+     */
+    public static long getCurDateLong(String pattern){
+        SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
+        Date date=new Date(System.currentTimeMillis());
+        return getStringToDate(sDateFormat.format(date),pattern);
+    }
     /**
      * 将字符串转为时间戳
      * @param dateString
@@ -47,7 +61,7 @@ public class DateUtils {
      * @return
      */
     public static long getStringToDate(String dateString, String pattern) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
         Date date = new Date();
         try{
             date = dateFormat.parse(dateString);
@@ -67,7 +81,7 @@ public class DateUtils {
      */
     public static boolean isDateBigger(String str1, String str2) {
         boolean isBigger = false;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
         Date dt1 = null;
         Date dt2 = null;
         try {

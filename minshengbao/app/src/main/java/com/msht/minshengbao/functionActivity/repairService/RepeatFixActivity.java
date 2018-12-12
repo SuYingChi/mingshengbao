@@ -25,7 +25,9 @@ import android.widget.TextView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
+import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
@@ -37,8 +39,9 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectTable;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
 import com.umeng.analytics.MobclickAgent;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +52,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -64,7 +68,7 @@ import top.zibin.luban.OnCompressListener;
  */
 public class RepeatFixActivity extends BaseActivity implements View.OnClickListener {
     private String reid,orderId;
-    private String address,type,info, parentCategory;
+    private String address,info, parentCategory;
     private String phone,title,orderNo, finishTime;
     private String appointDate;
     private String textString="";
@@ -75,7 +79,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private Button btnSend;
     private TextView appointmentData, appointmentTime;
     private TextView etProblem;
-    private GridView mPhotoGridView;
+    private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private MultiLineChooseLayout multiChoose;
     private int k=0;
@@ -279,16 +283,41 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         reid=data.getStringExtra("reid");
         orderId=data.getStringExtra("id");
         orderNo=data.getStringExtra("orderNo");
-        type= data.getStringExtra("type");
         title=data.getStringExtra("title");
         phone=data.getStringExtra("phone");
         finishTime =data.getStringExtra("finishTime");
         address=data.getStringExtra("address");
         parentCategory =data.getStringExtra("parentCategory");
+        String parentCode=data.getStringExtra("parentCode");
         initView();
+        initSetCodeImage(parentCode);
         initTimeData();
         initData();
         initEvent();
+    }
+    private void initSetCodeImage(String parentCode) {
+        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
+        switch (parentCode) {
+            case ConstantUtil.SANITARY_WARE:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.OTHER_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                typeImg.setImageResource(R.drawable.housekeeping_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+        }
     }
 
     private void initTimeData() {
@@ -317,31 +346,10 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         ((TextView)findViewById(R.id.id_tv_address)).setText(address);
         etProblem =(EditText)findViewById(R.id.id_et_info);
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
-        mPhotoGridView =(GridView)findViewById(R.id.noScrollgridview);
+        mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         appointmentData =(TextView)findViewById(R.id.id_data);
         appointmentTime =(TextView)findViewById(R.id.id_time);
-        ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
         btnSend =(Button)findViewById(R.id.id_btn_send);
-        switch (type){
-            case ConstantUtil.VALUE_ONE:
-                typeImg.setImageResource(R.drawable.home_sanitary_xh);
-                break;
-            case ConstantUtil.VALUE_TWO:
-                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
-                break;
-            case ConstantUtil.VALUE_THREE:
-                typeImg.setImageResource(R.drawable.home_lanterns_xh);
-                break;
-            case ConstantUtil.VALUE_FOUR:
-                typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                break;
-            case ConstantUtil.VALUE_FORTY_EIGHT:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-            default:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-        }
         appointmentData.setOnClickListener(this);
         appointmentTime.setOnClickListener(this);
 
@@ -379,13 +387,14 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         multiChoose.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
             @Override
             public void onItemClick(int position, String text) {
+                StringBuilder sb=new StringBuilder();
                 multiResult=multiChoose.getAllItemSelectedTextWithListArray();
                 if (multiResult!=null&&multiResult.size()>0){
-                    String textselect ="";
                     for (int i=0;i<multiResult.size();i++){
-                        textselect +=multiResult.get(i)+",";
+                        sb.append(multiResult.get(i));
+                        sb.append(",");
                     }
-                    textString=textselect;
+                    textString=sb.toString();
                 }else {
                     textString="";
                 }
@@ -412,10 +421,21 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
-                    .requestCode(MY_PERMISSIONS_REQUEST)
+                    .runtime()
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
+                    .onGranted(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            onShowPhoto();
+                        }
+                    })
+                    .onDenied(new Action<List<String>>() {
+                        @Override
+                        public void onAction(List<String> data) {
+                            ToastUtil.ToastText(context,"授权失败");
+                        }
+                    }).start();
         }else {
             if (position == imgPaths.size()) {
                 PhotoPicker.builder()
@@ -435,25 +455,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
             }
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                onShowPhoto();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(context,"授权失败");
-            }
-        }
-    };
     private void onShowPhoto() {
         if (thisPosition == imgPaths.size()) {
             PhotoPicker.builder()
@@ -493,61 +494,22 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         }
     }
     private void onsSelectDate() {
-        LayoutInflater l = LayoutInflater.from(this);
-        View mPickView = l.inflate(R.layout.item_pickerdata_dialog, null);
-        DatePicker datePicker=(DatePicker) mPickView.findViewById(R.id.id_date_picker);
-        Calendar mCurrent=Calendar.getInstance();
-        datePicker.init(mCurrent.get(Calendar.YEAR), mCurrent.get(Calendar.MONTH),  mCurrent.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {//滑动日期进行对日期的方位进行判断
-                Calendar mAfter=Calendar.getInstance();
-                Calendar mBefore=Calendar.getInstance();
-                mAfter.add(Calendar.DAY_OF_MONTH,6);
-                if (isDateAfter(view)) {
-                    view.init(mAfter.get(Calendar.YEAR),mAfter.get(Calendar.MONTH),mAfter.get(Calendar.DAY_OF_MONTH), this);
-                }
-                if (isDateBefore(view)) {
-                    view.init(mBefore.get(Calendar.YEAR), mBefore.get(Calendar.MONTH),mBefore.get(Calendar.DAY_OF_MONTH), this);
-                }
-            }
-        });
-        final String appointmentDataText=datePicker.getYear() + "-"+ (datePicker.getMonth()+1) + "-"
-                + datePicker.getDayOfMonth();
-        new PromptDialog.Builder(context)
+        new SelectDateDialog.Builder(this)
                 .setTitle("选择预约日期")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                //.setMessage("2016年")
-                .setView(mPickView)
-                .setButton1("取消", new PromptDialog.OnClickListener() {
+                .setButton1("取消", new SelectDateDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
+                    public void onClick(Dialog dialog, int which, String s) {
                         dialog.dismiss();
                     }
                 })
-                .setButton2("确定", new PromptDialog.OnClickListener() {
+                .setButton2("确定", new SelectDateDialog.OnClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
-                        appointmentData.setText(appointmentDataText);
+                    public void onClick(Dialog dialog, int which, String s) {
+                        appointmentData.setText(s);
                         appointmentTime.setText("08:30-11:30");
                         dialog.dismiss();
                     }
-                })
-                .show();
-    }
-    private boolean isDateBefore(DatePicker tempView) {
-        Calendar mCalendar = Calendar.getInstance();
-        Calendar temCalendar = Calendar.getInstance();
-        temCalendar.set(tempView.getYear(), tempView.getMonth(), tempView.getDayOfMonth(), 0, 0, 0);
-        return temCalendar.before(mCalendar);
-    }
-    private boolean isDateAfter(DatePicker tempView) {
-        Calendar mCalendar=Calendar.getInstance();
-        mCalendar.add(Calendar.DAY_OF_MONTH,6);
-        Calendar temCalendar=Calendar.getInstance();
-        temCalendar.add(Calendar.DAY_OF_MONTH,6);
-        temCalendar.set(tempView.getYear(),tempView.getMonth(),tempView.getDayOfMonth(),0,0,0);
-        return temCalendar.after(mCalendar);
+                }).show();
     }
     private void onSelectTime() {
         new SelectDialog(context,mList,mPosition).builder()

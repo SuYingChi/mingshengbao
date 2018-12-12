@@ -9,12 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/5/8.
+ *
+ * @author hong
+ * @date 2017/5/8
  */
 
 public class HouseApplianceFixAdapter extends BaseAdapter {
@@ -59,36 +62,56 @@ public class HouseApplianceFixAdapter extends BaseAdapter {
         if (convertView == null) {
             holder =new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_second_service, null);
-            holder.img_function=(ImageView)convertView.findViewById(R.id.id_function_img);
-            holder.tv_name=(TextView) convertView.findViewById(R.id.id_function_name);
+            holder.imgFunction =(ImageView)convertView.findViewById(R.id.id_function_img);
+            holder.tvName =(TextView) convertView.findViewById(R.id.id_function_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         String name=functionList.get(position).get("name");
         String code=functionList.get(position).get("code");
-        holder.tv_name.setText(name);
-        if (code.equals("air_conditioner_repair")){
-            holder.img_function.setImageResource(R.drawable.conditioner_repair_xh);
-        }else if (code.equals("washing_machine_repair")){
-            holder.img_function.setImageResource(R.drawable.washmachine_repair_xh);
-        }else if (code.equals("refrigerator_repair")){
-            holder.img_function.setImageResource(R.drawable.refrigerator_repair_xh);
-        }else if (code.equals("heater_repair")){
-            holder.img_function.setImageResource(R.drawable.heater_repair_xh);
-        }else if (code.equals("gas_stove_repair")){
-            holder.img_function.setImageResource(R.drawable.gas_stove_repair);
-        }else if (code.equals("hoods_repair")){
-            holder.img_function.setImageResource(R.drawable.hoods_repair_xh);
-        }else if (code.equals("computer_repair")){
-            holder.img_function.setImageResource(R.drawable.computer_repair_xh);
-        }else if (code.equals("sterilizer_repair")){
-            holder.img_function.setImageResource(R.drawable.sterilizer_repair_xh);
+        holder.tvName.setText(name);
+        switch (code){
+            case ConstantUtil.AIR_CONDITIONER_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.conditioner_repair_xh);
+                break;
+            case ConstantUtil.WASHING_MACHINE_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.washmachine_repair_xh);
+                break;
+            case ConstantUtil.REFRIGERATOR_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.refrigerator_repair_xh);
+                break;
+            case ConstantUtil.HEATER_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.heater_repair_xh);
+                break;
+            case ConstantUtil.GAS_STOVE_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.gas_stove_repair);
+                break;
+            case ConstantUtil.HOODS_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.hoods_repair_xh);
+                break;
+            case ConstantUtil.COMPUTER_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.computer_repair_xh);
+                break;
+            case ConstantUtil.STERILIZER_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.sterilizer_repair_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.home_appliance_repair_xh);
+                break;
+            case ConstantUtil.SANITARY_WARE:
+                holder.imgFunction.setImageResource(R.drawable.water_electric_repair_xh);
+                break;
+            case ConstantUtil.OTHER_REPAIR:
+                holder.imgFunction.setImageResource(R.drawable.home_other_repair_xh);
+                break;
+                default:
+                    break;
         }
         return convertView;
     }
     class ViewHolder {
-        public ImageView img_function;
-        public TextView  tv_name;
+         ImageView imgFunction;
+         TextView tvName;
     }
 }

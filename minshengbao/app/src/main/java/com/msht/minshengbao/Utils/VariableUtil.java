@@ -19,9 +19,9 @@ public class VariableUtil {
     public static int deleteFlag=0;
     public static String balance;
     public static String City="0";
+    public static String cityId="1";
     public static boolean boolSelect;
     public static boolean BoolCode;
-    public static boolean loginStatus=false;
     public static boolean networkStatus=true;
     public static boolean isCurrent=false;
     public static String waterAccount="";

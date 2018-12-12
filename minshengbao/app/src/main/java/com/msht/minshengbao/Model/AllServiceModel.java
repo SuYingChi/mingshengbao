@@ -3,7 +3,9 @@ package com.msht.minshengbao.Model;
 import java.util.ArrayList;
 
 /**
- * Created by hong on 2017/11/10.
+ *
+ * @author hong
+ * @date 2017/11/10
  */
 
 public class AllServiceModel extends BaseModel{
@@ -21,7 +23,7 @@ public class AllServiceModel extends BaseModel{
                 public int    id;
                 public String name;
                 public String code;
-                public String url;
+                public String content;
             }
         }
     }

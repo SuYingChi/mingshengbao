@@ -143,7 +143,8 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_customer_no);
         context=this;
-        setCommonHeader("添加客户号");
+        mPageName="添加客户号";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");

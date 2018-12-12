@@ -87,6 +87,7 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_home);
         context=this;
+        mPageName=PAGE_NAME;
         setCommonHeader(PAGE_NAME);
         customDialog=new CustomDialog(this, "正在加载");
         controlType=SharedPreferencesUtil.getControlType(context,SharedPreferencesUtil.CONTROL_TYPE,0);

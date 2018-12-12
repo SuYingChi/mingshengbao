@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GetAddressAdapter;
@@ -43,15 +46,15 @@ import java.util.HashMap;
  * @author hong
  * @date 2017/8/2  
  */
-public class RechargeFrag extends Fragment implements XListView.IXListViewListener {
+public class RechargeFrag extends Fragment {
     private String    userId;
     private String    password;
-    private XListView mListView;
     private int pos=-1;
     private TextView  tvNoData;
     private int refreshType;
     private JSONArray jsonArray;
     private GetAddressAdapter adapter;
+    private XRecyclerView mRecyclerView;
     private int pageNo=1;
     private int pageIndex=0;
     private Context mContext;
@@ -70,6 +73,11 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
             if (reference == null||reference.isDetached()) {
                 return;
             }
+            if (reference.refreshType==0){
+                reference.mRecyclerView.refreshComplete();
+            }else if (reference.refreshType==1){
+                reference.mRecyclerView.loadMoreComplete();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
@@ -78,11 +86,7 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
                         String error = object.optString("error");
                         reference.jsonArray =object.optJSONArray("data");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference.refreshType==0){
-                                reference.mListView.stopRefresh(true);
-                            }else if (reference.refreshType==1){
-                                reference.mListView.stopLoadMore();
-                            }
+
                             if (reference.jsonArray.length()>0){
                                 if (reference.pageNo==1){
                                     reference.recordList.clear();
@@ -90,14 +94,12 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
                                 reference.initReceiveData();
                             }
                         }else {
-                            reference.mListView.stopRefresh(false);
                             reference.failure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
                 case SendRequestUtil.FAILURE:
-                    reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
@@ -135,14 +137,15 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
             e.printStackTrace();
         }
         if (recordList.size()==0){
+            mRecyclerView.setVisibility(View.GONE);
             tvNoData.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
         }else {
+            mRecyclerView.setVisibility(View.VISIBLE);
             adapter.notifyDataSetChanged();
         }
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_recharge_record, container, false);
@@ -152,14 +155,21 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
         password=bundle.getString("password");
         tvNoData =(TextView)view.findViewById(R.id.id_tv_nodata);
         tvNoData.setText("当前没有客户号");
-        mListView=(XListView) view.findViewById(R.id.id_payrecord_listview);
-        mListView.setPullLoadEnable(false);
-        adapter = new GetAddressAdapter(mContext,recordList,pos);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView=(XRecyclerView )view.findViewById(R.id.id_pay_record_view);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        adapter=new GetAddressAdapter(mContext, recordList,pos);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(false);
+        adapter.setClickCallBack(new GetAddressAdapter.ItemClickCallBack() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pos=position-1;
+            public void onItemClick(View v, int position) {
+                pos=position;
                 adapter.notifyDataSetChanged();
                 String customerNo=recordList.get(pos).get("customerNo");
                 String address=recordList.get(pos).get("name");
@@ -173,6 +183,7 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
         adapter.setRadioButtonClickListener(new GetAddressAdapter.ItemRadioButtonClickListener() {
             @Override
             public void onRadioButtonClick(View v, int position) {
+                pos=position;
                 adapter.notifyDataSetChanged();
                 String customerNo=recordList.get(position).get("customerNo");
                 String address=recordList.get(position).get("name");
@@ -183,27 +194,27 @@ public class RechargeFrag extends Fragment implements XListView.IXListViewListen
                 startActivity(name);
             }
         });
-        initdata();
+        initData();
         return view;
     }
-    private void initdata() {
+    private void initData() {
         loadData(1);
-        mListView.setXListViewListener(this);
-    }
-
-    @Override
-    public void onRefresh() {
-        refreshType=0;
-        loadData(1);
-    }
-
-    @Override
-    public void onLoadMore() {
-        refreshType=1;
-        loadData(pageIndex + 1);
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                refreshType=0;
+                loadData(1);
+            }
+            @Override
+            public void onLoadMore() {
+                refreshType=1;
+                loadData(pageIndex + 1);
+            }
+        });
     }
     private void loadData(int i) {
         pageNo=i;
+        pageIndex=i;
         String validateURL = UrlUtil.IC_RECHARGE_SEARCH_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);

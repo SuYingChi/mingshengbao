@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -15,6 +17,7 @@ import android.widget.AdapterView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.HomeApplianceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -48,6 +51,7 @@ public class HomeApplianceCleanActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private HomeApplianceAdapter homeAdapter;
     private String pid;
+    private String typeName;
     private String cityId;
     private CustomDialog customDialog;
     private boolean loginState =false;
@@ -71,7 +75,6 @@ public class HomeApplianceCleanActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
@@ -119,13 +122,15 @@ public class HomeApplianceCleanActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_appliancesc_clean);
-        setCommonHeader("家电清洗");
+        mPageName="家电清洗";
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
-        cityId=data.getStringExtra("city_id");
+        typeName=data.getStringExtra("typeName");
+        setCommonHeader(typeName);
+        cityId=VariableUtil.cityId;
         initView();
         homeAdapter=new HomeApplianceAdapter(context,functionList);
         mGridView.setAdapter(homeAdapter);
@@ -137,10 +142,12 @@ public class HomeApplianceCleanActivity extends BaseActivity {
                 if (loginState){
                     String mId=functionList.get(position).get("id");
                     String mName=functionList.get(position).get("name");
+                    String code=functionList.get(position).get("code");
                     Intent intent=new Intent(context,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",mName);
-                    intent.putExtra("mMainType",mPageName);
+                    intent.putExtra("mMainType",typeName);
+                    intent.putExtra("code",code);
                     startActivity(intent);
                 }else {
                     Intent login=new Intent(context, LoginActivity.class);
@@ -155,15 +162,16 @@ public class HomeApplianceCleanActivity extends BaseActivity {
         webView=(WebView)findViewById(R.id.id_webview);
     }
     private void initData() {
-        customDialog.show();
-        String functionUrl= UrlUtil.SecondService_Url;
-        String function="";
-        try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(pid)){
+            customDialog.show();
+            String functionUrl= UrlUtil.SecondService_Url;
+            try {
+                functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
         }
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
     }
     @SuppressLint("SetJavaScriptEnabled")
     private void iniWebView() {

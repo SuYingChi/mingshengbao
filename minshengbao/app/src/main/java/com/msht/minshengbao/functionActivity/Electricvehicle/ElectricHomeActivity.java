@@ -40,8 +40,9 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
 import com.msht.minshengbao.ViewUI.widget.MySwipeRefreshLayout;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +51,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Demo class
@@ -182,7 +184,8 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_electric_home);
         context=this;
-        setCommonHeader("电动车");
+        mPageName="电动车";
+        setCommonHeader(mPageName);
         initView(savedInstanceState);
         mAdapter=new VehicleAdapter(context,mList);
         moreListView.setAdapter(mAdapter);
@@ -191,10 +194,21 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 AndPermission.with(this)
-                        .requestCode(MY_LOCATION_REQUEST)
+                        .runtime()
                         .permission(Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.ACCESS_COARSE_LOCATION)
-                        .send();
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                locationClient.startLocation();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许定位权限，地图定位无法使用！");
+                            }
+                        }).start();
             }else {
                 locationClient.startLocation();
             }
@@ -381,24 +395,6 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
         textParams.put("pageNo",pageNum);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_LOCATION_REQUEST) {
-                locationClient.startLocation();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_LOCATION_REQUEST) {
-                ToastUtil.ToastText(context,"获取位置授权失败");
-            }
-        }
-    };
     @Override
     public void onResume() {
         super.onResume();

@@ -24,7 +24,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by hong on 2017/11/21.
+ *
+ * @author hong
+ * @date 2017/11/21
  */
 
 public class VehicleAdapter extends BaseAdapter {

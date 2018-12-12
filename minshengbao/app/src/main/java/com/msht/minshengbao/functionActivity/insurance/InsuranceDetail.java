@@ -35,7 +35,8 @@ public class InsuranceDetail extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insurance_detail);
         context=this;
-        setCommonHeader("保险套餐详情");
+        mPageName="保险套餐详情";
+        setCommonHeader(mPageName);
         Intent data=getIntent();
         id=data.getStringExtra("id");
         initHeader();

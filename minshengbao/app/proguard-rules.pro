@@ -65,6 +65,17 @@
     -keep public class com.umeng.socialize.* {*;}
 
 
+-keep class com.umeng.** {*;}
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keep public class [com.msht.minshengbao].R$*{
+public static final int *;
+}
     -keep class com.facebook.**
     -keep class com.facebook.** { *; }
     -keep class com.umeng.scrshot.**

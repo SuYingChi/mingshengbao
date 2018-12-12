@@ -30,13 +30,21 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.SwitchView;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class MoreSettingActivity extends BaseActivity implements View.OnClickListener {
     private Button btnExit;
     private TextView tvCacheSize;
@@ -224,7 +232,6 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
         clearCookie();
         /*水宝账户清除*/
         VariableUtil.waterAccount="";
-        VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(context, SharedPreferencesUtil.Lstate, false);
         setResult(0x005);
         finish();
 
@@ -252,9 +259,20 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 urls=url;
                 AndPermission.with(this)
-                        .requestCode(MY_PERMISSIONS_REQUEST)
+                        .runtime()
                         .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .send();
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                downLoadApk(urls);
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许权限通过，无法更新");
+                            }
+                        }).start();
             }else {
                 downLoadApk(url);
             }
@@ -267,22 +285,6 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
         intent.putExtra("url", url);
         startService(intent);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode==MY_PERMISSIONS_REQUEST){
-                downLoadApk(urls);
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            ToastUtil.ToastText(context,"获取权限失败");
-        }
-    };
     @Override
     protected void onDestroy() {
         super.onDestroy();

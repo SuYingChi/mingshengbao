@@ -1,5 +1,6 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.http.SslError;
@@ -49,6 +50,7 @@ public class LpgBottleWebViewActivity extends BaseActivity  {
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText("民生宝");
     }
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         mWebView=(WebView)findViewById(R.id.lpg_WebView);
         WebSettings settings= mWebView.getSettings();

@@ -1,15 +1,19 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -26,6 +30,7 @@ import com.msht.minshengbao.Utils.MD5;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.umeng.analytics.MobclickAgent;
 
 public class VegetableGentlemenActivity extends AppCompatActivity implements MyWebChromeClient.OpenFileChooserCallBack {
@@ -66,7 +71,6 @@ public class VegetableGentlemenActivity extends AppCompatActivity implements MyW
         final String data = "&userid="+ userId +"&phone=" + userPhone +"&sign="+sign;
         String loginUrl= UrlUtil.VEGETABLE_URL +data;
         settingWeb();
-        Log.d("loginUrl=",loginUrl);
         mWebView.loadUrl(loginUrl);
         mWebView.requestFocusFromTouch();
         mWebView.setWebViewClient(new WebViewClient(){
@@ -98,6 +102,11 @@ public class VegetableGentlemenActivity extends AppCompatActivity implements MyW
                }
                super.doUpdateVisitedHistory(view, url, isReload);
            }
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed(); // 接受所有网站的证书
+                super.onReceivedSslError(view, handler, error);
+            }
         });
         mWebView.setWebChromeClient(new MyWebChromeClient(VegetableGentlemenActivity.this));
     }

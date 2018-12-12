@@ -69,20 +69,33 @@ public class TopModuleAdapter extends BaseAdapter {
         String name=functionList.get(position).get("name");
         String code=functionList.get(position).get("code");
         holder.tvName.setText(name);
-        if (code.equals(ConstantUtil.SHOP)){
-            holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
-        }else if (code.equals(ConstantUtil.GAS_PAY)){
-            holder.imgFunction.setImageResource(R.drawable.top_gaspay_xh);
-        }else if (code.equals(ConstantUtil.GAS_METER)){
-            holder.imgFunction.setImageResource(R.drawable.top_gas_writetable_xh);
-        }else if (code.equals(ConstantUtil.GAS_IC_CARD)){
-            holder.imgFunction.setImageResource(R.drawable.top_iccard_xh);
-        }else if (code.equals(ConstantUtil.INSURANCE)){
-            holder.imgFunction.setImageResource(R.drawable.home_insurance_xh);
-        }else if (code.equals(ConstantUtil.LPG_NAME)){
-            holder.imgFunction.setImageResource(R.drawable.lpg_home_xh);
-        }else {
-            holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
+        switch (code){
+            case ConstantUtil.SHOP:
+                holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
+                break;
+            case ConstantUtil.GAS_PAY:
+                holder.imgFunction.setImageResource(R.drawable.top_gaspay_xh);
+                break;
+            case ConstantUtil.GAS_METER:
+                holder.imgFunction.setImageResource(R.drawable.top_gas_writetable_xh);
+                break;
+            case ConstantUtil.GAS_IC_CARD:
+                holder.imgFunction.setImageResource(R.drawable.top_iccard_xh);
+                break;
+            case ConstantUtil.INSURANCE:
+                holder.imgFunction.setImageResource(R.drawable.home_insurance_xh);
+                break;
+            case ConstantUtil.LPG_NAME:
+                holder.imgFunction.setImageResource(R.drawable.lpg_home_xh);
+                break;
+            case ConstantUtil.DRINKING_WATER:
+                holder.imgFunction.setImageResource(R.drawable.water_app_xh);
+                break;
+            case ConstantUtil.GAS_SERVE:
+                holder.imgFunction.setImageResource(R.drawable.home_gassever_xh);
+                break;
+                default: holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
+                    break;
         }
         return convertView;
     }

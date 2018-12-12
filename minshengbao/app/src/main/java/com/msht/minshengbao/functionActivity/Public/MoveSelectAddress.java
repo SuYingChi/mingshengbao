@@ -1,6 +1,7 @@
 package com.msht.minshengbao.functionActivity.Public;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,8 +47,8 @@ import com.msht.minshengbao.MoveSelectAddress.PoiSearchTask;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,10 +92,21 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 AndPermission.with(this)
-                        .requestCode(MY_LOCATION_REQUEST)
+                        .runtime()
                         .permission(Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.ACCESS_COARSE_LOCATION)
-                        .send();
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                locationClient.startLocation();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许定位权限，地图定位无法使用！");
+                            }
+                        }).start();
             }else {
                 locationClient.startLocation();
             }
@@ -102,6 +114,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
             locationClient.startLocation();
         }
     }
+    @SuppressLint("ClickableViewAccessibility")
     private void initViews(Bundle savedInstanceState) {
         mMapView = (MapView) findViewById(R.id.id_mapView);
         // 此方法必须重写
@@ -234,24 +247,6 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         }
 
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if(requestCode==MY_LOCATION_REQUEST) {
-                locationClient.startLocation();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            if(requestCode==MY_LOCATION_REQUEST) {
-                ToastUtil.ToastText(context,"获取位置授权失败");
-            }
-        }
-    };
 
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {

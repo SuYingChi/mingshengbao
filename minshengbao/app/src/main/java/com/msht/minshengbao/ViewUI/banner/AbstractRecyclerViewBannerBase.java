@@ -30,8 +30,14 @@ import com.msht.minshengbao.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManager, A extends RecyclerView.Adapter> extends FrameLayout {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
+public abstract class AbstractRecyclerViewBannerBase<L extends RecyclerView.LayoutManager, A extends RecyclerView.Adapter> extends FrameLayout {
 
     protected int autoPlayDuration = 4000;//刷新间隔时间
 
@@ -69,27 +75,24 @@ public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManage
             return false;
         }
     });
-
-    public RecyclerViewBannerBase(Context context) {
+    public AbstractRecyclerViewBannerBase(Context context) {
         this(context, null);
     }
-
-    public RecyclerViewBannerBase(Context context, AttributeSet attrs) {
+    public AbstractRecyclerViewBannerBase(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
-    public RecyclerViewBannerBase(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AbstractRecyclerViewBannerBase(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
     }
 
     protected void initView(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecyclerViewBannerBase);
-        showIndicator = a.getBoolean(R.styleable.RecyclerViewBannerBase_showIndicator, true);
-        autoPlayDuration = a.getInt(R.styleable.RecyclerViewBannerBase_interval, 4000);
-        isAutoPlaying = a.getBoolean(R.styleable.RecyclerViewBannerBase_autoPlaying, true);
-        mSelectedDrawable = a.getDrawable(R.styleable.RecyclerViewBannerBase_indicatorSelectedSrc);
-        mUnselectedDrawable = a.getDrawable(R.styleable.RecyclerViewBannerBase_indicatorUnselectedSrc);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AbstractRecyclerViewBannerBase);
+        showIndicator = a.getBoolean(R.styleable.AbstractRecyclerViewBannerBase_showIndicator, true);
+        autoPlayDuration = a.getInt(R.styleable.AbstractRecyclerViewBannerBase_interval, 4000);
+        isAutoPlaying = a.getBoolean(R.styleable.AbstractRecyclerViewBannerBase_autoPlaying, true);
+        mSelectedDrawable = a.getDrawable(R.styleable.AbstractRecyclerViewBannerBase_indicatorSelectedSrc);
+        mUnselectedDrawable = a.getDrawable(R.styleable.AbstractRecyclerViewBannerBase_indicatorUnselectedSrc);
         if (mSelectedDrawable == null) {
             //绘制默认选中状态图形
             GradientDrawable selectedGradientDrawable = new GradientDrawable();
@@ -109,11 +112,11 @@ public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManage
             mUnselectedDrawable = new LayerDrawable(new Drawable[]{unSelectedGradientDrawable});
         }
 
-        indicatorMargin = a.getDimensionPixelSize(R.styleable.RecyclerViewBannerBase_indicatorSpace, dp2px(4));
-        int marginLeft = a.getDimensionPixelSize(R.styleable.RecyclerViewBannerBase_indicatorMarginLeft, dp2px(16));
-        int marginRight = a.getDimensionPixelSize(R.styleable.RecyclerViewBannerBase_indicatorMarginRight, dp2px(0));
-        int marginBottom = a.getDimensionPixelSize(R.styleable.RecyclerViewBannerBase_indicatorMarginBottom, dp2px(11));
-        int g = a.getInt(R.styleable.RecyclerViewBannerBase_indicatorGravity, 0);
+        indicatorMargin = a.getDimensionPixelSize(R.styleable.AbstractRecyclerViewBannerBase_indicatorBannerSpace, dp2px(4));
+        int marginLeft = a.getDimensionPixelSize(R.styleable.AbstractRecyclerViewBannerBase_indicatorMarginLeft, dp2px(16));
+        int marginRight = a.getDimensionPixelSize(R.styleable.AbstractRecyclerViewBannerBase_indicatorMarginRight, dp2px(0));
+        int marginBottom = a.getDimensionPixelSize(R.styleable.AbstractRecyclerViewBannerBase_indicatorMarginBottom, dp2px(11));
+        int g = a.getInt(R.styleable.AbstractRecyclerViewBannerBase_indicatorGravity, 0);
         int gravity;
         if (g == 0) {
             gravity = GravityCompat.START;
@@ -122,7 +125,7 @@ public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManage
         } else {
             gravity = Gravity.CENTER;
         }
-        int o = a.getInt(R.styleable.RecyclerViewBannerBase_orientation, 0);
+        int o = a.getInt(R.styleable.AbstractRecyclerViewBannerBase_orientation, 0);
         int orientation = 0;
         if (o == 0) {
             orientation = LinearLayoutManager.HORIZONTAL;
@@ -353,9 +356,7 @@ public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManage
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ImageView bannerPoint = (ImageView) holder.itemView;
             bannerPoint.setImageDrawable(currentPosition == position ? mSelectedDrawable : mUnselectedDrawable);
-
         }
-
         @Override
         public int getItemCount() {
             return bannerSize;
@@ -390,13 +391,16 @@ public abstract class RecyclerViewBannerBase<L extends RecyclerView.LayoutManage
     }
 
     protected boolean compareListDifferent(List<String> newTabList, List<String> oldTabList) {
-        if (oldTabList == null || oldTabList.isEmpty())
+        if (oldTabList == null || oldTabList.isEmpty()){
             return true;
-        if (newTabList.size() != oldTabList.size())
+        }
+        if (newTabList.size() != oldTabList.size()){
             return true;
+        }
         for (int i = 0; i < newTabList.size(); i++) {
-            if (TextUtils.isEmpty(newTabList.get(i)))
+            if (TextUtils.isEmpty(newTabList.get(i))){
                 return true;
+            }
             if (!newTabList.get(i).equals(oldTabList.get(i))) {
                 return true;
             }

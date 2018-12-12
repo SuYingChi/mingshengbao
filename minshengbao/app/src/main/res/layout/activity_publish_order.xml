@@ -4,8 +4,8 @@
     android:id="@+id/activity_publish_order"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_change_background"
-    android:fitsSystemWindows="true"
+    android:background="@color/background_gray"
+    android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.repairService.PublishOrderActivity">
     <include layout="@layout/layout_header"/>
@@ -15,7 +15,7 @@
         android:background="@color/background">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
@@ -34,9 +34,10 @@
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:text="维修类型:"
+                    android:text="@string/repair_type"
                     android:textSize="@dimen/text_width18"
                     android:textColor="#ff323232"/>
                 <TextView
@@ -45,7 +46,9 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:layout_toRightOf="@+id/id_text1"
-                    android:layout_marginLeft="@dimen/margin_12"
+                    android:layout_toEndOf="@+id/id_text1"
+                    android:layout_marginLeft="@dimen/margin_width12"
+                    android:layout_marginStart="@dimen/margin_width12"
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_width18"
                     android:textColor="@color/right_title"/>
@@ -54,15 +57,20 @@
                     android:layout_width="15dp"
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
                     android:layout_toRightOf="@+id/id_tv_project_type"
+                    android:layout_toEndOf="@+id/id_tv_project_type"
                     android:layout_marginLeft="@dimen/margin_width3"
+                    android:layout_marginStart="@dimen/margin_width3"
                     android:src="@drawable/trigon_xh"/>
                 <TextView
                     android:id="@+id/id_tv_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_img"
+                    android:layout_toEndOf="@+id/id_img"
                     android:layout_marginLeft="@dimen/margin_width3"
+                    android:layout_marginStart="@dimen/margin_width3"
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_width18"
                     android:textColor="@color/right_title"/>
@@ -78,20 +86,23 @@
                     android:id="@+id/id_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:text="价格表"
+                    android:text="@string/price_table"
                     android:textSize="@dimen/text_16"
                     android:textColor="@color/right_title"/>
                 <TextView
                     android:id="@+id/id_notice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="超值价位"
+                    android:hint="@string/overflow_price"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/id_img_forward"
-                    android:layout_marginRight="@dimen/margin_5"
+                    android:layout_toStartOf="@+id/id_img_forward"
+                    android:layout_marginRight="@dimen/margin_width5"
+                    android:layout_marginEnd="@dimen/margin_width15"
                     />
                 <ImageView
                     android:id="@+id/id_img_forward"
@@ -99,7 +110,10 @@
                     android:layout_height="@dimen/margin_width15"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:src="@drawable/forward_2x"
                     />
             </RelativeLayout>
@@ -120,8 +134,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:text="选择地址"
+                    android:text="@string/please_select_address"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/right_title"/>
             </RelativeLayout>
@@ -129,6 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:background="@color/light_gray"/>
             <RelativeLayout
                 android:id="@+id/id_re_selectaddre"
@@ -142,20 +158,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width12"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:background="@null"
                     android:layout_marginLeft="@dimen/margin_width18"
+                    android:layout_marginStart="@dimen/margin_width18"
                     android:textSize="@dimen/text_width16"/>
-                <TextView
-                    android:id="@+id/id_tv_phone"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/id_et_phone"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width12"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:inputType="phone"
+                    android:layout_toEndOf="@+id/id_tv_name"
+                    android:layout_toRightOf="@+id/id_tv_name"
                     android:layout_toLeftOf="@+id/id_img_forward2"
+                    android:layout_toStartOf="@+id/id_img_forward2"
                     android:gravity="end"
                     android:background="@null"
-                    android:inputType="number"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"/>
                 <TextView
                     android:id="@+id/id_tv_address"
@@ -167,15 +190,19 @@
                     android:layout_marginBottom="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_toLeftOf="@+id/id_img_forward2"
+                    android:layout_toStartOf="@+id/id_img_forward2"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"/>
                 <ImageView
                     android:id="@+id/id_img_forward2"
                     android:layout_width="@dimen/margin_15"
                     android:layout_height="@dimen/margin_15"
+                    android:contentDescription="@string/picture_text"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:src="@drawable/forward_2x"
                     />
             </RelativeLayout>
@@ -183,6 +210,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
                 android:background="@color/background_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -194,7 +222,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:text="推荐码"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:text="@string/recommend_code"
                     android:textColor="@color/right_title"
                     android:textSize="@dimen/text_width16"/>
                 <EditText
@@ -202,14 +231,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_recommand"
+                    android:layout_toEndOf="@+id/id_recommand"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:background="@null"
                     android:layout_centerVertical="true"
-                    android:gravity="right"
+                    android:inputType="phone"
+                    android:gravity="end"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"
-                    android:hint="可输入您的推荐码"/>
-
+                    android:hint="@string/please_input_recommend_code"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <View
@@ -226,9 +257,10 @@
                     android:id="@+id/id_appointment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:text="预约时间"
+                    android:text="@string/appointment_time"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/right_title"/>
                 <TextView
@@ -236,10 +268,10 @@
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/id_appointment"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:gravity="center"
-                    android:hint="选择预约日期"
+                    android:hint="@string/select_appointment_date"
                     android:focusable="false"
                     android:textSize="@dimen/text_width16"
                     android:textColor="#ff323232"
@@ -250,12 +282,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="#f8f8f8"
-                    android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_toRightOf="@+id/id_data"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:gravity="center"
-                    android:hint="选择预约时间"
+                    android:hint="@string/select_appointment_time"
                     android:textSize="@dimen/text_width16"
                     android:textColor="#ff323232"/>
             </LinearLayout>
@@ -277,7 +307,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:text="问题描述"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:text="@string/question_describe"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/right_title"/>
                 <com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout
@@ -295,13 +326,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width80"
                     android:layout_below="@+id/id_multiChoose"
-                    android:hint="您还可以输入140个字"
+                    android:hint="@string/can_input_140_character"
+                    android:inputType="textPersonName"
                     android:padding="@dimen/margin_width5"
                     android:layout_margin="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"
                     android:maxLength="150"
                     android:background="@drawable/shape_white_border_rectangle"
-                    android:gravity="left|top"/>
+                    android:gravity="start|top"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
@@ -317,15 +349,19 @@
                     android:layout_width="@dimen/margin_width25"
                     android:layout_height="@dimen/margin_width25"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginLeft="@dimen/margin_width12"
+                    android:layout_marginStart="@dimen/margin_width12"
                     android:src="@drawable/send_img_h"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_img1"
+                    android:layout_toEndOf="@+id/id_img1"
                     android:layout_marginLeft="@dimen/margin_width18"
+                    android:layout_marginStart="@dimen/margin_width18"
                     android:layout_centerVertical="true"
-                    android:text="上传维修部位照片"
+                    android:text="@string/upload_picture"
                     android:textColorHighlight="@color/black1"
                     android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
@@ -334,23 +370,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-                <GridView
+                <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                     android:id="@+id/noScrollgridview"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_width5"
+                    android:layout_marginTop="@dimen/margin_width10"
                     android:horizontalSpacing="@dimen/margin_width3"
+                    android:layout_centerHorizontal="true"
                     android:numColumns="4"
                     android:scrollbars="none"
-                    android:verticalSpacing="@dimen/margin_width5" >
-                </GridView>
+                    android:verticalSpacing="@dimen/margin_width5">
+                </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/noScrollgridview"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_width15"
-                    android:text="最多只能上传4张图片"
+                    android:text="@string/upload_most_four_picture"
                     android:textSize="@dimen/text_width14"/>
             </RelativeLayout>
             <RelativeLayout
@@ -367,7 +404,7 @@
                     android:layout_marginLeft="@dimen/margin_width20"
                     android:layout_marginBottom="@dimen/margin_width10"
                     android:background="@drawable/selector_touch_button_change"
-                    android:text="提交订单"
+                    android:text="@string/send_order"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/white"/>
             </RelativeLayout>

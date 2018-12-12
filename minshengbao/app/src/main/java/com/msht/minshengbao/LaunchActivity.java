@@ -34,7 +34,13 @@ import com.umeng.analytics.MobclickAgent;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class LaunchActivity extends AppCompatActivity {
     private Context mContext;
     private final String     mPageName = "启动页";
@@ -148,7 +154,6 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
-       // AndroidBug54971Workaround.assistActivity(findViewById(android.R.id.content));
         if(Build.VERSION.SDK_INT>=16){
             Window window=getWindow();
             WindowManager.LayoutParams params=window.getAttributes();
@@ -156,6 +161,7 @@ public class LaunchActivity extends AppCompatActivity {
             window.setAttributes(params);
         }
         mContext = this;
+        MobclickAgent.openActivityDurationTrack(false);
         final boolean isFirstOpen = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.FIRST_OPEN, true);
         if (isFirstOpen){
             SharedPreferencesUtil.clearPreference(this,"AppData");

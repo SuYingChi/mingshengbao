@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -96,9 +97,9 @@ public class OrderListFragment extends BaseFragment {
         mListView.setPullLoadEnable(true);
         myWorkOrderAdapter = new MyWorkOrderAdapter(getContext(),orderList);
         mListView.setAdapter(myWorkOrderAdapter);
-        myWorkOrderAdapter.SetOnItemSelectListener(new MyWorkOrderAdapter.OnItemSelectListener() {
+        myWorkOrderAdapter.setOnItemSelectListener(new MyWorkOrderAdapter.OnItemSelectListener() {
             @Override
-            public void ItemSelectClick(View view, int thisposition) {
+            public void onItemSelectClick(View view, int thisposition) {
                // int position=thisposition-1;
                 String orderId = orderList.get(thisposition).get("id");
                 String orderNo=orderList.get(thisposition).get("orderNo");
@@ -161,6 +162,7 @@ public class OrderListFragment extends BaseFragment {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
+        Log.d("msg.obj4=",textParams.toString());
         OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private static class RequestHandler extends Handler{
@@ -240,6 +242,7 @@ public class OrderListFragment extends BaseFragment {
                 String id=jsonObject.optString("id");
                 String cid=jsonObject.optString("cid");
                 String parentCategoryName=jsonObject.optString("parent_category_name");
+                String parentCategoryCode=jsonObject.optString("parent_category_code");
                 String categoryName=jsonObject.optString("category_name");
                 String categoryCode=jsonObject.optString("category_code");
                 String orderNo=jsonObject.optString("orderNo");
@@ -255,6 +258,7 @@ public class OrderListFragment extends BaseFragment {
                 map.put("orderNo",orderNo);
                 map.put("cid",cid);
                 map.put("parent_category_name",parentCategoryName);
+                map.put("parent_category_code",parentCategoryCode);
                 map.put("category_name",categoryName);
                 map.put("category_code",categoryCode);
                 map.put("type", type);
@@ -280,10 +284,12 @@ public class OrderListFragment extends BaseFragment {
                     int positions=position-1;
                     String cid=orderList.get(positions).get("cid");
                     String ids = orderList.get(positions).get("id");
+                    String parentCode=orderList.get(positions).get("parent_category_code");
                     Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
                     intent.putExtra("cid",cid);
                     intent.putExtra("id", ids);
                     intent.putExtra("pos", positions);
+                    intent.putExtra("parentCode",parentCode);
                     startActivityForResult(intent, 2);
                 }
             });

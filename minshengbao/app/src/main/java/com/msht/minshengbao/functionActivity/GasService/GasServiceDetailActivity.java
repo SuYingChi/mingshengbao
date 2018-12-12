@@ -216,7 +216,8 @@ public class GasServiceDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasservirce_detail);
         context=this;
-        setCommonHeader("燃气服务详情");
+        mPageName="燃气服务详情";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         Intent info=getIntent();
         id=info.getStringExtra("id");

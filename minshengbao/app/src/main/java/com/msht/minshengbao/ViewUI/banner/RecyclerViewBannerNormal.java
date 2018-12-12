@@ -1,16 +1,20 @@
-package com.renny.recyclerbanner;
+package com.msht.minshengbao.ViewUI.banner;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import com.example.library.banner.RecyclerViewBannerBase;
-import com.renny.recyclerbanner.adapter.NormalRecyclerAdapter;
+
+
+import com.msht.minshengbao.adapter.uiadapter.NormalRecyclerAdapter;
 
 import java.util.List;
 
-public class RecyclerViewBannerNormal extends RecyclerViewBannerBase<LinearLayoutManager, NormalRecyclerAdapter> {
+/**
+ * @author hong
+ */
+public class RecyclerViewBannerNormal extends AbstractRecyclerViewBannerBase<LinearLayoutManager, NormalRecyclerAdapter> {
 
     public RecyclerViewBannerNormal(Context context) {
         this(context, null);
@@ -24,8 +28,6 @@ public class RecyclerViewBannerNormal extends RecyclerViewBannerBase<LinearLayou
         super(context, attrs, defStyleAttr);
 
     }
-
-
     @Override
     protected void onBannerScrolled(RecyclerView recyclerView, int dx, int dy) {
         //解决连续滑动时指示器不更新的问题
@@ -61,16 +63,13 @@ public class RecyclerViewBannerNormal extends RecyclerViewBannerBase<LinearLayou
             refreshIndicator();
         }
     }
-
     @Override
     protected LinearLayoutManager getLayoutManager(Context context, int orientation) {
         return new LinearLayoutManager(context, orientation, false);
     }
-
     @Override
     protected NormalRecyclerAdapter getAdapter(Context context, List<String> list, OnBannerItemClickListener onBannerItemClickListener) {
         return new NormalRecyclerAdapter(context, list,onBannerItemClickListener);
     }
-
 
 }

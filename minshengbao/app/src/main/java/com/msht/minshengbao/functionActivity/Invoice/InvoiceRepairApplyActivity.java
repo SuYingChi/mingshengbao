@@ -156,7 +156,8 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_repair_apply);
         context=this;
-        setCommonHeader("发票申请");
+        mPageName="发票申请";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");

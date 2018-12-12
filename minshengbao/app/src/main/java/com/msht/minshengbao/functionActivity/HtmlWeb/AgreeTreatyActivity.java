@@ -1,5 +1,6 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,12 +26,15 @@ public class AgreeTreatyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agree_treayt);
+        context=this;
+        mPageName="相关协议";
         Intent data=getIntent();
         myUrl=data.getStringExtra("url");
         String mNavigation=data.getStringExtra("navigation");
         setCommonHeader(mNavigation);
         initWeBView();
     }
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWeBView() {
         WebView webTreaty=(WebView)findViewById(R.id.id_web_treaty);
         webTreaty.loadUrl(myUrl);

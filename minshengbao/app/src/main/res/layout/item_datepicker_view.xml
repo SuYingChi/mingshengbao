@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginLeft="@dimen/margin_width20"
+    android:layout_marginRight="@dimen/margin_width20"
+    android:background="@drawable/prompt_dialog_bg_normal">
+    <LinearLayout
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/prompt_dialog_title_bar_bg_orange"
+        android:gravity="start|center_vertical"
+        android:paddingBottom="@dimen/margin_width10"
+        android:paddingLeft="@dimen/margin_width15"
+        android:paddingRight="@dimen/margin_width15"
+        android:paddingTop="@dimen/margin_width10" >
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/text_width16"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/title_msg_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="20dp"
+        android:background="#DCDCDC"
+        android:visibility="visible" />
+    <LinearLayout
+        android:id="@+id/layout_addView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:layout_marginLeft="@dimen/margin_width15"
+        android:layout_marginRight="@dimen/margin_width15"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="vertical" >
+        <DatePicker
+            android:id="@+id/id_date_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="#696969"
+            android:textSize="@dimen/text_width18"
+            android:visibility="gone"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/msg_btn_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#DCDCDC"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/btn_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_width50" >
+        <TextView
+            android:id="@+id/button_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/prompt_dialog_btn_left_selector"
+            android:gravity="center"
+            android:textColor="#808080"
+            android:textSize="@dimen/text_width18"
+            android:visibility="gone" />
+        <View
+            android:id="@+id/btn_divider1"
+            android:layout_width="0.5dp"
+            android:layout_height="wrap_content"
+            android:background="#DCDCDC"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/button_center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/prompt_dialog_btn_center_selector"
+            android:gravity="center"
+            android:textColor="#808080"
+            android:textSize="@dimen/text_width18"
+            android:visibility="gone" />
+        <View
+            android:id="@+id/btn_divider2"
+            android:layout_width="@dimen/margin_width1"
+            android:layout_height="wrap_content"
+            android:background="#DCDCDC"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/button_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/prompt_dialog_btn_right_selector"
+            android:gravity="center"
+            android:textColor="#808080"
+            android:textSize="@dimen/text_width18"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

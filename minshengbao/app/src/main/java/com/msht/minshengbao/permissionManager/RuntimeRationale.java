@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yanzhenjie.permission.sample;
+package com.msht.minshengbao.permissionManager;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 
+import com.msht.minshengbao.R;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RequestExecutor;
@@ -27,7 +28,9 @@ import com.yanzhenjie.permission.RequestExecutor;
 import java.util.List;
 
 /**
- * Created by YanZhenjie on 2018/1/1.
+ *
+ * @author YanZhenjie
+ * @date 2018/1/1
  */
 public final class RuntimeRationale implements Rationale<List<String>> {
 

@@ -7,6 +7,7 @@
     <dimen name="margin_width220">440dp</dimen>
     <dimen name="margin_imgHight">150dp</dimen>
     <dimen name="margin_width320">640dp</dimen>
+    <dimen name="margin_width275">550dp</dimen>
     <dimen name="margin_width270">540dp</dimen>
     <dimen name="margin_width225">450dp</dimen>
     <dimen name="margin_width200">400dp</dimen>
@@ -21,6 +22,7 @@
     <dimen name="margin_width126">252dp</dimen>
     <dimen name="margin_width122">244dp</dimen>
     <dimen name="margin_width140">280dp</dimen>
+    <dimen name="margin_width120">240dp</dimen>
     <dimen name="margin_width100">200dp</dimen>
     <dimen name="margin_width90">180dp</dimen>
     <dimen name="margin_width89">178dp</dimen>
@@ -54,6 +56,7 @@
     <dimen name="margin_width5">10dp</dimen>
     <dimen name="margin_width3">6dp</dimen>
     <dimen name="margin_width2">4dp</dimen>
+    <dimen name="margin_width1">2dp</dimen>
     <dimen name="margin_width_200">-200dp</dimen>
     <dimen name="margin_width_70">-140dp</dimen>
     <dimen name="margin_width_80">-160dp</dimen>

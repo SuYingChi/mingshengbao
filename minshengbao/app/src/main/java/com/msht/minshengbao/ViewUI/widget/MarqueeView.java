@@ -1,4 +1,4 @@
-package com.sunfusheng.marqueeview;
+package com.msht.minshengbao.ViewUI.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,11 +14,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConvertUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sunfusheng on 16/5/31.
+ *
+ * @author sunfusheng
+ * @date 16/5/31
  */
 public class MarqueeView extends ViewFlipper {
 
@@ -26,7 +31,7 @@ public class MarqueeView extends ViewFlipper {
     private boolean hasSetAnimDuration = false;
     private int animDuration = 1000;
     private int textSize = 14;
-    private int textColor = 0xffffffff;
+    private int textColor = 0xff383838;
     private boolean singleLine = false;
 
     private int gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
@@ -68,7 +73,7 @@ public class MarqueeView extends ViewFlipper {
         singleLine = typedArray.getBoolean(R.styleable.MarqueeViewStyle_mvSingleLine, false);
         if (typedArray.hasValue(R.styleable.MarqueeViewStyle_mvTextSize)) {
             textSize = (int) typedArray.getDimension(R.styleable.MarqueeViewStyle_mvTextSize, textSize);
-            textSize = Utils.px2sp(context, textSize);
+            textSize = ConvertUtil.px2sp(context, textSize);
         }
         textColor = typedArray.getColor(R.styleable.MarqueeViewStyle_mvTextColor, textColor);
 
@@ -83,6 +88,9 @@ public class MarqueeView extends ViewFlipper {
             case GRAVITY_RIGHT:
                 gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
                 break;
+                default:
+                    gravity = Gravity.CENTER;
+                    break;
         }
 
         hasSetDirection = typedArray.hasValue(R.styleable.MarqueeViewStyle_mvDirection);
@@ -105,12 +113,15 @@ public class MarqueeView extends ViewFlipper {
                     inAnimResId = R.anim.anim_left_in;
                     outAnimResId = R.anim.anim_right_out;
                     break;
+                    default:
+                        inAnimResId = R.anim.anim_bottom_in;
+                        outAnimResId = R.anim.anim_top_out;
+                        break;
             }
         } else {
             inAnimResId = R.anim.anim_bottom_in;
             outAnimResId = R.anim.anim_top_out;
         }
-
         typedArray.recycle();
         setFlipInterval(interval);
     }
@@ -154,7 +165,7 @@ public class MarqueeView extends ViewFlipper {
      */
     private void startWithFixedWidth(String notice, @AnimRes int inAnimResId, @AnimRes int outAnimResID) {
         int noticeLength = notice.length();
-        int width = Utils.px2dip(getContext(), getWidth());
+        int width = ConvertUtil.px2dip(getContext(), getWidth());
         if (width == 0) {
             throw new RuntimeException("Please set the width of MarqueeView !");
         }
@@ -172,7 +183,9 @@ public class MarqueeView extends ViewFlipper {
             }
         }
 
-        if (notices == null) notices = new ArrayList<>();
+        if (notices == null){
+            notices = new ArrayList<>();
+        }
         notices.clear();
         notices.addAll(list);
         postStart(inAnimResId, outAnimResID);
@@ -195,7 +208,9 @@ public class MarqueeView extends ViewFlipper {
      * @param outAnimResID 离开动画的resID
      */
     public void startWithList(List<? extends CharSequence> notices, @AnimRes int inAnimResId, @AnimRes int outAnimResID) {
-        if (Utils.isEmpty(notices)) return;
+        if (ConvertUtil.isEmpty(notices)){
+            return;
+        }
         setNotices(notices);
         postStart(inAnimResId, outAnimResID);
     }
@@ -292,6 +307,11 @@ public class MarqueeView extends ViewFlipper {
     }
 
     public interface OnItemClickListener {
+        /**
+         * 点击回调
+         * @param position
+         * @param textView
+         */
         void onItemClick(int position, TextView textView);
     }
 

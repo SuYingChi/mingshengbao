@@ -23,7 +23,6 @@ import com.umeng.analytics.MobclickAgent;
 public class GasIntroduceActivity extends AppCompatActivity {
     private ViewPagerIndicator indicator;
     private ViewPager mViewPager;
-    private TextView  tvNavigation;
     private Context   mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class GasIntroduceActivity extends AppCompatActivity {
     }
     private void initView() {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
+        TextView tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
         tvNavigation.setText(R.string.gas_introduce);
         indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
     }

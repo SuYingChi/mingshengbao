@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".functionActivity.HtmlWeb.RichTextActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/layout_header"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <WebView
+                android:id="@+id/id_RichText_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </WebView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width30"
+                android:layout_marginBottom="@dimen/margin_width30">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_383838"
+                    android:layout_toLeftOf="@+id/id_weiChat"
+                    android:layout_toStartOf="@+id/id_weiChat"
+                    android:layout_marginEnd="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/text_width16"
+                    android:text="@string/msb_share_to_weiChat"/>
+                <ImageView
+                    android:id="@+id/id_weiChat"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_toLeftOf="@+id/id_friend_circle"
+                    android:layout_toStartOf="@+id/id_friend_circle"
+                    android:layout_marginEnd="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
+                    android:src="@drawable/weixin_share_xh"/>
+                <ImageView
+                    android:id="@+id/id_friend_circle"
+                    android:layout_width="@dimen/margin_width30"
+                    android:layout_height="@dimen/margin_width30"
+                    android:layout_marginRight="@dimen/margin_width15"
+                    android:layout_marginEnd="@dimen/margin_width15"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
+                    android:src="@drawable/friend_circle_xh"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

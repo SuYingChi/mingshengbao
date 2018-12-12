@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yanzhenjie.permission.sample;
+package com.msht.minshengbao.permissionManager;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.msht.minshengbao.R;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RequestExecutor;
 
 /**
- * Created by YanZhenjie on 2018/5/30.
+ *
+ * @author YanZhenjie
+ * @date 2018/5/30
  */
 public class OverlayRationale implements Rationale<Void> {
     @Override

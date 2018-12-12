@@ -164,9 +164,10 @@ public class InvoiceHistoryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_gas_history);
-        customDialog=new CustomDialog(this, "正在加载");
         context=this;
-        setCommonHeader("发票历史");
+        mPageName="发票历史";
+        setCommonHeader(mPageName);
+        customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         intView();

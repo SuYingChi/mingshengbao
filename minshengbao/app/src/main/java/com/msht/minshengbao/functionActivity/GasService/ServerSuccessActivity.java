@@ -22,6 +22,7 @@ public class ServerSuccessActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
+        mPageName ="服务提交成功";
         setContentView(R.layout.activity_server_success);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
         Intent data=getIntent();
@@ -29,7 +30,7 @@ public class ServerSuccessActivity extends BaseActivity {
         boolean firstSever= SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.First_server, true);
         boolean booleanFirst=data.getBooleanExtra("boolean",false);
         setCommonHeader(navigation);
-        mPageName ="服务提交成功";
+
         if (booleanFirst){
             if (firstSever){
                 findViewById(R.id.id_layout_second).setVisibility(View.GONE);

@@ -327,13 +327,13 @@ public class PublicPayWayActivity extends BaseActivity {
         }
         switch (status){
             case VariableUtil.VALUE_ZERO:
-                onStartActivity(lottery,"6");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_ONE:
-                onStartActivity(lottery,"6");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_TWO:
-                onStartActivity(lottery,"5");
+                onStartActivity(lottery,"0");
                 break;
             case VariableUtil.VALUE_THREE:
                 onShowDialogs("正在支付");
@@ -343,10 +343,12 @@ public class PublicPayWayActivity extends BaseActivity {
         }
     }
     private void onStartActivity(String lottery, String s) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=shop_pay_success";
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("url",lottery);
         success.putExtra("type",s);
-        success.putExtra("orderId",orderId);
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("navigation","商城支付");
         startActivity(success);
         finish();
     }

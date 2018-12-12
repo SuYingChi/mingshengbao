@@ -35,9 +35,6 @@
 -dontwarn  com.unionpay.**
 -keep class com.unionpay.** {*;}
 
--dontwarn cmb.pb.**
--keep class cmb.pb.** {*;}
-
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }

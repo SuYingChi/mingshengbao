@@ -170,24 +170,36 @@ public class LookEvaluateActivity extends BaseActivity {
         realAmount =data.getStringExtra("realAmount");
         evaluateScore =data.getStringExtra("evaluateScore");
         evaluateInfo =data.getStringExtra("evaluateInfo");
+        String parentCode=data.getStringExtra("parentCode");
         initfindViewById();
+        initSetCodeImage(parentCode);
         initData();
     }
-    private void initfindViewById() {
-        ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
-        ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
-        ((TextView)findViewById(R.id.id_tv_amount)).setText(realAmount);
-        ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
-        ((TextView)findViewById(R.id.id_tv_title)).setText(title);
-        tvMasterEva =(TextView)findViewById(R.id.id_master_massage);
-        userAddEva =(TextView)findViewById(R.id.id_again_massage);
+
+    private void initSetCodeImage(String parentCode) {
         ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
-        mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
-        tvEvaluation =(TextView) findViewById(R.id.id_tv_evaluation);
-        btnAdd =(Button)findViewById(R.id.id_btn_add);
-        layoutAdd =findViewById(R.id.id_li_add);
-        layoutMaster =findViewById(R.id.id_li_master);
-        switch (type){
+        switch (parentCode) {
+            case ConstantUtil.SANITARY_WARE:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+            case ConstantUtil.OTHER_REPAIR:
+                typeImg.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                typeImg.setImageResource(R.drawable.housekeeping_clean_xh);
+                break;
+            default:
+                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
+                break;
+        }
+        /*switch (type){
             case ConstantUtil.VALUE_ONE:
                 typeImg.setImageResource(R.drawable.home_sanitary_xh);
                 break;
@@ -205,7 +217,21 @@ public class LookEvaluateActivity extends BaseActivity {
                 break;
             default:
                 break;
-        }
+        }*/
+    }
+    private void initfindViewById() {
+        ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
+        ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
+        ((TextView)findViewById(R.id.id_tv_amount)).setText(realAmount);
+        ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
+        ((TextView)findViewById(R.id.id_tv_title)).setText(title);
+        tvMasterEva =(TextView)findViewById(R.id.id_master_massage);
+        userAddEva =(TextView)findViewById(R.id.id_again_massage);
+        mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
+        tvEvaluation =(TextView) findViewById(R.id.id_tv_evaluation);
+        btnAdd =(Button)findViewById(R.id.id_btn_add);
+        layoutAdd =findViewById(R.id.id_li_add);
+        layoutMaster =findViewById(R.id.id_li_master);
         mRatingBar.setStarEmptyDrawable(getResources().getDrawable(R.drawable.star_empty));
         mRatingBar.setStarFillDrawable(getResources().getDrawable(R.drawable.star_full));
         mRatingBar.setStarCount(5);

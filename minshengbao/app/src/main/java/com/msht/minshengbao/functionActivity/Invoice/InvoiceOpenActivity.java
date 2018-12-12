@@ -195,9 +195,10 @@ public class InvoiceOpenActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_open);
-        customDialog=new CustomDialog(this, "正在加载");
         context=this;
-        setCommonHeader("发票订单");
+        mPageName="发票订单";
+        setCommonHeader(mPageName);
+        customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         intView();

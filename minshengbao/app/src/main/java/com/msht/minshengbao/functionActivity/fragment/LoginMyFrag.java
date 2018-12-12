@@ -1,11 +1,13 @@
 package com.msht.minshengbao.functionActivity.fragment;
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.msht.minshengbao.Base.BaseHomeFragment;
+import com.msht.minshengbao.Utils.AppActivityUtil;
+import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
 import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.Invoice.InvoiceHomeActivity;
@@ -63,20 +71,16 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/7/2  
  */
-public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScrollview.ScrollViewListener {
+public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListener, MyScrollview.ScrollViewListener {
     private MyScrollview    myScrollview;
     private LinearLayout    layoutNavigation;
     private RelativeLayout  layoutMySetting;
-    private CircleImageView circleImageView;
     private TextView tvNavigation;
-    private TextView tvNickname;
+    private SimpleDraweeView mPortrait;
     private MenuItemM btnMessage;
-    private String avatarUrl;
     private String nickname;
-    private Bitmap myAvatar =null;
-    private ACache mCache;
     private int   bgHeight;
-    private Context mContext;
+    private Activity mActivity;
     /**最大显示消息数 **/
     private static final int MAX_MASSAGE=99;
     private MyNoScrollGridView mGridView;
@@ -84,67 +88,32 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
-    private final GetImageHandler getImageHandler=new GetImageHandler(this);
     public LoginMyFrag() {}
-    private static class GetImageHandler extends Handler{
-        private WeakReference<LoginMyFrag> mWeakReference;
-        public GetImageHandler(LoginMyFrag loginMyFrag) {
-            mWeakReference = new WeakReference<LoginMyFrag>(loginMyFrag);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final LoginMyFrag reference =mWeakReference.get();
-            // the referenced object has been cleared
-            if (reference == null||reference.isDetached()) {
-                return;
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    reference.myAvatar = (Bitmap)msg.obj;
-                    if (reference.myAvatar ==null){
-                        reference.circleImageView.setImageResource(R.drawable.potrait);
-                    }else {
-                        reference.circleImageView.setImageBitmap(reference.myAvatar);
-                        reference.mCache.put("avatarimg", reference.myAvatar);
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_loginafter_my, container, false);
-        mContext=getActivity();
-        mCache=ACache.get(mContext);
-        avatarUrl =SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
+    public View initFindView() {
+        if(mRootView==null){
+            mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my,null,false);
+        }
+        mActivity=getActivity();
+        String avatarUrl =SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
         nickname=SharedPreferencesUtil.getNickName(mContext,SharedPreferencesUtil.NickName,"");
-        VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
-            view.findViewById(R.id.id_view).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.id_view).setVisibility(View.GONE);
         }
-        initView(view);
-        myAvatar =mCache.getAsBitmap("avatarimg");
-        if (myAvatar !=null){
-            circleImageView.setImageBitmap(myAvatar);
-        }else {
-            if (avatarUrl !=null&&(!TextUtils.isEmpty(avatarUrl))){
-                onGetAvatar();
-            }
-        }
+        initView(mRootView);
+        Uri uri = Uri.parse(avatarUrl);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                //. 其他设置（如果有的话）
+                .build();
+        mPortrait.setController(controller);
         initListeners();
         mAdapter=new MyFunctionAdapter(mContext,mList);
         mGridView.setAdapter(mAdapter);
         initData();
         goActivity();
-        return  view;
+        return mRootView;
     }
     private void initView(View view) {
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
@@ -157,10 +126,19 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
         view.findViewById(R.id.id_re_setting).setOnClickListener(this);
         view.findViewById(R.id.id_right_massage).setOnClickListener(this);
-        circleImageView=(CircleImageView)view.findViewById(R.id.id_potrait);
+        mPortrait=(SimpleDraweeView)view.findViewById(R.id.id_portrait);
         tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
-        tvNickname =(TextView)view.findViewById(R.id.id_nickname);
-        tvNickname.setText(nickname);
+        TextView tvNickname =(TextView)view.findViewById(R.id.id_nickname);
+        if (!TextUtils.isEmpty(nickname)){
+            tvNickname.setText(nickname);
+        }else {
+            String userName=SharedPreferencesUtil.getNickName(mActivity,SharedPreferencesUtil.UserName,"");
+            if (RegularExpressionUtil.isPhone(userName)){
+                userName=userName.substring(0,3)+"****"+userName.substring(7,userName.length());
+            }
+            tvNickname.setText(userName);
+
+        }
         onUnReadMessage();
         btnMessage.setOnClickListener(new MenuItemM.OnClickListener() {
             @Override
@@ -199,38 +177,38 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 int code=mList.get(position).get("code");
                 switch (code){
                     case 0:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(mContext)){
                             goMyWallet();
                         }else {
-                            goLogin();
+                            AppActivityUtil.onStartLoginActivity(mContext);
                         }
                         break;
                     case 1:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(mContext)){
                             goGasServer();
                         }else {
-                            goLogin();
+                            AppActivityUtil.onStartLoginActivity(mContext);
                         }
                         break;
                     case 2:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(mContext)){
                             goCustomerNo();
                         }else {
-                            goLogin();
+                            AppActivityUtil.onStartLoginActivity(mContext);
                         }
                         break;
                     case 3:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(mContext)){
                             goInvoice();
                         }else {
-                            goLogin();
+                            AppActivityUtil.onStartLoginActivity(mContext);
                         }
                         break;
                     case 4:
-                        if (VariableUtil.loginStatus){
+                        if (isLoginState(mContext)){
                             goManage();
                         }else {
-                            goLogin();
+                            AppActivityUtil.onStartLoginActivity(mContext);
                         }
                         break;
                     case 5:
@@ -239,16 +217,8 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                     default:
                         break;
                 }
-
             }
         });
-    }
-    private void goLogin() {
-        Intent login=new Intent(mContext, LoginActivity.class);
-        startActivity(login);
-    }
-    private void onGetAvatar() {
-        SendRequestUtil.getBitmapFromService(avatarUrl,getImageHandler);
     }
     private void initListeners() {
         ViewTreeObserver vto = layoutMySetting.getViewTreeObserver();
@@ -289,17 +259,17 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_gosetting:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(mContext)){
                     goSetting();
                 }else {
-                   goLogin();
+                    AppActivityUtil.onStartLoginActivity(mContext);
                 }
                 break;
             case R.id.id_re_consult:
-                if (VariableUtil.loginStatus){
+                if (isLoginState(mContext)){
                     goConsult();
                 }else {
-                    goLogin();
+                    AppActivityUtil.onStartLoginActivity(mContext);
                 }
                 break;
             case R.id.id_re_hotline:
@@ -315,7 +285,6 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
                 break;
         }
     }
-
     private void goMessageCenter() {
         Intent intent=new Intent(mContext,MessageCenterActivity.class);
         startActivity(intent);
@@ -356,7 +325,6 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         startActivityForResult(intent,0x004);
     }
     private void goInvoice() {
-       // Intent intent=new Intent(mContext, InvoiceOpen.class);
         Intent intent=new Intent(mContext, InvoiceHomeActivity.class);
         startActivity(intent);
     }
@@ -368,7 +336,6 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         Intent intent=new Intent(mContext, MySettingActivity.class);
         startActivityForResult(intent,1);
     }
-
     private void goCustomerNo() {
         Intent intent=new Intent(mContext, CustomerNoManageActivity.class);
         startActivity(intent);

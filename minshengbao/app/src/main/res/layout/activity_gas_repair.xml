@@ -129,7 +129,7 @@
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:inputType="phone"
-                    android:hint="@string/gas_detail_describe"
+                    android:hint="@string/please_input_connection_phone"
                     android:background="@null"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -141,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="@string/gas_detail_describe"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:textStyle="bold"

@@ -23,6 +23,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -71,7 +72,9 @@ public class GasRepairActivity extends BaseActivity implements View.OnClickListe
                         String result=object.optString("result");
                         String error = object.optString("error");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onSendSuccess();
+                            JSONObject jsonObject=object.optJSONObject("data");
+                            String orderId=jsonObject.optString("id");
+                            activity.onPublishSuccess(orderId);
                         }else {
                             activity.displayDialog(error);
                         }
@@ -88,6 +91,18 @@ public class GasRepairActivity extends BaseActivity implements View.OnClickListe
             super.handleMessage(msg);
         }
     }
+
+    private void onPublishSuccess(String orderId) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=gas_order_activity"
+                +"&event_relate_id="+orderId;
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url","");
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("type","1");
+        success.putExtra("navigation","报修服务");
+        startActivity(success);
+        finish();
+    }
     private void onSendSuccess() {
         String navigation="报修服务";
         Intent success=new Intent(context,ServerSuccessActivity.class);
@@ -101,7 +116,8 @@ public class GasRepairActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_repair);
         context=this;
-        setCommonHeader("燃气报修");
+        mPageName="燃气报修";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");

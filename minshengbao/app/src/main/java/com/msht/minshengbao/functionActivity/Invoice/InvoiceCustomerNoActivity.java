@@ -135,9 +135,9 @@ public class InvoiceCustomerNoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_customer_no);
         context=this;
+        mPageName=PAGE_NAME;
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
-        mPageName=PAGE_NAME;
         setCommonHeader(PAGE_NAME);
         layoutNoData=findViewById(R.id.id_nodata_view);
         mRecyclerView=(XRecyclerView)findViewById(R.id.id_customer_data);

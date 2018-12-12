@@ -9,6 +9,8 @@
     <string name="home_tab_mail">商城</string>
     <string name="home_tab_home">首页</string>
     <string name="home_tab_order">订单</string>
+    <string name="special_topic_activity">专题活动</string>
+    <string name="hot_recommend">热门推荐</string>
     <!-- 我的模块  -->
     <string name="my_nick_name">昵称</string>
     <string name="my_sex">性别</string>
@@ -44,6 +46,16 @@
     <string name="qrCode_text">二维码</string>
     <string name="barCode_text">条形码</string>
     <string name="select_all_text">全选</string>
+    <string name="msb_more">更多</string>
+    <string name="msb_share_to_weiChat">分享到:</string>
+    <string name="setting">Setting</string>
+    <string name="resume">Resume</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_dialog">Tips</string>
+    <string name="message_overlay_failed">Your phone is not allowed us to draw on other applications.</string>
+    <string name="message_permission_rationale">Grant the following permissions to continue the program:\n\n%1$s</string>
+    <string name="message_permission_always_failed">Please give us permission in the settings:\n\n%1$s</string>
+    <string name="message_setting_comeback">The user comes back from the settings page.</string>
 
 
     <!--燃气模块 -->
@@ -106,4 +118,6 @@
 
     <string name="order_message">订单消息</string>
     <string name="notification_message">公告栏</string>
+
+
 </resources>

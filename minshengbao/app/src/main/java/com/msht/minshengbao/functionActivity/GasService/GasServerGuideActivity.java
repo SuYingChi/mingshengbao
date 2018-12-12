@@ -25,7 +25,8 @@ public class GasServerGuideActivity extends BaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_server_guide);
         context=this;
-        setCommonHeader("服务指南");
+        mPageName="服务指南";
+        setCommonHeader(mPageName);
         Rwangdian=(RelativeLayout)findViewById(R.id.id_layout_wangdian);
         Rbaoxiuyewu=(RelativeLayout)findViewById(R.id.id_layout_yewu);
         Rjiaona=(RelativeLayout)findViewById(R.id.id_layout_jiaona);

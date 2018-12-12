@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     tools:context="com.msht.minshengbao.functionActivity.fragment.TableRecordFrag">
     <!-- TODO: Update blank fragment layout -->
-    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
-        android:id="@+id/id_payrecord_listview"
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/id_pay_record_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
         android:scrollbars="none"
         android:footerDividersEnabled="true">
-    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    </com.jcodecraeer.xrecyclerview.XRecyclerView>
     <include layout="@layout/layout_nodata_view"
         android:id="@+id/id_nodata_view"
         android:visibility="gone"/>

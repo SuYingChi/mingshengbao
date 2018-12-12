@@ -1,10 +1,11 @@
 package com.msht.minshengbao.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
@@ -13,61 +14,58 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/3/20.
+ *
+ * @author hong
+ * @date 2017/3/20
  */
 
-public class GetRecordAdapter extends BaseAdapter {
-    private Context mContext;
-    private LayoutInflater mInflater = null;
+public class GetRecordAdapter extends  RecyclerView.Adapter<GetRecordAdapter.MyViewHolder> {
     private ArrayList<HashMap<String, String>> writeList = new ArrayList<HashMap<String, String>>();
     public GetRecordAdapter(Context context, ArrayList<HashMap<String, String>> mList) {
         super();
         this.writeList=mList;
-        this.mContext=context;
-        mInflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_write_table,viewGroup,false);
+        return new GetRecordAdapter.MyViewHolder(view);
     }
     @Override
-    public int getCount() {
-        return writeList.size();
-    }
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
+        myViewHolder.cnMeter.setText(writeList.get(i).get("meter")+"NM³");
+        myViewHolder.cnAddress.setText(writeList.get(i).get("address"));
+        myViewHolder.cnCustomer.setText(writeList.get(i).get("customerNo"));
+        myViewHolder.cnTime.setText(writeList.get(i).get("time"));
 
-    @Override
-    public Object getItem(int position) {
-        return writeList.get(position);
-    }
 
+    }
     @Override
     public long getItemId(int position) {
         return position;
     }
-
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.item_write_table, null);
-            holder.cn_meter=(TextView) convertView.findViewById(R.id.id_table_data);
-            holder.cn_costomer=(TextView)convertView.findViewById(R.id.id_customerNo);
-            holder.cn_address=(TextView) convertView.findViewById(R.id.id_address_text);
-            holder.cn_time=(TextView) convertView.findViewById(R.id.id_tv_time);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+    public int getItemCount() {
+        if (writeList!=null){
+            return writeList.size();
+        }else {
+            return 0;
         }
-        holder.cn_meter.setText(writeList.get(position).get("meter")+"NM³");
-        holder.cn_address.setText(writeList.get(position).get("address"));
-        holder.cn_costomer.setText(writeList.get(position).get("customerNo"));
-        holder.cn_time.setText(writeList.get(position).get("time"));
-
-        return convertView;
     }
-    class ViewHolder {
-        public TextView cn_meter;
-        public TextView cn_address;
-        public TextView cn_costomer;
-        public TextView cn_time;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+         TextView cnMeter;
+         TextView cnAddress;
+         TextView cnCustomer;
+         TextView cnTime;
+         View itemView;
+        private MyViewHolder(View view){
+            super(view);
+            cnMeter =(TextView) view.findViewById(R.id.id_table_data);
+            cnCustomer =(TextView)view.findViewById(R.id.id_customerNo);
+            cnAddress =(TextView) view.findViewById(R.id.id_address_text);
+            cnTime =(TextView) view.findViewById(R.id.id_tv_time);
+            itemView=view.findViewById(R.id.item_left);
+        }
     }
 
 }

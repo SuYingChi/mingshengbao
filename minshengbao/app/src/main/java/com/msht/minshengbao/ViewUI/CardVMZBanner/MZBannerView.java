@@ -26,8 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
-import com.msht.minshengbao.Bean.ADInfo;
-import com.msht.minshengbao.Bean.ActivityInfo;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZViewHolder;

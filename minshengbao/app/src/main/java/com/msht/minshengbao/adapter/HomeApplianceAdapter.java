@@ -9,12 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/5/5.
+ *
+ * @author hong
+ * @date 2017/5/5
  */
 
 public class HomeApplianceAdapter extends BaseAdapter {
@@ -58,32 +61,63 @@ public class HomeApplianceAdapter extends BaseAdapter {
         if (convertView == null) {
             holder =new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_second_service, null);
-            holder.img_function=(ImageView)convertView.findViewById(R.id.id_function_img);
-            holder.tv_name=(TextView) convertView.findViewById(R.id.id_function_name);
+            holder.imgFunction =(ImageView)convertView.findViewById(R.id.id_function_img);
+            holder.tvName =(TextView) convertView.findViewById(R.id.id_function_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         String name=functionList.get(position).get("name");
         String code=functionList.get(position).get("code");
-        holder.tv_name.setText(name);
-        if (code.equals("air_conditioner_clean")){
-            holder.img_function.setImageResource(R.drawable.conditioner_clean_xh);
-        }else if (code.equals("washing_machine_clean")){
-            holder.img_function.setImageResource(R.drawable.washingmachine_clean_xh);
-        }else if (code.equals("refrigerator_clean")){
-            holder.img_function.setImageResource(R.drawable.refrigerator_clean_xh);
-        }else if (code.equals("heater_clean")){
-            holder.img_function.setImageResource(R.drawable.heater_clean_xh);
-        }else if (code.equals("gas_stove_clean")){
-            holder.img_function.setImageResource(R.drawable.gas_stove_clean);
-        }else if (code.equals("hoods_clean")){
-            holder.img_function.setImageResource(R.drawable.hoods_clean);
+        holder.tvName.setText(name);
+        switch (code){
+            case ConstantUtil.AIR_CONDITIONER_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.conditioner_clean_xh);
+                break;
+            case ConstantUtil.WASHING_MACHINE_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.washingmachine_clean_xh);
+                break;
+            case ConstantUtil.REFRIGERATOR_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.refrigerator_clean_xh);
+                break;
+            case ConstantUtil.HEATER_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.heater_clean_xh);
+                break;
+            case ConstantUtil.HOODS_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.hoods_clean);
+                break;
+            case ConstantUtil.GAS_STOVE_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.gas_stove_clean);
+                break;
+            case ConstantUtil.HOUSE_CLEANING:
+                holder.imgFunction.setImageResource(R.drawable.homekeeping_clean_xh);
+                break;
+            case ConstantUtil.DEEP_CLEANLINESS:
+                holder.imgFunction.setImageResource(R.drawable.acarid_clean_xh);
+                break;
+            case ConstantUtil.FIRST_CLEANLINESS:
+                holder.imgFunction.setImageResource(R.drawable.sofa_clean_xh);
+                break;
+            case ConstantUtil.MITE_SERVICE:
+                holder.imgFunction.setImageResource(R.drawable.gas_stove_clean);
+                break;
+            case ConstantUtil.FLOOR_WAXING:
+                holder.imgFunction.setImageResource(R.drawable.gas_stove_clean);
+                break;
+            case ConstantUtil.MATTRESS_MITE:
+                holder.imgFunction.setImageResource(R.drawable.acarid_clean_xh);
+                break;
+            case ConstantUtil.SOFA_CLEANLINESS:
+                holder.imgFunction.setImageResource(R.drawable.sofa_clean_xh);
+                break;
+                default:
+                    holder.imgFunction.setImageResource(R.drawable.conditioner_clean_xh);
+                    break;
         }
         return convertView;
     }
     class ViewHolder {
-        public ImageView img_function;
-        public TextView  tv_name;
+         ImageView imgFunction;
+         TextView tvName;
     }
 }

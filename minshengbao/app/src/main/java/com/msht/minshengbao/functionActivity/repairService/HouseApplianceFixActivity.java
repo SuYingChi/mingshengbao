@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.HouseApplianceFixAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -48,6 +50,7 @@ public class HouseApplianceFixActivity extends BaseActivity {
     private HouseApplianceFixAdapter homeAdapter;
     private String pid;
     private String cityId;
+    private String typeName;
     private boolean loginState =false;
     private CustomDialog customDialog;
     private static final String SERVICE_URL= UrlUtil.Service_noteUrl;
@@ -118,13 +121,15 @@ public class HouseApplianceFixActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house_appliance_fix);
-        setCommonHeader("家电维修");
+        mPageName="家电维修";
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
-        cityId=data.getStringExtra("city_id");
+        typeName=data.getStringExtra("typeName");
+        setCommonHeader(typeName);
+        cityId=VariableUtil.cityId;
         initView();
         homeAdapter=new HouseApplianceFixAdapter(context,functionList);
         mGridView.setAdapter(homeAdapter);
@@ -136,10 +141,12 @@ public class HouseApplianceFixActivity extends BaseActivity {
                 if (loginState){
                     String mId=functionList.get(position).get("id");
                     String mName=functionList.get(position).get("name");
+                    String code=functionList.get(position).get("code");
                     Intent intent=new Intent(context,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",mName);
-                    intent.putExtra("mMainType",mPageName);
+                    intent.putExtra("mMainType",typeName);
+                    intent.putExtra("code",code);
                     startActivity(intent);
                 }else {
                     Intent login=new Intent(context, LoginActivity.class);
@@ -154,15 +161,16 @@ public class HouseApplianceFixActivity extends BaseActivity {
 
     }
     private void initData() {
-        customDialog.show();
-        String functionUrl= UrlUtil.SecondService_Url;
-        String function="";
-        try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(pid)){
+            customDialog.show();
+            String functionUrl= UrlUtil.SecondService_Url;
+            try {
+                functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
         }
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
     }
     private void iniWebView() {
         webView.loadUrl(SERVICE_URL);

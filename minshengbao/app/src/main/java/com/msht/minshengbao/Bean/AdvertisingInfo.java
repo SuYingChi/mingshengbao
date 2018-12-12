@@ -4,7 +4,7 @@ package com.msht.minshengbao.Bean;
  * @author Eden Cheng</br>
  * @version 2015年4月23日 上午11:32:53
  */
-public class ADInfo {
+public class AdvertisingInfo {
 	private String id = "";
 	private String type = "";
 	private String image = "";
@@ -12,6 +12,7 @@ public class ADInfo {
 	private String share;
 	private String title;
 	private String desc;
+	private String backUrl;
 	public String getId() {
 		return id;
 	}
@@ -54,5 +55,11 @@ public class ADInfo {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public void setBackUrl(String backUrl) {
+		this.backUrl = backUrl;
+	}
+	public String getBackUrl() {
+		return backUrl;
 	}
 }

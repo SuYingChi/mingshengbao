@@ -26,10 +26,8 @@ public class AboutMineActivity extends BaseActivity {
         setCommonHeader(mPageName);
         TextView tvVersionName=(TextView)findViewById(R.id.id_versionName);
         String mName= AppPackageUtil.getPackageVersionName(context);
-        if (TextUtils.isEmpty(mName)&&mName!=null){
-            mName="版本:"+mName;
-            tvVersionName.setText(mName);
-        }
+        mName="版本:"+mName;
+        tvVersionName.setText(mName);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

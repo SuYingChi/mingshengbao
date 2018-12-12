@@ -4,11 +4,17 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.ViewUI.banner.AbstractRecyclerViewBannerBase;
+import com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal;
 import com.msht.minshengbao.adapter.GasServiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -30,6 +36,7 @@ import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Demo class
@@ -40,12 +47,16 @@ import java.util.HashMap;
  */
 public class GasServiceActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
+    private RecyclerViewBannerNormal mBanner;
     private GasServiceAdapter homeAdapter;
     private String pid="";
     private String cityId="";
     private   boolean loginState =false;
     private CustomDialog customDialog;
+    private ArrayList<AdvertisingInfo> adInformation = new ArrayList<AdvertisingInfo>();
+    private List<String> advertisingList = new ArrayList<>();
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
+    private final GetAdvertisingHandler getAdvertisingHandler=new GetAdvertisingHandler(this);
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler  extends Handler{
         private WeakReference<GasServiceActivity > mWeakReference;
@@ -61,6 +72,7 @@ public class GasServiceActivity extends BaseActivity {
             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                 activity.customDialog.dismiss();
             }
+            activity.initBannerData();
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
@@ -87,6 +99,71 @@ public class GasServiceActivity extends BaseActivity {
 
         }
     }
+    private static class GetAdvertisingHandler extends Handler{
+        private WeakReference<GasServiceActivity> mWeakReference;
+        public GetAdvertisingHandler(GasServiceActivity activity) {
+            mWeakReference = new WeakReference<GasServiceActivity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final GasServiceActivity activity =mWeakReference.get();
+            // the referenced object has been cleared
+            if (activity == null||activity.isFinishing()) {
+                return;
+            }
+            switch (msg.what) {
+                case SendRequestUtil.SUCCESS:
+                    try {
+                        JSONObject object = new JSONObject(msg.obj.toString());
+                        String results=object.optString("result");
+                        String error=object.optString("error");
+                        JSONArray array =object.optJSONArray("data");
+                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            if (array.length()>0){
+                                activity.initAdvertisingData(array);
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                case SendRequestUtil.FAILURE:
+                    ToastUtil.ToastText(activity.context,msg.obj.toString());
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+
+    private void initAdvertisingData(JSONArray array) {
+        adInformation.clear();
+        advertisingList.clear();
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonObject = array.getJSONObject(i);
+                AdvertisingInfo info = new AdvertisingInfo();
+                info.setImages(jsonObject.getString("image"));
+                info.setUrl(jsonObject.getString("url"));
+                info.setDesc(jsonObject.optString("desc"));
+                info.setTitle(jsonObject.optString("title"));
+                info.setShare(jsonObject.optString("share"));
+                adInformation.add(info);
+                advertisingList.add(jsonObject.optString("image"));
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (advertisingList.size()>1){
+            mBanner.setAutoPlaying(true);
+        }else {
+            mBanner.setAutoPlaying(false);
+        }
+        mBanner.initBannerImageView(advertisingList,mAdCycleViewListener);
+    }
+
     private void initFunction(JSONArray json) {
         try {
             for (int i = 0; i < json.length(); i++) {
@@ -113,12 +190,13 @@ public class GasServiceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_service);
         context=this;
-        setCommonHeader("燃气业务");
-        loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
-        customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
-        cityId=data.getStringExtra("city_id");
+        cityId=VariableUtil.cityId;
+        mPageName=data.getStringExtra("name");
+        setCommonHeader(mPageName);
+        loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
+        customDialog=new CustomDialog(this, "正在加载");
         initView();
         homeAdapter=new GasServiceAdapter(context,functionList);
         mGridView.setAdapter(homeAdapter);
@@ -130,57 +208,80 @@ public class GasServiceActivity extends BaseActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (loginState){
-                    String codes=functionList.get(position).get("code");
-                    switch (codes){
-                        case "gas_repair":
-                            onGasRepair();
-                            break;
-                        case "gas_meter":
-                            onWriteTable();
-                            break;
-                        case "gas_pay":
-                            onPayFee();
-                            break;
-                        case "gas_install":
-                            installDevice();
-                            break;
-                        case "gas_rescue":
-                            onQianXian();
-                            break;
-                        case "gas_introduce":
-                            onIntroduce();
-                            break;
-                        default:
-                            break;
+                if (context!=null){
+                    if (isLoginState(context)){
+                        String codes=functionList.get(position).get("code");
+                        switch (codes){
+                            case "gas_repair":
+                                onGasRepair();
+                                break;
+                            case "gas_meter":
+                                onWriteTable();
+                                break;
+                            case "gas_pay":
+                                onPayFee();
+                                break;
+                            case "gas_install":
+                                installDevice();
+                                break;
+                            case "gas_rescue":
+                                onQianXian();
+                                break;
+                            case "gas_introduce":
+                                onIntroduce();
+                                break;
+                            default:
+                                break;
+                        }
+                    }else {
+                        AppActivityUtil.onStartLoginActivity(context);
+                        finish();
                     }
-                }else {
-                    Intent login=new Intent(context, LoginActivity.class);
-                    startActivity(login);
-                    finish();
                 }
             }
         });
     }
     private void initView() {
         mGridView=(MyNoScrollGridView)findViewById(R.id.id_function_view);
+        mBanner=(RecyclerViewBannerNormal)findViewById(R.id.id_banner);
     }
     private void initData() {
-        customDialog.show();
-        String functionUrl= UrlUtil.SecondService_Url;
-        String function="";
+        if (!TextUtils.isEmpty(pid)){
+            customDialog.show();
+            String functionUrl= UrlUtil.SecondService_Url;
+            try {
+                functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
+        }
+    }
+    private void initBannerData() {
+        String requestUrl=UrlUtil.ADVERTISING_URL;
         try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
+            requestUrl =requestUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&code="+URLEncoder.encode("gas_start_activity", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,getAdvertisingHandler);
     }
+    private AbstractRecyclerViewBannerBase.OnBannerItemClickListener mAdCycleViewListener = new AbstractRecyclerViewBannerBase.OnBannerItemClickListener() {
+
+        @Override
+        public void onItemClick(int position) {
+            AdvertisingInfo info=adInformation.get(position);
+            String myUrl=info.getUrl();
+            String title=info.getTitle();
+            String share=info.getShare();
+            String desc=info.getDesc();
+            AppActivityUtil.onAppActivityType(context,myUrl,title,share,desc,"gas_start_activity","");
+        }
+    };
     private void onPayFee() {
         Intent select=new Intent(context,GasPayFeeActivity.class);
         startActivity(select);
     }
-
     private void onQianXian() {
         Intent select=new Intent(context,GasEmergencyRescueActivity.class);
         startActivity(select);
@@ -200,17 +301,6 @@ public class GasServiceActivity extends BaseActivity {
     private void installDevice() {
         Intent select=new Intent(context,GasInstallActivity.class);
         startActivity(select);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(mPageName);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(mPageName);
     }
     @Override
     protected void onDestroy() {

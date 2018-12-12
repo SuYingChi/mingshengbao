@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/3/22.
+ *
+ * @author hong
+ * @date 2017/3/22
  */
 
 public class PayRecordAdapter extends BaseAdapter {
@@ -55,7 +57,7 @@ public class PayRecordAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.cn_money.setText("¥"+recordList.get(position).get("amount")+"元");
+        holder.cn_money.setText("¥"+recordList.get(position).get("amount"));
         holder.cn_time.setText(recordList.get(position).get("pay_time"));
         holder.cn_payway.setText(recordList.get(position).get("pay_method"));
         String writecard_state=recordList.get(position).get("writecard_state");
@@ -68,7 +70,7 @@ public class PayRecordAdapter extends BaseAdapter {
             holder.cn_writecard_state.setVisibility(View.VISIBLE);
         }else {
             holder.cn_writecard_state.setText(writecard_state);
-            holder.tv_text1.setText("缴费金额");
+            holder.tv_text1.setText("订单金额");
             holder.tv_text2.setText("缴费渠道");
             holder.tv_text3.setText("缴费时间");
             holder.tv_text4.setVisibility(View.GONE);

@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 /**
- * Created by zhy on 15/9/21.
+ *
+ * @author zhy
+ * @date 15/9/21
  */
-public class StatusBarCompat
-{
+public class StatusBarCompat {
     private static final int INVALID_VAL = -1;
     private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -65,11 +66,15 @@ public class StatusBarCompat
         }
         return result;
     }
-    /*沉浸式状态栏 */
+
+    /**
+     *沉浸式状态栏
+     * @param activity
+     */
     public static void setStatusBar(Activity activity){
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
           //  activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-           // activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
           //  activity.getWindow().getDecorView().setFitsSystemWindows(true);
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }

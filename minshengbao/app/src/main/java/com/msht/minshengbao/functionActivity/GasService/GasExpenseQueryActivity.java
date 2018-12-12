@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -124,7 +125,8 @@ public class GasExpenseQueryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_expense_query);
         context=this;
-        setCommonHeader("燃气费用");
+        mPageName="燃气费用";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -149,6 +151,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
         switch (requestCode){
             case 1:
                 if (resultCode==3){
+                    placeStatus=true;
                     voucherId=data.getStringExtra("vouid");
                     String amount=data.getStringExtra("amount");
                     double b=Double.parseDouble(amount);

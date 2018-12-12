@@ -7,12 +7,10 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.GasService.SelectCustomerNo">
     <include layout="@layout/layout_header"/>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_marginTop="@dimen/margin_20"
@@ -27,31 +25,21 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/text_16"/>
             </RelativeLayout>
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
-                android:id="@+id/id_listview"
+            <com.jcodecraeer.xrecyclerview.XRecyclerView
+                android:id="@+id/id_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@null">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+                android:layout_height="match_parent">
+            </com.jcodecraeer.xrecyclerview.XRecyclerView>
             <include layout="@layout/layout_line_gray"/>
-            <RelativeLayout
-                android:layout_marginTop="@dimen/margin_40"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/id_btn_add_address"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_customer_no"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="@dimen/margin_15"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/selector_touch_button_change"
-                    />
-            </RelativeLayout>
         </LinearLayout>
-    </ScrollView>
+    <Button
+        android:id="@+id/id_btn_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:text="@string/add_customer_no"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_width18"
+        android:background="@drawable/selector_rectangle_change_button"
+        />
 </LinearLayout>

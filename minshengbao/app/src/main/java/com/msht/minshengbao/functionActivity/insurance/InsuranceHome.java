@@ -52,7 +52,8 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insurance_home);
         context=this;
-        setCommonHeader("燃气保险");
+        mPageName="燃气保险";
+        setCommonHeader(mPageName);
         initView();
         initEvent();
     }

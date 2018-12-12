@@ -213,8 +213,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
                 if (purchaseAmount.equals(VariableUtil.VALUE_ZERO1)|| purchaseAmount.equals(VariableUtil.VALUE_ZERO2)
                         || purchaseAmount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                    onStartSuccess("","2");
-                  //  requestResult();
+                   // onStartSuccess("","1");
+                    requestResult();
                 }else {
                     /**
                      * channels=10
@@ -232,8 +232,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
                 if (purchaseAmount.equals(VariableUtil.VALUE_ZERO1)|| purchaseAmount.equals(VariableUtil.VALUE_ZERO2)
                         || purchaseAmount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                    onStartSuccess("","2");
-                   // requestResult();
+                   // onStartSuccess("","1");
+                    requestResult();
                 }else {
                     Gson gson = new Gson();
                     YiPayModel model = gson.fromJson(charge, YiPayModel.class);
@@ -243,8 +243,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
                 break;
             default:
                 setResult(0x002);
-                onStartSuccess("","2");
-               // requestResult();
+                //onStartSuccess("","1");
+                requestResult();
                 break;
         }
     }
@@ -312,13 +312,13 @@ public class IcCardExpenseActivity extends BaseActivity  {
         String lottery=json.optString("lottery");
         switch (status){
             case ConstantUtil.VALUE_ZERO:
-                onStartSuccess(lottery,"2");
+                onStartSuccess(lottery,"1");
                 break;
             case ConstantUtil.VALUE_ONE:
-                onStartSuccess(lottery,"2");
+                onStartSuccess(lottery,"1");
                 break;
             case ConstantUtil.VALUE_TWO:
-                onStartSuccess(lottery,"5");
+                onStartSuccess(lottery,"0");
                 break;
             case ConstantUtil.VALUE_THREE:
                 onShowDialogs("正在支付");
@@ -328,10 +328,12 @@ public class IcCardExpenseActivity extends BaseActivity  {
         }
     }
     private void onStartSuccess(String lottery, String type) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=iccard_pay_success";
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("type",type);
         success.putExtra("url",lottery);
-        success.putExtra("orderId",orderId);
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("navigation","IC卡充值");
         startActivity(success);
         finish();
     }
@@ -340,7 +342,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ic_card_expense);
         context=this;
-        setCommonHeader("IC卡燃气费用");
+        mPageName="IC卡燃气费用";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -490,8 +493,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
                     switch (resultCode){
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x002);
-                            onStartSuccess("","2");
-                           // requestResult();
+                           // onStartSuccess("","2");
+                            requestResult();
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialogs("取消支付");
@@ -512,8 +515,8 @@ public class IcCardExpenseActivity extends BaseActivity  {
         switch (result){
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x002);
-                onStartSuccess("","2");
-               // requestResult();
+               // onStartSuccess("","1");
+                requestResult();
                 break;
             case SendRequestUtil.CANCEL_VALUE:
                 onShowDialogs("已取消充值");

@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.events.NetWorkEvent;
@@ -89,6 +91,9 @@ public class BaseActivity extends AppCompatActivity  {
         }
     }
 
+    public boolean isLoginState(Context mContext){
+       return SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
+    }
     public boolean isOnDestroy() {
         return isOnDestroy;
     }
@@ -101,12 +106,14 @@ public class BaseActivity extends AppCompatActivity  {
         super.onResume();
         MobclickAgent.onPageStart(mPageName);
         MobclickAgent.onResume(context);
+
     }
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
         MobclickAgent.onPause(context);
+
     }
     @Override
     protected void onDestroy() {

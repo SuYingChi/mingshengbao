@@ -12,26 +12,27 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <include layout="@layout/layout_order_header_info"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
+                android:layout_height="@dimen/margin_width10"
                 android:background="@color/background_gray"/>
            <RelativeLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:background="@color/white"
-               android:minHeight="@dimen/margin_40">
+               android:minHeight="@dimen/margin_width40">
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginLeft="@dimen/margin_10"
+                   android:layout_marginLeft="@dimen/margin_width10"
+                   android:layout_marginStart="@dimen/margin_width10"
                    android:layout_centerVertical="true"
-                   android:textSize="@dimen/text_18"
+                   android:textSize="@dimen/text_width18"
                    android:textColor="@color/title_tv"
-                   android:text="问题描述"/>
+                   android:text="@string/question_describe"/>
            </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
@@ -42,81 +43,84 @@
                     android:id="@+id/id_et_problem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/margin_100"
+                    android:minHeight="@dimen/margin_width100"
                     android:background="@null"
-                    android:gravity="left|top"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:maxLength="120"
-                    android:textSize="@dimen/text_16"/>
+                    android:gravity="start|top"
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:maxLength="140"
+                    android:textSize="@dimen/text_width16"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_below="@+id/id_et_problem"
-                    android:layout_marginTop="@dimen/margin_5"
-                    android:layout_marginBottom="@dimen/margin_5"
-                    android:text="最多120字符"/>
+                    android:layout_marginTop="@dimen/margin_width5"
+                    android:layout_marginBottom="@dimen/margin_width5"
+                    android:text="@string/can_input_140_character"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
+                android:layout_height="@dimen/margin_width10"
                 android:background="@color/background_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_40">
+                android:minHeight="@dimen/margin_width40">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:text="上传问题部位照片"
-                    android:textSize="@dimen/text_16"/>
+                    android:text="@string/upload_repair_picture"
+                    android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-                <GridView
+                <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                     android:id="@+id/noScrollgridview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:horizontalSpacing="3dp"
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:horizontalSpacing="@dimen/margin_width3"
                     android:numColumns="4"
                     android:scrollbars="none"
-                    android:verticalSpacing="5dp" >
-                </GridView>
+                    android:verticalSpacing="@dimen/margin_width5" >
+                </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/noScrollgridview"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:text="最多只能上传4张图片"
-                    android:textSize="@dimen/text_16"/>
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:text="@string/upload_most_four_picture"
+                    android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_width10"
                 android:background="@color/white">
                 <Button
                     android:id="@+id/id_btn_send"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:layout_marginRight="@dimen/margin_20"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginBottom="@dimen/margin_10"
+                    android:layout_height="@dimen/margin_width45"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginBottom="@dimen/margin_width10"
                     android:background="@drawable/selector_touch_button_change"
-                    android:text="提交申请"
-                    android:textSize="@dimen/text_18"
+                    android:text="@string/send_order"
+                    android:textSize="@dimen/text_width18"
                     android:textColor="@color/white"/>
             </RelativeLayout>
         </LinearLayout>

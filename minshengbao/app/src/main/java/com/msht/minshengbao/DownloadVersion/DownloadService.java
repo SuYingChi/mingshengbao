@@ -1,5 +1,6 @@
 package com.msht.minshengbao.DownloadVersion;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -10,9 +11,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 
-import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -77,7 +78,7 @@ public class DownloadService extends Service {
                     break;
                 case DOWNLOAD_SUCCESS:
                     //下载完成
-                    reference.notifyNotification(100, 100);
+                    reference.notifyNotification(100, 100,"安装包下载完成");
                     installApk(reference.mContext,new File(DOWNLOAD_PATH,reference.fileName));
                     Toast.makeText(reference.mContext, "下载完成", Toast.LENGTH_SHORT).show();
                     break;
@@ -118,7 +119,6 @@ public class DownloadService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
     }
-
     private class InitThread extends Thread{
         String url = "";
         public InitThread(String url) {
@@ -210,7 +210,7 @@ public class DownloadService extends Service {
                         speed += len;
                         if(System.currentTimeMillis() - time > 1000){
                             time = System.currentTimeMillis();
-                            notifyNotification(mFinished,length);
+                            notifyNotification(mFinished,length,"安装包正在下载...");
                             Log.i(TAG, "mFinished=="+mFinished);
                             Log.i(TAG, "length=="+length);
                             Log.i(TAG, "speed=="+speed);
@@ -245,7 +245,14 @@ public class DownloadService extends Service {
 
     @SuppressWarnings("deprecation")
     public void createNotification() {
-        builder = new NotificationCompat.Builder(this);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager!=null){
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                NotificationChannel mChannel=new NotificationChannel("channel_download","应用下载",NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(mChannel);
+            }
+        }
+        builder = new NotificationCompat.Builder(this,"channel_download");
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentTitle("下载");
         builder.setContentText("安装包正在下载...");
@@ -255,15 +262,14 @@ public class DownloadService extends Service {
         contentView.setTextViewText(R.id.tv_progress, "0%");
         contentView.setTextViewText(R.id.id_tv_download,"安装包正在下载...");
         builder.setContent(contentView);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager!=null){
             notificationManager.notify(R.layout.item_notification, builder.build());
         }
     }
-    private void notifyNotification(long percent,long length){
+    private void notifyNotification(long percent,long length,String mNotice){
         contentView.setTextViewText(R.id.tv_progress, (percent*100/length)+"%");
         contentView.setProgressBar(R.id.progress, (int)length,(int)percent, false);
-        contentView.setTextViewText(R.id.id_tv_download,"安装包下载完成");
+        contentView.setTextViewText(R.id.id_tv_download,mNotice);
         builder.setContent(contentView);
         notificationManager.notify(R.layout.item_notification, builder.build());
     }

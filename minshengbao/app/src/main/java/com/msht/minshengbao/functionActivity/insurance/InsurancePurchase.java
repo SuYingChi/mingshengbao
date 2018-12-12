@@ -154,7 +154,8 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insurance_purchase);
         context=this;
-        setCommonHeader("购买保险");
+        mPageName="购买保险";
+        setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
         amount=getIntent().getStringExtra("Amount");
         id=getIntent().getStringExtra("insurance_Id");

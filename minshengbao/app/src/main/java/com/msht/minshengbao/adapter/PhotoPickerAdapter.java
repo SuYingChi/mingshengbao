@@ -29,7 +29,7 @@ public class PhotoPickerAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        if (listPath.size() == 9) {
+        if (listPath.size() ==4) {
             return listPath.size();
         } else {
             return listPath.size() + 1;

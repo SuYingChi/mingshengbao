@@ -178,9 +178,9 @@ public class InvoiceGasDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_gas_detail);
         context=this;
+        mPageName="电子发票详情";
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        mPageName="电子发票详情";
         invoiceId=getIntent().getStringExtra("invoiceId");
         setCommonHeader(mPageName);
         initFindViewId();

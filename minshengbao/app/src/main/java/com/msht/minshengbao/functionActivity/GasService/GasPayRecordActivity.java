@@ -155,17 +155,18 @@ public class GasPayRecordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_pay_record);
-        customDialog=new CustomDialog(this, "正在加载");
         context=this;
+        mPageName="充值缴费记录";
         customerNo=getIntent().getStringExtra("customerNo");
         address=getIntent().getStringExtra("address");
         urlType=getIntent().getStringExtra("urlType");
         if (urlType.equals(VariableUtil.VALUE_ONE)){
-            setCommonHeader("充值记录");
-
+            mPageName="充值记录";
         }else {
-            setCommonHeader("缴费记录");
+            mPageName="缴费记录";
         }
+        setCommonHeader(mPageName);
+        customDialog=new CustomDialog(this, "正在加载");
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         initHeader();

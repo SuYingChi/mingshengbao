@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -15,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
@@ -41,6 +43,7 @@ public class MyApplication extends Application {
         super.onCreate();
         instances=this;
         Fresco.initialize(this);
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "7dc4d7937bab57666f9188e5667e5930");
         UMShareAPI.get(this);
         CrashReport.initCrashReport(getApplicationContext(), "118eae5408", false);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -69,6 +72,7 @@ public class MyApplication extends Application {
             @Override
             public void onSuccess(String deviceToken) {
                 SharedPreferencesUtil.putDeviceData(getApplicationContext(),SharedPreferencesUtil.DeviceToken,deviceToken);
+                Log.d("deviceToken=",deviceToken);
             }
             @Override
             public void onFailure(String s, String s1) { }
@@ -106,7 +110,7 @@ public class MyApplication extends Application {
             }
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
-                Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
+                Log.d("msg.custom=",msg.custom);
             }
         };
         /* 使用自定义的NotificationHandler**/

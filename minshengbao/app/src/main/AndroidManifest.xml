@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -34,6 +35,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -46,8 +48,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".LaunchActivity"
             android:theme="@style/LauncherTheme">
@@ -57,11 +61,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="@string/host_value"
-                    android:scheme="msht"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="@string/host_value"
+                    android:scheme="msht" />
             </intent-filter>
         </activity>
         <activity android:name=".functionActivity.MainActivity" />
@@ -144,7 +150,7 @@
             android:name="com.unionpay.UPPayWapActivity"
             android:configChanges="orientation|keyboardHidden|fontScale"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <!-- 招行一网通 -->
         <service
             android:name="cmb.pb.cmbsafe.CmbService"
@@ -200,8 +206,7 @@
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@style/NoTranslucent" />
         <activity android:name=".functionActivity.Public.SelectCityActivity" />
         <activity android:name=".functionActivity.HtmlWeb.ShopActivity" />
         <activity android:name=".functionActivity.MyActivity.CustomerNoManageActivity" />
@@ -325,7 +330,11 @@
         <activity android:name=".functionActivity.WaterApp.WaterScanCodeActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterPayRechargeActivity" />
         <activity android:name=".functionActivity.WaterApp.WaterFriendShareActivity" />
-        <activity android:name=".functionActivity.HtmlWeb.PrizesGiftsActivity"></activity>
+        <activity android:name=".functionActivity.HtmlWeb.PrizesGiftsActivity" />
+        <activity android:name=".functionActivity.repairService.HomeMaintenanceActivity" />
+        <activity android:name=".functionActivity.repairService.HouseKeepingActivity" />
+        <activity android:name=".functionActivity.HtmlWeb.RichTextActivity" />
+        <activity android:name=".functionActivity.Public.MsbHeadLineActivity" />
     </application>
 
 </manifest>

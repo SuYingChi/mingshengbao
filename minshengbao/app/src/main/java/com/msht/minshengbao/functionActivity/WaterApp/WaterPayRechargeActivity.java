@@ -253,7 +253,9 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                    rechargeSuccess();
+                   // onRechargeSuccess("","1");
+                    requestResult();
+                   // rechargeSuccess();
                 }else {
                     /**
                      * channels=10
@@ -271,7 +273,9 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                    rechargeSuccess();
+                   // onRechargeSuccess("","1");
+                    requestResult();
+                   // rechargeSuccess();
                 }else {
                     Gson gson = new Gson();
                     YiPayModel model = gson.fromJson(charge, YiPayModel.class);
@@ -281,7 +285,9 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 break;
                 default:
                     setResult(0x002);
-                    rechargeSuccess();
+                   // onRechargeSuccess("","1");
+                    requestResult();
+                    // rechargeSuccess();
                     break;
         }
     }
@@ -289,10 +295,10 @@ public class WaterPayRechargeActivity extends BaseActivity {
         String status=json.optString("status");
         switch (status){
             case VariableUtil.VALUE_ZERO:
-                rechargeSuccess();
+                onRechargeSuccess("","1");
                 break;
             case VariableUtil.VALUE_ONE:
-                rechargeSuccess();
+                onRechargeSuccess("","1");
                 break;
             case VariableUtil.VALUE_TWO:
                 onShowDialog("充值提示","充值失败");
@@ -316,12 +322,22 @@ public class WaterPayRechargeActivity extends BaseActivity {
                     }
                 }).show();
     }
-    private void rechargeSuccess() {
+   /* private void rechargeSuccess() {
         Intent success=new Intent(context,WaterSuccessActivity.class);
         success.putExtra("amount",amount);
         startActivity(success);
         setResult(0x002);
         finish();
+    }*/
+    private void onRechargeSuccess(String lottery, String s){
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=water_recharge_pay_success_201811"
+                +"&event_relate_id="+orderId;
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url",lottery);
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("type",s);
+        success.putExtra("navigation","水宝充值");
+        startActivity(success);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -401,7 +417,8 @@ public class WaterPayRechargeActivity extends BaseActivity {
                     switch (resultCode){
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x002);
-                            rechargeSuccess();
+                            requestResult();
+                           // onRechargeSuccess("","1");
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialog("充值提示","取消支付");
@@ -422,7 +439,8 @@ public class WaterPayRechargeActivity extends BaseActivity {
         switch (title){
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x002);
-                rechargeSuccess();
+                requestResult();
+               // onRechargeSuccess("","1");
                 break;
             case SendRequestUtil.FAILURE_VALUE:
                 onShowDialog("充值提示","充值失败");
@@ -485,9 +503,12 @@ public class WaterPayRechargeActivity extends BaseActivity {
     private void initFindViewId() {
         etRecommend=(EditText)findViewById(R.id.id_et_recommend);
         TextView tvAmount=(TextView)findViewById(R.id.id_tv_amount) ;
+        TextView tvMealTip=(TextView)findViewById(R.id.id_meal_tip) ;
         btnSend =(Button)findViewById(R.id.id_btn_send);
         btnSend.setEnabled(false);
         String amountText="¥"+amount;
+        String mealTipText="充值"+amount+"元赠送"+giveFee+"元";
+        tvMealTip.setText(mealTipText);
         tvAmount.setText(amountText);
         mListView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         findViewById(R.id.id_back_agree).setOnClickListener(new View.OnClickListener() {
@@ -567,5 +588,4 @@ public class WaterPayRechargeActivity extends BaseActivity {
         treeMap.put("packId",packId);
         return SecretKeyUtil.getKeySign(treeMap);
     }
-
 }

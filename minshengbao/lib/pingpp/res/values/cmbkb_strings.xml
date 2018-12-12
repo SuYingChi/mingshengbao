@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources  xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="cmbkb_caption">CMB Safe Input</string>
     <string name="cmbkb_finish">Finish</string>
     <string name="cmbkb_more">More</string>

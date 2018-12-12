@@ -1,10 +1,13 @@
 package com.msht.minshengbao.functionActivity.repairService;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -14,6 +17,7 @@ import android.widget.AdapterView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.SanitaryAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -47,6 +51,7 @@ public class LampCircuitActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private SanitaryAdapter homeAdapter;
     private String pid;
+    private String typeName;
     private String cityId;
     private CustomDialog customDialog;
     private   boolean loginState =false;
@@ -70,7 +75,6 @@ public class LampCircuitActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
@@ -91,7 +95,6 @@ public class LampCircuitActivity extends BaseActivity {
                     break;
             }
             super.handleMessage(msg);
-
         }
     }
     private void initFunction(JSONArray json) {
@@ -112,21 +115,21 @@ public class LampCircuitActivity extends BaseActivity {
         }
         if (functionList.size() != 0) {
             homeAdapter.notifyDataSetChanged();
-        } else {
-
         }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lamp_circuit);
-        setCommonHeader("灯具电路");
+        mPageName="灯具电路";
         context=this;
         loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
-        cityId=data.getStringExtra("city_id");
+        typeName=data.getStringExtra("typeName");
+        setCommonHeader(typeName);
+        cityId=VariableUtil.cityId;
         initView();
         homeAdapter=new SanitaryAdapter(context,functionList);
         mGridView.setAdapter(homeAdapter);
@@ -141,7 +144,7 @@ public class LampCircuitActivity extends BaseActivity {
                     Intent intent=new Intent(context,PublishOrderActivity.class);
                     intent.putExtra("id",mId);
                     intent.putExtra("name",mName);
-                    intent.putExtra("mMainType",mPageName);
+                    intent.putExtra("mMainType",typeName);
                     startActivity(intent);
                 }else {
                     Intent login=new Intent(context, LoginActivity.class);
@@ -156,16 +159,18 @@ public class LampCircuitActivity extends BaseActivity {
         webView=(WebView)findViewById(R.id.id_webview);
     }
     private void initData() {
-        customDialog.show();
-        String functionUrl= UrlUtil.SecondService_Url;
-        String function="";
-        try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(pid)){
+            customDialog.show();
+            String functionUrl= UrlUtil.SecondService_Url;
+            try {
+                functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&pid="+URLEncoder.encode(pid, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
         }
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET,null,requestHandle);
     }
+    @SuppressLint("SetJavaScriptEnabled")
     private void iniWebView() {
         webView.loadUrl(SERVICE_URL);
         WebSettings settings=webView.getSettings();

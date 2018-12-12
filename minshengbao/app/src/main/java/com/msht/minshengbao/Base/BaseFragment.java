@@ -2,6 +2,7 @@ package com.msht.minshengbao.Base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -47,25 +48,21 @@ public abstract class BaseFragment extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        //setHasOptionsMenu(true);
-//        Log.d("TAG", "fragment->onCreate");
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (mRootView == null) {
             mRootView = initView();
         }
-//        Log.d("TAG", "fragment->onCreateView");
         return mRootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Log.d("TAG", "fragment->onActivityCreated");
         isPrepared = true;
         lazyLoad();
     }

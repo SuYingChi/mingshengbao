@@ -60,7 +60,7 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     private String payId;
     private String password;
     private String charge;
-    private String channels;
+    private String channels="";
     private String type;
     private String discountAmt="0";
     private String orderId="";
@@ -236,13 +236,13 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         }
         switch (status){
             case VariableUtil.VALUE_ZERO:
-                onStartActivity(lottery,"0");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_ONE:
-                onStartActivity(lottery,"0");
+                onStartActivity(lottery,"1");
                 break;
             case VariableUtil.VALUE_TWO:
-                onStartActivity(lottery,"5");
+                onStartActivity(lottery,"0");
                 break;
             case VariableUtil.VALUE_THREE:
                 onShowDialogs("正在支付");
@@ -252,10 +252,13 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
         }
     }
     private void onStartActivity(String lottery, String s) {
+        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=gas_fee_pay_success"
+                +"&event_relate_id="+orderId;
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("url",lottery);
         success.putExtra("type",s);
-        success.putExtra("orderId",orderId);
+        success.putExtra("pageUrl",pageUrl);
+        success.putExtra("navigation","燃气缴费");
         startActivity(success);
         finish();
     }
@@ -318,8 +321,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
                     || realAmount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(0x002);
-                onStartActivity("","0");
-               // requestResult();
+               // onStartActivity("","0");
+                requestResult();
             }else {
                 Pingpp.createPayment(PayFeeWayActivity.this, charge);
             }
@@ -327,8 +330,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
                     || realAmount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(0x002);
-                onStartActivity("","0");
-              //  requestResult();
+               // onStartActivity("","1");
+                requestResult();
             }else {
                 /**
                  * channels=10
@@ -345,8 +348,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             if (realAmount.equals(VariableUtil.VALUE_ZERO1)|| realAmount.equals(VariableUtil.VALUE_ZERO2)
                     || realAmount.equals(VariableUtil.VALUE_ZERO)){
                 setResult(0x002);
-                onStartActivity("","0");
-               // requestResult();
+               // onStartActivity("","1");
+                requestResult();
             }else {
                 Gson gson = new Gson();
                 YiPayModel model = gson.fromJson(charge, YiPayModel.class);
@@ -355,8 +358,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
             }
         }else {
             setResult(0x002);
-            onStartActivity("","0");
-           // requestResult();
+            //onStartActivity("","1");
+            requestResult();
         }
 
     }
@@ -531,19 +534,21 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
-                String result = data.getStringExtra("pay_result");
-                /* 处理返回值
-                 * "success" - payment succeed
-                 * "fail"    - payment failed
-                 * "cancel"  - user canceld
-                 * "invalid" - payment plugin not installed
-                 */
-                String errorMsg = data.getStringExtra("error_msg");
-                String extraMsg = data.getStringExtra("extra_msg");
-                showMsg(result);
+                if (data!=null){
+                    String result = data.getStringExtra("pay_result");
+                    /* 处理返回值
+                     * "success" - payment succeed
+                     * "fail"    - payment failed
+                     * "cancel"  - user canceld
+                     * "invalid" - payment plugin not installed
+                     */
+                    String errorMsg = data.getStringExtra("error_msg");
+                    String extraMsg = data.getStringExtra("extra_msg");
+                    showMsg(result);
+                }
             }
         }else {
-            if (data!=null){
+            if (data!=null&&!TextUtils.isEmpty(channels)){
                 if (channels.equals(ConstantUtil.VALUE_TEN)){
                     String result = data.getStringExtra("pay_result");
                     showMsg(result);
@@ -551,8 +556,8 @@ public class PayFeeWayActivity extends BaseActivity implements View.OnClickListe
                     switch (resultCode){
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x002);
-                            onStartActivity("","0");
-                           // requestResult();
+                            //onStartActivity("","0");
+                            requestResult();
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialogs("取消支付");
