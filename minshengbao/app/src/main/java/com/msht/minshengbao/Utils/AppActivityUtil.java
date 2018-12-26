@@ -407,6 +407,19 @@ public class AppActivityUtil {
             }
         }
     }
+    public static void onStartUrl(Context context,String url) {
+        if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)){
+            Intent intent=new Intent(context, ShopActivity.class);
+            intent.putExtra("url",url);
+            intent.putExtra("first",1);
+            context.startActivity(intent);
+        }else {
+            Intent other=new Intent(context, HtmlPageActivity.class);
+            other.putExtra("url",url);
+            other.putExtra("navigate","民生宝");
+            context.startActivity(other);
+        }
+    }
     private static void onShopMallPage(Context context, String url) {
         Intent intent=new Intent(context, ShopActivity.class);
         intent.putExtra("url",url);

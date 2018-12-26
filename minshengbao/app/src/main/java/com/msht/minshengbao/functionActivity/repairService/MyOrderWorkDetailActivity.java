@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.CallBackUtils;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
@@ -76,7 +77,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String phoneNo;
     private String parentCode;
     private int    requestCode=0;
-    private static final int  EVA_CODE=1;
+
     private JSONObject jsonObject;
     private CustomDialog customDialog;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
@@ -464,10 +465,10 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case EVA_CODE:
+            case 0x001:
                 //评价成功
                 if (resultCode==2){
-                    setResult(0x002);
+                    setResult(0x004);
                     finish();
                 }else if (resultCode==3){
                     couponId=data.getStringExtra("vouid");
@@ -490,7 +491,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 break;
             case 0x005:
                 if (resultCode==0x005){
-                    setResult(0x004);
+                    setResult(0x006);
                     finish();
                 }
             default:

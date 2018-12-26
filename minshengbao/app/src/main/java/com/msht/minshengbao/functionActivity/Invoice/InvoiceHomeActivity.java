@@ -31,7 +31,6 @@ import java.lang.ref.WeakReference;
 public class InvoiceHomeActivity extends BaseActivity implements View.OnClickListener {
     private static final String PAGE_NAME="发票申请";
     private View   layoutGasInvoice;
-    private int    controlType=0;
     private CustomDialog customDialog;
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
@@ -73,15 +72,12 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
     }
     private void onReceiveData(JSONObject jsonObject) {
         int type=jsonObject.optInt("type");
-        SharedPreferencesUtil.putControlType(context,SharedPreferencesUtil.CONTROL_TYPE,type);
         if (type==1){
             layoutGasInvoice.setVisibility(View.VISIBLE);
         }else {
             layoutGasInvoice.setVisibility(View.GONE);
         }
-
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,15 +86,10 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
         mPageName=PAGE_NAME;
         setCommonHeader(PAGE_NAME);
         customDialog=new CustomDialog(this, "正在加载");
-        controlType=SharedPreferencesUtil.getControlType(context,SharedPreferencesUtil.CONTROL_TYPE,0);
         findViewById(R.id.repair_invoice_layout).setOnClickListener(this);
         layoutGasInvoice=findViewById(R.id.gas_invoice_layout);
         layoutGasInvoice.setOnClickListener(this);
-        if (controlType==1){
-            layoutGasInvoice.setVisibility(View.VISIBLE);
-        }else {
-            onGetControlTypeData();
-        }
+        onGetControlTypeData();
     }
     private void onGetControlTypeData() {
         customDialog.show();

@@ -8,7 +8,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.ViewUI.widget.BannerLayout;
 
 /**
- * Created by hong on 2017/12/5.
+ *
+ * @author hong
+ * @date 2017/12/5
  */
 
 public class PictureImageLoader implements BannerLayout.ImageLoader{

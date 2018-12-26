@@ -3,7 +3,9 @@ package com.msht.minshengbao.Callback;
 import android.graphics.Bitmap;
 
 /**
- * Created by hong on 2017/2/17.
+ *
+ * @author hong
+ * @date 2017/2/17
  */
 
 public interface ResultImgListenner {

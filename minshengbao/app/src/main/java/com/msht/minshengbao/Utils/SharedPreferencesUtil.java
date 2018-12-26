@@ -213,13 +213,11 @@ public class SharedPreferencesUtil {
         editor.putString(strKey, strData);
         editor.apply();
     }
-    public static String getDeviceData(Context context, String strKey,
-                                        String strDefault) {//strDefault  boolean: Value to return if this preference does not exist.
+    public static String getDeviceData(Context context, String strKey, String strDefault) {
         SharedPreferences setPreferences = context.getSharedPreferences(
                 Device, Context.MODE_PRIVATE);
         return setPreferences.getString(strKey, strDefault);
     }
-
     public static void putDeviceData(Context context, String strKey,
                                       String strData) {
         SharedPreferences activityPreferences = context.getSharedPreferences(
@@ -230,12 +228,12 @@ public class SharedPreferencesUtil {
     }
     public static int getControlType(Context context, String strKey, int strDefault){
         SharedPreferences setPreferences = context.getSharedPreferences(
-                CONTROL, Context.MODE_PRIVATE);
+                spFileName, Context.MODE_PRIVATE);
         return setPreferences.getInt(strKey, strDefault);
     }
     public static void putControlType(Context context,String strKey,int strData){
         SharedPreferences activityPreferences = context.getSharedPreferences(
-                CONTROL, Context.MODE_PRIVATE);
+                spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putInt(strKey, strData);
         editor.apply();

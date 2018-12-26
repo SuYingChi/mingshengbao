@@ -123,7 +123,7 @@ public class AllServiceActivity extends BaseActivity {
                 String name=childCategories.get(secondPosition).name;
                 serveId=String.valueOf(childCategories.get(secondPosition).id);
                 if (!TextUtils.isEmpty(url)){
-                    startUrl(url);
+                    AppActivityUtil.onStartUrl(context,url);
                 }else {
                     AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
                 }

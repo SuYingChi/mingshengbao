@@ -19,6 +19,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -569,7 +570,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 Id=functionList.get(position).get("id");
                 String hasNext=functionList.get(position).get("hasNext");
                 String name=functionList.get(position).get("name");
-                AppActivityUtil.startActivityCode(mContext,codes,Id,name,hasNext);
+                String url=functionList.get(position).get("url");
+                if (!TextUtils.isEmpty(url)){
+                    AppActivityUtil.onStartUrl(mContext,url);
+                }else {
+                    AppActivityUtil.startActivityCode(mContext,codes,Id,name,hasNext);
+                }
             }
         });
         mHotGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -596,7 +602,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String codes= rightTopList.get(position).get("code");
                 Id= rightTopList.get(position).get("id");
                 String name=rightTopList.get(position).get("name");
-                AppActivityUtil.startActivityTopCode(mContext,codes,Id,name);
+                String url=rightTopList.get(position).get("url");
+                if (!TextUtils.isEmpty(url)){
+                    AppActivityUtil.onStartUrl(mContext,url);
+                }else {
+                    AppActivityUtil.startActivityTopCode(mContext,codes,Id,name);
+                }
             }
         });
     }
@@ -877,10 +888,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String id = jsonObject.getString("id");
                 String name=jsonObject.getString("name");
                 String code=jsonObject.getString("code");
+                String url=jsonObject.optString("url");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("name",name);
                 map.put("code",code);
+                map.put("url",url);
                 rightTopList.add(map);
             }
         }catch (JSONException e){
@@ -902,11 +915,13 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String id = jsonObject.getString("id");
                 String name=jsonObject.getString("name");
                 String code=jsonObject.getString("code");
+                String url=jsonObject.optString("url");
                 String hasNext=jsonObject.optString("has_next");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
                 map.put("name",name);
                 map.put("code",code);
+                map.put("url",url);
                 map.put("hasNext",hasNext);
                 functionList.add(map);
                 if (code.equals(ConstantUtil.GAS_SERVE)){

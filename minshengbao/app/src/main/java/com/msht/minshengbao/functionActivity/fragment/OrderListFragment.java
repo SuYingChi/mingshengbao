@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.msht.minshengbao.Interface.UpdateCallBack;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
@@ -43,7 +44,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/8/2  
  */
-public class OrderListFragment extends BaseFragment {
+public class OrderListFragment extends BaseFragment  {
     private MyWorkOrderAdapter myWorkOrderAdapter;
     private XListView mListView;
     private View layoutNoData;
@@ -125,7 +126,7 @@ public class OrderListFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==0x001||resultCode == 0x002 || resultCode == 0x003||resultCode==0x004||resultCode==0x005||resultCode==0x006) {
+        if (resultCode==0x004||resultCode==0x005||resultCode==0x006) {
             orderList.clear();
             myWorkOrderAdapter.notifyDataSetChanged();
             loadData(1);
@@ -162,7 +163,6 @@ public class OrderListFragment extends BaseFragment {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        Log.d("msg.obj4=",textParams.toString());
         OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private static class RequestHandler extends Handler{
@@ -290,7 +290,7 @@ public class OrderListFragment extends BaseFragment {
                     intent.putExtra("id", ids);
                     intent.putExtra("pos", positions);
                     intent.putExtra("parentCode",parentCode);
-                    startActivityForResult(intent, 2);
+                    startActivityForResult(intent, 4);
                 }
             });
         }
