@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/nc_bg"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/msb_color"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dp14"
+            android:src="@drawable/back2x" />
+
+        <TextView
+            style="@style/shopMsbcolorTitleText"
+            android:layout_centerInParent="true"
+            android:text="确认订单"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/shop_location" />
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="收货地址"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width2"
+                android:background="@color/white"
+                android:padding="@dimen/margin_Modules">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/grey_small_text" />
+
+                <TextView
+                    android:id="@+id/phone_num"
+                    style="@style/grey_small_text"
+                    android:layout_marginLeft="@dimen/margin_100"
+                    android:layout_toRightOf="@id/name"
+
+                    />
+
+                <TextView
+                    android:id="@+id/location"
+                    style="@style/grey_small_text"
+                    android:layout_below="@id/name"
+                    android:layout_marginTop="@dimen/margin_Modules" />
+
+                <ImageView
+                    style="@style/image"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/right_angle" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/location">
+
+                    <ImageView
+                        android:id="@+id/isdefault"
+                        style="@style/image"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/shop_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/isdefault"
+                        android:text="默认地址"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_width18" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/shop_recommand" />
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="推荐人信息"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlt_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/im"
+                    style="@style/image"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_Modules"
+                    android:src="@drawable/right_angle" />
+
+                <EditText
+                    android:id="@+id/et_recommand"
+                    style="@style/editText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="请填写手机号码"
+                    android:padding="@dimen/margin_Modules" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_8"
+                >
+
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/shop_recommand" />
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="发票信息"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlt_inv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/im2"
+                    style="@style/image"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_Modules"
+                    android:src="@drawable/right_angle" />
+
+                <TextView
+                    android:id="@+id/inv_info"
+                    style="@style/shopMsbcolorTitleText"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_Modules"
+                    android:textColor="@color/shop_grey" />
+            </RelativeLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fadingEdge="none"
+                    android:overScrollMode="always"
+                    android:requiresFadingEdge="none"
+                    android:scrollbarStyle="insideOverlay"
+                    android:layout_marginTop="@dimen/margin_8"
+                    />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/shop_others" />
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="其他"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="运费"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/delivery"
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="￥0.00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="小计"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/good_num"
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/total"
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="共计：￥0.00" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/ll_edit_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:id="@+id/total_money"
+            style="@style/shopMsbcolorTitleText"
+            android:layout_toLeftOf="@id/comfirm"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/comfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/cmbkb_dark_red"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/margin_width10"
+            android:paddingLeft="@dimen/margin_width32"
+            android:paddingRight="@dimen/margin_width32"
+            android:paddingTop="@dimen/margin_width10"
+            android:text="确认提交"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width18" />
+    </RelativeLayout>
+
+</LinearLayout>

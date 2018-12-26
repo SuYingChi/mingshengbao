@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+        <include layout="@layout/shop_keyword_search" />
+    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/rcl"
+       style="@style/rcl"/>
+</LinearLayout>

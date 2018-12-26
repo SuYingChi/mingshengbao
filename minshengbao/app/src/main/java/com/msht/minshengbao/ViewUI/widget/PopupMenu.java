@@ -81,7 +81,44 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 		v_item2.setOnClickListener(this);
 
 	}
+	public PopupMenu(Activity activity ,String[] tabs,int layoutId) {
+		super(activity);
+		this.activity = activity;
+		this.tabs = tabs;
+		LayoutInflater inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// 加载菜单布局文件
+		popView = inflater.inflate(layoutId, null);
+		// 把布局文件添加到popupWindow中
+		this.setContentView(popView);
+		// 设置菜单的宽度（需要和菜单于右边距的距离搭配，可以自己调到合适的位置）
+		this.setWidth(dip2px(activity, 120));
+		this.setHeight(LayoutParams.WRAP_CONTENT);
+		// 获取焦点
+		this.setFocusable(true);
+		// 设置PopupWindow可触摸
+		this.setTouchable(true);
+		// 设置非PopupWindow区域可触摸
+		this.setOutsideTouchable(true);
+		ColorDrawable dw = new ColorDrawable(0x00000000);
+		this.setBackgroundDrawable(dw);
+		//设置屏幕背景
+		setBackgroundAlpha(1f, alpha, 240);
+		this.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				setBackgroundAlpha(alpha, 1f, 300);
+			}
+		});
 
+		// 获取选项卡
+		v_item1 = popView.findViewById(R.id.ly_item1);
+		v_item2 = popView.findViewById(R.id.ly_item2);
+		// 添加监听
+		v_item1.setOnClickListener(this);
+		v_item2.setOnClickListener(this);
+
+	}
 
 	/**
 	 * 设置显示的位置

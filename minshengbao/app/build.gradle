@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         multiDexEnabled = true
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 2000043
         versionName "v3.9.8.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -59,54 +59,75 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':lib:pingpp')
-    compile files('libs/SocialSDK_Sina_Simplify.jar')
-    compile files('libs/SocialSDK_WeChat_Simplify.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_shareboard.jar')
-    compile files('libs/umeng_social_shareview.jar')
-    compile files('libs/umeng_social_tool.jar')
-    compile files('libs/umeng-analytics-v6.0.4.jar')
-    compile files('libs/utdid4all-1.0.4.jar')
-    compile project(':PushSDK')
-    compile files('libs/universal-image-loader-1.9.5.jar')
-    compile files('libs/AMap3DMap_5.6.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171128.jar')
-    compile files('libs/commons-codec-1.9.jar')
-    compile project(':zxinglite')
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:cardview-v7:25.1.0'
-    compile 'com.yanzhenjie:permission:1.0.3'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
-    compile 'com.github.chrisbanes:PhotoView:1.3.1'
-    compile 'top.zibin:Luban:1.1.2'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.github.bumptech.glide:glide:4.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:multidex:1.0.3'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.facebook.fresco:fresco:0.12.0'
-    compile 'com.facebook.fresco:animated-gif:0.12.0'
-    compile 'com.tencent.bugly:crashreport:latest.release'
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.okhttp3:okhttp:3.10.0'
-    compile 'com.androidadvance:topsnackbar:1.0.0'//顶部snackBar
-    compile 'org.greenrobot:eventbus:3.0.0'
+/*    implementation project(':lib:pingpp')*/
+    implementation files('libs/SocialSDK_Sina_Simplify.jar')
+    implementation files('libs/SocialSDK_WeChat_Simplify.jar')
+    implementation files('libs/umeng_social_api.jar')
+    implementation files('libs/umeng_social_net.jar')
+    implementation files('libs/umeng_social_shareboard.jar')
+    implementation files('libs/umeng_social_shareview.jar')
+    implementation files('libs/umeng_social_tool.jar')
+    implementation files('libs/umeng-analytics-v6.0.4.jar')
+    implementation files('libs/utdid4all-1.0.4.jar')
+  /*  implementation project(':PushSDK')*/
+    implementation files('libs/universal-image-loader-1.9.5.jar')
+    implementation files('libs/AMap3DMap_5.6.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171128.jar')
+    implementation files('libs/commons-codec-1.9.jar')
+    implementation project(':zxinglite')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.yanzhenjie:permission:1.0.3'
+    implementation 'com.jaredrummler:material-spinner:1.1.0'
+    implementation 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
+    implementation 'com.github.chrisbanes:PhotoView:1.3.1'
+    implementation 'top.zibin:Luban:1.1.2'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'io.reactivex:rxjava:1.1.6'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.facebook.fresco:fresco:0.12.0'
+    implementation 'com.facebook.fresco:animated-gif:0.12.0'
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.androidadvance:topsnackbar:1.0.0'//顶部snackBar
+    implementation 'org.greenrobot:eventbus:3.0.0'
     //suyingchi shop
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
-    compile(name: 'okhttputils', ext: 'aar')
-    compile 'cn.bingoogolapple:bga-swipebacklayout:1.1.8@aar'
-    compile 'com.gyf.barlibrary:barlibrary:2.3.0'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
+    implementation(name: 'okhttputils', ext: 'aar')
+    implementation(name: 'PushSDK',ext:'aar')
+    implementation(name: 'pingpp',ext:'aar')
+    implementation(name: 'slideleftRcl',ext:'aar')
+    implementation 'cn.bingoogolapple:bga-swipebacklayout:1.1.8@aar'
+    implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
+    implementation 'com.zhy:autolayout:1.4.3'
+    implementation 'com.zhy:base-rvadapter:3.0.3'
+    implementation 'com.bigkoo:pickerview:2.1.0'
+ /*   implementation ('com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+')*/
+/*    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
+    implementation 'com.umeng.sdk:common:1.5.3'
+//PushSDK必须依赖utdid库，所以需要加入对应依赖
+    implementation 'com.umeng.sdk:utdid:1.1.5.3'
+//PushSDK
+    implementation 'com.umeng.sdk:push:4.2.0'*/
+
+/*    implementation 'com.pingxx:pingpp-core:2.1.18' // (Ping++ 标准版 SDK) 必须添加
+    implementation 'com.pingxx:pingpp-ui:2.1.18' // 使用 Ping++ UI 时额外添加
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+' // 使用微信支付时添加,具体版本参考微信官方文档
+    implementation 'com.pingxx:pingpp-alipay:2.1.18' // 使用支付宝时添加
+    implementation 'com.pingxx:pingpp-upacp:2.1.18' // 使用银联支付时添加
+    implementation 'com.pingxx:pingpp-qpay:2.1.18' // 使用QQ钱包时添加
+    implementation 'com.pingxx:pingpp-cmbwallet:2.1.18' // 使用招行一网通时添加*/
 }

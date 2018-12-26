@@ -32,6 +32,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.adapter.HomeFunctionAdapter;
@@ -893,6 +894,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                 aMapLocation.getLongitude();//获取经度
                 String city=aMapLocation.getCity();
                 String district=aMapLocation.getDistrict();
+                aMapLocation.getCityCode();
                 if (city.contains("省")){
                     if (district.contains("陵水")){
                         mCity="陵水";

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableHeaderTranslationContent="true"
+        app:srlEnableOverScrollBounce="false">
+        <!--自定义滑动的ScrollView-->
+        <com.msht.minshengbao.androidShop.customerview.XScrollView
+            android:id="@+id/sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/nc_bg"
+            android:scrollbars="none">
+            <!--第一模块-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--图片轮播-->
+                <com.msht.minshengbao.androidShop.customerview.ImageCycleView
+                    android:id="@+id/cycleView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_width200"
+                    android:layout_alignParentTop="true" />
+                <!--主体-->
+                <LinearLayout
+                    android:id="@+id/homeViewID"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/cycleView"
+                    android:orientation="vertical" />
+
+            </RelativeLayout>
+        </com.msht.minshengbao.androidShop.customerview.XScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <!--搜索框-->
+    <include layout="@layout/shop_search_view" />
+</RelativeLayout>

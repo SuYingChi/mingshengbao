@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="@dimen/margin_width100"
+            android:layout_height="@dimen/margin_width100"
+             />
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/shopMsbcolorTitleText"
+            android:layout_alignTop="@id/iv"
+            android:layout_toRightOf="@id/iv"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@id/iv"
+            android:layout_toRightOf="@id/iv"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/shopMsbcolorTitleText"
+                android:text="商品评分"
+                android:textColor="@color/black" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/start_rcl"
+                style="@style/rcl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et"
+        style="@style/editText"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/margin_Modules"
+        android:gravity="top"
+        android:hint="亲，动动小手，来分享一下您的购物心得吧~"
+        android:maxLength="150"
+        />
+
+    <TextView
+        android:id="@+id/wordNum"
+        style="@style/shopMsbcolorTitleText"
+        android:layout_gravity="right"
+        android:text="80/150"
+        android:textColor="@color/shop_grey" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcl_grid"
+        style="@style/rcl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <CheckBox
+            android:id="@+id/cb_niming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="false"
+            android:drawableLeft="@drawable/item_carlist_selected"
+            android:drawablePadding="@dimen/margin_Modules"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_Modules"
+            android:text="匿名"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
+        <TextView
+            style="@style/shopMsbcolorTitleText"
+            android:textColor="@color/shop_grey"
+            android:text="(你写的评价会以匿名的形式展示)"
+            />
+    </LinearLayout>
+</LinearLayout>

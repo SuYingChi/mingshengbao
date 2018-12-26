@@ -65,4 +65,11 @@
     <string name="effective_date">有效期至:</string>
     <string name="use_text">使用说明:</string>
     <string name="quick_delivery">尽快配送</string>
+    <string name="loading">加载中</string>
+    <string name="please_login">请登录</string>
+
+    <!--商城 -->
+    <string name="monetary_unit">¥</string>
+    <string name="click_button_reload">点击按钮重新加载</string>
+    <string name="reload">重新加载</string>
 </resources>

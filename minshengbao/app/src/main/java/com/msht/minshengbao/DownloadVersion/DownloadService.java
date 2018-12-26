@@ -13,7 +13,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
 
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;

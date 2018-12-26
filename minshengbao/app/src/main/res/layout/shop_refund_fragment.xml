@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="?actionBarSize"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp14"
+                android:src="@drawable/back2x" />
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:paddingTop="2dp">
+
+
+                <Button
+                    android:id="@+id/refund_money"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_left_corner_bg"
+                    android:text="退款列表"
+                    android:textColor="@color/msb_color"
+                    android:textSize="@dimen/text_16" />
+
+
+                <Button
+                    android:id="@+id/refund_good"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_right_corner_unselect_bg"
+                    android:text="退货列表"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_16" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+    <com.msht.minshengbao.androidShop.customerview.NoScrollViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff" />
+</LinearLayout>

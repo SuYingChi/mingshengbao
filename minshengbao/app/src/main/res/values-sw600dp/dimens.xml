@@ -8,6 +8,7 @@
     <dimen name="margin_width225">270dp</dimen>
     <dimen name="margin_width220">264dp</dimen>
     <dimen name="margin_width200">240dp</dimen>
+    <dimen name="dp400">500dp</dimen>
     <dimen name="margin_width195">234dp</dimen>
     <dimen name="margin_width180">216dp</dimen>
     <dimen name="margin_width170">204dp</dimen>

@@ -6,6 +6,31 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="Loading_dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@drawable/shape_dialog_custom_bg</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+    <style name="full_screen_dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <item name="android:windowBackground">@drawable/shape_dialog_custom_bg</item><!--背景透明-->
+     <!--   <item name="android:backgroundDimEnabled">false</item>&lt;!&ndash;是否window变暗&ndash;&gt;-->
+    </style>
+    <style name="share_qrcode_dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:backgroundDimEnabled">false</item><!--是否window变暗-->
+    </style>
+    <style name="popup_window_anim">
+        <item name="android:windowEnterAnimation">@anim/popwindow_in</item>
+        <item name="android:windowExitAnimation">@anim/popwindow_exit</item>
+    </style>
     <style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="actionBarSize">@dimen/margin_width50</item>
@@ -38,7 +63,7 @@
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
-    <style name="PromptDialogStyle" parent="@android:style/Theme.Dialog">
+    <style name="PromptDialogStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!-- 边框 -->
         <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
         <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
@@ -56,7 +81,7 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
     <!-- 上传头像-->
-    <style name="Animation.PopupAnimation" parent="@android:style/Animation">
+    <style name="Animation.PopupAnimation" parent="android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
@@ -173,5 +198,135 @@
         <item name="android:windowEnterAnimation">@anim/trm_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/trm_popup_exit</item>
     </style>
+    <style name="search_good_small">
+        <item name="android:textSize">12dp</item>
+    </style>
 
+    <style name="search_good_big">
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="dp14">
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="dp12">
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <!--              shop               -->
+
+    <style name="shopMsbcolorTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/msb_color</item>
+        <item name="android:textSize">@dimen/text_width18</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/margin_Modules</item>
+    </style>
+    <style name="shopBlackTitleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_width18</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/margin_Modules</item>
+    </style>
+    <!-- 分隔线 -->
+    <style name="shopTitleLine">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/msb_color</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="shopRouteLine">
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/shop_grey</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="shopRoutePoint">
+        <item name="android:layout_width">@dimen/dp10</item>
+        <item name="android:layout_height">@dimen/dp10</item>
+        <item name="android:background">@drawable/shop_page_circle_on</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <!-- 分隔线右边的点 -->
+    <style name="shopTitleLinePoint">
+        <item name="android:layout_width">5dp</item>
+        <item name="android:layout_height">5dp</item>
+        <item name="android:background">@drawable/shop_page_circle_on</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <!--价格显示-->
+    <style name="small_money">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="big_money">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="price">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/msb_color</item>
+        <item name="android:textSize">@dimen/text_width18</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/margin_Modules</item>
+    </style>
+    <style name="grid_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/nc_bg</item>
+        <item name="android:horizontalSpacing">@dimen/dp4</item>
+        <item name="android:numColumns">2</item>
+        <item name="android:verticalSpacing">@dimen/dp4</item>
+        <item name="android:layout_marginTop">@dimen/dp1</item>
+    </style>
+    <style name="image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/dp5</item>
+    </style>
+    <style name="rcl">
+        <item name= "android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:requiresFadingEdge">none</item>
+       <item name="android:scrollbars">none</item>
+
+    </style>
+<style name="black_title_text">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:textSize">@dimen/text_width18</item>
+    <item name="android:textColor">@color/black</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:gravity">center</item>
+</style>
+    <style name="grey_small_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textColor">@color/nc_text</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_Modules</item>
+    </style>
+    <style name="route_grey_small_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/text_14</item>
+        <item name="android:textColor">@color/nc_text</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/margin_Modules</item>
+    </style>
+<style name="editText">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:background">@null</item>
+    <item name="android:textSize">@dimen/text_width18</item>
+    <item name="android:textColor">@color/black</item>
+    <item name="android:paddingLeft">@dimen/margin_Modules</item>
+    <item name="android:paddingRight">@dimen/margin_Modules</item>
+</style>
 </resources>

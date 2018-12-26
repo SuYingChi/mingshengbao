@@ -11,14 +11,17 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.CacheUtil;
@@ -30,59 +33,65 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.SwitchView;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class MoreSetting extends BaseActivity implements View.OnClickListener {
     private Button btnExit;
     private TextView tvCacheSize;
-    private String  urls;
+    private String urls;
     private boolean loginState, versionState;
     private JSONObject jsonObject;
     private ACache mCache;
-    private static  final int MY_PERMISSIONS_REQUEST=1;
+    private static final int MY_PERMISSIONS_REQUEST = 1;
     private CustomDialog customDialog;
     public static final String MY_ACTION = "ui";
-    private final RequestHandler requestHandler=new RequestHandler(this);
-    private static  class  RequestHandler extends  Handler{
+    private final RequestHandler requestHandler = new RequestHandler(this);
+
+    private static class RequestHandler extends Handler {
         private WeakReference<MoreSetting> mWeakReference;
+
         public RequestHandler(MoreSetting activity) {
-            mWeakReference=new WeakReference<MoreSetting>(activity);
+            mWeakReference = new WeakReference<MoreSetting>(activity);
         }
+
         @Override
         public void handleMessage(Message msg) {
-            final MoreSetting activity=mWeakReference.get();
-            if (activity==null||activity.isFinishing()){
+            final MoreSetting activity = mWeakReference.get();
+            if (activity == null || activity.isFinishing()) {
                 return;
             }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                    if (activity.customDialog != null && activity.customDialog.isShowing()) {
                         activity.customDialog.dismiss();
                     }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
+                        String results = object.optString("result");
                         String error = object.optString("error");
-                        activity.jsonObject =object.optJSONObject("data");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE) ){
+                        activity.jsonObject = object.optJSONObject("data");
+                        if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveVersionData();
-                        }else {
+                        } else {
                             activity.showDialog(error);
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                    if (activity.customDialog != null && activity.customDialog.isShowing()) {
                         activity.customDialog.dismiss();
                     }
-                    ToastUtil.ToastText(activity.context,msg.obj.toString());
+                    ToastUtil.ToastText(activity.context, msg.obj.toString());
                     break;
                 default:
                     break;
@@ -90,6 +99,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
             super.handleMessage(msg);
         }
     }
+
     private void showDialog(String error) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
@@ -105,24 +115,24 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
     }
 
     private void onReceiveVersionData() {
-        String version=jsonObject.optString("version");
-        int versions=Integer.parseInt(version);
-        String title=jsonObject.optString("title");
-        String desc=jsonObject.optString("desc");
-        final String url=jsonObject.optString("url");
-        int versionCode=0;
+        String version = jsonObject.optString("version");
+        int versions = Integer.parseInt(version);
+        String title = jsonObject.optString("title");
+        String desc = jsonObject.optString("desc");
+        final String url = jsonObject.optString("url");
+        int versionCode = 0;
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(),
                     PackageManager.GET_CONFIGURATIONS);
-            versionCode=pi.versionCode;
-        }catch (PackageManager.NameNotFoundException e){
+            versionCode = pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if (versionCode<versions){
+        if (versionCode < versions) {
             new PromptDialog.Builder(this)
                     .setTitle(title)
                     .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                    .setMessage(desc.replace("\\n","\n"))
+                    .setMessage(desc.replace("\\n", "\n"))
                     .setButton1("以后再说", new PromptDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog, int which) {
@@ -137,50 +147,53 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                         }
                     })
                     .show();
-        }else {
+        } else {
             showDialog("当前已是最新版本");
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_setting);
         mCache = ACache.get(this);
-        customDialog=new CustomDialog(this, "正在加载");
-        context=this;
+        customDialog = new CustomDialog(this, "正在加载");
+        context = this;
         setCommonHeader("更多设置");
-        loginState =SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
-        versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
+        loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
+        versionState = SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.VersionState, false);
         initView();
     }
+
     private void initView() {
-        tvCacheSize =(TextView)findViewById(R.id.id_cache_size);
-        btnExit =(Button)findViewById(R.id.id_btn_exit);
-        SwitchView switchView=(SwitchView)findViewById(R.id.id_switch);
+        tvCacheSize = (TextView) findViewById(R.id.id_cache_size);
+        btnExit = (Button) findViewById(R.id.id_btn_exit);
+        SwitchView switchView = (SwitchView) findViewById(R.id.id_switch);
         findViewById(R.id.id_re_version).setOnClickListener(this);
         findViewById(R.id.id_re_aboutme).setOnClickListener(this);
         findViewById(R.id.id_re_clearCache).setOnClickListener(this);
         btnExit.setOnClickListener(this);
-        if (loginState){
+        if (loginState) {
             btnExit.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             btnExit.setVisibility(View.GONE);
         }
-        if (versionState){
+        if (versionState) {
             switchView.setOpened(true);
-        }else {
+        } else {
             switchView.setOpened(false);
         }
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {
                 view.toggleSwitch(true);
-                SharedPreferencesUtil.putBoolean(context,SharedPreferencesUtil.VersionState,true);
+                SharedPreferencesUtil.putBoolean(context, SharedPreferencesUtil.VersionState, true);
             }
+
             @Override
             public void toggleToOff(SwitchView view) {
                 view.toggleSwitch(false);
-                SharedPreferencesUtil.putBoolean(context,SharedPreferencesUtil.VersionState,false);
+                SharedPreferencesUtil.putBoolean(context, SharedPreferencesUtil.VersionState, false);
             }
         });
         setTextCacheSize();
@@ -196,7 +209,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.id_re_aboutme:
                 goAboutMine();
                 break;
@@ -207,7 +220,7 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                 exitLogin();
                 break;
             case R.id.id_re_clearCache:
-                if (CacheUtil.clearAllCache(context)){
+                if (CacheUtil.clearAllCache(context)) {
                     setTextCacheSize();
                 }
                 break;
@@ -215,14 +228,15 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
     private void exitLogin() {
         //清除原有数据
-        SharedPreferencesUtil.Clear(this,"AppData");
+        SharedPreferencesUtil.Clear(this, "AppData");
         mCache.remove("avatarimg");
         mCache.clear();
         //清除网页Cookie
         clearCookie();
-        VariableUtil.loginStatus= SharedPreferencesUtil.getLstate(context, SharedPreferencesUtil.Lstate, false);
+        VariableUtil.loginStatus = SharedPreferencesUtil.getLstate(context, SharedPreferencesUtil.Lstate, false);
         /*Intent broadcast=new Intent();
         broadcast.setAction(MY_ACTION);
         broadcast.putExtra("broadcast", "1");
@@ -231,9 +245,24 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         intent.setFlags(2);
         startActivity(intent);*/
         setResult(0x005);
+        Gson gson = new Gson();
+        String searchhisLogin = gson.toJson(MyApplication.getInstance().getList());
+        String searchhisNologin = ShopSharePreferenceUtil.getShopSpStringValue("noLoginSearch");
+        String userId = ShopSharePreferenceUtil.getInstance().getUserId();
+        ShopSharePreferenceUtil.getInstance().ClearLoginSp();
+        ShopSharePreferenceUtil.setShopSpStringValue(userId, searchhisLogin);
+        ShopSharePreferenceUtil.setShopSpStringValue("noLoginSearch", searchhisNologin);
+        ArrayList<String> list;
+        if (TextUtils.isEmpty(searchhisNologin) || searchhisNologin.equals("null")) {
+            list = new ArrayList<String>();
+        } else {
+            list = JsonUtil.jsonArrayToList(searchhisNologin);
+        }
+        MyApplication.getInstance().setList(list);
         finish();
 
     }
+
     private void clearCookie() {
         CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(context);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -242,56 +271,64 @@ public class MoreSetting extends BaseActivity implements View.OnClickListener {
         cookieManager.removeSessionCookie();
         cookieManager.removeAllCookie();
     }
+
     private void checkVersion() {
         customDialog.show();
-        int device=2;
-        String validateURL = UrlUtil.APP_VERSION_URL +"?device="+device;
-        SendRequestUtil.getDataFromService(validateURL,requestHandler);
+        int device = 2;
+        String validateURL = UrlUtil.APP_VERSION_URL + "?device=" + device;
+        SendRequestUtil.getDataFromService(validateURL, requestHandler);
     }
+
     private void goAboutMine() {
-        Intent intent=new Intent(context, AboutMine.class);
+        Intent intent = new Intent(context, AboutMine.class);
         startActivity(intent);
     }
+
     private void requestLoadLimit(String url) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                urls=url;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                urls = url;
                 AndPermission.with(this)
                         .requestCode(MY_PERMISSIONS_REQUEST)
                         .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .send();
-            }else {
+            } else {
                 downLoadApk(url);
             }
-        }else {
+        } else {
             downLoadApk(url);
         }
     }
+
     private void downLoadApk(String url) {
-        Intent intent = new Intent(context,DownloadService.class);
+        Intent intent = new Intent(context, DownloadService.class);
         intent.putExtra("url", url);
         startService(intent);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
     }
+
     private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode) {
-            if (requestCode==MY_PERMISSIONS_REQUEST){
+            if (requestCode == MY_PERMISSIONS_REQUEST) {
                 downLoadApk(urls);
             }
         }
+
         @Override
         public void onFailed(int requestCode) {
-            ToastUtil.ToastText(context,"获取权限失败");
+            ToastUtil.ToastText(context, "获取权限失败");
         }
     };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (customDialog!=null&&customDialog.isShowing()){
+        if (customDialog != null && customDialog.isShowing()) {
             customDialog.dismiss();
         }
     }

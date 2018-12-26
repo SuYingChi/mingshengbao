@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
+import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
+import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MoreSetting;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
@@ -53,6 +55,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MyScro
     private MyNoScrollGridView mGridView;
     private MyFunctionAdapter mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
+
     public  MyFragment() {
     }
     @Override

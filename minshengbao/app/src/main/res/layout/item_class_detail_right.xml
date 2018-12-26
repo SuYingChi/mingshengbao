@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:padding="@dimen/dp5"
+    >
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_15"
+            android:ellipsize="end"
+            android:lines="2"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/price"
+            style="@style/shopMsbcolorTitleText"
+            android:textSize="@dimen/text_15"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+             />
+        <ImageView
+           android:id="@+id/car"
+            style="@style/image"
+            android:src="@drawable/class_detail_car"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+</LinearLayout>

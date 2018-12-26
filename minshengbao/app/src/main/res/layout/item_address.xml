@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlt"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_width2"
+    android:background="@color/white"
+    android:padding="@dimen/margin_Modules">
+
+    <TextView
+        android:id="@+id/name"
+        style="@style/grey_small_text" />
+
+    <TextView
+        android:id="@+id/phone_num"
+        style="@style/grey_small_text"
+        android:layout_marginLeft="@dimen/margin_100"
+        android:layout_toRightOf="@id/name"
+
+        />
+
+    <TextView
+        android:id="@+id/location"
+        style="@style/grey_small_text"
+        android:layout_below="@id/name"
+        android:layout_marginTop="@dimen/margin_Modules"
+        android:textColor="@color/shop_grey" />
+
+    <CheckBox
+        android:id="@+id/select_default_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location"
+        android:button="@null"
+        android:checked="false"
+        android:drawableLeft="@drawable/item_carlist_selected"
+        android:drawablePadding="@dimen/margin_Modules"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_Modules"
+        android:text="默认地址"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_width18"
+        android:layout_marginTop="@dimen/margin_width20"
+        />
+    <TextView
+        android:id="@+id/delete_address"
+        android:layout_alignTop="@id/select_default_address"
+        android:layout_alignBottom="@id/select_default_address"
+        android:layout_alignParentRight="true"
+        android:text="删除"
+        android:textColor="@color/black"
+        android:drawableLeft="@drawable/shop_delete"
+        android:drawablePadding="@dimen/margin_Modules"
+        style="@style/shopMsbcolorTitleText"
+         />
+    <TextView
+        android:id="@+id/edit_address"
+        android:layout_alignTop="@id/select_default_address"
+        android:layout_alignBottom="@id/select_default_address"
+        android:text="编辑"
+        android:textColor="@color/black"
+        android:drawableLeft="@drawable/shop_edit"
+        android:drawablePadding="@dimen/margin_Modules"
+        android:layout_toLeftOf="@id/delete_address"
+        style="@style/shopMsbcolorTitleText"
+        />
+</RelativeLayout>

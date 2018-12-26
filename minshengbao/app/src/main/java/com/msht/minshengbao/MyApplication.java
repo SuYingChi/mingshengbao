@@ -3,19 +3,34 @@ package com.msht.minshengbao;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.msht.minshengbao.OkhttpUtil.OkHttpManager;
 import com.msht.minshengbao.OkhttpUtil.SSLSocketClient;
-import com.msht.minshengbao.OkhttpUtil.log.LoggerInterceptor;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.androidShop.customerview.ShopRefreshHeader;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.MLoggerInterceptor;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
@@ -24,24 +39,90 @@ import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
+import com.zhy.http.okhttp.OkHttpUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import okhttp3.OkHttpClient;
 
 /**
  * Demo class
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
+ *
  * @author hong
  * @date 2016/4/2  
  */
 public class MyApplication extends Application {
+    private static MyApplication instance;
+
+    static {
+
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
+            @NonNull
+            @Override
+            public ShopRefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
+                return new ShopRefreshHeader(context);
+            }
+        });
+
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
+            @NonNull
+            @Override
+            public RefreshFooter createRefreshFooter(@NonNull Context context, @NonNull RefreshLayout layout) {
+                ClassicsFooter footer = new ClassicsFooter(context).setSpinnerStyle(SpinnerStyle.Translate);
+                footer.setDrawableArrowSize(14);//设置箭头的大小（dp单位）
+                footer.setDrawableProgressSize(14);//设置图片的大小（dp单位）、
+                footer.setProgressDrawable(context.getResources().getDrawable(R.drawable.loading));
+                footer.setAccentColor(context.getResources().getColor(R.color.text_hint));//设置强调颜色
+                footer.setTextSizeTitle(14);
+                footer.setFinishDuration(0);
+                return footer;
+            }
+        });
+
+
+    }
+
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
+    public List<String> getList() {
+        return list;
+    }
+
+    private List<String> list;
+
+    public static Context getMsbApplicationContext() {
+
+        return instance.getApplicationContext();
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
+        String liststr;
+        if (!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
+            liststr = ShopSharePreferenceUtil.getShopSpStringValue(ShopSharePreferenceUtil.getInstance().getUserId());
+        } else {
+            liststr = ShopSharePreferenceUtil.getShopSpStringValue("noLoginSearch");
+        }
+        if (TextUtils.isEmpty(liststr) || liststr.equals("null")) {
+            list = new ArrayList<String>();
+        } else {
+            list = JsonUtil.jsonArrayToList(liststr);
+        }
+
         Fresco.initialize(this);
         UMShareAPI.get(this);
+        BGASwipeBackHelper.init(this, null);
+
         CrashReport.initCrashReport(getApplicationContext(), "118eae5408", false);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.icon_stub)// 设置图片下载期间显示的图片
@@ -49,15 +130,15 @@ public class MyApplication extends Application {
                 .showImageOnFail(R.drawable.icon_error) // 设置图片加载或解码过程中发生错误显示的图片
                 .cacheInMemory(true) // 设置下载的图片是否缓存在内存中
                 .cacheOnDisk(true) // 设置下载的图片是否缓存在SD卡中
-               // .displayer(new RoundedBitmapDisplayer(20)) // 设置成圆角图片
-            .build(); // 创建配置过得DisplayImageOption对象
+                // .displayer(new RoundedBitmapDisplayer(20)) // 设置成圆角图片
+                .build(); // 创建配置过得DisplayImageOption对象
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).defaultDisplayImageOptions(options)
-            .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
-            .discCacheFileNameGenerator(new Md5FileNameGenerator()).tasksProcessingOrder(QueueProcessingType.LIFO).build();
+                .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
+                .discCacheFileNameGenerator(new Md5FileNameGenerator()).tasksProcessingOrder(QueueProcessingType.LIFO).build();
         ImageLoader.getInstance().init(config);
         /** okHttp默认的配置生成OkHttpClient*/
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new LoggerInterceptor("TAG"))
+                .addInterceptor(new MLoggerInterceptor("http", true))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
@@ -65,7 +146,18 @@ public class MyApplication extends Application {
                 .build();
 
         OkHttpManager.initClient(okHttpClient);
+        OkHttpUtils.initClient(okHttpClient);
         initUPush();
+    }
+
+    public static Context getApplicationContex() {
+
+        return instance.getApplicationContext();
+
+    }
+
+    public static MyApplication getInstance() {
+        return instance;
     }
 
     private void initUPush() {
@@ -77,10 +169,12 @@ public class MyApplication extends Application {
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
             public void onSuccess(String deviceToken) {
-                SharedPreferencesUtil.putDeviceData(getApplicationContext(),SharedPreferencesUtil.DeviceToken,deviceToken);
+                SharedPreferencesUtil.putDeviceData(getApplicationContext(), SharedPreferencesUtil.DeviceToken, deviceToken);
             }
+
             @Override
-            public void onFailure(String s, String s1) { }
+            public void onFailure(String s, String s1) {
+            }
         });
 
         UmengMessageHandler messageHandler = new UmengMessageHandler() {
@@ -105,14 +199,17 @@ public class MyApplication extends Application {
             public void launchApp(Context context, UMessage msg) {
                 super.launchApp(context, msg);
             }
+
             @Override
             public void openUrl(Context context, UMessage msg) {
                 super.openUrl(context, msg);
             }
+
             @Override
             public void openActivity(Context context, UMessage msg) {
                 super.openActivity(context, msg);
             }
+
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
                 Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show();
@@ -123,13 +220,39 @@ public class MyApplication extends Application {
     }
 
     {
-    PlatformConfig.setWeixin("wx33f335ace862eca1", "38e97727e3226f7141c3c647736bdb68");
-    //新浪微博
-    PlatformConfig.setSinaWeibo("4049059641", "22c648140a8ac43032e26bb3bcec71b3","http://sns.whalecloud.com/sina2/callback");
-     }
+        PlatformConfig.setWeixin("wx33f335ace862eca1", "38e97727e3226f7141c3c647736bdb68");
+        //新浪微博
+        PlatformConfig.setSinaWeibo("4049059641", "22c648140a8ac43032e26bb3bcec71b3", "http://sns.whalecloud.com/sina2/callback");
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+    /**
+     * 检测网络连接
+     *
+     * @return
+     */
+    public boolean checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null) {
+            return networkInfo.isAvailable();
+        }
+        return false;
+    }
+
+    public void addSearchHis(String searchKeyWord) {
+        if (list.contains(searchKeyWord)) {
+            list.remove(list.indexOf(searchKeyWord));
+            list.add(0, searchKeyWord);
+        } else {
+            list.add(searchKeyWord);
+        }
+    }
+
 }
