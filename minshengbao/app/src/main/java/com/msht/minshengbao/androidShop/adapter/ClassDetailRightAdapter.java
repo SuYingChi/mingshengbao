@@ -32,7 +32,6 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
                 int vw = params.width - iv.getPaddingLeft() - iv.getPaddingRight();
                 params.height = vw + iv.getPaddingTop() + iv.getPaddingBottom();
                 iv.setLayoutParams(params);
-                LogUtils.e("adapter vw="+iv.getLayoutParams().width+"vh="+iv.getLayoutParams().height);
                 GlideUtil.loadByImageView(context,iv,goodsListBean.getGoods_image_url());
             }
         });

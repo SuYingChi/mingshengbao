@@ -183,7 +183,11 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             }
         });
     }
-
+    public  void getMessageCount(){
+        if (!getKey().equals("")) {
+            ShopPresenter.getMsgCount(this);
+        }
+    }
     @Override
     protected void initData() {
         ShopPresenter.getShopHome(this);

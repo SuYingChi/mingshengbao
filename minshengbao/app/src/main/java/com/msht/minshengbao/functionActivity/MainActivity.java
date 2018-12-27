@@ -996,6 +996,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (currentFragment instanceof LoginMyFrag) {
             ((LoginMyFrag) currentFragment).getOrdersNum();
+        }else if(currentFragment instanceof ShopMainFragment){
+            ((ShopMainFragment) currentFragment).getMessageCount();
         }
     }
 

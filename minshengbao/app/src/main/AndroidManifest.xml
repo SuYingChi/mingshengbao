@@ -338,6 +338,8 @@
             android:launchMode="singleTask"
             />
         <activity android:name=".androidShop.activity.ShopMoreGoodActivity" />
+        <activity android:name=".androidShop.activity.WarnActivity" />
+        <activity android:name=".androidShop.activity.WarnMessageDetail" />
 
     </application>
 

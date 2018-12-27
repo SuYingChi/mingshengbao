@@ -1,21 +1,23 @@
 package com.msht.minshengbao.androidShop.presenter;
 
-import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
-import com.msht.minshengbao.androidShop.activity.ShopOrderEveluateActivity;
+import com.msht.minshengbao.androidShop.activity.WarnActivity;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
+import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
 import com.msht.minshengbao.androidShop.shopBean.MyAddEvaluateShopOrderBean;
 import com.msht.minshengbao.androidShop.shopBean.MyClassListBean;
 import com.msht.minshengbao.androidShop.shopBean.MyEvaluateShopOrderBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopkeywordBean;
+import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
-import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IAddAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCollectionView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCompanyNormalInvView;
@@ -46,6 +48,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IEditAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.INativGetPayListView;
+import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostAddEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
@@ -75,6 +78,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -85,8 +89,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
 
 public class ShopPresenter {
 
@@ -1182,4 +1184,69 @@ public class ShopPresenter {
         });
     }
 
+    public static void getMessagePreview(final IMessagePreView iMessagePreView, String userId, String token) {
+        OkHttpUtils.post().url(ShopConstants.MESSAGE_PREVIEW).addParams("userId", userId).addParams("password", token)
+                .build().execute(new DataStringCallback(iMessagePreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if(isShowLoadingDialog) {
+                    iView.dismissLoading();
+                }
+                MessagePreviewBean bean = null;
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iView.onError("接口返回空字符串");
+                }else {
+                    bean = JsonUtil.toBean(s, MessagePreviewBean.class);
+                    if(bean==null){
+                        isResponseSuccess=false;
+                        iView.onError("格式转换异常");
+                    }
+                    else if(bean.getData().size()==0){
+                        isResponseSuccess = false;
+                        iView.onError(bean.getError().toString());
+                    }else {
+                        isResponseSuccess = true;
+                    }
+                }
+                if (isResponseSuccess) {
+                    iMessagePreView.onGetMessagePreviewSuccess(bean);
+                }
+            }
+        });
+    }
+
+    public static void getWarnMessageList(final IWarnListView iWarnListView, String userId, String password) {
+        OkHttpUtils.post().url(UrlUtil.INFORM_URL).addParams("userId", userId).addParams("password", password)
+                .addParams("type", "2")
+                .addParams("page", iWarnListView.getPage())
+                .build().execute(new DataStringCallback(iWarnListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if(isShowLoadingDialog) {
+                    iView.dismissLoading();
+                }
+                WarnBean bean = null;
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iView.onError("接口返回空字符串");
+                }else {
+                    bean = JsonUtil.toBean(s, WarnBean.class);
+                    if(bean==null){
+                        isResponseSuccess=false;
+                        iView.onError("格式转换异常");
+                    }
+                    else if(bean.getData().size()==0){
+                        isResponseSuccess = false;
+                        iView.onError(bean.getError().toString());
+                    }else {
+                        isResponseSuccess = true;
+                    }
+                }
+                if (isResponseSuccess) {
+                    iWarnListView.onGetWarnListSuccess(bean);
+                }
+            }
+        });
+    }
 }

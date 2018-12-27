@@ -115,6 +115,8 @@ dependencies {
     implementation 'com.zhy:autolayout:1.4.3'
     implementation 'com.zhy:base-rvadapter:3.0.3'
     implementation 'com.bigkoo:pickerview:2.1.0'
+    implementation ('com.zzhoujay.richtext:richtext:3.0.7'){
+        exclude group: 'com.android.support'}
  /*   implementation ('com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+')*/
 /*    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
     implementation 'com.umeng.sdk:common:1.5.3'
