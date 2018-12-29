@@ -234,10 +234,11 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
 
             @Override
             public void onGoodDetail(String goodId) {
-                Map<String, String> map = new HashMap<String, String>();
+             /*   Map<String, String> map = new HashMap<String, String>();
                 map.put("type", "goods");
                 map.put("data", goodId);
-                doNotAdClick(map);
+                doNotAdClick(map);*/;
+                onShopItemViewClick("goods",goodId);
             }
         });
         rcl.setAdapter(adapter);

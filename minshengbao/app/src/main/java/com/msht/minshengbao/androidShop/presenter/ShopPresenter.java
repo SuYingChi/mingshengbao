@@ -85,6 +85,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -168,8 +169,31 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ClassDetailRightBean bean = JsonUtil.toBean(s, ClassDetailRightBean.class);
-                    List<ClassDetailRightBean.DatasBean.GoodsListBean> list = bean.getDatas().getGoods_list();
-                    iShopClassDetailView.onRightRclSuccess(list, bean.getPage_total());
+                    if(bean!=null) {
+                        List<ClassDetailRightBean.DatasBean.GoodsListBean> list = bean.getDatas().getGoods_list();
+                        iShopClassDetailView.onRightRclSuccess(list, bean.getPage_total());
+                    }else {
+                        try {
+                            JSONObject obj = new JSONObject(s).optJSONObject("datas");
+                            int page_total = new JSONObject(s).optInt("page_total");
+                            JSONArray jsonarry = obj.optJSONArray("goods_list");
+                            if(jsonarry!=null) {
+                                List<ClassDetailRightBean.DatasBean.GoodsListBean> list = new ArrayList<ClassDetailRightBean.DatasBean.GoodsListBean>();
+                                for (int ii = 0; ii < jsonarry.length(); ii++) {
+                                    JSONObject objj = jsonarry.optJSONObject(ii);
+                                    ClassDetailRightBean.DatasBean.GoodsListBean beanb = new ClassDetailRightBean.DatasBean.GoodsListBean();
+                                    beanb.setGoods_price(objj.optString("goods_price"));
+                                    beanb.setGoods_image_url(objj.optString("goods_image_url"));
+                                    beanb.setGoods_name(objj.optString("goods_name"));
+                                    beanb.setGoods_id(objj.optString("goods_id"));
+                                    list.add(beanb);
+                                    iShopClassDetailView.onRightRclSuccess(list,page_total);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });

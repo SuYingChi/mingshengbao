@@ -52,7 +52,6 @@ import com.msht.minshengbao.androidShop.shopBean.AddCarBean;
 import com.msht.minshengbao.androidShop.shopBean.GoodCommendBean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.GoodDetailActivityListener;
@@ -77,9 +76,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -503,11 +500,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Map<String, String> map = new HashMap<String, String>();
+                  /*  Map<String, String> map = new HashMap<String, String>();
                     map.put("type", "goods");
                     map.put("data", goodCommendBeanList.get(position).getGoods_id());
                     map.put("price", goodCommendBeanList.get(position).getGoods_promotion_price());
-                    doNotAdClick(map);
+                    doNotAdClick(map);*/
+
+                    String goodsId = goodCommendBeanList.get(position).getGoods_id();
+                    doShopItemViewClick("goods",goodsId);
                 }
             });
             ll_2.setOnClickListener(new View.OnClickListener() {
@@ -587,7 +587,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 PopUtil.toastInBottom("商品已下架或不支持购买");
             }
         } else {
-            new Intent(getActivity(), LoginActivity.class);
+           startActivity(new Intent(getActivity(), LoginActivity.class));
         }
     }
 

@@ -227,9 +227,7 @@
             style="@style/shopMsbcolorTitleText"
             android:layout_alignBottom="@id/youhuiiv"
             android:layout_toRightOf="@id/youhuinum"
-            android:ellipsize="end"
             android:text="112121212"
-            android:singleLine="true"
             android:textSize="@dimen/text_12"
             android:textColor="@color/gray_black" />
         <TextView

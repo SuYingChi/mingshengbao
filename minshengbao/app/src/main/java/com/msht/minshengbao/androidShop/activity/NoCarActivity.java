@@ -7,9 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -17,16 +15,12 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GuessLikeAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
-import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.GuessLikeBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -77,11 +71,13 @@ public class NoCarActivity extends ShopBaseActivity implements IGuessLikeGoodLis
         ad.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int childposition) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                String goodsId = datalist.get(childposition).getGoods_id();
+               /* HashMap<String, String> map = new HashMap<String, String>();
+
                 map.put("type", "goods");
                 map.put("data", goodsId);
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                String goodsId = datalist.get(childposition).getGoods_id();
+                onShopItemViewClick("goods",goodsId);
                 finish();
             }
         });

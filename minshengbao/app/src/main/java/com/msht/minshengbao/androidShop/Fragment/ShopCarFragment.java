@@ -237,10 +237,11 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
             @Override
             public void onGoodDetail(String goodid) {
-                Map<String, String> map = new HashMap<String, String>();
+              /*  Map<String, String> map = new HashMap<String, String>();
                 map.put("type", "goods");
                 map.put("data", goodid);
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                doShopItemViewClick("goods",goodid);
             }
         });
         rcl.setAdapter(adapter);

@@ -25,13 +25,17 @@ import com.androidadvance.topsnackbar.TSnackbar;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.NetworkChangeReceiver;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
@@ -440,38 +444,76 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         if (map.containsKey("type")) {
             switch (map.get("type")) {
                 case "keyword":
-                    Intent intent = new Intent(this, ShopKeywordListActivity.class);
-                    if (map.containsKey("data")) {
-                        intent.putExtra("keyword", map.get("data"));
+                    Intent intent = new Intent(this,ShopKeywordListActivity.class);
+                    if(map.containsKey("data")){
+                        intent.putExtra("keyword",map.get("data"));
                     }
                     startActivity(intent);
                     break;
                 case "goods":
-                    Intent intent2 = new Intent(this, ShopGoodDetailActivity.class);
-                    if (map.containsKey("data")) {
-                        intent2.putExtra("goodsid", map.get("data"));
+                    Intent intent2 = new Intent(this,ShopGoodDetailActivity.class);
+                    if(map.containsKey("data")){
+                        intent2.putExtra("goodsid",map.get("data"));
                     }
-                    if (map.containsKey("price")) {
-                        intent2.putExtra("price", map.get("price"));
+                    if(map.containsKey("price")){
+                        intent2.putExtra("price",map.get("price"));
                     }
+                    intent2.putExtra("type", "2");
                     startActivity(intent2);
                     break;
                 case "special":
-                    Intent intent3 = new Intent(this, ShopSpecialActivity.class);
-                    if (map.containsKey("data")) {
-                        intent3.putExtra("special", map.get("data"));
+                    Intent intent3 = new Intent(this,ShopSpecialActivity.class);
+                    if(map.containsKey("data")){
+                        intent3.putExtra("special",map.get("data"));
                     }
                     startActivity(intent3);
                     break;
                 case "url":
-                    Intent intent4 = new Intent(this, ShopUrlActivity.class);
-                    if (map.containsKey("data")) {
-                        intent4.putExtra("url", map.get("data"));
+                    String url;
+                    if(map.containsKey("data")){
+                        url = map.get("data");
+                        if (url.contains("gc_id=")) {
+                            Intent intent4 = new Intent(this, ShopClassDetailActivity.class);
+                            int index = url.indexOf("gc_id=");
+                            url = url.substring(index + 6).trim();
+                            intent4.putExtra("data", url);
+                            intent4.putExtra("title", "民生商城");
+                            startActivity(intent4);
+                        } else if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(url).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                            Intent intent4 = new Intent(this, ShopUrlActivity.class);
+                            intent4.putExtra("url", url);
+                            startActivity(intent4);
+                        }
                     }
-                    startActivity(intent4);
                     break;
                 default:
                     break;
+            }
+        }
+    }
+    protected void onShopItemViewClick(String type, String data) {
+        LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
+        if(TextUtils.equals(type,"goods")) {
+            Intent intent = new Intent(this, ShopGoodDetailActivity.class);
+            intent.putExtra("type", "2");
+            intent.putExtra("goodsid", data);
+            startActivity(intent);
+        }else if(TextUtils.equals(type,"keyword")){
+            Intent intent = new Intent(this, ShopKeywordListActivity.class);
+            intent.putExtra("keyword", data);
+            startActivity(intent);
+        }else if ("url".equals(type)) {
+            if (data.contains("gc_id=")) {
+                Intent intent = new Intent(this, ShopClassDetailActivity.class);
+                int index = data.indexOf("gc_id=");
+                data = data.substring(index + 6).trim();
+                intent.putExtra("data", data);
+                intent.putExtra("title", "民生商城");
+                startActivity(intent);
+            } else if (NetUtil.getDomain(data).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                Intent intent = new Intent(this, ShopUrlActivity.class);
+                intent.putExtra("url", data);
+                startActivity(intent);
             }
         }
     }

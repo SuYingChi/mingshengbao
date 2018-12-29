@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import com.google.zxing.Result;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.androidShop.LogoutEventBusEvent;
+import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
@@ -177,7 +180,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
      * @return the layout id
      */
     protected abstract int setLayoutId();
-    protected void doAdClick(Context context, int position, String type, String data) {
+    protected void doShopItemViewClick(String type, String data) {
         LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
         if(TextUtils.equals(type,"goods")) {
             Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
@@ -188,6 +191,19 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
             intent.putExtra("keyword", data);
             startActivity(intent);
+        }else if ("url".equals(type)) {
+            if (data.contains("gc_id=")) {
+                Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                int index = data.indexOf("gc_id=");
+                data = data.substring(index + 6).trim();
+                intent.putExtra("data", data);
+                intent.putExtra("title", "民生商城");
+                startActivity(intent);
+            } else if (NetUtil.getDomain(data).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
+                intent.putExtra("url", data);
+                startActivity(intent);
+            }
         }
     }
 
@@ -220,11 +236,22 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
                     startActivity(intent3);
                     break;
                 case "url":
-                    Intent intent4 = new Intent(getActivity(),ShopUrlActivity.class);
+                    String url;
                     if(map.containsKey("data")){
-                        intent4.putExtra("url",map.get("data"));
+                        url = map.get("data");
+                    if (url.contains("gc_id=")) {
+                        Intent intent4 = new Intent(getActivity(), ShopClassDetailActivity.class);
+                        int index = url.indexOf("gc_id=");
+                        url = url.substring(index + 6).trim();
+                        intent4.putExtra("data", url);
+                        intent4.putExtra("title", "民生商城");
+                        startActivity(intent4);
+                    } else if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(url).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                        Intent intent4 = new Intent(getActivity(), ShopUrlActivity.class);
+                        intent4.putExtra("url", url);
+                        startActivity(intent4);
                     }
-                    startActivity(intent4);
+                }
                     break;
                 default:
                     break;

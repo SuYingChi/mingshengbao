@@ -43,6 +43,7 @@ import com.msht.minshengbao.Bean.ActivityInfo;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
@@ -364,6 +365,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
                         intent.putExtra("goodsid", goodsid);
                         startActivity(intent);
+                    }else if (myUrl.contains("gc_id=")) {
+                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                            int index = myUrl.indexOf("gc_id=");
+                            myUrl = myUrl.substring(index + 6).trim();
+                            intent.putExtra("data", myUrl);
+                            intent.putExtra("title", "民生商城");
+                            startActivity(intent);
+                        } else if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(myUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                            Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
+                            intent.putExtra("url", myUrl);
+                            startActivity(intent);
                     } else {
                         Intent intent = new Intent(getActivity(), ShopActivity.class);
                         intent.putExtra("url", myUrl);
@@ -818,6 +830,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                                 String goodsid = rightUrl.substring(index + 9).trim();
                                 Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
                                 intent.putExtra("goodsid", goodsid);
+                                startActivity(intent);
+                            }else if (rightUrl.contains("gc_id=")) {
+                                Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                                int index = rightUrl.indexOf("gc_id=");
+                                rightUrl = rightUrl.substring(index + 6).trim();
+                                intent.putExtra("data", rightUrl);
+                                intent.putExtra("title", "民生商城");
+                                startActivity(intent);
+                            } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                                Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
+                                intent.putExtra("url", rightUrl);
                                 startActivity(intent);
                             } else {
                                 Intent intent = new Intent(mContext, ShopActivity.class);

@@ -30,9 +30,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.ImageListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -113,10 +111,13 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
         adapter.setOnItemClickListener(new MyHaveHeadAndFootRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Map map = new HashMap<String,String>();
+              /*  Map map = new HashMap<String,String>();
                 map.put("type","goods");
                 map.put("data",goodList.get(position).getGoodId());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                String goodsId = goodList.get(position).getGoodId();
+                onShopItemViewClick("goods",goodsId);
+
             }
         });
         rcl.setAdapter(adapter);

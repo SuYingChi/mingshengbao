@@ -21,6 +21,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopChatUserBean;
+import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMsgUserItemView;
@@ -241,7 +242,13 @@ public class TotalMessageListActivity extends ShopBaseActivity implements OnRefr
                     break;
                 //优惠促销
                 case 4:
-                    tvyouhui.setText(content);
+                    final JSONObject obj;
+                    try {
+                        obj = new JSONObject(content);
+                        tvyouhui.setText(obj.optString("log_msg"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     youhuitime.setText(time);
                     if(num==0){
                         youhuinum.setVisibility(View.INVISIBLE);

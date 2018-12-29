@@ -1,10 +1,12 @@
 package com.msht.minshengbao.androidShop.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,13 +34,10 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.androidShop.Fragment.ShopOrdersFragement;
 import com.msht.minshengbao.androidShop.adapter.ShopOrderGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
-import com.msht.minshengbao.androidShop.shopBean.OrdersItem;
-import com.msht.minshengbao.androidShop.shopBean.OrderslistBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopOrderDetailBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
@@ -57,9 +56,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -133,6 +130,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
 
     private String memberId;
     private List<ShopOrderDetailBean.DatasBean.OrderInfoBean.ZengpinListBean> zengpinglist;
+    private String store_phone;
 
     @Override
     protected void setLayout() {
@@ -165,11 +163,6 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         adapter.setDatas(list);
         adapter.setClickAfterSaleListener(this);
         rcl.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.getOrderDetail(this);
     }
 
@@ -281,21 +274,21 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
             } else {
                 tvFinishTime.setText(orderInfo.getFinnshed_time());
             }
-            if ( bean.getDatas().getOrder_info().getZengpin_list().size()>0) {
+            if (bean.getDatas().getOrder_info().getZengpin_list().size() > 0) {
                 llzengping.setVisibility(View.VISIBLE);
                 zengpinglist = bean.getDatas().getOrder_info().getZengpin_list();
                 StringBuilder sb = new StringBuilder();
-                for(ShopOrderDetailBean.DatasBean.OrderInfoBean.ZengpinListBean zengping:zengpinglist){
-                    sb.append(zengping.getGoods_name()+"x"+zengping.getGoods_num());
+                for (ShopOrderDetailBean.DatasBean.OrderInfoBean.ZengpinListBean zengping : zengpinglist) {
+                    sb.append(zengping.getGoods_name() + "x" + zengping.getGoods_num());
                 }
-                tvZengping.setText("贈品  "+sb.toString());
-            }else {
+                tvZengping.setText("贈品  " + sb.toString());
+            } else {
                 llzengping.setVisibility(View.GONE);
             }
-            if(bean.getDatas().getOrder_info().getPromotion().size()>0){
+            if (bean.getDatas().getOrder_info().getPromotion().size() > 0) {
                 StringBuilder sb = new StringBuilder();
-                for(List<String> p:bean.getDatas().getOrder_info().getPromotion()){
-                    for(String pp:p){
+                for (List<String> p : bean.getDatas().getOrder_info().getPromotion()) {
+                    for (String pp : p) {
                         sb.append(pp);
                     }
                 }
@@ -474,7 +467,25 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
 
 
     private void call(String store_phone) {
+        this.store_phone = store_phone;
+        if (!TextUtils.isEmpty(store_phone)) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (ContextCompat.checkSelfPermission(ShopOrdersDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    AndPermission.with(ShopOrdersDetailActivity.this)
+                            .requestCode(CALL_PERMISSIONS_REQUEST)
+                            .permission(
+                                    Manifest.permission.CALL_PHONE)
+                            .send();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
+                    startActivity(intent);
+                }
+            } else {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
+                startActivity(intent);
+            }
 
+        }
     }
 
     private void gotoKefu() {
@@ -493,10 +504,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
 
     @Override
     public void onGotoGoodDetail(int position) {
-        Map map = new HashMap<String,String>();
+      /*  Map map = new HashMap<String,String>();
         map.put("type","goods");
         map.put("data",list.get(position).getGoods_id());
-        doNotAdClick(map);
+        doNotAdClick(map);*/
+        String goodsId = list.get(position).getGoods_id();
+        onShopItemViewClick("goods", goodsId);
     }
 
     @Override
@@ -595,7 +608,9 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
 
     private static final int MY_PERMISSIONS_REQUEST = 200;
     private Drawable qrCodeImage;
+    private int CALL_PERMISSIONS_REQUEST = 300;
     private PermissionListener listener = new PermissionListener() {
+        @SuppressLint("MissingPermission")
         @Override
         public void onSucceed(int requestCode) {
             if (requestCode == MY_PERMISSIONS_REQUEST) {
@@ -603,14 +618,15 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 if (DrawbleUtil.saveImageToGallery(ShopOrdersDetailActivity.this, bitmap) != null) {
                     PopUtil.showAutoDissHookDialog(ShopOrdersDetailActivity.this, "已保存到本地相册", 200);
                 }
+            } else if (requestCode == CALL_PERMISSIONS_REQUEST) {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
+                startActivity(intent);
             }
         }
 
         @Override
         public void onFailed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(ShopOrdersDetailActivity.this, "没有权限");
-            }
+            ToastUtil.ToastText(ShopOrdersDetailActivity.this, "没有权限");
         }
     };
 }

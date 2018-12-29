@@ -52,6 +52,7 @@ public class ConstantUtil {
 
 
     public static final String SHOP_DOMAIN="shop.msbapp.cn";
+    public static final String DEBUG_SHOP_DOMAIN="dev.msbapp.cn";
     public static final String VEGETABLE_DOMAIN="jsxss.net";
 
 }

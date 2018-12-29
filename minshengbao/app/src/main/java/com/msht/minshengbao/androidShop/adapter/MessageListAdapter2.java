@@ -66,14 +66,6 @@ public class MessageListAdapter2 extends ComplexRecyclerViewAdapter {
                     tv.setSingleLine(false);
                 }
                 tv.setText(((WarnBean.DataBean) dataBean).getContent());
-            /*  holder.setOnClickListener(dataBean, position, new OnItemClickListener() {
-                  @Override
-                  public void onItemClickListener(int i, ComplexViewHolder complexViewHolder, Object o) {
-                      Intent intent = new Intent(mContext, WarnMessageDetailActivity.class);
-                      intent.putExtra("id", ((WarnBean.DataBean) dataBean).getId() + "");
-                      mContext.startActivity(intent);
-                  }
-              });*/
             } else if (type == 3) {
                 try {
                     final JSONObject obj = new JSONObject(((WarnBean.DataBean) dataBean).getContent());
@@ -84,14 +76,6 @@ public class MessageListAdapter2 extends ComplexRecyclerViewAdapter {
                         holder.setText(R.id.goodname, obj.optJSONArray("goods_list").optJSONObject(0).optString("goods_name"));
                     }
                    holder.setText(R.id.goodtv, "物流单号：" + obj.optString("shipping_code"));
-                  /*  holder.setOnClickListener(dataBean, position, new OnItemClickListener() {
-                        @Override
-                        public void onItemClickListener(int i, ComplexViewHolder complexViewHolder, Object o) {
-                            Intent intent = new Intent(mContext, ShopOrderRouteActivity.class);
-                            intent.putExtra("id", ((WarnBean.DataBean) dataBean).getId() + "");
-                            mContext.startActivity(intent);
-                        }
-                    });*/
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -99,18 +83,12 @@ public class MessageListAdapter2 extends ComplexRecyclerViewAdapter {
                 try {
                     final JSONObject obj = new JSONObject(((WarnBean.DataBean) dataBean).getContent());
                     holder.setText(R.id.title, obj.optString("log_msg"));
-                 /*   holder.setOnClickListener(dataBean, position, new OnItemClickListener() {
-                        @Override
-                        public void onItemClickListener(int i, ComplexViewHolder complexViewHolder, Object o) {
-                            Intent intent = new Intent(mContext, ShopKeywordListActivity.class);
-                            intent.putExtra("keyword", obj.optString("log_type_v"));
-                            mContext.startActivity(intent);
-                        }
-                    });*/
+                    TextView tv = holder.getView(R.id.desc);
+                    tv.setSingleLine(false);
+                    tv.setText(obj.optString("log_msg"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                holder.setText(R.id.desc, ((WarnBean.DataBean) dataBean).getContent());
             }
             if (((WarnBean.DataBean) dataBean).getFlag() == 0) {
                 holder.getView(R.id.point).setVisibility(View.VISIBLE);

@@ -474,10 +474,11 @@ public class ShopMainFragment2 extends ShopBaseFragment implements OnRefreshList
             @Override
             public void onItemClick(int position) {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("type", "goods");
+              /*  map.put("type", "goods");
                 map.put("data", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
                 map.put("price", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+              doShopItemViewClick("goods",shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
 
             }
         });
@@ -592,7 +593,7 @@ public class ShopMainFragment2 extends ShopBaseFragment implements OnRefreshList
      */
     private void onImageViewClick(View imageView, int position, final String type, final String data, boolean isAd) {
         if (isAd) {//是轮播
-            doAdClick(getContext(), position, type, data);
+            doShopItemViewClick(type, data);
         } else {  //不是轮播图
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

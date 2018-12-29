@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
@@ -31,6 +35,7 @@ import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopMoreGoodActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSearchActivty;
@@ -38,6 +43,7 @@ import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeChuDianPagerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeClassPagerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeGoodsAdapter;
+import com.msht.minshengbao.androidShop.adapter.ShopMaiBianQuanQiuPagerAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.ImageCycleView;
 import com.msht.minshengbao.androidShop.customerview.WrapChildHeightViewPager;
@@ -51,11 +57,14 @@ import com.msht.minshengbao.androidShop.shopBean.ShopHome4Bean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeAdvBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeClassBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods2Bean;
+import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods_3Bean;
 import com.msht.minshengbao.androidShop.util.AddViewHolder;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
@@ -76,9 +85,7 @@ import org.json.JSONTokener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -190,11 +197,13 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             }
         });
     }
-    public  void getMessageCount(){
+
+    public void getMessageCount() {
         if (!getKey().equals("")) {
             ShopPresenter.getMsgCount(this);
         }
     }
+
     @Override
     protected void initData() {
         ShopPresenter.getShopHome(this);
@@ -278,6 +287,11 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             showGoods_1(shopHomeGoods_1Bean);
                         }
 
+                    } else if (parameterObject.has("goods_3")) {
+                        ShopHomeGoods_3Bean ShopHomeGoods_3Bean = JsonUtil.toBean(parameterObject.toString(), ShopHomeGoods_3Bean.class);
+                        if (ShopHomeGoods_3Bean != null) {
+                            showGoods_3(ShopHomeGoods_3Bean);
+                        }
                     } else if (parameterObject.has("goods")) {
                         ShopHomeGoodsBean shopHomeGoodsBean = JsonUtil.toBean(parameterObject.toString(), ShopHomeGoodsBean.class);
                         if (shopHomeGoodsBean != null) {
@@ -296,6 +310,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     }
 
 
+
     /**
      * 轮播
      *
@@ -312,7 +327,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             public void onImageClick(int position, View imageView) {
                 if (itemDataList != null) {
                     ShopHomeAdvBean.AdvListBean.ItemBean itemData = itemDataList.get(position);
-                    onImageViewClick(imageView, position, itemData.getType(), itemData.getData(), true);
+                    doShopItemViewClick(itemData.getType(), itemData.getData());
                 }
             }
         };
@@ -338,38 +353,67 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         ShopHomeClassPagerAdapter pagerAdapter = new ShopHomeClassPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (position != homeClassList.size()-1) {
-                    String data = homeClassList.get(position).getData();
-                    if (data.contains("gc_id=")) {
-                        Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                        int index = data.indexOf("gc_id=");
-                        data = data.substring(index + 6).trim();
-                        intent.putExtra("data", data);
-                        intent.putExtra("position", position);
-                        intent.putExtra("title", homeClassList.get(position).getTitle());
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("list", (Serializable) homeClassList);
-                        intent.putExtras(bundle);
+                if (!BuildConfig.DEBUG) {
+                    if (position != homeClassList.size() - 1) {
+                        String data = homeClassList.get(position).getData();
+                        if (data.contains("gc_id=")) {
+                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                            int index = data.indexOf("gc_id=");
+                            data = data.substring(index + 6).trim();
+                            intent.putExtra("data", data);
+                            intent.putExtra("position", position);
+                            intent.putExtra("title", homeClassList.get(position).getTitle());
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("list", (Serializable) homeClassList);
+                            intent.putExtras(bundle);
+                            intent.putExtra("carnum", carNum);
+                            startActivity(intent);
+                        } else if (data.contains("keyword=")) {
+                            int index = data.indexOf("keyword=");
+                            String shopkeyword = data.substring(index + 8).trim();
+                            Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
+                            intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                            startActivity(intent);
+                        } else if (data.contains("goods_id=")) {
+                            int index = data.indexOf("goods_id=");
+                            String goodsid = data.substring(index + 9).trim();
+                            Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
+                            intent.putExtra("goodsid", goodsid);
+                            startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
+                        intent.putExtra("list", (Serializable) homeClassList);
                         intent.putExtra("carnum", carNum);
-                        startActivity(intent);
-                    }else  if (data.contains("keyword=")) {
-                        int index = data.indexOf("keyword=");
-                        String shopkeyword = data.substring(index + 8).trim();
-                        Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                        intent.putExtra("keyword",  StringUtil.toURLDecoder(shopkeyword));
-                        startActivity(intent);
-                    }else if(data.contains("goods_id=")){
-                        int index = data.indexOf("goods_id=");
-                        String goodsid = data.substring(index + 9).trim();
-                        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
-                        intent.putExtra("goodsid", goodsid);
-                        startActivity(intent);
+                        getActivity().startActivity(intent);
                     }
                 } else {
-                    Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
-                    intent.putExtra("list", (Serializable) homeClassList);
-                    intent.putExtra("carnum", carNum);
-                    getActivity().startActivity(intent);
+                    String data = homeClassList.get(position).getData();
+                    String type = homeClassList.get(position).getType();
+                    LogUtils.e(data + "type=" + homeClassList.get(position).getType());
+                    if ("keyword".equals(type)) {
+                        Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
+                        intent.putExtra("keyword", StringUtil.toURLDecoder(data));
+                        startActivity(intent);
+                    } else if ("goods".equals(type)) {
+                        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
+                        intent.putExtra("goodsid", data);
+                        startActivity(intent);
+                    } else if ("url".equals(type)) {
+                        if (data.contains("gc_id=")) {
+                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                            int index = data.indexOf("gc_id=");
+                            data = data.substring(index + 6).trim();
+                            intent.putExtra("data", data);
+                            intent.putExtra("title", homeClassList.get(position).getTitle());
+                            intent.putExtra("carnum", carNum);
+                            startActivity(intent);
+                        } else if (NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                            Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
+                            intent.putExtra("url", data);
+                            startActivity(intent);
+                        }
+                    }
                 }
             }
         });
@@ -420,9 +464,9 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
 
         shopHomeContent.addView(addViewHolder.getCustomView());
 
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewSquare), 0, shopHome2Bean.getHome2().getSquare_type(), shopHome2Bean.getHome2().getSquare_data(), false);
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewRectangle1), 0, shopHome2Bean.getHome2().getRectangle1_type(), shopHome2Bean.getHome2().getRectangle1_data(), false);
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewRectangle2), 0, shopHome2Bean.getHome2().getRectangle2_type(), shopHome2Bean.getHome2().getRectangle2_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewSquare), shopHome2Bean.getHome2().getSquare_type(), shopHome2Bean.getHome2().getSquare_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewRectangle1), shopHome2Bean.getHome2().getRectangle1_type(), shopHome2Bean.getHome2().getRectangle1_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewRectangle2), shopHome2Bean.getHome2().getRectangle2_type(), shopHome2Bean.getHome2().getRectangle2_data(), false);
     }
 
     /**
@@ -440,11 +484,14 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         mMZBanner.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
             @Override
             public void onPageClick(View view, int position) {
-                ShopHomeGoods2Bean.Goods2Bean.ItemBean itemBean = shopHomeGoods2Bean.getGoods_2().getItem().get(position);
+              /*  ShopHomeGoods2Bean.Goods2Bean.ItemBean itemBean = shopHomeGoods2Bean.getGoods_2().getItem().get(position);
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("type", itemBean.getType());
                 map.put("data", itemBean.getData());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                ShopHomeGoods2Bean.Goods2Bean.ItemBean itemBean = shopHomeGoods2Bean.getGoods_2().getItem().get(position);
+                //onShopItemViewClick(view,itemBean.getType(), itemBean.getData(), true);
+                doShopItemViewClick(itemBean.getType(), itemBean.getData());
             }
         });
         ArrayList<ShopHomeGoods2Bean.Goods2Bean.ItemBean> list = new ArrayList<ShopHomeGoods2Bean.Goods2Bean.ItemBean>(shopHomeGoods2Bean.getGoods_2().getItem());
@@ -476,9 +523,9 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         params.setMargins(0, DimenUtil.dip2px(getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0);
         shopHomeContent.addView(addViewHolder.getCustomView(), params);
 
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewSquare), 0, shopHome4Bean.getHome4().getSquare_type(), shopHome4Bean.getHome4().getSquare_data(), false);
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewRectangle1), 0, shopHome4Bean.getHome4().getRectangle1_type(), shopHome4Bean.getHome4().getRectangle1_data(), false);
-        onImageViewClick(addViewHolder.getView(R.id.ImageViewRectangle2), 0, shopHome4Bean.getHome4().getRectangle2_type(), shopHome4Bean.getHome4().getRectangle2_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewSquare), shopHome4Bean.getHome4().getSquare_type(), shopHome4Bean.getHome4().getSquare_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewRectangle1), shopHome4Bean.getHome4().getRectangle1_type(), shopHome4Bean.getHome4().getRectangle1_data(), false);
+        onShopItemViewClick(addViewHolder.getView(R.id.ImageViewRectangle2), shopHome4Bean.getHome4().getRectangle2_type(), shopHome4Bean.getHome4().getRectangle2_data(), false);
     }
 
     /**
@@ -524,19 +571,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             @Override
             public void onClick(View v) {
                 String data = shopHomeGoods_1Bean.getGoods_1().getMore_link();
-                if (data.contains("id=")) {
-                    Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                    int index = data.indexOf("id=");
-                    data = data.substring(index + 3).trim();
-                    intent.putExtra("data", data);
-                    intent.putExtra("position", 5);
-                    intent.putExtra("title", homeClassList.get(5).getTitle());
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("list", (Serializable) homeClassList);
-                    intent.putExtras(bundle);
-                    intent.putExtra("carnum", carNum);
-                    startActivity(intent);
-                }
+                doShopItemViewClick("url", data);
             }
         });
         AddViewHolder addViewHolder2 = new AddViewHolder(getContext(), R.layout.shop_home_class);
@@ -544,11 +579,13 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         ShopHomeChuDianPagerAdapter pagerAdapter = new ShopHomeChuDianPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Map<String, String> map = new HashMap<String, String>();
+                /*Map<String, String> map = new HashMap<String, String>();
                 map.put("type", "goods");
                 map.put("data", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
                 map.put("price", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+
+                doShopItemViewClick("goods", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
 
             }
         });
@@ -584,7 +621,60 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         shopHomeContent.addView(addViewHolder.getCustomView());
         shopHomeContent.addView(addViewHolder2.getCustomView());
     }
+    /*买遍全球*/
+    private void showGoods_3(final ShopHomeGoods_3Bean shopHomeGoods_3Bean) {
 
+        AddViewHolder addViewHolder = new AddViewHolder(getContext(), R.layout.shop_goods_1);
+        TextView textView = (TextView) addViewHolder.getView(R.id.title);
+        textView.setText(shopHomeGoods_3Bean.getGoods_3().getTitle());
+        LinearLayout llMore = (LinearLayout) addViewHolder.getView(R.id.more);
+        llMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String data = shopHomeGoods_3Bean.getGoods_3().getMore_link();
+                doShopItemViewClick("url", data);
+            }
+        });
+        AddViewHolder addViewHolder2 = new AddViewHolder(getContext(), R.layout.shop_home_class);
+        LinearLayout llIndicators = addViewHolder2.getView(R.id.llIndicators);
+        ShopMaiBianQuanQiuPagerAdapter pagerAdapter = new ShopMaiBianQuanQiuPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                doShopItemViewClick("goods", shopHomeGoods_3Bean.getGoods_3().getItem().get(position).getGoods_id());
+            }
+        });
+        final WrapChildHeightViewPager vp = addViewHolder2.getView(R.id.vp);
+        vp.setNoScroll(false);
+        vp.setOffscreenPageLimit(10);
+        vp.setAdapter(pagerAdapter);
+        pagerAdapter.setDatas(shopHomeGoods_3Bean.getGoods_3().getItem());
+        vp.setCurrentItem(0);
+        pagerAdapter.notifyDataSetChanged();
+
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                List<View> indicators = ((ShopMaiBianQuanQiuPagerAdapter) vp.getAdapter()).getIndicators();
+                for (int i = 0; i < indicators.size(); i++) {
+                    indicators.get(i).setSelected(i == position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+        });
+        shopHomeContent.addView(addViewHolder.getCustomView());
+        shopHomeContent.addView(addViewHolder2.getCustomView());
+    }
     /**
      * 猜你喜欢
      *
@@ -602,11 +692,12 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> map = new HashMap<String, String>();
+          /*      Map<String, String> map = new HashMap<String, String>();
                 map.put("type", "goods");
                 map.put("data", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
                 map.put("price", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                doShopItemViewClick("goods", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
             }
         });
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -627,10 +718,10 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     @Override
     public void onGetMessagePreviewSuccess(MessagePreviewBean s) {
         List<MessagePreviewBean.DataBean> list = s.getData();
-        for ( MessagePreviewBean.DataBean bean : list) {
-            msgCount+= bean.getUnread_num();
+        for (MessagePreviewBean.DataBean bean : list) {
+            msgCount += bean.getUnread_num();
         }
-        vHint.setText(msgCount+"");
+        vHint.setText(msgCount + "");
         if (msgCount > 0) {
             vHint.setVisibility(View.VISIBLE);
         } else {
@@ -661,32 +752,31 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     /**
      * 点击事件
      *
-     * @param imageView
-     * @param type      keyword 关键字搜索，data中为搜索关键字
-     *                  special 专题，data中为专题编号
-     *                  goods 商品，data中为商品编号
-     *                  store 店铺，data中为店铺编号
-     *                  category 跳转到分类，data中无数据
-     *                  cart 跳转到购物车，data中无数据
-     *                  my 跳转到我的商城，data中无数据
+     * @param type keyword 关键字搜索，data中为搜索关键字
+     *             special 专题，data中为专题编号
+     *             goods 商品，data中为商品编号
+     *             store 店铺，data中为店铺编号
+     *             category 跳转到分类，data中无数据
+     *             cart 跳转到购物车，data中无数据
+     *             my 跳转到我的商城，data中无数据
      * @param data
      */
-    private void onImageViewClick(View imageView, int position, final String type, final String data, boolean isAd) {
-        if (isAd) {//是轮播
-            doAdClick(getContext(), position, type, data);
+    private void onShopItemViewClick(View view, final String type, final String data, boolean havaClickView) {
+        if (havaClickView) {//是轮播
+            doShopItemViewClick(type, data);
         } else {  //不是轮播图
-            imageView.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Map<String, String> map = new HashMap<String, String>();
+                /*    Map<String, String> map = new HashMap<String, String>();
                     map.put("type", type);
                     map.put("data", data);
-                    doNotAdClick(map);
+                    doNotAdClick(map);*/
+                    doShopItemViewClick(type, data);
                 }
             });
         }
     }
-
 
     @Override
     public void onPause() {

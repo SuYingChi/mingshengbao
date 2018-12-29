@@ -27,6 +27,7 @@ import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.MyShopOrderActivity;
 import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
 import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
+import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.RefunBean;
@@ -715,7 +716,8 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     }
 
     private void goMessageCenter() {
-        Intent intent = new Intent(mContext, MessageCenterActivity.class);
+       // Intent intent = new Intent(mContext, MessageCenterActivity.class);
+        Intent intent = new Intent(mContext, TotalMessageListActivity.class);
         startActivity(intent);
         btnMessage.setUnReadCount(0);
     }

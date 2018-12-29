@@ -69,8 +69,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     private GoodEvaluationFragment f2;
     private AddCarOrBuyGoodDialog addCarOrBuyGoodDialog;
     private Intent carListIntent;
-    ;
-    private Intent loginIntent;
     private float toolbarAlpha;
     private Drawable currentLeftDrawblw;
     private Drawable currentRightDrawblw;
@@ -165,7 +163,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         });
         initNoNetworkLayout();
         carListIntent = new Intent(this, ShopCarActivity.class);
-        loginIntent = new Intent(this, LoginActivity.class);
         mToolbar.setAlpha(1);
         currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         currentRightDrawblw = getResources().getDrawable(R.drawable.menu);

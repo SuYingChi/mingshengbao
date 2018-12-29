@@ -25,7 +25,6 @@ import com.msht.minshengbao.functionActivity.MainActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -262,11 +261,14 @@ public class ShopSuccessActivity extends ShopBaseActivity implements IGuessLikeG
         ad.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int childposition) {
-                HashMap<String, String> map = new HashMap<String, String>();
+               /* HashMap<String, String> map = new HashMap<String, String>();
                 String goodsId = datalist.get(childposition).getGoods_id();
                 map.put("type", "goods");
                 map.put("data", goodsId);
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+
+                String goodsId = datalist.get(childposition).getGoods_id();
+                onShopItemViewClick("goods",goodsId);
             }
         });
         rcl.setAdapter(ad);

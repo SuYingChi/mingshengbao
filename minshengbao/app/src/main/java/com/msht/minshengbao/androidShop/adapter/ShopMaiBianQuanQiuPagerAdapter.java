@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,23 +13,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.androidShop.shopBean.ShopHomeClassBean;
-import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods_1Bean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods_3Bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopHomeChuDianPagerAdapter extends PagerAdapter {
+public class ShopMaiBianQuanQiuPagerAdapter extends PagerAdapter {
 
     private MyHaveHeadViewRecyclerAdapter.OnItemClickListener listener;
     private List<View> indicators = new ArrayList<>();//水平分页的指示器
-    private List<ShopHomeGoods_1Bean.Goods1Bean.ItemBean> datas = new ArrayList<>();//RecyclerView数据集合
+    private List<ShopHomeGoods_3Bean.Goods3Bean.ItemBean> datas = new ArrayList<>();//RecyclerView数据集合
     private Context context;
     private LinearLayout llIndicators;//水平分页的容器
     private int navCount = 3;
 
-    public void setDatas(List<ShopHomeGoods_1Bean.Goods1Bean.ItemBean> datas) {
+    public void setDatas(List<ShopHomeGoods_3Bean.Goods3Bean.ItemBean> datas) {
         this.datas = datas;
     }
 
@@ -38,7 +35,7 @@ public class ShopHomeChuDianPagerAdapter extends PagerAdapter {
         return indicators;
     }
 
-    public ShopHomeChuDianPagerAdapter(Context context, LinearLayout llIndicators, MyHaveHeadViewRecyclerAdapter.OnItemClickListener listener) {
+    public ShopMaiBianQuanQiuPagerAdapter(Context context, LinearLayout llIndicators, MyHaveHeadViewRecyclerAdapter.OnItemClickListener listener) {
         this.context = context;
         this.llIndicators = llIndicators;
         this.listener = listener;
@@ -76,8 +73,8 @@ public class ShopHomeChuDianPagerAdapter extends PagerAdapter {
         rcl.setLayoutManager(linearLayoutManager);
         rcl.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-        ChuDianAdapter adapter = new ChuDianAdapter(context);
-        List<ShopHomeGoods_1Bean.Goods1Bean.ItemBean> list = new ArrayList<ShopHomeGoods_1Bean.Goods1Bean.ItemBean>();
+        MaiBianQuanQiuAdapter adapter = new MaiBianQuanQiuAdapter(context);
+        List<ShopHomeGoods_3Bean.Goods3Bean.ItemBean> list = new ArrayList<ShopHomeGoods_3Bean.Goods3Bean.ItemBean>();
         //每页最多显示10个，小于数据集总数，且小于下一页开始的位置索引
         for (int i = position * navCount; i < (position + 1) * navCount && i < datas.size(); i++) {
             list.add(datas.get(i));

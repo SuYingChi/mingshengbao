@@ -29,9 +29,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.ImageListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -107,10 +105,12 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
         adapter.setOnItemClickListener(new MyHaveHeadAndFootRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Map map = new HashMap<String,String>();
+              /*  Map map = new HashMap<String,String>();
                 map.put("type","goods");
                 map.put("data",goodList.get(position).getGoods_id());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                String goodsId = goodList.get(position).getGoods_id();
+                onShopItemViewClick("goods",goodsId);
             }
         });
         rcl.setAdapter(adapter);

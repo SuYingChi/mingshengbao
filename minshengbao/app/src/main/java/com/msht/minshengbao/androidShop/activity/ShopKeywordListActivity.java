@@ -28,7 +28,6 @@ import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
@@ -119,12 +118,13 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             @Override
             public void onItemClick(int position) {
                 ShopkeywordBean.DatasBean.GoodsListBean item = datalist.get(position);
-                HashMap<String,String> map= new HashMap<String,String>();
+             //   HashMap<String,String> map= new HashMap<String,String>();
                 String goodsId = item.getGoods_id();
-                map.put("type","goods");
+             /*   map.put("type","goods");
                 map.put("data",goodsId);
                 map.put("price",item.getGoods_price());
-                doNotAdClick(map);
+                doNotAdClick(map);*/
+                onShopItemViewClick("goods",goodsId);
             }
         });
         adapter.setDatas(datalist);
