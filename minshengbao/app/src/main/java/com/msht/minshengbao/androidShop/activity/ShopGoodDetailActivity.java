@@ -255,7 +255,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     }
 
     private void goMessage() {
-        startActivity(new Intent(this, ShopMessageListActivity.class));
+        startActivity(new Intent(this, TotalMessageListActivity.class));
     }
 
     @Override

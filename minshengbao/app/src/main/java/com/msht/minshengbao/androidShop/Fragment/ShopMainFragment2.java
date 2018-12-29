@@ -28,7 +28,7 @@ import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZViewHolder;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
-import com.msht.minshengbao.androidShop.activity.ShopMessageListActivity;
+import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSearchActivty;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeChuDianPagerAdapter;
@@ -156,7 +156,7 @@ public class ShopMainFragment2 extends ShopBaseFragment implements OnRefreshList
         rltMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ShopMessageListActivity.class);
+                Intent intent = new Intent(getActivity(), TotalMessageListActivity.class);
                 getActivity().startActivity(intent);
             }
         });

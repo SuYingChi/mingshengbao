@@ -324,7 +324,7 @@
         <activity android:name=".androidShop.activity.ShopCollectionActivity" />
         <activity android:name=".androidShop.activity.ShopFootprintActivity" />
         <activity android:name=".androidShop.activity.ShopkefuActivity" />
-        <activity android:name=".androidShop.activity.ShopMessageListActivity" />
+        <activity android:name=".androidShop.activity.TotalMessageListActivity" />
         <!-- 微信分享注册 -->
         <activity
             android:name="com.msht.minshengbao.androidShop.wxapi.WXEntryActivity"
@@ -338,8 +338,8 @@
             android:launchMode="singleTask"
             />
         <activity android:name=".androidShop.activity.ShopMoreGoodActivity" />
-        <activity android:name=".androidShop.activity.WarnActivity" />
-        <activity android:name=".androidShop.activity.WarnMessageDetail" />
+        <activity android:name=".androidShop.activity.MessageListActivity" />
+        <activity android:name=".androidShop.activity.WarnMessageDetailActivity" />
 
     </application>
 

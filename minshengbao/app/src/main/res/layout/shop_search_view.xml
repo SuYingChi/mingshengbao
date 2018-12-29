@@ -63,14 +63,20 @@
             android:layout_centerInParent="true"
             android:src="@drawable/shop_home_message" />
 
-        <ImageView
+        <TextView
             android:id="@+id/vhint"
-            android:layout_width="@dimen/dp5"
-            android:layout_height="@dimen/dp5"
-            android:layout_alignTop="@id/ivIconMessage"
-            android:layout_toRightOf="@id/ivIconMessage"
-            android:src="@drawable/shop_red_point"
-            android:visibility="gone" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="46"
+            android:gravity="center"
+            android:background="@drawable/shop_red_oval"
+            android:textSize="@dimen/text_10"
+            android:textColor="@color/white"
+            android:visibility="visible"
+
+            />
 
     </RelativeLayout>
 </LinearLayout>

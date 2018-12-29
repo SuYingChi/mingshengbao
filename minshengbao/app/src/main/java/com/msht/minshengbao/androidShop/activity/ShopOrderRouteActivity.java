@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormGoodListAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopRouteAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -19,13 +20,14 @@ import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.OrderRouteBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchDeliverView {
+public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchDeliverView, IWarnMessageDetailView {
     @BindView(R.id.state)
     TextView tvState;
     @BindView(R.id.company)
@@ -44,6 +46,7 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
     private OrderRouteBean bean;
     private List<String> dataList=new ArrayList<String>();
     private ShopRouteAdapter adapter;
+    private String msgid;
 
     @Override
     protected void setLayout() {
@@ -61,6 +64,7 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         orderId = getIntent().getStringExtra("id");
+        msgid = getIntent().getIntExtra("msgid",0)+"";
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         linearLayoutManager.setAutoMeasureEnabled(true);
         rcl.setNestedScrollingEnabled(false);
@@ -81,6 +85,8 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
     protected void onResume() {
         super.onResume();
         ShopPresenter.getOrderRoute(this);
+        ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
+
     }
 
     @Override
@@ -99,5 +105,10 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
             tvCompany.setText(bean.getDatas().getExpress_name());
             tvSn.setText(bean.getDatas().getShipping_code());
         }
+    }
+
+    @Override
+    public void onGetDetailSuccess(String s) {
+
     }
 }

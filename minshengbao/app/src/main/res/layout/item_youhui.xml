@@ -6,15 +6,16 @@
     android:layout_marginLeft="@dimen/margin_Modules"
     android:layout_marginRight="@dimen/margin_Modules"
     >
-<TextView
-    android:id="@+id/time"
-    style="@style/grey_small_text"
-    android:layout_gravity="center_horizontal"
-    android:textColor="@color/white"
-    android:background="@color/shop_grey"
-    android:padding="3dp"
-    android:layout_marginTop="@dimen/margin_Modules"
-    />
+    <TextView
+        android:id="@+id/time"
+        style="@style/grey_small_text"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:background="@color/shop_grey"
+        android:padding="3dp"
+        android:layout_marginTop="@dimen/margin_Modules"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

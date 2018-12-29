@@ -61,15 +61,23 @@ public abstract class CircleScrollerRecyclerAdapter<T> extends RecyclerView.Adap
     //设置数据源为无限大实现循环滚动
     @Override
     public int getItemCount() {
-        return (datas == null ? 0 : Integer.MAX_VALUE);
+        //  return (datas == null ? 0 : Integer.MAX_VALUE);
+        if (datas == null) {
+            return 0;
+        } else if (datas.size() <= 6) {
+            return (datas.size());
+        } else {
+            return Integer.MAX_VALUE;
+        }
     }
-//多个type 使用第一个构造，重写该方法 根据不同type return RecyclerHolder
+
+    //多个type 使用第一个构造，重写该方法 根据不同type return RecyclerHolder
     @Override
     public RecyclerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == Integer.MIN_VALUE) {
             View headitemView = LayoutInflater.from(context).inflate(head_layoutId, parent, false);
-            return  new RecyclerHolder(context, headitemView);
-        }else {
+            return new RecyclerHolder(context, headitemView);
+        } else {
             //这么写会导致item宽度当为matchparent的时候显示不对,
             //View itemView = View.inflate(parent.getViewContext(), layoutId, null);
             //规范写法
@@ -81,7 +89,7 @@ public abstract class CircleScrollerRecyclerAdapter<T> extends RecyclerView.Adap
 
     @Override
     public int getItemViewType(int position) {
-        if (position ==0&&head_layoutId !=Integer.MIN_VALUE) {
+        if (position == 0 && head_layoutId != Integer.MIN_VALUE) {
             return Integer.MIN_VALUE;
         }
         return super.getItemViewType(position);
@@ -90,15 +98,16 @@ public abstract class CircleScrollerRecyclerAdapter<T> extends RecyclerView.Adap
     @Override
     public void onBindViewHolder(RecyclerHolder holder, int position) {
         this.position = position;
-        if(getItemViewType(position) == Integer.MIN_VALUE){
+        if (getItemViewType(position) == Integer.MIN_VALUE) {
             convert(holder, datas.get(0), position);
         } else {
-           if(datas.size()!=0) {
+            if (datas.size() != 0) {
                 convert(holder, datas.get(position % datas.size()), position % datas.size());
             }
         }
     }
-//多个type 使用holder.getitemviewtype区分
+
+    //多个type 使用holder.getitemviewtype区分
     public abstract void convert(RecyclerHolder holder, final T t, final int position);
 
     /**
@@ -116,5 +125,4 @@ public abstract class CircleScrollerRecyclerAdapter<T> extends RecyclerView.Adap
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-
 }

@@ -133,7 +133,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private String goods_storage;
     private String imageUrlDialog;
     private boolean initedView = false;
-    private String type;
     private String shareUrl;
     private boolean is_favorate;
     private String tid = "";
@@ -165,7 +164,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         Bundle arg = getArguments();
         if (arg != null) {
             goodsid = arg.getString("goodsid");
-            type = arg.getString("type");
+            String type = arg.getString("type");
         }
         actionbarSizeTypedArray = getContext().obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
         toolbarHeight = (int) (actionbarSizeTypedArray.getDimension(0, 0) * 2);

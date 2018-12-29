@@ -157,21 +157,21 @@ public class SelectAddressDialog extends Dialog {
         rcl3.setAdapter(rcl3Adapter);
         rcl3.setOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
-            public void onScrolled(RecyclerView recyclerView,int dx,int dy){
-                super.onScrolled(recyclerView,dx,dy);
-                LinearLayoutManager l = (LinearLayoutManager)recyclerView.getLayoutManager();
-                int adapterNowPos = l.findFirstCompletelyVisibleItemPosition();
-                int nowLastPos=l.findLastCompletelyVisibleItemPosition();
-                int selectPosition;
-                if((nowLastPos+adapterNowPos)%2!=0){
-                    selectPosition = (nowLastPos + adapterNowPos )/ 2 + 1;
-                }else {
-                    selectPosition = (nowLastPos + adapterNowPos) / 2;
-                }
-                if(areaList.size()!=0){
-                    //循环滚动要取余
-                    iGetAreaListView.onSelectedAreaItem(selectPosition % areaList.size());
-                }
+            public void onScrolled(RecyclerView recyclerView,int dx,int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                    LinearLayoutManager l = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    int adapterNowPos = l.findFirstCompletelyVisibleItemPosition();
+                    int nowLastPos = l.findLastCompletelyVisibleItemPosition();
+                    int selectPosition;
+                    if ((nowLastPos + adapterNowPos) % 2 != 0) {
+                        selectPosition = (nowLastPos + adapterNowPos) / 2 + 1;
+                    } else {
+                        selectPosition = (nowLastPos + adapterNowPos) / 2;
+                    }
+                    if (areaList.size() != 0) {
+                        //循环滚动要取余
+                        iGetAreaListView.onSelectedAreaItem(selectPosition % areaList.size());
+                    }
             }
         });
         ShopPresenter.getProvinceAreaList(iGetAreaListView);
@@ -203,7 +203,5 @@ public class SelectAddressDialog extends Dialog {
 
     public void notifyRcl3() {
         rcl3Adapter.notifyDataSetChanged();
-
-
     }
 }

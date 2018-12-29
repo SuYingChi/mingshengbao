@@ -84,6 +84,7 @@
             android:layout_below="@id/iv_no_data"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_Modules"
+            android:visibility="invisible"
             />
     </RelativeLayout>
 </LinearLayout>

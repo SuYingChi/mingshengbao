@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,6 +20,7 @@
             android:src="@drawable/back2x" />
 
         <TextView
+            android:id="@+id/title"
             style="@style/shopMsbcolorTitleText"
             android:layout_centerInParent="true"
             android:text="紧急通知"

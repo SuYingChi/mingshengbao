@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.adapter.KeywordListAdapterHaveHeadView;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -38,7 +40,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWordListView, OnRefreshLoadMoreListener, OnRefreshListener {
+public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWordListView, OnRefreshLoadMoreListener, OnRefreshListener, IWarnMessageDetailView {
     private static final int KEYWORD = 1000;
     private String keyword;
     private int curPage = 1;
@@ -64,6 +66,10 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     Toolbar mToolbar;
     @BindView(R.id.back)
     ImageView ivback;
+    @BindView(R.id.iv_no_data)
+    ImageView ivNoData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
     private List<ShopkeywordBean.DatasBean.GoodsListBean> datalist = new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
     private KeywordListAdapterHaveHeadView adapter;
     private String order1 = "2";
@@ -78,6 +84,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     private boolean isGrid = false;
     private DividerItemDecoration dividerItemDecoration2;
     private DividerItemDecoration dividerItemDecoration;
+    private String msgid;
 
     @Override
     protected void setLayout() {
@@ -101,6 +108,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             }
         });
         keyword = getIntent().getStringExtra("keyword");
+        msgid = getIntent().getIntExtra("msgid",0)+"";
         et.setHint(keyword);
         linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
@@ -119,6 +127,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                 doNotAdClick(map);
             }
         });
+        adapter.setDatas(datalist);
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
@@ -143,6 +152,9 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     protected void onResume() {
         super.onResume();
         ShopPresenter.getKeywordList(this);
+        if(!msgid.equals("0")) {
+            ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
+        }
     }
 
     private void initTab(String selectTab) {
@@ -259,7 +271,15 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     public void onSuccess(List<ShopkeywordBean.DatasBean.GoodsListBean> list, int pageTotal) {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
-        if (curPage == 1) {
+        if (pageTotal == 0) {
+            datalist.clear();
+            refreshLayout.setEnableAutoLoadMore(true);
+            refreshLayout.setNoMoreData(false);
+            adapter.notifyDataSetChanged();
+            ivNoData.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.VISIBLE);
+            return;
+        }/*else if (curPage == 1) {
             datalist.clear();
             datalist.addAll(list);
             adapter.setDatas(datalist);
@@ -268,7 +288,15 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             refreshLayout.setEnableAutoLoadMore(false);
             refreshLayout.finishLoadMoreWithNoMoreData();
             refreshLayout.setNoMoreData(true);
-        } else {
+        }*/
+        else if (curPage > pageTotal) {
+            refreshLayout.setEnableAutoLoadMore(false);
+            refreshLayout.finishLoadMoreWithNoMoreData();
+            refreshLayout.setNoMoreData(true);
+            return;
+        } else if (curPage == 1) {
+            datalist.clear();
+        } /*else {
             refreshLayout.setEnableAutoLoadMore(true);
             refreshLayout.setNoMoreData(false);
             if (list.size() != 0) {
@@ -276,7 +304,13 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                 adapter.setDatas(datalist);
                 adapter.notifyDataSetChanged();
             }
-        }
+        }*/
+        ivNoData.setVisibility(View.INVISIBLE);
+        tvNoData.setVisibility(View.INVISIBLE);
+        refreshLayout.setEnableAutoLoadMore(true);
+        refreshLayout.setNoMoreData(false);
+        datalist.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -380,5 +414,10 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onGetDetailSuccess(String s) {
+
     }
 }

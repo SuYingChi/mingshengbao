@@ -23,12 +23,15 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZViewHolder;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
-import com.msht.minshengbao.androidShop.activity.ShopMessageListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
+import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
+import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopMoreGoodActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSearchActivty;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
@@ -40,6 +43,7 @@ import com.msht.minshengbao.androidShop.customerview.ImageCycleView;
 import com.msht.minshengbao.androidShop.customerview.WrapChildHeightViewPager;
 import com.msht.minshengbao.androidShop.customerview.XScrollView;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoodsBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods_1Bean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHome2Bean;
@@ -52,7 +56,9 @@ import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
+import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -76,7 +82,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 
-public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshListener, IShopMainView, IGetMsgCountView {
+public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshListener, IShopMainView, IGetMsgCountView, IMessagePreView {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.sv)
@@ -90,13 +96,14 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     @BindView(R.id.tvSearchD)
     EditText etSeatch;
     @BindView(R.id.vhint)
-    ImageView vHint;
+    TextView vHint;
     @BindView(R.id.rlt_msg)
     RelativeLayout rltMsg;
     private List<String> advImagelist = new ArrayList<String>();
     private List<ShopHomeClassBean.ClassBean.ItemBean> homeClassList;
     private MZBannerView mMZBanner;
     private int carNum;
+    private Integer msgCount;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(CarNumEvent messageEvent) {
@@ -178,7 +185,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         rltMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ShopMessageListActivity.class);
+                Intent intent = new Intent(getActivity(), TotalMessageListActivity.class);
                 getActivity().startActivity(intent);
             }
         });
@@ -199,14 +206,22 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mImmersionBar = ImmersionBar.with(this);
+        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
         ImmersionBar.setTitleBar(getActivity(), mToolbar);
     }
 
+    @Override
+    protected void initImmersionBar() {
+        //super.initImmersionBar();
+        //ImmersionBar.setTitleBar(getActivity(), mToolbar);
+    }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -324,11 +339,11 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             @Override
             public void onItemClick(int position) {
                 if (position != homeClassList.size()-1) {
-                    Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
                     String data = homeClassList.get(position).getData();
-                    if (data.contains("id=")) {
-                        int index = data.indexOf("id=");
-                        data = data.substring(index + 3).trim();
+                    if (data.contains("gc_id=")) {
+                        Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                        int index = data.indexOf("gc_id=");
+                        data = data.substring(index + 6).trim();
                         intent.putExtra("data", data);
                         intent.putExtra("position", position);
                         intent.putExtra("title", homeClassList.get(position).getTitle());
@@ -336,6 +351,18 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                         bundle.putSerializable("list", (Serializable) homeClassList);
                         intent.putExtras(bundle);
                         intent.putExtra("carnum", carNum);
+                        startActivity(intent);
+                    }else  if (data.contains("keyword=")) {
+                        int index = data.indexOf("keyword=");
+                        String shopkeyword = data.substring(index + 8).trim();
+                        Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
+                        intent.putExtra("keyword",  StringUtil.toURLDecoder(shopkeyword));
+                        startActivity(intent);
+                    }else if(data.contains("goods_id=")){
+                        int index = data.indexOf("goods_id=");
+                        String goodsid = data.substring(index + 9).trim();
+                        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
+                        intent.putExtra("goodsid", goodsid);
                         startActivity(intent);
                     }
                 } else {
@@ -590,14 +617,24 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     @Override
     public void onGetMsgCountSuccess(String s) {
         try {
-            int msgCount = Integer.valueOf(new JSONObject(s).optString("datas"));
-            if (msgCount > 0) {
-                vHint.setVisibility(View.VISIBLE);
-            } else {
-                vHint.setVisibility(View.GONE);
-            }
+            msgCount = Integer.valueOf(new JSONObject(s).optString("datas"));
+            ShopPresenter.getMessagePreview(this, SharedPreferencesUtil.getUserId(getContext(), SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(getContext(), SharedPreferencesUtil.Password, ""));
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onGetMessagePreviewSuccess(MessagePreviewBean s) {
+        List<MessagePreviewBean.DataBean> list = s.getData();
+        for ( MessagePreviewBean.DataBean bean : list) {
+            msgCount+= bean.getUnread_num();
+        }
+        vHint.setText(msgCount+"");
+        if (msgCount > 0) {
+            vHint.setVisibility(View.VISIBLE);
+        } else {
+            vHint.setVisibility(View.GONE);
         }
     }
 

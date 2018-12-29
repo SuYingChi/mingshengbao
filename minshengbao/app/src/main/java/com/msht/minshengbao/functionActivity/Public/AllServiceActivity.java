@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
+import com.msht.minshengbao.androidShop.activity.MessageListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasInstallAcitivity;
@@ -53,6 +55,8 @@ public class AllServiceActivity extends BaseActivity {
     private ArrayList<AllServiceModel.MainCategory.ServeCategory> categories=null;
     private ArrayList<AllServiceModel.MainCategory.ServeCategory.ChildCategory> childcategories=null;
     private final ServerTypeHandler serverTypeHandler=new ServerTypeHandler(this);
+
+
     private static class ServerTypeHandler extends Handler{
         private WeakReference<AllServiceActivity> mWeakReference;
         public ServerTypeHandler(AllServiceActivity activity) {
@@ -108,7 +112,14 @@ public class AllServiceActivity extends BaseActivity {
                 childcategories=categories.get(mainPosition).child;
                 String code=childcategories.get(secondPosition).code;
                 serveId=String.valueOf(childcategories.get(secondPosition).id);
-                startServer(code);
+                if(mainPosition==4) {
+                    String shopkeyword = String.valueOf(childcategories.get(secondPosition).name);
+                    Intent intent = new Intent(AllServiceActivity.this, ShopKeywordListActivity.class);
+                    intent.putExtra("keyword", shopkeyword);
+                    startActivity(intent);
+                }else {
+                    startServer(code);
+                }
             }
         });
     }

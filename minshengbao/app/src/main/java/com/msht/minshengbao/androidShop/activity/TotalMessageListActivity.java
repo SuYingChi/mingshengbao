@@ -38,7 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopMessageListActivity extends ShopBaseActivity implements OnRefreshListener, IGetChatUserListView, IDeleteMsgUserItemView, IMessagePreView {
+public class TotalMessageListActivity extends ShopBaseActivity implements OnRefreshListener, IGetChatUserListView, IDeleteMsgUserItemView, IMessagePreView {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.refresh_layout)
@@ -96,15 +96,15 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
         adapter.addBtn(R.layout.delete_btn_layout, new ComplexRecyclerViewAdapter.OnItemBtnClickListener() {
             @Override
             public void onItemBtnClickListener(int pson, ComplexRecyclerViewAdapter.ComplexViewHolder holder, Object bean) {
-                ShopPresenter.deleteMsgUserItem(ShopMessageListActivity.this, dataList.get(pson).getU_id());
+                ShopPresenter.deleteMsgUserItem(TotalMessageListActivity.this, dataList.get(pson).getU_id());
             }
         });
 
         adapter.setOnItemClickListener(new ComplexRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int pson, ComplexRecyclerViewAdapter.ComplexViewHolder holder, Object bean) {
-                ShopMessageListActivity.this.position = pson;
-                Intent intent = new Intent(ShopMessageListActivity.this, ShopkefuActivity.class);
+                TotalMessageListActivity.this.position = pson;
+                Intent intent = new Intent(TotalMessageListActivity.this, ShopkefuActivity.class);
                 intent.putExtra("t_id", dataList.get(pson).getU_id());
                 startActivity(intent);
             }
@@ -174,13 +174,14 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
     public void onGetMessagePreviewSuccess(MessagePreviewBean s) {
         List<MessagePreviewBean.DataBean> list = s.getData();
         ArrayList<Integer> types = new ArrayList<Integer>();
-        for (MessagePreviewBean.DataBean bean : list) {
+        for (final MessagePreviewBean.DataBean bean : list) {
             String content = bean.getContent();
             int id = bean.getId();
             String time = bean.getTime();
             int num = bean.getUnread_num();
-            types.add(bean.getType());
-            switch (bean.getType()) {
+            final int type = bean.getType();
+            types.add(type);
+            switch (type) {
                 //燃气服务
                 case 1:
                     tvgas.setText(content);
@@ -194,7 +195,9 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
                     rltGas.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Intent intent =  new Intent(TotalMessageListActivity.this,MessageListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
                         }
                     });
                     break;
@@ -211,7 +214,9 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
                     rltWarn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           startActivity(new Intent(ShopMessageListActivity.this,WarnActivity.class));
+                           Intent intent =  new Intent(TotalMessageListActivity.this,MessageListActivity.class);
+                            intent.putExtra("type",type);
+                           startActivity(intent);
                         }
                     });
                     break;
@@ -228,7 +233,9 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
                     rltRoute.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Intent intent =  new Intent(TotalMessageListActivity.this,MessageListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
                         }
                     });
                     break;
@@ -245,7 +252,9 @@ public class ShopMessageListActivity extends ShopBaseActivity implements OnRefre
                     rltYouhui.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            Intent intent =  new Intent(TotalMessageListActivity.this,MessageListActivity.class);
+                            intent.putExtra("type",type);
+                            startActivity(intent);
                         }
                     });
                     break;

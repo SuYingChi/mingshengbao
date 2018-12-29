@@ -1,12 +1,12 @@
 package com.msht.minshengbao.androidShop.presenter;
 
-import android.os.Message;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
-import com.msht.minshengbao.androidShop.activity.WarnActivity;
+import com.msht.minshengbao.androidShop.activity.WarnMessageDetailActivity;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
@@ -33,6 +33,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IClearShopFootprintView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteCarItemView;
+import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMsgUserItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IEvaluationView;
@@ -79,6 +80,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
@@ -94,7 +96,7 @@ public class ShopPresenter {
 
     public static void loginShop(String usrname, String password, final ILoginShopView iLoginShopView) {
         //测试账号
-        OkHttpUtils.post().url(ShopConstants.LOGIN_SHOP).addParams("username",usrname).addParams("password", password).addParams("client", "android").build().execute(new DataStringCallback(iLoginShopView) {
+        OkHttpUtils.post().url(ShopConstants.LOGIN_SHOP).addParams("username", usrname).addParams("password", password).addParams("client", "android").build().execute(new DataStringCallback(iLoginShopView) {
             @Override
             public void onResponse(String s, int i) {
                 //先继承再重写或重写覆盖请求错误的场景
@@ -187,7 +189,7 @@ public class ShopPresenter {
         });
     }
 
-    public static void getSearchSuccess(final IShopSearchView iShopSearchView,String key) {
+    public static void getSearchSuccess(final IShopSearchView iShopSearchView, String key) {
         OkHttpUtils.post().url(ShopConstants.DEFAULT_SEARCH).addParams("key", key).build().execute(new DataStringCallback(iShopSearchView) {
             @Override
             public void onResponse(String s, int i) {
@@ -200,6 +202,7 @@ public class ShopPresenter {
 
         });
     }
+
     public static void getSearchSuccess(final IShopSearchView iShopSearchView) {
         OkHttpUtils.post().url(ShopConstants.DEFAULT_SEARCH).build().execute(new DataStringCallback(iShopSearchView) {
             @Override
@@ -213,6 +216,7 @@ public class ShopPresenter {
 
         });
     }
+
     public static void addCar(final IShopGoodDetailView iShopGoodDetailView) {
         OkHttpUtils.post().url(ShopConstants.ADD_CAR).addParams("key", iShopGoodDetailView.getKey()).addParams("goods_id", iShopGoodDetailView.getGoodsid()).addParams("quantity", iShopGoodDetailView.getSelectedGoodNum() + "").build().execute(new DataStringCallback(iShopGoodDetailView) {
             @Override
@@ -341,6 +345,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void deleteAddress(final IDeleteAddressView iDeleteAddressView) {
         OkHttpUtils.post().url(ShopConstants.DELETE_ADDRESS).addParams("key", iDeleteAddressView.getKey())
                 .addParams("address_id", iDeleteAddressView.getDeleteAddressId())
@@ -566,9 +571,9 @@ public class ShopPresenter {
         });
     }
 
-    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView,String paySn) {
+    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn) {
         OkHttpUtils.post().url(ShopConstants.BUY_STEP3).addParams("key", iBuyStep3GetPayListView.getKey())
-                .addParams("pay_sn",paySn)
+                .addParams("pay_sn", paySn)
                 .build().execute(new DataStringCallback(iBuyStep3GetPayListView) {
             @Override
             public void onResponse(String s, int i) {
@@ -646,7 +651,7 @@ public class ShopPresenter {
     public static void getShopOrdersList(final IShopOrdersView iShopOrdersView, boolean b) {
         OkHttpUtils.post().url(iShopOrdersView.getUrl()).addParams("key", iShopOrdersView.getKey())
                 .addParams("state_type", iShopOrdersView.getState_type())
-                .build().execute(new DataStringCallback(iShopOrdersView,b) {
+                .build().execute(new DataStringCallback(iShopOrdersView, b) {
             @Override
             public void onResponse(String s, int i) {
                 if (isShowLoadingDialog) {
@@ -670,11 +675,13 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void getShopOrdersList(final IShopOrdersNumView iShopOrdersNumView, String state_type, DataStringCallback dataStringCallback) {
-        OkHttpUtils.post().url(ShopConstants.SHOP_ORDER_LIST + "&page=1000&curpage="+1).addParams("key", iShopOrdersNumView.getKey())
-                .addParams("state_type",state_type)
+        OkHttpUtils.post().url(ShopConstants.SHOP_ORDER_LIST + "&page=1000&curpage=" + 1).addParams("key", iShopOrdersNumView.getKey())
+                .addParams("state_type", state_type)
                 .build().execute(dataStringCallback);
     }
+
     public static void getOrderDetail(final IShopOrderDetailView iShopOrderDetailView) {
         OkHttpUtils.get().url(ShopConstants.ORDER_DETAIL).addParams("key", iShopOrderDetailView.getKey())
                 .addParams("order_id", iShopOrderDetailView.getOrderId())
@@ -739,7 +746,7 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iCancelOrderView.onReceiveOrderSuccess(s,orderId);
+                    iCancelOrderView.onReceiveOrderSuccess(s, orderId);
                 }
             }
         });
@@ -759,9 +766,9 @@ public class ShopPresenter {
         });
     }
 
-    public static void getReceiveQrCodeImage(final IOrderQrCodeView iOrderQrCodeView,String orderId) {
+    public static void getReceiveQrCodeImage(final IOrderQrCodeView iOrderQrCodeView, String orderId) {
         OkHttpUtils.get().url(ShopConstants.ORDER_QR_CODE).addParams("key", iOrderQrCodeView.getKey())
-                .addParams("order_id",orderId )
+                .addParams("order_id", orderId)
                 .build().execute(new DataStringCallback(iOrderQrCodeView) {
             @Override
             public void onResponse(String s, int i) {
@@ -787,12 +794,14 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getRefundMoneyList(final IShopOrdersNumView iRefundMoneyView,DataStringCallback dataStringCallback) {
+
+    public static void getRefundMoneyList(final IShopOrdersNumView iRefundMoneyView, DataStringCallback dataStringCallback) {
         OkHttpUtils.get().url(ShopConstants.REFUND_LIST).addParams("key", iRefundMoneyView.getKey())
                 .addParams("curpage", "1")
                 .addParams("page", "1000")
                 .build().execute(dataStringCallback);
     }
+
     public static void getRefundGoodList(final IRefundGoodView iRefundGoodView) {
         OkHttpUtils.get().url(ShopConstants.RETURN_GOOD_LIST).addParams("key", iRefundGoodView.getKey())
                 .addParams("curpage", iRefundGoodView.getCurpage())
@@ -807,12 +816,14 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getRefundGoodList(final IShopOrdersNumView iRefundGoodView,DataStringCallback dataStringCallback) {
+
+    public static void getRefundGoodList(final IShopOrdersNumView iRefundGoodView, DataStringCallback dataStringCallback) {
         OkHttpUtils.get().url(ShopConstants.RETURN_GOOD_LIST).addParams("key", iRefundGoodView.getKey())
                 .addParams("curpage", "1")
                 .addParams("page", "1000")
                 .build().execute(dataStringCallback);
     }
+
     public static void getRefundMoneyDetail(final IRefundMoneyDetailView iRefundMoneyDetailView) {
         OkHttpUtils.get().url(ShopConstants.REFUND_ORDER_DETAIL).addParams("key", iRefundMoneyDetailView.getKey())
                 .addParams("refund_id", iRefundMoneyDetailView.getRefund_id())
@@ -886,8 +897,8 @@ public class ShopPresenter {
         for (int i = 0; i < picList.size(); i++) {
             pfbuilder.addParams("refund_pic[" + i + "]", picList.get(i));
         }
-        if(iPostRefundView.getRefund_type().equals("0")) {
-            pfbuilder .addParams("goods_num ", iPostRefundView.getGoods_num());
+        if (iPostRefundView.getRefund_type().equals("0")) {
+            pfbuilder.addParams("goods_num ", iPostRefundView.getGoods_num());
         }
         pfbuilder.build().execute(new DataStringCallback(iPostRefundView) {
             @Override
@@ -971,6 +982,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void postEvelateAll(final IPostEvelateAllView iPostEvelateAllView, List<MyEvaluateShopOrderBean> dataList) {
         PostFormBuilder pfbuilder = OkHttpUtils.post().url(ShopConstants.POST_EVELUATE_ALL)
                 .addParams("key", iPostEvelateAllView.getKey())
@@ -1026,7 +1038,7 @@ public class ShopPresenter {
     public static void getFootprintList(final IGetShopFootprintView iGetShopFootprintView) {
         OkHttpUtils.get().url(ShopConstants.SHOP_FOOTPRINT).addParams("key", iGetShopFootprintView.getKey())
                 .addParams("curpage", iGetShopFootprintView.getCurpage())
-                .addParams("page", 50+"")
+                .addParams("page", 50 + "")
                 .build().execute(new DataStringCallback(iGetShopFootprintView) {
             @Override
             public void onResponse(String s, int i) {
@@ -1037,12 +1049,14 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getFootprintList(final IShopOrdersNumView iGetShopFootprintView,DataStringCallback dataStringCallback) {
+
+    public static void getFootprintList(final IShopOrdersNumView iGetShopFootprintView, DataStringCallback dataStringCallback) {
         OkHttpUtils.get().url(ShopConstants.SHOP_FOOTPRINT).addParams("key", iGetShopFootprintView.getKey())
                 .addParams("curpage", "1")
-                .addParams("page", 1000+"")
+                .addParams("page", 1000 + "")
                 .build().execute(dataStringCallback);
     }
+
     public static void clearFootprintList(final IClearShopFootprintView iClearShopFootprintView) {
         OkHttpUtils.post().url(ShopConstants.CLEAR_SHOP_FOOTPRINT).addParams("key", iClearShopFootprintView.getKey())
                 .build().execute(new DataStringCallback(iClearShopFootprintView) {
@@ -1059,7 +1073,7 @@ public class ShopPresenter {
     public static void getCollectList(final IShopCollectionView iShopCollectionView) {
         OkHttpUtils.get().url(ShopConstants.SHOP_COLLECTION).addParams("key", iShopCollectionView.getKey())
                 .addParams("curpage", iShopCollectionView.getCurpage())
-                .addParams("page", 10+"")
+                .addParams("page", 10 + "")
                 .build().execute(new DataStringCallback(iShopCollectionView) {
             @Override
             public void onResponse(String s, int i) {
@@ -1070,13 +1084,15 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getCollectList(final IShopOrdersNumView iShopCollectionView,DataStringCallback dataStringCallback) {
+
+    public static void getCollectList(final IShopOrdersNumView iShopCollectionView, DataStringCallback dataStringCallback) {
         OkHttpUtils.get().url(ShopConstants.SHOP_COLLECTION).addParams("key", iShopCollectionView.getKey())
                 .addParams("curpage", "1")
                 .addParams("page", "1000")
                 .build().execute(dataStringCallback);
     }
-    public static void deleteCollect(final IShopDeleteCollectionView iShopDeleteCollectionView,String fav_id,final int Position) {
+
+    public static void deleteCollect(final IShopDeleteCollectionView iShopDeleteCollectionView, String fav_id, final int Position) {
         OkHttpUtils.post().url(ShopConstants.DELETE_COLLECTION).addParams("key", iShopDeleteCollectionView.getKey())
                 .addParams("fav_id", fav_id)
                 .build().execute(new DataStringCallback(iShopDeleteCollectionView) {
@@ -1084,7 +1100,7 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iShopDeleteCollectionView.onDeleteCollectSuccess(s,Position);
+                    iShopDeleteCollectionView.onDeleteCollectSuccess(s, Position);
                 }
             }
         });
@@ -1103,7 +1119,8 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getShareUrl(final IGetShareUrlView iGetShareUrlView,final String type) {
+
+    public static void getShareUrl(final IGetShareUrlView iGetShareUrlView, final String type) {
         OkHttpUtils.get().url(ShopConstants.GET_SHARE_URL)
                 .addParams("goods_id", iGetShareUrlView.getGoodId())
                 .addParams("type", type)
@@ -1112,7 +1129,7 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iGetShareUrlView.onGetShareUrlSuccess(s,type);
+                    iGetShareUrlView.onGetShareUrlSuccess(s, type);
                 }
             }
         });
@@ -1126,11 +1143,12 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iShopDeleteCollectionView.onDeleteCollectSuccess(s,0);
+                    iShopDeleteCollectionView.onDeleteCollectSuccess(s, 0);
                 }
             }
         });
     }
+
     public static void getMsgCount(final IGetMsgCountView iGetMsgCountView) {
         OkHttpUtils.get().url(ShopConstants.MSH_COUNT).addParams("key", iGetMsgCountView.getKey())
                 .build().execute(new DataStringCallback(iGetMsgCountView) {
@@ -1189,23 +1207,22 @@ public class ShopPresenter {
                 .build().execute(new DataStringCallback(iMessagePreView) {
             @Override
             public void onResponse(String s, int i) {
-                if(isShowLoadingDialog) {
+                if (isShowLoadingDialog) {
                     iView.dismissLoading();
                 }
                 MessagePreviewBean bean = null;
                 if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
                     isResponseSuccess = false;
                     iView.onError("接口返回空字符串");
-                }else {
+                } else {
                     bean = JsonUtil.toBean(s, MessagePreviewBean.class);
-                    if(bean==null){
-                        isResponseSuccess=false;
+                    if (bean == null) {
+                        isResponseSuccess = false;
                         iView.onError("格式转换异常");
-                    }
-                    else if(bean.getData().size()==0){
+                    } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
                         iView.onError(bean.getError().toString());
-                    }else {
+                    } else {
                         isResponseSuccess = true;
                     }
                 }
@@ -1216,35 +1233,80 @@ public class ShopPresenter {
         });
     }
 
-    public static void getWarnMessageList(final IWarnListView iWarnListView, String userId, String password) {
+    public static void getMessageList(final IWarnListView iWarnListView, String userId, String password, String type) {
         OkHttpUtils.post().url(UrlUtil.INFORM_URL).addParams("userId", userId).addParams("password", password)
-                .addParams("type", "2")
+                .addParams("type", type)
                 .addParams("page", iWarnListView.getPage())
                 .build().execute(new DataStringCallback(iWarnListView) {
             @Override
             public void onResponse(String s, int i) {
-                if(isShowLoadingDialog) {
+                if (isShowLoadingDialog) {
                     iView.dismissLoading();
                 }
                 WarnBean bean = null;
                 if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
                     isResponseSuccess = false;
                     iView.onError("接口返回空字符串");
-                }else {
+                } else {
                     bean = JsonUtil.toBean(s, WarnBean.class);
-                    if(bean==null){
-                        isResponseSuccess=false;
-                        iView.onError("格式转换异常");
-                    }
-                    else if(bean.getData().size()==0){
+                    if (bean == null) {
                         isResponseSuccess = false;
-                        iView.onError(bean.getError().toString());
-                    }else {
+                        iView.onError("格式转换异常");
+                    } else if (bean.getData().size() == 0) {
+                        isResponseSuccess = false;
+                        if (bean.getError() != null) {
+                            iView.onError(bean.getError().toString());
+                        }
+                    } else {
                         isResponseSuccess = true;
                     }
                 }
                 if (isResponseSuccess) {
                     iWarnListView.onGetWarnListSuccess(bean);
+                }
+            }
+        });
+    }
+
+    public static void getMessageDetail(final IWarnMessageDetailView iWarnMessageDetailView, String userId, String password, String id) {
+        OkHttpUtils.post().url(UrlUtil.INFORM_DETAIL).addParams("userId", userId).addParams("password", password)
+                .addParams("id", id)
+                .build().execute(new DataStringCallback(iWarnMessageDetailView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if (isShowLoadingDialog) {
+                    iView.dismissLoading();
+                }
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iView.onError("接口返回空字符串");
+                } else {
+                    isResponseSuccess = true;
+                }
+                if (isResponseSuccess) {
+                    iWarnMessageDetailView.onGetDetailSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void deleteMessageItem(final IDeleteMessageItemView iDeleteMessageItemView, String userId, String password, String id) {
+        OkHttpUtils.post().url(UrlUtil.INFORM_DELETE).addParams("userId", userId).addParams("password", password)
+                .addParams("id", id)
+                .build().execute(new DataStringCallback(iDeleteMessageItemView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if (isShowLoadingDialog) {
+                    iView.dismissLoading();
+                }
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iView.onError("接口返回空字符串");
+                } else {
+                    isResponseSuccess = true;
+                }
+                if (isResponseSuccess) {
+                    iDeleteMessageItemView.onDeleteMsgItemSuccess(s);
                 }
             }
         });

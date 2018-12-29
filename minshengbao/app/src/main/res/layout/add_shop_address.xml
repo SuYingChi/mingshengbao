@@ -47,7 +47,8 @@
         <EditText
             android:id="@+id/et_name"
             style="@style/editText"
-            android:gravity="right"/>
+            android:layout_marginRight="@dimen/margin_Modules"
+            android:gravity="right|center"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_mob"

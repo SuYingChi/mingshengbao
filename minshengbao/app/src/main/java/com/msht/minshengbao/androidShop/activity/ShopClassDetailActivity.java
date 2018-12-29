@@ -90,6 +90,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     RelativeLayout rltTitle;
     @BindView(R.id.iv_no_data)
     ImageView ivNoOrder;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
     private String gcId;
     private ClassDetailLeftAdapter classDetailLeftAdapter;
     private ArrayList<MyClassListBean> list;
@@ -302,7 +304,9 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getCarList(this, false);
+        if(!TextUtils.isEmpty(getKey())) {
+            ShopPresenter.getCarList(this, false);
+        }
     }
 
     @Override
@@ -344,8 +348,10 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             refreshLayout.setNoMoreData(false);
             classDetailRightAdapter.notifyDataSetChanged();
             ivNoOrder.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.VISIBLE);
         } else {
             ivNoOrder.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
             if (rightCurrenPage == 1) {
                 rightDataList.clear();
                 rightDataList.addAll(list);
@@ -557,7 +563,9 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     public void onModifyGoodNumSuccess(String s) {
         PopUtil.showAutoDissHookDialog(this, "购物车数量修改成功", 100);
-        ShopPresenter.getCarList(this, false);
+        if(!TextUtils.isEmpty(getKey())) {
+            ShopPresenter.getCarList(this, false);
+        }
     }
 
     @Override
