@@ -114,13 +114,13 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
             }
         });
         rcl.setAdapter(adapter);
-
+        ShopPresenter.getRefundMoneyDetail(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getRefundMoneyDetail(this);
+
     }
 
     @Override
@@ -137,6 +137,7 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
             reason.setText(refund.getReason_info());
             detail.setText(refund.getBuyer_message());
             amount2.setText(StringUtil.getPriceSpannable12String(this, refund.getRefund_amount(), R.style.big_money, R.style.big_money));
+           //如果在onresume里请求数据，这里list需要先清空在addall
             goodList.addAll(bean.getDatas().getGoods_list());
             adapter.notifyDataSetChanged();
             int total = 0;
@@ -171,6 +172,8 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
                 });
                 rcl2.setAdapter(ad);
             }
+            pay_method.setText(bean.getDatas().getDetail_array().getRefund_code());
+            online_refund.setText(bean.getDatas().getDetail_array().getPay_amount());
         }else {
             PopUtil.toastInBottom("数据转换异常");
         }

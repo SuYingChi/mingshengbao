@@ -6,10 +6,19 @@ public class RefundMoneyDetail {
 
     /**
      * code : 200
-     * datas : {"refund":{"refund_id":"149","goods_id":"0","goods_name":"订单商品全部退款","order_id":"1301","refund_amount":"4058.00","refund_sn":"302108181121144916","order_sn":"1000000000128301","add_time":"2018-11-21 14:49:16","goods_img_360":"http://dev.msbapp.cn/data/upload/shop/common/default_goods_image_360.gif","seller_state":"同意","admin_state":"待处理","store_id":"8","store_name":"福气廊","reason_info":"订单信息有误，需要重拍","buyer_message":"123","seller_message":"222","admin_message":null},"pic_list":["http://dev.msbapp.cn/data/upload/shop/refund/05961269563455068.jpg"],"detail_array":[],"goods_list":[{"rec_id":"1447","order_id":"1301","goods_id":"100157","goods_name":"万和灶具 C3-12T-L16Z（Y)","goods_price":"0.00","goods_num":"1","goods_image":"http://dev.msbapp.cn/data/upload/shop/store/goods/8/8_05581955944170345_240.jpg","goods_pay_price":"0.00","store_id":"8","buyer_id":"98906","goods_type":"5","promotions_id":"0","commis_rate":"200","gc_id":"0","goods_spec":null,"goods_contractid":"","goods_commonid":"0","add_time":"1542782829","is_dis":"0","dis_commis_rate":"0.000","dis_member_id":"0","dis_type":"0"},{"rec_id":"1446","order_id":"1301","goods_id":"100140","goods_name":"万和燃热水器JSQ25-13ST18（Y)","goods_price":"4068.00","goods_num":"1","goods_image":"http://dev.msbapp.cn/data/upload/shop/store/goods/8/8_05581767399212244_240.jpg","goods_pay_price":"4058.00","store_id":"8","buyer_id":"98906","goods_type":"1","promotions_id":"0","commis_rate":"200","gc_id":"1217","goods_spec":null,"goods_contractid":"","goods_commonid":"100133","add_time":"1542782829","is_dis":"1","dis_commis_rate":"7.200","dis_member_id":"0","dis_type":"1"}]}
+     * datas : {"refund":{"refund_id":"405","goods_id":"0","goods_name":"订单商品全部退款","order_id":"6838","refund_amount":"16.46","refund_sn":"763124181121095854","order_sn":"1000000000677801","add_time":"2018-11-21 09:58:54","goods_img_360":"http://shop.msbapp.cn:8090/data/upload/shop/common/default_goods_image_360.gif","seller_state":"同意","admin_state":"已完成","store_id":"24","store_name":"蔬菜先生","reason_info":"其他","buyer_message":"研发测试","seller_message":"研发测试","admin_message":"已退677801"},"pic_list":["http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095326326832.jpg","http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095330527580.jpg","http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095342912624.jpg"],"detail_array":{"refund_code":"微信支付[客户端]","pay_amount":"16.46","pd_amount":"0.00","rcb_amount":"0.00"},"goods_list":[{"rec_id":"8524","order_id":"6838","goods_id":"102921","goods_name":"上海青（500克/份） 配送时间:8:00--10:00","goods_price":"3.48","goods_num":"1","goods_image":"http://shop.msbapp.cn:8090/data/upload/shop/store/goods/24/24_05855741153190407_240.jpg","goods_pay_price":"3.48","store_id":"24","buyer_id":"249023","goods_type":"1","promotions_id":"0","commis_rate":"11","gc_id":"1276","goods_spec":"次日配送：配送时间:8:00--10:00","goods_contractid":"","goods_commonid":"100545","add_time":"1542765455","is_dis":"1","dis_commis_rate":"11.200","dis_member_id":"0","dis_type":"23"},{"rec_id":"8523","order_id":"6838","goods_id":"102578","goods_name":"地瓜叶（500克/份） 配送时间:8:00--10:00","goods_price":"2.98","goods_num":"1","goods_image":"http://shop.msbapp.cn:8090/data/upload/shop/store/goods/24/24_05855661948401742_240.jpg","goods_pay_price":"2.98","store_id":"24","buyer_id":"249023","goods_type":"1","promotions_id":"0","commis_rate":"11","gc_id":"1276","goods_spec":"次日配送：配送时间:8:00--10:00","goods_contractid":"","goods_commonid":"100507","add_time":"1542765455","is_dis":"1","dis_commis_rate":"11.200","dis_member_id":"0","dis_type":"23"}]}
      */
 
+    private int code;
     private DatasBean datas;
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 
     public DatasBean getDatas() {
         return datas;
@@ -21,15 +30,15 @@ public class RefundMoneyDetail {
 
     public static class DatasBean {
         /**
-         * refund : {"refund_id":"149","goods_id":"0","goods_name":"订单商品全部退款","order_id":"1301","refund_amount":"4058.00","refund_sn":"302108181121144916","order_sn":"1000000000128301","add_time":"2018-11-21 14:49:16","goods_img_360":"http://dev.msbapp.cn/data/upload/shop/common/default_goods_image_360.gif","seller_state":"同意","admin_state":"待处理","store_id":"8","store_name":"福气廊","reason_info":"订单信息有误，需要重拍","buyer_message":"123","seller_message":"222","admin_message":null}
-         * pic_list : ["http://dev.msbapp.cn/data/upload/shop/refund/05961269563455068.jpg"]
-         * detail_array : []
-         * goods_list : [{"rec_id":"1447","order_id":"1301","goods_id":"100157","goods_name":"万和灶具 C3-12T-L16Z（Y)","goods_price":"0.00","goods_num":"1","goods_image":"http://dev.msbapp.cn/data/upload/shop/store/goods/8/8_05581955944170345_240.jpg","goods_pay_price":"0.00","store_id":"8","buyer_id":"98906","goods_type":"5","promotions_id":"0","commis_rate":"200","gc_id":"0","goods_spec":null,"goods_contractid":"","goods_commonid":"0","add_time":"1542782829","is_dis":"0","dis_commis_rate":"0.000","dis_member_id":"0","dis_type":"0"},{"rec_id":"1446","order_id":"1301","goods_id":"100140","goods_name":"万和燃热水器JSQ25-13ST18（Y)","goods_price":"4068.00","goods_num":"1","goods_image":"http://dev.msbapp.cn/data/upload/shop/store/goods/8/8_05581767399212244_240.jpg","goods_pay_price":"4058.00","store_id":"8","buyer_id":"98906","goods_type":"1","promotions_id":"0","commis_rate":"200","gc_id":"1217","goods_spec":null,"goods_contractid":"","goods_commonid":"100133","add_time":"1542782829","is_dis":"1","dis_commis_rate":"7.200","dis_member_id":"0","dis_type":"1"}]
+         * refund : {"refund_id":"405","goods_id":"0","goods_name":"订单商品全部退款","order_id":"6838","refund_amount":"16.46","refund_sn":"763124181121095854","order_sn":"1000000000677801","add_time":"2018-11-21 09:58:54","goods_img_360":"http://shop.msbapp.cn:8090/data/upload/shop/common/default_goods_image_360.gif","seller_state":"同意","admin_state":"已完成","store_id":"24","store_name":"蔬菜先生","reason_info":"其他","buyer_message":"研发测试","seller_message":"研发测试","admin_message":"已退677801"}
+         * pic_list : ["http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095326326832.jpg","http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095330527580.jpg","http://shop.msbapp.cn:8090/data/upload/shop/refund/05961095342912624.jpg"]
+         * detail_array : {"refund_code":"微信支付[客户端]","pay_amount":"16.46","pd_amount":"0.00","rcb_amount":"0.00"}
+         * goods_list : [{"rec_id":"8524","order_id":"6838","goods_id":"102921","goods_name":"上海青（500克/份） 配送时间:8:00--10:00","goods_price":"3.48","goods_num":"1","goods_image":"http://shop.msbapp.cn:8090/data/upload/shop/store/goods/24/24_05855741153190407_240.jpg","goods_pay_price":"3.48","store_id":"24","buyer_id":"249023","goods_type":"1","promotions_id":"0","commis_rate":"11","gc_id":"1276","goods_spec":"次日配送：配送时间:8:00--10:00","goods_contractid":"","goods_commonid":"100545","add_time":"1542765455","is_dis":"1","dis_commis_rate":"11.200","dis_member_id":"0","dis_type":"23"},{"rec_id":"8523","order_id":"6838","goods_id":"102578","goods_name":"地瓜叶（500克/份） 配送时间:8:00--10:00","goods_price":"2.98","goods_num":"1","goods_image":"http://shop.msbapp.cn:8090/data/upload/shop/store/goods/24/24_05855661948401742_240.jpg","goods_pay_price":"2.98","store_id":"24","buyer_id":"249023","goods_type":"1","promotions_id":"0","commis_rate":"11","gc_id":"1276","goods_spec":"次日配送：配送时间:8:00--10:00","goods_contractid":"","goods_commonid":"100507","add_time":"1542765455","is_dis":"1","dis_commis_rate":"11.200","dis_member_id":"0","dis_type":"23"}]
          */
 
         private RefundBean refund;
+        private DetailArrayBean detail_array;
         private List<String> pic_list;
-        private List<?> detail_array;
         private List<GoodsListBean> goods_list;
 
         public RefundBean getRefund() {
@@ -40,20 +49,20 @@ public class RefundMoneyDetail {
             this.refund = refund;
         }
 
+        public DetailArrayBean getDetail_array() {
+            return detail_array;
+        }
+
+        public void setDetail_array(DetailArrayBean detail_array) {
+            this.detail_array = detail_array;
+        }
+
         public List<String> getPic_list() {
             return pic_list;
         }
 
         public void setPic_list(List<String> pic_list) {
             this.pic_list = pic_list;
-        }
-
-        public List<?> getDetail_array() {
-            return detail_array;
-        }
-
-        public void setDetail_array(List<?> detail_array) {
-            this.detail_array = detail_array;
         }
 
         public List<GoodsListBean> getGoods_list() {
@@ -66,23 +75,23 @@ public class RefundMoneyDetail {
 
         public static class RefundBean {
             /**
-             * refund_id : 149
+             * refund_id : 405
              * goods_id : 0
              * goods_name : 订单商品全部退款
-             * order_id : 1301
-             * refund_amount : 4058.00
-             * refund_sn : 302108181121144916
-             * order_sn : 1000000000128301
-             * add_time : 2018-11-21 14:49:16
-             * goods_img_360 : http://dev.msbapp.cn/data/upload/shop/common/default_goods_image_360.gif
+             * order_id : 6838
+             * refund_amount : 16.46
+             * refund_sn : 763124181121095854
+             * order_sn : 1000000000677801
+             * add_time : 2018-11-21 09:58:54
+             * goods_img_360 : http://shop.msbapp.cn:8090/data/upload/shop/common/default_goods_image_360.gif
              * seller_state : 同意
-             * admin_state : 待处理
-             * store_id : 8
-             * store_name : 福气廊
-             * reason_info : 订单信息有误，需要重拍
-             * buyer_message : 123
-             * seller_message : 222
-             * admin_message : null
+             * admin_state : 已完成
+             * store_id : 24
+             * store_name : 蔬菜先生
+             * reason_info : 其他
+             * buyer_message : 研发测试
+             * seller_message : 研发测试
+             * admin_message : 已退677801
              */
 
             private String refund_id;
@@ -101,7 +110,7 @@ public class RefundMoneyDetail {
             private String reason_info;
             private String buyer_message;
             private String seller_message;
-            private Object admin_message;
+            private String admin_message;
 
             public String getRefund_id() {
                 return refund_id;
@@ -231,39 +240,85 @@ public class RefundMoneyDetail {
                 this.seller_message = seller_message;
             }
 
-            public Object getAdmin_message() {
+            public String getAdmin_message() {
                 return admin_message;
             }
 
-            public void setAdmin_message(Object admin_message) {
+            public void setAdmin_message(String admin_message) {
                 this.admin_message = admin_message;
+            }
+        }
+
+        public static class DetailArrayBean {
+            /**
+             * refund_code : 微信支付[客户端]
+             * pay_amount : 16.46
+             * pd_amount : 0.00
+             * rcb_amount : 0.00
+             */
+
+            private String refund_code;
+            private String pay_amount;
+            private String pd_amount;
+            private String rcb_amount;
+
+            public String getRefund_code() {
+                return refund_code;
+            }
+
+            public void setRefund_code(String refund_code) {
+                this.refund_code = refund_code;
+            }
+
+            public String getPay_amount() {
+                return pay_amount;
+            }
+
+            public void setPay_amount(String pay_amount) {
+                this.pay_amount = pay_amount;
+            }
+
+            public String getPd_amount() {
+                return pd_amount;
+            }
+
+            public void setPd_amount(String pd_amount) {
+                this.pd_amount = pd_amount;
+            }
+
+            public String getRcb_amount() {
+                return rcb_amount;
+            }
+
+            public void setRcb_amount(String rcb_amount) {
+                this.rcb_amount = rcb_amount;
             }
         }
 
         public static class GoodsListBean {
             /**
-             * rec_id : 1447
-             * order_id : 1301
-             * goods_id : 100157
-             * goods_name : 万和灶具 C3-12T-L16Z（Y)
-             * goods_price : 0.00
+             * rec_id : 8524
+             * order_id : 6838
+             * goods_id : 102921
+             * goods_name : 上海青（500克/份） 配送时间:8:00--10:00
+             * goods_price : 3.48
              * goods_num : 1
-             * goods_image : http://dev.msbapp.cn/data/upload/shop/store/goods/8/8_05581955944170345_240.jpg
-             * goods_pay_price : 0.00
-             * store_id : 8
-             * buyer_id : 98906
-             * goods_type : 5
+             * goods_image : http://shop.msbapp.cn:8090/data/upload/shop/store/goods/24/24_05855741153190407_240.jpg
+             * goods_pay_price : 3.48
+             * store_id : 24
+             * buyer_id : 249023
+             * goods_type : 1
              * promotions_id : 0
-             * commis_rate : 200
-             * gc_id : 0
-             * goods_spec : null
+             * commis_rate : 11
+             * gc_id : 1276
+             * goods_spec : 次日配送：配送时间:8:00--10:00
              * goods_contractid :
-             * goods_commonid : 0
-             * add_time : 1542782829
-             * is_dis : 0
-             * dis_commis_rate : 0.000
+             * goods_commonid : 100545
+             * add_time : 1542765455
+             * is_dis : 1
+             * dis_commis_rate : 11.200
              * dis_member_id : 0
-             * dis_type : 0
+             * dis_type : 23
              */
 
             private String rec_id;
@@ -280,7 +335,7 @@ public class RefundMoneyDetail {
             private String promotions_id;
             private String commis_rate;
             private String gc_id;
-            private Object goods_spec;
+            private String goods_spec;
             private String goods_contractid;
             private String goods_commonid;
             private String add_time;
@@ -401,11 +456,11 @@ public class RefundMoneyDetail {
                 this.gc_id = gc_id;
             }
 
-            public Object getGoods_spec() {
+            public String getGoods_spec() {
                 return goods_spec;
             }
 
-            public void setGoods_spec(Object goods_spec) {
+            public void setGoods_spec(String goods_spec) {
                 this.goods_spec = goods_spec;
             }
 

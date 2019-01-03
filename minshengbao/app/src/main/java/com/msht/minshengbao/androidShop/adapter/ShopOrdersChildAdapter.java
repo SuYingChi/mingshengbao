@@ -92,7 +92,7 @@ public class ShopOrdersChildAdapter extends MyHaveHeadAndFootRecyclerAdapter<MyE
         if (holder.getItemViewType() == Integer.MIN_VALUE) {
             TextView tvStore = holder.getView(R.id.store);
             tvStore.setText(storeName);
-            holder.setText(R.id.order_state, state_desc);
+            holder.setText(R.id.order_state, state_desc==null||TextUtils.isEmpty(state_desc)||state_desc.equals("null")?"":state_desc);
         } else if (holder.getItemViewType() == Integer.MAX_VALUE) {
             if (zengpings.size()>0) {
                 holder.getView(R.id.ll_zengping).setVisibility(View.VISIBLE);
@@ -145,7 +145,7 @@ public class ShopOrdersChildAdapter extends MyHaveHeadAndFootRecyclerAdapter<MyE
         } else if (holder.getItemViewType() == 100) {
             holder.setImage(R.id.iv, extendOrderGoodsBean.getGoods_image_url());
             holder.setText(R.id.name, extendOrderGoodsBean.getGoods_name());
-            holder.setText(R.id.desc, extendOrderGoodsBean.getGoods_spec()==null?"":extendOrderGoodsBean.getGoods_spec().toString());
+            holder.setText(R.id.desc, extendOrderGoodsBean.getGoods_spec()==null||TextUtils.isEmpty(extendOrderGoodsBean.getGoods_spec())||"null".equals(extendOrderGoodsBean.getGoods_spec())?"":extendOrderGoodsBean.getGoods_spec());
             holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context, extendOrderGoodsBean.getGoods_price(), R.style.big_money, R.style.big_money));
             holder.setText(R.id.num, "X" + extendOrderGoodsBean.getGoods_num());
         }

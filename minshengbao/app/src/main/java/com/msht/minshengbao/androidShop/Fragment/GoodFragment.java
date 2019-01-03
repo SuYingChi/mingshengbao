@@ -732,8 +732,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             caridlist.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
+                carnum +=good.length();
                 for (int ii = 0; ii < good.length(); ii++) {
-                    carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
+                  //  carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
                     caridlist.add(new SimpleCarBean(good.optJSONObject(ii).optString("goods_id"), good.optJSONObject(ii).optString("cart_id")));
                 }
             }

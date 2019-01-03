@@ -3,7 +3,7 @@ package com.msht.minshengbao.androidShop;
 import com.msht.minshengbao.BuildConfig;
 
 public class ShopConstants {
-    public static final String BASE_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/mobile/"/*"http://shop.msbapp.cn:8090/mobile/"*/: /*"http://dev.msbapp.cn/mobile/"*/"http://shop.msbapp.cn:8090/mobile/";
+    public static final String BASE_URL = BuildConfig.DEBUG ? /*"http://dev.msbapp.cn/mobile/"*/"http://shop.msbapp.cn:8090/mobile/":"http://shop.msbapp.cn:8090/mobile/";
     public static final String BASE_WAP_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/wap/"/*"http://shop.msbapp.cn:8090/wap/"*/: "http://shop.msbapp.cn:8090/wap/";
     public static final String RELEASE_BASE_MSB_URL = "https://msbapp.cn";
     public static final String DEBUG_BASE_MSB_URL = "http://test.msbapp.cn:8080";

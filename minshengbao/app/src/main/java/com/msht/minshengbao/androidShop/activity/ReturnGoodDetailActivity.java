@@ -121,13 +121,12 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             }
         });
         rcl.setAdapter(adapter);
-
+        ShopPresenter.getRefundGoodDetail(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getRefundGoodDetail(this);
     }
 
     @Override

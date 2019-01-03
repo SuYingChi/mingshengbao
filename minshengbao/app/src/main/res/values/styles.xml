@@ -73,7 +73,7 @@
     </style>
     <!--tablayout文字字体  -->
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_18</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
     <style name="MyTabLayoutTextAppearanceInverse" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

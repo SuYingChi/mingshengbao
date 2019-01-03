@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
@@ -64,6 +65,8 @@ public class GoodEvaluationFragment extends ShopBaseLazyFragment implements IEva
     private List<EvaluationBean.DatasBean.GoodsEvalListBean> list = new ArrayList<EvaluationBean.DatasBean.GoodsEvalListBean>();
     private List<String> imageList;
     private int selectedPosition;
+    @BindView(R.id.tv_no_data)
+     TextView tvNoData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,6 +189,7 @@ public class GoodEvaluationFragment extends ShopBaseLazyFragment implements IEva
                 refreshLayout.setNoMoreData(false);
                 goodEvaluationAdapter.notifyDataSetChanged();
                 layoutEmpty.setVisibility(View.VISIBLE);
+                tvNoData.setVisibility(View.VISIBLE);
                 return;
             }else if (page > pageTotal) {
                 refreshLayout.setEnableAutoLoadMore(false);
@@ -196,6 +200,7 @@ public class GoodEvaluationFragment extends ShopBaseLazyFragment implements IEva
                 list.clear();
             }
             layoutEmpty.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
             refreshLayout.setEnableAutoLoadMore(true);
             refreshLayout.setNoMoreData(false);
             list.addAll(goodsEvalListBeanList);

@@ -57,7 +57,7 @@
      <TextView
          style="@style/shopMsbcolorTitleText"
          android:text="退款详情"
-         android:textColor="@color/shop_grey"
+         android:textColor="@color/black"
          android:background="@drawable/btn_refund"
          />
 

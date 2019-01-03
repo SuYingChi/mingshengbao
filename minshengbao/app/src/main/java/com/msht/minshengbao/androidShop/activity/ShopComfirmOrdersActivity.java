@@ -113,6 +113,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     Toolbar mToolbar;
     @BindView(R.id.back)
     ImageView ivback;
+    private boolean isInv = true;
 
     @Override
     protected void setLayout() {
@@ -150,9 +151,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 }
             }
             tvGoodNum.setText(String.format("共%d件商品", totalNum));
-            if(TextUtils.equals(isPickup_self,"0")) {
+            if (TextUtils.equals(isPickup_self, "0")) {
                 ShopPresenter.getAddressList(this, false);
-            }else {
+            } else {
                 PopUtil.toastInBottom("暂不支持自提商品购买");
             }
         } else {
@@ -183,13 +184,24 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 }
                 break;
             case R.id.rlt_inv_info:
-                Intent intent2 = new Intent(this, InvInfoActivity.class);
-                intent2.putExtra("data", datas.optString("order_amount"));
-                intent2.putExtra("address", selectedAddressBean);
-                startActivityForResult(intent2, REQUEST_CODE_INV_INFO);
+                if (!isInv) {
+                    PopUtil.showComfirmDialog(this, "", "该商品不支持开具发票", "", "知道了", null, null, true);
+                } else {
+                    Intent intent2 = new Intent(this, InvInfoActivity.class);
+                    intent2.putExtra("data", datas.optString("order_amount"));
+                    intent2.putExtra("address", selectedAddressBean);
+                    startActivityForResult(intent2, REQUEST_CODE_INV_INFO);
+                }
                 break;
             case R.id.comfirm:
-                ShopPresenter.buyStep2(this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch);
+                if(TextUtils.isEmpty(carIds)){
+                    PopUtil.showComfirmDialog(this,"","没有商品","","",null,null,true);
+
+                }else if(TextUtils.isEmpty(addressId)){
+                    PopUtil.showComfirmDialog(this,"","请添加收货地址","","",null,null,true);
+                }else {
+                    ShopPresenter.buyStep2(this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch);
+                }
                 break;
 
             default:
@@ -342,6 +354,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
             vat_hash = datas.optString("vat_hash");
             JSONObject obj = datas.optJSONObject("inv_info");
+            if (TextUtils.equals(obj.optString("content"), "不需要发票")) {
+                isInv = false;
+            } else {
+                isInv = true;
+            }
             invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
             tvInv_info.setText(content);
@@ -494,9 +511,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             JSONObject obj = new JSONObject(s);
             JSONObject datass = obj.optJSONObject("datas");
             JSONObject content = datass.optJSONObject("content");
-            if(content==null){
+            if (content == null) {
                 LogUtils.e(s);
-            }else {
+            } else {
                 goods_freight = 0;
                 for (int i = 0; i < list.size(); i++) {
                     String store_id = list.get(i).getStore_id();

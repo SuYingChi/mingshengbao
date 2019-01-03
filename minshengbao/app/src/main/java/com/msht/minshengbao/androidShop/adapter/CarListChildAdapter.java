@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.ShopStoreBean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.util.StringUtil;
@@ -42,11 +44,11 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
 
     public CarListChildAdapter(Context context) {
         super(context, R.layout.item_child_car_list);
-
     }
 
     @Override
     public void convert(final RecyclerHolder holder, final JSONObject obj, final int position) {
+
         if (holder.getItemViewType() == Integer.MIN_VALUE) {
             TextView tvStore = holder.getView(R.id.store);
             String storeName = obj.optString("store_name");
@@ -83,11 +85,11 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             });
             //刷新购物车，所有货物设为未选中状态
             if (initUnselectState) {
-                cbSelectStore.setChecked(false);
+                cbSelectStore.setChecked(obj.optBoolean("storecheck", false));
             }
             //底部的全选按钮选中状态的改变发起调用的notifyDataSetChanged()的时候走进来 isAllSelectNotify =true 标志开始notify子列表
             //全选触发，此时店铺按钮是未选，设置为已选
-            if (isAllSelectNotify && isSelectAll && !isCbStoreStartNotify && !isCbGoodStartNotify) {
+            else if (isAllSelectNotify && isSelectAll && !isCbStoreStartNotify && !isCbGoodStartNotify) {
                 if (!isCbStoreChecked) {
                     cbSelectStore.setChecked(true);
                 }
@@ -117,7 +119,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             tvJingle.setText(goodsSpec);
             TextView tvRemainNum = holder.getView(R.id.remain_num);
             String goodsStorage = obj.optString("goods_storage");
-            if(TextUtils.isEmpty(goodsStorage)){
+            if (TextUtils.isEmpty(goodsStorage)) {
                 goodsStorage = "商品已下架或不支持购买";
             }
             tvRemainNum.setText(String.format("库存量：%s", goodsStorage));
@@ -134,10 +136,11 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (!initUnselectState&&!isAllSelectNotify) {
+                    if (!initUnselectState && !isAllSelectNotify) {
                         //未选择店铺 商品全选了 需要刷新,或者 店铺被选，但是商品取消全选了 需要刷新
                         if (!isCbStoreChecked && isChecked) {
                             selecteGoodNum++;
+                            LogUtils.e("------onCheckGoodItem===" + obj+"------childPosition-----"+(position - 1));
                             carListChildListener.onCheckGoodItem(obj, storeBean, position - 1);
                             if (selecteGoodNum == getDatas().size() - 1) {
                                 isGoodCbCheckedAll = true;
@@ -167,7 +170,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                             carListChildListener.onUncheckGoodItem(obj, storeBean, position - 1);
                             isGoodCbCheckedAll = false;
                         }
-                    } else if (!initUnselectState&&isAllSelectNotify) {
+                    } else if (!initUnselectState) {
                         //全选，先选择了店铺，但商品还没有全选，notifydatasetchange的时候 商品的CheckBox更改为选中状态，回调进来，更改selecteGoodNum和isGoodCbCheckedAll的值
                         if (isChecked) {
                             selecteGoodNum++;
@@ -185,10 +188,11 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             });
             //刷新购物车，所有货物设为未选中状态
             if (initUnselectState) {
-                cbSelect.setChecked(false);
+               // cbSelect.setChecked(false);
+                cbSelect.setChecked(obj.optBoolean("goodcheck", false));
             }
             //底部的全选按钮选中状态的改变发起调用的notifyDataSetChanged()的时候走进来
-            if (isAllSelectNotify && isSelectAll && !isCbStoreStartNotify && !isCbGoodStartNotify) {
+            else if (isAllSelectNotify && isSelectAll && !isCbStoreStartNotify && !isCbGoodStartNotify) {
                 if (!cbSelect.isChecked()) {
                     cbSelect.setChecked(true);
                 }
@@ -198,7 +202,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                 if (cbSelect.isChecked()) {
                     cbSelect.setChecked(false);
                 }
-            } else {
+            } else
                 //店铺的checkbox那边选中状态的更改调用notifyDataSetChanged()的时候走进来
                 //选择了店铺，但此时该商品还没被选中，则设置为选中
                 if (!isAllSelectNotify && isCbStoreStartNotify && !isCbGoodStartNotify) {
@@ -209,8 +213,8 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                     else if (!isCbStoreChecked && cbSelect.isChecked()) {
                         cbSelect.setChecked(false);
                     }
+
                 }
-            }
             final TextView tvNum = holder.getView(R.id.number);
             String goodsNum = obj.optString("goods_num");
             tvNum.setText(goodsNum);
@@ -222,7 +226,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                 List<JSONObject> list = JsonUtil.jsonArrayToList(giftList.toString());
             }
 
-            TextView tvReduce = holder.getView(R.id.reduce);
+            LinearLayout tvReduce = holder.getView(R.id.ll_reduce);
             tvReduce.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -230,16 +234,16 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                     int num = Integer.valueOf(goodNum);
                     String goodsStorage = obj.optString("goods_storage");
                     int goodsStorageNum;
-                    if(TextUtils.isEmpty(goodsStorage)){
+                    if (TextUtils.isEmpty(goodsStorage)) {
                         goodsStorageNum = -1;
-                    }else {
+                    } else {
                         goodsStorageNum = Integer.valueOf(goodsStorage);
                     }
-                    if(goodsStorageNum==-1) {
+                    if (goodsStorageNum == -1) {
                         PopUtil.showComfirmDialog(context, "提示", "商品已经下架", null, "好", null, null, true);
-                    }  else if (num == 1) {
+                    } else if (num == 1) {
                         PopUtil.showComfirmDialog(context, "提示", "请选择至少一件该商品", null, "好", null, null, true);
-                    }else if (num >= goodsStorageNum) {
+                    } else if (num >= goodsStorageNum) {
                         PopUtil.showComfirmDialog(context, "提示", "库存量不足", null, "好", null, null, true);
                     } else {
                         num--;
@@ -256,7 +260,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                     }
                 }
             });
-            TextView tvPlus = holder.getView(R.id.plus);
+            LinearLayout tvPlus = holder.getView(R.id.ll_plus);
             tvPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -264,16 +268,16 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                     int num = Integer.valueOf(goodNum);
                     String goodsStorage = obj.optString("goods_storage");
                     int goodsStorageNum;
-                    if(TextUtils.isEmpty(goodsStorage)){
+                    if (TextUtils.isEmpty(goodsStorage)) {
                         goodsStorageNum = -1;
-                    }else {
-                         goodsStorageNum = Integer.valueOf(goodsStorage);
+                    } else {
+                        goodsStorageNum = Integer.valueOf(goodsStorage);
                     }
-                    if(goodsStorageNum==-1) {
+                    if (goodsStorageNum == -1) {
                         PopUtil.showComfirmDialog(context, "提示", "商品已经下架", null, "好", null, null, true);
-                    }else if (num >= goodsStorageNum) {
+                    } else if (num >= goodsStorageNum) {
                         PopUtil.showComfirmDialog(context, "提示", "库存量不足", null, "好", null, null, true);
-                    }else {
+                    } else {
                         num++;
                         try {
                             obj.put("goods_num", num + "");
@@ -298,8 +302,8 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
         //刷新到最后一项了，重置标志位
         if (position == datas.size() - 1) {
             if (isAllSelectNotify) {
-                setAllSelectNotify(isSelectAll, false,initUnselectState);
-            }else if(initUnselectState){
+                setAllSelectNotify(isSelectAll, false, initUnselectState);
+            } else if (initUnselectState) {
                 initUnselectState = false;
             }
         }
@@ -315,9 +319,9 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
     }
 
 
-    public void setAllSelectNotify(boolean isSelectAll, boolean isNotifyAdapter,boolean initUnselectState) {
+    public void setAllSelectNotify(boolean isSelectAll, boolean isNotifyAdapter, boolean initUnselectState) {
         this.initUnselectState = initUnselectState;
-        if(initUnselectState) {
+        if (initUnselectState) {
             isGoodCbCheckedAll = false;
             selecteGoodNum = 0;
             isCbStoreChecked = false;
@@ -325,7 +329,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             isCbGoodStartNotify = false;
             isAllSelectNotify = false;
             this.isSelectAll = false;
-        }else {
+        } else {
             this.isSelectAll = isSelectAll;
             isAllSelectNotify = isNotifyAdapter;
             isCbGoodStartNotify = false;
@@ -333,33 +337,20 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
         }
     }
 
-    public void initUnselectState(boolean initUnselectState) {
-        this.initUnselectState = initUnselectState;
-        if(initUnselectState) {
-            isGoodCbCheckedAll = false;
-            selecteGoodNum = 0;
-            isCbStoreChecked = false;
-            isCbStoreStartNotify = false;
-            isCbGoodStartNotify = false;
-            isAllSelectNotify = false;
-            isSelectAll = false;
-        }
-    }
-
     public interface CarListChildListener {
-        void onUncheckGoodItem(JSONObject goodObject, ShopStoreBean store, int childPosition);
+        void onUncheckGoodItem(final JSONObject goodObject, final ShopStoreBean store, final int childPosition);
 
-        void onUncheckStoreItem(ShopStoreBean store);
+        void onUncheckStoreItem(final ShopStoreBean store);
 
-        void onCheckStoreItem(ShopStoreBean store);
+        void onCheckStoreItem(final ShopStoreBean store);
 
-        void onCheckGoodItem(JSONObject goodObject, ShopStoreBean storeBean, int childPosition);
+        void onCheckGoodItem(final JSONObject goodObject,final ShopStoreBean storeBean,final int childPosition);
 
-        void onUnCheckGoodAndunCheckStoreItem(ShopStoreBean storeBean);
+        void onUnCheckGoodAndunCheckStoreItem(final ShopStoreBean storeBean);
 
-        void onModifyItemNum(JSONObject goodObject);
+        void onModifyItemNum(final JSONObject goodObject);
 
-        void onGotoGoodDetail(String goodsid);
+        void onGotoGoodDetail(final String goodsid);
     }
 
     public void setCarListChildListener(CarListChildListener carListChildListener) {

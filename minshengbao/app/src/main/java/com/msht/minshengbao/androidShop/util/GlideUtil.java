@@ -477,8 +477,8 @@ public class GlideUtil {/*
                         if (imageView == null) {
                             return false;
                         }
-                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_CENTER) {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         }
                         ViewGroup.LayoutParams params = imageView.getLayoutParams();
                         int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();

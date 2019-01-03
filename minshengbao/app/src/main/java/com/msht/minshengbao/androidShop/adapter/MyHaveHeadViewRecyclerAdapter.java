@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
 
@@ -87,7 +88,7 @@ public abstract class MyHaveHeadViewRecyclerAdapter<T> extends RecyclerView.Adap
     }
 
     @Override
-    public void onBindViewHolder(RecyclerHolder holder, int position) {
+    public void onBindViewHolder(RecyclerHolder holder,final int position) {
         if(getItemViewType(position) == Integer.MIN_VALUE){
             convert(holder, datas.get(0), position);
         } else {

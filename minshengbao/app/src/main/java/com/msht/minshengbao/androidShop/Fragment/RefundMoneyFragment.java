@@ -43,7 +43,9 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
     private ShopRefundMoneyListAdapter adapter;
     private List<RefunBean.DatasBean.RefundListBean> ordersList = new ArrayList<RefunBean.DatasBean.RefundListBean>();
     private int pageNum = 1;
-    private boolean isViewCreated=false;
+    private boolean isViewCreated = false;
+    private boolean isRestart = false;
+    private int lastPageNum;
 
     @Override
     protected int setLayoutId() {
@@ -65,7 +67,7 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
 
     @Override
     protected void initData() {
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
     }
@@ -74,8 +76,8 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
     @Override
     public void onGoDetail(int position) {
         String refundId = ordersList.get(position).getRefund_id();
-        Intent intent = new Intent(getActivity(),RefundMoneyActivity.class);
-        intent.putExtra("data",refundId);
+        Intent intent = new Intent(getActivity(), RefundMoneyActivity.class);
+        intent.putExtra("data", refundId);
         startActivity(intent);
     }
 
@@ -98,40 +100,61 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
             ivNoOrder.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
             return;
-        } else if (pageNum > pageTotal) {
-            refreshLayout.setEnableAutoLoadMore(false);
-            refreshLayout.finishLoadMoreWithNoMoreData();
-            refreshLayout.setNoMoreData(true);
-            return;
-        } else if (pageNum == 1) {
-            ordersList.clear();
         }
-        ivNoOrder.setVisibility(View.INVISIBLE);
-        tvNoData.setVisibility(View.INVISIBLE);
-        refreshLayout.setEnableAutoLoadMore(true);
-        refreshLayout.setNoMoreData(false);
-        ordersList.addAll(bean.getDatas().getRefund_list());
-        adapter.notifyDataSetChanged();
+        if (!isRestart) {
+            if (pageNum > pageTotal) {
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.finishLoadMoreWithNoMoreData();
+                refreshLayout.setNoMoreData(true);
+                return;
+            } else if (pageNum == 1) {
+                ordersList.clear();
+            }
+            ivNoOrder.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
+            refreshLayout.setEnableAutoLoadMore(true);
+            refreshLayout.setNoMoreData(false);
+            ordersList.addAll(bean.getDatas().getRefund_list());
+            adapter.notifyDataSetChanged();
+        }else {
+            if (pageNum == 1) {
+                ordersList.clear();
+                ordersList.addAll(bean.getDatas().getRefund_list());
+                pageNum++;
+                ShopPresenter.getRefundMoneyList(this);
+            } else if (pageNum < lastPageNum && bean.getDatas().getRefund_list().size() != 0) {
+                ordersList.addAll(bean.getDatas().getRefund_list());
+                pageNum++;
+                ShopPresenter.getRefundMoneyList(this);
+            } else if (pageNum == lastPageNum &&bean.getDatas().getRefund_list().size() != 0) {
+                ordersList.addAll(bean.getDatas().getRefund_list());
+                adapter.notifyDataSetChanged();
+                isRestart = false;
+            }
+        }
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         isViewCreated = true;
     }
-     @Override
-        protected void onVisible() {
-            super.onVisible();
-            if (isViewCreated) {
-                pageNum = 1;
-                if(!getKey().equals("")) {
-                    ShopPresenter.getRefundMoneyList(this);
-                }
+
+    @Override
+    protected void onVisible() {
+        super.onVisible();
+        if (isViewCreated) {
+            pageNum = 1;
+            if (!getKey().equals("")) {
+                ShopPresenter.getRefundMoneyList(this);
             }
         }
+    }
+
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
     }
@@ -139,7 +162,7 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         pageNum++;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
     }
@@ -152,9 +175,11 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
         ;
     }
 
-    public void refresh() {
+    public void refresh(boolean isRestart) {
+        this.isRestart = isRestart;
+        lastPageNum = pageNum;
         pageNum = 1;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
     }

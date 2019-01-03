@@ -84,7 +84,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.25"
-        android:background="@color/nc_yellow"
+        android:background="@color/yellow_text"
         android:minHeight="45dp">
 
         <TextView

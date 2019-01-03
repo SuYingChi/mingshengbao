@@ -51,12 +51,12 @@ public class MyShopOrderActivity extends ShopBaseActivity {
                     if (indexChilde != this.indexChild) {
                         this.indexChild = indexChilde;
                     }
-                    f2.refreshCurrentTab(indexChilde);
+                    f2.refreshCurrentTab(indexChilde,false);
                 } else {
                     if (indexChilde != this.indexChild) {
                         this.indexChild = indexChilde;
                     }
-                    f3.refreshCurrentTab(indexChilde);
+                    f3.refreshCurrentTab(indexChilde,false);
                 }
 
             }
@@ -128,12 +128,12 @@ public class MyShopOrderActivity extends ShopBaseActivity {
                 if (indexChilde != this.indexChild) {
                     this.indexChild = indexChilde;
                 }
-                f2.refreshCurrentTab(indexChilde);
+                f2.refreshCurrentTab(indexChilde,false);
             } else {
                 if (indexChilde != this.indexChild) {
                     this.indexChild = indexChilde;
                 }
-                f3.refreshCurrentTab(indexChilde);
+                f3.refreshCurrentTab(indexChilde,false);
             }
 
         }
@@ -144,9 +144,9 @@ public class MyShopOrderActivity extends ShopBaseActivity {
         super.onRestart();
         //刷新列表，当前页正在显示则重刷，不是则另选
         if(fragmentIndex==0){
-            f2.refreshCurrentTab(indexChild);
+            f2.refreshCurrentTab(indexChild,true);
         }else {
-            f3.refreshCurrentTab(indexChild);
+            f3.refreshCurrentTab(indexChild,true);
         }
     }
 }

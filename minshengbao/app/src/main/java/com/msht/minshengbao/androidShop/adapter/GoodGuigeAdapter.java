@@ -25,7 +25,7 @@ public class GoodGuigeAdapter extends MyHaveHeadViewRecyclerAdapter<GuiGeBean>{
             tv.setTextColor(context.getResources().getColor(R.color.white));
         }else {
             tv.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.btn_normal_unselect));
-            tv.setTextColor(context.getResources().getColor(R.color.shop_grey));
+            tv.setTextColor(context.getResources().getColor(R.color.black));
         }
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override

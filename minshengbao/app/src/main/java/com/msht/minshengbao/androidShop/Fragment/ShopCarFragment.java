@@ -89,7 +89,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
     private CarParentListener carParentListener;
     private boolean initUnselectState = false;
     private int carnum;
-    private boolean isModifyGoodNum =false;
+    private boolean isModifyGoodNum = false;
 
 
     @Override
@@ -117,13 +117,20 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         adapter.setDatas(carList);
         adapter.setCarListListener(new CarListAdapter.CarListListener() {
             @Override
-            public void onUncheckItem(JSONObject goodObject, ShopStoreBean storebject, int childPosition, int position) {
+            public void onUncheckItem(final JSONObject goodObject, final ShopStoreBean storebject,final int childPosition, final int position) {
                 isNotifyAdapter = false;
                 String cart_id = goodObject.optString("cart_id");
                 String goods_id = goodObject.optString("goods_id");
                 String goods_num = goodObject.optString("goods_num");
                 String goods_price = goodObject.optString("goods_price");
                 CarGoodItemBean bean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
+                int position2 = storeList.indexOf(storebject);
+                LogUtils.e("---position2----"+position2+"------childPosition-----"+childPosition);
+                try {
+                    carList.get(position2).optJSONArray("goods").optJSONObject(childPosition).put("goodcheck",false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if (selectedGoodList.contains(bean)) {
                     gotoBuyList.remove(selectedGoodList.indexOf(bean));
                     selectedGoodList.remove(bean);
@@ -136,7 +143,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
             //此时店铺下的商品全部也未选中
             @Override
-            public void onUncheckStoreItem(ShopStoreBean storeObject) {
+            public void onUncheckStoreItem(final ShopStoreBean storeObject) {
                 LogUtils.e("------onUncheckStoreItem===" + storeObject);
                 isNotifyAdapter = false;
                 if (selectedStoreList.contains(storeObject)) {
@@ -145,6 +152,11 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 int position = storeList.indexOf(storeObject);
                 JSONObject item = carList.get(position);
                 JSONArray goods = item.optJSONArray("goods");
+                try {
+                    carList.get(position).put("storecheck",false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 for (int i = 0; i < goods.length(); i++) {
                     JSONObject goodObject = goods.optJSONObject(i);
                     String cart_id = goodObject.optString("cart_id");
@@ -164,7 +176,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             }
 
             @Override
-            public void onCheckStoreItem(ShopStoreBean storeObject) {
+            public void onCheckStoreItem(final ShopStoreBean storeObject) {
                 LogUtils.e("-----onCheckStoreItem===" + storeObject);
                 isNotifyAdapter = false;
                 if (!selectedStoreList.contains(storeObject)) {
@@ -173,6 +185,11 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 int position = storeList.indexOf(storeObject);
                 JSONObject item = carList.get(position);
                 JSONArray goods = item.optJSONArray("goods");
+                try {
+                    carList.get(position).put("storecheck",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 for (int i = 0; i < goods.length(); i++) {
                     JSONObject goodObject = goods.optJSONObject(i);
                     String cart_id = goodObject.optString("cart_id");
@@ -180,6 +197,8 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                     String goods_num = goodObject.optString("goods_num");
                     String goods_price = goodObject.optString("goods_price");
                     CarGoodItemBean bean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
+                  /*  if (!goodObject.optBoolean("storage_state")) {
+                    } else */
                     if (!selectedGoodList.contains(bean)) {
                         selectedGoodList.add(bean);
                         gotoBuyList.add(goodObject);
@@ -192,13 +211,20 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             }
 
             @Override
-            public void onCheckGoodItem(JSONObject goodObject, ShopStoreBean storebject, int childPosition, int position) {
-                LogUtils.e("------onCheckGoodItem===" + goodObject);
+            public void onCheckGoodItem(final JSONObject goodObject,final  ShopStoreBean storebject,final int childPosition,final int position) {
                 String cart_id = goodObject.optString("cart_id");
                 String goods_id = goodObject.optString("goods_id");
                 String goods_num = goodObject.optString("goods_num");
                 String goods_price = goodObject.optString("goods_price");
                 CarGoodItemBean bean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
+                //刷新过列表后，外层recycleview的position传不对，只穿1，不知道为啥
+                int position2 = storeList.indexOf(storebject);
+                LogUtils.e("---position2----"+position2+"------childPosition-----"+childPosition);
+                try {
+                    carList.get(position2).optJSONArray("goods").optJSONObject(childPosition).put("goodcheck",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if (!selectedGoodList.contains(bean)) {
                     selectedGoodList.add(bean);
                     updateAmount();
@@ -218,7 +244,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
             //此时该店铺下还有商品选中
             @Override
-            public void onUnCheckGoodAndUnCheckStoreItem(ShopStoreBean storeBean) {
+            public void onUnCheckGoodAndUnCheckStoreItem(final ShopStoreBean storeBean) {
                 isNotifyAdapter = false;
                 if (selectedStoreList.contains(storeBean)) {
                     selectedStoreList.remove(storeBean);
@@ -229,19 +255,19 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             }
 
             @Override
-            public void onModifyGoodNum(JSONObject goodObject) {
+            public void onModifyGoodNum(final JSONObject goodObject) {
                 cart_id = goodObject.optString("cart_id");
                 goods_num = goodObject.optString("goods_num");
                 ShopPresenter.modifyGoodNum(ShopCarFragment.this, ShopCarFragment.this);
             }
 
             @Override
-            public void onGoodDetail(String goodid) {
+            public void onGoodDetail(final String goodid) {
               /*  Map<String, String> map = new HashMap<String, String>();
                 map.put("type", "goods");
                 map.put("data", goodid);
                 doNotAdClick(map);*/
-                doShopItemViewClick("goods",goodid);
+                doShopItemViewClick("goods", goodid);
             }
         });
         rcl.setAdapter(adapter);
@@ -282,7 +308,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                                 String goods_num = obj.optString("goods_num");
                                 String goods_price = obj.optString("goods_price");
                                 CarGoodItemBean goodBean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
-                                //add的时候没有判断重复，可重复添加，要添加之前先判断是否存在再添加，同时重写元素的equals和hashcode
                                 if (!selectedGoodList.contains(goodBean)) {
                                     selectedGoodList.add(goodBean);
                                     updateAmount();
@@ -379,24 +404,27 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             carnum = 0;
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                for (int ii = 0; ii < good.length(); ii++) {
+              /*  for (int ii = 0; ii < good.length(); ii++) {
                     carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                }
+                }*/
+                carnum += good.length();
             }
             EventBus.getDefault().postSticky(new CarNumEvent(carnum));
-                carList.clear();
-                storeList.clear();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.optJSONObject(i);
-                    carList.add(obj);
-                    String storeName = obj.optString("store_name");
-                    String storeId = obj.optString("store_id");
-                    ShopStoreBean storeBean = new ShopStoreBean(storeName, storeId);
-                    storeList.add(storeBean);
-                }
-                if (carList.size() == 0) {
-                    carParentListener.changeCarEmpty();
-                }
+            carList.clear();
+            storeList.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.optJSONObject(i);
+                obj.put("storecheck",false);
+                obj.put("goodcheck",false);
+                carList.add(obj);
+                String storeName = obj.optString("store_name");
+                String storeId = obj.optString("store_id");
+                ShopStoreBean storeBean = new ShopStoreBean(storeName, storeId);
+                storeList.add(storeBean);
+            }
+            if (carList.size() == 0) {
+                carParentListener.changeCarEmpty();
+            }
             if (!isModifyGoodNum) {
                 selectedStoreList.clear();
                 selectedGoodList.clear();
@@ -472,20 +500,28 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             for (JSONObject jsonObject : gotoBuyList) {
                 String store_id = jsonObject.optString("store_id");
                 String store_name = jsonObject.optString("store_name");
-                if (!map.containsKey(store_id)) {
-                    List<ComfirmShopGoodBean.GoodsBean> list = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
-                    ComfirmShopGoodBean.GoodsBean bean = JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class);
-                    list.add(bean);
-                    ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
-                    comfirmShopGoodBean.setStore_id(store_id);
-                    comfirmShopGoodBean.setStore_name(store_name);
-                    comfirmShopGoodBean.setGoods(list);
-                    map.put(store_id, comfirmShopGoodBean);
-                } else {
-                    ComfirmShopGoodBean bean = map.get(store_id);
-                    List<ComfirmShopGoodBean.GoodsBean> list = bean.getGoods();
-                    list.add(JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class));
-                    bean.setGoods(list);
+                if(!jsonObject.optBoolean("storage_state")){
+                    PopUtil.toastInBottom("已为您取消购买已下架或库存不足的商品");
+                }else if("1".equals(jsonObject.optString("pickup_self"))){
+                    PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
+                }else if (jsonObject.optBoolean("storage_state")&&"0".equals(jsonObject.optString("pickup_self"))) {
+                    if (!map.containsKey(store_id)) {
+                        List<ComfirmShopGoodBean.GoodsBean> list = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
+                        ComfirmShopGoodBean.GoodsBean bean = JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class);
+                        list.add(bean);
+                        ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
+                        comfirmShopGoodBean.setStore_id(store_id);
+                        comfirmShopGoodBean.setStore_name(store_name);
+                        comfirmShopGoodBean.setGoods(list);
+                        map.put(store_id, comfirmShopGoodBean);
+                    } else {
+                        ComfirmShopGoodBean bean = map.get(store_id);
+                        List<ComfirmShopGoodBean.GoodsBean> list = bean.getGoods();
+                        if (jsonObject.optBoolean("storage_state")) {
+                            list.add(JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class));
+                        }
+                        bean.setGoods(list);
+                    }
                 }
             }
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
@@ -494,7 +530,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                         + entry.getValue());
                 list.add(entry.getValue());
             }
-            String isPickup_self = "";
+       /*     String isPickup_self = "";
             out:
             for (int ii = 0; ii < list.size(); ii++) {
                 List<ComfirmShopGoodBean.GoodsBean> goods = list.get(ii).getGoods();
@@ -502,26 +538,26 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                     if (ii == 0 && i == 0) {
                         isPickup_self = goods.get(i).getPickup_self();
                     } else if (!goods.get(i).getPickup_self().equals(isPickup_self)) {
-                        PopUtil.toastInBottom("自提商品和普通商品请分开购买");
+                        isPickup_self = "1";
                         break out;
                     }
                 }
-            }
-            if (!TextUtils.isEmpty(isPickup_self)) {
-                if (TextUtils.equals(isPickup_self, "0")) {
+            }*/
+           /* if (!TextUtils.isEmpty(isPickup_self)) {
+                if (TextUtils.equals(isPickup_self, "0")) {*/
                     Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("ifCar", "1");
-                    bundle.putString("isPickup_self", isPickup_self);
+                    bundle.putString("isPickup_self", "0");
                     bundle.putSerializable("data", (Serializable) list);
                     intent.putExtras(bundle);
                     startActivity(intent);
-                } else {
+             /*   } else {
                     PopUtil.toastInBottom("暂不支持自提商品购买");
                 }
-            }else {
+            } else {
                 PopUtil.toastInBottom("请取消选择已下架或不支持购买的商品");
-            }
+            }*/
         }
     }
 

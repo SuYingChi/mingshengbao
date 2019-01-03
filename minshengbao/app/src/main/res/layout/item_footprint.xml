@@ -12,6 +12,9 @@
         style="@style/shopMsbcolorTitleText"
         android:layout_alignTop="@id/iv"
         android:layout_toRightOf="@id/iv"
+        android:textSize="@dimen/text_15"
+        android:lines="2"
+        android:ellipsize="end"
         android:textColor="@color/black"
 
          />
@@ -21,5 +24,7 @@
         android:textColor="@color/msb_color"
         android:layout_toRightOf="@id/iv"
         android:layout_alignBottom="@id/iv"
+        android:lines="2"
+        android:ellipsize="end"
         />
 </RelativeLayout>

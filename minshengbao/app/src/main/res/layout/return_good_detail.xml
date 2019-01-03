@@ -106,10 +106,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/reason"
@@ -129,10 +125,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/detail"
@@ -152,10 +144,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/amount2"
@@ -175,10 +163,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/num"
@@ -198,10 +182,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/sn"

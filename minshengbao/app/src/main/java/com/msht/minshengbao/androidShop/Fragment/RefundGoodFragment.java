@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.activity.ReturnGoodDetailActivity;
 import com.msht.minshengbao.androidShop.adapter.ShopRefundGoodListAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -23,6 +24,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,9 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
     private ShopRefundGoodListAdapter adapter;
     private List<RefunGoodBean.DatasBean.ReturnListBean> ordersList = new ArrayList<RefunGoodBean.DatasBean.ReturnListBean>();
     private int pageNum = 1;
-    private boolean isViewCreated=false;
+    private boolean isViewCreated = false;
+    private boolean isRestart = false;
+    private int lastPageNum;
 
     @Override
     protected int setLayoutId() {
@@ -62,7 +66,7 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
 
     @Override
     protected void initData() {
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundGoodList(this);
         }
     }
@@ -71,8 +75,8 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
     @Override
     public void onGoDetail(String refund) {
 
-        Intent intent = new Intent(getActivity(),ReturnGoodDetailActivity.class);
-        intent.putExtra("data",refund);
+        Intent intent = new Intent(getActivity(), ReturnGoodDetailActivity.class);
+        intent.putExtra("data", refund);
         startActivity(intent);
     }
 
@@ -95,26 +99,44 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
             ivNoOrder.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
             return;
-        } else if (pageNum > pageTotal) {
-            refreshLayout.setEnableAutoLoadMore(false);
-            refreshLayout.finishLoadMoreWithNoMoreData();
-            refreshLayout.setNoMoreData(true);
-            return;
-        } else if (pageNum == 1) {
-            ordersList.clear();
         }
-        ivNoOrder.setVisibility(View.INVISIBLE);
-        tvNoData.setVisibility(View.INVISIBLE);
-        refreshLayout.setEnableAutoLoadMore(true);
-        refreshLayout.setNoMoreData(false);
-        ordersList.addAll(bean.getDatas().getReturn_list());
-        adapter.notifyDataSetChanged();
+        if (!isRestart) {
+            if (pageNum > pageTotal) {
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.finishLoadMoreWithNoMoreData();
+                refreshLayout.setNoMoreData(true);
+                return;
+            } else if (pageNum == 1) {
+                ordersList.clear();
+            }
+            ivNoOrder.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
+            refreshLayout.setEnableAutoLoadMore(true);
+            refreshLayout.setNoMoreData(false);
+            ordersList.addAll(bean.getDatas().getReturn_list());
+            adapter.notifyDataSetChanged();
+        } else {
+            if (pageNum == 1) {
+                ordersList.clear();
+                ordersList.addAll(bean.getDatas().getReturn_list());
+                pageNum++;
+                ShopPresenter.getRefundGoodList(this);
+            } else if (pageNum < lastPageNum && bean.getDatas().getReturn_list().size() != 0) {
+                ordersList.addAll(bean.getDatas().getReturn_list());
+                pageNum++;
+                ShopPresenter.getRefundGoodList(this);
+            } else if (pageNum == lastPageNum &&bean.getDatas().getReturn_list().size() != 0) {
+                ordersList.addAll(bean.getDatas().getReturn_list());
+                adapter.notifyDataSetChanged();
+                isRestart = false;
+            }
+        }
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundGoodList(this);
         }
     }
@@ -122,7 +144,7 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         pageNum++;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundGoodList(this);
         }
     }
@@ -134,25 +156,29 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
         refreshLayout.finishLoadMore();
         ;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         isViewCreated = true;
     }
+
     @Override
     protected void onVisible() {
         super.onVisible();
         if (isViewCreated) {
             pageNum = 1;
-            if(!getKey().equals("")) {
+            if (!getKey().equals("")) {
                 ShopPresenter.getRefundGoodList(this);
             }
         }
     }
 
-    public void refresh() {
+    public void refresh(boolean isRestart) {
+        this.isRestart = isRestart;
+        lastPageNum = pageNum;
         pageNum = 1;
-        if(!getKey().equals("")) {
+        if (!getKey().equals("")) {
             ShopPresenter.getRefundGoodList(this);
         }
     }

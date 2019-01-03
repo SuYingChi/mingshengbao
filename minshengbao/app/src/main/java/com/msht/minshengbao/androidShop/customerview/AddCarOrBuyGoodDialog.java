@@ -120,7 +120,7 @@ public class AddCarOrBuyGoodDialog extends Dialog {
         });
     }
 
-    @OnClick({R.id.close, R.id.plus, R.id.reduce, R.id.add_car_dialog, R.id.buy_dialog})
+    @OnClick({R.id.close, R.id.ll_plus, R.id.ll_reduce, R.id.add_car_dialog, R.id.buy_dialog})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.close:
@@ -128,7 +128,7 @@ public class AddCarOrBuyGoodDialog extends Dialog {
                     AddCarOrBuyGoodDialog.this.dismiss();
                 }
                 break;
-            case R.id.reduce:
+            case R.id.ll_reduce:
                 if (num > 1) {
                     num--;
                     iShopGoodDetailView.setSelectedGoodNum(num);
@@ -137,7 +137,7 @@ public class AddCarOrBuyGoodDialog extends Dialog {
                     PopUtil.toastInBottom("最少一个商品");
                 }
                 break;
-            case R.id.plus:
+            case R.id.ll_plus:
                 if(num<Integer.valueOf(iShopGoodDetailView.getRemainNum())) {
                     num++;
                     iShopGoodDetailView.setSelectedGoodNum(num);
@@ -167,7 +167,7 @@ public class AddCarOrBuyGoodDialog extends Dialog {
         tvName.setText(iShopGoodDetailView.getNameDialog());
         tvPrice.setText(StringUtil.getPriceSpannable12String(getContext(), iShopGoodDetailView.getPrice(), R.style.big_money, R.style.big_money));
         tvRemainNum.setText(String.format("库存量:%s件", iShopGoodDetailView.getRemainNum()));
-        tvNum.setText(String.format("%d", num));
+        tvNum.setText(String.format("%d", iShopGoodDetailView.getSelectedGoodNum()));
         GlideUtil.loadRemoteImg(context,iv,iShopGoodDetailView.getImageUrl());
         if(TextUtils.isEmpty(iShopGoodDetailView.getGuigeName())) {
             llguige.setVisibility(View.INVISIBLE);

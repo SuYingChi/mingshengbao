@@ -80,10 +80,10 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
     }
 
     protected void showCenterLodaingDialog() {
-        if (!this.getActivity().isFinishing() && centerLoadingDialog == null) {
+        if (this.getActivity()!=null&&!this.getActivity().isFinishing() && centerLoadingDialog == null) {
             centerLoadingDialog = new LoadingDialog(this.getContext());
             centerLoadingDialog.show();
-        } else if (!this.getActivity().isFinishing() && !centerLoadingDialog.isShowing()) {
+        } else if (this.getActivity()!=null&&!this.getActivity().isFinishing() && !centerLoadingDialog.isShowing()) {
             centerLoadingDialog.show();
         }
     }

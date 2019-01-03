@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.ShopStoreBean;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
 import org.json.JSONArray;
@@ -79,37 +80,39 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
             childAdapter.setDatas(childList);
             childAdapter.setCarListChildListener(new CarListChildAdapter.CarListChildListener() {
                 @Override
-                public void onUncheckGoodItem(JSONObject goodObject, ShopStoreBean store,int childPosition) {
+                public void onUncheckGoodItem(final JSONObject goodObject,final ShopStoreBean store,final int childPosition) {
+                    LogUtils.e("---position----"+position+"------childPosition-----"+childPosition);
                     carListListener.onUncheckItem(goodObject, store, childPosition,position);
                 }
 
                 @Override
-                public void onUncheckStoreItem(ShopStoreBean store) {
+                public void onUncheckStoreItem(final ShopStoreBean store) {
                     carListListener.onUncheckStoreItem(store);
                 }
 
                 @Override
-                public void onCheckStoreItem(ShopStoreBean store) {
+                public void onCheckStoreItem(final ShopStoreBean store) {
                     carListListener.onCheckStoreItem(store);
                 }
 
                 @Override
-                public void onCheckGoodItem(JSONObject goodObject, ShopStoreBean storeBean,int childPosition) {
+                public void onCheckGoodItem(final JSONObject goodObject,final ShopStoreBean storeBean,final int childPosition) {
+                    LogUtils.e("---position----"+position+"------childPosition-----"+childPosition);
                     carListListener.onCheckGoodItem(goodObject, storeBean, childPosition,position);
                 }
 
                 @Override
-                public void onUnCheckGoodAndunCheckStoreItem(ShopStoreBean storeBean) {
+                public void onUnCheckGoodAndunCheckStoreItem(final ShopStoreBean storeBean) {
                     carListListener.onUnCheckGoodAndUnCheckStoreItem(storeBean);
                 }
 
                 @Override
-                public void onModifyItemNum(JSONObject goodObject) {
+                public void onModifyItemNum(final JSONObject goodObject) {
                     carListListener.onModifyGoodNum(goodObject);
                 }
 
                 @Override
-                public void onGotoGoodDetail(String goodsid) {
+                public void onGotoGoodDetail(final String goodsid) {
                     carListListener.onGoodDetail(goodsid);
                 }
             });
@@ -126,6 +129,7 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("store_name", store_name);
                 jsonObject.put("store_id", store_id);
+                jsonObject.put("storecheck",obj.optBoolean("storecheck",false));
                 childList.add(0, jsonObject);
                 childAdapter.setHead_layoutId(R.layout.item_chid_car_list_head);
                 childAdapter.setDatas(childList);
@@ -165,19 +169,19 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
 
 
     public interface CarListListener {
-        void onUncheckItem(JSONObject object, ShopStoreBean storebject, int childPosition, int position);
+        void onUncheckItem(final JSONObject object, final ShopStoreBean storebject, final int childPosition,final int position);
 
-        void onUncheckStoreItem(ShopStoreBean storeObject);
+        void onUncheckStoreItem(final ShopStoreBean storeObject);
 
-        void onCheckStoreItem(ShopStoreBean storeObject);
+        void onCheckStoreItem(final ShopStoreBean storeObject);
 
-        void onCheckGoodItem(JSONObject goodObject, ShopStoreBean storebject, int childPosition, int position);
+        void onCheckGoodItem(final JSONObject goodObject,final ShopStoreBean storebject,final int childPosition, final int position);
 
-        void onUnCheckGoodAndUnCheckStoreItem(ShopStoreBean storeBean);
+        void onUnCheckGoodAndUnCheckStoreItem(final ShopStoreBean storeBean);
 
-        void onModifyGoodNum(JSONObject goodObject);
+        void onModifyGoodNum(final JSONObject goodObject);
 
-        void onGoodDetail(String goodId);
+        void onGoodDetail(final String goodId);
     }
 
     public void setCarListListener(CarListListener carListChildListener) {

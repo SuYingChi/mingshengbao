@@ -69,12 +69,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:text="46"
+            android:text=""
             android:gravity="center"
             android:background="@drawable/shop_red_oval"
             android:textSize="@dimen/text_10"
             android:textColor="@color/white"
-            android:visibility="visible"
+            android:visibility="invisible"
 
             />
 

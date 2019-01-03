@@ -600,9 +600,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                             int carnum = 0;
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                                for (int ii = 0; ii < good.length(); ii++) {
+                                /*for (int ii = 0; ii < good.length(); ii++) {
                                     carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                                }
+                                }*/
+                                carnum +=good.length();
                             }
                             if (carnum > 0) {
                                 tvCarNum.setVisibility(View.VISIBLE);
@@ -1078,9 +1079,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                         int carnum = 0;
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                            for (int ii = 0; ii < good.length(); ii++) {
+                          /*  for (int ii = 0; ii < good.length(); ii++) {
                                 carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                            }
+                            }*/
+                            carnum +=good.length();
                         }
                         EventBus.getDefault().postSticky(new CarNumEvent(carnum));
                         if (carnum > 0) {

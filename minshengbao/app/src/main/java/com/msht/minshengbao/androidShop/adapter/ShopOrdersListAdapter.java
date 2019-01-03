@@ -31,6 +31,7 @@ public class ShopOrdersListAdapter extends MyHaveHeadAndFootRecyclerAdapter<Orde
 
     @Override
     public void convert(RecyclerHolder holder, final OrderslistBean orderslistBean, final int position) {
+        holder.setIsRecyclable(false);
         RecyclerView rcl = holder.getView(R.id.rcl);
         List<TextView> btnList = orderslistBean.getBtnList();
         List<MyExtendOrderGoodsBean> childList = orderslistBean.getMyExtendOrderGoods();

@@ -38,6 +38,7 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
     private List<ShopBaseLazyFragment> list=new ArrayList<ShopBaseLazyFragment>();
     private int tabPosition;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,15 +117,16 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
 
     }
 
-    public void refreshCurrentTab(int indexChilde) {
+    public void refreshCurrentTab(int indexChilde,boolean isRestart) {
+
         if (refundType != indexChilde) {
             initTopTab(indexChilde);
             vp.setCurrentItem(indexChilde);
         }else {
             if(indexChilde==0){
-                f0.refresh();
+                f0.refresh(isRestart);
             }else {
-                f1.refresh();
+                f1.refresh(isRestart);
             }
         }
     }

@@ -119,6 +119,13 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                 String goods_num = goodObject.optString("goods_num");
                 String goods_price = goodObject.optString("goods_price");
                 CarGoodItemBean bean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
+                int position2 = storeList.indexOf(storebject);
+                LogUtils.e("---position2----"+position2+"------childPosition-----"+childPosition);
+                try {
+                    carList.get(position2).optJSONArray("goods").optJSONObject(childPosition).put("goodcheck",false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if (selectedGoodList.contains(bean)) {
                     gotoBuyList.remove(selectedGoodList.indexOf(bean));
                     selectedGoodList.remove(bean);
@@ -142,6 +149,11 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                 int position = storeList.indexOf(storeObject);
                 JSONObject item = carList.get(position);
                 JSONArray goods = item.optJSONArray("goods");
+                try {
+                    carList.get(position).put("storecheck",false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 for (int i = 0; i < goods.length(); i++) {
                     JSONObject goodObject = goods.optJSONObject(i);
                     String cart_id = goodObject.optString("cart_id");
@@ -170,6 +182,11 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                 int position = storeList.indexOf(storeObject);
                 JSONObject item = carList.get(position);
                 JSONArray goods = item.optJSONArray("goods");
+                try {
+                    carList.get(position).put("storecheck",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 for (int i = 0; i < goods.length(); i++) {
                     JSONObject goodObject = goods.optJSONObject(i);
                     String cart_id = goodObject.optString("cart_id");
@@ -196,7 +213,14 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                 String goods_num = goodObject.optString("goods_num");
                 String goods_price = goodObject.optString("goods_price");
                 CarGoodItemBean bean = new CarGoodItemBean(cart_id, goods_id, goods_num, goods_price);
-                if (!selectedGoodList.contains(bean)) {
+                int position2 = storeList.indexOf(storebject);
+                LogUtils.e("---position2----"+position2+"------childPosition-----"+childPosition);
+                try {
+                    carList.get(position2).optJSONArray("goods").optJSONObject(childPosition).put("goodcheck",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                 if (!selectedGoodList.contains(bean)) {
                     selectedGoodList.add(bean);
                     updateAmount();
                     gotoBuyList.add(goodObject);
@@ -343,13 +367,16 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             carnum = 0;
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                for (int ii = 0; ii < good.length(); ii++) {
+              /*  for (int ii = 0; ii < good.length(); ii++) {
                     carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                }
+                }*/
+                carnum +=good.length();
             }
             EventBus.getDefault().postSticky(new CarNumEvent(carnum));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.optJSONObject(i);
+                obj.put("storecheck",false);
+                obj.put("goodcheck",false);
                 carList.add(obj);
                 String storeName = obj.optString("store_name");
                 String storeId = obj.optString("store_id");
@@ -438,20 +465,28 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             for (JSONObject jsonObject : gotoBuyList) {
                 String store_id = jsonObject.optString("store_id");
                 String store_name = jsonObject.optString("store_name");
-                if (!map.containsKey(store_id)) {
-                    List<ComfirmShopGoodBean.GoodsBean> list = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
-                    ComfirmShopGoodBean.GoodsBean bean = JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class);
-                    list.add(bean);
-                    ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
-                    comfirmShopGoodBean.setStore_id(store_id);
-                    comfirmShopGoodBean.setStore_name(store_name);
-                    comfirmShopGoodBean.setGoods(list);
-                    map.put(store_id, comfirmShopGoodBean);
-                } else {
-                    ComfirmShopGoodBean bean = map.get(store_id);
-                    List<ComfirmShopGoodBean.GoodsBean> list = bean.getGoods();
-                    list.add(JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class));
-                    bean.setGoods(list);
+                if(!jsonObject.optBoolean("storage_state")){
+                    PopUtil.toastInBottom("已为您取消购买已下架或库存不足的商品");
+                }else if("1".equals(jsonObject.optString("pickup_self"))){
+                    PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
+                }else if (jsonObject.optBoolean("storage_state")&&"0".equals(jsonObject.optString("pickup_self"))) {
+                    if (!map.containsKey(store_id)) {
+                        List<ComfirmShopGoodBean.GoodsBean> list = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
+                        ComfirmShopGoodBean.GoodsBean bean = JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class);
+                        list.add(bean);
+                        ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
+                        comfirmShopGoodBean.setStore_id(store_id);
+                        comfirmShopGoodBean.setStore_name(store_name);
+                        comfirmShopGoodBean.setGoods(list);
+                        map.put(store_id, comfirmShopGoodBean);
+                    } else {
+                        ComfirmShopGoodBean bean = map.get(store_id);
+                        List<ComfirmShopGoodBean.GoodsBean> list = bean.getGoods();
+                        if (jsonObject.optBoolean("storage_state")) {
+                            list.add(JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class));
+                        }
+                        bean.setGoods(list);
+                    }
                 }
             }
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
@@ -460,7 +495,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                         + entry.getValue());
                 list.add(entry.getValue());
             }
-            String isPickup_self = "";
+       /*     String isPickup_self = "";
             out:
             for (int ii = 0; ii < list.size(); ii++) {
                 List<ComfirmShopGoodBean.GoodsBean> goods = list.get(ii).getGoods();
@@ -468,32 +503,29 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                     if (ii == 0 && i == 0) {
                         isPickup_self = goods.get(i).getPickup_self();
                     } else if (!goods.get(i).getPickup_self().equals(isPickup_self)) {
-                        PopUtil.toastInBottom("自提商品和普通商品请分开购买");
+                        isPickup_self = "1";
                         break out;
                     }
                 }
-            }
-            if (!TextUtils.isEmpty(isPickup_self)) {
-                if (TextUtils.equals(isPickup_self, "0")) {
-                    Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ifCar", "1");
-                    bundle.putString("isPickup_self", isPickup_self);
-                    bundle.putSerializable("data", (Serializable) list);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                } else {
+            }*/
+           /* if (!TextUtils.isEmpty(isPickup_self)) {
+                if (TextUtils.equals(isPickup_self, "0")) {*/
+            Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("ifCar", "1");
+            bundle.putString("isPickup_self", "0");
+            bundle.putSerializable("data", (Serializable) list);
+            intent.putExtras(bundle);
+            startActivity(intent);
+             /*   } else {
                     PopUtil.toastInBottom("暂不支持自提商品购买");
                 }
-            }else {
+            } else {
                 PopUtil.toastInBottom("请取消选择已下架或不支持购买的商品");
-            }
+            }*/
         }
     }
 
-    private void eidtCar() {
-
-    }
 
     @Override
     public String getCarId() {

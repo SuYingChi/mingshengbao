@@ -53,12 +53,13 @@
             android:layout_height="@dimen/dp14"
             android:background="@drawable/shop_white_oval"
             android:gravity="center"
-            android:text="3"
+            android:text=""
             android:textColor="@color/red"
             android:textSize="@dimen/text_10"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/dp5"
+
             />
         <ImageView
             android:id="@+id/menu"
@@ -66,7 +67,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:padding="@dimen/dp14"
-            android:src="@drawable/shop_car_tab" />
+            android:src="@drawable/shop_car_class_detai" />
 
         <ImageView
             android:id="@+id/search"

@@ -231,8 +231,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                         rotateImageView(0);
                     }
                 });
-            }else {
-                 triangle.setVisibility(View.INVISIBLE);
+            } else {
+                triangle.setVisibility(View.INVISIBLE);
             }
             ShopPresenter.getClassDetailLeft(this);
             rclLeft.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -268,13 +268,13 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 @Override
                 public void onItemClick(int position) {
                     ClassDetailRightBean.DatasBean.GoodsListBean item = rightDataList.get(position);
-                   // HashMap<String, String> map = new HashMap<String, String>();
+                    // HashMap<String, String> map = new HashMap<String, String>();
                     String goodsId = item.getGoods_id();
                  /*   map.put("type", "goods");
                     map.put("data", goodsId);
                     doNotAdClick(map);*/
 
-                    onShopItemViewClick("goods",goodsId);
+                    onShopItemViewClick("goods", goodsId);
                 }
             });
             rclRight.setAdapter(classDetailRightAdapter);
@@ -317,10 +317,10 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         this.list = list;
         classDetailLeftAdapter.setDatas(list);
         classDetailLeftAdapter.notifyDataSetChanged();
-        if(list.size()>0) {
+        if (list.size() > 0) {
             rightGcId = list.get(0).getGc_id();
             ShopPresenter.getClassDetailRight(this);
-        }else {
+        } else {
             ivNoOrder.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
         }
@@ -503,12 +503,13 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                     bundle.putSerializable("data", (Serializable) list);
                     intent.putExtras(bundle);
                     startActivity(intent);
+                    selectNum = 1;
                 } else {
                     PopUtil.toastInBottom("暂不支持自提商品购买");
                 }
             }
         } else {
-           startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
@@ -545,6 +546,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     public void onAddCarSuccess(String s) {
         AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
+        selectNum = 1;
         if (TextUtils.equals(bean.getDatas(), "1")) {
             PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100);
             new Handler().postDelayed(new Runnable() {
@@ -570,6 +572,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
 
     @Override
     public void onModifyGoodNumSuccess(String s) {
+        selectNum = 1;
         PopUtil.showAutoDissHookDialog(this, "购物车数量修改成功", 100);
         if (!TextUtils.isEmpty(getKey())) {
             ShopPresenter.getCarList(this, false);
@@ -617,8 +620,9 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             caridlist.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
+                carNum += good.length();
                 for (int ii = 0; ii < good.length(); ii++) {
-                    carNum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
+                    /*    carNum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));*/
                     caridlist.add(new SimpleCarBean(good.optJSONObject(ii).optString("goods_id"), good.optJSONObject(ii).optString("cart_id")));
 
                 }

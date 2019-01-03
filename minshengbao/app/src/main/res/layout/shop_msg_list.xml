@@ -107,11 +107,11 @@
             android:layout_height="@dimen/text_20"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
-            android:text="3"
+            android:text=""
             android:layout_alignRight="@id/gasiv"
             android:textColor="@color/white"
             android:textSize="@dimen/text_10"
-            android:visibility="visible" />
+            android:visibility="invisible" />
         <TextView
             android:id="@+id/gastv"
             style="@style/shopMsbcolorTitleText"
@@ -120,7 +120,7 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="@dimen/text_12"
-            android:text="112121212"
+            android:text=""
             android:textColor="@color/gray_black" />
         <TextView
             android:id="@+id/gastime"
@@ -128,7 +128,7 @@
             android:layout_alignTop="@id/gasiv"
             android:layout_alignParentRight="true"
             android:textColor="@color/black"
-            android:text="一小时前"
+            android:text=""
             android:textSize="@dimen/text_12"
             />
         <TextView
@@ -162,11 +162,11 @@
             android:layout_height="@dimen/text_20"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
-            android:text="3"
+            android:text=""
             android:layout_alignRight="@id/routeiv"
             android:textColor="@color/white"
             android:textSize="@dimen/text_10"
-            android:visibility="visible" />
+            android:visibility="invisible" />
         <TextView
             android:id="@+id/routetv"
             style="@style/shopMsbcolorTitleText"
@@ -174,7 +174,7 @@
             android:layout_toRightOf="@id/routenum"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="112121212"
+            android:text=""
             android:textSize="@dimen/text_12"
             android:textColor="@color/gray_black" />
         <TextView
@@ -183,7 +183,7 @@
             android:layout_alignTop="@id/routeiv"
             android:layout_alignParentRight="true"
             android:textColor="@color/black"
-            android:text="一小时前"
+            android:text=""
             android:textSize="@dimen/text_12"
             />
         <TextView
@@ -217,17 +217,17 @@
             android:layout_height="@dimen/text_20"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
-            android:text="3"
+            android:text=""
             android:layout_alignRight="@id/youhuiiv"
             android:textColor="@color/white"
             android:textSize="@dimen/text_10"
-            android:visibility="visible" />
+            android:visibility="invisible" />
         <TextView
             android:id="@+id/youhuitv"
             style="@style/shopMsbcolorTitleText"
             android:layout_alignBottom="@id/youhuiiv"
             android:layout_toRightOf="@id/youhuinum"
-            android:text="112121212"
+            android:text=""
             android:textSize="@dimen/text_12"
             android:textColor="@color/gray_black" />
         <TextView
@@ -236,7 +236,7 @@
             android:layout_alignTop="@id/youhuiiv"
             android:layout_alignParentRight="true"
             android:textColor="@color/black"
-            android:text="一小时前"
+            android:text=""
             android:textSize="@dimen/text_12"
             />
         <TextView
