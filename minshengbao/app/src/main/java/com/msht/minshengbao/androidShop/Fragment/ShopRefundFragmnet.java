@@ -13,7 +13,10 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.BaseLazyFragmentPagerAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
+import com.msht.minshengbao.androidShop.event.RefundType;
 
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +102,7 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
     }
     private void initTopTab(int item) {
         refundType = item;
+        EventBus.getDefault().postSticky(new RefundType(refundType));
         if (item == 0) {
             btn0.setBackgroundResource(R.drawable.btn_left_corner_bg);
             btn1.setBackgroundResource(R.drawable.btn_right_corner_unselect_bg);

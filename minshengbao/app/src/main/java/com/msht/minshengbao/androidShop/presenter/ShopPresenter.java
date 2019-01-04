@@ -595,7 +595,7 @@ public class ShopPresenter {
         });
     }
 
-    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn) {
+    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn,final String orderId) {
         OkHttpUtils.post().url(ShopConstants.BUY_STEP3).addParams("key", iBuyStep3GetPayListView.getKey())
                 .addParams("pay_sn", paySn)
                 .build().execute(new DataStringCallback(iBuyStep3GetPayListView) {
@@ -603,7 +603,7 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iBuyStep3GetPayListView.onBuyStep3(s);
+                    iBuyStep3GetPayListView.onBuyStep3(s,orderId);
                 }
             }
         });

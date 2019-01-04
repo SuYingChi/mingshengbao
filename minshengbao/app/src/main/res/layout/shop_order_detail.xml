@@ -237,7 +237,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="少时诵诗书"
+                    android:text=""
                     android:ellipsize="end"
                     android:textColor="@color/shop_grey"
                     android:textSize="@dimen/text_14" />

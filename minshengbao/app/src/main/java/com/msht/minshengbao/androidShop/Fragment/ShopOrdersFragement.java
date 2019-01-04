@@ -46,6 +46,7 @@ import com.msht.minshengbao.androidShop.activity.ShopPayOrderActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
 import com.msht.minshengbao.androidShop.adapter.ShopOrdersListAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
+import com.msht.minshengbao.androidShop.event.OrderType;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
 import com.msht.minshengbao.androidShop.shopBean.MyExtendOrderGoodsBean;
@@ -73,6 +74,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +142,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabPosition = tab.getPosition();
+                EventBus.getDefault().post(new OrderType(tabPosition));
                 switch (tabPosition) {
                     case 0:
                         state_type = "";
@@ -701,11 +704,12 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
 
 
     @Override
-    public void onBuyStep3(String s) {
+    public void onBuyStep3(String s,String orderId) {
         Intent intent = new Intent(getActivity(), ShopPayOrderActivity.class);
         BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
         intent.putExtra("buyStep3", buyStep3bean);
         intent.putExtra("pdPassword", "");
+        intent.putExtra("orderId",   orderId);
         startActivity(intent);
     }
 
@@ -960,7 +964,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvPay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ShopPresenter.buyStep3(ShopOrdersFragement.this, pay_sn);
+                                ShopPresenter.buyStep3(ShopOrdersFragement.this, pay_sn,order_id);
                             }
                         });
                         btnList.add(tvPay);

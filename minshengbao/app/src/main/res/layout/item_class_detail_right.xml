@@ -22,14 +22,14 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_15"
+            android:textSize="@dimen/text_12"
             android:ellipsize="end"
             android:lines="2"
             android:textColor="@color/black" />
         <TextView
             android:id="@+id/price"
             style="@style/shopMsbcolorTitleText"
-            android:textSize="@dimen/text_15"
+            android:textSize="@dimen/text_12"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
              />

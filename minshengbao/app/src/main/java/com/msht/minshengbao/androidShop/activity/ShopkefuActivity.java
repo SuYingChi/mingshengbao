@@ -36,7 +36,7 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClie
 
     @Override
     protected void setLayout() {
-        setContentView(R.layout.shop_webview_layout);
+        setContentView(R.layout.shop_kefu_layout);
     }
 
     @Override

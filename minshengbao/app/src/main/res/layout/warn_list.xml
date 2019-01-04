@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+ <!--
+    分页重新请求数据到上次页的数据并刷新，不能加这两行 会自动滚到顶部，有嵌套recycleview时候才需要这两行
+    android:focusable="true"
+    android:focusableInTouchMode="true"-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"

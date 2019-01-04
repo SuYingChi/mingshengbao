@@ -22,6 +22,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.ImageListPagerDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.RefundMoneyDetail;
+import com.msht.minshengbao.androidShop.shopBean.RefundMoneyDetail2;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
@@ -175,7 +176,57 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
             pay_method.setText(bean.getDatas().getDetail_array().getRefund_code());
             online_refund.setText(bean.getDatas().getDetail_array().getPay_amount());
         }else {
-            PopUtil.toastInBottom("数据转换异常");
+            RefundMoneyDetail2 bean2 = JsonUtil.toBean(s, RefundMoneyDetail2.class);
+            RefundMoneyDetail2.DatasBean.RefundBean refund = bean2.getDatas().getRefund();
+            amount.setText(StringUtil.getPriceSpannable12String(this, refund.getRefund_amount(), R.style.big_money, R.style.big_money));
+            reason.setText(refund.getReason_info());
+            detail.setText(refund.getBuyer_message()==null?"":refund.getBuyer_message().toString());
+            amount2.setText(StringUtil.getPriceSpannable12String(this, refund.getRefund_amount(), R.style.big_money, R.style.big_money));
+            //如果在onresume里请求数据，这里list需要先清空在addall
+            List<RefundMoneyDetail2.DatasBean.GoodsListBean> list2 = bean2.getDatas().getGoods_list();
+            goodList.clear();
+            for(RefundMoneyDetail2.DatasBean.GoodsListBean data:list2){
+                RefundMoneyDetail.DatasBean.GoodsListBean good = new RefundMoneyDetail.DatasBean.GoodsListBean();
+                good.setGoods_name(data.getGoods_name());
+                good.setGoods_num(data.getGoods_num());
+                good.setGoods_price(data.getGoods_price());
+                good.setGoods_spec(data.getGoods_spec()==null?"":data.getGoods_spec().toString());
+                good.setGoods_image(data.getGoods_image());
+                goodList.add(good);
+            }
+            adapter.notifyDataSetChanged();
+            int total = 0;
+            for (RefundMoneyDetail.DatasBean.GoodsListBean b : goodList) {
+                total += Integer.valueOf(b.getGoods_num());
+            }
+            num.setText(total + "");
+            sn.setText(refund.getRefund_sn());
+            state.setText(refund.getSeller_state());
+            seller_message.setText(refund.getSeller_message()==null?"":refund.getSeller_message().toString());
+            caiwu_state.setText(refund.getAdmin_state());
+            imageList = (List<String>) bean2.getDatas().getPic_list();
+            if (imageList.size() == 0) {
+                tvpz.setVisibility(View.GONE);
+                rcl2.setVisibility(View.GONE);
+            } else {
+                tvpz.setVisibility(View.VISIBLE);
+                rcl2.setVisibility(View.VISIBLE);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
+                rcl2.setLayoutManager(gridLayoutManager);
+                gridLayoutManager.setAutoMeasureEnabled(true);
+                rcl2.setNestedScrollingEnabled(false);
+                GoodEvaluationChildAdapter ad = new GoodEvaluationChildAdapter(this);
+                ad.setDatas(imageList);
+                ad.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int childposition) {
+                        selectedIamgePosition = childposition;
+                        ImageListPagerDialog imageListDialog = new ImageListPagerDialog(RefundMoneyActivity.this, RefundMoneyActivity.this, childposition);
+                        imageListDialog.show();
+                    }
+                });
+                rcl2.setAdapter(ad);
+            }
         }
     }
 

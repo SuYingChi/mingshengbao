@@ -649,13 +649,13 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         BuyStep2SuccessBean bean = JsonUtil.toBean(s, BuyStep2SuccessBean.class);
         paySn = bean.getDatas().getPay_sn();
         orderId = bean.getDatas().getOrder_id();
-        ShopPresenter.buyStep3(this, paySn);
+        ShopPresenter.buyStep3(this, paySn,orderId+"");
 
     }
 
 
     @Override
-    public void onBuyStep3(String s) {
+    public void onBuyStep3(String s,String ordeId) {
         Intent intent = new Intent(this, ShopPayOrderActivity.class);
         BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
         intent.putExtra("buyStep3", buyStep3bean);

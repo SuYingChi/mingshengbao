@@ -231,9 +231,8 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
                     String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
                     PopUtil.toastInBottom("result=="+result+"  error_msg=="+errorMsg+"   extra_msg=="+extraMsg);
                 }else if(TextUtils.equals(result, "cancel")){
-                    Intent intent = new Intent(ShopPayOrderActivity.this, ShopWaitToPayedOrderActivity.class);
-                    intent.putExtra("pay_sn", payinfo.getPay_sn());
-                    intent.putExtra("charge", charge);
+                    Intent intent = new Intent(ShopPayOrderActivity.this, ShopOrdersDetailActivity.class);
+                    intent.putExtra("data",orderId);
                     startActivity(intent);
                     finish();
                 }else if(TextUtils.equals(result, "invalid")){

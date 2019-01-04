@@ -196,7 +196,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     tvPay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ShopPresenter.buyStep3(ShopOrdersDetailActivity.this, orderInfo.getPay_sn());
+                            ShopPresenter.buyStep3(ShopOrdersDetailActivity.this, orderInfo.getPay_sn(),orderId);
                         }
                     });
                     llbtns.addView(tvPay);
@@ -531,11 +531,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     }
 
     @Override
-    public void onBuyStep3(String s) {
+    public void onBuyStep3(String s,String orderId) {
         Intent intent = new Intent(this, ShopPayOrderActivity.class);
         BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
         intent.putExtra("buyStep3", buyStep3bean);
         intent.putExtra("pdPassword", "");
+        intent.putExtra("orderId", orderId);
         startActivity(intent);
     }
 
