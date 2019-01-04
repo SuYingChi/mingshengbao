@@ -362,9 +362,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
             tvInv_info.setText(content);
-            amount = datas.optString("order_amount");
-            goodsTotal = Double.valueOf(amount);
-            tvTotal.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, amount, R.style.big_money, R.style.big_money)));
+            //amount = datas.optString("order_amount");
+           // goodsTotal = Double.valueOf(amount);
+           // tvTotal.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, amount, R.style.big_money, R.style.big_money)));
             freight_hash = datas.optString("freight_hash");
             String predeposit = datas.optString("available_predeposit");
             if (!(TextUtils.isEmpty(predeposit) || TextUtils.equals(predeposit, "null"))) {
@@ -469,7 +469,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     rptList.add(rpt_obj);
                 }
             }
-
+            //自身价格减去满减，优惠，红包加上运费
             goodsTotalSelf = goodsTotalSelf - discount - voucher;
             if (rpackeObj != null) {
                 goodsTotalSelf -= Double.valueOf(rpackeObj.optString("rpacket_price"));

@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
+import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 
 
 import org.json.JSONArray;
@@ -202,7 +203,6 @@ public class JsonUtil {
         }
         return null;
     }
-
 
     /**
      /*     * 解析json(猜你喜欢商品)

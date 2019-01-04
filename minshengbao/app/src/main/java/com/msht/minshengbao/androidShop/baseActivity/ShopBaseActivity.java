@@ -34,7 +34,9 @@ import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
+import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.NetworkChangeReceiver;
 import com.msht.minshengbao.androidShop.util.PopUtil;
@@ -256,7 +258,12 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             startActivity(goLogin);
             this.finish();
         } else {
-            PopUtil.toastInBottom(s);
+            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
+            if(errorBaseData!=null) {
+                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
+            }else {
+                PopUtil.toastInCenter(s);
+            }
             switch (s) {
                 case "未登录":
                     AppUtil.logout();

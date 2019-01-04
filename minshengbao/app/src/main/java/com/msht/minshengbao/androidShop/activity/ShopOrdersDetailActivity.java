@@ -163,6 +163,11 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         adapter.setDatas(list);
         adapter.setClickAfterSaleListener(this);
         rcl.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ShopPresenter.getOrderDetail(this);
     }
 
@@ -175,6 +180,10 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     public void onGetDetailSuccess(String s) {
         ShopOrderDetailBean bean = JsonUtil.toBean(s, ShopOrderDetailBean.class);
         if (bean != null) {
+            llbtns.removeAllViews();
+            LinearLayout.LayoutParams llprams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            llprams.weight=1;
+            llbtns.addView(new View(this), llprams);
             final ShopOrderDetailBean.DatasBean.OrderInfoBean orderInfo = bean.getDatas().getOrder_info();
             String state = orderInfo.getOrder_state();
             memberId = orderInfo.getStore_member_id();
@@ -227,6 +236,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
             tvTip.setText(orderInfo.getOrder_tips());
             tvInvo.setText(orderInfo.getInvoice());
             tvStore.setText(orderInfo.getStore_name());
+            list.clear();
             list.addAll(orderInfo.getGoods_list());
             adapter.notifyDataSetChanged();
             tvMesssage.setText(orderInfo.getOrder_message());
@@ -247,6 +257,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 @Override
                 public void onClick(View v) {
                     if (orderInfo.getStore_phone() == null || orderInfo.getStore_phone().toString().equals("")) {
+                        PopUtil.showComfirmDialog(ShopOrdersDetailActivity.this,"","该商家没有提供联系电话","","知道了",null,null,true);
                     } else {
                         call(orderInfo.getStore_phone().toString());
                     }

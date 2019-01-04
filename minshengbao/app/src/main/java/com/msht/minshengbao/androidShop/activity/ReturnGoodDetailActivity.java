@@ -121,12 +121,13 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             }
         });
         rcl.setAdapter(adapter);
-        ShopPresenter.getRefundGoodDetail(this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        ShopPresenter.getRefundGoodDetail(this);
     }
 
     @Override
@@ -138,6 +139,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
     public void onGetRefundGoodDetailSuccess(String s) {
         ReturnGoodDetailBean returnGoodDetailBean = JsonUtil.toBean(s, ReturnGoodDetailBean.class);
         if (returnGoodDetailBean != null) {
+            goodList.clear();
             List<ReturnGoodDetailBean.DatasBean.GoodsListBean> goods = returnGoodDetailBean.getDatas().getGoods_list();
             for (ReturnGoodDetailBean.DatasBean.GoodsListBean good : goods) {
                 goodList.add(new ReturnGoodsListBean(good.getGoods_image(), good.getGoods_name(), good.getGoods_spec(), good.getGoods_price(), good.getGoods_num(),good.getGoods_id()));
@@ -163,6 +165,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             online_refund.setText(detailArray.getPay_amount());
             pd_amount.setText(detailArray.getPd_amount());
             rcb_amount.setText(detailArray.getRcb_amount());
+            imageList.clear();
             imageList = returnGoodDetailBean.getDatas().getPic_list();
             if (imageList.size() == 0) {
                 tvpz.setVisibility(View.GONE);
@@ -190,6 +193,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             ReturnGoodDetailBean2 returnGoodDetailBean2 = JsonUtil.toBean(s, ReturnGoodDetailBean2.class);
             llll.setVisibility(View.GONE);
             if (returnGoodDetailBean2 != null) {
+                goodList.clear();
                 List<ReturnGoodDetailBean2.DatasBean.GoodsListBean> goods = returnGoodDetailBean2.getDatas().getGoods_list();
                 for (ReturnGoodDetailBean2.DatasBean.GoodsListBean good : goods) {
                     goodList.add(new ReturnGoodsListBean(good.getGoods_image(), good.getGoods_name(), good.getGoods_spec(), good.getGoods_price(), good.getGoods_num(), good.getGoods_id()));
@@ -209,6 +213,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
                 state.setText(refund.getSeller_state());
                 seller_message.setText(refund.getSeller_message());
                 caiwu_state.setText(refund.getAdmin_state());
+                imageList.clear();
                 imageList = returnGoodDetailBean2.getDatas().getPic_list();
                 if (imageList.size() == 0) {
                     tvpz.setVisibility(View.GONE);

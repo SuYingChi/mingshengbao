@@ -162,13 +162,13 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
                 ShopPresenter.postAddEvelateAll(ShopOrderAddEveluateActivity.this, dataList);
             }
         });
-
+        ShopPresenter.getInitAddEveluate(this, orderId);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getInitAddEveluate(this, orderId);
+
     }
 
     private static final int MY_PERMISSIONS_REQUEST = 100;

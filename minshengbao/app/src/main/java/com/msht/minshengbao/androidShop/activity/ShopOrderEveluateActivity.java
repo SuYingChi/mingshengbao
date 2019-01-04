@@ -202,13 +202,12 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
                 ShopPresenter.postEvelateAll(ShopOrderEveluateActivity.this,dataList);
             }
         });
-
+        ShopPresenter.getInitEveluate(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getInitEveluate(this);
     }
 
     private PermissionListener listener = new PermissionListener() {

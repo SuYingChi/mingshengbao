@@ -425,6 +425,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.getJSONObject("datas");
             JSONObject goods_info = datas.getJSONObject("goods_info");
+            goodPrice = goods_info.optString("goods_price");
+            remianNum = goods_info.optString("goods_storage");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
             JSONObject spec_listObj = datas.optJSONObject("spec_list");

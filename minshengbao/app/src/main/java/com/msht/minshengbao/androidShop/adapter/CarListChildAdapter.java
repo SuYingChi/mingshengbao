@@ -243,9 +243,9 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
                         PopUtil.showComfirmDialog(context, "提示", "商品已经下架", null, "好", null, null, true);
                     } else if (num == 1) {
                         PopUtil.showComfirmDialog(context, "提示", "请选择至少一件该商品", null, "好", null, null, true);
-                    } else if (num >= goodsStorageNum) {
+                    } /*else if (num > goodsStorageNum) {
                         PopUtil.showComfirmDialog(context, "提示", "库存量不足", null, "好", null, null, true);
-                    } else {
+                    }*/ else {
                         num--;
                         try {
                             obj.put("goods_num", num + "");

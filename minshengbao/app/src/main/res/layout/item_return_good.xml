@@ -49,8 +49,8 @@
             android:id="@+id/time"
             style="@style/shopMsbcolorTitleText"
             android:textSize="@dimen/text_14"
-            android:textColor="@color/shop_grey"
-            android:text="20910920909209020"
+            android:textColor="@color/black"
+            android:text=""
             />
 
         <TextView
@@ -90,7 +90,7 @@
     <TextView
         style="@style/shopMsbcolorTitleText"
         android:text="退货详情"
-        android:textColor="@color/shop_grey"
+        android:textColor="@color/black"
         android:background="@drawable/btn_refund"
         android:layout_below="@id/line2"
         android:layout_alignParentRight="true"

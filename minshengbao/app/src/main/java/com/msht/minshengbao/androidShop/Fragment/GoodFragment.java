@@ -148,6 +148,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private int selectedGuigePosition = 0;
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
+    private ArrayList<String> imagelist = new ArrayList<String>();;
 
 
     @Override
@@ -425,13 +426,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             JSONArray imageList = datas.getJSONArray("image_list");
             imageUrlDialog = imageList.optJSONObject(0).optString("_mid");
             imageUrlShare = imageList.optJSONObject(0).optString("_big");
-            List<String> list = new ArrayList<String>();
             for (int k = 0; k < imageList.length(); k++) {
                 JSONObject parameterObject = imageList.optJSONObject(k);
                 String mid = parameterObject.optString("_mid");
-                list.add(mid);
+                imagelist.add(mid);
             }
-            showAdv(list);
+            showAdv(imagelist);
             JSONObject goods_info = datas.getJSONObject("goods_info");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
@@ -565,7 +565,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
-            list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, shareImageUrl, goods_name, selectedGoodNum + "", goods_price, goodsid));
+            list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, imagelist.get(0), goods_name, selectedGoodNum + "", goods_price, goodsid));
             ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
             comfirmShopGoodBean.setStore_id(storeId);
             comfirmShopGoodBean.setStore_name(storeName);

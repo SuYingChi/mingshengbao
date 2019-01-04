@@ -39,7 +39,7 @@ public class PopUtil {
 
     private static Toast toast;
 
-    public static PopupWindow showPopWindow(Context context, View anchorView, boolean bottom,View popupView,PopupWindow window) {
+    public static PopupWindow showPopWindow(Context context, View anchorView, boolean bottom, View popupView, PopupWindow window) {
 
 
        /* View popupView = LayoutInflater.from(context).inflate(R.layout.layout_popupwindow, null);
@@ -89,8 +89,7 @@ public class PopUtil {
     }
 
     public static void toastInBottom(String string) {
-        if(TextUtils.isEmpty(string))
-        {
+        if (TextUtils.isEmpty(string)) {
             return;
         }
         if (toast == null) {
@@ -101,6 +100,7 @@ public class PopUtil {
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
     }
+
     public static void toastInCenter(int stringResourceId) {
 
         if (toast == null) {
@@ -113,8 +113,7 @@ public class PopUtil {
     }
 
     public static void toastInCenter(String string) {
-        if(TextUtils.isEmpty(string))
-        {
+        if (TextUtils.isEmpty(string)) {
             return;
         }
         if (toast == null) {
@@ -125,6 +124,7 @@ public class PopUtil {
         toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 300);
         toast.show();
     }
+
     /**
      * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
      * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
@@ -185,12 +185,12 @@ public class PopUtil {
         dialog.show();
         dialog.getWindow().setContentView(layout);
         TextView btnCancel = (TextView) layout.findViewById(R.id.dialog_btn_cancel);
-        if(TextUtils.isEmpty(left)){
-        btnCancel.setText(left);
+        if (!TextUtils.isEmpty(left)) {
+            btnCancel.setText(left);
         }
         TextView btnOk = (TextView) layout.findViewById(R.id.dialog_btn_ok);
-        if(TextUtils.isEmpty(right)){
-        btnOk.setText(right);
+        if (!TextUtils.isEmpty(right)) {
+            btnOk.setText(right);
         }
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,11 +211,12 @@ public class PopUtil {
             }
         });
     }
-    public static void showAutoDissHookDialog(Context mContext, String tips,int delayMillis) {
+
+    public static void showAutoDissHookDialog(Context mContext, String tips, int delayMillis) {
         LayoutInflater inflaterDl = LayoutInflater.from(mContext);
         final LinearLayout layout = (LinearLayout) inflaterDl.inflate(
                 R.layout.dialog_autodissmiss_tips, null);
-        final AlertDialog dialog = new AlertDialog.Builder(mContext,R.style.Loading_dialog).create();
+        final AlertDialog dialog = new AlertDialog.Builder(mContext, R.style.Loading_dialog).create();
         TextView tvtips = (TextView) layout.findViewById(R.id.tv_delete_tips);
         tvtips.setText(tips);
         dialog.setCancelable(false);
@@ -227,20 +228,21 @@ public class PopUtil {
                 dialog.show();
                 dialog.getWindow().setContentView(layout);
             }
-        },delayMillis);
+        }, delayMillis);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(final DialogInterface dialog) {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if(dialog!=null)
+                        if (dialog != null)
                             dialog.dismiss();
                     }
-                },1500);
+                }, 1500);
             }
         });
     }
+
     public static void showWebViewDialog(final ShopBaseActivity activity, String url) {
         LayoutInflater inflaterDl = LayoutInflater.from(activity);
         RelativeLayout layout = (RelativeLayout) inflaterDl.inflate(

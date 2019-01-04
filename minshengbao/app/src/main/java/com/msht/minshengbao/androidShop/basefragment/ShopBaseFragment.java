@@ -25,7 +25,10 @@ import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
+import com.msht.minshengbao.androidShop.shopBean.BaseData;
+import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
@@ -107,7 +110,12 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             getActivity().startActivity(goLogin);
             getActivity().finish();
         } else {
-            PopUtil.toastInBottom(s);
+            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
+            if(errorBaseData!=null) {
+                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
+            }else {
+                PopUtil.toastInCenter(s);
+            }
             switch (s) {
                 case "未登录":
                 case "登出返回结果为空":

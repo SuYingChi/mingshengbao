@@ -185,6 +185,11 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
@@ -263,6 +268,8 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
         if (bean != null) {
             order = bean.getDatas().getOrder();
             store.setText(order.getStore_name());
+            goodList.clear();
+            reasonList.clear();
             goodList.addAll(bean.getDatas().getGoods_list());
             adapter.notifyDataSetChanged();
             amount.setText(order.getOrder_amount());
