@@ -76,7 +76,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
     LinearLayout llll;
     private List<ReturnGoodsListBean> goodList = new ArrayList<ReturnGoodsListBean>();
     private ShopReturnDetailGoodListAdapter adapter;
-    private List<String> imageList;
+    private List<String> imageList=new ArrayList<String>();
     private int selectedIamgePosition;
 
     @Override

@@ -19,7 +19,7 @@ public class ShopRefundGoodListAdapter extends MyHaveHeadAndFootRecyclerAdapter<
     @Override
     public void convert(RecyclerHolder holder, final RefunGoodBean.DatasBean.ReturnListBean returnListBean, final int position) {
        holder.setText(R.id.store,returnListBean.getStore_name());
-       holder.setText(R.id.order_state,returnListBean.getAdmin_state());
+       holder.setText(R.id.order_state,returnListBean.getSeller_state());
        holder.setImage(R.id.iv,returnListBean.getGoods_img_360());
        holder.setText(R.id.name,returnListBean.getGoods_name());
        holder.setText(R.id.time,returnListBean.getAdd_time());
