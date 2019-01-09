@@ -34,12 +34,14 @@ import com.msht.minshengbao.androidShop.shopBean.RefunBean;
 import com.msht.minshengbao.androidShop.shopBean.RefunGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopCellectionBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopFootPrintBean;
+import com.msht.minshengbao.androidShop.shopBean.ShopNumBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
+import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.Invoice.InvoiceOpen;
@@ -92,7 +94,7 @@ import okhttp3.Request;
  * @author hong
  * @date 2016/7/2  
  */
-public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScrollview.ScrollViewListener, IBaseView, IShopOrdersNumView {
+public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScrollview.ScrollViewListener, IBaseView, IOrderNumView {
     private MyScrollview myScrollview;
     private LinearLayout layoutNavigation;
     private RelativeLayout layoutMySetting;
@@ -117,17 +119,13 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private final GetImageHandler getImageHandler = new GetImageHandler(this);
     private LoadingDialog centerLoadingDialog;
-    private int waitEveluateOrdersNum;
+
     private TextView tvWaitEveluate;
     private TextView tvWaitGet;
     private TextView tvWaitPay;
     private TextView tvAllOrder;
-    private int waitGetOrdersNum;
-    private int waitPayOrdersNum;
-    private int allOrdersNum;
+
     private TextView tvRrfundOrder;
-    private int refundOrderNum = -1;
-    private int refundGoodOrderNum = -1;
     private LinearLayout llShopOrder;
     private LinearLayout llrefund;
     private LinearLayout llwaitEveluate;
@@ -137,7 +135,6 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     private LinearLayout llFootprint;
     private TextView tvCollect;
     private TextView tvFootprint;
-    private int collectNum;
 
     public LoginMyFrag() {
     }
@@ -190,6 +187,86 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
     public void onNetError() {
 
     }
+
+    @Override
+    public void onGetOrderNumSuccess(String s) {
+
+    }
+
+    public void getOrdersNum() {
+        ShopPresenter.getOrderNum(this,new DataStringCallback(this){
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ShopNumBean bean = JsonUtil.toBean(s, ShopNumBean.class);
+                    onGetNumSuccess(bean);
+                }
+            }
+        });
+    }
+
+    private void onGetNumSuccess(ShopNumBean bean) {
+        int footprintNum = bean.getDatas().getMember_info().getBrowses_goods();
+        if (footprintNum == 0) {
+            tvFootprint.setVisibility(View.GONE);
+        } else {
+            tvFootprint.setVisibility(View.VISIBLE);
+            tvFootprint.setText(String.format("%d", footprintNum));
+        }
+        llFootprint.setClickable(true);
+        int collectNum = bean.getDatas().getMember_info().getFavorites_goods();
+        if (collectNum == 0) {
+            tvCollect.setVisibility(View.GONE);
+        } else {
+            tvCollect.setVisibility(View.VISIBLE);
+            tvCollect.setText(String.format("%d", collectNum));
+        }
+        llCollect.setClickable(true);
+
+        String refundOrderNum = bean.getDatas().getMember_info().getReturnX();
+        if ("0".equals(refundOrderNum)) {
+                tvRrfundOrder.setVisibility(View.GONE);
+            } else {
+                tvRrfundOrder.setVisibility(View.VISIBLE);
+                tvRrfundOrder.setText(refundOrderNum);
+            }
+            llrefund.setClickable(true);
+        String waitEveluateOrdersNum = bean.getDatas().getMember_info().getOrder_noeval_count();
+        if ("0".equals(waitEveluateOrdersNum)) {
+            tvWaitEveluate.setVisibility(View.GONE);
+        } else {
+            tvWaitEveluate.setVisibility(View.VISIBLE);
+            tvWaitEveluate.setText(waitEveluateOrdersNum);
+        }
+        llwaitEveluate.setClickable(true);
+        String waitPayOrdersNum = bean.getDatas().getMember_info().getOrder_nopay_count();
+        if (waitPayOrdersNum .equals("0")) {
+            tvWaitPay.setVisibility(View.GONE);
+        } else {
+            tvWaitPay.setVisibility(View.VISIBLE);
+            tvWaitPay.setText(waitPayOrdersNum);
+        }
+        llwaitPay.setClickable(true);
+        String waitGetOrdersNum = bean.getDatas().getMember_info().getOrder_noreceipt_count();
+        if (waitGetOrdersNum .equals("0")) {
+            tvWaitGet.setVisibility(View.GONE);
+        } else {
+            tvWaitGet.setVisibility(View.VISIBLE);
+            tvWaitGet.setText(waitGetOrdersNum);
+        }
+        llwaitget.setClickable(true);
+
+       /* int allOrdersNum =Integer.valueOf(waitEveluateOrdersNum)+Integer.valueOf(waitPayOrdersNum)+Integer.valueOf(waitGetOrdersNum)+Integer.valueOf(refundOrderNum);
+        if (allOrdersNum == 0) {
+            tvAllOrder.setVisibility(View.GONE);
+        } else {
+            tvAllOrder.setVisibility(View.VISIBLE);
+            tvAllOrder.setText(String.format("%d", allOrdersNum));
+        }*/
+        llShopOrder.setClickable(true);
+    }
+
 
     private static class GetImageHandler extends Handler {
         private WeakReference<LoginMyFrag> mWeakReference;
@@ -256,212 +333,6 @@ public class LoginMyFrag extends Fragment implements View.OnClickListener, MyScr
         return view;
     }
 
-
-    public void getOrdersNum() {
-        ShopPresenter.getShopOrdersList(this, "state_new", new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetWaitPayOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getShopOrdersList(this, "state_send", new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetWaitGetOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getShopOrdersList(this, "state_noeval", new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetWaitEveluateOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getRefundGoodList(this, new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetRefundGoodOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getRefundMoneyList(this, new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetRefundMoneyOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getShopOrdersList(this, "", new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetAllOrdersNum(s);
-                }
-            }
-        });
-        ShopPresenter.getCollectList(this, new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetCollectNum(s);
-                }
-            }
-        });
-        ShopPresenter.getFootprintList(this, new DataStringCallback(this) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    onGetfootPrintNum(s);
-                }
-            }
-        });
-    }
-
-    private void onGetfootPrintNum(String s) {
-        ShopFootPrintBean bean = JsonUtil.toBean(s, ShopFootPrintBean.class);
-        int footprintNum = bean.getDatas().getGoodsbrowse_list().size();
-        if (footprintNum == 0) {
-            tvFootprint.setVisibility(View.GONE);
-        } else {
-            footprintNum = 0;
-            tvFootprint.setVisibility(View.VISIBLE);
-            List<ShopFootPrintBean.DatasBean.GoodsbrowseListBean> list = bean.getDatas().getGoodsbrowse_list();
-            for (ShopFootPrintBean.DatasBean.GoodsbrowseListBean beanb : list) {
-                footprintNum += beanb.getGoods_list().size();
-            }
-            tvFootprint.setText(footprintNum + "");
-        }
-        llFootprint.setClickable(true);
-    }
-
-    private void onGetCollectNum(String s) {
-        ShopCellectionBean bean = JsonUtil.toBean(s, ShopCellectionBean.class);
-        collectNum = bean.getDatas().getFavorites_list().size();
-        if (collectNum == 0) {
-            tvCollect.setVisibility(View.GONE);
-        } else {
-            tvCollect.setVisibility(View.VISIBLE);
-            tvCollect.setText(collectNum + "");
-        }
-        llCollect.setClickable(true);
-    }
-
-    private void onGetRefundMoneyOrdersNum(String s) {
-        RefunBean bean = JsonUtil.toBean(s, RefunBean.class);
-        refundOrderNum = bean.getDatas().getRefund_list().size();
-        if (refundGoodOrderNum != -1) {
-            if (refundOrderNum + refundGoodOrderNum == 0) {
-                tvRrfundOrder.setVisibility(View.GONE);
-            } else {
-                tvRrfundOrder.setVisibility(View.VISIBLE);
-                tvRrfundOrder.setText(String.format("%d", refundOrderNum + refundGoodOrderNum));
-            }
-            llrefund.setClickable(true);
-        }
-
-    }
-
-    private void onGetRefundGoodOrdersNum(String s) {
-        RefunGoodBean bean = JsonUtil.toBean(s, RefunGoodBean.class);
-        refundGoodOrderNum = bean.getDatas().getReturn_list().size();
-        if (refundOrderNum != -1) {
-            if (refundOrderNum + refundGoodOrderNum == 0) {
-                tvRrfundOrder.setVisibility(View.GONE);
-            } else {
-                tvRrfundOrder.setVisibility(View.VISIBLE);
-                tvRrfundOrder.setText(String.format("%d", refundOrderNum + refundGoodOrderNum));
-            }
-            llrefund.setClickable(true);
-        }
-    }
-
-    private void onGetWaitEveluateOrdersNum(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            JSONObject datas = obj.optJSONObject("datas");
-            JSONArray order_group_list = datas.optJSONArray("order_group_list");
-            waitEveluateOrdersNum = order_group_list.length();
-            if (waitEveluateOrdersNum == 0) {
-                tvWaitEveluate.setVisibility(View.GONE);
-            } else {
-                tvWaitEveluate.setVisibility(View.VISIBLE);
-                tvWaitEveluate.setText(String.format("%d", waitEveluateOrdersNum));
-            }
-            llwaitEveluate.setClickable(true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void onGetWaitGetOrdersNum(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            JSONObject datas = obj.optJSONObject("datas");
-            JSONArray order_group_list = datas.optJSONArray("order_group_list");
-            waitGetOrdersNum = order_group_list.length();
-            if (waitGetOrdersNum == 0) {
-                tvWaitGet.setVisibility(View.GONE);
-            } else {
-                tvWaitGet.setVisibility(View.VISIBLE);
-                tvWaitGet.setText(String.format("%d", waitGetOrdersNum));
-            }
-            llwaitget.setClickable(true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void onGetWaitPayOrdersNum(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            JSONObject datas = obj.optJSONObject("datas");
-            JSONArray order_group_list = datas.optJSONArray("order_group_list");
-            waitPayOrdersNum = order_group_list.length();
-            if (waitPayOrdersNum == 0) {
-                tvWaitPay.setVisibility(View.GONE);
-            } else {
-                tvWaitPay.setVisibility(View.VISIBLE);
-                tvWaitPay.setText(String.format("%d", waitPayOrdersNum));
-            }
-            llwaitPay.setClickable(true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void onGetAllOrdersNum(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            JSONObject datas = obj.optJSONObject("datas");
-            JSONArray order_group_list = datas.optJSONArray("order_group_list");
-            allOrdersNum = order_group_list.length();
-            if (allOrdersNum == 0) {
-                tvAllOrder.setVisibility(View.GONE);
-            } else {
-                tvAllOrder.setVisibility(View.VISIBLE);
-                tvAllOrder.setText(String.format("%d", allOrdersNum));
-            }
-            llShopOrder.setClickable(true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void initView(View view) {
         myScrollview = (MyScrollview) view.findViewById(R.id.id_scrollview);

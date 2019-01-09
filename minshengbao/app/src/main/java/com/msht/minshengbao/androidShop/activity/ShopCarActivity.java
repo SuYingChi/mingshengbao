@@ -106,7 +106,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
         super.onCreate(savedInstanceState);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+   //     rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new CarListAdapter(this);
         adapter.setDatas(carList);
         adapter.setCarListListener(new CarListAdapter.CarListListener() {
@@ -422,6 +422,8 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getCarList(this, true);
     }
 

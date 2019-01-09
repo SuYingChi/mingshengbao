@@ -1,8 +1,9 @@
 package com.msht.minshengbao.androidShop.shopBean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ClassDetailLeftBean {
+public class ClassDetailLeftBean implements Serializable{
 
     /**
      * code : 200
@@ -28,7 +29,7 @@ public class ClassDetailLeftBean {
         this.datas = datas;
     }
 
-    public static class DatasBean {
+    public static class DatasBean implements Serializable{
         private List<ClassListBean> class_list;
 
         public List<ClassListBean> getClass_list() {

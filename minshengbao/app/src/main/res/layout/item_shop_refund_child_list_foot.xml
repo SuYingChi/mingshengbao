@@ -28,7 +28,7 @@
             android:layout_gravity="center_vertical"
             android:text="共2件商品，合计"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_width18" />
+            android:textSize="@dimen/text_15" />
 
         <TextView
             android:id="@+id/price"
@@ -37,7 +37,7 @@
             android:layout_gravity="center_vertical"
             android:text="￥16.46"
             android:textColor="@color/msb_color"
-            android:textSize="@dimen/text_width18" />
+            android:textSize="@dimen/text_15" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -56,6 +56,7 @@
             android:layout_weight="1"/>
      <TextView
          style="@style/shopMsbcolorTitleText"
+         android:textSize="@dimen/text_15"
          android:text="退款详情"
          android:textColor="@color/black"
          android:background="@drawable/btn_refund"

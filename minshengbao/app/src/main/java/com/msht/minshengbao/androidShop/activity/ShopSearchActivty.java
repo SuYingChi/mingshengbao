@@ -58,6 +58,8 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
     Toolbar mToolbar;
     @BindView(R.id.back)
     ImageView ivback;
+    @BindView(R.id.clear)
+    ImageView tvClear;
 /*    private ShopHotSearchAdapter hotAdpter;*/
     private ShopHisSearchAdapter hisAdapter;
     private LinearLayout footView;
@@ -83,6 +85,13 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        tvClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et.setText("");
+                et.setHint("搜索商品，品牌");
             }
         });
         et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -221,6 +230,7 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
             List<String> mapListJson = JsonUtil.jsonArrayToList(array);
            /* hotAdpter.setmDatas(mapListJson);
             hotAdpter.notifyDataSetChanged();*/
+           list.clear();
            list.addAll(mapListJson);
            ad.notifyDataSetChanged();
            /* String hisArray = data.optString("his_list");

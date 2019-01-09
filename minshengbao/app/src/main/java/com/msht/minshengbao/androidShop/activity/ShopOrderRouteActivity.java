@@ -78,12 +78,6 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
                 finish();
             }
         });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.getOrderRoute(this);
         ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
 

@@ -150,8 +150,8 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
             });
           //  maxAmount = Double.valueOf(refundFormBean.getDatas().getGoods().getGoods_pay_price());
             maxAmount = Double.valueOf(refundFormBean.getDatas().getOrder().getOrder_amount());
+            refundMoney = maxAmount;
             etAmount.setHint("最多可退" + " ￥ " + maxAmount);
-            etAmount.setText(maxAmount+"");
             etAmount.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -228,7 +228,12 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
                     }*/
                         if(TextUtils.isEmpty(etReason.getText().toString())){
                            PopUtil.showComfirmDialog(RefundFormMoneyActivity.this,"","请填写退款说明","","知道了",null,null,true);
-                        }else {
+                        }else if("".equals(getRefund_amount())||"0".equals(getRefund_amount())){
+                            PopUtil.showComfirmDialog(RefundFormMoneyActivity.this,"","请填写退款金额","","知道了",null,null,true);
+                        }else if("".equals(getReasonId())){
+                            PopUtil.showComfirmDialog(RefundFormMoneyActivity.this,"","请选择退款原因","","知道了",null,null,true);
+                        }
+                        else {
                             ShopPresenter.postRefund(RefundFormMoneyActivity.this, postedPicList);
                         }
                 }

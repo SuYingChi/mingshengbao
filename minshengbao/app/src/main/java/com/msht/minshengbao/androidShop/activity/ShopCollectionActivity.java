@@ -80,13 +80,9 @@ public class ShopCollectionActivity extends ShopBaseActivity implements ShopCell
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.getCollectList(this);
     }
+
 
     @Override
     public void deleteItem(int position) {
@@ -138,6 +134,8 @@ public class ShopCollectionActivity extends ShopBaseActivity implements ShopCell
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getCollectList(this);
     }
 

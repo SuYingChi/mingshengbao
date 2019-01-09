@@ -33,6 +33,7 @@ public class MyShopOrderActivity extends ShopBaseActivity {
     private int fragmentIndex = -1;
     private int refundindex = -1;
     private int orderstype = -1;
+    private boolean isOnNewIntent = false;
 
 
     @Override
@@ -122,6 +123,7 @@ public class MyShopOrderActivity extends ShopBaseActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         initNoNetworkLayout();
+        isOnNewIntent = true;
         if (getIntent() != null) {
             int currentFragmentIndex = getIntent().getIntExtra("index", 0);
             int indexChilde = getIntent().getIntExtra("indexChild", 0);
@@ -140,7 +142,6 @@ public class MyShopOrderActivity extends ShopBaseActivity {
                 }
                 f3.refreshCurrentTab(refundindex, false);
             }
-
         }
     }
 
@@ -148,10 +149,14 @@ public class MyShopOrderActivity extends ShopBaseActivity {
     protected void onRestart() {
         super.onRestart();
         //刷新列表，当前页正在显示则重刷，不是则另选
-        if (fragmentIndex == 0) {
-            f2.refreshCurrentTab(orderstype, true);
-        } else {
-            f3.refreshCurrentTab(refundindex, true);
+        if (!isOnNewIntent) {
+            if (fragmentIndex == 0) {
+                f2.refreshCurrentTab(orderstype, true);
+            } else {
+                f3.refreshCurrentTab(refundindex, true);
+            }
+        }else {
+            isOnNewIntent = false;
         }
     }
 

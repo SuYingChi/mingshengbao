@@ -128,7 +128,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+       // rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new ShopOrdersListAdapter(getContext());
         adapter.setDatas(ordersList);
         adapter.setlistener(this);
@@ -213,6 +213,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
         if (isViewCreated) {
             pageNum = 1;
             url = getOrdersUrl(pageNum);
+            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(true);
             if (!getKey().equals("")) {
                 ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
             } else {
@@ -253,9 +255,15 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 if (pageNum == 1) {
                     ordersList.clear();
                     initOrdersItem(order_group_list);
-                    pageNum++;
-                    url = getOrdersUrl(pageNum);
-                    ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
+                    if(pageNum<lastPageNum) {
+                        pageNum++;
+                        url = getOrdersUrl(pageNum);
+                        ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
+                    }else {
+                        initOrdersItem(order_group_list);
+                        adapter.notifyDataSetChanged();
+                        isRestart = false;
+                    }
                 } else if (pageNum < lastPageNum&&order_group_list.length()>0) {
                     initOrdersItem(order_group_list);
                     pageNum++;
@@ -534,6 +542,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
         url = getOrdersUrl(pageNum);
+        refreshLayout.setEnableAutoLoadMore(true);
+        refreshLayout.setNoMoreData(false);
         if (!getKey().equals("")) {
             ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
         }
@@ -721,6 +731,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
             lastPageNum = pageNum;
             pageNum = 1;
             url = getOrdersUrl(pageNum);
+            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(true);
             if (!getKey().equals("")) {
                 ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
             }
@@ -776,7 +788,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvCancel.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvCancel.setText("取消订单");
                         tvCancel.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvCancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -795,7 +807,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvReceive.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvReceive.setText("确认收货");
                         tvReceive.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvReceive.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -814,7 +826,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvDelete.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvDelete.setText("删除订单");
                         tvDelete.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvDelete.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvDelete.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvDelete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -833,7 +845,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvGoodRoute.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvGoodRoute.setText("物流查询");
                         tvGoodRoute.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvGoodRoute.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -855,7 +867,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvGetGoodSelf.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvGetGoodSelf.setText("确认提货");
                         tvGetGoodSelf.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         btnList.add(tvGetGoodSelf);
                     }
                     if (if_evaluation) {
@@ -867,7 +879,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvEvaluation.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvEvaluation.setText("评价订单");
                         tvEvaluation.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvEvaluation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -900,7 +912,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvQrReceive.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_refund));
                         tvQrReceive.setText("提货二维码");
                         tvQrReceive.setTextColor(getContext().getResources().getColor(R.color.msb_color));
-                        tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
                         tvQrReceive.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -918,7 +930,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvRefund.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvRefund.setText("申请退款");
                         tvRefund.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvRefund.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -938,7 +950,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvAddEvaluation.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
                         tvAddEvaluation.setText("追加评价");
                         tvAddEvaluation.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvAddEvaluation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -958,9 +970,9 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
                         tvPay.setLayoutParams(paramas);
                         tvPay.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_pay));
-                        tvPay.setText("付款");
+                        tvPay.setText("支付订单");
                         tvPay.setTextColor(getContext().getResources().getColor(R.color.white));
-                        tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         tvPay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

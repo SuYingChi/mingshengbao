@@ -43,7 +43,7 @@ public class ShopRefundMoneyListAdapter extends MyHaveHeadAndFootRecyclerAdapter
         });
         List<RefunBean.DatasBean.RefundListBean.GoodsListBean> childList = refundListBean.getGoods_list();
         String storeName = refundListBean.getStore_name();
-        String seller_state = refundListBean.getSeller_state();
+        String seller_state = refundListBean.getAdmin_state().equals("无")?refundListBean.getSeller_state():refundListBean.getAdmin_state();
         int total = childList.size();
         String amount = refundListBean.getRefund_amount();
        if(rcl.getAdapter()==null){

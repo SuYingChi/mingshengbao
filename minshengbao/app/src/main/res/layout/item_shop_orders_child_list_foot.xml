@@ -46,7 +46,7 @@
             android:layout_gravity="center_vertical"
             android:text="共2件商品，合计"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_width18" />
+            android:textSize="@dimen/text_15" />
 
         <TextView
             android:id="@+id/price"

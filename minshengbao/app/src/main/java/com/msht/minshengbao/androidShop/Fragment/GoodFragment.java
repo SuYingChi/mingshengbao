@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -118,6 +119,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView tvYixuan;
     @BindView(R.id.kuaidiinfo)
     TextView kuaidiInfo;
+    @BindView(R.id.storeinfo)
+    TextView tvstore;
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -229,55 +232,63 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 holder.getView(R.id.ll_share_wx).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Glide.with(GoodFragment.this).load(shareImageUrl).into(new SimpleTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                WXWebpageObject webpage = new WXWebpageObject();
-                                webpage.webpageUrl = shareUrl;
-                                WXMediaMessage msg = new WXMediaMessage(webpage);
-                                msg.title = goods_name;
-                                String s = goods_jingle.replace("\r", "");
-                                s = s.replace("\t", "");
-                                msg.description = s;
-                                Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
-                                Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-                                msg.thumbData = bmpToByteArray(thumbBmp, true);
-                                SendMessageToWX.Req req = new SendMessageToWX.Req();
-                                req.transaction = buildTransaction("webpage");
-                                req.message = msg;
-                                req.scene = SendMessageToWX.Req.WXSceneSession;
-                                IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
-                                api.sendReq(req);
-                                dialog.dismiss();
-                            }
-                        });
+                        if(!isWeChatAppInstalled()){
+                            PopUtil.showComfirmDialog(getContext(),"","未安装微信","","",null,null,true);
+                        }else {
+                            Glide.with(GoodFragment.this).load(shareImageUrl).into(new SimpleTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    WXWebpageObject webpage = new WXWebpageObject();
+                                    webpage.webpageUrl = shareUrl;
+                                    WXMediaMessage msg = new WXMediaMessage(webpage);
+                                    msg.title = goods_name;
+                                    String s = goods_jingle.replace("\r", "");
+                                    s = s.replace("\t", "");
+                                    msg.description = s;
+                                    Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
+                                    Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+                                    msg.thumbData = bmpToByteArray(thumbBmp, true);
+                                    SendMessageToWX.Req req = new SendMessageToWX.Req();
+                                    req.transaction = buildTransaction("webpage");
+                                    req.message = msg;
+                                    req.scene = SendMessageToWX.Req.WXSceneSession;
+                                    IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
+                                    api.sendReq(req);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
                     }
                 });
                 holder.getView(R.id.ll_share_wxq).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Glide.with(GoodFragment.this).load(shareImageUrl).into(new SimpleTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                WXWebpageObject webpage = new WXWebpageObject();
-                                webpage.webpageUrl = shareUrl;
-                                WXMediaMessage msg = new WXMediaMessage(webpage);
-                                msg.title = goods_name;
-                                String s = goods_jingle.replace("\r", "");
-                                s = s.replace("\t", "");
-                                msg.description = s;
-                                Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
-                                Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-                                msg.thumbData = bmpToByteArray(thumbBmp, true);
-                                SendMessageToWX.Req req = new SendMessageToWX.Req();
-                                req.transaction = buildTransaction("webpage");
-                                req.message = msg;
-                                req.scene = SendMessageToWX.Req.WXSceneTimeline;
-                                IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
-                                api.sendReq(req);
-                                dialog.dismiss();
-                            }
-                        });
+                        if (!isWeChatAppInstalled()) {
+                            PopUtil.showComfirmDialog(getContext(), "", "未安装微信", "", "", null, null, true);
+                        } else {
+                            Glide.with(GoodFragment.this).load(shareImageUrl).into(new SimpleTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    WXWebpageObject webpage = new WXWebpageObject();
+                                    webpage.webpageUrl = shareUrl;
+                                    WXMediaMessage msg = new WXMediaMessage(webpage);
+                                    msg.title = goods_name;
+                                    String s = goods_jingle.replace("\r", "");
+                                    s = s.replace("\t", "");
+                                    msg.description = s;
+                                    Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
+                                    Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+                                    msg.thumbData = bmpToByteArray(thumbBmp, true);
+                                    SendMessageToWX.Req req = new SendMessageToWX.Req();
+                                    req.transaction = buildTransaction("webpage");
+                                    req.message = msg;
+                                    req.scene = SendMessageToWX.Req.WXSceneTimeline;
+                                    IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
+                                    api.sendReq(req);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
                     }
                 });
                 holder.getView(R.id.ll_share_qrcode).setOnClickListener(new View.OnClickListener() {
@@ -394,7 +405,24 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
         return result;
     }
-
+    public  boolean isWeChatAppInstalled() {
+        IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
+        if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
+            return true;
+        } else {
+            final PackageManager packageManager = getContext().getPackageManager();
+            List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+            if (pinfo != null) {
+                for (int i = 0; i < pinfo.size(); i++) {
+                    String pn = pinfo.get(i).packageName;
+                    if (pn.equalsIgnoreCase("com.tencent.mm")) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
     @Override
     protected void initData() {
         super.initData();
@@ -417,6 +445,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             tid = datas.optJSONObject("store_info").optString("member_id");
             storeId = datas.optJSONObject("store_info").optString("store_id");
             storeName = datas.optJSONObject("store_info").optString("store_name");
+            tvstore.setText("本产品由"+storeName+"提供售后服务和产品支持");
             is_favorate = datas.optBoolean("is_favorate");
             if (is_favorate) {
                 iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_collected));
@@ -469,11 +498,27 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
             tvgoods_jingle.setText(goods_jingle);
-            goods_price = goods_info.optString("goods_price");
+            if(TextUtils.isEmpty(goods_info.optString("promotion_price"))){
+                if(TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))){
+                    if(TextUtils.isEmpty(goods_info.optString("goods_price"))){
+                      PopUtil.toastInCenter("没有商品价格");
+                    }else {
+                        goods_price =  goods_info.optString("goods_price");
+                    }
+                }else {
+                    goods_price =  goods_info.optString("goods_promotion_price");
+                }
+            }else{
+                goods_price = goods_info.optString("promotion_price");
+            }
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));
-            goods_marketprice = goods_info.optString("goods_marketprice");
+            if(TextUtils.equals(goods_info.optString("promotion_type"),"xianshi")) {
+                goods_marketprice = goods_info.optString("goods_price");
+            }else {
+                goods_marketprice = goods_info.optString("goods_marketprice");
+            }
             tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
             tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
             JSONObject goods_hair_info = datas.getJSONObject("goods_hair_info");

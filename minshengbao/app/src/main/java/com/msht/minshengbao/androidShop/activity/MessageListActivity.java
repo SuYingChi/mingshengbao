@@ -44,12 +44,12 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
     @BindView(R.id.title)
     TextView tvtitle;
     private List<WarnBean.DataBean> dataList = new ArrayList<WarnBean.DataBean>();
- /*   private MessageListAdapter adapter;*/
- private MessageListAdapter2 adapter;
+    /*   private MessageListAdapter adapter;*/
+    private MessageListAdapter2 adapter;
     private int page = 1;
     private String type;
     private int lastPage = -1;
-    private boolean onRestart=false;
+    private boolean onRestart = false;
     private int deletepson;
 
 
@@ -76,8 +76,8 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
         rcl.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         if (type.equals("1")) {
             tvtitle.setText("燃气服务");
-          //  adapter = new MessageListAdapter(this, R.layout.item_warn);
-            adapter = new MessageListAdapter2(this,dataList, 1);
+            //  adapter = new MessageListAdapter(this, R.layout.item_warn);
+            adapter = new MessageListAdapter2(this, dataList, 1);
             adapter.addBtn(R.layout.delete_btn_message, new ComplexRecyclerViewAdapter.OnItemBtnClickListener() {
                 @Override
                 public void onItemBtnClickListener(int pson, ComplexRecyclerViewAdapter.ComplexViewHolder holder, Object bean) {
@@ -87,16 +87,16 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
             });
         } else if (type.equals("2")) {
             tvtitle.setText("紧急通知");
-        //    adapter = new MessageListAdapter(this, R.layout.item_warn);
-            adapter = new MessageListAdapter2(this,dataList,2);
+            //    adapter = new MessageListAdapter(this, R.layout.item_warn);
+            adapter = new MessageListAdapter2(this, dataList, 2);
         } else if (type.equals("3")) {
             tvtitle.setText("物流助手");
-         //   adapter = new MessageListAdapter(this, R.layout.item_wuliu);
-            adapter = new MessageListAdapter2(this, dataList,3);
+            //   adapter = new MessageListAdapter(this, R.layout.item_wuliu);
+            adapter = new MessageListAdapter2(this, dataList, 3);
         } else {
             tvtitle.setText("优惠促销");
-           // adapter = new MessageListAdapter(this, R.layout.item_youhui);
-            adapter = new MessageListAdapter2(this, dataList,4);
+            // adapter = new MessageListAdapter(this, R.layout.item_youhui);
+            adapter = new MessageListAdapter2(this, dataList, 4);
         }
       /*  adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
@@ -112,15 +112,15 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
                 }
             }
         });*/
-       // adapter.setDatas(dataList);
+        // adapter.setDatas(dataList);
         adapter.setOnItemClickListener(new ComplexRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int i, ComplexRecyclerViewAdapter.ComplexViewHolder complexViewHolder, Object o) {
-                if(type.equals("2")){
+                if (type.equals("2")) {
                     Intent intent = new Intent(MessageListActivity.this, WarnMessageDetailActivity.class);
                     intent.putExtra("id", dataList.get(i).getId() + "");
                     startActivity(intent);
-                }else if(type.equals("3")){
+                } else if (type.equals("3")) {
                     try {
                         JSONObject obj = new JSONObject(dataList.get(i).getContent());
                         Intent intent = new Intent(MessageListActivity.this, ShopOrderRouteActivity.class);
@@ -130,7 +130,7 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else if(type.equals("4")){
+                } else if (type.equals("4")) {
                     try {
                         JSONObject obj = new JSONObject(dataList.get(i).getContent());
                         Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
@@ -160,8 +160,10 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
     @Override
     protected void onRestart() {
         super.onRestart();
-        onRestart=true;
+        onRestart = true;
         page = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getMessageList(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), type);
 
     }
@@ -176,6 +178,8 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getMessageList(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), type);
 
     }
@@ -203,8 +207,13 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
             if (page == 1) {
                 dataList.clear();
                 dataList.addAll(bean.getData());
-                page++;
-                ShopPresenter.getMessageList(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), type);
+                if (page<lastPage) {
+                    page++;
+                    ShopPresenter.getMessageList(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), type);
+                }else {
+                    adapter.notifyDataSetChanged();
+                    onRestart = false;
+                }
             } else if (page < lastPage && bean.getData().size() != 0) {
                 dataList.addAll(bean.getData());
                 page++;
@@ -212,21 +221,21 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
             } else if (page == lastPage && bean.getData().size() != 0) {
                 dataList.addAll(bean.getData());
                 adapter.notifyDataSetChanged();
-                onRestart=false;
+                onRestart = false;
             }
         }
     }
 
     @Override
     public void onDeleteMsgItemSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this,"删除成功",0);
+        PopUtil.showAutoDissHookDialog(this, "删除成功", 0);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 dataList.remove(deletepson);
                 adapter.notifyDataSetChanged();
             }
-        },1500);
+        }, 1500);
 
     }
 }

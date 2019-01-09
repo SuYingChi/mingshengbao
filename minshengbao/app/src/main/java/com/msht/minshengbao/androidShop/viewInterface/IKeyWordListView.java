@@ -17,4 +17,6 @@ public interface IKeyWordListView extends IBaseView {
     String getPage();
 
     String orderKey();
+
+    String getGcId();
 }

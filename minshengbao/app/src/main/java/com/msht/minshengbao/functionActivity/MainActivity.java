@@ -332,6 +332,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
             tvMassageNum.setText(messageCount);
             tvMassageNum.setVisibility(View.VISIBLE);
+
         } else {
             tvMassageNum.setVisibility(View.GONE);
         }

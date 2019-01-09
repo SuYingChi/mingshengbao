@@ -543,11 +543,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
                         }
                         break;
                     case "vegetables_scxs":
-                        if (VariableUtil.loginStatus) {
+                      /*  if (VariableUtil.loginStatus) {
                             vegetableScxs();
                         } else {
                             gologins();
-                        }
+                        }*/
+                      Intent intent = new Intent(getActivity(),ShopKeywordListActivity.class);
+                      intent.putExtra("gcid","24");
+                      startActivity(intent);
                         break;
                     default:
                         showNotify("民生宝", "已推出新版本，如果您想使用该服务，请点击更新！");
@@ -1154,7 +1157,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AMap
 
     }
 
-    ;
+
 
     @Override
     public void onPause() {

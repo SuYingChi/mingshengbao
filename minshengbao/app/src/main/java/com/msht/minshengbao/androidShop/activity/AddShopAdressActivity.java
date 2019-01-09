@@ -149,7 +149,7 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
 
     @Override
     public String isDefault() {
-        return "1";
+        return "0";
     }
 
 

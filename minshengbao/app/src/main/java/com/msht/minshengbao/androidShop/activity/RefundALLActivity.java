@@ -178,17 +178,16 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
                 }*/
                 if (TextUtils.isEmpty(et.getText().toString())) {
                     PopUtil.showComfirmDialog(RefundALLActivity.this, "", "请填写退款说明", "", "知道了", null, null, true);
-                } else {
+                } else if("".equals(getReasonId())){
+                    PopUtil.showComfirmDialog(RefundALLActivity.this, "", "请选择退款原因", "", "知道了", null, null, true);
+                }
+                else {
                     ShopPresenter.postRefundAll(RefundALLActivity.this, postedPicList);
                 }
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private void onRequestLimitPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

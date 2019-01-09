@@ -12,28 +12,23 @@ import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
-public class KeywordListAdapterHaveHeadView extends MyHaveHeadViewRecyclerAdapter<ShopkeywordBean.DatasBean.GoodsListBean> {
+public class KeywordListAdapter extends MyHaveHeadViewRecyclerAdapter<ShopkeywordBean.DatasBean.GoodsListBean> {
 
-    public KeywordListAdapterHaveHeadView(Context context) {
+    public KeywordListAdapter(Context context) {
         super(context, R.layout.item_keyword_search);
     }
 
     @Override
     public void convert(RecyclerHolder holder, final ShopkeywordBean.DatasBean.GoodsListBean goodsListBean, final int position) {
         final ImageView iv = holder.getView(R.id.iv);
-        iv.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = iv.getLayoutParams();
-                params.width = (int) (DimenUtil.getScreenWidth() * 0.25);
-                int vw = params.width - iv.getPaddingLeft() - iv.getPaddingRight();
-                params.height = vw + iv.getPaddingTop() + iv.getPaddingBottom();
-                iv.setLayoutParams(params);
-                GlideUtil.loadByImageView(context, iv, goodsListBean.getGoods_image_url());
-            }
-        });
+        ViewGroup.LayoutParams params = iv.getLayoutParams();
+        params.width = (int) (DimenUtil.getScreenWidth() * 0.25);
+        int vw = params.width - iv.getPaddingLeft() - iv.getPaddingRight();
+        params.height = vw + iv.getPaddingTop() + iv.getPaddingBottom();
+        iv.setLayoutParams(params);
+        GlideUtil.loadByImageView(context, iv, goodsListBean.getGoods_image_url());
         TextView tv = holder.getView(R.id.name);
-        tv.setText(goodsListBean.getGoods_name());
+        tv.setText(goodsListBean.getGoods_name().trim());
         TextView tv2 = holder.getView(R.id.name2);
         tv2.setText(goodsListBean.getGoods_jingle());
         TextView tv3 = holder.getView(R.id.sell);

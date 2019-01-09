@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.androidShop.adapter.KeywordListAdapterHaveHeadView;
+import com.msht.minshengbao.androidShop.adapter.KeywordListAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -70,7 +70,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
     private List<ShopkeywordBean.DatasBean.GoodsListBean> datalist = new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
-    private KeywordListAdapterHaveHeadView adapter;
+    private KeywordListAdapter adapter;
     private String order1 = "2";
     private String order2 = "2";
     private String order3 = "2";
@@ -84,6 +84,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     private DividerItemDecoration dividerItemDecoration2;
     private DividerItemDecoration dividerItemDecoration;
     private String msgid;
+    private String gcId="";
 
     @Override
     protected void setLayout() {
@@ -107,23 +108,22 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             }
         });
         keyword = getIntent().getStringExtra("keyword");
+        if(keyword==null){
+            keyword="";
+        }
+        gcId = getIntent().getStringExtra("gcid");
         msgid = getIntent().getIntExtra("msgid",0)+"";
         et.setHint(keyword);
         linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
         dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rcl.addItemDecoration(dividerItemDecoration);
-        adapter = new KeywordListAdapterHaveHeadView(this);
+        adapter = new KeywordListAdapter(this);
         adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 ShopkeywordBean.DatasBean.GoodsListBean item = datalist.get(position);
-             //   HashMap<String,String> map= new HashMap<String,String>();
                 String goodsId = item.getGoods_id();
-             /*   map.put("type","goods");
-                map.put("data",goodsId);
-                map.put("price",item.getGoods_price());
-                doNotAdClick(map);*/
                 onShopItemViewClick("goods",goodsId);
             }
         });
@@ -145,17 +145,12 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                 goSearch();
             }
         });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ShopPresenter.getKeywordList(this);
+     //   ShopPresenter.getKeywordList(this);
         if(!msgid.equals("0")) {
             ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
         }
     }
+
 
     private void initTab(String selectTab) {
 
@@ -254,7 +249,11 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
         if (requestCode == KEYWORD && resultCode == RESULT_OK) {
             if (data != null) {
                 if (!TextUtils.isEmpty(data.getStringExtra("keyword"))&&!TextUtils.equals(keyword,data.getStringExtra("keyword"))) {
+                    gcId="";
                     keyword = data.getStringExtra("keyword");
+                    curPage = 1;
+                    refreshLayout.setEnableAutoLoadMore(true);
+                    refreshLayout.setNoMoreData(false);
                     ShopPresenter.getKeywordList(this);
                     et.setText(keyword);
                 }
@@ -332,6 +331,14 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     @Override
     public String orderKey() {
         return orderKey;
+    }
+
+    @Override
+    public String getGcId() {
+        if(TextUtils.isEmpty(gcId)){
+            gcId="";
+        }
+        return gcId;
     }
 
     @Override

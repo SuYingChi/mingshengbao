@@ -1,14 +1,13 @@
 package com.msht.minshengbao.androidShop.presenter;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
-import com.msht.minshengbao.androidShop.activity.WarnMessageDetailActivity;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
 import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
 import com.msht.minshengbao.androidShop.shopBean.MyAddEvaluateShopOrderBean;
 import com.msht.minshengbao.androidShop.shopBean.MyClassListBean;
@@ -44,12 +43,14 @@ import com.msht.minshengbao.androidShop.viewInterface.IGetInvContentView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IEditAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.INativGetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
+import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostAddEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
@@ -65,6 +66,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShopFootprintView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopCollectionView;
@@ -134,7 +136,21 @@ public class ShopPresenter {
         });
     }
 
-
+    //第一级分类
+    public static void getAllClass(final IShopAllClassView iShopAllClassView) {
+        OkHttpUtils.get().url(ShopConstants.CLASS_DETAIL_LEFT).build().execute(new DataStringCallback(iShopAllClassView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ClassFirstBean bean = JsonUtil.toBean(s, ClassFirstBean.class);
+                    List<ClassFirstBean.DatasBean.ClassListBean> list = bean.getDatas().getClass_list();
+                    iShopAllClassView.onGetAllClassSuccess(list);
+                }
+            }
+        });
+    }
+    //第二级分类
     public static void getClassDetailLeft(final IShopClassDetailView iShopClassDetailView) {
         OkHttpUtils.get().url(ShopConstants.CLASS_DETAIL_LEFT).addParams("gc_id", iShopClassDetailView.getGcId()).build().execute(new DataStringCallback(iShopClassDetailView) {
             @Override
@@ -182,7 +198,7 @@ public class ShopPresenter {
                                 for (int ii = 0; ii < jsonarry.length(); ii++) {
                                     JSONObject objj = jsonarry.optJSONObject(ii);
                                     ClassDetailRightBean.DatasBean.GoodsListBean beanb = new ClassDetailRightBean.DatasBean.GoodsListBean();
-                                    beanb.setGoods_price(objj.optString("goods_price"));
+                                    beanb.setGoods_price(objj.optString("goods_promotion_price"));
                                     beanb.setGoods_image_url(objj.optString("goods_image_url"));
                                     beanb.setGoods_name(objj.optString("goods_name"));
                                     beanb.setGoods_id(objj.optString("goods_id"));
@@ -200,7 +216,7 @@ public class ShopPresenter {
     }
 
     public static void getKeywordList(final IKeyWordListView iKeyWordListView) {
-        OkHttpUtils.get().url(ShopConstants.KEYWORD_LIST).addParams("keyword", iKeyWordListView.getKeyword()).addParams("order", iKeyWordListView.order()).addParams("page", iKeyWordListView.getPage()).addParams("curpage", iKeyWordListView.getCurrenPage()).addParams("key", iKeyWordListView.orderKey()).build().execute(new DataStringCallback(iKeyWordListView) {
+        OkHttpUtils.get().url(ShopConstants.KEYWORD_LIST).addParams("keyword", iKeyWordListView.getKeyword()).addParams("store_id", iKeyWordListView.getGcId()).addParams("order", iKeyWordListView.order()).addParams("page", iKeyWordListView.getPage()).addParams("curpage", iKeyWordListView.getCurrenPage()).addParams("key", iKeyWordListView.orderKey()).build().execute(new DataStringCallback(iKeyWordListView) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -827,6 +843,7 @@ public class ShopPresenter {
     }
 
     public static void getRefundGoodList(final IRefundGoodView iRefundGoodView) {
+        LogUtils.e(Log.getStackTraceString(new Throwable()));
         OkHttpUtils.get().url(ShopConstants.RETURN_GOOD_LIST).addParams("key", iRefundGoodView.getKey())
                 .addParams("curpage", iRefundGoodView.getCurpage())
                 .addParams("page", "10")
@@ -913,7 +930,7 @@ public class ShopPresenter {
         PostFormBuilder pfbuilder = OkHttpUtils.post().url(ShopConstants.REFUN_MONEY_OR_GOOD).addParams("key", iPostRefundView.getKey())
                 .addParams("order_id", iPostRefundView.getOrderId())
                 .addParams("reason_id", iPostRefundView.getReasonId())
-                .addParams("buyer_message ", iPostRefundView.getBuyerMessage())
+                .addParams("buyer_message", iPostRefundView.getBuyerMessage())
                 .addParams("order_goods_id", iPostRefundView.getOrder_goods_id())
                 .addParams("refund_amount", iPostRefundView.getRefund_amount())
                 .addParams("refund_type", iPostRefundView.getRefund_type());
@@ -921,8 +938,8 @@ public class ShopPresenter {
         for (int i = 0; i < picList.size(); i++) {
             pfbuilder.addParams("refund_pic[" + i + "]", picList.get(i));
         }
-        if (iPostRefundView.getRefund_type().equals("0")) {
-            pfbuilder.addParams("goods_num ", iPostRefundView.getGoods_num());
+        if (iPostRefundView.getRefund_type().equals("2")) {
+            pfbuilder.addParams("goods_num", iPostRefundView.getGoods_num());
         }
         pfbuilder.build().execute(new DataStringCallback(iPostRefundView) {
             @Override
@@ -1331,6 +1348,39 @@ public class ShopPresenter {
                 }
                 if (isResponseSuccess) {
                     iDeleteMessageItemView.onDeleteMsgItemSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getRetrunGoodSendInit(final IGetWuliuView iGetWuliuView) {
+        OkHttpUtils.get().url(ShopConstants.RETURN_GOOD_SENT_INIT).addParams("key", iGetWuliuView.getKey())
+                .addParams("return_id", iGetWuliuView.getReturnId())
+                .build().execute(new DataStringCallback(iGetWuliuView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetWuliuView.onGetReturnGoodInitSuccess(s);
+                }
+            }
+        });
+    }
+    public static void getOrderNum(final IOrderNumView iOrderNumView,DataStringCallback dataStringCallback) {
+        OkHttpUtils.get().url(ShopConstants.MY_SHOP_NUM).addParams("key", iOrderNumView.getKey())
+                .build().execute(dataStringCallback);
+    }
+    public static void retrunGoodSendPost(final IGetWuliuView iGetWuliuView) {
+        OkHttpUtils.post().url(ShopConstants.RETURN_GOOD_SENT_POST).addParams("key", iGetWuliuView.getKey())
+                .addParams("return_id", iGetWuliuView.getReturnId())
+                .addParams("express_id", iGetWuliuView.getExpress_id())
+                .addParams("invoice_no", iGetWuliuView.invoice_no())
+                .build().execute(new DataStringCallback(iGetWuliuView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetWuliuView.onPostReturnGoodSuccess(s);
                 }
             }
         });

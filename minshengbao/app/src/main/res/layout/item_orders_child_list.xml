@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="38.00"
             android:textColor="@color/msb_color"
-            android:textSize="@dimen/text_width18" />
+            android:textSize="@dimen/text_15" />
         <View
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -37,6 +37,7 @@
         android:orientation="vertical"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/nc_bg"
         >
     <include layout="@layout/item_order_child_list_head"/>
     <include layout="@layout/item_orders_child_list"/>
@@ -44,7 +45,10 @@
         android:id="@+id/ll_reason"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/margin_Modules"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -69,7 +73,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/dp1"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -87,7 +94,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/dp1"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -105,7 +115,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/dp1"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"

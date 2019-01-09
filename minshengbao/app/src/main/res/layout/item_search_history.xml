@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/dp20"
     >
 <ImageView
     android:id="@+id/iv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:src="@drawable/search_clock"
+    android:layout_marginLeft="@dimen/margin_Modules"
     android:layout_centerVertical="true"
     android:layout_alignParentLeft="true"
     />
@@ -20,7 +20,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="@dimen/margin_Modules"
         android:layout_toRightOf="@+id/iv"
-        android:textSize="@dimen/text_15"
+        android:textSize="@dimen/text_12"
          />
     <ImageView
         android:id="@+id/delete"

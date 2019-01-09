@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.ClassDetailLeftAdapter;
 import com.msht.minshengbao.androidShop.adapter.ClassDetailRightAdapter;
@@ -28,7 +29,9 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.AddCarOrBuyGoodDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.AddCarBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.MyClassListBean;
@@ -41,6 +44,7 @@ import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopGoodDetailView;
 import com.msht.minshengbao.events.CarNumEvent;
@@ -61,7 +65,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopClassDetailActivity extends ShopBaseActivity implements IShopClassDetailView, OnRefreshLoadMoreListener, OnRefreshListener, ClassDetailRightAdapter.AddCarListener, IShopGoodDetailView, ICarListView, IModifyCarGoodNumView {
+public class ShopClassDetailActivity extends ShopBaseActivity implements IShopClassDetailView, OnRefreshLoadMoreListener, OnRefreshListener, ClassDetailRightAdapter.AddCarListener, IShopGoodDetailView, ICarListView, IModifyCarGoodNumView, IShopAllClassView {
     @BindView(R.id.rcl)
     RecyclerView rclLeft;
     @BindView(R.id.rcl2)
@@ -158,151 +162,84 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 finish();
             }
         });
+        //适配首页的全部里跳转到商城分类页
         gcId = getIntent().getStringExtra("data");
         String tit = getIntent().getStringExtra("title");
-        selectPosition = getIntent().getIntExtra("selectPosition", 0);
-        tvTitle.setText(tit);
-        Bundle bundle = getIntent().getExtras();
-        //初始化顶部点击弹出popwindow
-        if (bundle != null) {
-            List<ShopHomeClassBean.ClassBean.ItemBean> popDatas = (List<ShopHomeClassBean.ClassBean.ItemBean>) bundle.getSerializable("list");
-            if (popDatas != null && popDatas.size() > 0) {
-                triangle.setVisibility(View.VISIBLE);
-                rltTitle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PopUtil.showPopWindow(ShopClassDetailActivity.this, tvTitle, false, popViewHolder.getCustomView(), popWindow);
-                        rotateImageView(180);
-                    }
-                });
-
-                final ArrayList<MyClassListBean> popWindowList = new ArrayList<MyClassListBean>();
-                MyClassListBean myClassListBean;
-                String data;
-                for (ShopHomeClassBean.ClassBean.ItemBean classListBean : popDatas) {
-                    myClassListBean = new MyClassListBean();
-                    myClassListBean.setGc_name(classListBean.getTitle());
-                    data = classListBean.getData();
-                    int index = data.indexOf("id=");
-                    data = data.substring(index + 3).trim();
-                    myClassListBean.setGc_id(data);
-                    if (popDatas.indexOf(classListBean) == selectPosition) {
-                        myClassListBean.setIsSelected(true);
-                    } else {
-                        myClassListBean.setIsSelected(false);
-                    }
-                    popWindowList.add(myClassListBean);
-                }
-                popViewHolder = new AddViewHolder(this, R.layout.layout_popupwindow);
-                RecyclerView rcl3 = popViewHolder.getView(R.id.rcl3);
-                rcl3.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-                rcl3.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-                rcl3Adapter = new PopRclAdapterHaveHeadView(this);
-                rcl3Adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        if (selectPosition != position) {
-                            selectPosition = position;
-                            for (int i = 0; i < popWindowList.size(); i++) {
-                                MyClassListBean bean = popWindowList.get(i);
-                                if (i == position) {
-                                    bean.setIsSelected(true);
-                                } else {
-                                    bean.setIsSelected(false);
-                                }
-                                popWindowList.set(i, bean);
-                            }
-                            rcl3Adapter.notifyDataSetChanged();
-                            popWindow.dismiss();
-                            tvTitle.setText(popWindowList.get(position).getGc_name());
-                            gcId = popWindowList.get(position).getGc_id();
-                            ShopPresenter.getClassDetailLeft(ShopClassDetailActivity.this);
+        if(!TextUtils.isEmpty(tit)){
+            tvTitle.setText(tit);
+        }
+        rclLeft.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rclLeft.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        classDetailLeftAdapter = new ClassDetailLeftAdapter(this);
+        classDetailLeftAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (!TextUtils.equals(list.get(position).getGc_id(), rightGcId)) {
+                    rightGcId = list.get(position).getGc_id();
+                    for (int i = 0; i < list.size(); i++) {
+                        MyClassListBean bean = list.get(i);
+                        if (i == position) {
+                            bean.setIsSelected(true);
+                        } else {
+                            bean.setIsSelected(false);
                         }
+                        list.set(i, bean);
                     }
-                });
-                rcl3.setAdapter(rcl3Adapter);
-                rcl3Adapter.setDatas(popWindowList);
-                LogUtils.e("popWindowList.size()==================" + popWindowList.size());
-                rcl3Adapter.notifyDataSetChanged();
-                popWindow = new PopupWindow(popViewHolder.getCustomView(), ViewGroup.LayoutParams.MATCH_PARENT, DimenUtil.dip2px(400));
-                popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        rotateImageView(0);
-                    }
-                });
-            } else {
-                triangle.setVisibility(View.INVISIBLE);
+                    classDetailLeftAdapter.notifyDataSetChanged();
+                    rightCurrenPage = 1;
+                    refreshLayout.setEnableAutoLoadMore(true);
+                    refreshLayout.setNoMoreData(false);
+                    ShopPresenter.getClassDetailRight(ShopClassDetailActivity.this);
+                }
             }
-            ShopPresenter.getClassDetailLeft(this);
-            rclLeft.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-            rclLeft.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-            classDetailLeftAdapter = new ClassDetailLeftAdapter(this);
-            classDetailLeftAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    if (!TextUtils.equals(list.get(position).getGc_id(), rightGcId)) {
-                        rightGcId = list.get(position).getGc_id();
-                        for (int i = 0; i < list.size(); i++) {
-                            MyClassListBean bean = list.get(i);
-                            if (i == position) {
-                                bean.setIsSelected(true);
-                            } else {
-                                bean.setIsSelected(false);
-                            }
-                            list.set(i, bean);
-                        }
-                        classDetailLeftAdapter.notifyDataSetChanged();
-                        rightCurrenPage = 1;
-                        ShopPresenter.getClassDetailRight(ShopClassDetailActivity.this);
-                    }
-                }
-            });
-            rclLeft.setAdapter(classDetailLeftAdapter);
+        });
+        rclLeft.setAdapter(classDetailLeftAdapter);
 
-            rclRight.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-            rclRight.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-            classDetailRightAdapter = new ClassDetailRightAdapter(this);
-            classDetailRightAdapter.setOnAddCarListener(this);
-            classDetailRightAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    ClassDetailRightBean.DatasBean.GoodsListBean item = rightDataList.get(position);
-                    // HashMap<String, String> map = new HashMap<String, String>();
-                    String goodsId = item.getGoods_id();
+        rclRight.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rclRight.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        classDetailRightAdapter = new ClassDetailRightAdapter(this);
+        classDetailRightAdapter.setOnAddCarListener(this);
+        classDetailRightAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                ClassDetailRightBean.DatasBean.GoodsListBean item = rightDataList.get(position);
+                // HashMap<String, String> map = new HashMap<String, String>();
+                String goodsId = item.getGoods_id();
                  /*   map.put("type", "goods");
                     map.put("data", goodsId);
                     doNotAdClick(map);*/
 
-                    onShopItemViewClick("goods", goodsId);
-                }
-            });
-            rclRight.setAdapter(classDetailRightAdapter);
-            refreshLayout.setOnRefreshListener(this);
-            refreshLayout.setOnLoadMoreListener(this);
-            ivSearch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ShopClassDetailActivity.this, ShopSearchActivty.class);
-                    intent.putExtra("main", 1);
-                    startActivity(intent);
-                }
-            });
-            ivMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                onShopItemViewClick("goods", goodsId);
+            }
+        });
+        rclRight.setAdapter(classDetailRightAdapter);
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout.setOnLoadMoreListener(this);
+        ivSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShopClassDetailActivity.this, ShopSearchActivty.class);
+                intent.putExtra("main", 1);
+                startActivity(intent);
+            }
+        });
+        ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    if (TextUtils.isEmpty(getKey())) {
-                        startActivity(new Intent(ShopClassDetailActivity.this, NoLoginCarActivity.class));
-                    } else if (carNum == 0) {
-                        startActivity(new Intent(ShopClassDetailActivity.this, NoCarActivity.class));
-                    } else if (carNum > 0) {
-                        startActivity(new Intent(ShopClassDetailActivity.this, ShopCarActivity.class));
-                    }
+                if (TextUtils.isEmpty(getKey())) {
+                    startActivity(new Intent(ShopClassDetailActivity.this, NoLoginCarActivity.class));
+                } else if (carNum == 0) {
+                    startActivity(new Intent(ShopClassDetailActivity.this, NoCarActivity.class));
+                } else if (carNum > 0) {
+                    startActivity(new Intent(ShopClassDetailActivity.this, ShopCarActivity.class));
                 }
-            });
-        }
+            }
+        });
+        ShopPresenter.getAllClass(this);
+        //  ShopPresenter.getClassDetailLeft(this);
     }
+
 
     @Override
     protected void onResume() {
@@ -319,6 +256,9 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         classDetailLeftAdapter.notifyDataSetChanged();
         if (list.size() > 0) {
             rightGcId = list.get(0).getGc_id();
+            rightCurrenPage =1;
+            refreshLayout.setEnableAutoLoadMore(true);
+            refreshLayout.setNoMoreData(false);
             ShopPresenter.getClassDetailRight(this);
         } else {
             ivNoOrder.setVisibility(View.VISIBLE);
@@ -365,7 +305,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 rightDataList.addAll(list);
                 classDetailRightAdapter.setDatas(rightDataList);
                 classDetailRightAdapter.notifyDataSetChanged();
-            } else if (rightCurrenPage >= page_total) {
+            } else if (rightCurrenPage > page_total) {
                 refreshLayout.setEnableAutoLoadMore(false);
                 refreshLayout.finishLoadMoreWithNoMoreData();
                 refreshLayout.setNoMoreData(true);
@@ -397,6 +337,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         rightCurrenPage = 1;
+        refreshLayout.setEnableAutoLoadMore(true);
+        refreshLayout.setNoMoreData(false);
         ShopPresenter.getClassDetailRight(this);
     }
 
@@ -425,7 +367,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.getJSONObject("datas");
             JSONObject goods_info = datas.getJSONObject("goods_info");
-            goodPrice = goods_info.optString("goods_price");
+            goodPrice = goods_info.optString("goods_promotion_price");
             remianNum = goods_info.optString("goods_storage");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
@@ -639,5 +581,92 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onGetAllClassSuccess(List<ClassFirstBean.DatasBean.ClassListBean> popDatas) {
+        //初始化顶部点击弹出popwindow
+        /*if (!BuildConfig.DEBUG) {*/
+       /* if (BuildConfig.DEBUG) {*/
+            if (popDatas != null && popDatas.size() > 0) {
+                triangle.setVisibility(View.VISIBLE);
+                rltTitle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PopUtil.showPopWindow(ShopClassDetailActivity.this, tvTitle, false, popViewHolder.getCustomView(), popWindow);
+                        rotateImageView(180);
+                    }
+                });
+
+                final ArrayList<MyClassListBean> popWindowList = new ArrayList<MyClassListBean>();
+                MyClassListBean myClassListBean;
+                for (ClassFirstBean.DatasBean.ClassListBean classListBean : popDatas) {
+                    myClassListBean = new MyClassListBean();
+                    myClassListBean.setGc_name(classListBean.getGc_name());
+                  /*  data = classListBean.getData();
+                    int index = data.indexOf("id=");
+                    data = data.substring(index + 3).trim();*/
+                    myClassListBean.setGc_id(classListBean.getGc_id());
+                    if (TextUtils.isEmpty(gcId)) {
+                        if (tvTitle.getText().toString().equals(classListBean.getGc_name())) {
+                            selectPosition = popDatas.indexOf(classListBean);
+                            myClassListBean.setIsSelected(true);
+                            gcId=myClassListBean.getGc_id();
+                            tvTitle.setText(classListBean.getGc_name());
+                        }else {
+                            myClassListBean.setIsSelected(false);
+                        }
+                    } else if (classListBean.getGc_id().equals(gcId)) {
+                        selectPosition = popDatas.indexOf(classListBean);
+                        myClassListBean.setIsSelected(true);
+                        tvTitle.setText(classListBean.getGc_name());
+                    } else {
+                        myClassListBean.setIsSelected(false);
+                    }
+                    popWindowList.add(myClassListBean);
+                }
+                popViewHolder = new AddViewHolder(this, R.layout.layout_popupwindow);
+                RecyclerView rcl3 = popViewHolder.getView(R.id.rcl3);
+                rcl3.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+                rcl3.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                rcl3Adapter = new PopRclAdapterHaveHeadView(this);
+                rcl3Adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        if (selectPosition != position) {
+                            selectPosition = position;
+                            for (int i = 0; i < popWindowList.size(); i++) {
+                                MyClassListBean bean = popWindowList.get(i);
+                                if (i == position) {
+                                    bean.setIsSelected(true);
+                                } else {
+                                    bean.setIsSelected(false);
+                                }
+                                popWindowList.set(i, bean);
+                            }
+                            rcl3Adapter.notifyDataSetChanged();
+                            popWindow.dismiss();
+                            tvTitle.setText(popWindowList.get(position).getGc_name());
+                            gcId = popWindowList.get(position).getGc_id();
+                            ShopPresenter.getClassDetailLeft(ShopClassDetailActivity.this);
+                        }
+                    }
+                });
+                //rcl3.setAdapter(rcl3Adapter);
+                rcl3Adapter.setDatas(popWindowList);
+                rcl3.setAdapter(rcl3Adapter);
+                // rcl3Adapter.notifyDataSetChanged();
+                popWindow = new PopupWindow(popViewHolder.getCustomView(), ViewGroup.LayoutParams.MATCH_PARENT, DimenUtil.dip2px(400));
+                popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        rotateImageView(0);
+                    }
+                });
+                ShopPresenter.getClassDetailLeft(this);
+            } else {
+                triangle.setVisibility(View.INVISIBLE);
+            }
+      /*  }*/
     }
 }

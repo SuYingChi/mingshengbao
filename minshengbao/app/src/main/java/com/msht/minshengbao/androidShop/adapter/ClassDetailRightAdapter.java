@@ -36,7 +36,7 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
             }
         });
         TextView tv = holder.getView(R.id.name);
-        tv.setText(goodsListBean.getGoods_name());
+        tv.setText(goodsListBean.getGoods_name().trim());
         TextView tvPrice = holder.getView(R.id.price);
         tvPrice.setText(context.getResources().getString(R.string.monetary_unit)+"  "+goodsListBean.getGoods_price());
         ImageView car = holder.getView(R.id.car);

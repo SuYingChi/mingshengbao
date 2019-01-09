@@ -73,20 +73,16 @@ public class ShopFootprintActivity extends ShopBaseActivity implements IGetShopF
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+       // rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new ShopFootprintAdapter(this);
         adapter.setDatas(datalist);
         adapter.setListener(this);
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.getFootprintList(this);
     }
+
 
     @Override
     protected void initImmersionBar() {
@@ -142,6 +138,8 @@ public class ShopFootprintActivity extends ShopBaseActivity implements IGetShopF
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getFootprintList(this);
     }
 

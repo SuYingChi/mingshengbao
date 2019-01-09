@@ -9,34 +9,36 @@
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/margin_width150"
+        android:layout_height="@dimen/margin_width150"
          />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_width15"
         >
 
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_12"
+            android:textSize="@dimen/text_15"
             android:ellipsize="end"
             android:lines="2"
+            android:gravity="left"
             android:textColor="@color/black" />
         <TextView
             android:id="@+id/price"
             style="@style/shopMsbcolorTitleText"
-            android:textSize="@dimen/text_12"
+            android:textSize="@dimen/text_15"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
              />
         <ImageView
            android:id="@+id/car"
             style="@style/image"
-            android:src="@drawable/class_detail_car"
+            android:src="@drawable/class_car"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             />

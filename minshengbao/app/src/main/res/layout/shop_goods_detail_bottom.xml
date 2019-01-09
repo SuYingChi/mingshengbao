@@ -55,8 +55,8 @@
             />
             <TextView
                 android:id="@+id/car_num"
-                android:layout_width="@dimen/dp14"
-                android:layout_height="@dimen/dp14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/shop_red_oval"
                 android:text="3"
                 android:textSize="@dimen/text_10"

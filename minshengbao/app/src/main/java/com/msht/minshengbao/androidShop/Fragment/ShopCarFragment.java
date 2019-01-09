@@ -112,7 +112,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+       // rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new CarListAdapter(getContext());
         adapter.setDatas(carList);
         adapter.setCarListListener(new CarListAdapter.CarListListener() {
@@ -458,6 +458,8 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         if (!getKey().equals("")) {
             ShopPresenter.getCarList(ShopCarFragment.this, false);
         }

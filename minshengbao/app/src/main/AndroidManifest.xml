@@ -340,6 +340,7 @@
         <activity android:name=".androidShop.activity.ShopMoreGoodActivity" />
         <activity android:name=".androidShop.activity.MessageListActivity" />
         <activity android:name=".androidShop.activity.WarnMessageDetailActivity" />
+        <activity android:name=".androidShop.activity.ReturnGoodSendGoodActivity" />
 
     </application>
 

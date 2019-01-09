@@ -37,14 +37,19 @@
         android:orientation="vertical"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/nc_bg"
         >
     <include layout="@layout/item_order_child_list_head"/>
-    <include layout="@layout/item_orders_child_list"/>
+    <include layout="@layout/item_orders_child_list"
+        />
     <LinearLayout
         android:id="@+id/ll_reason"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin_Modules"
+        android:background="@color/white"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -69,7 +74,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp1"
+        android:background="@color/white"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -87,7 +95,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp1"
+        android:background="@color/white"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -105,7 +116,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp1"
+        android:background="@color/white"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"
@@ -123,7 +137,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp1"
+        android:background="@color/white"
+        >
 
         <TextView
             style="@style/shopMsbcolorTitleText"

@@ -45,11 +45,11 @@ public class StringUtil {
         if (!s.contains(".")) {
             s += ".00";
         }else if(s.substring(s.indexOf(".")+1).length()==1){
-            s = s.substring(0,s.indexOf(".")+1)+"0";
+            s = s.substring(0,s.indexOf(".")+2)+"0";
         }else if(s.substring(s.indexOf(".")+1).length()==0){
-            s = s.substring(0,s.indexOf(".")+1)+"00";
+            s = s.substring(0,s.indexOf(".")+2)+"00";
         }else if(s.substring(s.indexOf(".")+1).length()>2){
-            s = s.substring(0,s.indexOf(".")+2);
+            s = s.substring(0,s.indexOf(".")+3);
         }
         position = s.indexOf(".");
         SpannableString spannableString = new SpannableString(s);

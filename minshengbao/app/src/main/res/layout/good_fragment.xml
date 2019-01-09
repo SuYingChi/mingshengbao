@@ -74,19 +74,20 @@
                     android:id="@+id/price"
                     style="@style/shopMsbcolorTitleText"
                     android:layout_gravity="left"
-                    android:text="69" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/goods_marketprice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="118"
+                    android:text=""
                     android:textSize="@dimen/text_10" />
                 <TextView
                     android:id="@+id/kuaidiinfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="快递：免运费"
+                    android:text=""
+                    android:visibility="invisible"
                     android:layout_marginTop="@dimen/margin_Modules"
                     android:textColor="@color/nc_text"
                     android:textSize="@dimen/text_12" />
@@ -102,7 +103,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="快递：免运费"
+                        android:text=""
                         android:textColor="@color/nc_text"
                         android:textSize="@dimen/text_12" />
 
@@ -111,7 +112,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="销售量：0件"
+                        android:text=""
+                        android:visibility="invisible"
                         android:textColor="@color/nc_text"
                         android:textSize="@dimen/text_12" />
                 </LinearLayout>
@@ -124,12 +126,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/storeinfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="center_horizontal"
                     android:padding="@dimen/margin_Modules"
-                    android:text="本产品由民生宝自营店提供售后服务和产品支持"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 

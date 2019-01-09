@@ -165,12 +165,6 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
         ShopPresenter.getInitAddEveluate(this, orderId);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     private static final int MY_PERMISSIONS_REQUEST = 100;
 
     private void onRequestLimitPhoto(int position, int item) {

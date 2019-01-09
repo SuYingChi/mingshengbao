@@ -122,7 +122,7 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             if (TextUtils.isEmpty(goodsStorage)) {
                 goodsStorage = "商品已下架或不支持购买";
             }
-            tvRemainNum.setText(String.format("库存量：%s", goodsStorage));
+            tvRemainNum.setText(String.format("库存量：%s件", goodsStorage));
             String goodsPrice = obj.optString("goods_price");
             TextView tvGoodsPrice = holder.getView(R.id.price);
             tvGoodsPrice.setText(StringUtil.getPriceSpannable12String(context, goodsPrice, R.style.small_money, R.style.small_money));

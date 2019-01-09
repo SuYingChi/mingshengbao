@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.viewInterface;
 
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.MyClassListBean;
 
@@ -18,4 +19,5 @@ public interface IShopClassDetailView extends IBaseView{
     String getCurrenPage();
 
     void onRightRclSuccess(List<ClassDetailRightBean.DatasBean.GoodsListBean> list, int page_total);
+
 }

@@ -272,11 +272,6 @@ public class ShopSuccessActivity extends ShopBaseActivity implements IGuessLikeG
             }
         });
         rcl.setAdapter(ad);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.guessLikeGoodList(this);
     }
 

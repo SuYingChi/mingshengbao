@@ -17,15 +17,19 @@ import com.msht.minshengbao.androidShop.adapter.MoreGoodAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseFragment;
+import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeClassBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 
 import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopMoreGoodActivity extends ShopBaseActivity{
+public class ShopMoreGoodActivity extends ShopBaseActivity implements IShopAllClassView {
     @BindView(R.id.toolbar2)
     Toolbar mToolbar;
     @BindView(R.id.back)
@@ -34,11 +38,13 @@ public class ShopMoreGoodActivity extends ShopBaseActivity{
     RecyclerView rcl;
     @BindView(R.id.tvSearchD)
     EditText et;
+    private int carnum;
 
     @Override
     protected void setLayout() {
         setContentView(R.layout.more_good);
     }
+
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
@@ -66,9 +72,8 @@ public class ShopMoreGoodActivity extends ShopBaseActivity{
                 startActivity(intent);
             }
         });
-        final int carnum = getIntent().getIntExtra("carnum", 0);
-        final List<ShopHomeClassBean.ClassBean.ItemBean> homeClassList = (List<ShopHomeClassBean.ClassBean.ItemBean>) getIntent().getSerializableExtra("list");
-        homeClassList.remove(homeClassList.size()-1);
+        ShopPresenter.getAllClass(this);
+        /*final List<ClassFirstBean.DatasBean.ClassListBean> homeClassList = (List<ClassFirstBean.DatasBean.ClassListBean>) getIntent().getSerializableExtra("list");
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         rcl.setLayoutManager(gridLayoutManager);
         MoreGoodAdapter ad = new MoreGoodAdapter(this);
@@ -77,7 +82,7 @@ public class ShopMoreGoodActivity extends ShopBaseActivity{
             @Override
             public void onItemClick(int childposition) {
                 Intent intent = new Intent(ShopMoreGoodActivity.this, ShopClassDetailActivity.class);
-                String data = homeClassList.get(childposition).getData();
+              *//*  String data = homeClassList.get(childposition).getData();
                 if (data.contains("id=")) {
                     int index = data.indexOf("id=");
                     data = data.substring(index + 3).trim();
@@ -89,7 +94,52 @@ public class ShopMoreGoodActivity extends ShopBaseActivity{
                     intent.putExtras(bundle);
                     intent.putExtra("carnum", carnum);
                     startActivity(intent);
-                }
+                }*//*
+                String data = homeClassList.get(childposition).getGc_id();
+                intent.putExtra("data", data);
+                intent.putExtra("title", homeClassList.get(childposition).getGc_name());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("list", (Serializable) homeClassList);
+                intent.putExtras(bundle);
+                intent.putExtra("carnum", carnum);
+                startActivity(intent);
+            }
+        });
+        rcl.setAdapter(ad);*/
+    }
+
+    @Override
+    public void onGetAllClassSuccess(final List<ClassFirstBean.DatasBean.ClassListBean> homeClassList) {
+      //  final List<ClassFirstBean.DatasBean.ClassListBean> homeClassList = (List<ClassFirstBean.DatasBean.ClassListBean>) getIntent().getSerializableExtra("list");
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        rcl.setLayoutManager(gridLayoutManager);
+        MoreGoodAdapter ad = new MoreGoodAdapter(this);
+        ad.setDatas(homeClassList);
+        ad.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int childposition) {
+                Intent intent = new Intent(ShopMoreGoodActivity.this, ShopClassDetailActivity.class);
+              /*  String data = homeClassList.get(childposition).getData();
+                if (data.contains("id=")) {
+                    int index = data.indexOf("id=");
+                    data = data.substring(index + 3).trim();
+                    intent.putExtra("data", data);
+                    intent.putExtra("position", childposition);
+                    intent.putExtra("title", homeClassList.get(childposition).getTitle());
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("list", (Serializable) homeClassList);
+                    intent.putExtras(bundle);
+                    intent.putExtra("carnum", carnum);
+                    startActivity(intent);
+                }*/
+                String data = homeClassList.get(childposition).getGc_id();
+                intent.putExtra("data", data);
+                intent.putExtra("title", homeClassList.get(childposition).getGc_name());
+            /*    Bundle bundle = new Bundle();
+                bundle.putSerializable("list", (Serializable) homeClassList);
+                intent.putExtras(bundle);*/
+            /*    intent.putExtra("carnum", carnum);*/
+                startActivity(intent);
             }
         });
         rcl.setAdapter(ad);

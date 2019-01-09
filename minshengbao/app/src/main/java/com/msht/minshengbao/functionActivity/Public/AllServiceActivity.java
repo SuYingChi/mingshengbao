@@ -2,17 +2,25 @@ package com.msht.minshengbao.functionActivity.Public;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.adapter.AllServerAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Control.FullyLinearLayoutManager;
 import com.msht.minshengbao.androidShop.activity.MessageListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
+import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopMoreGoodActivity;
+import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
+import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasInstallAcitivity;
@@ -75,6 +83,7 @@ public class AllServiceActivity extends BaseActivity {
                         AllServiceModel model = gson.fromJson(msg.obj.toString(), AllServiceModel.class);
                         if (model.result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             ArrayList<AllServiceModel.MainCategory.ServeCategory> data = model.data.serve;
+                            data.get(4).child.add(new AllServiceModel.MainCategory.ServeCategory.ChildCategory("更多分类"));
                             activity.categories=data;
                             activity.allServerAdapter.clear();
                             activity.allServerAdapter.addAll(data);
@@ -109,16 +118,34 @@ public class AllServiceActivity extends BaseActivity {
         allServerAdapter.SetOnItemClickListener(new AllServerAdapter.OnItemClickListener() {
             @Override
             public void ItemClick(View view, int mainPosition, int secondPosition) {
-                childcategories=categories.get(mainPosition).child;
-                String code=childcategories.get(secondPosition).code;
-                serveId=String.valueOf(childcategories.get(secondPosition).id);
-                if(mainPosition==4) {
-                    String shopkeyword = String.valueOf(childcategories.get(secondPosition).name);
-                    Intent intent = new Intent(AllServiceActivity.this, ShopKeywordListActivity.class);
-                    intent.putExtra("keyword", shopkeyword);
-                    startActivity(intent);
-                }else {
-                    startServer(code);
+                childcategories = categories.get(mainPosition).child;
+                String code = childcategories.get(secondPosition).code;
+                serveId = String.valueOf(childcategories.get(secondPosition).id);
+                if (BuildConfig.DEBUG) {
+                    if (mainPosition == 4) {
+                        String shopkeyword = String.valueOf(childcategories.get(secondPosition).name);
+                        Intent intent = new Intent(AllServiceActivity.this, ShopKeywordListActivity.class);
+                        intent.putExtra("keyword", shopkeyword);
+                        startActivity(intent);
+                    } else {
+                        startServer(code);
+                    }
+                } else {
+                    if (mainPosition == 4) {
+                        if(secondPosition<childcategories.size()-1){
+                            Intent intent = new Intent(AllServiceActivity.this, ShopClassDetailActivity.class);
+                            String gcId= Uri.parse(childcategories.get(secondPosition).url).getQueryParameter("gc_id");
+                            intent.putExtra("data",gcId);
+                            intent.putExtra("title",String.valueOf(childcategories.get(secondPosition).name));
+                            startActivity(intent);
+                        }else {
+                            Intent intent = new Intent(AllServiceActivity.this, ShopMoreGoodActivity.class);
+                            startActivity(intent);
+                        }
+
+                    } else {
+                        startServer(code);
+                    }
                 }
             }
         });
@@ -198,7 +225,10 @@ public class AllServiceActivity extends BaseActivity {
                 redwind();
                 break;
            case "vegetables_scxs":
-                vegetableScxs();
+               // vegetableScxs();
+               Intent intent = new Intent(this,ShopKeywordListActivity.class);
+               intent.putExtra("gcid","24");
+               startActivity(intent);
                 break;
             default:
                 showNotify("民生宝" ,"你的版本过老，如若需使用，请点击更新");

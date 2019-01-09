@@ -105,7 +105,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
         linearLayoutManager.setAutoMeasureEnabled(true);
         rcl.setNestedScrollingEnabled(false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+       // rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new ShopReturnDetailGoodListAdapter(this);
         adapter.setDatas(goodList);
         adapter.setOnItemClickListener(new MyHaveHeadAndFootRecyclerAdapter.OnItemClickListener() {
@@ -150,11 +150,11 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             detail.setText(refund.getBuyer_message());
             amount2.setText(StringUtil.getPriceSpannable12String(this, refund.getRefund_amount(), R.style.big_money, R.style.big_money));
             adapter.notifyDataSetChanged();
-            int total = 0;
+           /* int total = 0;
             for (ReturnGoodsListBean b : goodList) {
                 total += Integer.valueOf(b.getGoods_num());
-            }
-            num.setText(total + "");
+            }*/
+            num.setText(refund.getGoods_num());
             sn.setText(refund.getRefund_sn());
             state.setText(refund.getSeller_state());
             seller_message.setText(refund.getSeller_message());
@@ -162,7 +162,7 @@ public class ReturnGoodDetailActivity extends ShopBaseActivity implements IRefun
             ReturnGoodDetailBean.DatasBean.DetailArrayBean detailArray = returnGoodDetailBean.getDatas().getDetail_array();
             llll.setVisibility(View.VISIBLE);
             pay_method.setText(detailArray.getRefund_code());
-            online_refund.setText(detailArray.getPay_amount());
+            online_refund.setText(getResources().getString(R.string.monetary_unit)+detailArray.getPay_amount());
             pd_amount.setText(detailArray.getPd_amount());
             rcb_amount.setText(detailArray.getRcb_amount());
             imageList.clear();

@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -73,6 +75,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     TextView tvGoodNum;
     @BindView(R.id.total)
     TextView tvTotalGoodsSelf;
+    @BindView(R.id.ll_inv)
+    LinearLayout llinv;
+    @BindView(R.id.rlt_inv_info)
+    RelativeLayout rltinv;
     private static final int REQUEST_CODE_ADDRESS = 100;
     private List<ComfirmShopGoodBean> list;
     private String ifCarted;
@@ -325,7 +331,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             //scrollerview 嵌套recycleview，再嵌套recycleview ，使用nestedscrollerview，不能用Scrollerview,并且加上这行代码
             rcl.setNestedScrollingEnabled(false);
             rcl.setLayoutManager(linearLayoutManager);
-            rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+          //  rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
             OrdersGoodListAdapter adapter = new OrdersGoodListAdapter(this, new OrdersGoodListAdapter.OrdersListListener() {
                 @Override
                 public void onMessaged(String message, int position) {
@@ -342,7 +348,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
-                    if (!TextUtils.isEmpty(re.getRecommend_phone())) {
+                    if (!TextUtils.isEmpty(re.getRecommend_phone())||!"null".equals(re.getRecommend_phone())) {
                         etRecommand.setText(re.getRecommend_phone());
                     }
                     recommendBean = re;
@@ -356,8 +362,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             JSONObject obj = datas.optJSONObject("inv_info");
             if (TextUtils.equals(obj.optString("content"), "不需要发票")) {
                 isInv = false;
+                llinv.setVisibility(View.GONE);
+                rltinv.setVisibility(View.GONE);
             } else {
                 isInv = true;
+                llinv.setVisibility(View.VISIBLE);
+                rltinv.setVisibility(View.VISIBLE);
             }
             invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();

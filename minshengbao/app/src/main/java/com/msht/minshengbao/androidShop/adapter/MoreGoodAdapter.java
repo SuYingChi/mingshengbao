@@ -7,12 +7,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeClassBean;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
-public class MoreGoodAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHomeClassBean.ClassBean.ItemBean> {
+public class MoreGoodAdapter extends MyHaveHeadViewRecyclerAdapter<ClassFirstBean.DatasBean.ClassListBean> {
 
 
     private LinearLayout.LayoutParams mLayoutParams;
@@ -26,11 +28,11 @@ public class MoreGoodAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHomeClass
     }
 
     @Override
-    public void convert(RecyclerHolder holder, final ShopHomeClassBean.ClassBean.ItemBean itemNav, final int position) {
+    public void convert(RecyclerHolder holder, final ClassFirstBean.DatasBean.ClassListBean itemNav, final int position) {
         ImageView ivPic = holder.getView(R.id.ivPic);
         ivPic.setLayoutParams(mLayoutParams);
         TextView tv = holder.getView(R.id.tv);
-        tv.setText(itemNav.getTitle());
+        tv.setText(itemNav.getGc_name());
         GlideUtil.loadRemoteImg(context,ivPic,itemNav.getImage());
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override

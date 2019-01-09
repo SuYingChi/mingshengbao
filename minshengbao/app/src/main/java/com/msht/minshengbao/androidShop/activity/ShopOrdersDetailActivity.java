@@ -199,7 +199,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
                     tvPay.setLayoutParams(paramas);
                     tvPay.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_pay));
-                    tvPay.setText("付款");
+                    tvPay.setText("支付订单");
                     tvPay.setTextColor(this.getResources().getColor(R.color.white));
                     tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                     tvPay.setOnClickListener(new View.OnClickListener() {

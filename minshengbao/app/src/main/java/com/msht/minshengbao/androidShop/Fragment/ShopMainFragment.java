@@ -49,6 +49,8 @@ import com.msht.minshengbao.androidShop.customerview.ImageCycleView;
 import com.msht.minshengbao.androidShop.customerview.WrapChildHeightViewPager;
 import com.msht.minshengbao.androidShop.customerview.XScrollView;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
 import com.msht.minshengbao.androidShop.shopBean.MessagePreviewBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoodsBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopHomeGoods_1Bean;
@@ -68,6 +70,7 @@ import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -234,6 +237,8 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         shopHomeContent.removeAllViews();
         ShopPresenter.getShopHome(this);
 
@@ -264,7 +269,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                         ShopHomeClassBean shopHomeClassBean = JsonUtil.toBean(parameterObject.toString(), ShopHomeClassBean.class);
                         if (shopHomeClassBean != null) {
                             homeClassList = shopHomeClassBean.getClassX().getItem();
-                            showClass(homeClassList);
+                            showClass();
                         }
                     } else if (parameterObject.has("home2")) {
                         ShopHome2Bean shopHome2Bean = JsonUtil.toBean(parameterObject.toString(), ShopHome2Bean.class);
@@ -345,9 +350,10 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     /**
      * 显示首页的分类导航栏
      *
-     * @param homeClassList
+     *
+     *
      */
-    private void showClass(final List<ShopHomeClassBean.ClassBean.ItemBean> homeClassList) {
+    private void showClass() {
         AddViewHolder addViewHolder = new AddViewHolder(getContext(), R.layout.shop_home_class);
         LinearLayout llIndicators = addViewHolder.getView(R.id.llIndicators);
         ShopHomeClassPagerAdapter pagerAdapter = new ShopHomeClassPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
@@ -361,12 +367,11 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             int index = data.indexOf("gc_id=");
                             data = data.substring(index + 6).trim();
                             intent.putExtra("data", data);
-                            intent.putExtra("position", position);
+                           // intent.putExtra("selectPosition", position);
                             intent.putExtra("title", homeClassList.get(position).getTitle());
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("list", (Serializable) homeClassList);
-                            intent.putExtras(bundle);
-                            intent.putExtra("carnum", carNum);
+                            //Bundle bundle = new Bundle();
+                         //   bundle.putSerializable("list", (Serializable) list);
+                           // intent.putExtras(bundle);
                             startActivity(intent);
                         } else if (data.contains("keyword=")) {
                             int index = data.indexOf("keyword=");
@@ -383,8 +388,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                         }
                     } else {
                         Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
-                        intent.putExtra("list", (Serializable) homeClassList);
-                        intent.putExtra("carnum", carNum);
+                      //  intent.putExtra("list", (Serializable) list);
                         getActivity().startActivity(intent);
                     }
                 } else {
@@ -406,7 +410,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             data = data.substring(index + 6).trim();
                             intent.putExtra("data", data);
                             intent.putExtra("title", homeClassList.get(position).getTitle());
-                            intent.putExtra("carnum", carNum);
                             startActivity(intent);
                         } else if (NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
                             Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
@@ -728,6 +731,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             vHint.setVisibility(View.GONE);
         }
     }
+
 
 
     public static class BannerViewHolder implements MZViewHolder<ShopHomeGoods2Bean.Goods2Bean.ItemBean> {

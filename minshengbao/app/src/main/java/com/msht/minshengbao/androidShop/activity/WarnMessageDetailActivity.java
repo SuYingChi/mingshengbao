@@ -64,11 +64,6 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
         ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), id);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
 
 

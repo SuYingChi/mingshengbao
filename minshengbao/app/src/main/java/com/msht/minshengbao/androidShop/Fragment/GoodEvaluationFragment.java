@@ -246,6 +246,8 @@ public class GoodEvaluationFragment extends ShopBaseLazyFragment implements IEva
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getEvaluation(GoodEvaluationFragment.this);
     }
 

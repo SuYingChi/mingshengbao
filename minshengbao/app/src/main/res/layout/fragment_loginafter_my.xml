@@ -103,8 +103,8 @@
                         android:textSize="@dimen/text_width16" />
                     <TextView
                         android:id="@+id/collected_num"
-                        android:layout_width="@dimen/dp14"
-                        android:layout_height="@dimen/dp14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/shop_red_oval"
                         android:gravity="center"
                         android:text="3"
@@ -143,8 +143,8 @@
                     android:textSize="@dimen/text_width16" />
                     <TextView
                         android:id="@+id/footprint_num"
-                        android:layout_width="@dimen/dp14"
-                        android:layout_height="@dimen/dp14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/shop_red_oval"
                         android:gravity="center"
                         android:text="3"
@@ -197,8 +197,8 @@
 
                         <TextView
                             android:id="@+id/shop_order_num"
-                            android:layout_width="@dimen/dp14"
-                            android:layout_height="@dimen/dp14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/shop_red_oval"
                             android:gravity="center"
                             android:text="3"
@@ -247,8 +247,8 @@
 
                         <TextView
                             android:id="@+id/wait_pay_order_num"
-                            android:layout_width="@dimen/dp14"
-                            android:layout_height="@dimen/dp14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/shop_red_oval"
                             android:gravity="center"
                             android:text="3"
@@ -297,8 +297,8 @@
 
                         <TextView
                             android:id="@+id/wait_get_order_num"
-                            android:layout_width="@dimen/dp14"
-                            android:layout_height="@dimen/dp14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/shop_red_oval"
                             android:gravity="center"
                             android:text="3"
@@ -347,8 +347,8 @@
 
                         <TextView
                             android:id="@+id/my_wait_eveluate_order_num"
-                            android:layout_width="@dimen/dp14"
-                            android:layout_height="@dimen/dp14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/shop_red_oval"
                             android:gravity="center"
                             android:text="3"
@@ -397,8 +397,8 @@
 
                         <TextView
                             android:id="@+id/my_refund_order_num"
-                            android:layout_width="@dimen/dp14"
-                            android:layout_height="@dimen/dp14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/shop_red_oval"
                             android:gravity="center"
                             android:text="3"

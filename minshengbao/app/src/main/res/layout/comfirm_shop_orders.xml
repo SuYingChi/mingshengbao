@@ -160,6 +160,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/ll_inv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -197,6 +198,8 @@
                     android:id="@+id/inv_info"
                     style="@style/shopMsbcolorTitleText"
                     android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_toLeftOf="@id/im2"
                     android:padding="@dimen/margin_Modules"
                     android:textColor="@color/shop_grey" />
             </RelativeLayout>

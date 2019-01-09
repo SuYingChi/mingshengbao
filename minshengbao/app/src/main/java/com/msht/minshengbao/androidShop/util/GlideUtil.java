@@ -369,6 +369,7 @@ public class GlideUtil {/*
                 .apply(options)
                 .into(imageView);
     }
+
     public static void loadRemoteImgfitX(Context context, ImageView imageView, String imgUrl) {
         RequestOptions options = new RequestOptions()
                 .placeholder(R.drawable.icon_stub)
@@ -382,6 +383,7 @@ public class GlideUtil {/*
                 .apply(options)
                 .into(imageView);
     }
+
     /**
      * 加载网络图片（没有淡入淡出动画效果）
      *
@@ -483,7 +485,7 @@ public class GlideUtil {/*
                         ViewGroup.LayoutParams params = imageView.getLayoutParams();
                         int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                         float scale = (float) vw / (float) resource.getIntrinsicWidth();
-                        int vh =  (int)(resource.getIntrinsicHeight() * scale);
+                        int vh = (int) (resource.getIntrinsicHeight() * scale);
                         params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
                         imageView.setLayoutParams(params);
 
@@ -525,27 +527,29 @@ public class GlideUtil {/*
                         final float width = bitmap.getWidth();
                         final float heightOrigin = bitmap.getHeight();
                         final Matrix matrix = new Matrix();
-                        imageView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
-                                int vh = imageView.getMeasuredHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
-                                float withHeighScale = vw / vh;
-                                //注意相除转为int时为0 导致 异常崩溃
-                                float height = width / withHeighScale;
-                                //y+hetght 必须小于bitmap。height
-                                if (height < heightOrigin) {
-                                    float h = height / heightOrigin;
-                                    matrix.postScale(1, h);  //宽高变化系数
-                                } else {
-                                    matrix.postScale(1, 1);
-                                    height = heightOrigin;
-                                }
-                                Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, (int) width, (int) height, matrix, true);
-                                imageView.setImageBitmap(resizeBmp);
-                            }
-                        });
-
+                        int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                        int vh = imageView.getMeasuredHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
+                        int withHeighScale;
+                        if(vh!=0) {
+                             withHeighScale = vw / vh;
+                        }else {
+                            withHeighScale = 1;
+                        }
+                        //注意相除转为int时为0 导致 异常崩溃
+                        float height = width / withHeighScale;
+                        if(height==0){
+                            height = heightOrigin;
+                        }
+                        //y+hetght 必须小于bitmap。height
+                        if (height < heightOrigin) {
+                            float h = height / heightOrigin;
+                            matrix.postScale(1, h);  //宽高变化系数
+                        } else {
+                            matrix.postScale(1, 1);
+                            height = heightOrigin;
+                        }
+                        Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, (int) width, (int) height, matrix, true);
+                        imageView.setImageBitmap(resizeBmp);
                     }
                 });
 

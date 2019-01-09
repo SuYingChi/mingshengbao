@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop;
 
 import com.msht.minshengbao.BuildConfig;
+import com.msht.minshengbao.androidShop.util.DataStringCallback;
 
 public class ShopConstants {
     public static final String BASE_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/mobile/"/*"http://shop.msbapp.cn:8090/mobile/"*/:"http://shop.msbapp.cn:8090/mobile/";
@@ -72,7 +73,9 @@ public class ShopConstants {
     public static final String DELETE_MSG_USER_ITEM = BASE_URL+"index.php?act=member_chat&op=del_msg";
     public static final String GUESS_LIKE = BASE_URL+"index.php?act=member_goodsbrowse&op=guesslike";
     public static final String MESSAGE_PREVIEW = BuildConfig.DEBUG ? DEBUG_BASE_MSB_URL +"/Gas/message/preview": RELEASE_BASE_MSB_URL +"/Gas/message/preview";
-
+    public static final String RETURN_GOOD_SENT_INIT = BASE_URL+"index.php?act=member_return&op=ship_form";
+    public static final String RETURN_GOOD_SENT_POST = BASE_URL+"index.php?act=member_return&op=ship_post";
+    public static final String MY_SHOP_NUM = BASE_URL+"index.php?act=member_index";
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;
     }

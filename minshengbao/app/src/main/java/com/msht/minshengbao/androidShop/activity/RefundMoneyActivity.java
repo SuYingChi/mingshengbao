@@ -118,11 +118,7 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
         ShopPresenter.getRefundMoneyDetail(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-    }
 
     @Override
     public String getRefund_id() {
@@ -174,7 +170,7 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
                 rcl2.setAdapter(ad);
             }
             pay_method.setText(bean.getDatas().getDetail_array().getRefund_code());
-            online_refund.setText(bean.getDatas().getDetail_array().getPay_amount());
+            online_refund.setText(getResources().getString(R.string.monetary_unit)+bean.getDatas().getDetail_array().getPay_amount());
         }else {
             RefundMoneyDetail2 bean2 = JsonUtil.toBean(s, RefundMoneyDetail2.class);
             RefundMoneyDetail2.DatasBean.RefundBean refund = bean2.getDatas().getRefund();

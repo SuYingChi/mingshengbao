@@ -27,7 +27,7 @@
         <TextView
             style="@style/shopMsbcolorTitleText"
             android:layout_centerInParent="true"
-            android:text="商城消息"
+            android:text="消息"
             android:textColor="@color/white" />
     </RelativeLayout>
     </android.support.v7.widget.Toolbar>
@@ -48,8 +48,8 @@
             />
         <TextView
             android:id="@+id/warnnum"
-            android:layout_width="@dimen/text_20"
-            android:layout_height="@dimen/text_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
             android:text="3"
@@ -103,8 +103,8 @@
             />
         <TextView
             android:id="@+id/gasnum"
-            android:layout_width="@dimen/text_20"
-            android:layout_height="@dimen/text_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
             android:text=""
@@ -158,8 +158,8 @@
             />
         <TextView
             android:id="@+id/routenum"
-            android:layout_width="@dimen/text_20"
-            android:layout_height="@dimen/text_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
             android:text=""
@@ -213,8 +213,8 @@
             />
         <TextView
             android:id="@+id/youhuinum"
-            android:layout_width="@dimen/text_20"
-            android:layout_height="@dimen/text_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
             android:text=""

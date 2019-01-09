@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/nc_bg"
     android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -31,114 +33,127 @@
                 android:textColor="@color/white" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-    <include layout="@layout/item_order_child_list_head"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcl"
-       style="@style/rcl"/>
-    <LinearLayout
-        android:id="@+id/ll_reason"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_weight="1">
 
-        <TextView
-            style="@style/shopMsbcolorTitleText"
-            android:text="退款原因"
-            android:textColor="@color/black" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-        <TextView
-            android:id="@+id/reason"
-            style="@style/shopMsbcolorTitleText"
-            android:text=""
-            android:textColor="@color/black" />
-        <ImageView
-            style="@style/image"
-            android:src="@drawable/right_angle"
-            android:layout_gravity="center_vertical"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/shopMsbcolorTitleText"
-            android:text="退款金额"
-            android:textColor="@color/black" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tv_amount"
-            style="@style/shopMsbcolorTitleText"
-            android:text="" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/shopMsbcolorTitleText"
-            android:text="退款说明"
-            android:textColor="@color/black" />
-
-        <EditText
-            android:id="@+id/et_reason"
-            style="@style/editText"
-            android:hint="选填"
-            android:gravity="end|center_vertical"
-            android:maxLines="1"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/shopMsbcolorTitleText"
-            android:text="退款凭证"
-            android:textColor="@color/black" />
-
-        <GridView
-            android:id="@+id/noScrollgridview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_width5"
-            android:horizontalSpacing="@dimen/margin_width3"
-            android:numColumns="3"
-            android:scrollbars="none"
-            >
-        </GridView>
-    </LinearLayout>
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <include layout="@layout/item_order_child_list_head" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcl"
+                style="@style/rcl"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:id="@+id/ll_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_Modules"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="退款原因"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/reason"
+                    style="@style/shopMsbcolorTitleText"
+                    android:text=""
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    style="@style/image"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/right_angle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="退款金额"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_amount"
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="退款说明"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/et_reason"
+                    style="@style/editText"
+                    android:gravity="end|center_vertical"
+                    android:hint="选填"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp1"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="退款凭证"
+                    android:textColor="@color/black" />
+
+                <GridView
+                    android:id="@+id/noScrollgridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_width5"
+                    android:horizontalSpacing="@dimen/margin_width3"
+                    android:numColumns="3"
+                    android:scrollbars="none"></GridView>
+            </LinearLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
     <TextView
         android:id="@+id/post"
         style="@style/shopMsbcolorTitleText"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:text="确认退款"
         android:background="@color/msb_color"
-        />
+        android:gravity="center"
+        android:text="确认退款"
+        android:textColor="@color/white" />
 </LinearLayout>

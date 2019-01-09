@@ -515,7 +515,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
                 int index = data.indexOf("gc_id=");
                 data = data.substring(index + 6).trim();
                 intent.putExtra("data", data);
-                intent.putExtra("title", "民生商城");
                 startActivity(intent);
             } else if (NetUtil.getDomain(data).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
                 Intent intent = new Intent(this, ShopUrlActivity.class);

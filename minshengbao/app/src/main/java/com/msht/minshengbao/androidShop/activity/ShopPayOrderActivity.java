@@ -85,13 +85,9 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
         adapter.setFoot_layoutId(R.layout.item_pay_foot);
         adapter.setDatas(payList);
         rcl.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         ShopPresenter.getNativPayList(this);
     }
+
 
     @Override
     public void pay() {

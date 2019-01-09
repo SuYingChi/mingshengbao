@@ -205,10 +205,6 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
         ShopPresenter.getInitEveluate(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private PermissionListener listener = new PermissionListener() {
         @Override

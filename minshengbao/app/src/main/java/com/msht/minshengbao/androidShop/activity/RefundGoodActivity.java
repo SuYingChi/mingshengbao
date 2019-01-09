@@ -152,8 +152,9 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
             });
             maxAmount = Double.valueOf(refundFormBean.getDatas().getOrder().getOrder_amount());
             maxNum = Integer.valueOf(refundFormBean.getDatas().getGoods().getGoods_num());
+            refundMoney = maxAmount;
+            refundNum = maxNum;
             etAmount.setHint("最多可退" + " ￥ " + maxAmount);
-            etAmount.setText(maxAmount+"");
             etAmount.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -270,7 +271,14 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
                     }*/
                 if (TextUtils.isEmpty(etReason.getText().toString())) {
                     PopUtil.showComfirmDialog(RefundGoodActivity.this, "", "请填写退款说明", "", "知道了", null, null, true);
-                } else {
+                } else if("".equals(getRefund_amount())||"0".equals(getRefund_amount())){
+                    PopUtil.showComfirmDialog(RefundGoodActivity.this,"","请填写退款金额","","知道了",null,null,true);
+                }else if("".equals(getReasonId())){
+                    PopUtil.showComfirmDialog(RefundGoodActivity.this,"","请选择退款原因","","知道了",null,null,true);
+                }else if("".equals(getGoods_num())||"0".equals(getGoods_num())){
+                    PopUtil.showComfirmDialog(RefundGoodActivity.this,"","请填写退货数量","","知道了",null,null,true);
+                }
+                else {
                     ShopPresenter.postRefund(RefundGoodActivity.this, postedPicList);
                 }
             }

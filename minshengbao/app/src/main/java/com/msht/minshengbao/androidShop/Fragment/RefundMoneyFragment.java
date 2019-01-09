@@ -56,7 +56,7 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+      //  rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new ShopRefundMoneyListAdapter(getContext());
         adapter.setDatas(ordersList);
         adapter.setlistener(this);
@@ -120,8 +120,13 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
             if (pageNum == 1) {
                 ordersList.clear();
                 ordersList.addAll(bean.getDatas().getRefund_list());
-                pageNum++;
-                ShopPresenter.getRefundMoneyList(this);
+                if(pageNum<lastPageNum) {
+                    pageNum++;
+                    ShopPresenter.getRefundMoneyList(this);
+                }else {
+                    adapter.notifyDataSetChanged();
+                    isRestart = false;
+                }
             } else if (pageNum < lastPageNum && bean.getDatas().getRefund_list().size() != 0) {
                 ordersList.addAll(bean.getDatas().getRefund_list());
                 pageNum++;
@@ -145,6 +150,8 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
         super.onVisible();
         if (isViewCreated) {
             pageNum = 1;
+            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(true);
             if (!getKey().equals("")) {
                 ShopPresenter.getRefundMoneyList(this);
             }
@@ -154,6 +161,8 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNum = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
@@ -179,6 +188,8 @@ public class RefundMoneyFragment extends ShopBaseLazyFragment implements OnRefre
         this.isRestart = isRestart;
         lastPageNum = pageNum;
         pageNum = 1;
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
         if (!getKey().equals("")) {
             ShopPresenter.getRefundMoneyList(this);
         }
