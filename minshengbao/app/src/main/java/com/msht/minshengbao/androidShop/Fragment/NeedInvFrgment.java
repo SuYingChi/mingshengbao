@@ -19,6 +19,7 @@ import com.msht.minshengbao.androidShop.shopBean.InvItemBean;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvListView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,13 +125,12 @@ public class NeedInvFrgment extends ShopBaseFragment implements IGetInvListView,
 
     @Override
     public void onDeleteInvSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(getContext(),"删除发票条目",0);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(getContext(), "删除发票条目", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 ShopPresenter.getInvList(NeedInvFrgment.this);
             }
-        },1500);
+        });
     }
 
     @Override

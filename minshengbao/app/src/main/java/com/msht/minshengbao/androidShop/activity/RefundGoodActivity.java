@@ -38,6 +38,7 @@ import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -478,17 +479,16 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
 
     @Override
     public void onPostRefundSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this, "部分退货成功", 200);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "部分退货成功", 200, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 Intent intent = new Intent(RefundGoodActivity.this, ShopSuccessActivity.class);
                 intent.putExtra("state", "refundGood");
                 intent.putExtra("id", refundFormBean.getDatas().getOrder().getOrder_id());
                 startActivity(intent);
                 finish();
             }
-        }, 1600);
+        });
     }
 
     @Override

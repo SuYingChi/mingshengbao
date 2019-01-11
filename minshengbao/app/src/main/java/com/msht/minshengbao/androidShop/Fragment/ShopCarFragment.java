@@ -48,6 +48,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -600,15 +601,14 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
     @Override
     public void onDeleteCarItemsSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(getContext(), "购物车删除成功", 0);
-        handler.postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(getContext(), "购物车删除成功", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 if (!getKey().equals("")) {
                     ShopPresenter.getCarList(ShopCarFragment.this, false);
                 }
             }
-        }, 1600);
+        });
     }
 
     private void updateAmount() {

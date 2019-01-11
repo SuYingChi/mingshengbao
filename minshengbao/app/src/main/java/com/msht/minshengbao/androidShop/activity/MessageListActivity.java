@@ -21,6 +21,7 @@ import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -228,14 +229,12 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
 
     @Override
     public void onDeleteMsgItemSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this, "删除成功", 0);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "删除成功", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 dataList.remove(deletepson);
                 adapter.notifyDataSetChanged();
             }
-        }, 1500);
-
+        });
     }
 }

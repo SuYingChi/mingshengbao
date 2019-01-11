@@ -23,6 +23,7 @@ import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IAddAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IEditAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAreaListView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,13 +134,12 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public void onEditAddressSuccess() {
-        PopUtil.showAutoDissHookDialog(this,"地址修改成功",0);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this,"地址修改成功", 0,new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 finish();
             }
-        },1600);
+        });
     }
 
     @Override

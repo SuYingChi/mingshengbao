@@ -241,7 +241,6 @@ public class InvInfoActivity extends ShopBaseActivity implements NeedInvFrgment.
         transaction.remove(needFrag).commit();
         needFrag = new NeedInvFrgment();
         switchContent(needFrag);
-        ;
     }
 
     @Override

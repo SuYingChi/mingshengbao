@@ -41,6 +41,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundAllFormView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -178,10 +179,9 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
                 }*/
                 if (TextUtils.isEmpty(et.getText().toString())) {
                     PopUtil.showComfirmDialog(RefundALLActivity.this, "", "请填写退款说明", "", "知道了", null, null, true);
-                } else if("".equals(getReasonId())){
+                } else if ("".equals(getReasonId())) {
                     PopUtil.showComfirmDialog(RefundALLActivity.this, "", "请选择退款原因", "", "知道了", null, null, true);
-                }
-                else {
+                } else {
                     ShopPresenter.postRefundAll(RefundALLActivity.this, postedPicList);
                 }
             }
@@ -231,18 +231,16 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
 
     @Override
     public void onPostRefundSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this, "提交全部退款", 100);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "提交全部退款", 100, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 Intent intent = new Intent(RefundALLActivity.this, ShopSuccessActivity.class);
                 intent.putExtra("state", "refund");
                 intent.putExtra("id", orderId);
                 startActivity(intent);
                 finish();
             }
-        }, 1600);
-
+        });
     }
 
     @Override

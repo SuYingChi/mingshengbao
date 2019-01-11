@@ -21,6 +21,7 @@ import com.msht.minshengbao.androidShop.shopBean.WuliuCompanyItemBean;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
 import com.msht.minshengbao.androidShop.viewInterface.IReturnGoodSendGoodView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -151,13 +152,12 @@ public class ReturnGoodSendGoodActivity extends ShopBaseActivity implements IGet
 
     @Override
     public void onPostReturnGoodSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this, "提交发货信息成功", 0);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "提交发货信息成功", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 finish();
             }
-        }, 1600);
+        });
     }
 
     private void showInvDialog() {

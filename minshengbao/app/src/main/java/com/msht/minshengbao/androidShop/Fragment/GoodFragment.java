@@ -44,6 +44,7 @@ import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
 import com.msht.minshengbao.androidShop.adapter.GoodsDetailRecommendAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -686,15 +687,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onAddCarSuccess(String s) {
         AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
         if (TextUtils.equals(bean.getDatas(), "1")) {
-            PopUtil.showAutoDissHookDialog(getContext(), "添加购物车成功", 100);
-            new Handler().postDelayed(new Runnable() {
+            PopUtil.showAutoDissHookDialog(getContext(), "添加购物车成功", 100, new OnDissmissLisenter() {
                 @Override
-                public void run() {
+                public void onDissmiss() {
                     if (!TextUtils.isEmpty(getKey())) {
                         ShopPresenter.getCarList(GoodFragment.this, false);
                     }
                 }
-            }, 1600);
+            });
         }
     }
 

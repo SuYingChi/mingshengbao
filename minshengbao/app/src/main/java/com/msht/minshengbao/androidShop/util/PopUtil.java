@@ -32,6 +32,7 @@ import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.DrawHookByAnimatorView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
 
@@ -241,8 +242,8 @@ public class PopUtil {
                 }, 1500);
             }
         });
-
-        public static void showAutoDissHookDialog(Context mContext, String tips, int delayMillis) {
+    }
+        public static void showAutoDissHookDialog(Context mContext, String tips, int delayMillis, final OnDissmissLisenter onDissmissLisenter) {
             LayoutInflater inflaterDl = LayoutInflater.from(mContext);
             final LinearLayout layout = (LinearLayout) inflaterDl.inflate(
                     R.layout.dialog_autodissmiss_tips, null);
@@ -267,6 +268,7 @@ public class PopUtil {
                         public void run() {
                             if (dialog != null)
                                 dialog.dismiss();
+                            onDissmissLisenter.onDissmiss();
                         }
                     }, 1500);
                 }

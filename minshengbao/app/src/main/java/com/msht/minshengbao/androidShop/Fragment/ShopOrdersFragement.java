@@ -66,6 +66,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 
 import butterknife.BindView;
 
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -582,27 +583,24 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
 
     @Override
     public void onDeleteOrderSuccess(final String orderId) {
-        PopUtil.showAutoDissHookDialog(getContext(), "订单删除成功", 100);
-        int position = 0;
-        for (OrderslistBean bean : ordersList) {
-            if (bean.getOrderId().equals(orderId)) {
-                position = ordersList.indexOf(bean);
-                break;
-            }
-        }
-        ordersList.remove(position);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(getContext(), "订单删除成功", 100, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
+                int position = 0;
+                for (OrderslistBean bean : ordersList) {
+                    if (bean.getOrderId().equals(orderId)) {
+                        position = ordersList.indexOf(bean);
+                        break;
+                    }
+                }
+                ordersList.remove(position);
                 adapter.notifyDataSetChanged();
                 if (ordersList.size() == 0) {
                     ivNoOrder.setVisibility(View.VISIBLE);
                     tvNoData.setVisibility(View.VISIBLE);
                 }
             }
-        }, 1500);
-
-
+        });
     }
 
 

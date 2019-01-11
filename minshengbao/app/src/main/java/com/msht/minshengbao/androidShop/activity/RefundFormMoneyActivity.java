@@ -39,6 +39,7 @@ import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -445,17 +446,16 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
 
     @Override
     public void onPostRefundSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this,"部分退款成功",100);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "部分退款成功", 100, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 Intent intent =  new Intent(RefundFormMoneyActivity.this,ShopSuccessActivity.class);
                 intent.putExtra("state","refund");
                 intent.putExtra("id",refundFormBean.getDatas().getOrder().getOrder_id());
                 startActivity(intent);
                 finish();
             }
-        },1600);
+        });
     }
     //图片上传失败
     @Override

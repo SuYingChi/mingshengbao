@@ -47,6 +47,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopGoodDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -492,15 +493,14 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
         selectNum = 1;
         if (TextUtils.equals(bean.getDatas(), "1")) {
-            PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100);
-            new Handler().postDelayed(new Runnable() {
+            PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100, new OnDissmissLisenter() {
                 @Override
-                public void run() {
+                public void onDissmiss() {
                     if (!TextUtils.isEmpty(getKey())) {
                         ShopPresenter.getCarList(ShopClassDetailActivity.this, false);
                     }
                 }
-            }, 1600);
+            });
         }
     }
 

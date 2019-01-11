@@ -24,6 +24,7 @@ import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAddressListView;
 import com.msht.minshengbao.androidShop.viewInterface.IEditAddressView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
     private String true_name;
     private String city_id;
     private String deleteAddress_id;
-    private int deletePosition=0;
+    private int deletePosition = 0;
 
     @Override
     protected void setLayout() {
@@ -82,7 +83,7 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
     }
 
 
-    @OnClick({R.id.back,R.id.add_address})
+    @OnClick({R.id.back, R.id.add_address})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -99,7 +100,7 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public void onEditAddressSuccess() {
-        ShopPresenter.getAddressList(this,false);
+        ShopPresenter.getAddressList(this, false);
         PopUtil.showAutoDissHookDialog(this, "设置默认地址成功", 500);
     }
 
@@ -189,9 +190,9 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public void onItemEdit(int position) {
-       Intent intent =  new Intent(this,ShopEditAddressActivity.class);
+        Intent intent = new Intent(this, ShopEditAddressActivity.class);
         ShopAddressListBean.DatasBean.AddressListBean bean = list.get(position);
-        intent.putExtra("data",bean);
+        intent.putExtra("data", bean);
         startActivity(intent);
     }
 
@@ -199,14 +200,14 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
     public void onItemDeleted(int position) {
         deleteAddress_id = list.get(position).getAddress_id();
         deletePosition = position;
-         ShopPresenter.deleteAddress(this);
+        ShopPresenter.deleteAddress(this);
     }
 
     @Override
     public void onItemClick(int position) {
         ShopAddressListBean.DatasBean.AddressListBean bean = list.get(position);
         Intent intent = new Intent();
-        intent.putExtra("data",bean);
+        intent.putExtra("data", bean);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -214,7 +215,7 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
     @Override
     protected void onResume() {
         super.onResume();
-        ShopPresenter.getAddressList(this,true);
+        ShopPresenter.getAddressList(this, true);
     }
 
     @Override
@@ -224,14 +225,13 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public void onDeleteAddressSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this,"成功删除收货地址",0);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "成功删除收货地址", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 list.remove(deletePosition);
                 addressListAdapter.notifyDataSetChanged();
             }
-        },1500);
+        });
 
     }
 }

@@ -29,6 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 
 import com.msht.minshengbao.androidShop.viewInterface.IShopDeleteCollectionView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -154,10 +155,9 @@ public class ShopCollectionActivity extends ShopBaseActivity implements ShopCell
 
     @Override
     public void onDeleteCollectSuccess(String s, final int position) {
-        PopUtil.showAutoDissHookDialog(this,"删除收藏成功",100);
-        new Handler().postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "删除收藏成功", 100, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 datalist.remove(position);
                 adapter.notifyDataSetChanged();
                 if(datalist.size()==0){
@@ -165,7 +165,7 @@ public class ShopCollectionActivity extends ShopBaseActivity implements ShopCell
                     tvNoData.setVisibility(View.VISIBLE);
                 }
             }
-        },1600);
+        });
 
     }
 }

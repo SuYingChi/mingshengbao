@@ -47,6 +47,7 @@ import butterknife.OnClick;
 
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteCarItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -567,13 +568,12 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
 
     @Override
     public void onDeleteCarItemsSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(this, "购物车删除成功", 0);
-        handler.postDelayed(new Runnable() {
+        PopUtil.showAutoDissHookDialog(this, "购物车删除成功", 0, new OnDissmissLisenter() {
             @Override
-            public void run() {
+            public void onDissmiss() {
                 ShopPresenter.getCarList(ShopCarActivity.this, false);
             }
-        }, 1600);
+        });
     }
 
     private void updateAmount() {
