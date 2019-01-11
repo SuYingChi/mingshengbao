@@ -46,7 +46,7 @@
         <TextView
             android:id="@+id/tv_amount"
             style="@style/shopMsbcolorTitleText"
-            android:text="39.00"
+            android:text=""
             android:textColor="@color/black"
             />
     </LinearLayout>

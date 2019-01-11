@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/margin_Modules"
-    android:paddingBottom="@dimen/margin_Modules"
+    android:paddingTop="@dimen/dp5"
+    android:paddingBottom="@dimen/dp5"
     >
 <TextView
     style="@style/shopMsbcolorTitleText"

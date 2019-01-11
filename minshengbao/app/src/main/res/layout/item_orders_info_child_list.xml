@@ -52,7 +52,7 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="38.00"
+            android:text=""
             android:textColor="@color/msb_color"
             android:textSize="@dimen/text_width18" />
         <View
@@ -63,7 +63,7 @@
             android:id="@+id/num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X2"
+            android:text=""
             android:textColor="@color/shop_grey"
             android:textSize="16sp"
             />
@@ -83,6 +83,7 @@
         android:id="@+id/afterSale"
         style="@style/shopMsbcolorTitleText"
         android:text="申请售后"
+        android:textSize="@dimen/text_15"
         android:layout_gravity="right"
         android:layout_margin="@dimen/margin_Modules"
         android:background="@drawable/btn_refund"

@@ -34,6 +34,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
@@ -61,12 +62,20 @@ import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopDeleteCollectionView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopGoodDetailView;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
@@ -384,6 +393,43 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
         });
     }
+   private void  umengShare(final String shareUrl, final String shareTitle, final String desc,final Bitmap bitmap){
+       ShareAction mShareAction = new ShareAction(getActivity()).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE)
+               .setShareboardclickCallback(new ShareBoardlistener() {
+                   @Override
+                   public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
+                       UMWeb web = new UMWeb(shareUrl);
+                       web.setTitle(shareTitle);
+                       web.setDescription(desc);
+                       web.setThumb(new UMImage(getActivity(), bitmap));
+                       new ShareAction(getActivity()).withMedia(web)
+                               .setPlatform(shareMedia)
+                               .setCallback(new UMShareListener() {
+                                   @Override
+                                   public void onStart(SHARE_MEDIA share_media) {
+
+                                   }
+
+                                   @Override
+                                   public void onResult(SHARE_MEDIA share_media) {
+
+                                   }
+
+                                   @Override
+                                   public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+
+                                   }
+
+                                   @Override
+                                   public void onCancel(SHARE_MEDIA share_media) {
+
+                                   }
+                               })
+                               .share();
+                   }
+               });
+       mShareAction.open();
+    }
 
     private String buildTransaction(final String type) {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
@@ -545,12 +591,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                  /*  Map<String, String> map = new HashMap<String, String>();
-                    map.put("type", "goods");
-                    map.put("data", goodCommendBeanList.get(position).getGoods_id());
-                    map.put("price", goodCommendBeanList.get(position).getGoods_promotion_price());
-                    doNotAdClick(map);*/
-
                     String goodsId = goodCommendBeanList.get(position).getGoods_id();
                     doShopItemViewClick("goods",goodsId);
                 }

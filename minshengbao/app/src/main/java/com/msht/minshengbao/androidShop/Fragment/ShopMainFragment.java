@@ -73,6 +73,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.events.CarNumEvent;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -166,7 +167,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
 
             @Override
             public void onScrollOverTop() {
-                mToolbar.setVisibility(View.INVISIBLE);
+             //   mToolbar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -195,8 +196,12 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         rltMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TotalMessageListActivity.class);
-                getActivity().startActivity(intent);
+                if(TextUtils.isEmpty(getKey())){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }else {
+                    Intent intent = new Intent(getActivity(), TotalMessageListActivity.class);
+                    getActivity().startActivity(intent);
+                }
             }
         });
     }

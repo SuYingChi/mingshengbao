@@ -564,7 +564,6 @@ public class ShopPresenter {
     }
 
     public static void buyStep2ChangeAddress(final IChangeAddressView iChangeAddressView) {
-        LogUtils.e(Log.getStackTraceString(new Throwable()));
         OkHttpUtils.post().url(ShopConstants.BUY_STEP2_CHANGE_ADDRESS).addParams("key", iChangeAddressView.getKey())
                 .addParams("freight_hash", iChangeAddressView.getFreight_hash())
                 .addParams("city_id", iChangeAddressView.getCityId())

@@ -1,7 +1,10 @@
 package com.msht.minshengbao.androidShop.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -9,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.widget.PopupMenu;
 import com.msht.minshengbao.androidShop.Fragment.DetailFragment;
 import com.msht.minshengbao.androidShop.Fragment.GoodEvaluationFragment;
@@ -80,14 +85,15 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+       super.initImmersionBar();
+        //mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.transparent_color).navigationBarWithKitkatEnable(false).init();
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarCompat.setStatusBar(this);
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
         data = intent.getStringExtra("goodsid");
@@ -252,7 +258,11 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     }
 
     private void goMessage() {
-        startActivity(new Intent(this, TotalMessageListActivity.class));
+        if(TextUtils.isEmpty(getKey())){
+            startActivity(new Intent(this, LoginActivity.class));
+        }else {
+            startActivity(new Intent(this, TotalMessageListActivity.class));
+        }
     }
 
     @Override

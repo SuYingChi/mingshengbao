@@ -3,7 +3,6 @@ package com.msht.minshengbao.androidShop.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -80,7 +79,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @BindView(R.id.rlt_inv_info)
     RelativeLayout rltinv;
     private static final int REQUEST_CODE_ADDRESS = 100;
-    private List<ComfirmShopGoodBean> list;
+    private List<ComfirmShopGoodBean> comfirmShopGoodBeans = new ArrayList<ComfirmShopGoodBean>();
     private String ifCarted;
     private String isPickup_self;
     private String addressId;
@@ -120,6 +119,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @BindView(R.id.back)
     ImageView ivback;
     private boolean isInv = true;
+    private OrdersGoodListAdapter adapter;
+    private Bundle bundle;
+
 
     @Override
     protected void setLayout() {
@@ -144,24 +146,30 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
         });
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        bundle = intent.getExtras();
         if (bundle != null) {
-            list = (List<ComfirmShopGoodBean>) bundle.getSerializable("data");
+           // comfirmShopGoodBeans = (List<ComfirmShopGoodBean>) bundle.getSerializable("data");
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+            linearLayoutManager.setAutoMeasureEnabled(true);
+            //scrollerview 嵌套recycleview，再嵌套recycleview ，使用nestedscrollerview，不能用Scrollerview,并且加上这行代码
+            rcl.setNestedScrollingEnabled(false);
+            rcl.setLayoutManager(linearLayoutManager);
+            adapter = new OrdersGoodListAdapter(this, new OrdersGoodListAdapter.OrdersListListener() {
+                @Override
+                public void onMessaged(String message, int position) {
+                    String store_id = comfirmShopGoodBeans.get(position).getStore_id();
+                    messageMap.put(store_id, message);
+                }
+
+                @Override
+                public void onGoGoodDetail(String goods_id) {
+                    onShopItemViewClick("goods",goods_id);
+                }
+            });
+            adapter.setDatas(comfirmShopGoodBeans);
+            rcl.setAdapter(adapter);
             ifCarted = bundle.getString("ifCar");
             isPickup_self = bundle.getString("isPickup_self");
-            int totalNum = 0;
-            for (ComfirmShopGoodBean bean : list) {
-                List<ComfirmShopGoodBean.GoodsBean> goodlist = bean.getGoods();
-                for (ComfirmShopGoodBean.GoodsBean good : goodlist) {
-                    totalNum += Integer.valueOf(good.getGoods_num());
-                }
-            }
-            tvGoodNum.setText(String.format("共%d件商品", totalNum));
-            if (TextUtils.equals(isPickup_self, "0")) {
-                ShopPresenter.getAddressList(this, false);
-            } else {
-                PopUtil.toastInBottom("暂不支持自提商品购买");
-            }
         } else {
             finish();
         }
@@ -200,12 +208,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 }
                 break;
             case R.id.comfirm:
-                if(TextUtils.isEmpty(carIds)){
-                    PopUtil.showComfirmDialog(this,"","没有商品","","",null,null,true);
+                if (TextUtils.isEmpty(carIds)) {
+                    PopUtil.showComfirmDialog(this, "", "没有商品", "", "", null, null, true);
 
-                }else if(TextUtils.isEmpty(addressId)){
-                    PopUtil.showComfirmDialog(this,"","请添加收货地址","","",null,null,true);
-                }else {
+                } else if (TextUtils.isEmpty(addressId)) {
+                    PopUtil.showComfirmDialog(this, "", "请添加收货地址", "", "", null, null, true);
+                } else {
                     ShopPresenter.buyStep2(this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch);
                 }
                 break;
@@ -249,6 +257,17 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (TextUtils.equals(isPickup_self, "0")) {
+            ShopPresenter.getAddressList(this, false);
+            // ShopPresenter.buyStep1(this);
+        } else {
+            PopUtil.toastInBottom("暂不支持自提商品购买");
+        }
+    }
+
+    @Override
     public void onGetAddressListSuccess(String s) {
         ShopAddressListBean.DatasBean.AddressListBean defaultAddress = null;
         ShopAddressListBean addressBean = JsonUtil.toBean(s, ShopAddressListBean.class);
@@ -265,6 +284,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_selected));
             addressId = defaultAddress.getAddress_id();
             selectedAddressBean = defaultAddress;
+            comfirmShopGoodBeans.clear();
+            comfirmShopGoodBeans.addAll((List<ComfirmShopGoodBean>) bundle.getSerializable("data"));
             ShopPresenter.buyStep1(this);
         } else if (addressBean.getDatas().getAddress_list().size() > 0) {
             defaultAddress = addressBean.getDatas().getAddress_list().get(0);
@@ -273,10 +294,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             tvLoac.setText(String.format("%s%s", defaultAddress.getArea_info(), defaultAddress.getAddress()));
             addressId = defaultAddress.getAddress_id();
             selectedAddressBean = defaultAddress;
+            comfirmShopGoodBeans.clear();
+            comfirmShopGoodBeans.addAll((List<ComfirmShopGoodBean>) bundle.getSerializable("data"));
             ShopPresenter.buyStep1(this);
             iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_no_selected));
         } else {
-            PopUtil.toastInBottom("您还没有收货地址，请添加默认地址");
+            PopUtil.toastInBottom("您还没有收货地址，请添加收货地址");
         }
 
     }
@@ -286,8 +309,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         // return "3713|1,3787|1";
         if (ifCarted.equals("1")) {
             StringBuilder sf = new StringBuilder();
-            for (int i = 0; i < list.size(); i++) {
-                List<ComfirmShopGoodBean.GoodsBean> goods = list.get(i).getGoods();
+            for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
+                List<ComfirmShopGoodBean.GoodsBean> goods = comfirmShopGoodBeans.get(i).getGoods();
                 for (int ii = 0; ii < goods.size(); ii++) {
                     if (ii == 0 && i == 0) {
                         sf.append(goods.get(ii).getCart_id()).append("|").append(goods.get(ii).getGoods_num());
@@ -300,8 +323,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             return carIds;
         } else {
             StringBuilder sf = new StringBuilder();
-            for (int i = 0; i < list.size(); i++) {
-                List<ComfirmShopGoodBean.GoodsBean> goods = list.get(i).getGoods();
+            for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
+                List<ComfirmShopGoodBean.GoodsBean> goods = comfirmShopGoodBeans.get(i).getGoods();
                 for (int ii = 0; ii < goods.size(); ii++) {
                     if (ii == 0 && i == 0) {
                         sf.append(goods.get(ii).getGoods_id()).append("|").append(goods.get(ii).getGoods_num());
@@ -323,24 +346,59 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public void onBuyStep1Success(String s) {
+        comfirmShopGoodBeans.clear();
+        recommandList.clear();
+        manSongMap.clear();
+        discount = 0;
+        storeMansongMap.clear();
+        voucher = 0;
+        voucherInfoMap.clear();
+        voucherListSingleMap.clear();
+        voucherListMap.clear();
+        goods_freight = 0;
+        goodsTotalSelf = 0;
+        rptList.clear();
+        int totalNum = 0;
+        messageMap.clear();
         try {
             JSONObject jsonObject = new JSONObject(s);
             datas = jsonObject.optJSONObject("datas");
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-            linearLayoutManager.setAutoMeasureEnabled(true);
-            //scrollerview 嵌套recycleview，再嵌套recycleview ，使用nestedscrollerview，不能用Scrollerview,并且加上这行代码
-            rcl.setNestedScrollingEnabled(false);
-            rcl.setLayoutManager(linearLayoutManager);
-          //  rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-            OrdersGoodListAdapter adapter = new OrdersGoodListAdapter(this, new OrdersGoodListAdapter.OrdersListListener() {
-                @Override
-                public void onMessaged(String message, int position) {
-                    String store_id = list.get(position).getStore_id();
-                    messageMap.put(store_id, message);
+            JSONObject storeCartList = datas.optJSONObject("store_cart_list");
+            List<String> storeIdlist = JsonUtil.getJsonObjectKeyList(storeCartList);
+            for (String storeId : storeIdlist) {
+                ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
+                comfirmShopGoodBean.setStore_id(storeId);
+                List<ComfirmShopGoodBean.GoodsBean> comfirmGoodList = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
+                JSONObject storeobj = storeCartList.optJSONObject(storeId);
+                String store_name = storeobj.optString("store_name");
+                comfirmShopGoodBean.setStore_name(store_name);
+                JSONArray goodList = storeobj.optJSONArray("goods_list");
+                for (int i = 0; i < goodList.length(); i++) {
+                    JSONObject goodobj = goodList.optJSONObject(i);
+                    if (!goodobj.optBoolean("storage_state")) {
+                        PopUtil.toastInBottom("已为您取消购买已下架或库存不足的商品");
+                    } else if ("1".equals(goodobj.optString("pickup_self"))) {
+                        PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
+                    } else if (goodobj.optBoolean("storage_state") && "0".equals(goodobj.optString("pickup_self"))) {
+                        //  String store_name, String storeId,String goods_image_url,String goods_name,String goods_num,String goods_price,String good_id
+                        ComfirmShopGoodBean.GoodsBean goodbean = new ComfirmShopGoodBean.GoodsBean(store_name, storeId, goodobj.optString("goods_image_url"), goodobj.optString("goods_name"), goodobj.optString("goods_num"), goodobj.optString("goods_price"), goodobj.optString("goods_id"));
+                        goodbean.setCart_id(goodobj.optString("cart_id"));
+                        comfirmGoodList.add(goodbean);
+                    }
                 }
-            });
-            adapter.setDatas(list);
-            rcl.setAdapter(adapter);
+                if (comfirmGoodList.size() != 0) {
+                    comfirmShopGoodBean.setGoods(comfirmGoodList);
+                    comfirmShopGoodBeans.add(comfirmShopGoodBean);
+                }
+            }
+            adapter.notifyDataSetChanged();
+            for (ComfirmShopGoodBean bean : comfirmShopGoodBeans) {
+                List<ComfirmShopGoodBean.GoodsBean> goodlist = bean.getGoods();
+                for (ComfirmShopGoodBean.GoodsBean good : goodlist) {
+                    totalNum += Integer.valueOf(good.getGoods_num());
+                }
+            }
+            tvGoodNum.setText(String.format("共%d件商品", totalNum));
             JSONArray recommendinfo = datas.optJSONArray("recommend_info");
             for (int i = 0; i < recommendinfo.length(); i++) {
                 JSONObject obj = recommendinfo.optJSONObject(i);
@@ -348,7 +406,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
-                    if (!TextUtils.isEmpty(re.getRecommend_phone())||!"null".equals(re.getRecommend_phone())) {
+                    if (!TextUtils.isEmpty(re.getRecommend_phone()) || !"null".equals(re.getRecommend_phone())) {
                         etRecommand.setText(re.getRecommend_phone());
                     }
                     recommendBean = re;
@@ -360,27 +418,24 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
             vat_hash = datas.optString("vat_hash");
             JSONObject obj = datas.optJSONObject("inv_info");
-            if (TextUtils.equals(obj.optString("content"), "不需要发票")) {
-                isInv = false;
-                llinv.setVisibility(View.GONE);
-                rltinv.setVisibility(View.GONE);
-            } else {
+            if (TextUtils.equals(datas.optString("ifshow_inv"), "1")) {
                 isInv = true;
                 llinv.setVisibility(View.VISIBLE);
                 rltinv.setVisibility(View.VISIBLE);
+            } else {
+                isInv = false;
+                llinv.setVisibility(View.GONE);
+                rltinv.setVisibility(View.GONE);
             }
             invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
             tvInv_info.setText(content);
-            //amount = datas.optString("order_amount");
-           // goodsTotal = Double.valueOf(amount);
-           // tvTotal.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, amount, R.style.big_money, R.style.big_money)));
             freight_hash = datas.optString("freight_hash");
             String predeposit = datas.optString("available_predeposit");
             if (!(TextUtils.isEmpty(predeposit) || TextUtils.equals(predeposit, "null"))) {
                 available_predeposit = Double.valueOf(predeposit);
             }
-            for (ComfirmShopGoodBean bean : list) {
+            for (ComfirmShopGoodBean bean : comfirmShopGoodBeans) {
                 if (datas.opt("store_mansong_rule_list") instanceof JSONObject) {
                     JSONObject storeMansongObj = datas.optJSONObject("store_mansong_rule_list");
                     manSongMap.put(bean.getStore_id(), storeMansongObj);
@@ -491,9 +546,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 goodsTotalSelf -= rpacket;
             }
             goodsTotal = goodsTotalSelf + goods_freight;
-            tvTotalGoodsSelf.setText(StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money));
-            tvDelivery.setText(StringUtil.getPriceSpannable12String(this, goods_freight + "", R.style.big_money, R.style.big_money));
-            tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
+     //       tvTotalGoodsSelf.setText(StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money));
+        //    tvDelivery.setText(StringUtil.getPriceSpannable12String(this, goods_freight + "", R.style.big_money, R.style.big_money));
+        //    tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
             ShopPresenter.buyStep2ChangeAddress(this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -525,8 +580,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 LogUtils.e(s);
             } else {
                 goods_freight = 0;
-                for (int i = 0; i < list.size(); i++) {
-                    String store_id = list.get(i).getStore_id();
+                for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
+                    String store_id = comfirmShopGoodBeans.get(i).getStore_id();
                     double deliverFare = Double.valueOf(TextUtils.isEmpty(content.optString(store_id)) ? "0" : content.optString(store_id));
                     goods_freight += deliverFare;
                 }
@@ -659,13 +714,13 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         BuyStep2SuccessBean bean = JsonUtil.toBean(s, BuyStep2SuccessBean.class);
         paySn = bean.getDatas().getPay_sn();
         orderId = bean.getDatas().getOrder_id();
-        ShopPresenter.buyStep3(this, paySn,orderId+"");
+        ShopPresenter.buyStep3(this, paySn, orderId + "");
 
     }
 
 
     @Override
-    public void onBuyStep3(String s,String ordeId) {
+    public void onBuyStep3(String s, String ordeId) {
         Intent intent = new Intent(this, ShopPayOrderActivity.class);
         BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
         intent.putExtra("buyStep3", buyStep3bean);

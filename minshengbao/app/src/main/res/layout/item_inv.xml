@@ -5,7 +5,8 @@
     android:orientation="horizontal">
     <CheckBox
         android:id="@+id/cb"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:button="@null"
         android:checked="false"
@@ -15,12 +16,8 @@
         android:padding="@dimen/margin_Modules"
         android:text="发票简述"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_width18"
+        android:textSize="@dimen/text_15"
         />
-    <View
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"/>
     <ImageView
         android:id="@+id/delete"
         android:layout_width="wrap_content"

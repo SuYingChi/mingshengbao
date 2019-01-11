@@ -20,9 +20,10 @@ public class ShopReturnDetailGoodListAdapter extends MyHaveHeadAndFootRecyclerAd
     public void convert(RecyclerHolder holder, final ReturnGoodsListBean good, final int position) {
         holder.setImage(R.id.iv,good.getGoods_image());
         holder.setText(R.id.name,good.getGoods_name());
-        if(good.getGoods_spec()==null||good.getGoods_spec().toString().equals("null")){
-            holder.setText(R.id.desc,"");
-        }else {
+        if (good.getGoods_spec() == null || good.getGoods_spec().toString().equals("null")) {
+            holder.getView(R.id.desc).setVisibility(View.GONE);
+        } else {
+            holder.getView(R.id.desc).setVisibility(View.VISIBLE);
             holder.setText(R.id.desc,good.getGoods_spec().toString());
         }
         holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context,good.getGoods_price(),R.style.big_money,R.style.big_money));

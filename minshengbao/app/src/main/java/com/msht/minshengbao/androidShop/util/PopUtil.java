@@ -241,6 +241,36 @@ public class PopUtil {
                 }, 1500);
             }
         });
+
+        public static void showAutoDissHookDialog(Context mContext, String tips, int delayMillis) {
+            LayoutInflater inflaterDl = LayoutInflater.from(mContext);
+            final LinearLayout layout = (LinearLayout) inflaterDl.inflate(
+                    R.layout.dialog_autodissmiss_tips, null);
+            final AlertDialog dialog = new AlertDialog.Builder(mContext, R.style.Loading_dialog).create();
+            TextView tvtips = (TextView) layout.findViewById(R.id.tv_delete_tips);
+            tvtips.setText(tips);
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.show();
+                    dialog.getWindow().setContentView(layout);
+                }
+            }, delayMillis);
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (dialog != null)
+                                dialog.dismiss();
+                        }
+                    }, 1500);
+                }
+            });
     }
 
     public static void showWebViewDialog(final ShopBaseActivity activity, String url) {

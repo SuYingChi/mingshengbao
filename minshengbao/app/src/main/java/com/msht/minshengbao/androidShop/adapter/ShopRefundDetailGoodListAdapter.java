@@ -19,10 +19,11 @@ public class ShopRefundDetailGoodListAdapter extends MyHaveHeadAndFootRecyclerAd
     public void convert(RecyclerHolder holder, final RefundMoneyDetail.DatasBean.GoodsListBean good, final int position) {
         holder.setImage(R.id.iv,good.getGoods_image());
         holder.setText(R.id.name,good.getGoods_name());
-        if(good.getGoods_spec()==null||good.getGoods_spec().toString().equals("null")){
-            holder.setText(R.id.desc,"");
+        if(good.getGoods_spec()==null||good.getGoods_spec().equals("null")){
+            holder.getView(R.id.desc).setVisibility(View.GONE);
         }else {
-            holder.setText(R.id.desc,good.getGoods_spec().toString());
+            holder.getView(R.id.desc).setVisibility(View.VISIBLE);
+            holder.setText(R.id.desc,good.getGoods_spec());
         }
         holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context,good.getGoods_price(),R.style.big_money,R.style.big_money));
         holder.setText(R.id.num,"x "+good.getGoods_num());

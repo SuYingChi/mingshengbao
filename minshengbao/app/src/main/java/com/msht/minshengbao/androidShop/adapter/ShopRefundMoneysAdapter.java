@@ -64,7 +64,12 @@ class ShopRefundMoneysAdapter extends MyHaveHeadAndFootRecyclerAdapter<RefunBean
         } else if (holder.getItemViewType() == 100) {
             holder.setImage(R.id.iv, goodsListBean.getGoods_img_360());
             holder.setText(R.id.name, goodsListBean.getGoods_name());
-            holder.setText(R.id.desc, goodsListBean.getGoods_spec());
+            if (goodsListBean.getGoods_spec() == null || goodsListBean.getGoods_spec().toString().equals("null")) {
+                holder.getView(R.id.desc).setVisibility(View.GONE);
+            } else {
+                holder.getView(R.id.desc).setVisibility(View.VISIBLE);
+                holder.setText(R.id.desc,goodsListBean.getGoods_spec());
+            }
         }
     }
     @Override

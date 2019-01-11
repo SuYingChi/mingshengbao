@@ -86,7 +86,10 @@ public class ShopAfterSaleActivity extends ShopBaseActivity implements IRefundFo
             price.setText(StringUtil.getPriceSpannable12String(this,refundFormBean.getDatas().getGoods().getGoods_price(),R.style.big_money,R.style.big_money));
             num.setText(String.format("X%s", refundFormBean.getDatas().getGoods().getGoods_num()));
             if(refundFormBean.getDatas().getGoods().getGoods_spec()!=null) {
+                desc.setVisibility(View.VISIBLE);
                 desc.setText(refundFormBean.getDatas().getGoods().getGoods_spec().toString());
+            }else {
+                desc.setVisibility(View.GONE);
             }
             tvName.setText(refundFormBean.getDatas().getGoods().getGoods_name());
         }

@@ -194,6 +194,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
+
     /**
      * 初始化滑动返回。在 super.onCreate(savedInstanceState) 之前调用该方法
      */
@@ -262,7 +263,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             if(errorBaseData!=null) {
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
             }else {
-                PopUtil.toastInCenter(s);
+              //  PopUtil.toastInCenter(s);
             }
             switch (s) {
                 case "未登录":

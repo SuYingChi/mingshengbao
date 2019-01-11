@@ -22,8 +22,9 @@ public class ShopOrderGoodListAdapter extends MyHaveHeadAndFootRecyclerAdapter<S
           holder.setImage(R.id.iv,goodsListBean.getImage_url());
           holder.setText(R.id.name,goodsListBean.getGoods_name());
           if(goodsListBean.getGoods_spec()==null||goodsListBean.getGoods_spec().toString().equals("null")){
-              holder.setText(R.id.desc,"");
+              holder.getView(R.id.desc).setVisibility(View.GONE);
           }else {
+              holder.getView(R.id.desc).setVisibility(View.VISIBLE);
               holder.setText(R.id.desc,goodsListBean.getGoods_spec().toString());
           }
          LinearLayout ll_after_sale= holder.getView(R.id.ll_after_sale);

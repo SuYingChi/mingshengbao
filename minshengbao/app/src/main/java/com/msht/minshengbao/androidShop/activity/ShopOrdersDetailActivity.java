@@ -201,7 +201,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     tvPay.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_pay));
                     tvPay.setText("支付订单");
                     tvPay.setTextColor(this.getResources().getColor(R.color.white));
-                    tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     tvPay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -233,7 +233,11 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
             tvLocation.setText(orderInfo.getReciver_addr());
             tvPay.setText(orderInfo.getPayment_name());
             tvState.setText(orderInfo.getState_desc());
-            tvTip.setText(orderInfo.getOrder_tips());
+            if(TextUtils.isEmpty(orderInfo.getInvoice())){
+                tvTip.setVisibility(View.GONE);
+            }else {
+                tvTip.setText(orderInfo.getOrder_tips());
+            }
             tvInvo.setText(orderInfo.getInvoice());
             tvStore.setText(orderInfo.getStore_name());
             list.clear();
@@ -246,7 +250,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 num += Integer.valueOf(b.getGoods_num());
             }
             tvNum.setText(String.format("%d 件商品", num));
-            tvTotal.setText(orderInfo.getReal_pay_amount());
+            tvTotal.setText(StringUtil.getPriceSpannable12String(this,orderInfo.getReal_pay_amount(),R.style.big_money,R.style.big_money));
             llkefu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -315,7 +319,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvCancel.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvCancel.setText("取消订单");
                 tvCancel.setTextColor(this.getResources().getColor(R.color.black));
-                tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -335,7 +339,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvGoodRoute.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvGoodRoute.setText("物流查询");
                 tvGoodRoute.setTextColor(this.getResources().getColor(R.color.black));
-                tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvGoodRoute.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -355,7 +359,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvReceive.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvReceive.setText("确认收货");
                 tvReceive.setTextColor(this.getResources().getColor(R.color.black));
-                tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -373,7 +377,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvGetGoodSelf.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvGetGoodSelf.setText("确认提货");
                 tvGetGoodSelf.setTextColor(this.getResources().getColor(R.color.black));
-                tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvGetGoodSelf.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -421,7 +425,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvRefund.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvRefund.setText("申请退款");
                 tvRefund.setTextColor(this.getResources().getColor(R.color.black));
-                tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvRefund.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -441,7 +445,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvAddEvaluation.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvAddEvaluation.setText("追加评价");
                 tvAddEvaluation.setTextColor(this.getResources().getColor(R.color.black));
-                tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvAddEvaluation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -461,7 +465,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvQrReceive.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_refund));
                 tvQrReceive.setText("提货二维码");
                 tvQrReceive.setTextColor(getResources().getColor(R.color.msb_color));
-                tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvQrReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

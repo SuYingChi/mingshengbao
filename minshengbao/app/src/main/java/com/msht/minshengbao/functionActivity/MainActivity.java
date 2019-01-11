@@ -785,7 +785,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private void goMessage() {
         //  Intent intent = new Intent(context, MessageCenterActivity.class);
-        startActivity(new Intent(this, TotalMessageListActivity.class));
+        if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+            startActivity(new Intent(this, TotalMessageListActivity.class));
+        }else {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
         //startActivityForResult(intent, 0);
     }
 

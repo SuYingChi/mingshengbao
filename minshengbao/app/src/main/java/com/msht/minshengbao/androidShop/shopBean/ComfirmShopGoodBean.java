@@ -18,11 +18,6 @@ public class ComfirmShopGoodBean implements Serializable{
     public ComfirmShopGoodBean() {
     }
 
-    public ComfirmShopGoodBean(String store_id, String store_name, List<GoodsBean> goods) {
-        this.store_id = store_id;
-        this.store_name = store_name;
-        this.goods = goods;
-    }
 
     public String getStore_id() {
         return store_id;

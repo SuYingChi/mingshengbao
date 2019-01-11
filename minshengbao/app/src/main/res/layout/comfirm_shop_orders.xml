@@ -166,6 +166,7 @@
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/margin_8"
+                android:visibility="gone"
                 >
 
                 <ImageView
@@ -184,7 +185,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp1"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <ImageView
                     android:id="@+id/im2"
@@ -200,6 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_toLeftOf="@id/im2"
+                    android:textSize="@dimen/text_width14"
                     android:padding="@dimen/margin_Modules"
                     android:textColor="@color/shop_grey" />
             </RelativeLayout>

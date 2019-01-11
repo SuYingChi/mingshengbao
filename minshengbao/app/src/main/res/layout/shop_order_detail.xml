@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:background="@color/nc_bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -73,7 +74,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_8"
+                android:layout_marginTop="@dimen/margin_width2"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
@@ -118,7 +119,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_8"
+                android:layout_marginTop="@dimen/margin_width2"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
@@ -136,7 +137,7 @@
                 android:id="@+id/pay"
                 style="@style/shopBlackTitleText"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/dp1"
+                android:layout_marginTop="@dimen/margin_width2"
                 android:background="@color/white"
                 android:padding="@dimen/margin_Modules" />
 
@@ -215,16 +216,14 @@
                     android:ellipsize="end"
                     />
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp1"
-                android:background="@color/shop_grey"
-                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_width2"
+                >
 
                 <TextView
                     style="@style/shopMsbcolorTitleText"
@@ -258,7 +257,7 @@
                     style="@style/shopMsbcolorTitleText"
                     android:layout_width="match_parent"
                     android:gravity="right"
-                    android:text="少时诵诗书"
+                    android:text=""
                     android:textColor="@color/shop_grey"
                     android:textSize="@dimen/text_14" />
             </LinearLayout>
@@ -266,7 +265,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp1"
+                android:layout_marginTop="@dimen/margin_width2"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
@@ -306,6 +305,7 @@
                 <TextView
                     android:id="@+id/good_num"
                     style="@style/shopMsbcolorTitleText"
+                    android:textSize="@dimen/text_15"
                     android:text="" />
 
                 <TextView
@@ -317,39 +317,44 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_width2"
+                android:layout_marginTop="@dimen/margin_Modules"
                 android:background="@color/white"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <LinearLayout
                     android:id="@+id/kefu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_cancle"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/shopMsbcolorTitleText"
                         android:drawableLeft="@drawable/order_detai_kefu"
                         android:text="联系客服"
-                        android:textColor="@color/black" />
+                        android:textSize="@dimen/text_15"
+                        android:textColor="@color/nc_text" />
                 </LinearLayout>
-
+                <View
+                    android:layout_width="@dimen/dp1"
+                    android:layout_height="match_parent"
+                    android:background="@color/nc_bg"
+                    />
                 <LinearLayout
                     android:id="@+id/call"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/btn_cancle"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/shopMsbcolorTitleText"
                         android:drawableLeft="@drawable/shop_call"
                         android:text="拨打电话"
-                        android:textColor="@color/black" />
+                        android:textSize="@dimen/text_15"
+                        android:textColor="@color/nc_text" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -358,6 +363,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:layout_marginTop="@dimen/margin_Modules"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -375,7 +381,7 @@
                     <TextView
                         android:id="@+id/order_num"
                         style="@style/shopMsbcolorTitleText"
-                        android:text="0q0090909090900"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>
@@ -397,7 +403,7 @@
                     <TextView
                         android:id="@+id/creat_time"
                         style="@style/shopMsbcolorTitleText"
-                        android:text="0q0090909090900"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>
@@ -418,7 +424,7 @@
                     <TextView
                         android:id="@+id/payment_time"
                         style="@style/shopMsbcolorTitleText"
-                        android:text="0q0090909090900"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>
@@ -439,7 +445,7 @@
                     <TextView
                         android:id="@+id/shipping_time"
                         style="@style/shopMsbcolorTitleText"
-                        android:text="0q0090909090900"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>
@@ -460,7 +466,7 @@
                     <TextView
                         android:id="@+id/finnshed_time"
                         style="@style/shopMsbcolorTitleText"
-                        android:text="0q0090909090900"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>

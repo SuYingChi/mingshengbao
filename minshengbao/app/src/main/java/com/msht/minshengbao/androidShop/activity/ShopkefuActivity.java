@@ -19,13 +19,16 @@ import android.widget.ImageView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.MyAPI.MyWebChomeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
+import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 
 import butterknife.BindView;
 
-public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClient.OpenFileChooserCallBack, IWarnMessageDetailView {
     @BindView(R.id.web)
     WebView webView;
     @BindView(R.id.toolbar2)
@@ -50,6 +53,7 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String t_id = getIntent().getStringExtra("t_id");
+      //  ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), t_id);
         imChatUrl = ShopConstants.getImChatUrl(t_id, getKey());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,5 +138,10 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClie
     @Override
     public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
         return false;
+    }
+
+    @Override
+    public void onGetDetailSuccess(String s) {
+
     }
 }

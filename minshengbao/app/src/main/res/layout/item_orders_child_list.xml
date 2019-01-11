@@ -34,7 +34,7 @@
         android:lines="2"
         android:ellipsize="end"
         android:layout_marginLeft="@dimen/dp5"
-        android:textColor="@color/shop_grey"
+        android:textColor="@color/nc_text"
         android:layout_marginTop="@dimen/margin_Modules"
         android:textSize="@dimen/text_12" />
 
@@ -52,7 +52,7 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="38.00"
+            android:text=""
             android:textColor="@color/msb_color"
             android:textSize="@dimen/text_15" />
         <View
@@ -63,7 +63,7 @@
             android:id="@+id/num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X2"
+            android:text=""
             android:textColor="@color/shop_grey"
             android:textSize="16sp"
             />

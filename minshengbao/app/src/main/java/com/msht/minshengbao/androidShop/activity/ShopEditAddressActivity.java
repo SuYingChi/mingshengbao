@@ -133,13 +133,13 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public void onEditAddressSuccess() {
-        PopUtil.showAutoDissHookDialog(this,"地址修改成功",500);
+        PopUtil.showAutoDissHookDialog(this,"地址修改成功",0);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 finish();
             }
-        },1500);
+        },1600);
     }
 
     @Override

@@ -81,11 +81,6 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
         rcl.setAdapter(addressListAdapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ShopPresenter.getAddressList(this,true);
-    }
 
     @OnClick({R.id.back,R.id.add_address})
     public void onViewClicked(View view) {
@@ -217,8 +212,8 @@ public class ShopAddressListActivity extends ShopBaseActivity implements IEditAd
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         ShopPresenter.getAddressList(this,true);
     }
 

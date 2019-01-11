@@ -16,18 +16,18 @@ import java.util.List;
  * @Description RRecyclerAdapter封装
  * @Result 1.只有一种item的情况下，缓存的ViewHolder的数目为RecyclerView在滑动过程中所能在一屏内容纳的最大item个数+2
  * 2.有至少两种item显示的情况下，每种item的ViewHolder的缓存个数为单种item在一屏内最大显示个数+1
- * 实现原理是给数据源添加头和尾的数据源，因此在处理正常数据时注意下标
+ * 实现原理是给数据源添加头和尾的数据源，因此在处理正常数据时注意下标,套子recycleview时不要在父adpter里对子adapter数据源的list做增加头尾数据操作
  */
 public abstract class MyHaveHeadAndFootRecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerHolder> {
 
     protected Context context;
     protected List<T> datas;
     protected int layoutId;
-    private int head_layoutId = Integer.MIN_VALUE;
+    protected int head_layoutId = Integer.MIN_VALUE;
     protected String monetary_unit;
     protected OnItemClickListener onItemClickListener;//像listview一样添加点击事件
     protected MyApplication application = MyApplication.getInstance();
-    private int foot_layoutId = Integer.MAX_VALUE;
+    protected int foot_layoutId = Integer.MAX_VALUE;
 
 
     public MyHaveHeadAndFootRecyclerAdapter(Context context) {

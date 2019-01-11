@@ -7,10 +7,11 @@ public class ShopChatUserBean {
      * u_name : 海南民生商贸有限公司
      * avatar : http://dev.msbapp.cn/data/upload/shop/common/default_user_portrait.gif
      * recent : 1
-     * m_id : 788
-     * time : 2018-11-29 12:10:39
+     * m_id : 863
+     * time : 2019-01-02 10:59:06
      * r_state : 1
-     * t_msg : 高耗能充满
+     * t_msg : 反对法打发
+     * msg_count : 0
      */
 
     private String u_id;
@@ -19,8 +20,9 @@ public class ShopChatUserBean {
     private int recent;
     private String m_id;
     private String time;
-    private int r_state;
+    private String r_state;
     private String t_msg;
+    private String msg_count;
 
     public String getU_id() {
         return u_id;
@@ -70,11 +72,11 @@ public class ShopChatUserBean {
         this.time = time;
     }
 
-    public int getR_state() {
+    public String getR_state() {
         return r_state;
     }
 
-    public void setR_state(int r_state) {
+    public void setR_state(String r_state) {
         this.r_state = r_state;
     }
 
@@ -84,5 +86,13 @@ public class ShopChatUserBean {
 
     public void setT_msg(String t_msg) {
         this.t_msg = t_msg;
+    }
+
+    public String getMsg_count() {
+        return msg_count;
+    }
+
+    public void setMsg_count(String msg_count) {
+        this.msg_count = msg_count;
     }
 }

@@ -4,8 +4,8 @@ import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 
 public class ShopConstants {
-    public static final String BASE_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/mobile/"/*"http://shop.msbapp.cn:8090/mobile/"*/:"http://shop.msbapp.cn:8090/mobile/";
-    public static final String BASE_WAP_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/wap/"/*"http://shop.msbapp.cn:8090/wap/"*/: "http://shop.msbapp.cn:8090/wap/";
+    public static final String BASE_URL = BuildConfig.DEBUG ? /*"http://dev.msbapp.cn/mobile/"*/"http://shop.msbapp.cn:8090/mobile/":"http://shop.msbapp.cn:8090/mobile/";
+    public static final String BASE_WAP_URL = BuildConfig.DEBUG ? /*"http://dev.msbapp.cn/wap/"*/"http://shop.msbapp.cn:8090/wap/": "http://shop.msbapp.cn:8090/wap/";
     public static final String RELEASE_BASE_MSB_URL = "https://msbapp.cn";
     public static final String DEBUG_BASE_MSB_URL = "http://test.msbapp.cn:8080";
     public static final String SHOP_SP = "shop";
@@ -37,7 +37,7 @@ public class ShopConstants {
     public static final String BUY_STEP2 = BASE_URL + "index.php?act=member_buy&op=buy_step2";
     public static final String BUY_STEP3 = BASE_URL + "index.php?act=member_buy&op=pay";
     public static final String BUY_STEP4 = BASE_URL + "index.php?act=member_payment&op=pay_new";
-    public static final String NATIVE_GET_PAY_LIST = BuildConfig.DEBUG ? DEBUG_BASE_MSB_URL +"/api/app/pay_method": RELEASE_BASE_MSB_URL + "/api/app/pay_method";
+    public static final String NATIVE_GET_PAY_LIST = BuildConfig.DEBUG ? RELEASE_BASE_MSB_URL +"/api/app/pay_method": RELEASE_BASE_MSB_URL + "/api/app/pay_method";
     public static final String SHOP_PAY_SOURCE_PARAMAS = "app_shop_pay_method";
     public static final String SHOP_ORDER_LIST = BASE_URL + "index.php?act=member_order&op=order_list";
     public static final String ORDER_DETAIL = BASE_URL + "index.php?act=member_order&op=order_info";
@@ -72,7 +72,7 @@ public class ShopConstants {
     public static final String CHAT_USER_LIST = BASE_URL+"index.php?act=member_chat&op=get_user_list";
     public static final String DELETE_MSG_USER_ITEM = BASE_URL+"index.php?act=member_chat&op=del_msg";
     public static final String GUESS_LIKE = BASE_URL+"index.php?act=member_goodsbrowse&op=guesslike";
-    public static final String MESSAGE_PREVIEW = BuildConfig.DEBUG ? DEBUG_BASE_MSB_URL +"/Gas/message/preview": RELEASE_BASE_MSB_URL +"/Gas/message/preview";
+    public static final String MESSAGE_PREVIEW = BuildConfig.DEBUG ? RELEASE_BASE_MSB_URL +"/Gas/message/preview": RELEASE_BASE_MSB_URL +"/Gas/message/preview";
     public static final String RETURN_GOOD_SENT_INIT = BASE_URL+"index.php?act=member_return&op=ship_form";
     public static final String RETURN_GOOD_SENT_POST = BASE_URL+"index.php?act=member_return&op=ship_post";
     public static final String MY_SHOP_NUM = BASE_URL+"index.php?act=member_index";

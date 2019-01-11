@@ -21,6 +21,7 @@ import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
 import com.msht.minshengbao.androidShop.shopBean.NativePayMethodsBean;
 import com.msht.minshengbao.androidShop.shopBean.NativePayMethodsBean2;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBuyStep4CreatChargeView;
 import com.msht.minshengbao.androidShop.viewInterface.INativGetPayListView;
@@ -93,15 +94,15 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
     public void pay() {
         if (selectedPayBean == null) {
             PopUtil.showComfirmDialog(this, "", "请选择支付方式", "", "知道了", null, null, true);
-        } else if(charge==null){
+        } else if (charge == null) {
             PopUtil.showComfirmDialog(this, "", "请等待charge重新生成", "", "知道了", null, null, true);
-        }else {
+        } else {
             PopUtil.showComfirmDialog(this, null, "确认支付订单？", "取消", "确定", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //获取到chargeid 但暂时不支付订单，订单转换为待付款
                     Intent intent = new Intent(ShopPayOrderActivity.this, ShopOrdersDetailActivity.class);
-                    intent.putExtra("data",orderId);
+                    intent.putExtra("data", orderId);
                     startActivity(intent);
                     finish();
                 }
@@ -111,7 +112,7 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
                     //确认支付 调起ping++完成支付
                     Pingpp.createPayment(ShopPayOrderActivity.this, charge);
                 }
-            },false);
+            }, false);
         }
 
     }
@@ -131,7 +132,7 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
             selectedPayBean.setCheck(true);
             payList.set(position, selectedPayBean);
             adapter.notifyDataSetChanged();
-            charge=null;
+            charge = null;
             ShopPresenter.creatCharge(this);
         }
     }
@@ -217,21 +218,24 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
                     intent.putExtra("data", payinfo.getPay_sn());
                     startActivity(intent);
                     finish();*/
-                    Intent intent= new Intent(this,ShopSuccessActivity.class);
-                    intent.putExtra("id",orderId);
-                    intent.putExtra("state","pay");
+                    Intent intent = new Intent(this, ShopSuccessActivity.class);
+                    intent.putExtra("id", orderId);
+                    intent.putExtra("state", "pay");
                     startActivity(intent);
                     finish();
-                }else if(TextUtils.equals(result, "fail")){
+                } else if (TextUtils.equals(result, "fail")) {
                     String errorMsg = data.getStringExtra("error_msg"); // 错误信息
                     String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
-                    PopUtil.toastInBottom("result=="+result+"  error_msg=="+errorMsg+"   extra_msg=="+extraMsg);
-                }else if(TextUtils.equals(result, "cancel")){
+                    if (errorMsg.equals("permission_denied")) {
+                        PopUtil.toastInCenter("所需权限被禁止，请允许权限后重试");
+                    }
+                    LogUtils.e("result==" + result + "  error_msg==" + errorMsg + "   extra_msg==" + extraMsg);
+                } else if (TextUtils.equals(result, "cancel")) {
                     Intent intent = new Intent(ShopPayOrderActivity.this, ShopOrdersDetailActivity.class);
-                    intent.putExtra("data",orderId);
+                    intent.putExtra("data", orderId);
                     startActivity(intent);
                     finish();
-                }else if(TextUtils.equals(result, "invalid")){
+                } else if (TextUtils.equals(result, "invalid")) {
                     PopUtil.toastInBottom("payment plugin not installed");
                 }
             }

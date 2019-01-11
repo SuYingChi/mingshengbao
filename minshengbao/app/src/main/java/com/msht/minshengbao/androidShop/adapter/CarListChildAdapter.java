@@ -116,7 +116,12 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             tvName.setText(goodsName);
             String goodsSpec = obj.optString("goods_spec");
             TextView tvJingle = holder.getView(R.id.jingle);
-            tvJingle.setText(goodsSpec);
+            if(TextUtils.isEmpty(goodsSpec)){
+                tvJingle.setVisibility(View.GONE);
+            }else {
+                tvJingle.setVisibility(View.VISIBLE);
+                tvJingle.setText(goodsSpec);
+            }
             TextView tvRemainNum = holder.getView(R.id.remain_num);
             String goodsStorage = obj.optString("goods_storage");
             if (TextUtils.isEmpty(goodsStorage)) {

@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,12 @@ public class MsgUserListAdapter extends ComplexRecyclerViewAdapter {
         Object item = datas.get(i);
         if(item instanceof ShopChatUserBean){
             String avatar = ((ShopChatUserBean) item).getAvatar();
+           if(!TextUtils.isEmpty(((ShopChatUserBean) item).getMsg_count())&&!((ShopChatUserBean) item).getMsg_count().equals("0")){
+               complexViewHolder.getView(R.id.vhint).setVisibility(View.VISIBLE);
+               complexViewHolder.setText(R.id.vhint,((ShopChatUserBean) item).getMsg_count());
+           }else {
+               complexViewHolder.getView(R.id.vhint).setVisibility(View.INVISIBLE);
+           }
             GlideUtil.loadRemoteCircleImg(mContext,complexViewHolder.getImageView(R.id.iv),avatar);
             complexViewHolder.setText(R.id.time,((ShopChatUserBean) item).getTime());
             complexViewHolder.setText(R.id.name, ((ShopChatUserBean) item).getU_name());

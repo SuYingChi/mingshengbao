@@ -36,7 +36,7 @@ public class DataStringCallback extends StringCallback {
         if(isShowLoadingDialog) {
             iView.dismissLoading();
         }
-        iView.onError(e.toString());
+        iView.onError(e.getMessage());
 
     }
 
