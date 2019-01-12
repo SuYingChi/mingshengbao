@@ -3,6 +3,7 @@ package com.msht.minshengbao.functionActivity.Public;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -199,15 +200,18 @@ public class PublicPayWayActivity extends BaseActivity {
             if (reference == null||reference.isFinishing()) {
                 return;
             }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-                        String error = object.optString("error");
+                        String error=object.optString("error");
+                        if (reference.requestCode==1){
+                            error=new String(object.optString("msg").getBytes(),"utf-8");
+                        }
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
                                 JSONArray jsonArray =object.getJSONArray("data");
@@ -228,9 +232,6 @@ public class PublicPayWayActivity extends BaseActivity {
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     reference.showFailure(msg.obj.toString());
                     break;
                 default:

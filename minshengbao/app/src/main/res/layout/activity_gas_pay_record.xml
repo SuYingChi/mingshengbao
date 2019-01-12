@@ -7,58 +7,7 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.GasService.GasPayRecordActivity">
     <include layout="@layout/layout_header"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_width60"
-        android:background="@color/white">
-        <TextView
-            android:id="@+id/id_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginStart="@dimen/margin_width10"
-            android:layout_marginTop="@dimen/margin_width12"
-            android:text="@string/customer_no_text"
-            android:textColor="@color/black1"
-            android:textSize="@dimen/text_width16"/>
-        <TextView
-            android:id="@+id/id_customerNo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_width12"
-            android:layout_toRightOf="@+id/id_text1"
-            android:layout_toEndOf="@+id/id_text1"
-           android:layout_marginStart="@dimen/margin_width30"
-            android:layout_marginLeft="@dimen/margin_width30"
-            android:textSize="@dimen/text_width16"
-            android:textColor="@color/black1"/>
-        <TextView
-            android:id="@+id/id_text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginStart="@dimen/margin_width10"
-            android:layout_marginTop="@dimen/margin_width10"
-            android:layout_marginBottom="@dimen/margin_width12"
-            android:layout_below="@+id/id_text1"
-            android:text="@string/gas_address"
-            android:textColor="@color/black1"
-            android:textSize="@dimen/text_width16"/>
-        <TextView
-            android:id="@+id/id_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/id_text1"
-            android:layout_marginTop="@dimen/margin_width10"
-            android:layout_toRightOf="@+id/id_text2"
-            android:layout_toEndOf="@+id/id_text2"
-            android:layout_marginStart="@dimen/margin_width10"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginBottom="@dimen/margin_width12"
-            android:textSize="@dimen/text_width16"
-            android:textColor="@color/black1"/>
-    </RelativeLayout>
+    <include layout="@layout/layout_gas_customer_no"/>
     <include layout="@layout/layout_line_gray"/>
     <View
         android:layout_width="match_parent"
@@ -67,15 +16,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
-            android:id="@+id/id_payrecord_listview"
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/id_record_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:divider="@null">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
-        <include layout="@layout/layout_nodata_view"
-            android:id="@+id/id_nodata_view"
+        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+        <include layout="@layout/layout_no_data_view"
+            android:id="@+id/id_no_data_view"
             android:visibility="gone"/>
     </FrameLayout>
 </LinearLayout>

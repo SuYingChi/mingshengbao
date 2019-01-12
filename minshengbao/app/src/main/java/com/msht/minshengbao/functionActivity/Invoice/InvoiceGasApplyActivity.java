@@ -1,26 +1,15 @@
 package com.msht.minshengbao.functionActivity.Invoice;
 
-import android.Manifest;
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
@@ -34,18 +23,14 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.DeliveryInfoDialog;
 import com.msht.minshengbao.ViewUI.Dialog.InvoiceEnsureDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
-import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
+import com.msht.minshengbao.ViewUI.Dialog.PublicNoticeDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class
@@ -58,18 +43,17 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
     private View layoutView;
     private View layoutTaxpayer;
     private View layoutAddress;
-    private Button btnPersonal, btnCompany;
     private Button   btnSend;
-    private EditText etAddress;
-    private EditText etInvoiceName;
-    private EditText etTaxpayerNum, etBank, etBankcard;
-    private EditText etCompanyTel, etCompanyAddress;
+    private TextView tvType;
+    private TextView tvAddress;
+    private TextView tvInvoiceName;
+    private TextView tvTaxpayerNum,tvCompanyAddress;
     private TextView etEmail;
+    private int     requestType=0;
     private String  userId,password,type="1";
     private String  invoiceType,amount;
     private String  invoiceName, email;
-    private String  address,identifyNo,bank;
-    private String  bankcard,companyTel;
+    private String  address, taxpayerNum;
     private String  customerNo;
     private String  paymentNo;
     private String  fpId;
@@ -96,7 +80,12 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
                         String results=object.optString("result");
                         String error = object.optString("error");
                         if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onSuccess();
+                            if (activity.requestType==0){
+                                JSONObject jsonObject=object.optJSONObject("data");
+                                activity.onReceiveInvoiceData(jsonObject);
+                            }else {
+                                activity.onSuccess();
+                            }
                         } else {
                             activity.onNoticeDialog(error);
                         }
@@ -113,6 +102,40 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
             super.handleMessage(msg);
         }
     }
+    private void onReceiveInvoiceData(JSONObject jsonObject) {
+        String name=jsonObject.optString("name");
+        String address=jsonObject.optString("address");
+        taxpayerNum=jsonObject.optString("taxpayer_num");
+        type=jsonObject.optString("type");
+        tvTaxpayerNum.setText(taxpayerNum);
+        tvAddress.setText(address);
+        tvCompanyAddress.setText(address);
+        tvInvoiceName.setText(name);
+        onSetType(type);
+    }
+    private void onSetType(String type) {
+        switch (type){
+            case "1":
+                tvType.setText("个人");
+                layoutView.setVisibility(View.GONE);
+                layoutAddress.setVisibility(View.VISIBLE);
+                layoutTaxpayer.setVisibility(View.GONE);
+                break;
+            case "3":
+                tvType.setText("单位");
+                layoutTaxpayer.setVisibility(View.VISIBLE);
+                layoutView.setVisibility(View.VISIBLE);
+                layoutAddress.setVisibility(View.GONE);
+                break;
+            default:
+                tvType.setText("个人");
+                layoutView.setVisibility(View.GONE);
+                layoutAddress.setVisibility(View.VISIBLE);
+                layoutTaxpayer.setVisibility(View.GONE);
+                break;
+        }
+    }
+
     private void onSuccess() {
         setResult(1);
         Intent intent=new Intent(context,InvoiceSendSuccessActivity.class);
@@ -136,8 +159,18 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initFindViewId();
         initEvent();
+        initInvoiceData();
     }
-
+    private void initInvoiceData() {
+        requestType=0;
+        customDialog.show();
+        String validateURL= UrlUtil.INVOICE_DATA_TYPE;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        textParams.put("customerNo",customerNo);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL,OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler) ;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,8 +178,8 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
             case ConstantUtil.REQUEST_CODE_ONE:
                 if (resultCode==ConstantUtil.REQUEST_CODE_ONE){
                     address=data.getStringExtra("mAddress");
-                    etAddress.setText(address);
-                    etCompanyAddress.setText(address);
+                    tvAddress.setText(address);
+                    tvCompanyAddress.setText(address);
                 }
                 break;
                 default:
@@ -154,31 +187,25 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
         }
     }
     private void initEvent() {
-        btnCompany.setOnClickListener(this);
-        btnPersonal.setOnClickListener(this);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
-        etInvoiceName.addTextChangedListener(myTextWatcher);
         etEmail.addTextChangedListener(myTextWatcher);
-        etAddress.addTextChangedListener(myTextWatcher);
+        tvAddress.addTextChangedListener(myTextWatcher);
         btnSend.setOnClickListener(this);
     }
     private void initFindViewId() {
         findViewById(R.id.id_status_view).setVisibility(View.GONE);
+        tvType=(TextView)findViewById(R.id.id_type);
         btnSend =(Button)findViewById(R.id.id_btn_send);
-        btnPersonal =(Button)findViewById(R.id.id_btn_personal);
-        btnCompany =(Button)findViewById(R.id.id_btn_company);
-        layoutView =findViewById(R.id.id_li_view);
+        layoutView =findViewById(R.id.id_company_layout);
         layoutTaxpayer =findViewById(R.id.id_taxpayer_layout);
-        etAddress=(EditText) findViewById(R.id.id_et_address);
-        etInvoiceName =(EditText)findViewById(R.id.id_et_name);
+        tvAddress=(TextView) findViewById(R.id.id_tv_address);
+        tvInvoiceName =(TextView)findViewById(R.id.id_tv_name);
         etEmail =(EditText)findViewById(R.id.id_et_email);
-        etTaxpayerNum =(EditText)findViewById(R.id.id_et_taxpayer_num);
-        etBank =(EditText)findViewById(R.id.id_et_bank);
-        etBankcard =(EditText)findViewById(R.id.id_et_bankcard);
-        etCompanyTel =(EditText)findViewById(R.id.id_et_company_tel);
-        etCompanyAddress =(EditText)findViewById(R.id.id_et_company_addr);
+        tvTaxpayerNum =(TextView)findViewById(R.id.id_tv_taxpayer_num);
+        tvCompanyAddress =(TextView) findViewById(R.id.id_tv_company_address);
         TextView tvAmount =(TextView)findViewById(R.id.id_amount);
         layoutAddress=findViewById(R.id.id_district_layout);
+        findViewById(R.id.id_correct).setOnClickListener(this);
         tvAmount.setText(amount);
         btnSend.setEnabled(false);
     }
@@ -186,63 +213,48 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.id_btn_personal:
-                type="1";
-                btnPersonal.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btnCompany.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                layoutView.setVisibility(View.GONE);
-                layoutTaxpayer.setVisibility(View.GONE);
-                layoutAddress.setVisibility(View.VISIBLE);
-                break;
-            case R.id.id_btn_company:
-                type="3";
-                layoutView.setVisibility(View.VISIBLE);
-                layoutTaxpayer.setVisibility(View.VISIBLE);
-                layoutAddress.setVisibility(View.GONE);
-                etBank.setHint("请输入您的开户银行（必填）");
-                etBankcard.setHint("请输入您的开户账号（必填）");
-                btnCompany.setBackgroundResource(R.drawable.shape_orange_corner_button);
-                btnPersonal.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
-                break;
             case R.id.id_btn_send:
                 onApplyData();
+                break;
+            case R.id.id_correct:
+                onStartHtml();
                 break;
             default:
                 break;
         }
     }
+    private void onStartHtml() {
+        String url= UrlUtil.GAS_INVOICE_QUESTION_URL;
+        Intent price=new Intent(context,HtmlPageActivity.class);
+        price.putExtra("navigate","疑问解答");
+        price.putExtra("url",url);
+        startActivity(price);
+    }
     private void onApplyData() {
-        invoiceName=etInvoiceName.getText().toString().trim();
+        invoiceName=tvInvoiceName.getText().toString().trim();
         email = etEmail.getText().toString().trim();
-        identifyNo= etTaxpayerNum.getText().toString().trim();
-        bank      = etBank.getText().toString().trim();
-        bankcard  = etBankcard.getText().toString().trim();
-        companyTel= etCompanyTel.getText().toString().trim();
+        taxpayerNum = tvTaxpayerNum.getText().toString().trim();
         switch (type){
             case VariableUtil.VALUE_ONE:
-                address=etAddress.getText().toString().trim();
+                address=tvAddress.getText().toString().trim();
                 invoiceType="个人普通发票";
                 if (!RegularExpressionUtil.isEmail(email)){
                     onNoticeDialog("电子邮箱格式不正确!");
-                }else if (TextUtils.isEmpty(etAddress.getText().toString())){
-                    onNoticeDialog("请输入您的联系地址");
+                }else if (TextUtils.isEmpty(tvAddress.getText().toString())){
+                    onNoticeDialog("抱歉！由于您的联系地址缺失，不能提交申请，建议前去营业厅对其进行处理。");
+                }else if (TextUtils.isEmpty(invoiceName)){
+                    onNoticeDialog("抱歉！由于您的发票抬头缺失，不能提交申请，建议前去营业厅对其进行处理。");
                 }else {
                     requestServer();
                 }
                 break;
             case VariableUtil.VALUE_THREE:
                 invoiceType="企业普通发票";
-                address=etCompanyAddress.getText().toString().trim();
-                if (TextUtils.isEmpty(etTaxpayerNum.getText().toString())){
-                    onNoticeDialog("请输入您的纳税人识别号");
-                }else if (TextUtils.isEmpty(etBank.getText().toString())){
-                    onNoticeDialog("请输入您的开户银行");
-                }else if (TextUtils.isEmpty(etBankcard.getText().toString())){
-                    onNoticeDialog("请输入您的开户账号");
-                }else if (TextUtils.isEmpty(etCompanyTel.getText().toString())){
-                    onNoticeDialog("请输入您的企业电话");
-                }else if (TextUtils.isEmpty(etCompanyAddress.getText().toString())){
-                    onNoticeDialog("请输入您的企业地址");
+                address=tvCompanyAddress.getText().toString().trim();
+                if (TextUtils.isEmpty(tvTaxpayerNum.getText().toString())){
+                    onNoticeDialog("抱歉！由于您的纳税识别号缺失，不能提交申请，建议前去营业厅对其进行处理。");
+                }else if (TextUtils.isEmpty(tvCompanyAddress.getText().toString())){
+                    onNoticeDialog("抱歉！由于您的企业地址缺失，不能提交申请，建议前去营业厅对其进行处理。");
                 }else if(!RegularExpressionUtil.isEmail(email)){
                     onNoticeDialog("电子邮箱格式不正确!");
                 }else {
@@ -253,19 +265,16 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
                 break;
         }
     }
-    private void onNoticeDialog(String s) {
-        new PromptDialog.Builder(context)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(s)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-
-                    }
-                }).show();
+    private void onNoticeDialog(String result) {
+        new PublicNoticeDialog(context).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .setTitleText("温馨提示")
+                .setButtonText("我知道了")
+                .setMessageContentText(result)
+                .setImageVisibility(false)
+                .setLineViewVisibility(true)
+                .show();
     }
     private void requestServer() {
         new InvoiceEnsureDialog(context).builder()
@@ -274,7 +283,7 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
                 .setEmailText(email)
                 .setInvoiceType(invoiceType)
                 .setInvoiceName(invoiceName)
-                .setTaxpayerNum(identifyNo)
+                .setTaxpayerNum(taxpayerNum)
                 .setOnPositiveClickListener(new InvoiceEnsureDialog.OnPositiveClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -284,6 +293,7 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
     }
 
     private void onSendService() {
+        requestType=1;
         customDialog.show();
         String validateURL= UrlUtil.INVOICE_GAS_APPLY;
         HashMap<String, String> textParams = new HashMap<String, String>();
@@ -297,10 +307,7 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
         textParams.put("email",email);
         textParams.put("name",invoiceName);
         textParams.put("company_address",address);
-        textParams.put("taxpayer_num",identifyNo);
-        textParams.put("bank",bank);
-        textParams.put("bankcard",bankcard);
-        textParams.put("company_tel",companyTel);
+        textParams.put("taxpayer_num", taxpayerNum);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL,OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler) ;
 
     }
@@ -309,7 +316,7 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(etInvoiceName.getText().toString())||TextUtils.isEmpty(etEmail.getText().toString())){
+            if (TextUtils.isEmpty(etEmail.getText().toString())){
                 btnSend.setEnabled(false);
             }else {
                 btnSend.setEnabled(true);

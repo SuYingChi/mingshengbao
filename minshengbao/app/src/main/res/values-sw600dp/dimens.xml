@@ -4,6 +4,7 @@
     <dimen name="margin_banner">240dp</dimen>
     <dimen name="margin_imgHight">120dp</dimen>
     <dimen name="margin_width320">384dp</dimen>
+    <dimen name="margin_width300">360dp</dimen>
     <dimen name="margin_width275">330dp</dimen>
     <dimen name="margin_width270">324dp</dimen>
     <dimen name="margin_width225">270dp</dimen>

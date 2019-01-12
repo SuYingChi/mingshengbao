@@ -3,13 +3,19 @@ package com.msht.minshengbao;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.msht.minshengbao.OkhttpUtil.SSLSocketClient;
+import com.msht.minshengbao.Utils.AppActivityUtil;
+import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -72,7 +78,6 @@ public class MyApplication extends Application {
             @Override
             public void onSuccess(String deviceToken) {
                 SharedPreferencesUtil.putDeviceData(getApplicationContext(),SharedPreferencesUtil.DeviceToken,deviceToken);
-                Log.d("deviceToken=",deviceToken);
             }
             @Override
             public void onFailure(String s, String s1) { }
@@ -98,7 +103,20 @@ public class MyApplication extends Application {
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
             @Override
             public void launchApp(Context context, UMessage msg) {
-                super.launchApp(context, msg);
+                if (!msg.extra.isEmpty()){
+                    String url=msg.extra.get("url");
+                    if (AppActivityUtil.isAppAlive(context)){
+                        if (AppActivityUtil.isLoginState(context)){
+                            AppActivityUtil.onPushStartActivity(context,url);
+                        }else {
+                            AppActivityUtil.onLoginActivity(context,url);
+                        }
+                    }else {
+                        onStartMainActivity(context,url);
+                    }
+                }else {
+                    super.launchApp(context, msg);
+                }
             }
             @Override
             public void openUrl(Context context, UMessage msg) {
@@ -110,13 +128,23 @@ public class MyApplication extends Application {
             }
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
-                Log.d("msg.custom=",msg.custom);
+                if (!msg.extra.isEmpty()){
+                    String url=msg.extra.get("url");
+                    if (AppActivityUtil.isAppAlive(context)){
+                        if (AppActivityUtil.isLoginState(context)){
+                            AppActivityUtil.onPushStartActivity(context,url);
+                        }else {
+                            AppActivityUtil.onLoginActivity(context,url);
+                        }
+                    }else {
+                        onStartMainActivity(context,url);
+                    }
+                }
             }
         };
         /* 使用自定义的NotificationHandler**/
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
     }
-
     {
     PlatformConfig.setWeixin("wx33f335ace862eca1", "38e97727e3226f7141c3c647736bdb68");
     //新浪微博
@@ -127,7 +155,12 @@ public class MyApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
+    private void onStartMainActivity(Context context, String url) {
+        Intent intent=new Intent(context,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("pushUrl",url);
+        context.startActivity(intent);
+    }
     public static Context getContext() {
         return instances;
     }

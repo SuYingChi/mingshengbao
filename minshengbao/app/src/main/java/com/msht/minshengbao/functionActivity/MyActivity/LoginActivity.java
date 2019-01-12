@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -40,6 +41,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ImageView backImage;
     private String username;
     private String mPassword;
+    private String pushUrl;
     private CustomDialog customDialog;
     public static final String MY_ACTION = "ui";
     private final LogonHandler logonHandler=new LogonHandler(this);
@@ -106,6 +108,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         broadcast.putExtra("broadcast", "1");
         sendBroadcast(broadcast);
         Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra("pushUrl",pushUrl);
         startActivity(intent);
         finish();
 
@@ -122,6 +125,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mPageName ="登录界面";
         PushAgent.getInstance(context).onAppStart();
         customDialog=new CustomDialog(this, "正在加载");
+        Intent data=getIntent();
+        if (data!=null){
+            pushUrl=data.getStringExtra("pushUrl");
+        }
         initFindView();
         initEvent();
     }

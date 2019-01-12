@@ -153,7 +153,7 @@ public class HouseKeepingActivity extends BaseActivity {
                     intent.putExtra("code",code);
                     startActivity(intent);
                 }else {
-                    AppActivityUtil.onStartLoginActivity(context);
+                    AppActivityUtil.onStartLoginActivity(context,"");
                 }
             }
         });

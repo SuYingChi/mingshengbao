@@ -203,7 +203,7 @@ public class InvoiceGasListActivity extends BaseActivity {
     }
 
     private void onStartApply(int pos) {
-        String customerNo=mList.get(pos).get("customerNo");
+       // String customerNo=mList.get(pos).get("customerNo");
         String paymentNo=mList.get(pos).get("paymentNo");
         String fpId=mList.get(pos).get("fpId");
         String amount=mList.get(pos).get("amount");

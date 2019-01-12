@@ -53,7 +53,7 @@ public class GasInstallActivity extends BaseActivity implements View.OnClickList
     private Button   btnSelectAddress, btnVerify;
     private TextView tvInstallType;
     private View layoutType;
-    private EditText tvAddress;
+    private TextView tvAddress;
     private EditText etInstallTopic;
     private EditText etDetail;
     private EditText etPhone;

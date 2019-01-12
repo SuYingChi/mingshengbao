@@ -139,6 +139,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                                 activity.customDialog.dismiss();
                             }
+                            activity.btnSendOrder.setEnabled(true);
                             activity.onFailure(error);
                         }
                     }catch (Exception e){
@@ -149,6 +150,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                     if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                         activity.customDialog.dismiss();
                     }
+                    activity.btnSendOrder.setEnabled(true);
                     ToastUtil.ToastText(activity.context, msg.obj.toString());
                     break;
                 default:

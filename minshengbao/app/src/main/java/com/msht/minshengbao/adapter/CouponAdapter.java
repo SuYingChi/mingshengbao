@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 
 import java.util.ArrayList;
@@ -83,9 +84,10 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnName.setTextColor(Color.parseColor("#FF383838"));
             holder.layoutBack.setBackgroundResource(R.mipmap.coupon_exceed_2xh);
         }
-        if (!TextUtils.isEmpty(remainderDay)){
+        if ((!TextUtils.isEmpty(remainderDay))&&(!remainderDay.equals(ConstantUtil.VALUE_ZERO))){
+            String mDayText="剩"+remainderDay+"天";
             holder.cnTime.setVisibility(View.VISIBLE);
-            holder.cnTime.setText("剩"+remainderDay+"天");
+            holder.cnTime.setText(mDayText);
         }else {
             holder.cnTime.setVisibility(View.GONE);
         }

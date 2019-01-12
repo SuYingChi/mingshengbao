@@ -7,11 +7,11 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2000051
-        versionName "v4.5"
+        versionCode 2000052
+        versionName "v4.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "arm64-v8a","armeabi", "armeabi-v7a", "x86","x86_64","mips"
+            abiFilters "arm64-v8a", "armeabi", "armeabi-v7a", "x86", "x86_64", "mips"
         }
     }
     //配置keystore签名

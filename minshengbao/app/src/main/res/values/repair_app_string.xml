@@ -13,6 +13,7 @@
     <string name="upload_repair_picture">上传维修部位照片</string>
     <string name="send_order">提交订单</string>
     <string name="upload_most_four_picture">最多只能上传4张图片</string>
+    <string name="no_server_order">无服务订单</string>
     
     
 </resources>

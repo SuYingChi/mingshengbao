@@ -160,6 +160,7 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         String discountFees =jsonObject.optString("discount_fee");
         String lateFees =jsonObject.optString("late_fee");
         JSONArray json=jsonObject.optJSONArray("detail_list");
+        VariableUtil.detailList.clear();
         try {
             for (int i = 0; i < json.length(); i++) {
                 JSONObject object = json.getJSONObject(i);
@@ -215,10 +216,12 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         mSelectTable.setEnabled(true);
-        etSelectTable.setText(tableList.get(0).get("name"));
-        etLast.setText(tableList.get(0).get("lastNum"));
-        tableBh =tableList.get(0).get("bh");
-        tableId=tableList.get(0).get("id");
+        if (tableList!=null&&tableList.size()>0){
+            etSelectTable.setText(tableList.get(0).get("name"));
+            etLast.setText(tableList.get(0).get("lastNum"));
+            tableBh =tableList.get(0).get("bh");
+            tableId=tableList.get(0).get("id");
+        }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

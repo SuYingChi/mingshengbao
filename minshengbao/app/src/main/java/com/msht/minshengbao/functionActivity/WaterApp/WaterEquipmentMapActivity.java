@@ -98,6 +98,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     private TextView tvCancel;
     private CustomDialog customDialog;
     private String mCity;
+    private String defaultAddress,defaultName;
     private ArrayList<MarkerOptions> markerOptionsArrayList=new ArrayList<MarkerOptions>();
     private ArrayList<HashMap<String, String>>  addressList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
@@ -170,7 +171,8 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.location_water_xh));
                 markerOptions.icon(bitmapDescriptor);
                 markerOptions.position(latLng);
-                markerOptions.title(address);
+                markerOptions.title(communityName);
+                markerOptions.snippet(address);
                 markerOptionsArrayList.add(markerOptions);
             }
         } catch (JSONException e) {
@@ -449,6 +451,8 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             }else {
                 mCity=aMapLocation.getDistrict();
             }
+            defaultAddress=aMapLocation.getAddress();
+            defaultName=aMapLocation.getPoiName();
             locationClient.stopLocation();
         }
     }
@@ -460,11 +464,18 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                     R.layout.custom_info_window, null);
         }
         render(marker, infoWindow);
-    return infoWindow;
+        return infoWindow;
     }
     private void render(Marker marker, View infoWindow) {
-        TextView name=(TextView)infoWindow.findViewById(R.id.title);
-        name.setText(marker.getTitle());
+        TextView name=(TextView)infoWindow.findViewById(R.id.id_title);
+        TextView content=(TextView)infoWindow.findViewById(R.id.id_content);
+        if (!TextUtils.isEmpty(marker.getTitle())){
+            content.setText(marker.getSnippet());
+            name.setText(marker.getTitle());
+        }else {
+            name.setText(defaultName);
+            content.setText(defaultAddress);
+        }
     }
     @Override
     public View getInfoContents(Marker marker) {

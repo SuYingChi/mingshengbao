@@ -4,6 +4,7 @@
     android:id="@+id/activity_invoice_open"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.Invoice.InvoiceOpenActivity">
     <include layout="@layout/layout_header"/>
@@ -17,7 +18,7 @@
             android:layout_height="match_parent"
             android:divider="@null">
         </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
-        <include layout="@layout/layout_nodata_view"
+        <include layout="@layout/layout_no_data_view"
             android:id="@+id/id_nodata_view"
             android:visibility="gone"/>
     </FrameLayout>

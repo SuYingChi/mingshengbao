@@ -152,7 +152,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
             case 1:
                 if (resultCode==3){
                     placeStatus=true;
-                    voucherId=data.getStringExtra("vouid");
+                    voucherId=data.getStringExtra("voucherId");
                     String amount=data.getStringExtra("amount");
                     double b=Double.parseDouble(amount);
                     double a=Double.parseDouble(debts);
@@ -223,7 +223,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent voucher=new Intent(context,SelectVoucherActivity.class);
-                voucher.putExtra("pay_amount",debts);
+                voucher.putExtra("payAmount",debts);
                 voucher.putExtra("category","2");
                 startActivityForResult(voucher,1);
             }

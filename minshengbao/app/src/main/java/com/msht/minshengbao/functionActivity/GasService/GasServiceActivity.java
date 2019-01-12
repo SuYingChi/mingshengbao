@@ -234,7 +234,7 @@ public class GasServiceActivity extends BaseActivity {
                                 break;
                         }
                     }else {
-                        AppActivityUtil.onStartLoginActivity(context);
+                        AppActivityUtil.onStartLoginActivity(context,"");
                         finish();
                     }
                 }

@@ -40,9 +40,6 @@ public class InvoiceGasDetailActivity extends BaseActivity {
     private TextView tvTaxpayer;
     private TextView tvContent;
     private TextView tvAmount;
-    private TextView tvBank;
-    private TextView tvAccount;
-    private TextView tvEnterpriseTel;
     private TextView tvAddress;
     private TextView tvEnterpriseAddress;
     private View     layoutEnterprise;
@@ -156,9 +153,7 @@ public class InvoiceGasDetailActivity extends BaseActivity {
         tvEmail.setText(email);
         tvAddress.setText(companyAddress);
         tvEnterpriseAddress.setText(companyAddress);
-        tvEnterpriseTel.setText(companyTel);
-        tvBank.setText(bank);
-        tvAccount.setText(bankcard);
+
     }
     private void onFailure(String error) {
         new PromptDialog.Builder(this)
@@ -205,12 +200,9 @@ public class InvoiceGasDetailActivity extends BaseActivity {
         tvContent=(TextView)findViewById(R.id.id_tv_content);
         tvTaxpayer=(TextView)findViewById(R.id.id_taxpayerNo) ;
         tvAmount=(TextView)findViewById(R.id.id_invoice_amount) ;
-        tvBank=(TextView)findViewById(R.id.id_open_bank);
-        tvAccount=(TextView)findViewById(R.id.id_open_account);
+
         tvAddress=(TextView)findViewById(R.id.id_tv_address);
         layoutAddress=findViewById(R.id.id_district_layout);
-        tvBank=(TextView)findViewById(R.id.id_open_bank);
-        tvEnterpriseTel=(TextView)findViewById(R.id.id_enterprise_tel);
         tvEnterpriseAddress=(TextView)findViewById(R.id.id_enterprise_address);
         layoutLook.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,7 +17,7 @@
         </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
         <include layout="@layout/layout_line_gray"/>
     </LinearLayout>
-    <include layout="@layout/layout_nodata_view"
+    <include layout="@layout/layout_no_data_view"
         android:id="@+id/id_nodata_view"
         android:visibility="gone"/>
 

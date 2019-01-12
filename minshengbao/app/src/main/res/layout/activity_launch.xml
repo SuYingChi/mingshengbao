@@ -37,7 +37,7 @@
         android:id="@+id/id_logo_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_buttom_xh"
+        android:src="@drawable/logo_bottom_xh"
         android:contentDescription="@string/picture_text"
         android:visibility="gone"/>
 </LinearLayout>

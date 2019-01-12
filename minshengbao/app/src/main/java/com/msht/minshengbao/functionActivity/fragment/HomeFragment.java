@@ -592,7 +592,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     intent.putExtra("code",code);
                     startActivity(intent);
                 }else {
-                    AppActivityUtil.onStartLoginActivity(mContext);
+                    AppActivityUtil.onStartLoginActivity(mContext,"");
                 }
             }
         });
@@ -784,14 +784,14 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 if (isLoginState(mContext)){
                     airConditioner();
                 }else {
-                    AppActivityUtil.onStartLoginActivity(mContext);
+                    AppActivityUtil.onStartLoginActivity(mContext,"");
                 }
                 break;
             case R.id.id_layout_over:
                 if (isLoginState(mContext)){
                     hoodsClean();
                 }else {
-                    AppActivityUtil.onStartLoginActivity(mContext);
+                    AppActivityUtil.onStartLoginActivity(mContext,"");
                 }
                 break;
             case R.id.id_headLine_more:

@@ -94,6 +94,15 @@ public class TopModuleAdapter extends BaseAdapter {
             case ConstantUtil.GAS_SERVE:
                 holder.imgFunction.setImageResource(R.drawable.home_gassever_xh);
                 break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.housekeeping_clean_xh);
+                break;
+            case ConstantUtil.HOME_MAINTENANCE:
+                holder.imgFunction.setImageResource(R.drawable.home_otherfix_xh);
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                holder.imgFunction.setImageResource(R.drawable.home_appliance_clean_xh);
+                break;
                 default: holder.imgFunction.setImageResource(R.drawable.top_shopmall_xh);
                     break;
         }

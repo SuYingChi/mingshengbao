@@ -4,6 +4,7 @@
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
     <dimen name="activity_horizontal_margin">64dp</dimen>
     <dimen name="margin_banner">400dp</dimen>
+    <dimen name="margin_width300">600dp</dimen>
     <dimen name="margin_width220">440dp</dimen>
     <dimen name="margin_imgHight">150dp</dimen>
     <dimen name="margin_width320">640dp</dimen>

@@ -41,7 +41,7 @@ import java.util.HashMap;
 public class CouponFragment extends BaseFragment {
     private String userId;
     private String password;
-    private  String status="1";
+    private String status="1";
     private RelativeLayout layoutNoData;
     private Button btnShare;
     private XListView xListView;
@@ -106,7 +106,7 @@ public class CouponFragment extends BaseFragment {
                             }
                             reference.onGetCouponData();
                         }else {
-                            reference.onFaifure(error);
+                            reference.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -162,7 +162,7 @@ public class CouponFragment extends BaseFragment {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void onFaifure(String error) {
+    private void onFailure(String error) {
         new PromptDialog.Builder(getActivity())
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)

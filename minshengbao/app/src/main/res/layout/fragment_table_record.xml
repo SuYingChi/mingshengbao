@@ -12,7 +12,7 @@
         android:scrollbars="none"
         android:footerDividersEnabled="true">
     </com.jcodecraeer.xrecyclerview.XRecyclerView>
-    <include layout="@layout/layout_nodata_view"
+    <include layout="@layout/layout_no_data_view"
         android:id="@+id/id_nodata_view"
         android:visibility="gone"/>
 </FrameLayout>

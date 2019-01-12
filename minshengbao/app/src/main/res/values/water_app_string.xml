@@ -50,6 +50,14 @@
     <string name="share_to_weiXin">分享到微信</string>
     <string name="water_inform_tip">即日起，水宝充值可领取大礼包！</string>
 
+    <!--水宝  -->
+    <string name="scan_buywater">扫码购水</string>
+    <string name="send_water">送水到家</string>
+    <string name="balance_recharge">余额充值</string>
+    <string name="recharge_amount_text">充值金额:</string>
+    <string name="recharge_account_text">充值账户:</string>
+    <string name="recharge_success_text">充值成功</string>
+
 
 
 </resources>

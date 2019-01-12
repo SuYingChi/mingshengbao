@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
@@ -13,7 +12,7 @@ import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivi
 import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasInstallActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIntroduceActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasPayFeeHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
@@ -22,6 +21,8 @@ import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
+import com.msht.minshengbao.functionActivity.MessageCenterActivity;
+import com.msht.minshengbao.functionActivity.MessageDetailActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
@@ -52,7 +53,7 @@ public class AppActivityUtil {
                     if (isLoginState(context)){
                         onStartVegetableActivity(context,url);
                     }else {
-                        onStartLoginActivity(context);
+                        onStartLoginActivity(context,"");
                     }
                     break;
                 default:
@@ -63,7 +64,7 @@ public class AppActivityUtil {
                             if (isLoginState(context)){
                                 onStartHtmlActivity(context,url,title,share,desc,activityCode,backUrl);
                             }else {
-                                onStartLoginActivity(context);
+                                onStartLoginActivity(context,"");
                             }
                         }
                     }
@@ -80,60 +81,28 @@ public class AppActivityUtil {
                 onShopMall(context);
                 break;
             case ConstantUtil.WATER:
-                if (isLoginState(context)){
-                    onDrinkingWater(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onDrinkingWater(context,"");
                 break;
             case ConstantUtil.DRINKING_WATER:
-                if (isLoginState(context)){
-                    onDrinkingWater(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onDrinkingWater(context,"");
                 break;
             case ConstantUtil.LPG_NAME:
-                if (isLoginState(context)){
-                    onLpgService(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onLpgService(context,"");
                 break;
             case ConstantUtil.VEGETABLE:
-                if (isLoginState(context)){
-                    onVegetableModel(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onVegetableModel(context,"");
                 break;
             case ConstantUtil.INSURANCE:
-                if (isLoginState(context)){
-                    onInsurance(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onInsurance(context,"");
                 break;
             case ConstantUtil.GAS_METER:
-                if (isLoginState(context)){
-                    onGasMeter(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onGasMeter(context,"");
                 break;
             case ConstantUtil.GAS_PAY:
-                if (isLoginState(context)){
-                    onGasPay(context);
-                }else {
-                    onStartLoginActivity(context);
-                }
+                onGasPay(context,"");
                 break;
             case ConstantUtil.GAS_IC_CARD:
-                if (isLoginState(context)){
-                    onIcCard(context);
-                }else {
-                    AppActivityUtil.onStartLoginActivity(context);
-                }
+                onIcCard(context,"");
                 break;
             case ConstantUtil.HOUSEKEEPING_CLEAN:
                 id=Uri.parse(url).getQueryParameter("id");
@@ -196,39 +165,19 @@ public class AppActivityUtil {
                     onElectricVehicleRepair(context);
                     break;
                 case ConstantUtil.INSURANCE:
-                    if (isLoginState(context)){
-                        onInsurance(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onInsurance(context,"");
                     break;
                 case ConstantUtil.ALL_SERVICE:
-                    if (isLoginState(context)){
-                        onAllService(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onAllService(context);
                     break;
                 case ConstantUtil.INTELLIGENT_FARM:
-                    if (isLoginState(context)){
-                        onIntelligentFarm(context);
-                    }else {
-                       onStartLoginActivity(context);
-                    }
+                    onIntelligentFarm(context);
                     break;
                 case ConstantUtil.DRINKING_WATER:
-                    if (isLoginState(context)){
-                        onDrinkingWater(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onDrinkingWater(context,"");
                     break;
                 case ConstantUtil.VEGETABLE_SCXS:
-                    if (isLoginState(context)){
-                        onVegetableModel(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onVegetableModel(context,"");
                     break;
                 case ConstantUtil.HOUSEKEEPING_CLEAN:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)){
@@ -244,37 +193,20 @@ public class AppActivityUtil {
                     onShopMall(context);
                     break;
                 case ConstantUtil.GAS_PAY:
-                    if (isLoginState(context)){
-                        onGasPay(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasPay(context,"");
                     break;
                 case ConstantUtil.GAS_METER:
-                    if (isLoginState(context)){
-                        onGasMeter(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasMeter(context,"");
                     break;
                 case ConstantUtil.GAS_IC_CARD:
-                    if (isLoginState(context)){
-                        onIcCard(context);
-                    }else {
-                        AppActivityUtil.onStartLoginActivity(context);
-                    }
+                    onIcCard(context,"");
                     break;
                 case ConstantUtil.LPG_NAME:
-                    if (isLoginState(context)){
-                        onLpgService(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onLpgService(context,"");
                     break;
                 default:
                     showNotify(context,"民生宝" ,"已推出新版本，如果您想使用该服务，请点击更新！");
                     break;
-
             }
         }
     }
@@ -285,70 +217,52 @@ public class AppActivityUtil {
                     onShopMall(context);
                     break;
                 case ConstantUtil.GAS_PAY:
-                    if (isLoginState(context)){
-                        onGasPay(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasPay(context,"");
                     break;
                 case ConstantUtil.GAS_METER:
-                    if (isLoginState(context)){
-                        onGasMeter(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasMeter(context,"");
                     break;
                 case ConstantUtil.GAS_IC_CARD:
-                    if (isLoginState(context)){
-                        onIcCard(context);
-                    }else {
-                        AppActivityUtil.onStartLoginActivity(context);
-                    }
+                    onIcCard(context,"");
                     break;
                 case ConstantUtil.LPG_NAME:
-                    if (isLoginState(context)){
-                        onLpgService(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onLpgService(context,"");
                     break;
                 case ConstantUtil.GAS_REPAIR:
-                    if (isLoginState(context)){
-                        onGasRepair(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasRepair(context,"");
                     break;
                 case ConstantUtil.GAS_INSTALL:
-                    if (isLoginState(context)){
-                        onGasInstall(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasInstall(context,"");
                     break;
                 case ConstantUtil.GAS_RESCUE:
-                    if (isLoginState(context)){
-                        onGasRescue(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasRescue(context);
                     break;
                 case ConstantUtil.GAS_INTRODUCE:
-                    if (isLoginState(context)){
-                        onGasIntroduce(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onGasIntroduce(context);
                     break;
                 case ConstantUtil.GAS_SERVE:
                     onGasServe(context,id,name);
                     break;
                 case ConstantUtil.DRINKING_WATER:
-                    if (isLoginState(context)){
-                        onDrinkingWater(context);
-                    }else {
-                        onStartLoginActivity(context);
-                    }
+                    onDrinkingWater(context,"");
+                    break;
+                case ConstantUtil.HOUSEHOLD_CLEAN:
+                    onHouseHoldClean(context,id,name);
+                    break;
+                case ConstantUtil.HOUSEKEEPING_CLEAN:
+                    onHouseKeepingClean(context,id,name);
+                    break;
+                case ConstantUtil.HOUSEHOLD_REPAIR:
+                    onHouseHoldRepair(context,id,name,"0");
+                    break;
+                case ConstantUtil.INSURANCE:
+                    onInsurance(context,"");
+                    break;
+                case ConstantUtil.SANITARY_WARE:
+                    onSanitaryWare(context,id,name,"0");
+                    break;
+                case ConstantUtil.HOME_MAINTENANCE:
+                    onHomeMaintenance(context,id,name);
                     break;
                 default:
                     showNotify(context,"民生宝" ,"已推出新版本，如果您想使用该服务，请点击更新！");
@@ -407,6 +321,300 @@ public class AppActivityUtil {
             }
         }
     }
+
+    /**
+     * 消息推送
+     * @param context 上下文
+     * @param url 连接
+     */
+    public static void onPushStartActivity(Context context,String url){
+        String code=Uri.parse(url).getQueryParameter("code");
+        String id;
+        switch (code){
+            case ConstantUtil.SHOP:
+                onPushStartShop(context);
+                break;
+            case ConstantUtil.LPG_NAME:
+                onPushStartLpg(context,url);
+                break;
+            case ConstantUtil.WATER:
+                onPushStartWater(context,url);
+                break;
+            case ConstantUtil.INSURANCE:
+                onPushInsurance(context,url);
+                break;
+            case ConstantUtil.GAS_METER:
+                onPushGasMeter(context,url);
+                break;
+            case ConstantUtil.GAS_PAY:
+                onPushGasPay(context,url);
+                break;
+            case ConstantUtil.GAS_IC_CARD:
+                onPushIcCard(context,url);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                id=Uri.parse(url).getQueryParameter("id");
+                onPushHouseKeepingClean(context,id,"家政保洁");
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                id=Uri.parse(url).getQueryParameter("id");
+                onPushHouseHoldClean(context,id,"家电清洗");
+                break;
+            case ConstantUtil.HOME_MAINTENANCE:
+                id=Uri.parse(url).getQueryParameter("id");
+                onPushHomeMaintenance(context,id,"家居维修");
+                break;
+            case ConstantUtil.MESSAGE:
+                onStartMessage(context);
+                break;
+            case ConstantUtil.MESSAGE_DETAIL:
+                onStartMessageDetail(context,url,1);
+                break;
+            case ConstantUtil.MESSAGE_LIST:
+                onStartMessageList(context,url,1);
+                break;
+                default:
+                    if (url.startsWith(ConstantUtil.HTTP)){
+                        url=LinkUrlUtil.containMark(context,url);
+                        if (isLoginState(context)){
+                            onStartHtmlActivity(context,url,"民生宝","0","民生宝","","");
+                        }else {
+                            onStartLoginActivity(context,url);
+                        }
+                    }
+                    break;
+        }
+    }
+    public static void onPushActivity(Context context,String url){
+        String code=Uri.parse(url).getQueryParameter("code");
+        String id;
+        switch (code){
+            case ConstantUtil.SHOP:
+                onShopMall(context);
+                break;
+            case ConstantUtil.WATER:
+                onDrinkingWater(context,url);
+                break;
+            case ConstantUtil.DRINKING_WATER:
+                onDrinkingWater(context,url);
+                break;
+            case ConstantUtil.LPG_NAME:
+                onLpgService(context,url);
+                break;
+            case ConstantUtil.VEGETABLE:
+                onVegetableModel(context,url);
+                break;
+            case ConstantUtil.INSURANCE:
+                onInsurance(context,url);
+                break;
+            case ConstantUtil.GAS_METER:
+                onGasMeter(context,url);
+                break;
+            case ConstantUtil.GAS_PAY:
+                onGasPay(context,url);
+                break;
+            case ConstantUtil.GAS_IC_CARD:
+                onIcCard(context,url);
+                break;
+            case ConstantUtil.HOUSEKEEPING_CLEAN:
+                id=Uri.parse(url).getQueryParameter("id");
+                onHouseKeepingClean(context,id,"家政保洁");
+                break;
+            case ConstantUtil.HOUSEHOLD_CLEAN:
+                id=Uri.parse(url).getQueryParameter("id");
+                onHouseHoldClean(context,id,"家电清洗");
+                break;
+            case ConstantUtil.HOME_MAINTENANCE:
+                id=Uri.parse(url).getQueryParameter("id");
+                onHomeMaintenance(context,id,"家居维修");
+                break;
+            case ConstantUtil.MESSAGE:
+                onStartMessage(context);
+                break;
+            case ConstantUtil.MESSAGE_DETAIL:
+                onStartMessageDetail(context,url, 0);
+                break;
+            case ConstantUtil.MESSAGE_LIST:
+                onStartMessageList(context,url,0);
+                break;
+            default:
+                if (url.startsWith(ConstantUtil.HTTP)){
+                    url=LinkUrlUtil.containMark(context,url);
+                    if (isLoginState(context)){
+                        onStartHtmlActivity(context,url,"民生宝","0","民生宝","","");
+                    }else {
+                        onStartLoginActivity(context,url);
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * 消息列表
+     * @param context
+     * @param url
+     */
+    private static void onStartMessageList(Context context, String url,int i) {
+        String type=Uri.parse(url).getQueryParameter("type");
+        String id=Uri.parse(url).getQueryParameter("id");
+        Intent intent = null;
+        switch (type){
+            /**燃气工单**/
+            case ConstantUtil.VALUE_ONE:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            /**紧急通知**/
+            case ConstantUtil.VALUE_TWO:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            /**物流列表**/
+            case ConstantUtil.VALUE_THREE:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            /**优惠促销**/
+            case ConstantUtil.VALUE_FOUR:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            default:
+                break;
+        }
+        if (intent!=null){
+            if (i==1){
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            intent.putExtra("id",id);
+            context.startActivity(intent);
+        }
+    }
+    /**
+     * 消息详情
+     * @param context
+     * @param url
+     * @param i
+     */
+    private static void onStartMessageDetail(Context context, String url, int i) {
+        String type=Uri.parse(url).getQueryParameter("type");
+        String id=Uri.parse(url).getQueryParameter("id");
+        Intent intent = null;
+        switch (type){
+            /**燃气工单**/
+            case ConstantUtil.VALUE_ONE:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+             /**紧急通知**/
+            case ConstantUtil.VALUE_TWO:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            /**物流列表**/
+            case ConstantUtil.VALUE_THREE:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+            /**优惠促销**/
+            case ConstantUtil.VALUE_FOUR:
+                intent=new Intent(context,MessageDetailActivity.class);
+                break;
+                default:
+                    break;
+        }
+        if (intent!=null){
+            if (i==1){
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            intent.putExtra("id",id);
+            context.startActivity(intent);
+        }
+    }
+    /**
+     * 消息中心
+     * @param context
+     */
+    private static void onStartMessage(Context context) {
+        Intent intent=new Intent(context,MessageCenterActivity.class);
+        context.startActivity(intent);
+    }
+    private static void onPushHomeMaintenance(Context context, String id, String name) {
+        Intent intent=new Intent(context, HomeMaintenanceActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("pid",id);
+        intent.putExtra("typeName",name);
+        context.startActivity(intent);
+    }
+    private static void onPushHouseHoldClean(Context context, String id, String name) {
+        Intent intent=new Intent(context, HomeApplianceCleanActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("pid",id);
+        intent.putExtra("typeName",name);
+        context.startActivity(intent);
+    }
+    private static void onPushHouseKeepingClean(Context context, String id, String name) {
+        Intent intent=new Intent(context, HouseKeepingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("pid",id);
+        intent.putExtra("typeName",name);
+        context.startActivity(intent);
+    }
+    private static void onPushIcCard(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasIcCardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            AppActivityUtil.onStartLoginActivity(context,pushUrl);
+        }
+    }
+
+    private static void onPushGasPay(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasPayFeeHomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
+    }
+    private static void onPushGasMeter(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasWriteTableActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
+    }
+    private static void onPushStartWater(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,WaterMainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
+    }
+    private static void onPushStartLpg(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context, LpgMyAccountActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
+    }
+    private static void onPushStartShop(Context context) {
+        Intent intent=new Intent(context, ShopActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+
+    }
+    private static void onPushInsurance(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context, InsuranceHome.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
+    }
     public static void onStartUrl(Context context,String url) {
         if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)){
             Intent intent=new Intent(context, ShopActivity.class);
@@ -428,43 +636,72 @@ public class AppActivityUtil {
     }
 
     private static void onGasIntroduce(Context context) {
-        Intent intent=new Intent(context,GasIntroduceActivity.class);
-        context.startActivity(intent);
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasIntroduceActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,"");
+        }
     }
     private static void onGasRescue(Context context) {
-        Intent intent=new Intent(context,GasEmergencyRescueActivity.class);
-        context.startActivity(intent);
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasEmergencyRescueActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,"");
+        }
     }
-
-    private static void onGasInstall(Context context) {
-        Intent intent=new Intent(context,GasInstallActivity.class);
-        context.startActivity(intent);
+    private static void onGasInstall(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasInstallActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
-
-    private static void onGasRepair(Context context) {
-        Intent intent=new Intent(context,GasRepairActivity.class);
-        context.startActivity(intent);
+    private static void onGasRepair(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasRepairActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
     private static void onShopMall(Context context) {
         Intent intent=new Intent(context, ShopActivity.class);
         context.startActivity(intent);
     }
-    private static void onGasPay(Context context) {
-        Intent intent=new Intent(context,GasPayFeeActivity.class);
-        context.startActivity(intent);
+    private static void onGasPay(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasPayFeeHomeActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
-
-    private static void onGasMeter(Context context) {
-        Intent intent=new Intent(context,GasWriteTableActivity.class);
-        context.startActivity(intent);
+    private static void onGasMeter(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context,GasWriteTableActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
-    private static void onIcCard(Context context) {
-        Intent card=new Intent(context,GasIcCardActivity.class);
-        context.startActivity(card);
+    private static void onIcCard(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent card=new Intent(context,GasIcCardActivity.class);
+            context.startActivity(card);
+        }else {
+            AppActivityUtil.onStartLoginActivity(context,pushUrl);
+        }
     }
-    private static void onLpgService(Context context) {
-        Intent intent=new Intent(context, LpgMyAccountActivity.class);
-        context.startActivity(intent);
+    private static void onLpgService(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context, LpgMyAccountActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
     public static void showNotify(Context context, String title, String s) {
         if (context!=null){
@@ -521,28 +758,48 @@ public class AppActivityUtil {
         Intent intent=new Intent(context, ElectricHomeActivity.class);
         context.startActivity(intent);
     }
-    private static void onInsurance(Context context) {
-        Intent intent=new Intent(context, InsuranceHome.class);
-        context.startActivity(intent);
+    private static void onInsurance(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context, InsuranceHome.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
     private static void onAllService(Context context) {
-        Intent serve=new Intent(context,AllServiceActivity.class);
-        context.startActivity(serve);
+        if (isLoginState(context)){
+            Intent serve=new Intent(context,AllServiceActivity.class);
+            context.startActivity(serve);
+        }else {
+            onStartLoginActivity(context,"");
+        }
     }
     private static void onIntelligentFarm(Context context) {
-        String url=UrlUtil.Intelligent_FarmUrl;
-        Intent intent=new Intent(context, IntelligentFarmHmlActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("navigate","智慧农贸");
-        context.startActivity(intent);
+        if (isLoginState(context)){
+            String url=UrlUtil.Intelligent_FarmUrl;
+            Intent intent=new Intent(context, IntelligentFarmHmlActivity.class);
+            intent.putExtra("url",url);
+            intent.putExtra("navigate","智慧农贸");
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,"");
+        }
     }
-    private static void onDrinkingWater(Context context) {
-        Intent serve=new Intent(context,WaterMainActivity.class);
-        context.startActivity(serve);
+    private static void onDrinkingWater(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent serve=new Intent(context,WaterMainActivity.class);
+            context.startActivity(serve);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
-    private static void onVegetableModel(Context context) {
-        Intent intent=new Intent(context, VegetableGentlemenActivity.class);
-        context.startActivity(intent);
+    private static void onVegetableModel(Context context,String pushUrl) {
+        if (isLoginState(context)){
+            Intent intent=new Intent(context, VegetableGentlemenActivity.class);
+            context.startActivity(intent);
+        }else {
+            onStartLoginActivity(context,pushUrl);
+        }
     }
     private static void onHouseKeepingClean(Context context, String id, String name) {
 
@@ -568,16 +825,25 @@ public class AppActivityUtil {
         intent.putExtra("backUrl",backUrl);
         context.startActivity(intent);
     }
-    public static void onStartLoginActivity(Context context) {
-        Intent login=new Intent(context, LoginActivity.class);
-        context.startActivity(login);
-    }
     private static void onStartVegetableActivity(Context context, String url) {
         Intent intent=new Intent(context, VegetableGentlemenActivity.class);
         context.startActivity(intent);
     }
-
+    public static void onStartLoginActivity(Context context,String pushUrl) {
+        Intent login=new Intent(context, LoginActivity.class);
+        login.putExtra("pushUrl",pushUrl);
+        context.startActivity(login);
+    }
+    public static void onLoginActivity(Context context,String pushUrl) {
+        Intent login=new Intent(context, LoginActivity.class);
+        login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        login.putExtra("pushUrl",pushUrl);
+        context.startActivity(login);
+    }
     public static boolean isLoginState(Context mContext){
         return SharedPreferencesUtil.getLstate(mContext, SharedPreferencesUtil.Lstate, false);
+    }
+    public static boolean isAppAlive(Context mContext){
+        return SharedPreferencesUtil.getAppAliveState(mContext, SharedPreferencesUtil.IS_App_ALIVE, false);
     }
 }

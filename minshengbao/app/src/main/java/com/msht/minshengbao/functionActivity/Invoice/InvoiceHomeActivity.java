@@ -50,6 +50,7 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
+
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -76,6 +77,7 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
             layoutGasInvoice.setVisibility(View.VISIBLE);
         }else {
             layoutGasInvoice.setVisibility(View.GONE);
+           // layoutGasInvoice.setVisibility(View.VISIBLE);
         }
     }
     @Override

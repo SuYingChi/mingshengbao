@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Locale;
 
 
+/**
+ * @author hong
+ */
 public class ActionSheetDialog {
 	private int    mHour;
 	private String mSendTime="尽快送达";

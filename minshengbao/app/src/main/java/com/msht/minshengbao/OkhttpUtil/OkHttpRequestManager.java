@@ -1,6 +1,8 @@
 package com.msht.minshengbao.OkhttpUtil;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -28,23 +30,25 @@ public class OkHttpRequestManager implements ReqCallBack{
     public static final int TYPE_POST_FORM = 2;
     /**post Multipart 请求参数为表单 **/
     public static final int TYPE_POST_MULTIPART = 3;
+    /**okHttpClient 实例 */
+    private OkHttpClient mOkHttpClient;
 
-    private OkHttpClient mOkHttpClient;//okHttpClient 实例
 
-
-    //同步请求类
+    /**同步请求类*/
     private OkHttpRequestSyn okhttpRequestSyn;
-    //异步请求类
-    private OkHttpRequestAsyn okhttpRequestAsyn;
+    /**异步请求类 */
+    private OkHttpRequestAsync okhttpRequestAsyn;
 
     //请求成功回调接口
     private OkHttpReqCallBack okHttpReqCallBack;
+    private final Handler mHandler;
 
     /**
      * 初始化RequestManager
      */
     public OkHttpRequestManager(Context context) {
 
+        mHandler=new Handler(Looper.getMainLooper());
         //初始化OkHttpClient
         mOkHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(15, TimeUnit.SECONDS)
@@ -62,7 +66,7 @@ public class OkHttpRequestManager implements ReqCallBack{
         okhttpRequestSyn.setReqCallBack(this);
 
         //初始化异步类OkhttpRequestAsyn
-        okhttpRequestAsyn=OkHttpRequestAsyn.getInstance(context,mOkHttpClient);
+        okhttpRequestAsyn=OkHttpRequestAsync.getInstance(context,mOkHttpClient);
         //注册回到函数
         okhttpRequestAsyn.setReqCallBack(this);
     }
@@ -92,21 +96,21 @@ public class OkHttpRequestManager implements ReqCallBack{
      * @param paramsMap   请求参数
      * @param <T> 数据泛型
      **/
-    public <T> Call requestAsyn(String actionUrl, int requestType, HashMap<String, String> paramsMap,OkHttpReqCallBack okHttpReqCallBack) {
+    public <T> Call requestAsync(String actionUrl, int requestType, HashMap<String, String> paramsMap,OkHttpReqCallBack okHttpReqCallBack) {
         Call call = null;
         this.okHttpReqCallBack=okHttpReqCallBack;
         switch (requestType) {
             case TYPE_GET:
-                call = okhttpRequestAsyn.requestGetByAsyn(actionUrl, paramsMap);
+                call = okhttpRequestAsyn.requestGetByAsync(actionUrl, paramsMap);
                 break;
             case TYPE_POST_JSON:
-                call = okhttpRequestAsyn.requestPostByAsyn(actionUrl, paramsMap);
+                call = okhttpRequestAsyn.requestPostByAsync(actionUrl, paramsMap);
                 break;
             case TYPE_POST_FORM:
-                call = okhttpRequestAsyn.requestPostByAsynWithForm(actionUrl, paramsMap);
+                call = okhttpRequestAsyn.requestPostByAsyncWithForm(actionUrl, paramsMap);
                 break;
             case TYPE_POST_MULTIPART:
-                call=okhttpRequestAsyn.requestPostByAsynWithMultipart(actionUrl, paramsMap);
+                call=okhttpRequestAsyn.requestPostByAsyncWithMultipart(actionUrl, paramsMap);
                 break;
                 default:
                     break;
@@ -114,15 +118,38 @@ public class OkHttpRequestManager implements ReqCallBack{
         return call;
     }
     @Override
-    public void onRequestSuccess(String result) {
-        okHttpReqCallBack.onRequestSuccess(result);
+    public void onRequestSuccess(final String result) {
+        mHandler.post(new Runnable(){
+            @Override
+            public void run() {
+                okHttpReqCallBack.onRequestSuccess(result);
+               // reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
+            }
+        });
+       // okHttpReqCallBack.onRequestSuccess(result);
     }
     @Override
-    public void onRequestFailed(String errorMsg) {
-        okHttpReqCallBack.onReqFailed(ERROR_NETWORK);
+    public void onRequestFailed(final String errorMsg) {
+        mHandler.post(new Runnable(){
+            @Override
+            public void run() {
+               // okHttpReqCallBack.onRequestSuccess(result);
+                okHttpReqCallBack.onReqFailed(errorMsg);
+                // reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
+            }
+        });
+        //okHttpReqCallBack.onReqFailed(ERROR_NETWORK);
     }
     @Override
-    public void onRequestServiceFailed(String errorMsg) {
-        okHttpReqCallBack.onReqFailed(ERROR_SERVICE);
+    public void onRequestServiceFailed(final String errorMsg) {
+        mHandler.post(new Runnable(){
+            @Override
+            public void run() {
+                // okHttpReqCallBack.onRequestSuccess(result);
+                okHttpReqCallBack.onReqFailed(errorMsg);
+                // reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
+            }
+        });
+      //  okHttpReqCallBack.onReqFailed(ERROR_SERVICE);
     }
 }

@@ -37,7 +37,6 @@
                     android:layout_marginTop="@dimen/margin_width50"
                     android:background="@mipmap/gas_iccard_xh" />
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -4,10 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity">
     <include layout="@layout/layout_header"/>
-    <com.msht.minshengbao.ViewUI.ViewPagerIndicator
+    <ScrollView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_gray"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_gray">
+                <ImageView
+                    android:id="@+id/id_img_view"
+                    android:layout_width="@dimen/margin_width300"
+                    android:layout_height="@dimen/margin_width300"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/picture_text"
+                    android:layout_marginRight="@dimen/margin_width30"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginTop="@dimen/margin_width40"
+                    android:background="@mipmap/gas_iccard_xh" />
+            </RelativeLayout>
+            <Button
+                android:id="@+id/id_btn_scan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width40"
+                android:layout_marginLeft="@dimen/margin_width45"
+                android:layout_marginRight="@dimen/margin_width45"
+                android:layout_marginBottom="@dimen/margin_width15"
+                android:background="@drawable/selector_touch_button_change"
+                android:minHeight="@dimen/margin_width45"
+                android:text="@string/scan_code"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_width18" />
+            <TextView
+                android:id="@+id/id_operation_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/not_know_operation_step"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/colorOrange"/>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:background="@color/background_gray">
+        <TextView
+            android:id="@+id/id_near_machine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorOrange"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_width14"
+            android:text="@string/near_ic_card_machine"/>
+        <View
+            android:layout_width="@dimen/margin_width1"
+            android:layout_height="@dimen/margin_width20"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_width8"
+            android:layout_marginLeft="@dimen/margin_width8"
+            android:layout_marginEnd="@dimen/margin_width8"
+            android:layout_marginRight="@dimen/margin_width8"
+            android:background="@color/colorOrange"/>
+        <TextView
+            android:id="@+id/id_price_explain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorOrange"
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_width14"
+            android:text="@string/gas_price_explain"/>
+    </LinearLayout>
+    <!--<com.msht.minshengbao.ViewUI.ViewPagerIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_width50"
@@ -19,6 +100,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+    </android.support.v4.view.ViewPager>-->
 
 </LinearLayout>

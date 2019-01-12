@@ -4,6 +4,7 @@
     android:id="@+id/activity_gas_server_order"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity">
     <include layout="@layout/layout_header"/>
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
-        <include layout="@layout/layout_nodata_view"
+        <include layout="@layout/layout_no_data_view"
             android:id="@+id/id_nodata_layout"
             android:visibility="gone"/>
     </FrameLayout>

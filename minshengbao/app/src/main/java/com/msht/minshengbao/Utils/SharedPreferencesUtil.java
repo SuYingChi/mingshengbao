@@ -14,6 +14,7 @@ public class SharedPreferencesUtil {
     private static final String spVersion="spversion";
     private static final String Device="Device";
     private static final String CONTROL="control";
+    public static final String IS_App_ALIVE="isAppAlive";
     public static final String CONTROL_TYPE="CONTROL_TYPE";
     public static final String FIRST_OPEN = "first_open";
     public static final String First_server="first_sever";
@@ -50,6 +51,19 @@ public class SharedPreferencesUtil {
         editor.putBoolean(strKey, strData);
         editor.apply();
     }
+
+    public static Boolean getAppAliveState(Context context, String strKey, Boolean strDefault){
+        SharedPreferences setPreferences = context.getSharedPreferences(
+                spFist, Context.MODE_PRIVATE);
+        return setPreferences.getBoolean(strKey, strDefault);
+    }
+    public static void putAppAliveState(Context context, String strKey, Boolean strData){
+        SharedPreferences activityPreferences = context.getSharedPreferences(
+                spFist, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = activityPreferences.edit();
+        editor.putBoolean(strKey, strData);
+        editor.apply();
+    }
     public static Long getDateLong(Context context,String strKey,long strDefault){
         if (context!=null){
             SharedPreferences setPreferences = context.getSharedPreferences(
@@ -80,7 +94,7 @@ public class SharedPreferencesUtil {
                 spFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = activityPreferences.edit();
         editor.putString(strKey, strData);
-        editor.commit();
+        editor.apply();
     }
     public static String getAvatarUrl(Context context, String strKey,
                                    String strData){

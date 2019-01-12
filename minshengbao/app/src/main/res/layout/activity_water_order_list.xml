@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:divider="@null">
         </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
-        <include layout="@layout/layout_nodata_view"
+        <include layout="@layout/layout_no_data_view"
             android:id="@+id/id_nodata_view"
             android:visibility="gone"/>
     </FrameLayout>

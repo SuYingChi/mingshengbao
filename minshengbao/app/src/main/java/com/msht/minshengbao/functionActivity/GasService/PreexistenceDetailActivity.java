@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -135,7 +134,7 @@ public class PreexistenceDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preexistence_detail);
+        setContentView(R.layout.activity_gas_preexistence_detail);
         context=this;
         mPageName="燃气预存款明细";
         customDialog=new CustomDialog(this, "正在加载");

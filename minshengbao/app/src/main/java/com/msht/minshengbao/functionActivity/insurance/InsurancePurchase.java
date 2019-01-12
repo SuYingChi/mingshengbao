@@ -75,6 +75,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
     private static final String[] CERTIFICATE_TYPE = {"居民身份证","港澳通行证","台湾通行证"};
     private CustomDialog customDialog;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
+    private Handler handler=new Handler();
     private final GetInsuranceHandler getinsuranceHandler=new GetInsuranceHandler(this);
     private static class GetInsuranceHandler extends Handler{
 
@@ -106,6 +107,9 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                                 reference.onHouseData(jsonObject);
                             }
                         }else {
+                            if (reference.requestType==1){
+                                reference.tvAddress.setText("");
+                            }
                             reference.onFailure(error);
                         }
                     }catch (Exception e){
@@ -255,20 +259,34 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         stopTime =formats.format(calendar.getTime());
         MyTextWatcher myTextWatcher=new MyTextWatcher();
         etCustomerNo.addTextChangedListener(myTextWatcher);
-
     }
     private class MyTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length()==ConstantUtil.VALUE8||s.length()==ConstantUtil.VALUE10){
+            /*if (s.length()==ConstantUtil.VALUE8||s.length()==ConstantUtil.VALUE10){
                 onSearchHouseData();
-            }
+            }*/
         }
         @Override
-        public void afterTextChanged(Editable s) {}
+        public void afterTextChanged(Editable s) {
+            if (delayRun!=null){
+                handler.removeCallbacks(delayRun);
+            }
+            if (s.length()==ConstantUtil.VALUE8||s.length()==ConstantUtil.VALUE10){
+                handler.postDelayed(delayRun,1500);
+            }else {
+                tvAddress.setText("");
+            }
+        }
     }
+    private Runnable delayRun=new Runnable() {
+        @Override
+        public void run() {
+            onSearchHouseData();
+        }
+    };
     private void onSearchHouseData() {
         requestType=1;
         String validateURL = UrlUtil.HouseSearch_Url;

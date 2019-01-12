@@ -1,13 +1,22 @@
 package com.msht.minshengbao.functionActivity.GasService;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.LocationUtils;
+import com.msht.minshengbao.Utils.MPermissionUtils;
+import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.IccardViewAdapter;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
@@ -15,7 +24,12 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
 import com.umeng.analytics.MobclickAgent;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+
+import java.util.List;
 
 /**
  * Demo class
@@ -24,42 +38,27 @@ import com.umeng.analytics.MobclickAgent;
  * @author hong
  * @date 2016/9/22  
  */
-public class GasIcCardActivity extends AppCompatActivity implements View.OnClickListener {
-    private ViewPagerIndicator indicator;
-    private ViewPager mViewPager;
-    private TextView tvPrice, tvNavigation;
-    private String    userId;
-    private String    password;
-    private String navigate="气价说明";
-    private static final  String PAGE_NAME ="IC卡缴费";
-    private Context mContext;
-
+public class GasIcCardActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_iccard);
-        mContext=this;
-        StatusBarCompat.setStatusBar(this);
-        userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
-        password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
+        context=this;
+        setCommonHeader("IC卡充值");
         initView();
-        initEvent();
     }
     private void initView() {
-        indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
-        mViewPager =(ViewPager)findViewById(R.id.id_viewPager_fees);
         findViewById(R.id.id_goback).setOnClickListener(this);
-        tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
-        tvNavigation =(TextView)findViewById(R.id.tv_navigation) ;
-        tvNavigation.setText(PAGE_NAME);
-        tvPrice.setVisibility(View.VISIBLE);
-        tvPrice.setText(navigate);
-    }
-    private void initEvent() {
+        findViewById(R.id.id_btn_scan).setOnClickListener(this);
+        findViewById(R.id.id_operation_step).setOnClickListener(this);
+        findViewById(R.id.id_near_machine).setOnClickListener(this);
+        findViewById(R.id.id_price_explain).setOnClickListener(this);
+        TextView tvPrice=(TextView)findViewById(R.id.id_tv_rightText);
         tvPrice.setOnClickListener(this);
-        mViewPager.setAdapter(new IccardViewAdapter(getSupportFragmentManager(), getApplicationContext(),userId,password));
-        indicator.setViewPager(mViewPager,0);
+        tvPrice.setVisibility(View.VISIBLE);
+        tvPrice.setText("充值记录");
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -67,30 +66,74 @@ public class GasIcCardActivity extends AppCompatActivity implements View.OnClick
                 finish();
                 break;
             case R.id.id_tv_rightText:
-                gasprice();
+                onRechargeRecord();
+                break;
+            case R.id.id_btn_scan:
+                requestPermission();
+                break;
+            case R.id.id_operation_step:
+                onOperationStep();
+                break;
+            case R.id.id_near_machine:
+                onNearMachine();
+                break;
+            case R.id.id_price_explain:
+                onGasPrice();
                 break;
             default:
                 break;
         }
     }
-    private void gasprice() {
+    private void onRechargeRecord() {
+        Intent intent=new Intent(context,GasIcCardNumberList.class);
+        startActivity(intent);
+    }
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                goScanActivity();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许拍照权限，二维码扫描无法使用！");
+                            }
+                        }).start();
+            }else {
+                goScanActivity();
+            }
+        }else {
+            goScanActivity();
+        }
+    }
+    private void goScanActivity() {
+        Intent intent =new Intent(context, QrCodeScanActivity.class);
+        startActivity(intent);
+    }
+    private void onOperationStep() {
+        String url= UrlUtil.IC_OPERATION_STEP_URL;
+        Intent intent=new Intent(context,HtmlPageActivity.class);
+        intent.putExtra("navigate","操作流程");
+        intent.putExtra("url",url);
+        startActivity(intent);
+    }
+    private void onNearMachine() {
+        Intent intent =new Intent(context, GasIcCardMachineMap.class);
+        startActivity(intent);
+    }
+    private void onGasPrice() {
         String url= UrlUtil.Gasprice_Url;
-        Intent price=new Intent(mContext,HtmlPageActivity.class);
-        price.putExtra("navigate",navigate);
+        Intent price=new Intent(context,HtmlPageActivity.class);
+        price.putExtra("navigate","气价说明");
         price.putExtra("url",url);
         startActivity(price);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(PAGE_NAME);
-        MobclickAgent.onResume(mContext);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(PAGE_NAME);
-        MobclickAgent.onPause(mContext);
     }
 }

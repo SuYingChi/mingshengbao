@@ -460,7 +460,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 break;
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -471,7 +470,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                     setResult(0x004);
                     finish();
                 }else if (resultCode==3){
-                    couponId=data.getStringExtra("vouid");
+                    couponId=data.getStringExtra("voucherId");
                     String disAmount=data.getStringExtra("amount");
                     tvUseCoupon.setText(disAmount+"元");
                     tvUseCoupon.setTextColor(0xff555555);

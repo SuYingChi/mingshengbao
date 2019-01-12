@@ -42,7 +42,7 @@ public class SelectVoucherActivity extends BaseActivity {
     private Button   btnShare;
     private RelativeLayout  layoutNoData, layoutShare;
     private NotUseAdapter   mAdapter;
-    private String userId,password,pay_amount,category="2";
+    private String userId,password,payAmount,category="2";
     private JSONObject jsonObject;
     private ArrayList<HashMap<String, String>> voucherList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
@@ -60,7 +60,6 @@ public class SelectVoucherActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -144,10 +143,10 @@ public class SelectVoucherActivity extends BaseActivity {
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String vouid = voucherList.get(position).get("id");
+                        String vouId = voucherList.get(position).get("id");
                         String amount = voucherList.get(position).get("amount");
                         Intent name = new Intent();
-                        name.putExtra("vouid", vouid);
+                        name.putExtra("voucherId", vouId);
                         name.putExtra("amount", amount);
                         setResult(3, name);
                         finish();
@@ -165,7 +164,7 @@ public class SelectVoucherActivity extends BaseActivity {
         userId = SharedPreferencesUtil.getUserId(context, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password, "");
         Intent data=getIntent();
-        pay_amount=data.getStringExtra("pay_amount");
+        payAmount=data.getStringExtra("payAmount");
         category=data.getStringExtra("category");
         initFindViewById();
         mAdapter=new NotUseAdapter(context);
@@ -179,7 +178,7 @@ public class SelectVoucherActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("category",category);
-        textParams.put("pay_amount",pay_amount);
+        textParams.put("pay_amount",payAmount);
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initFindViewById() {

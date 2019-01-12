@@ -43,7 +43,6 @@
     <string name="water_recharge_tip">(仅用于直饮水设备购水时支付使用)</string>
     <!--首页  -->
     <string name="updata_apk">你的版本过老，如若需使用，请点击更新</string>
-
     <!--地址 -->
     <string name="delect_text">删除</string>
     <string name="edit_text">编辑</string>
@@ -87,6 +86,7 @@
     <string name="please_input_email">请输入电子邮箱</string>
     <string name="receive_information">接收信息</string>
     <string name="normal_information">基本信息</string>
+    <string name="personal_apply_type">申请人类型:</string>
     <string name="invoice_type">发票类型:</string>
     <string name="invoice_name">发票抬头:</string>
     <string name="taxpayer_No">纳税号码:</string>
@@ -108,6 +108,8 @@
     <string name="ticket_information">票据信息</string>
     <string name="order_ticket_detail">单据信息</string>
     <string name="business_license">营业执照扫描件</string>
+    <string name="legal_effect_tip">电子发票与纸质发票具有同等的法律效力，可支持报销入账</string>
+    <string name="information_not_correct"><u>开票信息不正确？</u></string>
 
     <string name="please_ensure_email">请确认邮箱无误</string>
     <string name="please_input_open_bank">请输入您的开户银行</string>

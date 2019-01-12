@@ -14,63 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <RelativeLayout
-                android:id="@+id/item_left"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF" >
-                <ImageView
-                    android:layout_width="@dimen/margin_width20"
-                    android:layout_height="@dimen/margin_width20"
-                    android:src="@drawable/customer_xh"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginStart="@dimen/margin_width10"
-                    android:layout_marginTop="@dimen/margin_width10"
-                    android:layout_marginBottom="@dimen/margin_width10"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:contentDescription="@string/picture_text"
-                    android:id="@+id/id_customerView" />
-                <TextView
-                    android:id="@+id/id_customerText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/id_customerView"
-                    android:layout_toEndOf="@+id/id_customerView"
-                    android:layout_marginLeft="@dimen/margin_width6"
-                    android:layout_marginStart="@dimen/margin_width6"
-                    android:textSize="@dimen/text_width16"
-                    android:textColor="@color/color_383838"
-                    android:layout_marginTop="@dimen/margin_6"
-                    android:layout_alignBottom="@+id/id_customerView"
-                    />
-                <ImageView
-                    android:layout_width="@dimen/margin_width20"
-                    android:layout_height="@dimen/margin_width20"
-                    android:layout_marginTop="@dimen/margin_width10"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginStart="@dimen/margin_width10"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/id_customerText"
-                    android:contentDescription="@string/picture_text"
-                    android:src="@drawable/address_xh"
-                    android:id="@+id/imageView8" />
-                <TextView
-                    android:id="@+id/id_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/text_width16"
-                    android:textColor="@color/color_383838"
-                    android:layout_toRightOf="@+id/imageView8"
-                    android:layout_toEndOf="@+id/imageView8"
-                    android:layout_marginStart="@dimen/margin_width6"
-                    android:layout_marginLeft="@dimen/margin_6"
-                    android:layout_below="@+id/id_customerText"
-                    android:layout_marginTop="@dimen/margin_width10"
-                    android:layout_marginBottom="@dimen/margin_width10"/>
-            </RelativeLayout>
+            <include layout="@layout/layout_gas_customer_no"/>
             <include layout="@layout/layout_line_gray"/>
             <LinearLayout
                 android:id="@+id/id_layout_data"

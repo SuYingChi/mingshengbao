@@ -100,7 +100,6 @@ public class SelfHelpPay extends Fragment {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        reference.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (!reference.requestLine){
                                 reference.jsonArray =object.optJSONArray("data");
@@ -165,16 +164,16 @@ public class SelfHelpPay extends Fragment {
     private void onGasExpenseData() {
         //清空原来数据
         customerNo="";
-        String debts="";
         String name=jsonObject.optString("name");
         String customerNum=jsonObject.optString("customerNo");
         String allBalance=jsonObject.optString("balance");
-        debts=jsonObject.optString("debts");
+        String  debts=jsonObject.optString("debts");
         String totalNum=jsonObject.optString("total_num");
         String gasFee=jsonObject.optString("gas_fee");
         String discountFees=jsonObject.optString("discount_fee");
         String lateFee=jsonObject.optString("late_fee");
         JSONArray json=jsonObject.optJSONArray("detail_list");
+        VariableUtil.detailList.clear();
         try {
             for (int i = 0; i < json.length(); i++) {
                 JSONObject object = json.getJSONObject(i);
@@ -192,7 +191,7 @@ public class SelfHelpPay extends Fragment {
                 map.put("amounts",amounts);
                 map.put("balance",balance);
                 map.put("discount_fee", discountFee);
-                map.put("late_fee", lateFee);
+                map.put("late_fee", lateFees);
                 VariableUtil.detailList.add(map);
             }
         }catch (JSONException e){

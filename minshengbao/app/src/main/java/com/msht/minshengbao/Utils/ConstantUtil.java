@@ -145,6 +145,10 @@ public class ConstantUtil {
     public static final String SWITCH_SOCKET="switch_socket";
     public static final String CIRCUIT="circuit";
 
+    public static final String MESSAGE_DETAIL="message_detail";
+    public static final String MESSAGE="message";
+    public static final String MESSAGE_LIST="message_list";
+
     public static final String SHOP_ELECTRIC_WATER_HEATER="shop_electric_water_heater";
     public static final String SHOP_LAMPBLACK_MACHINE="shop_lampblack_machine";
     public static final String SHOP_GAS_STOVE="shop_gas_stove";
@@ -158,6 +162,7 @@ public class ConstantUtil {
     public static final String VEGETABLE_DOMAIN="jsxss.net";
 
     public static final String WEI_XIN_CHAT_REDIRECT="wechat_redirect";
+    public static final String HTTP="http";
 
 
     /**支付方式 */
@@ -188,6 +193,21 @@ public class ConstantUtil {
     /**通知栏 */
     public static final String NOTIFICATION_PUSH_CHANNEL_ID="push";
     public static final String NOTIFICATION_DOWNLOAD_CHANNEL_ID="download";
+
+
+    /**手机厂商**/
+    public final static String HUAWEI = "Huawei";
+    public final static String MEIZU = "Meizu";
+    public final static String XIAOMI = "Xiaomi";
+    public final static String SONY = "Sony";
+    public final static String OPPO = "OPPO";
+    public final static String VIVO = "vivo";
+    public final static String SAMSUNG = "samsung";
+    public final static String LG = "LG";
+    public final static String LETV = "Letv";
+    public final static String ZTE = "ZTE";
+    public final static String YULONG = "YuLong";
+    public final static String LENOVO = "LENOVO";
 
 
 

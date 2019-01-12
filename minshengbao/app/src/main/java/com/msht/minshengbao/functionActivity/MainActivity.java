@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,8 +30,11 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.GuideActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpReqCallBack;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.AppPackageUtil;
+import com.msht.minshengbao.Utils.AppShortCutUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
 import com.msht.minshengbao.events.NetWorkEvent;
@@ -92,10 +96,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static final int MAX_MASSAGE=99;
     private static  final String MY_ACTION = "ui";
     private static  final int MY_LOCATION_REQUEST=0;
-    private static  final int REQUEST_CODE=2;
-    private static  final int MY_PERMISSIONS_REQUEST=1;
     private static  final int MY_CAMERA_REQUEST=3;
     private int     clickCode =0x001;
+    private int     requestType=0;
     /**
      USE_COUPON_CODE 优惠券使用返回
     */
@@ -164,7 +167,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String error = object.optString("error");
                         JSONObject json =object.optJSONObject("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onUnreadMassage(json);
+                            if (activity.requestType==0){
+                                activity.onGetBadgeCountMessage();
+                                activity.onUnreadMassage(json);
+                            }else {
+                                activity.onUnBadgeMassage(json);
+                            }
+
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -179,6 +188,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.handleMessage(msg);
         }
     }
+
+
     private static class PushHandler extends Handler{
         private WeakReference<MainActivity> mWeakReference;
         public PushHandler(MainActivity mainActivity) {
@@ -303,6 +314,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             tvMassageNum.setVisibility(View.GONE);
         }
     }
+    private void onUnBadgeMassage(JSONObject json) {
+        int badgeCount=json.optInt("num");
+        String messageCount="0";
+        if (badgeCount!=0){
+            if (badgeCount>MAX_MASSAGE){
+                messageCount=String.valueOf(MAX_MASSAGE);
+
+            }else {
+                messageCount=String.valueOf(badgeCount);
+            }
+            AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
+        }else {
+            AppShortCutUtil.addNumShortCut(context,MainActivity.class,false,messageCount,true);
+        }
+
+    }
     private void onPersonalInformation() {
         String sex     =objectJson.optString("sex");
         String phoneNo=objectJson.optString("phone");
@@ -327,7 +354,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         StatusBarCompat.compat(this,0x00ffffff);
-        //StatusBarCompat.setStatusBar(this);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
         }
@@ -340,9 +366,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         initRequestPermission();
         if (isLoginState(context)){
-            if (NetWorkUtil.isNetWorkEnable(this)){
+           /* if (NetWorkUtil.isNetWorkEnable(this)){
                 onGetMessage();
-            }
+            }*/
             initGetInformation();
             initPush();
         }
@@ -355,6 +381,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 AppPackageUtil.openNotificationManager(context);
             }
             SharedPreferencesUtil.putBoolean(this, SharedPreferencesUtil.FIRST_OPEN, false);
+        }
+        Intent data=getIntent();
+        if (data!=null){
+            String pushUrl=data.getStringExtra("pushUrl");
+            if (!TextUtils.isEmpty(pushUrl)){
+                AppActivityUtil.onPushActivity(context,pushUrl);
+            }
         }
     }
     private void initRequestPermission() {
@@ -406,12 +439,59 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         SendRequestUtil.getDataFromService(validateURL,versionHandler);
     }
     private void onGetMessage() {
+        requestType=0;
         String validateURL = UrlUtil.MESSAGE_UNREAD_URL;
-        Map<String, String> textParams = new HashMap<String, String>();
-        textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
+            @Override
+            public void onReqFailed(String errorMsg) {
+                ToastUtil.ToastText(context,errorMsg);
+            }
+            @Override
+            public void onRequestSuccess(String result) {
+                onAnalysisMessage(result);
+            }
+        });
+      //  SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
+    }
+    private void onGetBadgeCountMessage() {
+        requestType=1;
+        String validateURL = UrlUtil.BADGE_COUNT_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>(3);
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
+            @Override
+            public void onReqFailed(String errorMsg) {
+                ToastUtil.ToastText(context,errorMsg);
+            }
+            @Override
+            public void onRequestSuccess(String result) {
+                onAnalysisMessage(result);
+            }
+        });
+       // SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
+    }
+    private void onAnalysisMessage(String result){
+        try {
+            JSONObject object = new JSONObject(result);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            JSONObject json =object.optJSONObject("data");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                if (requestType==0){
+                    onGetBadgeCountMessage();
+                    onUnreadMassage(json);
+                }else {
+                    onUnBadgeMassage(json);
+                }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     private void initBroadcast() {
         IntentFilter filter=new IntentFilter();
@@ -715,20 +795,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
            // AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
         }
     }
-   /* private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode==MY_PERMISSIONS_REQUEST){
-                downLoadApk(urls);
-            }else if (requestCode==REQUEST_CODE){
-                pushMessage();
-            }
-        }
-        @Override
-        public void onFailed(int requestCode) {
-            ToastUtil.ToastText(context,"获取权限失败！");
-        }
-    };*/
     public void initNetBroadcast() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -739,6 +805,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onStart() {
         super.onStart();
         initNetBroadcast();
+        SharedPreferencesUtil.putAppAliveState(this, SharedPreferencesUtil.IS_App_ALIVE, true);
     }
     @Override
     public void onNetWorkEventBus(NetWorkEvent netMobile) {
@@ -775,6 +842,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         MobclickAgent.onKillProcess(context);
                        // ZhugeSDK.getInstance().flush(getApplicationContext());//诸葛数据
                         finish();
+
                       //  System.exit(0);
                     }
                 })
@@ -783,8 +851,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        if (isLoginState(context)){
+            onGetMessage();
+           // onGetBadgeCountMessage();
+        }
         MobclickAgent.onResume(context);
-       // ZhugeSDK.getInstance().init(getApplicationContext());
     }
     @Override
     protected void onPause() {
@@ -800,6 +871,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (receiver != null) {
             unregisterReceiver(receiver);
+        }
+        if (context!=null){
+            SharedPreferencesUtil.putAppAliveState(context, SharedPreferencesUtil.IS_App_ALIVE, false);
         }
     }
 }

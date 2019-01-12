@@ -180,35 +180,35 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                         if (isLoginState(mContext)){
                             goMyWallet();
                         }else {
-                            AppActivityUtil.onStartLoginActivity(mContext);
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
                         break;
                     case 1:
                         if (isLoginState(mContext)){
                             goGasServer();
                         }else {
-                            AppActivityUtil.onStartLoginActivity(mContext);
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
                         break;
                     case 2:
                         if (isLoginState(mContext)){
                             goCustomerNo();
                         }else {
-                            AppActivityUtil.onStartLoginActivity(mContext);
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
                         break;
                     case 3:
                         if (isLoginState(mContext)){
                             goInvoice();
                         }else {
-                            AppActivityUtil.onStartLoginActivity(mContext);
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
                         break;
                     case 4:
                         if (isLoginState(mContext)){
                             goManage();
                         }else {
-                            AppActivityUtil.onStartLoginActivity(mContext);
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
                         break;
                     case 5:
@@ -262,14 +262,14 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 if (isLoginState(mContext)){
                     goSetting();
                 }else {
-                    AppActivityUtil.onStartLoginActivity(mContext);
+                    AppActivityUtil.onStartLoginActivity(mContext,"");
                 }
                 break;
             case R.id.id_re_consult:
                 if (isLoginState(mContext)){
                     goConsult();
                 }else {
-                    AppActivityUtil.onStartLoginActivity(mContext);
+                    AppActivityUtil.onStartLoginActivity(mContext,"");
                 }
                 break;
             case R.id.id_re_hotline:

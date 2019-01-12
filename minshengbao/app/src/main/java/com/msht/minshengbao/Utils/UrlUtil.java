@@ -98,6 +98,7 @@ public class UrlUtil {
     public static final String PRE_DEPOSIT_HISTORY = BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
     public static final String SPECIAL_TOPIC_URL =BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
     public static final String ADVERTISING_URL=BuildConfig.URL_HEADS+"/api/app/get_activity_by_code ";
+    public static final String BADGE_COUNT_URL=BuildConfig.URL_HEADS+"/Gas/message/badgeCount";
 
     /**分享*/
     public static final String SUCCESS_SHARE_URL=BuildConfig.URL_HEADS+"/msht_operation_platform/app_share/app_share_success";
@@ -121,12 +122,17 @@ public class UrlUtil {
     public static final String SELECT_ADDRESS_URL = BuildConfig.URL_HEADS +"/Gas/usedHouse/list";
     public static final String CREATE_ORDER_GAS =BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/createOrder";
     public static final String GAS_EXPENSE_PAY =BuildConfig.URL_HEADS +"/Gas/gas_fee_pay/pay";
+    public static final String INTERNET_TABLE_RECORD=BuildConfig.URL_HEADS+"/Gas/payment/iotPaymentDetail";
+    public static final String INTERNET_TABLE_LAST_DATA=BuildConfig.URL_HEADS+"/Gas/payment/meterTypeSearch";
+    public static final String INTERNET_TABLE_PAYMENT=BuildConfig.URL_HEADS+"/Gas/payment/requestPaymentGas";
     /**
      * ic卡
      */
     public static final String IC_RECHARGE_BILL_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRecharge";
     public static final String IC_RECHARGE_SEARCH_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRechargeSearch";
     public static final String IC_RECHARGE_HISTORY_URL =BuildConfig.URL_HEADS+"/Gas/payment/icRechargeHistory";
+    public static final String IC_RECHARGE_BRANCH_URL=BuildConfig.URL_HEADS+"/Gas/payment/icRechargeBranch";
+    public static final String IC_OPERATION_STEP_URL="http://msbapp.cn/ic_card/index.html";
     /**抢险  **/
     public static final String GAS_QIANGXIAN_URL = BuildConfig.URL_HEADS +"/Gas/app/rescue";
     /**
@@ -222,6 +228,8 @@ public class UrlUtil {
     public static final String INVOICE_EXPRESS_INFORMATION=BuildConfig.URL_HEADS+"/Gas/invoice/repair_invoice_expressInfo";
     public static final String INVOICE_REPAIR_ORDER=BuildConfig.URL_HEADS+"/Gas/invoice/invoice_order_list";
     public static final String INVOICE_CONTROL_URL=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_hide";
+    public static final String INVOICE_DATA_TYPE=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_detail";
+    public static final String GAS_INVOICE_QUESTION_URL =BuildConfig.URL_HEADS+"/gas_h5/Interrogative_answer.html";
 
     /**
      * 维修服务

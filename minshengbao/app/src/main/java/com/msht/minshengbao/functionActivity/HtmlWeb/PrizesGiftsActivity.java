@@ -95,7 +95,6 @@ public class PrizesGiftsActivity extends BaseActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("WebViewUrl=",url);
                 if (url.contains(ConstantUtil.WEI_XIN_CHAT_REDIRECT)){
                     finish();
                 }else {

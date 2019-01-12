@@ -1,2 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources  xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <!--燃气模块 -->
+    <string name="automate_pay_fee">自动缴费</string>
+    <string name="bill_detail">账单明细</string>
+    <string name="customerNo_manager">用户号管理</string>
+    <string name="coupon_text">代金劵</string>
+    <string name="customer_no_text">用户号</string>
+    <string name="deduct_gas_prestore_fee_text">扣除燃气预存款:</string>
+    <string name="discount_Amount">优惠金额</string>
+    <string name="gas_address">燃气地址</string>
+    <string name="gas_fee_text">燃气费:</string>
+    <string name="gas_last_fee_text">违约金:</string>
+    <string name="gas_prestore_fee">燃气预存款余额</string>
+    <string name="go_to_pay">去缴费></string>
+    <string name="go_to_charge">去充值></string>
+    <string name="gas_unit">NM³</string>
+    <string name="how_do_get_customerNo">如何获取用户号</string>
+    <string name="immediately_pay_fee">立即缴费</string>
+    <string name="ic_table_recharge">IC卡表充值</string>
+    <string name="internet_table_recharge">物联网表充值</string>
+    <string name="input_customerNo_query">输入用户号查询</string>
+    <string name="last_recharge_time">上次充值时间</string>
+    <string name="last_recharge_gasNum">上次充值气量</string>
+    <string name="ordinary_table_pay">普表缴费</string>
+    <string name="pay_fee_customerNo_check">缴费户号查询</string>
+    <string name="please_input_payFee_customerNo">请输入缴费户号</string>
+    <string name="please_input_gas_num">请输入充值气量</string>
+    <string name="please_select_address">选择地址</string>
+    <string name="please_select_customerNo">选择燃气用户号</string>
+
+    <string name="query_text">查询</string>
+    <string name="should_pay_fee">应缴金额</string>
+    <string name="select_customerNo_query">选择用户号查询</string>
+    <string name="should_pay_amount">应付款</string>
+    <string name="total_gas_num">共用气</string>
+    <string name="recharge_record">充值记录</string>
+    <string name="recharge_customerNo">充值户号</string>
+    <string name="recharge_gas_num">充值气量</string>
+    <string name="real_pay_amount">实付款</string>
+    
+</resources>

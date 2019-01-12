@@ -102,7 +102,6 @@ public class HtmlPageActivity extends BaseActivity {
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -129,11 +128,13 @@ public class HtmlPageActivity extends BaseActivity {
             }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
+                    //分享成功后刷新
+                    activity.mWebView.reload();
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            ToastUtil.ToastText(activity.context,"分享");
+                            ToastUtil.ToastText(activity.context,"分享成功啦");
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -253,8 +254,8 @@ public class HtmlPageActivity extends BaseActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-           // SendRequestUtil.getDataFromService(successBackUrl,backUrlHandler);
-            OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(successBackUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
+            SendRequestUtil.getDataFromService(successBackUrl,backUrlHandler);
+           // OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(successBackUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
         }
 
     }
@@ -312,7 +313,7 @@ public class HtmlPageActivity extends BaseActivity {
        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
            @Override
            public void onRefresh() {
-               mWebView.loadUrl(mUrl);
+               mWebView.reload();
            }
        });
         mRefresh.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {

@@ -4,10 +4,14 @@ import android.app.Dialog;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.PayRecordAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
@@ -42,12 +46,11 @@ public class GasPayRecordActivity extends BaseActivity {
     private String    address;
     private String    urlType;
     private String    validateURL = UrlUtil.PayRecors_HistoryUrl;
-    private XListView mListView;
+    private View      layoutNoData;
+    private XRecyclerView mRecyclerView;
     private TextView  tvNoData;
     private int refreshType;
-    private JSONArray jsonArray;
     private PayRecordAdapter adapter;
-    private int pageNo=1;
     private int pageIndex=0;
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
@@ -66,6 +69,11 @@ public class GasPayRecordActivity extends BaseActivity {
             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                 activity.customDialog.dismiss();
             }
+            if (activity.refreshType==0){
+                activity.mRecyclerView.refreshComplete();
+            }else if (activity.refreshType==1){
+                activity.mRecyclerView.loadMoreComplete();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
@@ -73,35 +81,64 @@ public class GasPayRecordActivity extends BaseActivity {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        activity.jsonArray =object.optJSONArray("data");
+                        JSONArray jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (activity.refreshType==0){
-                                activity.mListView.stopRefresh(true);
-                            }else if (activity.refreshType==1){
-                                activity.mListView.stopLoadMore();
-                            }
-                            if (activity.jsonArray.length()>0){
-                                if (activity.pageNo==1){
+                            if (jsonArray.length()>0){
+                                if (activity.pageIndex<=1){
                                     activity.recordList.clear();
                                 }
-                                activity.onRecordData();
+                                if (activity.urlType.equals(ConstantUtil.VALUE_TWO)){
+                                    activity.onNBRecordData(jsonArray);
+                                }else{
+                                    activity.onRecordData(jsonArray);
+                                }
                             }
                         }else {
-                            activity.mListView.stopLoadMore();
-                            activity.mListView.stopRefresh(false);
                             activity.onFailure(error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();}
                     break;
                 case SendRequestUtil.FAILURE:
-                    activity.mListView.stopRefresh(false);
                     ToastUtil.ToastText(activity.context,msg.obj.toString());
                     break;
                 default:
                     break;
             }
             super.handleMessage(msg);
+        }
+    }
+
+    private void onNBRecordData(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i <jsonArray.length(); i++) {
+                JSONObject jsonObject =jsonArray.getJSONObject(i);
+                String customerNo = jsonObject.optString("customerNo");
+                String amount = jsonObject.optString("amount");
+                String address = jsonObject.optString("address");
+                String state = jsonObject.optString("meterState");
+                String payMethod=jsonObject.getString("payState");
+                String payTime=jsonObject.getString("payTime");
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("customerNo", customerNo);
+                map.put("amount", amount);
+                map.put("address", address);
+                map.put("state", state);
+                map.put("payMethod",payMethod);
+                map.put("payTime",payTime);
+                map.put("writeCardState",state);
+                map.put("tableType","2");
+                recordList.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (recordList.size()==0){
+            layoutNoData.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
+        }else {
+            layoutNoData.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
         }
     }
     private void onFailure(String error) {
@@ -117,7 +154,7 @@ public class GasPayRecordActivity extends BaseActivity {
                     }
                 }).show();
     }
-    private void onRecordData() {
+    private void onRecordData(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -128,6 +165,21 @@ public class GasPayRecordActivity extends BaseActivity {
                 String payMethod=jsonObject.getString("pay_method");
                 String payTime=jsonObject.getString("pay_time");
                 String writeCardState="0";
+                String tableType;
+                switch (urlType){
+                    case ConstantUtil.VALUE_ZERO:
+                        tableType="0";
+                        break;
+                    case ConstantUtil.VALUE_ONE:
+                        tableType="1";
+                        break;
+                    case ConstantUtil.VALUE_TWO:
+                        tableType="2";
+                        break;
+                    default:
+                        tableType="0";
+                        break;
+                }
                 if (jsonObject.has("writecard_state")){
                     writeCardState=jsonObject.getString("writecard_state");
                 }
@@ -136,18 +188,20 @@ public class GasPayRecordActivity extends BaseActivity {
                 map.put("amount", amount);
                 map.put("address", address);
                 map.put("state", state);
-                map.put("pay_method",payMethod);
-                map.put("pay_time",payTime);
-                map.put("writecard_state",writeCardState);
+                map.put("payMethod",payMethod);
+                map.put("payTime",payTime);
+                map.put("writeCardState",writeCardState);
+                map.put("tableType",tableType);
                 recordList.add(map);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
         if (recordList.size()==0){
-            tvNoData.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
+            layoutNoData.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
         }else {
+            layoutNoData.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
         }
     }
@@ -160,10 +214,10 @@ public class GasPayRecordActivity extends BaseActivity {
         customerNo=getIntent().getStringExtra("customerNo");
         address=getIntent().getStringExtra("address");
         urlType=getIntent().getStringExtra("urlType");
-        if (urlType.equals(VariableUtil.VALUE_ONE)){
-            mPageName="充值记录";
-        }else {
+        if (urlType.equals(VariableUtil.VALUE_ZERO)){
             mPageName="缴费记录";
+        }else {
+            mPageName="充值记录";
         }
         setCommonHeader(mPageName);
         customDialog=new CustomDialog(this, "正在加载");
@@ -171,42 +225,51 @@ public class GasPayRecordActivity extends BaseActivity {
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         initHeader();
         initView();
-        initdata();
+        initData();
     }
     private void initHeader() {
-        ((TextView)findViewById(R.id.id_customerNo)).setText(customerNo);
+        ((TextView)findViewById(R.id.id_customerText)).setText(customerNo);
         ((TextView)findViewById(R.id.id_address)).setText(address);
     }
-    private void initdata() {
+    private void initData() {
         customDialog.show();
         loadData(1);
     }
     private void loadData(int i) {
         pageIndex =i;
-        pageNo=i;
-        String size="16";
         if (urlType.equals(VariableUtil.VALUE_ZERO)){
             validateURL = UrlUtil.PayRecors_HistoryUrl;
         }else if (urlType.equals(VariableUtil.VALUE_ONE)){
             validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
+        }else if (urlType.equals(VariableUtil.VALUE_TWO)){
+            validateURL = UrlUtil.INTERNET_TABLE_RECORD;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();
-        String pageNum=String.valueOf(pageNo);
+        String pageNum=String.valueOf(i);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customerNo);
         textParams.put("page",pageNum);
-        textParams.put("size",size);
+        textParams.put("size","16");
         OkHttpRequestUtil.getInstance(context.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
     private void initView() {
-        tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
-        tvNoData.setText("当前没有交费记录");
-        mListView=(XListView)findViewById(R.id.id_payrecord_listview);
-        mListView.setPullLoadEnable(true);
+        TextView tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
+        tvNoData.setText("当前没有记录");
+        layoutNoData=findViewById(R.id.id_no_data_view);
+        mRecyclerView=(XRecyclerView) findViewById(R.id.id_record_data);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         adapter = new PayRecordAdapter(context,recordList);
-        mListView.setAdapter(adapter);
-        mListView.setXListViewListener(new XListView.IXListViewListener() {
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.refresh();
+        mRecyclerView.setPullRefreshEnabled(true);
+        mRecyclerView.setLoadingMoreEnabled(true);
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 refreshType=0;

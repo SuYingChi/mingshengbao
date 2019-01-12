@@ -10,27 +10,53 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/picture_text"
         android:layout_marginRight="@dimen/margin_width5"
-        android:layout_marginEnd="@dimen/margin_width5">
+        android:layout_marginEnd="@dimen/margin_width5"
+        android:visibility="gone">
     </ImageView>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/id_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_width6"
+            android:layout_marginStart="@dimen/margin_width6"
             android:layout_marginTop="@dimen/margin_width5"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginStart="@dimen/margin_width10"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/text_width16"
+            android:text="@string/default_text"/>
+        <TextView
+            android:id="@+id/id_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_title"
+            android:layout_marginTop="@dimen/margin_width8"
+            android:layout_marginLeft="@dimen/margin_width6"
+            android:layout_marginStart="@dimen/margin_width6"
             android:layout_marginEnd="@dimen/margin_width10"
             android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width5"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/color_383838"
+            android:textColor="@color/app_text"
             android:textSize="@dimen/text_width14"
             android:text="@string/default_text"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/picture_text"
+            android:layout_toRightOf="@+id/id_content"
+            android:layout_toEndOf="@+id/id_content"
+            android:layout_marginLeft="@dimen/margin_width6"
+            android:layout_marginStart="@dimen/margin_width6"
+            android:layout_marginRight="@dimen/margin_width8"
+            android:layout_marginEnd="@dimen/margin_width8"
+            android:layout_marginTop="@dimen/margin_width6"
+            android:layout_marginBottom="@dimen/margin_width6"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerVertical="true"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

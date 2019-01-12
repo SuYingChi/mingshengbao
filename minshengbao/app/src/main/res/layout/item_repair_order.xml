@@ -7,8 +7,10 @@
     android:layout_height="wrap_content"
     android:background="@color/background_gray">
     <LinearLayout
+        android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_touch_background"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -112,7 +114,6 @@
                 android:background="@drawable/selector_touch_button_change"
                 android:text="去评价"
                 android:visibility="gone"/>
-
         </RelativeLayout>
     </LinearLayout>
 

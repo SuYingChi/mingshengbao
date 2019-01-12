@@ -1,6 +1,7 @@
 package com.msht.minshengbao.Utils;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -13,6 +14,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 工具类
@@ -138,5 +141,24 @@ public class AppPackageUtil {
             }
             context.startActivity(localIntent);
         }
+    }
+
+    /**
+     * 判断应用是否已经启动
+     *
+     * @param context     一个context
+     * @return boolean
+     */
+    public static boolean isAppAlive(Context context) {
+        ActivityManager activityManager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> processInfo
+                = activityManager.getRunningAppProcesses();
+        for (int i = 0; i < processInfo.size(); i++) {
+            if (processInfo.get(i).processName.equals(context.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,6 +18,24 @@
             android:layout_height="wrap_content"
             android:background="@color/background"
             android:orientation="vertical">
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:minHeight="@dimen/margin_width40"
+               android:background="@color/yellow_more_light">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_centerVertical="true"
+                   android:layout_marginStart="@dimen/margin_width10"
+                   android:layout_marginRight="@dimen/margin_width10"
+                   android:layout_marginLeft="@dimen/margin_width10"
+                   android:layout_marginEnd="@dimen/margin_width10"
+                   android:textSize="@dimen/text_width14"
+                   android:textColor="@color/yellow_more_gray"
+                   android:layout_centerInParent="true"
+                   android:text="@string/legal_effect_tip"/>
+           </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,41 +48,28 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
-                    android:text="申请人类型:"
+                    android:text="@string/personal_apply_type"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
-                <Button
-                    android:id="@+id/id_btn_personal"
+                <TextView
+                    android:id="@+id/id_type"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/margin_width30"
-                    android:layout_toRightOf="@+id/id_text0"
+                    android:layout_height="wrap_content"
+                    android:minWidth="@dimen/margin_width70"
+                    android:minHeight="@dimen/margin_width30"
                     android:layout_toEndOf="@+id/id_text0"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:layout_centerVertical="true"
-                    android:text="@string/Personal_text"
+                    android:layout_toRightOf="@+id/id_text0"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/margin_width20"
+                    android:layout_marginLeft="@dimen/margin_width20"
                     android:background="@drawable/shape_orange_corner_button"
-                    android:textColor="@color/white"/>
-                <Button
-                    android:id="@+id/id_btn_company"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/margin_30"
-                    android:layout_toRightOf="@+id/id_btn_personal"
-                    android:layout_toEndOf="@+id/id_btn_personal"
-                    android:layout_marginStart="@dimen/margin_width30"
-                    android:layout_marginLeft="@dimen/margin_width30"
                     android:layout_centerVertical="true"
-                    android:text="@string/enterprise_text"
-                    android:background="@drawable/shape_back_gray_corner_button"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_width14"
+                    android:text="@string/Personal_text"/>
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:background="@color/line_gray">
-            </View>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width1"
@@ -74,11 +79,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"
                 android:background="@color/touch_backgroud">
-            </View>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width1"
-                android:background="@color/line_gray">
             </View>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -95,18 +95,19 @@
                     android:text="@string/invoice_name"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
-                <EditText
-                    android:id="@+id/id_et_name"
+                <TextView
+                    android:id="@+id/id_tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_text2"
                     android:layout_toEndOf="@+id/id_text2"
                     android:layout_marginLeft="@dimen/margin_width20"
                     android:layout_marginStart="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:inputType="textPersonName"
-                    android:hint="请输入您的发票抬头"
-                    android:background="@null"/>
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/app_text"/>
             </RelativeLayout>
             <LinearLayout
                 android:id="@+id/id_taxpayer_layout"
@@ -136,8 +137,8 @@
                         android:text="@string/taxpayer_No"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_taxpayer_num"
+                    <TextView
+                        android:id="@+id/id_tv_taxpayer_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_text9"
@@ -145,8 +146,10 @@
                         android:layout_marginLeft="@dimen/margin_width5"
                         android:layout_marginStart="@dimen/margin_width5"
                         android:layout_centerVertical="true"
-                        android:inputType="textPersonName"
-                        android:hint="@string/please_input_taxpayerNo"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/app_text"
                         android:background="@null"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -158,11 +161,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width10"
                     android:background="@color/touch_backgroud"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width1"
-                    android:background="@color/line_gray">
-                </View>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -187,14 +185,16 @@
                         android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_marginStart="@dimen/margin_width20"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:textSize="@dimen/text_width16"
-                        android:textColor="@color/title_tv"
+                        android:textColor="@color/app_text"
                         android:text="@string/normal_use_gas"
                         android:background="@null"/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width1"
+                    android:layout_height="0.5dp"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:background="@color/line_gray">
@@ -241,22 +241,8 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:background="@color/line_gray">
-            </View>
-            <View
-                android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"
                 android:background="@color/touch_backgroud">
-            </View>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:background="@color/line_gray">
             </View>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -285,6 +271,7 @@
                     android:layout_marginLeft="@dimen/margin_width20"
                     android:inputType="textEmailAddress"
                     android:layout_centerVertical="true"
+                    android:textColor="@color/app_text"
                     android:background="@null"
                     android:hint="@string/please_input_email"/>
             </RelativeLayout>
@@ -309,8 +296,8 @@
                         android:text="@string/connection_address_text"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_address"
+                    <TextView
+                        android:id="@+id/id_tv_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_width6"
@@ -318,142 +305,26 @@
                         android:layout_toRightOf="@+id/id_text7"
                         android:layout_toEndOf="@+id/id_text7"
                         android:background="@null"
-                        android:layout_marginEnd="@dimen/margin_width5"
-                        android:layout_marginRight="@dimen/margin_width5"
-                        android:inputType="textPersonName"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:textSize="@dimen/text_width16"
-                        android:textColor="@color/title_tv"
+                        android:textColor="@color/app_text"
                         android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_marginStart="@dimen/margin_width20"
-                        android:layout_centerVertical="true"
-                        android:hint="@string/please_input_address"/>
+                        android:layout_centerVertical="true"/>
                 </RelativeLayout>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/line_gray">
             </View>
             <LinearLayout
-                android:id="@+id/id_li_view"
+                android:id="@+id/id_company_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width10"
-                    android:background="@color/touch_backgroud">
-                </View>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/line_gray">
-                </View>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:minHeight="@dimen/margin_width50">
-                    <TextView
-                        android:id="@+id/id_text10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_marginStart="@dimen/margin_width10"
-                        android:text="@string/open_bank"
-                        android:textSize="@dimen/text_width16"
-                        android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_bank"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/id_text10"
-                        android:layout_toEndOf="@+id/id_text10"
-                        android:layout_marginStart="@dimen/margin_width20"
-                        android:layout_marginLeft="@dimen/margin_width20"
-                        android:inputType="textPersonName"
-                        android:layout_centerVertical="true"
-                        android:hint="@string/please_input_open_bank"
-                        android:background="@null"/>
-                </RelativeLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width1"
-                    android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginRight="@dimen/margin_width10"
-                    android:background="@color/line_gray">
-                </View>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/margin_width50">
-                    <TextView
-                        android:id="@+id/id_text11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_marginStart="@dimen/margin_width10"
-                        android:text="@string/open_account"
-                        android:textSize="@dimen/text_width16"
-                        android:textColor="@color/title_tv"/>
-                    <EditText
-                        android:id="@+id/id_et_bankcard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:layout_toRightOf="@+id/id_text11"
-                        android:layout_toEndOf="@+id/id_text11"
-                        android:layout_marginLeft="@dimen/margin_width20"
-                        android:layout_marginStart="@dimen/margin_width10"
-                        android:layout_centerVertical="true"
-                        android:hint="@string/please_input_open_account"
-                        android:background="@null"/>
-                </RelativeLayout>
-                <LinearLayout
-                    android:id="@+id/id_company_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/margin_width1"
-                        android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_marginRight="@dimen/margin_width10"
-                        android:background="@color/line_gray">
-                    </View>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:minHeight="@dimen/margin_width50">
-                        <TextView
-                            android:id="@+id/id_text12"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/margin_width10"
-                            android:layout_marginStart="@dimen/margin_width10"
-                            android:text="@string/enterprise_tel"
-                            android:textSize="@dimen/text_width16"
-                            android:textColor="@color/title_tv"/>
-                        <EditText
-                            android:id="@+id/id_et_company_tel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="phone"
-                            android:layout_toRightOf="@+id/id_text12"
-                            android:layout_toEndOf="@+id/id_text12"
-                            android:layout_marginStart="@dimen/margin_width20"
-                            android:layout_marginLeft="@dimen/margin_width20"
-                            android:layout_centerVertical="true"
-                            android:hint="请输入您的企业电话（必填）"
-                            android:background="@null"/>
-                    </RelativeLayout>
-                    <include layout="@layout/layout_line_interval"/>
+                android:orientation="vertical">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -469,8 +340,8 @@
                             android:text="@string/enterprise_address"
                             android:textSize="@dimen/text_width16"
                             android:textColor="@color/title_tv"/>
-                        <EditText
-                            android:id="@+id/id_et_company_addr"
+                        <TextView
+                            android:id="@+id/id_tv_company_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/id_text13"
@@ -478,16 +349,12 @@
                             android:layout_marginLeft="@dimen/margin_width20"
                             android:layout_marginStart="@dimen/margin_width20"
                             android:layout_centerVertical="true"
-                            android:inputType="textPersonName"
-                            android:hint="请输入您的企业地址（必填）"
+                            android:layout_marginRight="@dimen/margin_width10"
+                            android:layout_marginEnd="@dimen/margin_width10"
+                            android:textSize="@dimen/text_width16"
+                            android:textColor="@color/app_text"
                             android:background="@null"/>
                     </RelativeLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width1"
-                    android:background="@color/line_gray">
-                </View>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -497,14 +364,24 @@
                     android:id="@+id/id_btn_send"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_20"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginRight="@dimen/margin_20"
+                    android:layout_marginTop="@dimen/margin_width40"
+                    android:layout_marginLeft="@dimen/margin_width45"
+                    android:layout_marginRight="@dimen/margin_width45"
                     android:background="@drawable/selector_touch_button_change"
-                    android:text="确认提交"
+                    android:text="@string/ensure_send"
                     android:textSize="@dimen/text_18"
                     android:textColor="@color/white"
                     android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/id_correct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/id_btn_send"
+                    android:layout_marginTop="@dimen/margin_width20"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="@dimen/text_width16"
+                    android:text="@string/information_not_correct"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
