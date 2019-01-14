@@ -119,7 +119,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
-    private final GetImageHandler getImageHandler = new GetImageHandler(this);
     private LoadingDialog centerLoadingDialog;
 
     private TextView tvWaitEveluate;
@@ -268,42 +267,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }*/
         llShopOrder.setClickable(true);
     }
-
-
-    private static class GetImageHandler extends Handler {
-        private WeakReference<LoginMyFrag> mWeakReference;
-
-        public GetImageHandler(LoginMyFrag loginMyFrag) {
-            mWeakReference = new WeakReference<LoginMyFrag>(loginMyFrag);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            final LoginMyFrag reference = mWeakReference.get();
-            // the referenced object has been cleared
-            if (reference == null || reference.isDetached()) {
-                return;
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    reference.myAvatar = (Bitmap) msg.obj;
-                    if (reference.myAvatar == null) {
-                        reference.circleImageView.setImageResource(R.drawable.potrait);
-                    } else {
-                        reference.circleImageView.setImageBitmap(reference.myAvatar);
-                        reference.mCache.put("avatarimg", reference.myAvatar);
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(reference.mContext, msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
-
     @Override
     public View initFindView() {
         if(mRootView==null){

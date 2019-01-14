@@ -26,6 +26,7 @@ import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
+import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MessageDetailActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -625,8 +626,9 @@ public class AppActivityUtil {
     }
 
     private static void onPushStartShop(Context context) {
-        Intent intent = new Intent(context, ShopActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("index",1);
         context.startActivity(intent);
 
     }

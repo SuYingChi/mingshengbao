@@ -252,8 +252,8 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     private void goShopHome() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("shophome",true);
-        EventBus.getDefault().postSticky(new GoShopMainEvent());
+        intent.putExtra("index",2);
+        //EventBus.getDefault().postSticky(new GoShopMainEvent());
         startActivity(intent);
     }
 

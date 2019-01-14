@@ -36,6 +36,7 @@ import com.msht.minshengbao.androidShop.shopBean.RefundReasonItemBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
@@ -43,8 +44,8 @@ import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundAllFormView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+
 
 import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
@@ -190,15 +191,18 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
 
 
     private void onRequestLimitPhoto(int position) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            AndPermission.with(this)
+           /*      AndPermission.with(this)
                     .requestCode(MY_PERMISSIONS_REQUEST)
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
-        } else {
-            onClickRefundPictureContainerItem(position);
-        }
+                    .send();*/
+            PermissionUtils.requestPermissions(this, new PermissionUtils.PermissionRequestFinishListener() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    onClickRefundPictureContainerItem(thisPosition);
+                }
+            }, Permission.WRITE_EXTERNAL_STORAGE);
+
     }
 
     private void showReasonDialog() {
@@ -287,7 +291,7 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
             }
         }
     }
-
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
@@ -307,7 +311,7 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
                 ToastUtil.ToastText(RefundALLActivity.this, "授权失败");
             }
         }
-    };
+    };*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -343,7 +347,6 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
                                 public void onError(Throwable e) {
                                     // TODO 当压缩过去出现问题时调用
                                     ShopPresenter.postRefundPic(RefundALLActivity.this, files);
-                                    ;
                                 }
                             }).launch();
                 }

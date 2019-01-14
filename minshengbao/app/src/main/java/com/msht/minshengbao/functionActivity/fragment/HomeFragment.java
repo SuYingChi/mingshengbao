@@ -60,7 +60,7 @@ import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
-import com.msht.minshengbao.functionActivity.GasService.GasIccardActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
@@ -135,10 +135,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private String mCity = "海口";
     private String cityId = "1";
     private String Id = "null";
-    private String flag;
     private int times = 0;
 
-    private int times=0;
     private int requestType=0;
     private String url;
     private String share;
@@ -170,6 +168,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final SpecialTopicHandler specialTopicHandler =new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
+
+
     public HomeFragment() {}
     private static class GetAdvertisingHandler extends Handler{
         private WeakReference<HomeFragment> mWeakReference;
@@ -697,7 +697,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 if(data!=null){
                     if (resultCode==2){
                         mCity=data.getStringExtra("mCity");
-                        flag=data.getStringExtra("flag");
+                     //   flag=data.getStringExtra("flag");
                         cityId=data.getStringExtra("Id");
                         VariableUtil.City=mCity;
                         VariableUtil.cityId=cityId;

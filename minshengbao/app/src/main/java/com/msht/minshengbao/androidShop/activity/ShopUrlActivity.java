@@ -18,14 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 
 import butterknife.BindView;
 
-public class ShopUrlActivity extends ShopBaseActivity implements MyWebChomeClient.OpenFileChooserCallBack {
+public class ShopUrlActivity extends ShopBaseActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     @BindView(R.id.web)
     WebView webView;
    /* @BindView(R.id.toolbar2)
@@ -112,7 +112,7 @@ public class ShopUrlActivity extends ShopBaseActivity implements MyWebChomeClien
                 return true;
             }
         });
-        webView.setWebChromeClient(new MyWebChomeClient(this));
+        webView.setWebChromeClient(new MyWebChromeClient(this));
     }
 
     @Override
@@ -121,9 +121,10 @@ public class ShopUrlActivity extends ShopBaseActivity implements MyWebChomeClien
     }
 
     @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
+    public void onProgressChanged(WebView view, int newProgress) {
 
     }
+
 
     @Override
     public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {

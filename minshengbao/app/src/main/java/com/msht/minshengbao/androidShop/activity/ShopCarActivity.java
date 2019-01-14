@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.Fragment.ShopCarNoLoginFragment;
 import com.msht.minshengbao.androidShop.adapter.CarListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -363,50 +364,51 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.optJSONObject("datas");
             JSONArray jsonArray = datas.optJSONArray("cart_list");
-            carList.clear();
-            storeList.clear();
-            carnum = 0;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-              /*  for (int ii = 0; ii < good.length(); ii++) {
-                    carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                }*/
-                carnum +=good.length();
-            }
-            EventBus.getDefault().postSticky(new CarNumEvent(carnum));
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.optJSONObject(i);
-                obj.put("storecheck",false);
-                obj.put("goodcheck",false);
-                carList.add(obj);
-                String storeName = obj.optString("store_name");
-                String storeId = obj.optString("store_id");
-                ShopStoreBean storeBean = new ShopStoreBean(storeName, storeId);
-                storeList.add(storeBean);
-            }
-            if (!isModifyGoodNum) {
-                selectedStoreList.clear();
-                selectedGoodList.clear();
-                gotoBuyList.clear();
-                updateAmount();
-                initCarliststate();
-                adapter.notifyDataSetChanged();
-                cart_count = datas.optString("cart_count");
-                JSONArray guess_like_list = datas.optJSONArray("guess_like_list");
-                guessList = JsonUtil.jsonArrayToList(guess_like_list.toString());
-            } else {
-                isModifyGoodNum = false;
-                int selectedGoodposition = -1;
-                for (CarGoodItemBean bean : selectedGoodList) {
-                    if (bean.getCarId().equals(cart_id)) {
-                        selectedGoodposition = selectedGoodList.indexOf(bean);
-                        break;
-                    }
+            if(jsonArray.length() == 0){
+                startActivity(new Intent(this, NoCarActivity.class));
+            }else {
+                carList.clear();
+                storeList.clear();
+                carnum = 0;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
+                    carnum += good.length();
                 }
-                if (selectedGoodposition != -1 && !selectedGoodList.get(selectedGoodposition).getQuantity().equals(goods_num)) {
-                    selectedGoodList.get(selectedGoodposition).setQuantity(goods_num);
-                    gotoBuyList.get(selectedGoodposition).put("goods_num", goods_num);
+                EventBus.getDefault().postSticky(new CarNumEvent(carnum));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.optJSONObject(i);
+                    obj.put("storecheck", false);
+                    obj.put("goodcheck", false);
+                    carList.add(obj);
+                    String storeName = obj.optString("store_name");
+                    String storeId = obj.optString("store_id");
+                    ShopStoreBean storeBean = new ShopStoreBean(storeName, storeId);
+                    storeList.add(storeBean);
+                }
+                if (!isModifyGoodNum) {
+                    selectedStoreList.clear();
+                    selectedGoodList.clear();
+                    gotoBuyList.clear();
                     updateAmount();
+                    initCarliststate();
+                    adapter.notifyDataSetChanged();
+                    cart_count = datas.optString("cart_count");
+                    JSONArray guess_like_list = datas.optJSONArray("guess_like_list");
+                    guessList = JsonUtil.jsonArrayToList(guess_like_list.toString());
+                } else {
+                    isModifyGoodNum = false;
+                    int selectedGoodposition = -1;
+                    for (CarGoodItemBean bean : selectedGoodList) {
+                        if (bean.getCarId().equals(cart_id)) {
+                            selectedGoodposition = selectedGoodList.indexOf(bean);
+                            break;
+                        }
+                    }
+                    if (selectedGoodposition != -1 && !selectedGoodList.get(selectedGoodposition).getQuantity().equals(goods_num)) {
+                        selectedGoodList.get(selectedGoodposition).setQuantity(goods_num);
+                        gotoBuyList.get(selectedGoodposition).put("goods_num", goods_num);
+                        updateAmount();
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -581,6 +583,6 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
         for (CarGoodItemBean bean : selectedGoodList) {
             total += Double.valueOf(bean.getGoodPrice()) * Integer.valueOf(bean.getQuantity());
         }
-        tvToatl.setText("合计：" + StringUtil.getPriceSpannable12String(this, total + "", R.style.big_money, R.style.big_money));
+        tvToatl.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, total + "", R.style.big_money, R.style.big_money)));
     }
 }

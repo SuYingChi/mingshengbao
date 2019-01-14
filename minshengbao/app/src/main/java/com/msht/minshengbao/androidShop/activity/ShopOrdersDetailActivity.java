@@ -41,6 +41,7 @@ import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopOrderDetailBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.util.StringUtil;
@@ -49,8 +50,8 @@ import com.msht.minshengbao.androidShop.viewInterface.ICancelOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -481,20 +482,28 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     }
 
 
-    private void call(String store_phone) {
+    @SuppressLint("MissingPermission")
+    private void call(final String store_phone) {
         this.store_phone = store_phone;
         if (!TextUtils.isEmpty(store_phone)) {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (ContextCompat.checkSelfPermission(ShopOrdersDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    AndPermission.with(ShopOrdersDetailActivity.this)
+             /*   if (ContextCompat.checkSelfPermission(ShopOrdersDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+           */        /* AndPermission.with(ShopOrdersDetailActivity.this)
                             .requestCode(CALL_PERMISSIONS_REQUEST)
                             .permission(
                                     Manifest.permission.CALL_PHONE)
-                            .send();
-                } else {
+                            .send();*/
+           PermissionUtils.requestPermissions(ShopOrdersDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
+               @Override
+               public void onPermissionRequestSuccess(List<String> permissions) {
+                   Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
+                   startActivity(intent);
+               }
+           },Permission.CALL_PHONE);
+               /* } else {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
                     startActivity(intent);
-                }
+                }*/
             } else {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
                 startActivity(intent);
@@ -580,11 +589,20 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     if (qrCodeImage != null) {
                         if (Build.VERSION.SDK_INT >= 23) {
                             if (ContextCompat.checkSelfPermission(ShopOrdersDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                AndPermission.with(ShopOrdersDetailActivity.this)
+                               /* AndPermission.with(ShopOrdersDetailActivity.this)
                                         .requestCode(MY_PERMISSIONS_REQUEST)
                                         .permission(
                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                        .send();
+                                        .send();*/
+                                PermissionUtils.requestPermissions(ShopOrdersDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
+                                    @Override
+                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                        Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
+                                        if (DrawbleUtil.saveImageToGallery(ShopOrdersDetailActivity.this, bitmap) != null) {
+                                            PopUtil.showAutoDissHookDialog(ShopOrdersDetailActivity.this, "已保存到本地相册", 200);
+                                        }
+                                    }
+                                }, Permission.WRITE_EXTERNAL_STORAGE);
                             } else {
                                 Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
                                 if (DrawbleUtil.saveImageToGallery(ShopOrdersDetailActivity.this, bitmap) != null) {
@@ -617,15 +635,15 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         }
     }
 
-    @Override
+ /*   @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
+    }*/
 
     private static final int MY_PERMISSIONS_REQUEST = 200;
     private Drawable qrCodeImage;
     private int CALL_PERMISSIONS_REQUEST = 300;
-    private PermissionListener listener = new PermissionListener() {
+/*    private PermissionListener listener = new PermissionListener() {
         @SuppressLint("MissingPermission")
         @Override
         public void onSucceed(int requestCode) {
@@ -644,5 +662,5 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         public void onFailed(int requestCode) {
             ToastUtil.ToastText(ShopOrdersDetailActivity.this, "没有权限");
         }
-    };
+    };*/
 }

@@ -152,8 +152,6 @@ public class MyApplication extends Application {
                 .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 .build();
-
-        OkHttpManager.initClient(okHttpClient);
         OkHttpUtils.initClient(okHttpClient);
         initUPush();
     }

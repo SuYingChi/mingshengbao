@@ -113,13 +113,8 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     private List<String> advImagelist = new ArrayList<String>();
     private List<ShopHomeClassBean.ClassBean.ItemBean> homeClassList;
     private MZBannerView mMZBanner;
-    private int carNum;
     private Integer msgCount;
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(CarNumEvent messageEvent) {
-        carNum = messageEvent.getCarNum();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

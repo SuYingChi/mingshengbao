@@ -28,14 +28,16 @@ import com.msht.minshengbao.ViewUI.widget.MyScrollview;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
 import com.zzhoujay.richtext.RichText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -82,6 +84,7 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.setWebViewClient(new WebViewClient(){
+            @SuppressLint("MissingPermission")
             @Override
             public boolean shouldOverrideUrlLoading
                     (WebView view, String url) {
@@ -90,16 +93,13 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
                if (url != null && url.contains(tag)) {
                     mobile = url.substring(url.lastIndexOf(":") + 1);
                    if (Build.VERSION.SDK_INT >= 23) {
-                       if (ContextCompat.checkSelfPermission(WarnMessageDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                           AndPermission.with(WarnMessageDetailActivity.this)
-                                   .requestCode(CALL_PERMISSIONS_REQUEST)
-                                   .permission(
-                                           Manifest.permission.CALL_PHONE)
-                                   .send();
-                       } else {
-                           Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
-                           startActivity(intent);
-                       }
+                       PermissionUtils.requestPermissions(WarnMessageDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
+                           @Override
+                           public void onPermissionRequestSuccess(List<String> permissions) {
+                               Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
+                               startActivity(intent);
+                           }
+                       }, Permission.CALL_PHONE);
                    } else {
                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
                        startActivity(intent);
@@ -148,7 +148,7 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
         }
     }
 
-    private int CALL_PERMISSIONS_REQUEST = 300;
+    /*private int CALL_PERMISSIONS_REQUEST = 300;
     private PermissionListener listener = new PermissionListener() {
         @SuppressLint("MissingPermission")
         @Override
@@ -167,5 +167,5 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
+    }*/
 }

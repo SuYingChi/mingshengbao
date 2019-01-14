@@ -42,6 +42,7 @@ import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
@@ -77,8 +78,8 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -329,7 +330,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                             public void onClick(View v) {
                                 if (qrCodeImage != null) {
                                     if (Build.VERSION.SDK_INT >= 23) {
-                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                  /*      if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                             AndPermission.with(GoodFragment.this)
                                                     .requestCode(MY_PERMISSIONS_REQUEST)
                                                     .permission(
@@ -340,7 +341,16 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                                             if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
                                                 PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
                                             }
-                                        }
+                                        }*/
+                                        PermissionUtils.requestPermissions(getContext(), new PermissionUtils.PermissionRequestFinishListener() {
+                                            @Override
+                                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
+                                                if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
+                                                    PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
+                                                }
+                                            }
+                                        }, Permission.WRITE_EXTERNAL_STORAGE);
                                     } else {
                                         Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
                                         if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
@@ -902,7 +912,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_no_collected));
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
     }
@@ -924,5 +934,5 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 ToastUtil.ToastText(getContext(), "没有权限");
             }
         }
-    };
+    };*/
 }

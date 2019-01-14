@@ -30,12 +30,13 @@ import com.msht.minshengbao.androidShop.shopBean.UploadEvaluatePicBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopInitEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+
 
 import me.iwf.photopicker.PhotoPicker;
 import top.zibin.luban.Luban;
@@ -205,7 +206,7 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
         ShopPresenter.getInitEveluate(this);
     }
 
-
+/*
     private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode) {
@@ -225,20 +226,26 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
+    }*/
 
     private static final int MY_PERMISSIONS_REQUEST = 100;
 
-    private void onRequestLimitPhoto(int position, int item) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            AndPermission.with(this)
+    private void onRequestLimitPhoto(final int position, final int item) {
+    /*    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+    */       /* AndPermission.with(this)
                     .requestCode(MY_PERMISSIONS_REQUEST)
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
-        } else {
+                    .send();*/
+            PermissionUtils.requestPermissions(this, new PermissionUtils.PermissionRequestFinishListener() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    onClickEveluatePictureContainerItem(position, item);
+                }
+            }, Permission.WRITE_EXTERNAL_STORAGE);
+       /* } else {
             onClickEveluatePictureContainerItem(position, item);
-        }
+        }*/
     }
 
     private void onClickEveluatePictureContainerItem(int childPosition, int item) {

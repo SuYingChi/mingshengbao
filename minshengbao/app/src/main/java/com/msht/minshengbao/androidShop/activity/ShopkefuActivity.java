@@ -17,18 +17,15 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.msht.minshengbao.MyAPI.MyWebChomeClient;
+import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
-import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 
 import butterknife.BindView;
 
-public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClient.OpenFileChooserCallBack, IWarnMessageDetailView {
+public class ShopkefuActivity extends ShopBaseActivity implements MyWebChromeClient.OpenFileChooserCallBack, IWarnMessageDetailView {
     @BindView(R.id.web)
     WebView webView;
     @BindView(R.id.toolbar2)
@@ -116,7 +113,7 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClie
                 return true;
             }
         });
-        webView.setWebChromeClient(new MyWebChomeClient(this));
+        webView.setWebChromeClient(new MyWebChromeClient(this));
     }
 
     @Override
@@ -131,9 +128,10 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChomeClie
     }
 
     @Override
-    public void onProgressChangeds(WebView view, int newProgress) {
+    public void onProgressChanged(WebView view, int newProgress) {
 
     }
+
 
     @Override
     public boolean openFileChooserCallBackAndroid5(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {

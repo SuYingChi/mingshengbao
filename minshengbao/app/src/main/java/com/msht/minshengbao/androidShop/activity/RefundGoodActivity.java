@@ -33,6 +33,7 @@ import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
@@ -40,8 +41,8 @@ import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -291,16 +292,22 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
 
 }
 
-    private void onRequestLimitPhoto(int position) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            AndPermission.with(this)
+    private void onRequestLimitPhoto(final int position) {
+   /*     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+  */       /*   AndPermission.with(this)
                     .requestCode(MY_PERMISSIONS_REQUEST)
                     .permission(Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .send();
-        } else {
+                    .send();*/
+            PermissionUtils.requestPermissions(this, new PermissionUtils.PermissionRequestFinishListener() {
+                @Override
+                public void onPermissionRequestSuccess(List<String> permissions) {
+                    onClickRefundPictureContainerItem(position);
+                }
+            }, Permission.WRITE_EXTERNAL_STORAGE);
+       /* } else {
             onClickRefundPictureContainerItem(position);
-        }
+        }*/
     }
 
     private void onClickRefundPictureContainerItem(int position) {
@@ -322,7 +329,7 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
         }
     }
 
-    private PermissionListener listener = new PermissionListener() {
+/*    private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode) {
             if (requestCode == MY_PERMISSIONS_REQUEST) {
@@ -336,7 +343,7 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
                 ToastUtil.ToastText(RefundGoodActivity.this, "授权失败");
             }
         }
-    };
+    };*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

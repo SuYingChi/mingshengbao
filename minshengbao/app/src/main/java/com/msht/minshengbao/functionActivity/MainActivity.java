@@ -362,7 +362,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
         } else {
-            initTab();
+            int index = getIntent().getIntExtra("index", 0);
+            initTab(index);
         }
         initRequestPermission();
         if (isLoginState(context)){
@@ -569,7 +570,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tvCarNum.setLayoutParams(layoutParams);
     }
 
-    private void initTab() {
+    private void initTab(int index) {
         if (homeFrag == null) {
             homeFrag = new HomeFragment();
         }
@@ -580,7 +581,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             shopCarParentFragment = new ShopCarParentFragment();
             final Bundle bundle = new Bundle();
             if (!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
-                ShopPresenter.getCarList(new ICarListView() {
+                ShopPresenter.getCarList(new ISimpleCarListView() {
                     @Override
                     public void onGetCarListSuccess(String s) {
                         try {
@@ -590,9 +591,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             int carnum = 0;
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                                /*for (int ii = 0; ii < good.length(); ii++) {
-                                    carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                                }*/
                                 carnum +=good.length();
                             }
                             if (carnum > 0) {
@@ -609,47 +607,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         }
                     }
 
-
-                    @Override
-                    public void showLoading() {
-
-                    }
-
-                    @Override
-                    public void dismissLoading() {
-
-                    }
-
-                    @Override
-                    public void onError(String s) {
-
-                    }
-
                     @Override
                     public String getKey() {
                         return ShopSharePreferenceUtil.getInstance().getKey();
                     }
-
-                    @Override
-                    public String getUserId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getLoginPassword() {
-                        return null;
-                    }
-
-                    @Override
-                    public void onLogout() {
-
-                    }
-
-                    @Override
-                    public void onNetError() {
-
-                    }
-                }, false);
+                });
             } else {
                 tvCarNum.setVisibility(View.GONE);
                 EventBus.getDefault().postSticky(new CarNumEvent(-1));
@@ -657,47 +619,47 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
             shopCarParentFragment.setArguments(bundle);
         }
-      /*  if (getIntent().getBooleanExtra("shophome", false)) {
-            ((RadioButton) findViewById(R.id.radio_order)).setChecked(true);
-            hearLayout.setVisibility(View.INVISIBLE);
-            tvNavigation.setText("商城");
-            if (!shopMainFrag.isAdded()) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_layout, shopMainFrag).commitAllowingStateLoss();
-                currentFragment = shopMainFrag;
-                clickCode = 0x004;
-            } else {
-                clickCode = 0x004;
-                addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopMainFrag);
-            }
-        } else {*/
-        if (!homeFrag.isAdded()) {
-            FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-            trans.remove(homeFrag).commit();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_layout, homeFrag).commit();
-            currentFragment = homeFrag;
-            clickCode = 0x001;
-        } else {
-            clickCode = 0x001;
-            addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
-        }
+      switch (index){
+          case 0:
+              if (!homeFrag.isAdded()) {
+                  FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+                  trans.remove(homeFrag).commit();
+                  getSupportFragmentManager().beginTransaction()
+                          .add(R.id.content_layout, homeFrag).commit();
+                  currentFragment = homeFrag;
+                  clickCode = 0x001;
+              } else {
+                  clickCode = 0x001;
+                  addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
+              }
+          case 1:
+              ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
+              clickTab2Layout();
+              break;
+          case 2:
+              ((RadioButton) findViewById(R.id.radio_order)).setChecked(true);
+              clickTab3Layout();
+              break;
+          case 3:
+              ((RadioButton) findViewById(R.id.radio_me)).setChecked(true);
+              clickTab4Layout();
+              break;
+              default:break;
+      }
+
         /* }*/
     }
 
     private void addOrShowFragment(FragmentTransaction fragmentTransaction, Fragment fragment) {
-        if (currentFragment == fragment) {
-            return;
-        }
-        // 如果当前fragment未被添加，则添加到Fragment管理器中
-        if (!fragment.isAdded()) {
-            /*fragmentTransaction.hide(currentFragment)
-                    .add(R.id.content_layout, minshengFrag).commit();*/
-            fragmentTransaction.hide(currentFragment)
-                    .add(R.id.content_layout, fragment).commitAllowingStateLoss();
-        } else {
-            //fragmentTransaction.hide(currentFragment).show(minshengFrag).commit();
-            fragmentTransaction.hide(currentFragment).show(fragment).commitAllowingStateLoss();
+        if(currentFragment == null) {
+            fragmentTransaction .add(R.id.content_layout, fragment).commitAllowingStateLoss();
+        }else if(!currentFragment.equals(fragment)&&fragment!=null){
+            if (!fragment.isAdded()) {
+                fragmentTransaction.hide(currentFragment)
+                        .add(R.id.content_layout, fragment).commitAllowingStateLoss();
+            } else {
+                fragmentTransaction.hide(currentFragment).show(fragment).commitAllowingStateLoss();
+            }
         }
         currentFragment = fragment;
     }
@@ -810,10 +772,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void clickTab2Layout() {
-       /* if (VariableUtil.networkStatus){
-            Intent intent=new Intent(context, ShopHomeActivity.class);
-            startActivityForResult(intent, clickCode);
-        }*/
         hearLayout.setVisibility(View.INVISIBLE);
         clickCode = 0x004;
         tvNavigation.setText("商城");
@@ -824,15 +782,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void clickTab3Layout() {
-       /* hearLayout.setVisibility(View.INVISIBLE);
-        clickCode =0x002;
-        tvNavigation.setText("订单");
-        *//*if (orderFrag== null) {
-            orderFrag = new OrderFragment();
-        }*//*
-         *//**每次进入重新加载 **//*
-        orderFrag = new OrderFragment();
-        addOrShowFragment(getSupportFragmentManager().beginTransaction(), orderFrag);*/
         hearLayout.setVisibility(View.INVISIBLE);
         clickCode = 0x002;
         tvNavigation.setText("购物车");
@@ -870,7 +819,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else {
             myNewFrag = new LoginMyFrag();
             addOrShowFragment(getSupportFragmentManager().beginTransaction(), myNewFrag);
-
         }
     }
 

@@ -55,6 +55,7 @@ import com.msht.minshengbao.androidShop.shopBean.OrderslistBean;
 import com.msht.minshengbao.androidShop.shopBean.ZengpingBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
@@ -72,8 +73,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -648,7 +648,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 public void onClick(View v) {
                     if (qrCodeImage != null) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                           /* if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 AndPermission.with(ShopOrdersFragement.this)
                                         .requestCode(MY_PERMISSIONS_REQUEST)
                                         .permission(
@@ -658,8 +658,18 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                                 Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
                                 if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
                                     PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
+                                }*/
+                            PermissionUtils.requestPermissions(getContext(), new PermissionUtils.PermissionRequestFinishListener() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    if(permissions.contains(Permission.WRITE_EXTERNAL_STORAGE)) {
+                                        Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
+                                        if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
+                                            PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
+                                        }
+                                    }
                                 }
-                            }
+                            }, Permission.WRITE_EXTERNAL_STORAGE);
                         } else {
                             Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
                             if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
@@ -686,12 +696,12 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
         }
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
+    }*/
 
-    private PermissionListener listener = new PermissionListener() {
+  /*  private PermissionListener listener = new PermissionListener() {
         @Override
         public void onSucceed(int requestCode) {
             if (requestCode == MY_PERMISSIONS_REQUEST) {
@@ -708,7 +718,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 ToastUtil.ToastText(getContext(), "没有权限");
             }
         }
-    };
+    };*/
 
 
     @Override
