@@ -158,12 +158,6 @@ public class MyApplication extends Application {
         initUPush();
     }
 
-    public static Context getApplicationContex() {
-
-        return instance.getApplicationContext();
-
-    }
-
     public static MyApplication getInstance() {
         return instance;
     }
@@ -291,8 +285,5 @@ public class MyApplication extends Application {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("pushUrl",url);
         context.startActivity(intent);
-    }
-    public static Context getContext() {
-        return instances;
     }
 }

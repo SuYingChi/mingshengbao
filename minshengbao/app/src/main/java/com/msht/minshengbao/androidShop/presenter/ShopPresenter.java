@@ -17,6 +17,7 @@ import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.SimpleDataStringCallback;
 import com.msht.minshengbao.androidShop.viewInterface.IAddAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCollectionView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCompanyNormalInvView;
@@ -78,6 +79,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopInitEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
+import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
@@ -280,7 +282,17 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void getCarList(final ISimpleCarListView iCarListView) {
+        OkHttpUtils.post().url(ShopConstants.CAR_LIST).addParams("key", iCarListView.getKey()).build().execute(new SimpleDataStringCallback(iCarListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iCarListView.onGetCarListSuccess(s);
+                }
+            }
+        });
+    }
     public static void getShopHome(final IShopMainView iShopMainView) {
         OkHttpUtils.get().url(ShopConstants.SHOP_HOME).build().execute(new DataStringCallback(iShopMainView) {
             @Override

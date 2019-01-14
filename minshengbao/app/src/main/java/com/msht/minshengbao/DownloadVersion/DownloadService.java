@@ -1,5 +1,4 @@
 package com.msht.minshengbao.DownloadVersion;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -13,15 +12,12 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +25,12 @@ import java.io.RandomAccessFile;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 /**
  * Demo class
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author hong
- * @date 2017/4/2  
+ * @date 2017/4/2
  */
 public class DownloadService extends Service {
     public static final String DOWNLOAD_PATH =
@@ -63,7 +58,6 @@ public class DownloadService extends Service {
         public RequestHandler(DownloadService downloadService) {
             mWeakReference = new WeakReference<DownloadService>(downloadService);
         }
-
         @Override
         public void handleMessage(Message msg) {
             final DownloadService reference =mWeakReference.get();
@@ -78,7 +72,7 @@ public class DownloadService extends Service {
                     break;
                 case DOWNLOAD_SUCCESS:
                     //下载完成
-                    reference.notifyNotification(100, 100);
+                    reference.notifyNotification(100, 100,"安装包下载完成");
                     installApk(reference.mContext,new File(DOWNLOAD_PATH,reference.fileName));
                     Toast.makeText(reference.mContext, "下载完成", Toast.LENGTH_SHORT).show();
                     break;
@@ -93,7 +87,6 @@ public class DownloadService extends Service {
             }
             super.handleMessage(msg);
         }
-
     }
     private void onDownThread() {
         new DownloadThread(url,length).start();
@@ -104,7 +97,6 @@ public class DownloadService extends Service {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null){
@@ -115,11 +107,9 @@ public class DownloadService extends Service {
             }else{
                 mHandler.sendEmptyMessage(URL_ERROR);
             }
-
         }
         return super.onStartCommand(intent, flags, startId);
     }
-
     private class InitThread extends Thread{
         String url = "";
         public InitThread(String url) {
@@ -182,14 +172,13 @@ public class DownloadService extends Service {
             RandomAccessFile raf = null;
             InputStream input = null;
             try {
-
                 URL url = new URL(this.url);
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(6000);
                 conn.setRequestMethod("GET");
                 //设置下载位置
                 int start =0;
-               // conn.setRequestProperty("Range", "bytes="+0+"-"+length);
+                // conn.setRequestProperty("Range", "bytes="+0+"-"+length);
                 //设置文件写入位置
                 File file = new File(DownloadService.DOWNLOAD_PATH,fileName);
                 raf = new RandomAccessFile(file, "rwd");
@@ -211,7 +200,7 @@ public class DownloadService extends Service {
                         speed += len;
                         if(System.currentTimeMillis() - time > 1000){
                             time = System.currentTimeMillis();
-                            notifyNotification(mFinished,length);
+                            notifyNotification(mFinished,length,"安装包正在下载...");
                             Log.i(TAG, "mFinished=="+mFinished);
                             Log.i(TAG, "length=="+length);
                             Log.i(TAG, "speed=="+speed);
@@ -222,7 +211,6 @@ public class DownloadService extends Service {
                 }else{   //conn.getResponseCode()!=200,
                     mHandler.sendEmptyMessage(NET_ERROR);
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally{
@@ -239,11 +227,9 @@ public class DownloadService extends Service {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
-
     @SuppressWarnings("deprecation")
     public void createNotification() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

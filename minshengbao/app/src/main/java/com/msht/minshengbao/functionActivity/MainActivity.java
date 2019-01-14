@@ -43,6 +43,7 @@ import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
+import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.msht.minshengbao.GuideActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpReqCallBack;
@@ -117,7 +118,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final int MY_CAMERA_REQUEST=3;
     private int     clickCode =0x001;
-    private int     requestType=0;
     /**
      * USE_COUPON_CODE 优惠券使用返回
      */
@@ -128,14 +128,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static final int EXIT_CODE = 0x005;
     private NetBroadcastReceiver receiver;
     private final RequestHandler requestHandler = new RequestHandler(this);
-    private final MessageNumHandler messageNumHandler = new MessageNumHandler(this);
     private final PushHandler pushHandler = new PushHandler(this);
     private final VersionHandler versionHandler = new VersionHandler(this);
     private ImmersionBar mImmersionBar;
     private ShopMainFragment shopMainFrag;
     private ShopCarParentFragment shopCarParentFragment;
     private TextView tvCarNum;
-    private Integer msgCount;
 
 
     private static class RequestHandler extends Handler {
@@ -177,48 +175,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private static class MessageNumHandler extends Handler {
-        private WeakReference<MainActivity> mWeakReference;
-
-        public MessageNumHandler(MainActivity mainActivity) {
-            mWeakReference = new WeakReference<MainActivity>(mainActivity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            final MainActivity activity = mWeakReference.get();
-            if (activity == null || activity.isFinishing()) {
-                return;
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results = object.optString("result");
-                        String error = object.optString("error");
-                        JSONObject json =object.optJSONObject("data");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (activity.requestType==0){
-                                activity.onGetBadgeCountMessage();
-                                activity.onUnreadMassage(json);
-                            }else {
-                                activity.onUnBadgeMassage(json);
-                            }
-
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    break;
-                default:
-                    break;
-
-            }
-            super.handleMessage(msg);
-        }
-    }
 
 
 
@@ -413,7 +369,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
            /* if (NetWorkUtil.isNetWorkEnable(this)){
                 onGetMessage();
             }*/
-            getTotalMessage();
+            onGetMessage();
             initGetInformation();
             initPush();
         }
@@ -436,59 +392,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void getTotalMessage() {
-        ShopPresenter.getMsgCount(new IGetMsgCountView() {
-            @Override
-            public void onGetMsgCountSuccess(String s) {
-                try {
-                    msgCount = Integer.valueOf(new JSONObject(s).optString("datas"));
-                    onGetMessage();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void showLoading() {
-
-            }
-
-            @Override
-            public void dismissLoading() {
-
-            }
-
-            @Override
-            public void onError(String s) {
-
-            }
-
-            @Override
-            public String getKey() {
-                return ShopSharePreferenceUtil.getInstance().getKey();
-            }
-
-            @Override
-            public String getUserId() {
-                return null;
-            }
-
-            @Override
-            public String getLoginPassword() {
-                return null;
-            }
-
-            @Override
-            public void onLogout() {
-
-            }
-
-            @Override
-            public void onNetError() {
-
-            }
-        });
-    }
 
     protected void initImmersionBar() {
         //在BaseActivity里初始化
@@ -551,11 +454,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void onGetMessage() {
-        requestType=0;
         String validateURL = UrlUtil.MESSAGE_UNREAD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
+        textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
         OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
             @Override
             public void onReqFailed(String errorMsg) {
@@ -563,17 +466,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
             @Override
             public void onRequestSuccess(String result) {
-                onAnalysisMessage(result);
+                onAnalysisMessage(result,0);
             }
         });
-      //  SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
     }
     private void onGetBadgeCountMessage() {
-        requestType=1;
         String validateURL = UrlUtil.BADGE_COUNT_URL;
         HashMap<String, String> textParams = new HashMap<String, String>(3);
         textParams.put("userId",userId);
         textParams.put("password",password);
+        textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
         OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
             @Override
             public void onReqFailed(String errorMsg) {
@@ -581,12 +483,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
             @Override
             public void onRequestSuccess(String result) {
-                onAnalysisMessage(result);
+                onAnalysisMessage(result,1);
             }
         });
        // SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
     }
-    private void onAnalysisMessage(String result){
+    private void onAnalysisMessage(String result,int requestType){
         try {
             JSONObject object = new JSONObject(result);
             String results=object.optString("result");
@@ -963,15 +865,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tvNavigation.setText("我的");
         hearLayout.setVisibility(View.INVISIBLE);
         if(!isLoginState(context)) {
-            /*if (myFrag == null) {
-                myFrag = new MyFragment();
-            }*/
             myFrag = new MyFragment();
             addOrShowFragment(getSupportFragmentManager().beginTransaction(), myFrag);
         } else {
-            /*if (myNewFrag==null){
-                myNewFrag=new LoginMyFrag();
-            }*/
             myNewFrag = new LoginMyFrag();
             addOrShowFragment(getSupportFragmentManager().beginTransaction(), myNewFrag);
 
@@ -1133,10 +1029,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (isLoginState(context)){
-            onGetMessage();
-           // onGetBadgeCountMessage();
-        }
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
     }
@@ -1179,27 +1071,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             ((ShopMainFragment) currentFragment).getMessageCount();
         }
         if (isLoginState(context) && NetWorkUtil.isNetWorkEnable(this)) {
-            getTotalMessage();
+            onGetMessage();
         }
     }
 
     private void refreshCarNum() {
         if (!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
-            ShopPresenter.getCarList(new ICarListView() {
+            ShopPresenter.getCarList(new ISimpleCarListView() {
                 @Override
                 public void onGetCarListSuccess(String s) {
                     try {
                         JSONObject jsonObj = new JSONObject(s);
                         JSONObject dataObj = jsonObj.getJSONObject("datas");
                         JSONArray jsonArray = dataObj.optJSONArray("cart_list");
-                        // String totalAddedCarNum = dataObj.optString("cart_count");
                         int carnum = 0;
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                          /*  for (int ii = 0; ii < good.length(); ii++) {
-                                carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                            }*/
-                            carnum +=good.length();
+                            carnum += good.length();
                         }
                         EventBus.getDefault().postSticky(new CarNumEvent(carnum));
                         if (carnum > 0) {
@@ -1212,48 +1100,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                 }
-
-
-                @Override
-                public void showLoading() {
-
-                }
-
-                @Override
-                public void dismissLoading() {
-
-                }
-
-                @Override
-                public void onError(String s) {
-
-                }
-
                 @Override
                 public String getKey() {
                     return ShopSharePreferenceUtil.getInstance().getKey();
                 }
-
-                @Override
-                public String getUserId() {
-                    return null;
-                }
-
-                @Override
-                public String getLoginPassword() {
-                    return null;
-                }
-
-                @Override
-                public void onLogout() {
-
-                }
-
-                @Override
-                public void onNetError() {
-
-                }
-            }, false);
+            }
+        );
         } else {
             tvCarNum.setVisibility(View.GONE);
             EventBus.getDefault().postSticky(new CarNumEvent(-1));

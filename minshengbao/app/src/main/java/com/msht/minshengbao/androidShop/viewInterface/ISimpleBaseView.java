@@ -1,4 +1,7 @@
 package com.msht.minshengbao.androidShop.viewInterface;
 
-interface ISimpleBaseView {
+public interface ISimpleBaseView {
+
+    String getKey();
+
 }

@@ -59,31 +59,36 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
+ *
  * @author hong
  * @date 2018/7/2  
  */
 public class AllServiceActivity extends BaseActivity {
     private String serveId;
-    private String mCity="";
-    private String cityId="";
+    private String mCity = "";
+    private String cityId = "";
     private MyRecyclerView myRecyclerView;
     private AllServerAdapter allServerAdapter;
-    private ArrayList<AllServiceModel.MainCategory.ServeCategory> categories=null;
-    private ArrayList<AllServiceModel.MainCategory.ServeCategory.ChildCategory> childCategories=null;
-    private final ServerTypeHandler serverTypeHandler=new ServerTypeHandler(this);
-    private static class ServerTypeHandler extends Handler{
+    private ArrayList<AllServiceModel.MainCategory.ServeCategory> categories = null;
+    private ArrayList<AllServiceModel.MainCategory.ServeCategory.ChildCategory> childCategories = null;
+    private final ServerTypeHandler serverTypeHandler = new ServerTypeHandler(this);
+
+    private static class ServerTypeHandler extends Handler {
         private WeakReference<AllServiceActivity> mWeakReference;
+
         public ServerTypeHandler(AllServiceActivity activity) {
-            mWeakReference=new WeakReference<AllServiceActivity>(activity);
+            mWeakReference = new WeakReference<AllServiceActivity>(activity);
         }
+
         @Override
         public void handleMessage(Message msg) {
-            final AllServiceActivity activity=mWeakReference.get();
-            if (activity==null||activity.isFinishing()){
+            final AllServiceActivity activity = mWeakReference.get();
+            if (activity == null || activity.isFinishing()) {
                 return;
             }
             switch (msg.what) {
@@ -94,11 +99,11 @@ public class AllServiceActivity extends BaseActivity {
                         if (model.result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             ArrayList<AllServiceModel.MainCategory.ServeCategory> data = model.data.serve;
                             data.get(4).child.add(new AllServiceModel.MainCategory.ServeCategory.ChildCategory("更多分类"));
-                            activity.categories=data;
+                            activity.categories = data;
                             activity.allServerAdapter.clear();
                             activity.allServerAdapter.addAll(data);
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
@@ -111,14 +116,15 @@ public class AllServiceActivity extends BaseActivity {
             super.handleMessage(msg);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_service);
-        context=this;
+        context = this;
         setCommonHeader("全部");
-        mCity=VariableUtil.City;
-        cityId=VariableUtil.cityId;
+        mCity = VariableUtil.City;
+        cityId = VariableUtil.cityId;
         initView();
         myRecyclerView.setLayoutManager(new FullyLinearLayoutManager(getApplicationContext()));
         allServerAdapter = new AllServerAdapter(this);
@@ -127,74 +133,45 @@ public class AllServiceActivity extends BaseActivity {
         allServerAdapter.SetOnItemClickListener(new AllServerAdapter.OnItemClickListener() {
             @Override
             public void ItemClick(View view, int mainPosition, int secondPosition) {
-                childCategories=categories.get(mainPosition).child;
-                String mainCode=categories.get(mainPosition).code;
-                String code=childCategories.get(secondPosition).code;
-                String url=childCategories.get(secondPosition).content;
-                String name=childCategories.get(secondPosition).name;
-                serveId=String.valueOf(childCategories.get(secondPosition).id);
-                if (!TextUtils.isEmpty(url)){
-                    AppActivityUtil.onStartUrl(context,url);
-                }else {
-                    AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
-                }
-
-                childcategories = categories.get(mainPosition).child;
-                String code = childcategories.get(secondPosition).code;
-                serveId = String.valueOf(childcategories.get(secondPosition).id);
-                if (BuildConfig.DEBUG) {
-                    if (mainPosition == 4) {
-                        String shopkeyword = String.valueOf(childcategories.get(secondPosition).name);
-                        Intent intent = new Intent(AllServiceActivity.this, ShopKeywordListActivity.class);
-                        intent.putExtra("keyword", shopkeyword);
+                childCategories = categories.get(mainPosition).child;
+                String mainCode = categories.get(mainPosition).code;
+                String code = childCategories.get(secondPosition).code;
+                String url = childCategories.get(secondPosition).content;
+                String name = childCategories.get(secondPosition).name;
+                serveId = String.valueOf(childCategories.get(secondPosition).id);
+                if ("shop".equals(mainCode)) {
+                    if (secondPosition < childCategories.size() - 1) {
+                        Intent intent = new Intent(AllServiceActivity.this, ShopClassDetailActivity.class);
+                        String gcId = Uri.parse(childCategories.get(secondPosition).url).getQueryParameter("gc_id");
+                        intent.putExtra("data", gcId);
+                        intent.putExtra("title", String.valueOf(childCategories.get(secondPosition).name));
                         startActivity(intent);
                     } else {
-                        startServer(code);
+                        Intent intent = new Intent(AllServiceActivity.this, ShopMoreGoodActivity.class);
+                        startActivity(intent);
                     }
-                } else {
-                    if (mainPosition == 4) {
-                        if(secondPosition<childcategories.size()-1){
-                            Intent intent = new Intent(AllServiceActivity.this, ShopClassDetailActivity.class);
-                            String gcId= Uri.parse(childcategories.get(secondPosition).url).getQueryParameter("gc_id");
-                            intent.putExtra("data",gcId);
-                            intent.putExtra("title",String.valueOf(childcategories.get(secondPosition).name));
-                            startActivity(intent);
-                        }else {
-                            Intent intent = new Intent(AllServiceActivity.this, ShopMoreGoodActivity.class);
-                            startActivity(intent);
-                        }
-
-                    } else {
-                        startServer(code);
+                } else if (!TextUtils.isEmpty(url)){
+                        AppActivityUtil.onStartUrl(context,url);
+                    }else {
+                        AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
                     }
-                }
             }
         });
     }
+
     private void initView() {
-        myRecyclerView=(MyRecyclerView)findViewById(R.id.id_serve_view);
+        myRecyclerView = (MyRecyclerView) findViewById(R.id.id_serve_view);
     }
-    private void startUrl(String url) {
-        if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)){
-            Intent intent=new Intent(context, ShopActivity.class);
-            intent.putExtra("url",url);
-            intent.putExtra("first",1);
-            startActivity(intent);
-        }else {
-            Intent other=new Intent(context, HtmlPageActivity.class);
-            other.putExtra("url",url);
-            other.putExtra("navigate","民生宝");
-            startActivity(other);
-        }
-    }
+
+
     private void intData() {
-        String functionUrl= UrlUtil.ALL_SERVE_CATALOG_URL;
-        String function="";
+        String functionUrl = UrlUtil.ALL_SERVE_CATALOG_URL;
+        String function = "";
         try {
-            function =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201811", "UTF-8");
+            function = functionUrl + "?city_id=" + URLEncoder.encode(cityId, "UTF-8") + "&city_name=" + URLEncoder.encode(mCity, "UTF-8") + "&version=" + URLEncoder.encode("201811", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        SendRequestUtil.getDataFromService(function,serverTypeHandler);
+        SendRequestUtil.getDataFromService(function, serverTypeHandler);
     }
 }

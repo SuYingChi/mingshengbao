@@ -482,13 +482,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                         intent.putExtra("first", 1);
                         startActivity(intent);
                     }
-                } else if (NetUtil.getDomain(myUrl).equals(ConstantUtil.VEGETABLE_DOMAIN)) {
-                    if (VariableUtil.loginStatus) {
-                        vegetableScxs();
-                    } else {
-                        gologins();
-                    }
-                } else if (!myUrl.equals(VariableUtil.NULL_VALUE)) {
+                }  else if (!myUrl.equals(VariableUtil.NULL_VALUE)) {
                     String title=info.getTitle();
                     String share=info.getShare();
                     String desc=info.getDesc();

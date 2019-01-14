@@ -84,7 +84,7 @@ public class AppPackageUtil {
         return false;
     }
     public static boolean isNotificationManagerEnabled(Context context) {
-        return NotificationManagerCompat.from(MyApplication.getContext()).areNotificationsEnabled();
+        return NotificationManagerCompat.from(MyApplication.getInstance()).areNotificationsEnabled();
     }
     public static void openNotificationManager(final Context context){
         new PromptDialog.Builder(context)
