@@ -368,7 +368,7 @@ public class LpgOrderGasActivity extends BaseActivity implements View.OnClickLis
         textParams.put("userId",lpgUserId);
         textParams.put("msbUserId",userId);
         textParams.put("realAmount",mTotalAmount);
-        textParams.put("orderType",orderType);
+        textParams.put("orderKey",orderType);
         textParams.put("orderSource",orderSource);
         textParams.put("deliveryTime",deliveryTime);
         textParams.put("mobile",lpgMobile);

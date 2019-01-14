@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
+import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
+import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;

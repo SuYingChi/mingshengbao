@@ -12,6 +12,7 @@
     <dimen name="margin_width270">540dp</dimen>
     <dimen name="margin_width225">450dp</dimen>
     <dimen name="margin_width200">400dp</dimen>
+    <dimen name="dp400">800dp</dimen>
     <dimen name="margin_width195">390dp</dimen>
     <dimen name="margin_width174">348dp</dimen>
     <dimen name="margin_width170">340dp</dimen>

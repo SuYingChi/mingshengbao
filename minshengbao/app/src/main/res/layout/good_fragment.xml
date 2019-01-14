@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.msht.minshengbao.androidShop.customerview.XScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/nc_bg"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <!--图片轮播-->
+            <com.msht.minshengbao.androidShop.customerview.ImageCycleView
+                android:id="@+id/cycleView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width320"
+                android:layout_alignParentTop="true" />
+
+            <ImageView
+                android:id="@+id/collected"
+                android:layout_width="@dimen/margin_width50"
+                android:layout_height="@dimen/margin_width50"
+                android:layout_alignBottom="@id/cycleView"
+                android:layout_alignRight="@id/cycleView"
+                android:layout_marginRight="@dimen/margin_Modules"
+                android:padding="@dimen/margin_Modules"
+                />
+
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="@dimen/margin_width50"
+                android:layout_height="@dimen/margin_width50"
+                android:layout_alignBottom="@id/collected"
+                android:layout_alignTop="@id/collected"
+                android:layout_marginRight="@dimen/margin_Modules"
+                android:layout_toLeftOf="@id/collected"
+                android:src="@drawable/shop_good_share"
+                android:padding="@dimen/margin_Modules"
+                />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_Modules"
+                android:paddingRight="@dimen/margin_Modules">
+
+                <TextView
+                    android:id="@+id/goods_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_14" />
+
+                <TextView
+                    android:id="@+id/goods_jingle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/nc_text"
+                    android:textSize="@dimen/text_14" />
+
+                <TextView
+                    android:id="@+id/price"
+                    style="@style/shopMsbcolorTitleText"
+                    android:layout_gravity="left"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/goods_marketprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/text_10" />
+                <TextView
+                    android:id="@+id/kuaidiinfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="invisible"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:textColor="@color/nc_text"
+                    android:textSize="@dimen/text_12" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_Modules"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/kuaidi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_12" />
+
+                    <TextView
+                        android:id="@+id/saleCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:visibility="invisible"
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_12" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_Modules"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/storeinfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/margin_Modules"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_14" />
+
+                <LinearLayout
+                    android:id="@+id/ll_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_Modules"
+                        android:text="已选"
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_14" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/yixuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_Modules"
+                        android:text="默认x1"
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_14" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/margin_Modules"
+                        android:src="@drawable/right_angle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_Modules"
+                        android:text="商品评价         好评率"
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_14" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_Modules"
+                        android:text="0人评价"
+                        android:textColor="@color/nc_text"
+                        android:textSize="@dimen/text_14" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/margin_Modules"
+                        android:src="@drawable/right_angle" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:background="@color/white"
+                    android:padding="@dimen/margin_Modules"
+                    android:text="商品推荐"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_14" />
+            </LinearLayout>
+
+            <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                android:id="@+id/gv"
+                style="@style/grid_view" />
+        </LinearLayout>
+    </com.msht.minshengbao.androidShop.customerview.XScrollView>
+</RelativeLayout>

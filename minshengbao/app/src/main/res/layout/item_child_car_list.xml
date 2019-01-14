@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="@dimen/margin_Modules"
+    >
+
+    <CheckBox
+        android:id="@+id/select"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/margin_width122"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/margin_Modules"
+        android:paddingRight="@dimen/margin_Modules"
+        android:drawableLeft="@drawable/item_carlist_selected"
+        android:button="@null"
+        android:checked="false" />
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="@dimen/margin_width122"
+        android:layout_height="@dimen/margin_width122"
+        android:layout_marginBottom="@dimen/margin_Modules"
+        android:scaleType="fitCenter"
+        android:layout_toRightOf="@id/select" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/close"
+        android:layout_toRightOf="@id/iv"
+        android:lines="2"
+        android:ellipsize="end"
+        android:layout_marginLeft="@dimen/margin_width15"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_width14" />
+
+    <TextView
+        android:id="@+id/jingle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/iv"
+        android:visibility="gone"
+        android:lines="2"
+        android:ellipsize="end"
+        android:layout_marginLeft="@dimen/margin_width15"
+        android:textColor="@color/nc_text"
+        android:textSize="@dimen/text_12" />
+
+    <LinearLayout
+        android:id="@+id/ll_remain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/name"
+        android:layout_below="@id/jingle"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/remain_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库存量:"
+            android:textColor="@color/msb_color"
+            android:textSize="@dimen/text_12" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:text=""
+            android:textColor="@color/msb_color"
+            android:textSize="@dimen/text_width18" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/num_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_remain"
+        android:layout_alignParentRight="true" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        />
+</RelativeLayout>

@@ -601,7 +601,7 @@ public class MZBannerView<ActivityInfo> extends RelativeLayout {
             View view = holder.createView(container.getContext());
 /*
             if( mDatas!=null && mDatas.size()>0){
-                holder.onBind(container.getContext(),realPosition,mDatas.get(realPosition));
+                holder.onBind(container.getViewContext(),realPosition,mDatas.get(realPosition));
             }*/
             if(Imageinfos!=null && Imageinfos.size()>0){
                 holder.onBind(container.getContext(),realPosition,Imageinfos.get(realPosition));

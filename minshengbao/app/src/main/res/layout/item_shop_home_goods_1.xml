@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dp4"
+    android:background="@color/white"
+    android:orientation="vertical">
+     <!--配合使用完全显示子view的GridView的时候会出现GridView显示不全的bug ，imageview高度不能使用wrapcontent或在onresouce里动态设置-->
+    <!--需要使用scaleType="fitXY"属性让图片充满该view-->
+    <!--android:layout_width="match_parent，否则会出现平板显示太小，手机显示不全-->
+    <ImageView
+        android:id="@+id/ivGoodPic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_width200"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        />
+
+
+    <TextView
+        android:id="@+id/tvGoodName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="10dp"
+        android:text=""
+        android:lines="2"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp14" />
+
+
+    <TextView
+        android:id="@+id/tvGoodPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp5"
+        android:singleLine="true"
+        android:textColor="@color/red"
+        android:textSize="14sp" />
+
+</LinearLayout>

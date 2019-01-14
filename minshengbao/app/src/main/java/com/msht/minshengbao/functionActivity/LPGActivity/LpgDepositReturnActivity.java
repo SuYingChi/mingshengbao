@@ -333,7 +333,7 @@ public class LpgDepositReturnActivity extends BaseActivity implements View.OnCli
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",lpgUserId);
         textParams.put("msbUserId",userId);
-        textParams.put("orderType",orderType);
+        textParams.put("orderKey",orderType);
         textParams.put("orderSource",orderSource);
         textParams.put("deliveryTime",deliveryTime);
         textParams.put("mobile",lpgMobile);

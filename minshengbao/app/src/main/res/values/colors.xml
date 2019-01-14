@@ -68,7 +68,15 @@
     <color name="qmui_config_color_red">#FA3A3A</color>
     <color name="uncompleted_text_color">#9e9e9e</color>
     <color name="uncompleted_color">#A3E0D9</color>
-
-
-
+    <color name="text_hint">#999999</color>
+    <color name="msb_color">#f96331</color>
+       <!-- 商城-->
+    <color name="nc_bg">#f0f2f5</color>
+    <color name="nc_text_dark">#232326</color>
+    <color name="nc_border">#F0EFF4</color>
+    <color name="nc_text">#868686</color>
+    <color name="nc_ming_grade_bg">#ED5564</color>
+    <color name="commission_bg">#f0f2f5</color>
+    <color name="shop_grey">#30000000</color>
+    <color name="nc_yellow">#DDFFFF00</color>
 </resources>

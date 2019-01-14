@@ -159,6 +159,7 @@ public class ConstantUtil {
 
     public static final String SHOP_DOMAIN="shop.msbapp.cn";
     //public static final String SHOP_DOMAIN="dev.msbapp.cn";
+    public static final String DEBUG_SHOP_DOMAIN="dev.msbapp.cn";
     public static final String VEGETABLE_DOMAIN="jsxss.net";
 
     public static final String WEI_XIN_CHAT_REDIRECT="wechat_redirect";

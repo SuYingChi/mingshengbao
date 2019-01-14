@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_Modules"
+        >
+        <TextView
+            android:layout_width="@dimen/margin_width122"
+            android:layout_height="wrap_content"
+            android:text="开户账号"
+            android:gravity="right"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18"
+            />
+        <EditText
+            android:id="@+id/et_account"
+            style="@style/editText"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Modules"
+            android:background="@null"
+            android:hint="请输入您的开户账号"/>
+    </LinearLayout>

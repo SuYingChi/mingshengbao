@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="@dimen/margin_width20"
+
+    >
+<TextView
+    android:id="@+id/pay"
+    style="@style/shopMsbcolorTitleText"
+    android:layout_width="@dimen/margin_width320"
+    android:textColor="@color/white"
+    android:text="立即支付"
+    android:gravity="center_horizontal"
+    android:background="@drawable/btn_normal"
+    />
+</LinearLayout>

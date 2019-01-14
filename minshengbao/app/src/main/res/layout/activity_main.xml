@@ -61,9 +61,11 @@
     <include layout="@layout/layout_line_gray"/>
     <!-- 底部tab -->
     <RelativeLayout
+        android:id="@+id/rla"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        >
     <RadioGroup
         android:id="@+id/radiogroup_main"
         android:gravity="center_vertical"
@@ -107,7 +109,7 @@
             android:textColor="@drawable/radio_home_textcolor"
             android:drawableTop="@drawable/radio_order_button"
             android:drawablePadding="3dp"
-            android:text="订单"
+            android:text="购物车"
             android:layout_height="@dimen/margin_width50"/>
         <RadioButton
             android:id="@+id/radio_me"
@@ -122,5 +124,15 @@
             android:text="我的"
             android:layout_height="@dimen/margin_width50"/>
     </RadioGroup>
+        <TextView
+            android:id="@+id/shop_car_num"
+            android:layout_width="@dimen/dp14"
+            android:layout_height="@dimen/dp14"
+            android:background="@drawable/shop_red_oval"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_10"
+            android:visibility="invisible" />
     </RelativeLayout>
 </LinearLayout>

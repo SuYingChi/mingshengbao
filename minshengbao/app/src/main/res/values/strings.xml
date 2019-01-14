@@ -100,4 +100,11 @@
     <string name="notification_message">公告栏</string>
 
 
+    <string name="loading">加载中</string>
+    <string name="please_login">请登录</string>
+
+    <!--商城 -->
+    <string name="monetary_unit">¥</string>
+    <string name="click_button_reload">点击按钮重新加载</string>
+    <string name="reload">重新加载</string>
 </resources>

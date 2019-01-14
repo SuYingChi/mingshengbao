@@ -78,7 +78,7 @@ public class DownloadService extends Service {
                     break;
                 case DOWNLOAD_SUCCESS:
                     //下载完成
-                    reference.notifyNotification(100, 100,"安装包下载完成");
+                    reference.notifyNotification(100, 100);
                     installApk(reference.mContext,new File(DOWNLOAD_PATH,reference.fileName));
                     Toast.makeText(reference.mContext, "下载完成", Toast.LENGTH_SHORT).show();
                     break;
@@ -119,6 +119,7 @@ public class DownloadService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
     private class InitThread extends Thread{
         String url = "";
         public InitThread(String url) {
@@ -210,7 +211,7 @@ public class DownloadService extends Service {
                         speed += len;
                         if(System.currentTimeMillis() - time > 1000){
                             time = System.currentTimeMillis();
-                            notifyNotification(mFinished,length,"安装包正在下载...");
+                            notifyNotification(mFinished,length);
                             Log.i(TAG, "mFinished=="+mFinished);
                             Log.i(TAG, "length=="+length);
                             Log.i(TAG, "speed=="+speed);

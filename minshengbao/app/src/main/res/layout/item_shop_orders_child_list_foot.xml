@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        />
+    <LinearLayout
+        android:id="@+id/ll_zengping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/rcl"
+        android:background="@color/white"
+        >
+        <TextView
+            android:id="@+id/zengpingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Modules"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width16"
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/liu_yan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_Modules">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/total_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="共2件商品，合计"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_15" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="￥16.46"
+            android:textColor="@color/msb_color"
+            android:textSize="@dimen/text_width18" />
+        <TextView
+            android:id="@+id/deleiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="(含运费￥10.00)"
+            android:textColor="@color/shop_grey"
+            android:textSize="@dimen/text_14" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp1"
+        />
+    <LinearLayout
+        android:id="@+id/btn_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_Modules">
+
+    </LinearLayout>
+</LinearLayout>
