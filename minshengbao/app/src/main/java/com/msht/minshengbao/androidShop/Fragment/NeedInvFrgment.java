@@ -91,7 +91,7 @@ public class NeedInvFrgment extends ShopBaseFragment implements IGetInvListView,
     @Override
     public void onDeleteItem(int position) {
         deleteInvId = invList.get(position).getInv_id();
-        PopUtil.showComfirmDialog(getContext(), null, "点击确认删除该条发票内容", "cancel", "ok", null, new View.OnClickListener() {
+        PopUtil.showComfirmDialog(getContext(), null, "点击确认删除该条发票内容", "取消", "确认", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShopPresenter.deleteInvItem(NeedInvFrgment.this);

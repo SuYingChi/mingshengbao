@@ -28,5 +28,6 @@
             android:textColor="@color/white" />
 
     </RelativeLayout>
-    <include layout="@layout/smart_refresh_rcl"/>
+    <include layout="@layout/smart_refresh_rcl"
+        />
 </LinearLayout>

@@ -170,6 +170,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             rcl.setAdapter(adapter);
             ifCarted = bundle.getString("ifCar");
             isPickup_self = bundle.getString("isPickup_self");
+            if (TextUtils.equals(isPickup_self, "0")) {
+                ShopPresenter.getAddressList(this, false);
+            } else {
+                PopUtil.toastInBottom("暂不支持自提商品购买");
+            }
         } else {
             finish();
         }
@@ -256,16 +261,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (TextUtils.equals(isPickup_self, "0")) {
-            ShopPresenter.getAddressList(this, false);
-            // ShopPresenter.buyStep1(this);
-        } else {
-            PopUtil.toastInBottom("暂不支持自提商品购买");
-        }
-    }
+
 
     @Override
     public void onGetAddressListSuccess(String s) {

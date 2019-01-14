@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginLeft="@dimen/margin_Modules"
-    android:layout_marginRight="@dimen/margin_Modules"
+
     >
 <TextView
     android:id="@+id/time"
@@ -34,6 +33,7 @@
         <TextView
             android:id="@+id/title"
             style="@style/shopBlackTitleText"
+            android:textSize="@dimen/text_15"
             android:textColor="@color/black"
             android:singleLine="true"
             android:ellipsize="end"
@@ -42,8 +42,9 @@
         <TextView
             android:id="@+id/desc"
             style="@style/shopBlackTitleText"
+            android:textSize="@dimen/text_14"
             android:layout_gravity="left"
-            android:textColor="@color/shop_grey"
+            android:textColor="@color/right_title"
             android:singleLine="true"
             android:ellipsize="end"
             />

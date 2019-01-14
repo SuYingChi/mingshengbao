@@ -25,14 +25,15 @@
         >
         <TextView
             android:id="@+id/point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/margin_width7"
+            android:layout_height="@dimen/margin_width7"
             android:background="@drawable/shop_red_oval"
             android:gravity="center"
             android:visibility="visible" />
         <TextView
             android:id="@+id/title"
             style="@style/shopBlackTitleText"
+            android:textSize="@dimen/text_15"
             android:textColor="@color/black"
             android:singleLine="true"
             android:ellipsize="end"
@@ -42,7 +43,8 @@
             android:id="@+id/desc"
             style="@style/shopBlackTitleText"
             android:layout_gravity="left"
-            android:textColor="@color/shop_grey"
+            android:textSize="@dimen/text_14"
+            android:textColor="@color/right_title"
             android:singleLine="true"
             android:ellipsize="end"
             />
