@@ -452,43 +452,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         public void onImageClick(AdvertisingInfo info, int position, View imageView) {
             String myUrl = info.getUrl();
             if (!TextUtils.isEmpty(myUrl)&&!myUrl.equals(VariableUtil.NULL_VALUE)) {
-               /* if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)) {
-                    if (myUrl.contains("keyword=")) {
-                        int index = myUrl.indexOf("keyword=");
-                        String shopkeyword = myUrl.substring(index + 8).trim();
-                        Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                        intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
-                        startActivity(intent);
-                    } else if (myUrl.contains("goods_id=")) {
-                        int index = myUrl.indexOf("goods_id=");
-                        String goodsid = myUrl.substring(index + 9).trim();
-                        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
-                        intent.putExtra("goodsid", goodsid);
-                        startActivity(intent);
-                    }else if (myUrl.contains("gc_id=")) {
-                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                            int index = myUrl.indexOf("gc_id=");
-                            myUrl = myUrl.substring(index + 6).trim();
-                            intent.putExtra("data", myUrl);
-                            intent.putExtra("title", "民生商城");
-                            startActivity(intent);
-                        } else if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(myUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
-                            Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
-                            intent.putExtra("url", myUrl);
-                            startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(getActivity(), ShopActivity.class);
-                        intent.putExtra("url", myUrl);
-                        intent.putExtra("first", 1);
-                        startActivity(intent);
-                    }
-                }  else*/
                     String title=info.getTitle();
                     String share=info.getShare();
                     String desc=info.getDesc();
                     String backUrl=info.getBackUrl();
                     AppActivityUtil.onAppActivityType(mContext,myUrl,title,share,desc,"header_img",backUrl);
-
             }
         }
         @Override

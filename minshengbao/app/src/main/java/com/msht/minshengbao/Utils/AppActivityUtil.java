@@ -745,11 +745,7 @@ public class AppActivityUtil {
                 Intent intent = new Intent(context, ShopUrlActivity.class);
                 intent.putExtra("url", rightUrl);
                 context.startActivity(intent);
-            } /*else {
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("index",1);
-                context.startActivity(intent);
-            }*/
+            }
         }
     }
 
@@ -934,12 +930,9 @@ public class AppActivityUtil {
     }
 
     private static void onVegetableModel(Context context, String pushUrl) {
-        if (isLoginState(context)) {
-            Intent intent = new Intent(context, VegetableGentlemenActivity.class);
-            context.startActivity(intent);
-        } else {
-            onStartLoginActivity(context, pushUrl);
-        }
+        Intent intent = new Intent(context,ShopKeywordListActivity.class);
+        intent.putExtra("gcid","24");
+        context.startActivity(intent);
     }
 
     private static void onHouseKeepingClean(Context context, String id, String name) {
