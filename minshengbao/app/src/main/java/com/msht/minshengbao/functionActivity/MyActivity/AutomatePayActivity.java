@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.adapter.AutomaticPayAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ReplacePayAgreeActivity;
@@ -31,13 +32,19 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2018/7/2  
+ */
 public class AutomatePayActivity extends BaseActivity implements View.OnClickListener {
     private AutomaticPayAdapter adapter;
     private View views;
     private TextView tvNoData, tvRightText;
     private String password,userId;
-    private String Id,customerNum,addr;
+    private String id,customerNum, address;
     private int pos=-1;
     private ListView mListView;
     private int   requestCode=0;
@@ -79,14 +86,21 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
                                 }
                             }else if (activity.requestCode==1){
                                 JSONObject objectInfo = object.optJSONObject("data");
-                                activity.addr = objectInfo.optString("address");
+                                activity.address = objectInfo.optString("address");
                                 activity.requestCode=2;
                                 activity.showDialogs("再仔细瞧瞧哦！");
                             }else if (activity.requestCode==2){
-                                activity.displayDialog("添加自动缴费地址完成");
+                                activity.autoList.clear();  //清除原来数据
+                                activity.requestCode=0;
+                                activity.requestService();
                             }else if (activity.requestCode==3){
-                                activity.autoList.remove(activity.pos);
-                                activity.adapter.notifyDataSetChanged();
+                                if (activity.autoList!=null&&activity.autoList.size()>1){
+                                    activity.autoList.remove(activity.pos);
+                                    activity.adapter.notifyDataSetChanged();
+                                }else {
+                                    activity.requestCode=0;
+                                    activity.requestService();
+                                }
                             }
                         }else {
                             activity.displayDialog(error);
@@ -116,11 +130,6 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        if (requestCode==2){
-                            autoList.clear();  //清除原来数据
-                            requestCode=0;
-                            requestSevice();
-                        }
                         dialog.dismiss();
                     }
                 }).show();
@@ -159,24 +168,26 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initFindViewByid();
-        adapter=new AutomaticPayAdapter(context,autoList, new AutomaticPayAdapter.IOnItemButtonClickListener() {
+        VariableUtil.boolSelect =false;
+        adapter=new AutomaticPayAdapter(context,autoList);
+        mListView.setAdapter(adapter);
+        requestService();
+        adapter.setOnItemDeleteButtonClickListener(new AutomaticPayAdapter.IOnItemButtonClickListener() {
             @Override
-            public void onDelectClick(View v, int position) {
+            public void onDeleteClick(View v, int position) {
                 pos=position;
-                Id=autoList.get(position).get("id");
+                id =autoList.get(position).get("id");
                 customerNum=autoList.get(position).get("customerNo");
-                addr=autoList.get(position).get("address");
+                address =autoList.get(position).get("address");
                 requestCode=3;
                 showDialogs("确定要移除吗？");
             }
         });
-        mListView.setAdapter(adapter);
-        requestSevice();
     }
     private void showDialogs(String string) {
         final EnsureAddress ensureAddress=new EnsureAddress(this);
         ensureAddress.setTitleText(string);
-        ensureAddress.setAddressText(addr);
+        ensureAddress.setAddressText(address);
         ensureAddress.setCustomerText(customerNum);
         ensureAddress.setOnNegativeListener(new View.OnClickListener() {
             @Override
@@ -188,22 +199,44 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 ensureAddress.dismiss();
-                requestSevice();
+                requestService();
             }
         });
         ensureAddress.show();
-
     }
     private void initFindViewByid() {
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
         tvRightText.setVisibility(View.VISIBLE);
-        tvRightText.setText("添加");
-        tvRightText.setOnClickListener(this);
+        tvRightText.setText("编辑");
+        tvRightText.setTag(0);
+        findViewById(R.id.id_new_addBtn).setOnClickListener(this);
         views=findViewById(R.id.id_view);
         tvNoData =(TextView)findViewById(R.id.id_nodata);
         mListView = (ListView)findViewById(R.id.id_auto_address);
+        tvRightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tag=(Integer)v.getTag();
+                switch (tag){
+                    case 0:
+                        VariableUtil.boolSelect =true;
+                        adapter.notifyDataSetChanged();
+                        v.setTag(1);
+                        tvRightText.setText("撤销");
+                        break;
+                    case 1:
+                        VariableUtil.boolSelect =false;
+                        adapter.notifyDataSetChanged();
+                        v.setTag(0);
+                        tvRightText.setText("编辑");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
-    private void requestSevice() {
+    private void requestService() {
         customDialog.show();
         String validateURL="";
         Map<String, String> textParams = new HashMap<String, String>();
@@ -219,7 +252,7 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
             textParams.put("customerNo",customerNum);
         }else if (requestCode==3){
             validateURL = UrlUtil.DelectAutopay_AddUrl;
-            textParams.put("id",Id);
+            textParams.put("id", id);
         }
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
@@ -229,10 +262,9 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
             case R.id.id_goback:
                 finish();
                 break;
-            case R.id.id_tv_rightText:
+            case R.id.id_new_addBtn:
                 Intent intent=new Intent(context, ReplacePayAgreeActivity.class);
                 startActivityForResult(intent,1);
-                // showInputDialog();
                 break;
             default:
                 break;
@@ -254,7 +286,7 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
             public void onClick(View v) {
                 customerNum=etCustomer.getText().toString().trim();
                 requestCode=1;
-                requestSevice();
+                requestService();
                 input.dismiss();
             }
         });
@@ -273,8 +305,6 @@ public class AutomatePayActivity extends BaseActivity implements View.OnClickLis
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

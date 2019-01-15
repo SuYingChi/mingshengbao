@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.Public.PayFeeWayActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
@@ -38,6 +39,7 @@ import java.util.HashMap;
  * @date 2016/8/2  
  */
 public class GasExpenseQueryActivity extends BaseActivity {
+    private TextView tvPrice;
     private TextView tvBill;
     private TextView tvVoucher;
     private TextView tvReal;
@@ -177,6 +179,9 @@ public class GasExpenseQueryActivity extends BaseActivity {
         }
     }
     private void initView() {
+        tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
+        tvPrice.setVisibility(View.VISIBLE);
+        tvPrice.setText("缴费记录");
         View layoutData =findViewById(R.id.id_layout_data);
         View layoutNoData =findViewById(R.id.id_nodata_layout);
         View layoutBtn =findViewById(R.id.id_layout_btn);
@@ -264,6 +269,16 @@ public class GasExpenseQueryActivity extends BaseActivity {
                 intent.putExtra("mCustomerNo",customerNo);
                 intent.putExtra("name",name);
                 startActivity(intent);
+            }
+        });
+        tvPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url= UrlUtil.Gasprice_Url;
+                Intent price=new Intent(context,HtmlPageActivity.class);
+                price.putExtra("navigate","气价说明");
+                price.putExtra("url",url);
+                startActivity(price);
             }
         });
     }

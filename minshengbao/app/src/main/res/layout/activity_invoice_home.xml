@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/margin_width50"
-        android:background="@drawable/selector_touch_background"
-        android:visibility="gone">
+        android:background="@drawable/selector_touch_background">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

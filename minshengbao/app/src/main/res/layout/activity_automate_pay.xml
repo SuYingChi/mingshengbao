@@ -7,26 +7,47 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.MyActivity.AutomatePayActivity">
     <include layout="@layout/layout_header"/>
-    <ListView
-        android:id="@+id/id_auto_address"
+    <FrameLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </ListView>
-    <include layout="@layout/layout_line_gray"/>
-    <RelativeLayout
+        <ListView
+            android:id="@+id/id_auto_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width40"
+            android:minHeight="@dimen/margin_width45">
+            <TextView
+                android:id="@+id/id_nodata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/margin_width20"
+
+                android:text="@string/not_add_customerNo"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/colorOrange"/>
+        </RelativeLayout>
+    </FrameLayout>
+    <Button
+        android:id="@+id/id_new_addBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_width45">
-        <TextView
-            android:id="@+id/id_nodata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/margin_width20"
-            android:visibility="gone"
-            android:text="@string/not_add_customerNo"
-            android:textSize="@dimen/text_width16"
-            android:textColor="@color/colorOrange"/>
-    </RelativeLayout>
+        android:minHeight="@dimen/margin_width45"
+        android:layout_marginRight="@dimen/margin_width60"
+        android:layout_marginEnd="@dimen/margin_width60"
+        android:layout_marginLeft="@dimen/margin_width60"
+        android:layout_marginStart="@dimen/margin_width60"
+        android:layout_marginTop="@dimen/margin_width20"
+        android:layout_marginBottom="@dimen/margin_width20"
+        android:textSize="@dimen/text_width16"
+        android:textColor="@color/white"
+        android:text="@string/new_add_customerNo_text"
+        android:background="@drawable/selector_touch_button_change"/>
+
 </LinearLayout>

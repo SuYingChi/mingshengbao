@@ -1,66 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/selector_touch_background">
+    <ImageView
+        android:id="@+id/id_customerView"
+        android:layout_width="@dimen/margin_width30"
+        android:layout_height="@dimen/margin_width30"
+        android:src="@drawable/gas_customer_icon_xh"
+        android:layout_marginLeft="@dimen/margin_width10"
+        android:layout_marginStart="@dimen/margin_width10"
+        android:layout_marginTop="@dimen/margin_width10"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:contentDescription="@string/picture_text"
+        android:layout_gravity="center_vertical"/>
     <RelativeLayout
         android:id="@+id/item_left"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF" >
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="21dp"
-            android:src="@drawable/customer_xh"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_6"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:layout_alignParentLeft="true"
-            android:id="@+id/id_customerimg" />
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/id_customerText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/id_customerimg"
-            android:layout_marginLeft="@dimen/text_10"
-            android:textSize="@dimen/text_18"
-            android:textColor="#000000"
-            android:layout_marginTop="@dimen/margin_6"
-            android:layout_alignBottom="@+id/id_customerimg"
-            />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="21dp"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/id_customerText"
-            android:src="@drawable/address_xh"
-            android:id="@+id/id_addressimg" />
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/color_383838"
+            android:text="@string/default_text"/>
         <TextView
             android:id="@+id/id_address_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/id_addressimg"
-            android:layout_marginLeft="@dimen/text_10"
-            android:layout_toLeftOf="@+id/id_btn_contast"
-            android:layout_marginRight="@dimen/margin_3"
-            android:textSize="@dimen/text_18"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/color_383838"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width10"
             android:layout_below="@+id/id_customerText"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:textColor="#000000"
-           />
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:text="@string/default_text"/>
         <ImageView
             android:id="@+id/id_btn_contast"
-            android:layout_width="@dimen/margin_28"
-            android:layout_height="@dimen/margin_30"
+            android:layout_width="@dimen/margin_width25"
+            android:layout_height="@dimen/margin_width25"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/picture_text"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:background="@drawable/delect_addr_xh"
             android:visibility="gone"/>
     </RelativeLayout>

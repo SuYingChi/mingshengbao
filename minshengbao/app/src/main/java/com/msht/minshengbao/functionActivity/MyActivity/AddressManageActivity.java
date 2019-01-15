@@ -185,7 +185,7 @@ public class AddressManageActivity extends BaseActivity {
                 return true;
             }
         });
-        mAdapter.setOnDelectListener(new AddressManageAdapter.OnSelectDelectListener() {
+        mAdapter.setOnDeleteListener(new AddressManageAdapter.OnSelectDelectListener() {
             @Override
             public void ItemDelectClick(View view, int thisposition) {
                 addressId=addrList.get(thisposition).get("id");

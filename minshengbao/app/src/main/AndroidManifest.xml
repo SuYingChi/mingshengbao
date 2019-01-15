@@ -351,6 +351,7 @@
         <activity android:name=".functionActivity.GasService.GasInternetTableRechargeActivity" />
         <activity android:name=".functionActivity.GasService.GasInternetTablePayFeeActivity" />
         <activity android:name=".functionActivity.repairService.RepairOrderListActivity" />
+        <activity android:name=".functionActivity.GasService.GasOrdinaryRecordActivity"></activity>
     </application>
 
 </manifest>

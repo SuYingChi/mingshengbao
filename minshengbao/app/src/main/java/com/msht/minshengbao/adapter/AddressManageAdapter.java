@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/4/28.
+ *
+ * @author hong
+ * @date 2017/4/28
  */
 
 public class AddressManageAdapter extends BaseAdapter {
@@ -30,8 +32,8 @@ public class AddressManageAdapter extends BaseAdapter {
     public void setOnItemSelectListener(OnItemSelectListener listener){
         this.listener=listener;
     }
-    public void setOnDelectListener(OnSelectDelectListener delectlistener){
-        this.delectlistener=delectlistener;
+    public void setOnDeleteListener(OnSelectDelectListener deletelistener){
+        this.delectlistener=deletelistener;
     }
     public interface OnItemCheckedListener{
         void ItemCheckedClick(View view,int thisposition);

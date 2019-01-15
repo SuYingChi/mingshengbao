@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,10 +17,12 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -47,17 +50,10 @@ import java.util.HashMap;
  * @date 2019/1/8 
  */
 public class GasInternetTableActivity extends BaseActivity {
-    private RadioGroup radioGroup;
-    private RadioButton radioButtonAddress;
-    private ListViewForScrollView mLstView;
-    private RelativeLayout customerLayout;
-    private View   layoutLine;
-    private EditText etCustomer;
-    private Button btnPayQuery;
+    private TextView   tvNoDataTip;
+    private ListView mLstView;
     private String userId;
     private String password;
-    private String getCustomerNo;
-    private String ediCustomerNo;
     private String customerNo;
     private String meterNo;
     private String mAddress;
@@ -191,8 +187,8 @@ public class GasInternetTableActivity extends BaseActivity {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonObject = array.optJSONObject(i);
                 String id = jsonObject.optString("id");
-                String address = jsonObject.optString("address");
                 String bh = jsonObject.optString("bh");
+                String address = jsonObject.optString("address")+"(表号:"+bh+")";
                 String moduleType = "2";
                 String lastNum = jsonObject.optString("lastNum");
                 HashMap<String, String> map = new HashMap<String, String>();
@@ -223,7 +219,7 @@ public class GasInternetTableActivity extends BaseActivity {
     private void onInternetTable() {
         if (context!=null&&tableList!=null){
             new SelectDialog(context,tableList,-1).builder()
-                    .setTitleText("选择表具")
+                    .setTitleText("请选择表具")
                     .setCancelable(false)
                     .setCanceledOnTouchOutside(true)
                     .setOnSheetItemClickListener(new SelectDialog.OnSheetItemClickListener() {
@@ -253,9 +249,11 @@ public class GasInternetTableActivity extends BaseActivity {
             e.printStackTrace();
         }
         if (houseList!=null&&houseList.size()>0){
-            adapter.notifyDataSetChanged();
-            mLstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            tvNoDataTip.setVisibility(View.GONE);
+        }else {
+            tvNoDataTip.setVisibility(View.VISIBLE);
         }
+        adapter.notifyDataSetChanged();
     }
     private void displayDialog(String s) {
         if (context!=null){
@@ -285,70 +283,30 @@ public class GasInternetTableActivity extends BaseActivity {
         adapter=new GetHouseAdapter(context,houseList);
         mLstView.setAdapter(adapter);
         initHouseData();
-        initEvent();
         mLstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getCustomerNo = houseList.get(position).get("customerNo");
+                customerNo = houseList.get(position).get("customerNo");
                 mAddress=houseList.get(position).get("name");
-                //选中item的position 赋给cus_pos
-                VariableUtil.mPos=position;
-                adapter.notifyDataSetInvalidated();
-                customerNo = getCustomerNo;
+                onQueryTableType();
                 //选择地址后按钮有效点击，
-                btnPayQuery.setEnabled(true);
             }
         });
     }
 
-    private void initEvent() {
-        radioButtonAddress.setChecked(true);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int id = group.getCheckedRadioButtonId();
-                switch (group.getCheckedRadioButtonId()) {
-                    case R.id.id_rb_address:
-                        customerLayout.setVisibility(View.GONE);
-                        mLstView.setVisibility(View.VISIBLE);
-                        layoutLine.setVisibility(View.VISIBLE);
-                        //编辑框数据清空清空
-                        ediCustomerNo ="";
-                        //选择地址后获取
-                        customerNo= getCustomerNo;
-                        break;
-                    case R.id.id_rb_customer:
-                        btnPayQuery.setEnabled(false);
-                        mLstView.setVisibility(View.GONE);
-                        customerLayout.setVisibility(View.VISIBLE);
-                        layoutLine.setVisibility(View.GONE);
-                        //地址颜色变色标志
-                        VariableUtil.mPos=-1;
-                        adapter.notifyDataSetInvalidated();
-                        getCustomerNo ="";
-                        editAction();
-                        //获取编辑框输入的客户号
-                        customerNo= ediCustomerNo;
-                        break;
-                    default:
-                        break;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case ConstantUtil.VALUE1:
+                if (resultCode==ConstantUtil.VALUE1){
+                    requestType=0;
+                    initHouseData();
                 }
-            }
-        });
-        btnPayQuery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(customerNo)) {
-                    ediCustomerNo = etCustomer.getText().toString().trim();
-                    customerNo=ediCustomerNo;
-                }
-                onQueryTableType();
-                VariableUtil.mPos=-1;
-                adapter.notifyDataSetInvalidated();
-                etCustomer.setText("");
-                btnPayQuery.setEnabled(false);
-            }
-        });
+                break;
+            default:
+                break;
+        }
     }
     private void onQueryTableType() {
         requestType=1;
@@ -370,7 +328,6 @@ public class GasInternetTableActivity extends BaseActivity {
         textParams.put("meterNo",meterNo);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
     private void onOrdinaryTableExpense() {
         requestType=3;
         customDialog.show();
@@ -394,35 +351,26 @@ public class GasInternetTableActivity extends BaseActivity {
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initFindViewId() {
-        layoutLine=findViewById(R.id.id_line_layout);
-        radioGroup =(RadioGroup)findViewById(R.id.id_radiogroup);
-        radioButtonAddress =(RadioButton)findViewById(R.id.id_rb_address);
-        RadioButton radioButtonCustomer =(RadioButton)findViewById(R.id.id_rb_customer);
-        mLstView=(ListViewForScrollView)findViewById(R.id.id_addre_listview);
-        customerLayout =(RelativeLayout)findViewById(R.id.id_customer_layout);
-        etCustomer =(EditText)findViewById(R.id.id_et_customerNo);
-        btnPayQuery =(Button)findViewById(R.id.id_btn_payquery);
-        btnPayQuery.setEnabled(false);
+        tvNoDataTip=(TextView)findViewById(R.id.id_tv_tip);
+        mLstView=(ListView)findViewById(R.id.id_address_dataList);
+        findViewById(R.id.id_newAdd_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addAddress=new Intent(context,AddCustomerNoActivity.class);
+                startActivityForResult(addAddress, 1);
+            }
+        });
     }
     private void onIcCardTable() {
         Intent card=new Intent(context,GasIcCardActivity.class);
         startActivity(card);
     }
-    private void editAction() {
-        etCustomer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ediCustomerNo = etCustomer.getText().toString().trim();
-                if (TextUtils.isEmpty(ediCustomerNo)) {
-                    btnPayQuery.setEnabled(false);
-                }else {
-                    btnPayQuery.setEnabled(true);
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

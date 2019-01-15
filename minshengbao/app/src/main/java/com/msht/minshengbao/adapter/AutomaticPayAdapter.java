@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.VariableUtil;
 
 import org.json.JSONArray;
 
@@ -16,43 +17,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/2/15.
+ *
+ * @author hong
+ * @date 2017/2/15
  */
 
 public class AutomaticPayAdapter extends BaseAdapter {
     private Context mContext = null;
-
-    /**
-     *
-     */
-    private int mRightWidth = 0;
-
-    private JSONArray mjsonArray;
-
-    private ArrayList<HashMap<String, String>> List = new ArrayList<HashMap<String, String>>();
-
+    private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
+    public void setOnItemDeleteButtonClickListener(IOnItemButtonClickListener listener){
+        this.mListener=listener;
+    }
     /**
      * 单击事件监听器
      */
     private IOnItemButtonClickListener mListener = null;
 
     public interface IOnItemButtonClickListener {
-        void onDelectClick(View v, int position);
+        /**
+         * 删除
+         * @param v
+         * @param position
+         */
+        void onDeleteClick(View v, int position);
     }
 
-    public AutomaticPayAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists, IOnItemButtonClickListener iOnItem) {
+    public AutomaticPayAdapter(Context ctx, ArrayList<HashMap<String, String>> houseLists) {
         mContext = ctx;
-        List=houseLists;
-        mListener = iOnItem;
+        mList =houseLists;
     }
     @Override
     public int getCount() {
-        return List.size();
+        return mList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return List.get(position);
+        return mList.get(position);
     }
 
     @Override
@@ -67,21 +68,26 @@ public class AutomaticPayAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_autopay_address, parent, false);
             item = new ViewHolder();
-            item.item_customer=(TextView)convertView.findViewById(R.id.id_customerText);
-            item.item_left_txt = (TextView)convertView.findViewById(R.id.item_left_txt);
-            item.item_delect=(ImageView)convertView.findViewById(R.id.id_delect_img);
+            item.itemCustomer =(TextView)convertView.findViewById(R.id.id_customerText);
+            item.itemLeftTxt = (TextView)convertView.findViewById(R.id.item_left_txt);
+            item.itemDelete =(ImageView)convertView.findViewById(R.id.id_delect_img);
             convertView.setTag(item);
         } else {                // 有直接获得ViewHolder
             item = (ViewHolder)convertView.getTag();
         }
-        item.item_left_txt.setText(List.get(position).get("address"));
-        String customers=List.get(position).get("customerNo");
-        item.item_customer.setText(customers);
-        item.item_delect.setOnClickListener(new View.OnClickListener() {
+        item.itemLeftTxt.setText(mList.get(position).get("address"));
+        String customers= mList.get(position).get("customerNo");
+        item.itemCustomer.setText(customers);
+        if (VariableUtil.boolSelect){
+            item.itemDelete.setVisibility(View.VISIBLE);
+        }else {
+            item.itemDelete.setVisibility(View.GONE);
+        }
+        item.itemDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onDelectClick(v, thisPosition);
+                    mListener.onDeleteClick(v, thisPosition);
                 }
 
             }
@@ -89,9 +95,9 @@ public class AutomaticPayAdapter extends BaseAdapter {
         return convertView;
     }
     private class ViewHolder {
-        ImageView item_delect;
-        TextView item_customer;
-        TextView item_left_txt;
+        ImageView itemDelete;
+        TextView itemCustomer;
+        TextView itemLeftTxt;
 
     }
 }

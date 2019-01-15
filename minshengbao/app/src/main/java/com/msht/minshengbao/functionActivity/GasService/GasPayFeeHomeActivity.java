@@ -15,6 +15,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -93,6 +94,8 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
                             }else {
                                 activity.onTableData(array);
                             }
+                        }else {
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -137,6 +140,8 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
                                 activity.onGasExpenseData(jsonObject);
                             }
 
+                        }else {
+                            ToastUtil.ToastText(activity.context,error);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -173,6 +178,11 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
             mBanner.setAutoPlaying(true);
         }else {
             mBanner.setAutoPlaying(false);
+        }
+        if (adInformation!=null&&adInformation.size()!=0){
+            mBanner.setVisibility(View.VISIBLE);
+        }else {
+            mBanner.setVisibility(View.GONE);
         }
         mBanner.initBannerImageView(advertisingList,mAdCycleViewListener);
     }
@@ -277,6 +287,10 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_pay_fee_home);
+        //适配华为手机虚拟键遮挡tab的问题
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
         context=this;
         setCommonHeader("燃气缴费");
         customDialog=new CustomDialog(this, "正在加载");
@@ -419,9 +433,9 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
     }
 
     private void onQuestionText() {
-        String url= UrlUtil.IC_OPERATION_STEP_URL;
+        String url= UrlUtil.GET_CUSTOMER_NO_URL;
         Intent intent=new Intent(context,HtmlPageActivity.class);
-        intent.putExtra("navigate","操作流程");
+        intent.putExtra("navigate","获取方式");
         intent.putExtra("url",url);
         startActivity(intent);
     }
@@ -451,7 +465,6 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
         @Override
         public void afterTextChanged(Editable s) {}
     }
-
     @Override
     protected void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){
