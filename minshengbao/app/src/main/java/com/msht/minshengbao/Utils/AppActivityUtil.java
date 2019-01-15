@@ -11,6 +11,7 @@ import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivity;
@@ -23,7 +24,6 @@ import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
@@ -84,7 +84,7 @@ public class AppActivityUtil {
         String id;
         switch (code) {
             case ConstantUtil.SHOP:
-                onShopMall(context);
+                onShopMallPage(context,url);
                 break;
             case ConstantUtil.WATER:
                 onDrinkingWater(context, "");
@@ -341,59 +341,71 @@ public class AppActivityUtil {
     public static void onPushStartActivity(Context context, String url) {
         String code = Uri.parse(url).getQueryParameter("code");
         String id;
-        switch (code) {
-            case ConstantUtil.SHOP:
-                onPushStartShop(context);
-                break;
-            case ConstantUtil.LPG_NAME:
-                onPushStartLpg(context, url);
-                break;
-            case ConstantUtil.WATER:
-                onPushStartWater(context, url);
-                break;
-            case ConstantUtil.INSURANCE:
-                onPushInsurance(context, url);
-                break;
-            case ConstantUtil.GAS_METER:
-                onPushGasMeter(context, url);
-                break;
-            case ConstantUtil.GAS_PAY:
-                onPushGasPay(context, url);
-                break;
-            case ConstantUtil.GAS_IC_CARD:
-                onPushIcCard(context, url);
-                break;
-            case ConstantUtil.HOUSEKEEPING_CLEAN:
-                id = Uri.parse(url).getQueryParameter("id");
-                onPushHouseKeepingClean(context, id, "家政保洁");
-                break;
-            case ConstantUtil.HOUSEHOLD_CLEAN:
-                id = Uri.parse(url).getQueryParameter("id");
-                onPushHouseHoldClean(context, id, "家电清洗");
-                break;
-            case ConstantUtil.HOME_MAINTENANCE:
-                id = Uri.parse(url).getQueryParameter("id");
-                onPushHomeMaintenance(context, id, "家居维修");
-                break;
-            case ConstantUtil.MESSAGE:
-                onStartMessage(context);
-                break;
-            case ConstantUtil.MESSAGE_DETAIL:
-                onStartMessageDetail(context, url, 1);
-                break;
-            case ConstantUtil.MESSAGE_LIST:
-                onStartMessageList(context, url, 1);
-                break;
-            default:
-                if (url.startsWith(ConstantUtil.HTTP)) {
-                    url = LinkUrlUtil.containMark(context, url);
-                    if (isLoginState(context)) {
-                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
-                    } else {
-                        onStartLoginActivity(context, url);
-                    }
+        if(TextUtils.isEmpty(code)){
+            if (url.startsWith(ConstantUtil.HTTP)) {
+                url = LinkUrlUtil.containMark(context, url);
+                if (isLoginState(context)) {
+                    onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
+                } else {
+                    onStartLoginActivity(context, url);
                 }
-                break;
+            }
+        }else {
+            switch (code) {
+                case ConstantUtil.SHOP:
+                    onPushStartShop(context,url);
+                    break;
+                case ConstantUtil.LPG_NAME:
+                    onPushStartLpg(context, url);
+                    break;
+                case ConstantUtil.WATER:
+                case ConstantUtil.DRINKING_WATER:
+                    onPushStartWater(context, url);
+                    break;
+                case ConstantUtil.INSURANCE:
+                    onPushInsurance(context, url);
+                    break;
+                case ConstantUtil.GAS_METER:
+                    onPushGasMeter(context, url);
+                    break;
+                case ConstantUtil.GAS_PAY:
+                    onPushGasPay(context, url);
+                    break;
+                case ConstantUtil.GAS_IC_CARD:
+                    onPushIcCard(context, url);
+                    break;
+                case ConstantUtil.HOUSEKEEPING_CLEAN:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    onPushHouseKeepingClean(context, id, "家政保洁");
+                    break;
+                case ConstantUtil.HOUSEHOLD_CLEAN:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    onPushHouseHoldClean(context, id, "家电清洗");
+                    break;
+                case ConstantUtil.HOME_MAINTENANCE:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    onPushHomeMaintenance(context, id, "家居维修");
+                    break;
+                case ConstantUtil.MESSAGE:
+                    onStartMessage(context);
+                    break;
+                case ConstantUtil.MESSAGE_DETAIL:
+                    onStartMessageDetail(context, url, 1);
+                    break;
+                case ConstantUtil.MESSAGE_LIST:
+                    onStartMessageList(context, url, 1);
+                    break;
+                default:
+                    if (url.startsWith(ConstantUtil.HTTP)) {
+                        url = LinkUrlUtil.containMark(context, url);
+                        if (isLoginState(context)) {
+                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
+                        } else {
+                            onStartLoginActivity(context, url);
+                        }
+                    }
+                    break;
+            }
         }
     }
 
@@ -402,7 +414,7 @@ public class AppActivityUtil {
         String id;
         switch (code) {
             case ConstantUtil.SHOP:
-                onShopMall(context);
+                onShopMallPage(context,url);
                 break;
             case ConstantUtil.WATER:
                 onDrinkingWater(context, url);
@@ -625,12 +637,41 @@ public class AppActivityUtil {
         }
     }
 
-    private static void onPushStartShop(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("index",1);
-        context.startActivity(intent);
-
+    private static void onPushStartShop(Context context,String rightUrl) {
+        if ((!TextUtils.isEmpty(rightUrl)) && (!rightUrl.equals(VariableUtil.NULL_VALUE))) {
+            if (rightUrl.contains("keyword=")) {
+                int index = rightUrl.indexOf("keyword=");
+                String shopkeyword = rightUrl.substring(index + 8).trim();
+                Intent intent = new Intent(context, ShopKeywordListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                context.startActivity(intent);
+            } else if (rightUrl.contains("goods_id=")) {
+                int index = rightUrl.indexOf("goods_id=");
+                String goodsid = rightUrl.substring(index + 9).trim();
+                Intent intent = new Intent(context, ShopGoodDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("goodsid", goodsid);
+                context.startActivity(intent);
+            } else if (rightUrl.contains("gc_id=")) {
+                Intent intent = new Intent(context, ShopClassDetailActivity.class);
+                int index = rightUrl.indexOf("gc_id=");
+                rightUrl = rightUrl.substring(index + 6).trim();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("data", rightUrl);
+                context.startActivity(intent);
+            } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                Intent intent = new Intent(context, ShopUrlActivity.class);
+                intent.putExtra("url", rightUrl);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            } else {
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("index",1);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        }
     }
 
     private static void onPushInsurance(Context context, String pushUrl) {
@@ -643,15 +684,38 @@ public class AppActivityUtil {
         }
     }
 
-    public static void onStartUrl(Context context, String url) {
-        if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)) {
-            Intent intent = new Intent(context, ShopActivity.class);
-            intent.putExtra("url", url);
-            intent.putExtra("first", 1);
-            context.startActivity(intent);
+    public static void onStartUrl(Context context, String rightUrl) {
+        if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN)) {
+                if (rightUrl.contains("keyword=")) {
+                    int index = rightUrl.indexOf("keyword=");
+                    String shopkeyword = rightUrl.substring(index + 8).trim();
+                    Intent intent = new Intent(context, ShopKeywordListActivity.class);
+                    intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                    context.startActivity(intent);
+                } else if (rightUrl.contains("goods_id=")) {
+                    int index = rightUrl.indexOf("goods_id=");
+                    String goodsid = rightUrl.substring(index + 9).trim();
+                    Intent intent = new Intent(context, ShopGoodDetailActivity.class);
+                    intent.putExtra("goodsid", goodsid);
+                    context.startActivity(intent);
+                } else if (rightUrl.contains("gc_id=")) {
+                    Intent intent = new Intent(context, ShopClassDetailActivity.class);
+                    int index = rightUrl.indexOf("gc_id=");
+                    rightUrl = rightUrl.substring(index + 6).trim();
+                    intent.putExtra("data", rightUrl);
+                    context.startActivity(intent);
+                } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                    Intent intent = new Intent(context, ShopUrlActivity.class);
+                    intent.putExtra("url", rightUrl);
+                    context.startActivity(intent);
+                } /*else {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("index",1);
+                    context.startActivity(intent);
+                }*/
         } else {
             Intent other = new Intent(context, HtmlPageActivity.class);
-            other.putExtra("url", url);
+            other.putExtra("url", rightUrl);
             other.putExtra("navigate", "民生宝");
             context.startActivity(other);
         }
@@ -681,12 +745,11 @@ public class AppActivityUtil {
                 Intent intent = new Intent(context, ShopUrlActivity.class);
                 intent.putExtra("url", rightUrl);
                 context.startActivity(intent);
-            } else {
-                Intent intent = new Intent(context, ShopActivity.class);
-                intent.putExtra("url", rightUrl);
-                intent.putExtra("first", 1);
+            } /*else {
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("index",1);
                 context.startActivity(intent);
-            }
+            }*/
         }
     }
 
@@ -727,7 +790,8 @@ public class AppActivityUtil {
     }
 
     private static void onShopMall(Context context) {
-        Intent intent = new Intent(context, ShopActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("index",1);
         context.startActivity(intent);
     }
 

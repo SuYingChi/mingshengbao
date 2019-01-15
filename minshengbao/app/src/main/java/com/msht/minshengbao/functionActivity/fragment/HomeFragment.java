@@ -451,8 +451,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         @Override
         public void onImageClick(AdvertisingInfo info, int position, View imageView) {
             String myUrl = info.getUrl();
-            if (!TextUtils.isEmpty(myUrl)) {
-                if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)) {
+            if (!TextUtils.isEmpty(myUrl)&&!myUrl.equals(VariableUtil.NULL_VALUE)) {
+               /* if (NetUtil.getDomain(myUrl).equals(ConstantUtil.SHOP_DOMAIN)) {
                     if (myUrl.contains("keyword=")) {
                         int index = myUrl.indexOf("keyword=");
                         String shopkeyword = myUrl.substring(index + 8).trim();
@@ -482,13 +482,13 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                         intent.putExtra("first", 1);
                         startActivity(intent);
                     }
-                }  else if (!myUrl.equals(VariableUtil.NULL_VALUE)) {
+                }  else*/
                     String title=info.getTitle();
                     String share=info.getShare();
                     String desc=info.getDesc();
                     String backUrl=info.getBackUrl();
                     AppActivityUtil.onAppActivityType(mContext,myUrl,title,share,desc,"header_img",backUrl);
-                }
+
             }
         }
         @Override

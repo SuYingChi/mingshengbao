@@ -20,6 +20,7 @@ import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.customerview.ShopRefreshHeader;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.MLoggerInterceptor;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.functionActivity.MainActivity;
@@ -198,6 +199,7 @@ public class MyApplication extends Application {
             @Override
             public void launchApp(Context context, UMessage msg) {
                 if (!msg.extra.isEmpty()){
+                    LogUtils.e(msg.extra.get("url"));
                     String url=msg.extra.get("url");
                     if (AppActivityUtil.isAppAlive(context)){
                         if (AppActivityUtil.isLoginState(context)){
@@ -226,6 +228,7 @@ public class MyApplication extends Application {
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
                 if (!msg.extra.isEmpty()){
+                    LogUtils.e(msg.extra.get("url"));
                     String url=msg.extra.get("url");
                     if (AppActivityUtil.isAppAlive(context)){
                         if (AppActivityUtil.isLoginState(context)){
