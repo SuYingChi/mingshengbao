@@ -76,8 +76,7 @@ public class InvoiceHomeActivity extends BaseActivity implements View.OnClickLis
         if (type==1){
             layoutGasInvoice.setVisibility(View.VISIBLE);
         }else {
-            layoutGasInvoice.setVisibility(View.GONE);
-           // layoutGasInvoice.setVisibility(View.VISIBLE);
+           layoutGasInvoice.setVisibility(View.VISIBLE);
         }
     }
     @Override

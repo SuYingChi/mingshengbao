@@ -8,17 +8,56 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity">
     <include layout="@layout/layout_header"/>
-    <com.msht.minshengbao.ViewUI.ViewPagerIndicator
-        android:id="@+id/indicator"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_width16"
+            android:gravity="start"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_toLeftOf="@+id/id_newAdd_btn"
+            android:layout_toStartOf="@+id/id_newAdd_btn"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:textColor="@color/color_383838"
+            android:text="@string/pay_fee_customerNo"/>
+        <TextView
+            android:id="@+id/id_newAdd_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_centerVertical="true"
+            android:text="@string/new_add_customerNo"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/color_383838"/>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_width10"
         android:background="@color/white">
-    </com.msht.minshengbao.ViewUI.ViewPagerIndicator>
-    <include layout="@layout/layout_line_gray"/>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/id_viewPager_fees"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+        <ListView
+            android:id="@+id/id_address_dataList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <TextView
+            android:id="@+id/id_tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_width16"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_width40"
+            android:text="@string/current_noHave_customerNo"
+            android:textColor="@color/red"
+            android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/content"
     android:background="@color/background_gray"
     tools:context=".functionActivity.GasService.GasPayFeeHomeActivity">
     <include layout="@layout/layout_header"/>
@@ -25,8 +26,8 @@
                 <com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal
                     android:id="@+id/id_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width150"
-                    android:layout_marginBottom="@dimen/text_width20"
+                    android:layout_height="@dimen/margin_width100"
+                    android:layout_marginBottom="@dimen/text_width10"
                     app:showIndicator="false"
                     app:orientation="horizontal">
                 </com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal>
@@ -41,7 +42,7 @@
                         android:id="@+id/id_ordinary_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/margin_width100"
                         android:background="@drawable/ordinary_table_xh">
                         <TextView
                             android:id="@+id/id_ordinary_text"
@@ -50,7 +51,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width20"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_width18"
+                            android:textSize="@dimen/text_width16"
                             android:text="@string/ordinary_table_pay"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -58,7 +59,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width5"
                             android:layout_below="@+id/id_ordinary_text"
-                            android:textSize="@dimen/text_width14"
+                            android:layout_marginBottom="@dimen/margin_width10"
+                            android:textSize="@dimen/text_width12"
                             android:textColor="@color/white"
                             android:text="@string/go_to_pay"/>
 
@@ -67,11 +69,11 @@
                         android:id="@+id/id_ic_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
+                        android:layout_height="@dimen/margin_width100"
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_marginRight="@dimen/margin_width10"
-                        android:layout_height="wrap_content"
                         android:background="@drawable/ic_table_xh">
                         <TextView
                             android:id="@+id/id_ic_table"
@@ -80,7 +82,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width20"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_width18"
+                            android:textSize="@dimen/text_width16"
                             android:text="@string/ic_table_recharge"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -88,17 +90,17 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width5"
                             android:layout_below="@+id/id_ic_table"
-                            android:textSize="@dimen/text_width14"
+                            android:layout_marginBottom="@dimen/margin_width10"
+                            android:textSize="@dimen/text_width12"
                             android:textColor="@color/white"
                             android:text="@string/go_to_charge"/>
-
                     </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/id_internet_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/internat_table_xh">
+                        android:layout_height="@dimen/margin_width100"
+                        android:background="@drawable/internet_table_xh">
                         <TextView
                             android:id="@+id/id_internet_text"
                             android:layout_width="wrap_content"
@@ -106,7 +108,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width20"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_width18"
+                            android:textSize="@dimen/text_width16"
                             android:text="@string/internet_table_recharge"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -114,10 +116,10 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_width5"
                             android:layout_below="@+id/id_internet_text"
-                            android:textSize="@dimen/text_width14"
+                            android:layout_marginBottom="@dimen/margin_width10"
+                            android:textSize="@dimen/text_width12"
                             android:textColor="@color/white"
                             android:text="@string/go_to_charge"/>
-
                     </RelativeLayout>
                 </LinearLayout>
                 <View
@@ -159,8 +161,9 @@
                         android:paddingRight="@dimen/margin_width15"
                         android:layout_height="@dimen/margin_width40"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/shape_white_border_rectangle"
-                        android:textSize="@dimen/text_width16"/>
+                        android:background="@drawable/shape_gray_corner_border_bg"
+                        android:textSize="@dimen/text_width16"
+                        tools:ignore="Autofill" />
                 </RelativeLayout>
             </LinearLayout>
             <Button
@@ -177,7 +180,7 @@
                 android:text="@string/query_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_18"
-                android:background="@drawable/selector_touch_button_change"/>
+                android:background="@drawable/shape_orange_corner_button"/>
             <TextView
                 android:id="@+id/id_question_text"
                 android:layout_width="wrap_content"

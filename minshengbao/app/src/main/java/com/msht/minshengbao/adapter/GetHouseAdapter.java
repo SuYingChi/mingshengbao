@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
@@ -16,7 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by hong on 2017/3/21.
+ *
+ * @author hong
+ * @date 2017/3/21
  */
 
 public class GetHouseAdapter extends BaseAdapter {
@@ -47,32 +48,20 @@ public class GetHouseAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_customerno, null);
-            holder.addressimg = (ImageView) convertView.findViewById(R.id.id_addressimg);
-            holder.address_word = (TextView) convertView.findViewById(R.id.id_address_text);
-            holder.customerimg=(ImageView)convertView.findViewById(R.id.id_customerimg);
-            holder.cn_customer=(TextView)convertView.findViewById(R.id.id_customerText);
+            holder.addressWord = (TextView) convertView.findViewById(R.id.id_address_text);
+            holder.cnCustomer =(TextView)convertView.findViewById(R.id.id_customerText);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.customerimg.setImageResource(R.drawable.customer_xh);
-        holder.addressimg.setImageResource(R.drawable.address_xh);
-        holder.address_word.setText(houseList.get(position).get("name"));
-        holder.cn_customer.setText(houseList.get(position).get("customerNo"));
-        holder.cn_customer.setTextColor(Color.parseColor("#ff444444"));
-        holder.address_word.setTextColor(Color.parseColor("#ff444444"));
-        if(VariableUtil.mPos==position){
-            holder.customerimg.setImageResource(R.drawable.customer_select);
-            holder.addressimg.setImageResource(R.drawable.address_select);
-            holder.cn_customer.setTextColor(Color.parseColor("#fff96331"));
-            holder.address_word.setTextColor(Color.parseColor("#fff96331"));
-        }
+        holder.addressWord.setText(houseList.get(position).get("name"));
+        holder.cnCustomer.setText(houseList.get(position).get("customerNo"));
+        holder.cnCustomer.setTextColor(Color.parseColor("#ff444444"));
+        holder.addressWord.setTextColor(Color.parseColor("#ff444444"));
         return convertView;
     }
     class ViewHolder {
-        public ImageView addressimg;
-        public ImageView customerimg;
-        public TextView address_word;
-        public TextView cn_customer;
+         TextView addressWord;
+         TextView cnCustomer;
     }
 }

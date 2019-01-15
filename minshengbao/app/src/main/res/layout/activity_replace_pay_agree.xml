@@ -16,34 +16,35 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_60"
+        android:minHeight="@dimen/margin_width56"
         android:gravity="bottom">
         <Button
             android:id="@+id/id_btn_refuse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_40"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:background="@drawable/selector_orange_corner_button"
-            android:text="拒绝"
-            android:textSize="@dimen/text_18"
-            android:textColor="@color/white"
-            />
+            android:minHeight="@dimen/margin_width35"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:background="@drawable/selector_touch_button_change"
+            android:text="@string/refuse_text"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/white"/>
         <Button
             android:id="@+id/id_btn_agree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_40"
+            android:minHeight="@dimen/margin_width35"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
-            android:background="@drawable/selector_orange_corner_button"
-            android:text="同意，下一步"
-            android:textSize="@dimen/text_18"
-            android:textColor="@color/white"
-            />
+            android:background="@drawable/selector_touch_button_change"
+            android:text="@string/agree_text"
+            android:textSize="@dimen/text_width16"
+            android:textColor="@color/white"/>
     </RelativeLayout>
 </LinearLayout>

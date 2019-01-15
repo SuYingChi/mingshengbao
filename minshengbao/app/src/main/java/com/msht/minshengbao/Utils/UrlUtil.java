@@ -125,6 +125,7 @@ public class UrlUtil {
     public static final String INTERNET_TABLE_RECORD=BuildConfig.URL_HEADS+"/Gas/payment/iotPaymentDetail";
     public static final String INTERNET_TABLE_LAST_DATA=BuildConfig.URL_HEADS+"/Gas/payment/meterTypeSearch";
     public static final String INTERNET_TABLE_PAYMENT=BuildConfig.URL_HEADS+"/Gas/payment/requestPaymentGas";
+    public static final String GET_CUSTOMER_NO_URL=BuildConfig.URL_HEADS+"/get_usernum.html";
     /**
      * ic卡
      */

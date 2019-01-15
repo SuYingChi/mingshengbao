@@ -235,7 +235,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@style/NoTranslucent" />
-            />
         <activity android:name=".functionActivity.Public.SelectCityActivity" />
         <activity android:name=".functionActivity.HtmlWeb.ShopActivity" />
         <activity android:name=".functionActivity.MyActivity.CustomerNoManageActivity" />
@@ -371,6 +370,7 @@
         <activity android:name=".functionActivity.GasService.GasInternetTableRechargeActivity" />
         <activity android:name=".functionActivity.GasService.GasInternetTablePayFeeActivity" />
         <activity android:name=".functionActivity.repairService.RepairOrderListActivity" />
+        <activity android:name=".functionActivity.GasService.GasOrdinaryRecordActivity"></activity>
         <activity android:name=".androidShop.activity.ShopHomeActivity" />
         <activity android:name=".androidShop.activity.ShopGoodDetailActivity" />
         <activity android:name=".androidShop.activity.ShopClassDetailActivity" />
