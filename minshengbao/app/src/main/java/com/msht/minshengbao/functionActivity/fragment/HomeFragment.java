@@ -258,7 +258,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             final HomeFragment reference = mWeakReference.get();
-            // the referenced object has been cleared
             if (reference == null || reference.isDetached()) {
                 return;
             }

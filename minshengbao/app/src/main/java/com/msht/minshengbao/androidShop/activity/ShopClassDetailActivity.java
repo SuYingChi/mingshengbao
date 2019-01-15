@@ -130,33 +130,14 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
 
     @Override
     protected void initImmersionBar() {
-        super.initImmersionBar();
+       /* super.initImmersionBar();
         mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);
+        ImmersionBar.setTitleBar(this, mToolbar);*/
     }
-
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(CarNumEvent messageEvent) {
-        carNum = messageEvent.getCarNum();
-        if (carNum > 0) {
-            tvCarNum.setVisibility(View.VISIBLE);
-            tvCarNum.setText(String.format("%d", carNum));
-        } else {
-            tvCarNum.setVisibility(View.GONE);
-        }
-    }*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*EventBus.getDefault().register(this);
-        carNum = getIntent().getIntExtra("carnum", -1);
-        if (carNum > 0) {
-            tvCarNum.setVisibility(View.VISIBLE);
-            tvCarNum.setText(String.format("%d", carNum));
-        } else {
-            tvCarNum.setVisibility(View.GONE);
-        }*/
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

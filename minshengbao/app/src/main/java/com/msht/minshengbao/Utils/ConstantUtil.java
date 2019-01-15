@@ -9,6 +9,8 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.msht.minshengbao.BuildConfig;
+
 import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
@@ -158,7 +160,7 @@ public class ConstantUtil {
 
 
     public static final String SHOP_DOMAIN="shop.msbapp.cn";
-    //public static final String SHOP_DOMAIN="dev.msbapp.cn";
+    public static final String FIANL_SHOP_DOMAIN= BuildConfig.DEBUG ? /*"dev.msbapp.cn"*/ "shop.msbapp.cn": "shop.msbapp.cn";
     public static final String DEBUG_SHOP_DOMAIN="dev.msbapp.cn";
     public static final String VEGETABLE_DOMAIN="jsxss.net";
 

@@ -206,7 +206,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
                 data = data.substring(index + 6).trim();
                 intent.putExtra("data", data);
                 startActivity(intent);
-            } else if (NetUtil.getDomain(data).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+            } else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
                 intent.putExtra("url", data);
                 startActivity(intent);
@@ -253,7 +253,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
                         intent4.putExtra("data", url);
                         intent4.putExtra("title", "民生商城");
                         startActivity(intent4);
-                    } else if (NetUtil.getDomain(url).equals(ConstantUtil.SHOP_DOMAIN)||NetUtil.getDomain(url).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                    } else if (NetUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                         Intent intent4 = new Intent(getActivity(), ShopUrlActivity.class);
                         intent4.putExtra("url", url);
                         startActivity(intent4);

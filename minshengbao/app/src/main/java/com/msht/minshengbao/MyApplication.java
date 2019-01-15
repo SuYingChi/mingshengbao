@@ -124,7 +124,7 @@ public class MyApplication extends Application {
         if (TextUtils.isEmpty(liststr) || liststr.equals("null")) {
             list = new ArrayList<String>();
         } else {
-            list = JsonUtil.jsonArrayToList(liststr);
+            list = JsonUtil.stringsToList(liststr);
         }
 
         Fresco.initialize(this);

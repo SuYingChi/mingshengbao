@@ -193,7 +193,7 @@ public class LaunchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if ((!TextUtils.isEmpty(contentUrl))&&(!contentUrl.equals(ConstantUtil.NULL_VALUE))){
                     touchStatus=false;
-                    if (NetUtil.getDomain(contentUrl).equals(ConstantUtil.SHOP_DOMAIN)){
+                    if (NetUtil.getDomain(contentUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)){
                         goHome();
                         onStartShopActivity(contentUrl);
                     }else{

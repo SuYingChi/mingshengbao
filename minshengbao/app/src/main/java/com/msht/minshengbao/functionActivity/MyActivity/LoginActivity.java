@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,mPassword);
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
-            ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
+        ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
 
             @Override
             public String getKey() {
@@ -124,7 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onLoginShopSuccess(String s) {
                 LoginShopBean bean = JsonUtil.toBean(s, LoginShopBean.class);
                 if(bean!=null){
-                    ShopSharePreferenceUtil.getInstance().setKey(bean.getDatas().getKey());
+                    ShopSharePreferenceUtil.setShopSpStringValue("key",bean.getDatas().getKey());
                     ShopSharePreferenceUtil.setShopSpStringValue("username", bean.getDatas().getUsername());
                     ShopSharePreferenceUtil.setShopSpStringValue("userId",bean.getDatas().getUserid());
                     ShopSharePreferenceUtil.setShopSpStringValue("password",etPassword.getText().toString());
@@ -137,18 +137,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
                     MyApplication.getInstance().setList(list);
                     EventBus.getDefault().postSticky(new LoginShopEvent(bean));
+                    Intent broadcast=new Intent();
+                    broadcast.setAction(MY_ACTION);
+                    broadcast.putExtra("broadcast", "1");
+                    sendBroadcast(broadcast);
+                    Intent intent=new Intent(context,MainActivity.class);
+                    intent.putExtra("index",0);
+                    intent.putExtra("pushUrl",pushUrl);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
-        Intent broadcast=new Intent();
-        broadcast.setAction(MY_ACTION);
-        broadcast.putExtra("broadcast", "1");
-        sendBroadcast(broadcast);
-        Intent intent=new Intent(context,MainActivity.class);
-        intent.putExtra("index",0);
-        intent.putExtra("pushUrl",pushUrl);
-        startActivity(intent);
-        finish();
 
     }
     @Override

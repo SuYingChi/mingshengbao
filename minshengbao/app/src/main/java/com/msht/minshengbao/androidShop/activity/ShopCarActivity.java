@@ -366,6 +366,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             JSONArray jsonArray = datas.optJSONArray("cart_list");
             if(jsonArray.length() == 0){
                 startActivity(new Intent(this, NoCarActivity.class));
+                finish();
             }else {
                 carList.clear();
                 storeList.clear();

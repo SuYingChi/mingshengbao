@@ -13,6 +13,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
+import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,7 +60,9 @@ public class NoLoginCarActivity extends ShopBaseActivity {
         tvReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NoLoginCarActivity.this, ShopHomeActivity.class));
+                Intent intent =  new Intent(NoLoginCarActivity.this, MainActivity.class);
+                intent.putExtra("index",1);
+                startActivity(intent);
                 finish();
             }
         });
