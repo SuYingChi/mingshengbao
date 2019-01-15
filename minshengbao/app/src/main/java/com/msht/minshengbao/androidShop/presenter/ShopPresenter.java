@@ -101,7 +101,7 @@ public class ShopPresenter {
 
     public static void loginShop(String usrname, String password, final ILoginShopView iLoginShopView) {
         //测试账号
-        OkHttpUtils.post().url(ShopConstants.LOGIN_SHOP).addParams("username", usrname).addParams("password", password).addParams("client", "android").build().execute(new DataStringCallback(iLoginShopView) {
+        OkHttpUtils.post().url(ShopConstants.LOGIN_SHOP).addParams("username", usrname).addParams("password", password).addParams("client", "android").build().execute(new SimpleDataStringCallback(iLoginShopView) {
             @Override
             public void onResponse(String s, int i) {
                 //先继承再重写或重写覆盖请求错误的场景

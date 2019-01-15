@@ -89,9 +89,7 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 	 *            这里的x,y值自己调整可以
 	 */
 	public void showLocation(int resourId,int xoff,int yoff) {
-		Log.d("offSetX=",""+ dip2px(activity, xoff));
-		showAsDropDown(activity.findViewById(resourId), dip2px(activity, xoff),
-				dip2px(activity, yoff));
+		showAsDropDown(activity.findViewById(resourId), xoff, yoff);
 	}
 
 	private void setBackgroundAlpha(float from, float to, int duration) {

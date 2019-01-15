@@ -78,7 +78,7 @@ public class ShopSuccessActivity extends ShopBaseActivity implements IGuessLikeG
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(ShopSuccessActivity.this, MainActivity.class);
-                        intent.putExtra("index",2);
+                        intent.putExtra("index",1);
                         startActivity(intent);
                       //  EventBus.getDefault().postSticky(new GoShopMainEvent());
                         finish();

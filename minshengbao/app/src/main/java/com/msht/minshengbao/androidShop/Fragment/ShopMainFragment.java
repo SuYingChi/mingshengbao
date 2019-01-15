@@ -117,12 +117,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     protected int setLayoutId() {
         return R.layout.shop_main_fragment;
     }

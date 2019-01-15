@@ -632,6 +632,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                   clickCode = 0x001;
                   addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
               }
+              break;
           case 1:
               ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
               clickTab2Layout();
@@ -1005,13 +1006,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    //再次回到首页时手动刷新购物车fragment
     @Override
     protected void onRestart() {
         super.onRestart();
         refreshCarNum();
-        if (shopCarParentFragment != null) {
-            shopCarParentFragment.refreshCarFragment();
+        if (currentFragment instanceof ShopCarParentFragment) {
+            ((ShopCarParentFragment)currentFragment).refreshCarFragment();
         }
         if (currentFragment instanceof LoginMyFrag) {
             ((LoginMyFrag) currentFragment).getOrdersNum();

@@ -114,49 +114,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
             ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
-            @Override
-            public void showLoading() {
-              customDialog.show();
-            }
-
-            @Override
-            public void dismissLoading() {
-                if (customDialog!=null&&customDialog.isShowing()){
-                    customDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onError(String s) {
-                if (customDialog!=null&&customDialog.isShowing()){
-                    customDialog.dismiss();
-                }
-                PopUtil.toastInBottom(s);
-            }
 
             @Override
             public String getKey() {
                 return null;
-            }
-
-            @Override
-            public String getUserId() {
-                return null;
-            }
-
-            @Override
-            public String getLoginPassword() {
-                return null;
-            }
-
-            @Override
-            public void onLogout() {
-
-            }
-
-            @Override
-            public void onNetError() {
-
             }
 
             @Override
@@ -184,6 +145,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         broadcast.putExtra("broadcast", "1");
         sendBroadcast(broadcast);
         Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra("index",0);
         intent.putExtra("pushUrl",pushUrl);
         startActivity(intent);
         finish();

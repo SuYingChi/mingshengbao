@@ -236,7 +236,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         String[] abs = new String[]{"消息", "首页"};
         PopupMenu mPopupMenu = new PopupMenu(this, abs, R.layout.shop_good_detail_popup_menu);
         // 设置弹出菜单弹出的位置
-        mPopupMenu.showLocation(R.id.menu, getResources().getDimensionPixelOffset(R.dimen.margin_width_70), getResources().getDimensionPixelOffset(R.dimen.margin_width10));
+        mPopupMenu.showLocation(R.id.menu, getResources().getDimensionPixelSize(R.dimen.margin_width_70), getResources().getDimensionPixelSize(R.dimen.margin_width10));
         // 设置回调监听，获取点击事件
         mPopupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
             @Override
@@ -252,7 +252,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     private void goShopHome() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("index",2);
+        intent.putExtra("index",1);
         //EventBus.getDefault().postSticky(new GoShopMainEvent());
         startActivity(intent);
     }

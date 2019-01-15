@@ -269,10 +269,10 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     }
     @Override
     public View initFindView() {
+        mActivity=getActivity();
         if(mRootView==null){
             mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my,null,false);
         }
-        mActivity=getActivity();
         String avatarUrl =SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
         nickname=SharedPreferencesUtil.getNickName(mContext,SharedPreferencesUtil.NickName,"");
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){

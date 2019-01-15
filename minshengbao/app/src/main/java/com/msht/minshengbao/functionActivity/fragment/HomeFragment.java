@@ -582,11 +582,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
 
     @Override
     public View initFindView() {
+        mContext=getActivity();
         if(mRootView==null){
             mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_home,null,false);
             //view = inflater.inflate(R.layout.fragment_orderlist, container, false);
         }
-        mContext=getActivity();
         VariableUtil.cityPos =-1;
         initView(mRootView);
 
