@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
+import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
+import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
@@ -60,11 +62,11 @@ public class MyFragment extends BaseHomeFragment implements View.OnClickListener
     public  MyFragment() {}
     @Override
     public View initFindView() {
+        mActivity=getActivity();
         if(mRootView==null){
             mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_my,null,false);
             //view = inflater.inflate(R.layout.fragment_orderlist, container, false);
         }
-        mActivity=getActivity();
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             mRootView.findViewById(R.id.id_view).setVisibility(View.GONE);
         }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+       android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_width70"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="sssssssssssssssssssssssssssssssssssssssssssssssss"
+            android:textSize="@dimen/text_width18" />
+
+        <TextView
+            android:id="@+id/info2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+            android:textSize="@dimen/text_width18" />
+        <View
+            android:layout_width="match_parent"
+           android:layout_marginTop="@dimen/margin_Modules"
+            android:background="@color/nc_bg"
+            android:layout_height="2dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ll"
+        android:layout_alignBottom="@id/ll"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/margin_width30"
+        android:paddingRight="@dimen/margin_width30">
+
+        <View
+            android:id="@+id/topLine"
+           android:background="@color/shop_grey"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <View
+            android:id="@+id/point"
+          android:layout_width="@dimen/dp10"
+          android:layout_height="@dimen/dp10"
+         android:background="@drawable/shop_page_circle_on"
+            />
+
+        <View
+            android:id="@+id/bottomLine"
+            android:background="@color/shop_grey"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</RelativeLayout>

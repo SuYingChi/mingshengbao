@@ -79,7 +79,9 @@
                     android:scheme="msht" />
             </intent-filter>
         </activity>
-        <activity android:name=".functionActivity.MainActivity" />
+        <activity android:name=".functionActivity.MainActivity"/>
+            <!--//登录成功后再启动会导致崩盘 暂且不加-->
+        <!-- android:launchMode="singleTask"-->
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
@@ -352,6 +354,57 @@
         <activity android:name=".functionActivity.GasService.GasInternetTablePayFeeActivity" />
         <activity android:name=".functionActivity.repairService.RepairOrderListActivity" />
         <activity android:name=".functionActivity.GasService.GasOrdinaryRecordActivity"></activity>
+        <activity android:name=".androidShop.activity.ShopHomeActivity" />
+        <activity android:name=".androidShop.activity.ShopGoodDetailActivity" />
+        <activity android:name=".androidShop.activity.ShopClassDetailActivity" />
+        <activity android:name=".androidShop.activity.ShopKeywordListActivity" />
+        <activity android:name=".androidShop.activity.ShopSpecialActivity" />
+        <activity android:name=".androidShop.activity.ShopUrlActivity" />
+        <activity android:name=".androidShop.activity.ShopSearchActivty" />
+        <activity android:name=".androidShop.activity.ShopCarActivity" />
+        <activity android:name=".androidShop.activity.ShopComfirmOrdersActivity" />
+        <activity android:name=".androidShop.activity.ShopAddressListActivity" />
+        <activity android:name=".androidShop.activity.AddShopAdressActivity" />
+        <activity android:name=".androidShop.activity.ShopEditAddressActivity" />
+        <activity android:name=".androidShop.activity.RecommendActivity" />
+        <activity android:name=".androidShop.activity.InvInfoActivity" />
+        <activity android:name=".androidShop.activity.ShopPayOrderActivity" />
+        <activity android:name=".androidShop.activity.ShopWaitToPayedOrderActivity" />
+        <activity android:name=".androidShop.activity.ShopOrdersDetailActivity" />
+        <activity android:name=".androidShop.activity.RefundMoneyActivity" />
+        <activity android:name=".androidShop.activity.ReturnGoodDetailActivity" />
+        <activity android:name=".androidShop.activity.RefundALLActivity" />
+        <activity android:name=".androidShop.activity.ShopAfterSaleActivity" />
+        <activity android:name=".androidShop.activity.RefundFormMoneyActivity" />
+        <activity android:name=".androidShop.activity.RefundGoodActivity" />
+        <activity android:name=".androidShop.activity.ShopOrderRouteActivity" />
+        <activity android:name=".androidShop.activity.ShopOrderEveluateActivity"
+
+            />
+        <activity android:name=".androidShop.activity.ShopSuccessActivity" />
+        <activity android:name=".androidShop.activity.ShopOrderAddEveluateActivity"
+
+            />
+        <activity android:name=".androidShop.activity.ShopCollectionActivity" />
+        <activity android:name=".androidShop.activity.ShopFootprintActivity" />
+        <activity android:name=".androidShop.activity.ShopkefuActivity" />
+        <activity android:name=".androidShop.activity.TotalMessageListActivity" />
+        <!-- 微信分享注册 -->
+        <activity
+            android:name="com.msht.minshengbao.androidShop.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".androidShop.activity.NoLoginCarActivity" />
+        <activity android:name=".androidShop.activity.NoCarActivity" />
+        <activity android:name=".androidShop.activity.MyShopOrderActivity"
+            android:launchMode="singleTask"
+            />
+        <activity android:name=".androidShop.activity.ShopMoreGoodActivity" />
+        <activity android:name=".androidShop.activity.MessageListActivity" />
+        <activity android:name=".androidShop.activity.WarnMessageDetailActivity" />
+        <activity android:name=".androidShop.activity.ReturnGoodSendGoodActivity" />
+
     </application>
 
 </manifest>

@@ -15,15 +15,20 @@ public class AllServiceModel extends BaseModel{
         public int online_flag;
         public ArrayList<ServeCategory> serve;
 
-        public class ServeCategory{
+        public static class ServeCategory{
             public String name;
             public String code;
             public ArrayList<ChildCategory> child;
-            public class ChildCategory{
+            public static class ChildCategory{
                 public int    id;
                 public String name;
                 public String code;
                 public String content;
+                public String url;
+
+                public ChildCategory(String name) {
+                    this.name = name;
+                }
             }
         }
     }

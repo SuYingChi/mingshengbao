@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <RelativeLayout
+        android:id="@+id/rltt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/margin_Modules">
+
+        <include
+            android:id="@+id/head"
+            layout="@layout/item_shop_order_child_list_head" />
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="@dimen/margin_width122"
+            android:layout_height="@dimen/margin_width122"
+            android:layout_below="@+id/head"
+            android:layout_marginBottom="@dimen/margin_Modules"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:layout_toRightOf="@id/select" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv"
+            android:layout_below="@id/close"
+            android:layout_marginLeft="@dimen/dp5"
+            android:layout_toRightOf="@id/iv"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp1"
+            android:layout_below="@id/iv"
+            android:background="@color/shop_grey" />
+
+        <RelativeLayout
+            android:id="@+id/rlt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line1"
+            android:layout_marginLeft="@dimen/margin_Modules"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/shopMsbcolorTitleText"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <TextView
+                android:id="@+id/tv_amount"
+                style="@style/shopMsbcolorTitleText"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/num"
+                style="@style/shopMsbcolorTitleText"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_amount" />
+
+            <TextView
+                style="@style/shopMsbcolorTitleText"
+                android:layout_toLeftOf="@id/tv_amount"
+                android:text="退款金额："
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+
+            <TextView
+                style="@style/shopMsbcolorTitleText"
+                android:layout_alignTop="@id/num"
+                android:layout_toLeftOf="@id/num"
+                android:text="退货数量："
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp1"
+            android:layout_below="@id/rlt"
+            android:background="@color/shop_grey" />
+
+        <TextView
+            android:id="@+id/btn_detail"
+            style="@style/shopMsbcolorTitleText"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/line2"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:background="@drawable/btn_refund"
+            android:text="退货详情"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_15" />
+
+        <TextView
+            android:id="@+id/send_good"
+            style="@style/shopMsbcolorTitleText"
+            android:layout_below="@id/line2"
+            android:layout_marginRight="@dimen/margin_Modules"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:layout_toLeftOf="@id/btn_detail"
+            android:background="@drawable/btn_refund"
+            android:text="退货发货"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_15" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_Modules"
+        android:layout_below="@id/rltt" />
+</RelativeLayout>

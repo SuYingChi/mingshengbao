@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_Modules"
+        android:paddingTop="@dimen/margin_Modules">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            >
+            <View style="@style/shopTitleLine" />
+
+            <View style="@style/shopTitleLinePoint" />
+             <ImageView
+                 style="@style/image"
+                 android:src="@drawable/cainixihuan"
+                 android:layout_gravity="center_vertical"
+                 />
+            <TextView
+                android:id="@+id/title"
+                style="@style/shopMsbcolorTitleText" />
+
+            <View style="@style/shopTitleLinePoint" />
+
+            <View style="@style/shopTitleLine" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+        android:id="@+id/gv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/nc_bg"
+        android:horizontalSpacing="@dimen/dp4"
+        android:numColumns="2"
+        android:verticalSpacing="@dimen/dp4" />
+</LinearLayout>

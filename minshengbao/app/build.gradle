@@ -62,6 +62,11 @@ android {
     configurations {
         all*.exclude group: 'com.umeng.analytics:analytics:latest.integration', module: 'analytics-6.1.0'
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -115,4 +120,17 @@ dependencies {
     implementation files('libs/passguard.jar')
     implementation project(':lib:pingpp')
     implementation project(':PushSDK')
+    //suyingchi shop
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
+    implementation(name: 'okhttputils', ext: 'aar')
+    implementation(name: 'slideleftRcl',ext:'aar')
+    implementation 'cn.bingoogolapple:bga-swipebacklayout:1.1.8@aar'
+    implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
+    implementation 'com.zhy:autolayout:1.4.3'
+    implementation 'com.zhy:base-rvadapter:3.0.3'
+    implementation 'com.bigkoo:pickerview:2.1.0'
+    implementation ('com.zzhoujay.richtext:richtext:3.0.7'){
+        exclude group: 'com.android.support'}
 }

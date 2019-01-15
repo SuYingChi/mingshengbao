@@ -52,6 +52,7 @@
                 android:layout_height="8dp"
                 android:background="@color/background_gray"/>
             <include layout="@layout/layout_line_gray"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

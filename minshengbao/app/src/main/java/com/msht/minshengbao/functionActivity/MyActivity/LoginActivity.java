@@ -16,6 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.androidShop.event.LoginShopEvent;
+import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.LoginShopBean;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
+import com.msht.minshengbao.androidShop.viewInterface.ILoginShopView;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.R;
@@ -26,10 +34,12 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.umeng.message.PushAgent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,11 +113,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,mPassword);
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
+            ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
+
+            @Override
+            public String getKey() {
+                return null;
+            }
+
+            @Override
+            public void onLoginShopSuccess(String s) {
+                LoginShopBean bean = JsonUtil.toBean(s, LoginShopBean.class);
+                if(bean!=null){
+                    ShopSharePreferenceUtil.getInstance().setKey(bean.getDatas().getKey());
+                    ShopSharePreferenceUtil.setShopSpStringValue("username", bean.getDatas().getUsername());
+                    ShopSharePreferenceUtil.setShopSpStringValue("userId",bean.getDatas().getUserid());
+                    ShopSharePreferenceUtil.setShopSpStringValue("password",etPassword.getText().toString());
+                    String searchhis = ShopSharePreferenceUtil.getShopSpStringValue(ShopSharePreferenceUtil.getInstance().getUserId());
+                    ArrayList<String> list;
+                    if (TextUtils.isEmpty(searchhis) || searchhis.equals("null")) {
+                        list = new ArrayList<String>();
+                    } else {
+                        list = JsonUtil.jsonArrayToList(searchhis);
+                    }
+                    MyApplication.getInstance().setList(list);
+                    EventBus.getDefault().postSticky(new LoginShopEvent(bean));
+                }
+            }
+        });
         Intent broadcast=new Intent();
         broadcast.setAction(MY_ACTION);
         broadcast.putExtra("broadcast", "1");
         sendBroadcast(broadcast);
         Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra("index",0);
         intent.putExtra("pushUrl",pushUrl);
         startActivity(intent);
         finish();

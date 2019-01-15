@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_Modules">
+
+        <include
+            layout="@layout/smart_refresh_rcl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/iv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/shop_no_order_image"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            style="@style/shopBlackTitleText"
+            android:layout_below="@id/iv_no_data"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:visibility="invisible"
+            android:text="没有订单哦，亲" />
+    </RelativeLayout>
+</RelativeLayout>

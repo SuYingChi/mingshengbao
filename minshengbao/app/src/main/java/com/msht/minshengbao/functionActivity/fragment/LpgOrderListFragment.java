@@ -176,7 +176,7 @@ public class LpgOrderListFragment extends BaseFragment {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("orderId", orderId);
                 map.put("code", code);
-                map.put("orderType","1");
+                map.put("orderKey","1");
                 map.put("fiveBottleCount", fiveBottleCount);
                 map.put("fifteenBottleCount",fifteenBottleCount);
                 map.put("fiftyBottleCount", fiftyBottleCount);
@@ -265,7 +265,7 @@ public class LpgOrderListFragment extends BaseFragment {
         HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(i);
         textParams.put("userId",lpgUserId);
-        textParams.put("orderType",orderType);
+        textParams.put("orderKey",orderType);
         textParams.put("orderStatus",orderStatus);
         textParams.put("pageNum",pageNum);
         textParams.put("pageSize","16");

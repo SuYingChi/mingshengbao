@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    >
+    <CheckBox
+        android:id="@+id/select_store"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/margin_30"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="@dimen/margin_Modules"
+        android:paddingRight="@dimen/margin_Modules"
+        android:drawableLeft="@drawable/item_carlist_selected"
+        android:layout_centerVertical="true"
+        android:button="@null"
+        android:checked="false"
+        />
+    <TextView
+        android:id="@+id/store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_Modules"
+        android:text=""
+        android:textColor="@color/black"
+        android:layout_toRightOf="@id/select_store"
+        />
+</RelativeLayout>

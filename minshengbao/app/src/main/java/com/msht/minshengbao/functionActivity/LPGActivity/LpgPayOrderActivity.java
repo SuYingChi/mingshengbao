@@ -234,7 +234,7 @@ public class LpgPayOrderActivity extends BaseActivity {
         String validateURL= UrlUtil.LPG_QUERY_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
-        textParams.put("orderType",orderType);
+        textParams.put("orderKey",orderType);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override

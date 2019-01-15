@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_Modules">
+
+    <com.msht.minshengbao.androidShop.customerview.DrawHookView
+        android:id="@+id/hook"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/tv_delete_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:lines="1"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/margin_Modules"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_16"
+        android:textStyle="bold"
+        tools:text="该功能需开启定位权限才可以使用哦点击去开启" />
+
+
+
+</LinearLayout>

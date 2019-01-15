@@ -6,6 +6,7 @@
     <dimen name="margin_width320">320dp</dimen>
     <dimen name="margin_width300">300dp</dimen>
     <dimen name="margin_width275">275dp</dimen>
+    <dimen name="dp400">400dp</dimen>
     <dimen name="margin_width270">270dp</dimen>
     <dimen name="margin_width225">225dp</dimen>
     <dimen name="margin_width220">220dp</dimen>
@@ -122,6 +123,17 @@
     <dimen name="psts_dot_m_top">7dp</dimen>
     <dimen name="psts_dot_linelayout_h">23dp</dimen>
     <dimen name="psts_dot_txt_size">10sp</dimen>
+    <dimen name="margin_Modules">10dp</dimen>
+    <dimen name="dp5">8dp</dimen>
+    <dimen name="dp14">14dp</dimen>
+    <dimen name="dp12">12dp</dimen>
+    <dimen name="dp10">10dp</dimen>
+    <dimen name="dp1">1dp</dimen>
+    <dimen name="home_image_cycle_height">165dp</dimen>
+    <dimen name="search_height">48dp</dimen>
+    <dimen name="dp20">20dp</dimen>
+    <dimen name="dp4">4dp</dimen>
+    <dimen name="shop_home_area_margin">5dp</dimen>
 
     <dimen name="normal_size">40dp</dimen>
     <dimen name="floating_view_max_width">78dp</dimen>

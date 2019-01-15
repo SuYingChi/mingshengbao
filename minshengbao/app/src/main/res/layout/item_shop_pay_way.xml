@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white">
+        <ImageView
+            android:id="@+id/id_pay_img"
+            android:layout_width="@dimen/margin_35"
+            android:layout_height="@dimen/margin_35"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:src="@drawable/wechat_pay_h" />
+        <TextView
+            android:id="@+id/id_pay_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_20"
+            android:layout_toRightOf="@+id/id_pay_img"
+            android:text="微信支付"
+            android:textColor="#444444"
+            android:textSize="@dimen/text_18" />
+
+        <TextView
+            android:id="@+id/id_tv_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_3"
+            android:layout_toRightOf="@+id/id_pay_name"
+            android:textColor="#444444"
+            android:textSize="@dimen/text_18" />
+          />
+    <CheckBox
+        android:id="@+id/cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:checked="false"
+        android:drawableLeft="@drawable/item_carlist_selected"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_Modules"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_width18"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/cb"
+        android:background="@color/nc_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/margin_Modules"
+        />
+    </RelativeLayout>
