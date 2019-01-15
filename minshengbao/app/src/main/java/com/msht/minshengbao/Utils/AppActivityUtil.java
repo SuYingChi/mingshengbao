@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.androidShop.activity.MessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
-import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
+import com.msht.minshengbao.androidShop.activity.WarnMessageDetailActivity;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivity;
@@ -27,7 +30,6 @@ import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
-import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MessageDetailActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
@@ -387,7 +389,7 @@ public class AppActivityUtil {
                     onPushHomeMaintenance(context, id, "家居维修");
                     break;
                 case ConstantUtil.MESSAGE:
-                    onStartMessage(context);
+                    onStartMessage(context, url);
                     break;
                 case ConstantUtil.MESSAGE_DETAIL:
                     onStartMessageDetail(context, url, 1);
@@ -453,13 +455,21 @@ public class AppActivityUtil {
                 onHomeMaintenance(context, id, "家居维修");
                 break;
             case ConstantUtil.MESSAGE:
-                onStartMessage(context);
+                onStartMessage(context,url);
                 break;
             case ConstantUtil.MESSAGE_DETAIL:
-                onStartMessageDetail(context, url, 0);
+                if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+                    onStartMessageDetail(context, url, 0);
+                }else {
+                    AppActivityUtil.onStartLoginActivity(context, url);
+                }
                 break;
             case ConstantUtil.MESSAGE_LIST:
-                onStartMessageList(context, url, 0);
+                if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+                    onStartMessageList(context, url, 0);
+                }else {
+                    AppActivityUtil.onStartLoginActivity(context, url);
+                }
                 break;
             default:
                 if (url.startsWith(ConstantUtil.HTTP)) {
@@ -487,19 +497,19 @@ public class AppActivityUtil {
         switch (type) {
             /**燃气工单**/
             case ConstantUtil.VALUE_ONE:
-                intent = new Intent(context, MessageDetailActivity.class);
+                intent = new Intent(context, MessageListActivity.class);
                 break;
             /**紧急通知**/
             case ConstantUtil.VALUE_TWO:
-                intent = new Intent(context, MessageDetailActivity.class);
+                intent = new Intent(context, MessageListActivity.class);
                 break;
             /**物流列表**/
             case ConstantUtil.VALUE_THREE:
-                intent = new Intent(context, MessageDetailActivity.class);
+                intent = new Intent(context, MessageListActivity.class);
                 break;
             /**优惠促销**/
             case ConstantUtil.VALUE_FOUR:
-                intent = new Intent(context, MessageDetailActivity.class);
+                intent = new Intent(context, MessageListActivity.class);
                 break;
             default:
                 break;
@@ -508,7 +518,7 @@ public class AppActivityUtil {
             if (i == 1) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-            intent.putExtra("id", id);
+            intent.putExtra("type", type);
             context.startActivity(intent);
         }
     }
@@ -531,7 +541,7 @@ public class AppActivityUtil {
                 break;
             /**紧急通知**/
             case ConstantUtil.VALUE_TWO:
-                intent = new Intent(context, MessageDetailActivity.class);
+                intent = new Intent(context, WarnMessageDetailActivity.class);
                 break;
             /**物流列表**/
             case ConstantUtil.VALUE_THREE:
@@ -557,12 +567,15 @@ public class AppActivityUtil {
      * 消息中心
      *
      * @param context
+     * @param pushUrl
      */
-    private static void onStartMessage(Context context) {
-        Intent intent = new Intent(context, MessageCenterActivity.class);
-        context.startActivity(intent);
+    private static void onStartMessage(Context context, String pushUrl) {
+        if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+            context.startActivity(new Intent(context, TotalMessageListActivity.class));
+        }else {
+            AppActivityUtil.onStartLoginActivity(context, pushUrl);
+        }
     }
-
     private static void onPushHomeMaintenance(Context context, String id, String name) {
         Intent intent = new Intent(context, HomeMaintenanceActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

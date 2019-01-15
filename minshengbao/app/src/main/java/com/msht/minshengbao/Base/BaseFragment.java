@@ -32,7 +32,6 @@ public abstract class BaseFragment extends Fragment{
     public BaseFragment() {
         // Required empty public constructor
     }
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -50,7 +49,6 @@ public abstract class BaseFragment extends Fragment{
         mContext = getActivity();
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +64,6 @@ public abstract class BaseFragment extends Fragment{
         isPrepared = true;
         lazyLoad();
     }
-
     protected void lazyLoad() {
         if (!isPrepared || !isVisible || !isFirst) {
             return;
@@ -75,14 +72,19 @@ public abstract class BaseFragment extends Fragment{
         initData();
         isFirst = false;
     }
-
     //do something
     protected void onInvisible() {
 
-
     }
+    /**
+     * 获取id
+     * @return
+     */
     public abstract View initView();
 
+    /**
+     * 初始化数据
+     */
     public abstract void initData();
 
 }
