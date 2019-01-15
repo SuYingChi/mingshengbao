@@ -85,9 +85,11 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     protected void initImmersionBar() {
-       super.initImmersionBar();
-        //mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.transparent_color).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);
+      /* super.initImmersionBar();
+      //  mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.transparent_color).navigationBarWithKitkatEnable(false).init();
+        ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();*/
+        ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
+        ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();
     }
 
     @Override

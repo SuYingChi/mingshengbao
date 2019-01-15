@@ -98,7 +98,14 @@ public class AllServiceActivity extends BaseActivity {
                         AllServiceModel model = gson.fromJson(msg.obj.toString(), AllServiceModel.class);
                         if (model.result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             ArrayList<AllServiceModel.MainCategory.ServeCategory> data = model.data.serve;
-                            data.get(4).child.add(new AllServiceModel.MainCategory.ServeCategory.ChildCategory("更多分类"));
+                            int shopPosition = -1;
+                            for(int i=0;i<data.size();i++){
+                                if("shop".equals(data.get(i).code)){
+                                    shopPosition=i;
+                                    break;
+                                }
+                            }
+                            data.get(shopPosition).child.add(new AllServiceModel.MainCategory.ServeCategory.ChildCategory("更多分类"));
                             activity.categories = data;
                             activity.allServerAdapter.clear();
                             activity.allServerAdapter.addAll(data);
