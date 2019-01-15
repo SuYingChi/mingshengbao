@@ -20,8 +20,8 @@
     <string name="gas_unit">NM³</string>
     <string name="how_do_get_customerNo">如何获取用户号?</string>
     <string name="immediately_pay_fee">立即缴费</string>
-    <string name="ic_table_recharge">IC卡表充值</string>
-    <string name="internet_table_recharge">物联网表充值</string>
+    <string name="ic_table_recharge">IC卡表</string>
+    <string name="internet_table_recharge">物联网表</string>
     <string name="input_customerNo_query">输入用户号查询</string>
     <string name="last_recharge_time">上次充值时间</string>
     <string name="last_recharge_gasNum">上次充值气量</string>
