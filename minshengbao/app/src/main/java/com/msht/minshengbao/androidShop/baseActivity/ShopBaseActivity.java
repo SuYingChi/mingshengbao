@@ -187,7 +187,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
 
     protected void initImmersionBar() {
         mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.navigationBarColor(R.color.colorPrimary).init();
+        mImmersionBar.navigationBarColor(R.color.black).init();
     }
 
     protected void setSoftInPutMode() {

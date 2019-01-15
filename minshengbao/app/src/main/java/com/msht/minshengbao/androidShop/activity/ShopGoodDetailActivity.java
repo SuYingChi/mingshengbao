@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,9 +86,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     protected void initImmersionBar() {
-      /* super.initImmersionBar();
-      //  mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.transparent_color).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();*/
         ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
         ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();
     }
@@ -95,7 +93,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarCompat.setStatusBar(this);
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
         data = intent.getStringExtra("goodsid");
@@ -174,7 +171,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         mToolbar.setAlpha(1);
         currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
-        ;
     }
 
 

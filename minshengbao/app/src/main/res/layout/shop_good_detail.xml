@@ -16,7 +16,8 @@
             android:layout_height="match_parent"
             android:layout_above="@id/bottom"
             />
-    <include layout="@layout/shop_goods_detail_toolbar"
+    <include
+        layout="@layout/shop_goods_detail_toolbar"
         />
     <ImageView
         android:id="@+id/back"
@@ -24,7 +25,7 @@
         android:layout_height="?actionBarSize"
         android:src="@drawable/back2x"
         android:padding="@dimen/dp14"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_width25"
         />
     <ImageView
         android:id="@+id/menu"
@@ -33,6 +34,6 @@
         android:src="@drawable/menu"
         android:padding="@dimen/dp14"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/margin_width25"
         />
 </RelativeLayout>
