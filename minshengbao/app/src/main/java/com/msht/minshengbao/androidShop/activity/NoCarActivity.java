@@ -19,6 +19,7 @@ import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.GuessLikeBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
+import com.msht.minshengbao.functionActivity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,9 @@ public class NoCarActivity extends ShopBaseActivity implements IGuessLikeGoodLis
         returnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NoCarActivity.this, ShopHomeActivity.class));
+              Intent intent =  new Intent(NoCarActivity.this, MainActivity.class);
+               intent.putExtra("index",1);
+               startActivity(intent);
                 finish();
             }
         });

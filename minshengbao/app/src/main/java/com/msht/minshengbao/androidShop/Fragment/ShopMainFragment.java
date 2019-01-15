@@ -353,7 +353,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         ShopHomeClassPagerAdapter pagerAdapter = new ShopHomeClassPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if (!BuildConfig.DEBUG) {
                     if (position != homeClassList.size() - 1) {
                         String data = homeClassList.get(position).getData();
                         if (data.contains("gc_id=")) {
@@ -361,11 +360,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             int index = data.indexOf("gc_id=");
                             data = data.substring(index + 6).trim();
                             intent.putExtra("data", data);
-                           // intent.putExtra("selectPosition", position);
                             intent.putExtra("title", homeClassList.get(position).getTitle());
-                            //Bundle bundle = new Bundle();
-                         //   bundle.putSerializable("list", (Serializable) list);
-                           // intent.putExtras(bundle);
                             startActivity(intent);
                         } else if (data.contains("keyword=")) {
                             int index = data.indexOf("keyword=");
@@ -382,36 +377,8 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                         }
                     } else {
                         Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
-                      //  intent.putExtra("list", (Serializable) list);
                         getActivity().startActivity(intent);
                     }
-                } else {
-                    String data = homeClassList.get(position).getData();
-                    String type = homeClassList.get(position).getType();
-                    LogUtils.e(data + "type=" + homeClassList.get(position).getType());
-                    if ("keyword".equals(type)) {
-                        Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                        intent.putExtra("keyword", StringUtil.toURLDecoder(data));
-                        startActivity(intent);
-                    } else if ("goods".equals(type)) {
-                        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
-                        intent.putExtra("goodsid", data);
-                        startActivity(intent);
-                    } else if ("url".equals(type)) {
-                        if (data.contains("gc_id=")) {
-                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                            int index = data.indexOf("gc_id=");
-                            data = data.substring(index + 6).trim();
-                            intent.putExtra("data", data);
-                            intent.putExtra("title", homeClassList.get(position).getTitle());
-                            startActivity(intent);
-                        } else if (NetUtil.getDomain(data).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
-                            Intent intent = new Intent(getActivity(), ShopUrlActivity.class);
-                            intent.putExtra("url", data);
-                            startActivity(intent);
-                        }
-                    }
-                }
             }
         });
         final WrapChildHeightViewPager vp = addViewHolder.getView(R.id.vp);

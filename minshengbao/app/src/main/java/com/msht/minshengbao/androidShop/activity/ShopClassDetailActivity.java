@@ -131,32 +131,12 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
         ImmersionBar.setTitleBar(this, mToolbar);
     }
-
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(CarNumEvent messageEvent) {
-        carNum = messageEvent.getCarNum();
-        if (carNum > 0) {
-            tvCarNum.setVisibility(View.VISIBLE);
-            tvCarNum.setText(String.format("%d", carNum));
-        } else {
-            tvCarNum.setVisibility(View.GONE);
-        }
-    }*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*EventBus.getDefault().register(this);
-        carNum = getIntent().getIntExtra("carnum", -1);
-        if (carNum > 0) {
-            tvCarNum.setVisibility(View.VISIBLE);
-            tvCarNum.setText(String.format("%d", carNum));
-        } else {
-            tvCarNum.setVisibility(View.GONE);
-        }*/
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,12 +184,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             @Override
             public void onItemClick(int position) {
                 ClassDetailRightBean.DatasBean.GoodsListBean item = rightDataList.get(position);
-                // HashMap<String, String> map = new HashMap<String, String>();
                 String goodsId = item.getGoods_id();
-                 /*   map.put("type", "goods");
-                    map.put("data", goodsId);
-                    doNotAdClick(map);*/
-
                 onShopItemViewClick("goods", goodsId);
             }
         });
@@ -238,7 +213,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             }
         });
         ShopPresenter.getAllClass(this);
-        //  ShopPresenter.getClassDetailLeft(this);
     }
 
 
@@ -586,8 +560,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     @Override
     public void onGetAllClassSuccess(List<ClassFirstBean.DatasBean.ClassListBean> popDatas) {
         //初始化顶部点击弹出popwindow
-        /*if (!BuildConfig.DEBUG) {*/
-       /* if (BuildConfig.DEBUG) {*/
             if (popDatas != null && popDatas.size() > 0) {
                 triangle.setVisibility(View.VISIBLE);
                 rltTitle.setOnClickListener(new View.OnClickListener() {
@@ -603,9 +575,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 for (ClassFirstBean.DatasBean.ClassListBean classListBean : popDatas) {
                     myClassListBean = new MyClassListBean();
                     myClassListBean.setGc_name(classListBean.getGc_name());
-                  /*  data = classListBean.getData();
-                    int index = data.indexOf("id=");
-                    data = data.substring(index + 3).trim();*/
                     myClassListBean.setGc_id(classListBean.getGc_id());
                     if (TextUtils.isEmpty(gcId)) {
                         if (tvTitle.getText().toString().equals(classListBean.getGc_name())) {
@@ -652,10 +621,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                         }
                     }
                 });
-                //rcl3.setAdapter(rcl3Adapter);
                 rcl3Adapter.setDatas(popWindowList);
                 rcl3.setAdapter(rcl3Adapter);
-                // rcl3Adapter.notifyDataSetChanged();
                 popWindow = new PopupWindow(popViewHolder.getCustomView(), ViewGroup.LayoutParams.MATCH_PARENT, DimenUtil.dip2px(400));
                 popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
@@ -667,6 +634,5 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             } else {
                 triangle.setVisibility(View.INVISIBLE);
             }
-      /*  }*/
     }
 }

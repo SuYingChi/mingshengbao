@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.androidShop.activity.MessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
@@ -698,7 +699,7 @@ public class AppActivityUtil {
     }
 
     public static void onStartUrl(Context context, String rightUrl) {
-        if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN)) {
+        if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 if (rightUrl.contains("keyword=")) {
                     int index = rightUrl.indexOf("keyword=");
                     String shopkeyword = rightUrl.substring(index + 8).trim();
@@ -717,7 +718,7 @@ public class AppActivityUtil {
                     rightUrl = rightUrl.substring(index + 6).trim();
                     intent.putExtra("data", rightUrl);
                     context.startActivity(intent);
-                } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+                } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                     Intent intent = new Intent(context, ShopUrlActivity.class);
                     intent.putExtra("url", rightUrl);
                     context.startActivity(intent);
@@ -754,7 +755,7 @@ public class AppActivityUtil {
                 rightUrl = rightUrl.substring(index + 6).trim();
                 intent.putExtra("data", rightUrl);
                 context.startActivity(intent);
-            } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
+            } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 Intent intent = new Intent(context, ShopUrlActivity.class);
                 intent.putExtra("url", rightUrl);
                 context.startActivity(intent);

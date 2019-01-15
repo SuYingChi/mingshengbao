@@ -233,7 +233,11 @@ public class JsonUtil {
         }.getType());
         return itemGoodsLite;
     }
-
+    public static  ArrayList<String> stringsToList(String json) {
+        ArrayList<String> itemGoodsLite = JsonUtil.toBean(json, new TypeToken<List<String>>() {
+        }.getType());
+        return itemGoodsLite;
+    }
     public static <T> T getPopupAdData(String json, Class<T> clazz) {
         T itemPopupAd = JsonUtil.toBean(json, clazz);
         return itemPopupAd;

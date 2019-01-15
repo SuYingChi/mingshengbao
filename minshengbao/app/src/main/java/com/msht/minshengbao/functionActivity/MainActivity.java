@@ -365,6 +365,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             int index = getIntent().getIntExtra("index", 0);
             initTab(index);
         }
+        refreshCarNum();
         initRequestPermission();
         if (isLoginState(context)){
            /* if (NetWorkUtil.isNetWorkEnable(this)){
@@ -1020,6 +1021,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (isLoginState(context) && NetWorkUtil.isNetWorkEnable(this)) {
             onGetMessage();
+        }else {
+            tvMassageNum.setVisibility(View.GONE);
+            VariableUtil.messageNum=0;
         }
     }
 
