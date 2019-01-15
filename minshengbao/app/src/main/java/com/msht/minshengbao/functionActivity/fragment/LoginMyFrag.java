@@ -3,21 +3,14 @@ package com.msht.minshengbao.functionActivity.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -31,64 +24,43 @@ import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
-import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.MyShopOrderActivity;
 import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
 import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
-import com.msht.minshengbao.androidShop.shopBean.RefunBean;
-import com.msht.minshengbao.androidShop.shopBean.RefunGoodBean;
-import com.msht.minshengbao.androidShop.shopBean.ShopCellectionBean;
-import com.msht.minshengbao.androidShop.shopBean.ShopFootPrintBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopNumBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
-import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
-import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.Invoice.InvoiceHomeActivity;
-import com.msht.minshengbao.functionActivity.MessageCenterActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ConsultRecommendActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.CustomerNoManageActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MySettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MyWalletActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.ACache;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
-import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM;
-import com.msht.minshengbao.ViewUI.CircleImageView;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.ViewUI.widget.MyScrollview;
+import com.msht.minshengbao.functionActivity.repairService.RepairOrderListActivity;
 import com.umeng.analytics.MobclickAgent;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Request;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -290,11 +262,20 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         mAdapter = new MyFunctionAdapter(mContext, mList);
         mGridView.setAdapter(mAdapter);
         initData();
+        initEvent(mRootView);
         goActivity();
         getOrdersNum();
         return mRootView;
     }
 
+    private void initEvent(View view) {
+        view.findViewById(R.id.repair_order).setOnClickListener(this);
+        view.findViewById(R.id.my_repair_wait_pay).setOnClickListener(this);
+        view.findViewById(R.id.repair_finished).setOnClickListener(this);
+        view.findViewById(R.id.my_wait_repair_eveluate).setOnClickListener(this);
+        view.findViewById(R.id.my_repair_refund).setOnClickListener(this);
+
+    }
 
     private void initView(View view) {
         myScrollview = (MyScrollview) view.findViewById(R.id.id_scrollview);
@@ -484,12 +465,12 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             public void onGlobalLayout() {
                 layoutMySetting.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 bgHeight = layoutMySetting.getHeight();
-                inisetListaner();
+                initSetListener();
             }
         });
     }
 
-    private void inisetListaner() {
+    private void initSetListener() {
         myScrollview.setScrollViewListener(this);
     }
 
@@ -515,7 +496,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     public void onDestroy() {
         super.onDestroy();
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -542,9 +522,29 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             case R.id.id_right_massage:
                 goMessageCenter();
                 break;
+            case R.id.repair_order:
+                onRepairOrder(0);
+                break;
+            case R.id.my_repair_wait_pay:
+                onRepairOrder(1);
+                break;
+            case R.id.repair_finished:
+                onRepairOrder(2);
+                break;
+            case R.id.my_wait_repair_eveluate:
+                onRepairOrder(3);
+                break;
+            case R.id.my_repair_refund:
+                onRepairOrder(4);
+                break;
             default:
                 break;
         }
+    }
+    private void onRepairOrder(int i) {
+        Intent intent=new Intent(mContext,RepairOrderListActivity.class);
+        intent.putExtra("status",i);
+        startActivity(intent);
     }
     private void goMessageCenter() {
        // Intent intent = new Intent(mContext, MessageCenterActivity.class);
@@ -631,7 +631,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                             CallPhoneUtil.callPhone(mContext, phone);
                         }
                     }
-
                     @Override
                     public void onPermissionDenied(int code) {
                         ToastUtil.ToastText(mContext, "没有权限您将无法进行相关操作！");
@@ -649,9 +648,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         MobclickAgent.onPageStart(mPageName);
 
     }
-
-    ;
-
     @Override
     public void onPause() {
         super.onPause();

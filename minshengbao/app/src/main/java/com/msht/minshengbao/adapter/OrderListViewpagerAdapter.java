@@ -8,7 +8,9 @@ import com.msht.minshengbao.functionActivity.fragment.OrderListFragment;
 
 
 /**
- * Created by hei on 2016/12/26.
+ *
+ * @author hei
+ * @date 2016/12/26
  * 我的订单界面的viewpager适配器
  */
 

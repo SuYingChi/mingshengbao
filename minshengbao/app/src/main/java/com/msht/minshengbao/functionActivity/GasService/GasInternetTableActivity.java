@@ -274,7 +274,7 @@ public class GasInternetTableActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_internet_table);
         context=this;
-        setCommonHeader("物联网表查询");
+        setCommonHeader("物联网表");
         customDialog=new CustomDialog(context, "正在加载");
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");

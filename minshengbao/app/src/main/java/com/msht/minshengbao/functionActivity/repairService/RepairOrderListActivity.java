@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +22,10 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
+import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
 import com.msht.minshengbao.adapter.InvoiceHistoryAdapter;
 import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
+import com.msht.minshengbao.adapter.OrderListViewpagerAdapter;
 import com.msht.minshengbao.adapter.RepairOrderListAdapter;
 import com.msht.minshengbao.functionActivity.fragment.OrderListFragment;
 
@@ -173,11 +176,21 @@ public class RepairOrderListActivity extends BaseActivity {
         context=this;
         setCommonHeader("维修订单");
         customDialog=new CustomDialog(this, "正在加载");
-        status=getIntent().getStringExtra("status");
+        Intent data=getIntent();
+        int statuses;
+        if (data!=null){
+            statuses=data.getIntExtra("status",0);
+        }else {
+            statuses=0;
+        }
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         layoutNoData =findViewById(R.id.id_re_nodata);
         mRecyclerView=(XRecyclerView)findViewById(R.id.id_order_view);
+        ViewPager mViewpager = (ViewPager)findViewById(R.id.viewpager);
+        ViewPagerIndicator mIndicator = (ViewPagerIndicator)findViewById(R.id.indicator);
+        mViewpager.setAdapter(new OrderListViewpagerAdapter(getSupportFragmentManager()));
+        mIndicator.setViewPager(mViewpager,statuses);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -249,7 +262,7 @@ public class RepairOrderListActivity extends BaseActivity {
     }
     private void initOrderList(int i) {
         pageIndex =i;
-        String validateURL = UrlUtil.INSURANCE_HISTORY_URL;
+        String validateURL = UrlUtil.maintainservise_Url;
         HashMap<String, String> textParams = new HashMap<String, String>();
         String pageNum=String.valueOf(i);
         textParams.put("userId",userId);

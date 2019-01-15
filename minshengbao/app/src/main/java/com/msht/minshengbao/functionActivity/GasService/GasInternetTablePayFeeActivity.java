@@ -199,7 +199,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
         success.putExtra("url",lottery);
         success.putExtra("type",s);
         success.putExtra("pageUrl",pageUrl);
-        success.putExtra("navigation","物联网表充值结果");
+        success.putExtra("navigation","支付结果");
         startActivity(success);
         finish();
     }
@@ -308,7 +308,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_internet_table_pay_fee);
         context=this;
-        setCommonHeader("充值支付");
+        setCommonHeader("支付订单");
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
