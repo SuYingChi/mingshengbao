@@ -20,7 +20,6 @@ import android.widget.EditText;
 
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.androidShop.WebActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseFragment;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
@@ -95,13 +94,6 @@ public class AppUtil {
         ShopSharePreferenceUtil.setShopSpStringValue("siteName", "");
     }
 
-    public static void goWeb(Context mContext, String url) {
-        if (TextUtils.isEmpty(url))
-            return;
-        Intent goweb = new Intent(mContext, WebActivity.class);
-        goweb.putExtra("url", url);
-        mContext.startActivity(goweb);
-    }
 
     public static void goLogin(Context mContext) {
         Intent go = new Intent(mContext, LoginActivity.class);

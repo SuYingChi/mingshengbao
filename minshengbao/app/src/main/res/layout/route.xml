@@ -70,7 +70,7 @@
                         <TextView
                             android:id="@+id/state"
                             style="@style/shopMsbcolorTitleText"
-                            android:text="物流状态"
+                            android:text=""
                             android:textColor="@color/msb_color" />
                     </LinearLayout>
 

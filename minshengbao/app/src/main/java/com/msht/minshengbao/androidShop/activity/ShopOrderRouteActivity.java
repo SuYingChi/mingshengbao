@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
     ImageView ivback;
     private String orderId;
     private OrderRouteBean bean;
-    private List<String> dataList=new ArrayList<String>();
+    private List<String> dataList = new ArrayList<String>();
     private ShopRouteAdapter adapter;
     private String msgid;
 
@@ -64,7 +65,7 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         orderId = getIntent().getStringExtra("id");
-        msgid = getIntent().getIntExtra("msgid",0)+"";
+        msgid = getIntent().getIntExtra("msgid", 0) + "";
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         linearLayoutManager.setAutoMeasureEnabled(true);
         rcl.setNestedScrollingEnabled(false);
@@ -90,11 +91,15 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
 
     @Override
     public void onSearchDeliverSuccess(String s) {
-       bean = JsonUtil.toBean(s,OrderRouteBean.class);
+        bean = JsonUtil.toBean(s, OrderRouteBean.class);
         if (bean != null) {
             dataList.addAll(bean.getDatas().getDeliver_info());
             adapter.notifyDataSetChanged();
-            tvState.setText(bean.getDatas().getState());
+            if (TextUtils.isEmpty(bean.getDatas().getState()) || TextUtils.equals(bean.getDatas().getState(), "null")) {
+                tvState.setText("");
+            } else {
+                tvState.setText(bean.getDatas().getState());
+            }
             tvPhone.setText(bean.getDatas().getExpress_service_phone());
             tvCompany.setText(bean.getDatas().getExpress_name());
             tvSn.setText(bean.getDatas().getShipping_code());

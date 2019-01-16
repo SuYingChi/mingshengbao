@@ -85,7 +85,8 @@ public class MessageListAdapter2 extends ComplexRecyclerViewAdapter {
                     holder.setText(R.id.title, obj.optString("log_msg"));
                     TextView tv = holder.getView(R.id.desc);
                     tv.setSingleLine(false);
-                    tv.setText(obj.optString("log_msg"));
+                    tv.setText("点击查看详情");
+                   // tv.setText(obj.optString("log_msg"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
