@@ -165,6 +165,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
     private ArrayList<String> imagelist = new ArrayList<String>();
+    private String selectedGuigeName;
     ;
 
 
@@ -529,6 +530,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     String guigeName = guigevalueobj.optString(guigeidlist.get(i));
                     if (i == selectedGuigePosition) {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, true));
+                        selectedGuigeName = guigeName;
+                        if(selectedGuigeName==null||guigeName.equals("null")){
+                            selectedGuigeName="";
+                        }
                     } else {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, false));
                     }
@@ -613,9 +618,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             if (selectedGoodNum == 1) {
-                tvYixuan.setText("默认x1");
+                tvYixuan.setText(selectedGuigeName+"默认x1");
             } else {
-                tvYixuan.setText(selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
             }
             ll_3.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -744,6 +749,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (childposition != selectedGuigePosition) {
             selectedGuigePosition = childposition;
             goodsid = guigeList.get(childposition).getGuigeGoodId();
+            guigename = guigeList.get(childposition).getGuigeName();
+            if (selectedGoodNum == 1) {
+                tvYixuan.setText(selectedGuigeName+"默认x1");
+            } else {
+                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
+            }
             ShopPresenter.getGoodDetail(this);
         }
     }
@@ -753,9 +764,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void setSelectedGoodNum(int num) {
         this.selectedGoodNum = num;
         if (selectedGoodNum == 1) {
-            tvYixuan.setText("默认x1");
+            tvYixuan.setText(selectedGuigeName+"默认x1");
         } else {
-            tvYixuan.setText(selectedGoodNum + "件");
+            tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
         }
     }
 
@@ -912,27 +923,4 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_no_collected));
     }
 
-   /* @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
-                    PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
-                }
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(getContext(), "没有权限");
-            }
-        }
-    };*/
 }
