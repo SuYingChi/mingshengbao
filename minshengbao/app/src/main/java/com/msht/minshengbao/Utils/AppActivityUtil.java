@@ -528,7 +528,7 @@ public class AppActivityUtil {
         switch (type) {
             /**燃气工单**/
             case ConstantUtil.VALUE_ONE:
-                intent = new Intent(context, MessageDetailActivity.class);
+              //  intent = new Intent(context, MessageDetailActivity.class);
                 break;
             /**紧急通知**/
             case ConstantUtil.VALUE_TWO:
@@ -536,11 +536,11 @@ public class AppActivityUtil {
                 break;
             /**物流列表**/
             case ConstantUtil.VALUE_THREE:
-                intent = new Intent(context, MessageDetailActivity.class);
+             //   intent = new Intent(context, MessageDetailActivity.class);
                 break;
             /**优惠促销**/
             case ConstantUtil.VALUE_FOUR:
-                intent = new Intent(context, MessageDetailActivity.class);
+             //   intent = new Intent(context, MessageDetailActivity.class);
                 break;
             default:
                 break;

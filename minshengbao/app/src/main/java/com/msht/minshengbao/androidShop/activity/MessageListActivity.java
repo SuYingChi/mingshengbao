@@ -19,6 +19,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
@@ -134,10 +135,33 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
                 } else if (type.equals("4")) {
                     try {
                         JSONObject obj = new JSONObject(dataList.get(i).getContent());
-                        Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
-                        intent.putExtra("keyword", obj.optString("log_type_v"));
-                        intent.putExtra("msgid", dataList.get(i).getId());
+                       /* Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
+                        intent.putExtra("keyword", obj.optString("url"));
+                        intent.putExtra("msgid", dataList.get(i).getId());*/
+                        String data = obj.optString("url");
+                        if (data.contains("gc_id=")) {
+                            Intent intent = new Intent(MessageListActivity.this, ShopClassDetailActivity.class);
+                            int index = data.indexOf("gc_id=");
+                            data = data.substring(index + 6).trim();
+                            intent.putExtra("data", data);
+                            startActivity(intent);
+                        } else if (data.contains("keyword=")) {
+                            int index = data.indexOf("keyword=");
+                            String shopkeyword = data.substring(index + 8).trim();
+                            Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
+                            intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                            startActivity(intent);
+                        } else if (data.contains("goods_id=")) {
+                            int index = data.indexOf("goods_id=");
+                            String goodsid = data.substring(index + 9).trim();
+                            Intent intent = new Intent(MessageListActivity.this, ShopGoodDetailActivity.class);
+                            intent.putExtra("goodsid", goodsid);
+                            startActivity(intent);
+                        }
+                     else {
+                        Intent intent = new Intent(MessageListActivity.this, ShopMoreGoodActivity.class);
                         startActivity(intent);
+                    }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

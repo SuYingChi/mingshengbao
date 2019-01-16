@@ -145,7 +145,6 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                 goSearch();
             }
         });
-     //   ShopPresenter.getKeywordList(this);
         if(!msgid.equals("0")) {
             ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
         }
