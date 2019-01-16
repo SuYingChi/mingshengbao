@@ -493,7 +493,6 @@ public class AppActivityUtil {
      */
     private static void onStartMessageList(Context context, String url, int i) {
         String type = Uri.parse(url).getQueryParameter("type");
-        String id = Uri.parse(url).getQueryParameter("id");
         Intent intent = null;
         switch (type) {
             /**燃气工单**/

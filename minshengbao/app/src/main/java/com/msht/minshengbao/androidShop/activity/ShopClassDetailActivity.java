@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.adapter.ClassDetailLeftAdapter;
 import com.msht.minshengbao.androidShop.adapter.ClassDetailRightAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
@@ -47,6 +48,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopGoodDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.events.CarNumEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -66,7 +68,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopClassDetailActivity extends ShopBaseActivity implements IShopClassDetailView, OnRefreshLoadMoreListener, OnRefreshListener, ClassDetailRightAdapter.AddCarListener, IShopGoodDetailView, ICarListView, IModifyCarGoodNumView, IShopAllClassView {
+public class ShopClassDetailActivity extends ShopBaseActivity implements IShopClassDetailView, OnRefreshLoadMoreListener, OnRefreshListener, ClassDetailRightAdapter.AddCarListener, IShopGoodDetailView, ICarListView, IModifyCarGoodNumView, IShopAllClassView, IWarnMessageDetailView {
     @BindView(R.id.rcl)
     RecyclerView rclLeft;
     @BindView(R.id.rcl2)
@@ -148,6 +150,10 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         String tit = getIntent().getStringExtra("title");
         if(!TextUtils.isEmpty(tit)){
             tvTitle.setText(tit);
+        }
+        String msgid = getIntent().getIntExtra("msgid", 0) + "";
+        if(!msgid.equals("0")) {
+            ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
         }
         rclLeft.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rclLeft.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -634,5 +640,10 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             } else {
                 triangle.setVisibility(View.INVISIBLE);
             }
+    }
+
+    @Override
+    public void onGetDetailSuccess(String s) {
+
     }
 }

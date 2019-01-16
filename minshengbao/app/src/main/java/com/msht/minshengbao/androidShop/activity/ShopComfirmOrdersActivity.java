@@ -413,7 +413,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 recommendBean = new RecommendBean("", "1");
             }
             vat_hash = datas.optString("vat_hash");
-            JSONObject obj = datas.optJSONObject("inv_info");
+            //JSONObject obj = datas.optJSONObject("inv_info");
             if (TextUtils.equals(datas.optString("ifshow_inv"), "1")) {
                 isInv = true;
                 llinv.setVisibility(View.VISIBLE);
@@ -423,9 +423,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llinv.setVisibility(View.GONE);
                 rltinv.setVisibility(View.GONE);
             }
-            invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
+           /* invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
-            tvInv_info.setText(content);
+            tvInv_info.setText(content);*/
+           //默认没有发票
+            invInfoBean = new InvItemBean("不需要发票", true, "","","");
+            tvInv_info.setText("不需要发票");
             freight_hash = datas.optString("freight_hash");
             String predeposit = datas.optString("available_predeposit");
             if (!(TextUtils.isEmpty(predeposit) || TextUtils.equals(predeposit, "null"))) {

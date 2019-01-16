@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.widget.PopupMenu;
 import com.msht.minshengbao.androidShop.Fragment.DetailFragment;
@@ -32,8 +33,10 @@ import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.AddCarOrBuyGoodDialog;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
+import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.GoodDetailActivityListener;
+import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
@@ -45,7 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDetailActivityListener {
+public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDetailActivityListener, IWarnMessageDetailView {
     private String type;
     private String data;
     @BindView(R.id.toolbar)
@@ -171,6 +174,10 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         mToolbar.setAlpha(1);
         currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
+        String msgid = getIntent().getIntExtra("msgid", 0) + "";
+        if(!msgid.equals("0")) {
+            ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
+        }
     }
 
 
@@ -399,5 +406,10 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     protected void onRestart() {
         super.onRestart();
         f0.refreshCarList();
+    }
+
+    @Override
+    public void onGetDetailSuccess(String s) {
+
     }
 }

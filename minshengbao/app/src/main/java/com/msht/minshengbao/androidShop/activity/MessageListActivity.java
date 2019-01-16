@@ -102,29 +102,14 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
             // adapter = new MessageListAdapter(this, R.layout.item_youhui);
             adapter = new MessageListAdapter2(this, dataList, 4);
         }
-      /*  adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                if (type.equals("2")) {
-                    Intent intent = new Intent(MessageListActivity.this, WarnMessageDetailActivity.class);
-                    intent.putExtra("id", dataList.get(position).getId() + "");
-                    startActivity(intent);
-                } else if (type.equals("3")) {
-                    Intent intent = new Intent(MessageListActivity.this, ShopOrderRouteActivity.class);
-                    intent.putExtra("id", position + "");
-                    startActivity(intent);
-                }
-            }
-        });*/
-        // adapter.setDatas(dataList);
         adapter.setOnItemClickListener(new ComplexRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int i, ComplexRecyclerViewAdapter.ComplexViewHolder complexViewHolder, Object o) {
-                if (type.equals(ConstantUtil.VALUE_ONE)){
+                if (type.equals(ConstantUtil.VALUE_ONE)) {
                     Intent intent = new Intent(MessageListActivity.this, MessageDetailActivity.class);
                     intent.putExtra("id", dataList.get(i).getId() + "");
                     startActivity(intent);
-                }else if (type.equals("2")) {
+                } else if (type.equals("2")) {
                     Intent intent = new Intent(MessageListActivity.this, WarnMessageDetailActivity.class);
                     intent.putExtra("id", dataList.get(i).getId() + "");
                     startActivity(intent);
@@ -141,12 +126,10 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
                 } else if (type.equals("4")) {
                     try {
                         JSONObject obj = new JSONObject(dataList.get(i).getContent());
-                       /* Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
-                        intent.putExtra("keyword", obj.optString("url"));
-                        intent.putExtra("msgid", dataList.get(i).getId());*/
                         String data = obj.optString("url");
                         if (data.contains("gc_id=")) {
                             Intent intent = new Intent(MessageListActivity.this, ShopClassDetailActivity.class);
+                            intent.putExtra("msgid", dataList.get(i).getId());
                             int index = data.indexOf("gc_id=");
                             data = data.substring(index + 6).trim();
                             intent.putExtra("data", data);
@@ -155,19 +138,17 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
                             int index = data.indexOf("keyword=");
                             String shopkeyword = data.substring(index + 8).trim();
                             Intent intent = new Intent(MessageListActivity.this, ShopKeywordListActivity.class);
+                            intent.putExtra("msgid", dataList.get(i).getId());
                             intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
                             startActivity(intent);
                         } else if (data.contains("goods_id=")) {
                             int index = data.indexOf("goods_id=");
                             String goodsid = data.substring(index + 9).trim();
                             Intent intent = new Intent(MessageListActivity.this, ShopGoodDetailActivity.class);
+                            intent.putExtra("msgid", dataList.get(i).getId());
                             intent.putExtra("goodsid", goodsid);
                             startActivity(intent);
                         }
-                     else {
-                        Intent intent = new Intent(MessageListActivity.this, ShopMoreGoodActivity.class);
-                        startActivity(intent);
-                    }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -238,10 +219,10 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
             if (page == 1) {
                 dataList.clear();
                 dataList.addAll(bean.getData());
-                if (page<lastPage) {
+                if (page < lastPage) {
                     page++;
                     ShopPresenter.getMessageList(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), type);
-                }else {
+                } else {
                     adapter.notifyDataSetChanged();
                     onRestart = false;
                 }

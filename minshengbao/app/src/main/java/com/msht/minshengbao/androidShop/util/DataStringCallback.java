@@ -36,7 +36,11 @@ public class DataStringCallback extends StringCallback {
         if(isShowLoadingDialog) {
             iView.dismissLoading();
         }
-        iView.onError(e.getMessage().toString());
+        if(e.getMessage().toString().contains("timeout")){
+            iView.onError("网络连接超时，请重试");
+        }else {
+            iView.onError(e.getMessage().toString());
+        }
 
     }
 

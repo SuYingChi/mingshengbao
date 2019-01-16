@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.ShopChatUserBean;
@@ -38,7 +39,14 @@ public class MsgUserListAdapter extends ComplexRecyclerViewAdapter {
             GlideUtil.loadRemoteCircleImg(mContext,complexViewHolder.getImageView(R.id.iv),avatar);
             complexViewHolder.setText(R.id.time,((ShopChatUserBean) item).getTime());
             complexViewHolder.setText(R.id.name, ((ShopChatUserBean) item).getU_name());
-            complexViewHolder.setText(R.id.price,((ShopChatUserBean) item).getT_msg());
+            String tMsg = ((ShopChatUserBean) item).getT_msg();
+            if(tMsg.startsWith(":")&&tMsg.endsWith(":")){
+                String gifName = tMsg.substring(1, tMsg.length() - 1);
+                int gifId = mContext.getResources().getIdentifier(gifName, "raw", mContext.getPackageName());
+                Glide.with(mContext).asGif().load(gifId).into(complexViewHolder.getImageView(R.id.emoji));
+            }else {
+                complexViewHolder.setText(R.id.price, ((ShopChatUserBean) item).getT_msg());
+            }
         }
     }
 }
