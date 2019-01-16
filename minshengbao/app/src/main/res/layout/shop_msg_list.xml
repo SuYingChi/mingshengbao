@@ -64,7 +64,7 @@
             android:layout_toRightOf="@id/warnnum"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="112121212"
+            android:text=""
             android:textSize="@dimen/text_12"
             android:textColor="@color/gray_black" />
         <TextView
@@ -73,7 +73,7 @@
             android:layout_alignTop="@id/warniv"
             android:layout_alignParentRight="true"
             android:textColor="@color/black"
-            android:text="一小时前"
+            android:text=""
             android:textSize="@dimen/text_12"
             />
         <TextView
