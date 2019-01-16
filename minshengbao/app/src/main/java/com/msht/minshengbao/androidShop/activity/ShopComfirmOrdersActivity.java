@@ -192,7 +192,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             case R.id.back:
                 finish();
             case R.id.rlt_recommend:
-                if (recommandList.size() == 0) {
+                if (recommandList.size() <=1) {
                     PopUtil.toastInCenter("无更多推荐人可选");
                 } else {
                     Intent intent1 = new Intent(this, RecommendActivity.class);
@@ -398,11 +398,13 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             JSONArray recommendinfo = datas.optJSONArray("recommend_info");
             for (int i = 0; i < recommendinfo.length(); i++) {
                 JSONObject obj = recommendinfo.optJSONObject(i);
-                recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
+                if(!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))){
+                    recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
+                }
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
-                    if (!TextUtils.isEmpty(re.getRecommend_phone()) || !"null".equals(re.getRecommend_phone())) {
+                    if (!TextUtils.isEmpty(re.getRecommend_phone()) && !"null".equals(re.getRecommend_phone())) {
                         etRecommand.setText(re.getRecommend_phone());
                     }
                     recommendBean = re;
