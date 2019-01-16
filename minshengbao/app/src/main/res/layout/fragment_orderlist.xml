@@ -6,13 +6,13 @@
     android:layout_height="match_parent">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        android:layout_height="match_parent"
+        android:background="@color/background_gray">
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
             android:id="@+id/id_order_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+            android:layout_height="wrap_content">
+        </com.jcodecraeer.xrecyclerview.XRecyclerView>
         <RelativeLayout
             android:id="@+id/id_re_nodata"
             android:layout_width="match_parent"
@@ -20,9 +20,10 @@
             android:visibility="gone">
             <ImageView
                 android:id="@+id/id_img_wufuwu"
-                android:layout_width="135dp"
-                android:layout_height="135dp"
-                android:layout_marginTop="@dimen/margin_30"
+                android:layout_width="@dimen/margin_width120"
+                android:layout_height="@dimen/margin_width120"
+                android:contentDescription="@string/picture_text"
+                android:layout_marginTop="@dimen/margin_width30"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/order_data_xh"/>
             <TextView
@@ -31,9 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/id_img_wufuwu"
-                android:layout_marginTop="@dimen/margin_20"
-                android:textSize="@dimen/text_20"
-                android:text="无服务工单" />
+                android:layout_marginTop="@dimen/margin_width20"
+                android:textSize="@dimen/text_width18"
+                android:text="@string/no_server_order" />
         </RelativeLayout>
     </FrameLayout>
 </LinearLayout>

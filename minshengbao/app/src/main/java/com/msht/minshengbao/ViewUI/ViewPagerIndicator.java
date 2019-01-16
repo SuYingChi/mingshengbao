@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -96,9 +97,7 @@ public class ViewPagerIndicator extends LinearLayout {
         mPaint.setColor(getResources().getColor(R.color.colorAccent));
         mPaint.setStyle(Style.FILL);
         mPaint.setPathEffect(new CornerPathEffect(3));
-
     }
-
     /**
      * 绘制指示器
      */
@@ -109,7 +108,6 @@ public class ViewPagerIndicator extends LinearLayout {
         canvas.translate(mTranslationX, getHeight() + 1);
         canvas.drawPath(indicatorPath,mPaint);
         canvas.restore();
-
         super.dispatchDraw(canvas);
     }
 
@@ -152,40 +150,37 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     // 设置关联的ViewPager
-    public void setViewPager(ViewPager mViewPager, int pos) {
-        this.mViewPager = mViewPager;
+    public void setViewPager(ViewPager viewPager, int pos) {
+        this.mViewPager = viewPager;
+        mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+                scroll(position, positionOffset);
+            }
 
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                // 设置字体颜色高亮
                 resetTextViewColor();
                 highLightTextView(position*2);
             }
 
             @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-                // 滚动
-                scroll(position, positionOffset);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrollStateChanged(int i) {
 
             }
         });
-        String[] Title = new String[mViewPager.getAdapter().getCount()];
+        String[] mTitle = new String[mViewPager.getAdapter().getCount()];
         for (int i = 0; i < mViewPager.getAdapter().getCount(); i++) {
-            Title[i] = (String) mViewPager.getAdapter().getPageTitle(i);
+            mTitle[i] = (String) mViewPager.getAdapter().getPageTitle(i);
         }
-        mTabVisibleCount=Title.length;
-        setTabItemTitles(Title);
+        mTabVisibleCount=mTitle.length;
+        setTabItemTitles(mTitle);
 
         // 设置当前页
         mViewPager.setCurrentItem(pos);
         // 高亮
-        highLightTextView(pos);
+       // highLightTextView(pos);
     }
 
     /**

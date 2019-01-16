@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.androidShop.adapter.MessageListAdapter2;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -23,6 +24,7 @@ import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
+import com.msht.minshengbao.functionActivity.MessageDetailActivity;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -118,7 +120,11 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
         adapter.setOnItemClickListener(new ComplexRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int i, ComplexRecyclerViewAdapter.ComplexViewHolder complexViewHolder, Object o) {
-                if (type.equals("2")) {
+                if (type.equals(ConstantUtil.VALUE_ONE)){
+                    Intent intent = new Intent(MessageListActivity.this, MessageDetailActivity.class);
+                    intent.putExtra("id", dataList.get(i).getId() + "");
+                    startActivity(intent);
+                }else if (type.equals("2")) {
                     Intent intent = new Intent(MessageListActivity.this, WarnMessageDetailActivity.class);
                     intent.putExtra("id", dataList.get(i).getId() + "");
                     startActivity(intent);

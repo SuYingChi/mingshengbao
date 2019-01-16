@@ -7,36 +7,15 @@
     android:orientation="vertical"
     tools:context=".functionActivity.repairService.RepairOrderListActivity">
     <include layout="@layout/layout_header"/>
-    <FrameLayout
+    <com.msht.minshengbao.ViewUI.ViewPagerIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white">
+    </com.msht.minshengbao.ViewUI.ViewPagerIndicator>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
-            android:id="@+id/id_order_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.jcodecraeer.xrecyclerview.XRecyclerView>
-        <RelativeLayout
-            android:id="@+id/id_re_nodata"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-            <ImageView
-                android:id="@+id/id_img_wufuwu"
-                android:layout_width="@dimen/margin_width120"
-                android:layout_height="@dimen/margin_width120"
-                android:contentDescription="@string/picture_text"
-                android:layout_marginTop="@dimen/margin_width30"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/order_data_xh"/>
-            <TextView
-                android:id="@+id/id_tv_wufuwu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/id_img_wufuwu"
-                android:layout_marginTop="@dimen/margin_width20"
-                android:textSize="@dimen/text_width18"
-                android:text="@string/no_server_order" />
-        </RelativeLayout>
-    </FrameLayout>
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

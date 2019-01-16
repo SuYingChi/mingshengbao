@@ -115,14 +115,7 @@ public class MessageDetailActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(context, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
         id=data.getStringExtra("id");
-        String type=data.getStringExtra("type");
-        if (type.equals(ConstantUtil.VALUE_ONE)){
-            setCommonHeader("订单消息");
-        }else if (type.equals(ConstantUtil.VALUE_TWO)){
-            setCommonHeader("公告");
-        }else {
-            setCommonHeader("消息详情");
-        }
+        setCommonHeader("订单消息");
         initFindViewId();
         settingWeb();
         initData();

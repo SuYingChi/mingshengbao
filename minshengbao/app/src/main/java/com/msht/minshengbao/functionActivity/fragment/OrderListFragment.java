@@ -5,15 +5,19 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.Interface.UpdateCallBack;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
+import com.msht.minshengbao.adapter.RepairOrderListAdapter;
 import com.msht.minshengbao.functionActivity.repairService.MyOrderWorkDetailActivity;
 import com.msht.minshengbao.functionActivity.repairService.RepairEvaluateActivity;
 import com.msht.minshengbao.R;
@@ -45,15 +49,13 @@ import java.util.HashMap;
  * @date 2016/8/2  
  */
 public class OrderListFragment extends BaseFragment  {
-    private MyWorkOrderAdapter myWorkOrderAdapter;
-    private XListView mListView;
+    private RepairOrderListAdapter mAdapter;
+    private XRecyclerView mRecyclerView;
     private View layoutNoData;
     private int status =0;
     private String  userId,password;
-    private int pageNo=0;
     private int pageIndex=0;
     private int refreshType;
-    private JSONArray jsonArray;
     private Activity mActivity;
     private final RequestHandler requestHandler=new RequestHandler(this);
     private CustomDialog customDialog;
@@ -62,7 +64,7 @@ public class OrderListFragment extends BaseFragment  {
         OrderListFragment orderListFragment = new OrderListFragment();
         switch (position){
             case 0:
-                orderListFragment.status=position;
+                orderListFragment.status=0;
                 break;
             case 1:
                 orderListFragment.status=1;
@@ -71,45 +73,53 @@ public class OrderListFragment extends BaseFragment  {
                 orderListFragment.status=2;
                 break;
             case 3:
+                orderListFragment.status=5;
+                break;
+            case 4:
                 orderListFragment.status=4;
                 break;
             default:
                 break;
         }
-      //  orderListFragment.status=position;
         return orderListFragment;
     }
     @Override
     public View initView() {
         if(mRootView==null){
             mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_orderlist,null,false);
-            //view = inflater.inflate(R.layout.fragment_orderlist, container, false);
         }
         mActivity = getActivity();
         customDialog=new CustomDialog(getActivity(), "正在加载");
-        userId= SharedPreferencesUtil.getUserId(getActivity(), SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(getActivity(), SharedPreferencesUtil.Password,"");
+        userId= SharedPreferencesUtil.getUserId(mActivity, SharedPreferencesUtil.UserId,"");
+        password=SharedPreferencesUtil.getPassword(mActivity, SharedPreferencesUtil.Password,"");
         initMyView(mRootView);
         return mRootView;
     }
     private void initMyView(View mRootView) {
         layoutNoData =mRootView.findViewById(R.id.id_re_nodata);
-        mListView=(XListView)mRootView.findViewById(R.id.id_order_view);
-        mListView.setPullLoadEnable(true);
-        myWorkOrderAdapter = new MyWorkOrderAdapter(getContext(),orderList);
-        mListView.setAdapter(myWorkOrderAdapter);
-        myWorkOrderAdapter.setOnItemSelectListener(new MyWorkOrderAdapter.OnItemSelectListener() {
+        mRecyclerView=(XRecyclerView)mRootView.findViewById(R.id.id_order_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+        mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
+        mAdapter=new RepairOrderListAdapter(mActivity,orderList);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.refresh();
+        mRecyclerView.setPullRefreshEnabled(true);
+        mRecyclerView.setLoadingMoreEnabled(true);
+        mAdapter.setOnItemSelectListener(new RepairOrderListAdapter.OnItemSelectListener() {
             @Override
-            public void onItemSelectClick(View view, int thisposition) {
-               // int position=thisposition-1;
-                String orderId = orderList.get(thisposition).get("id");
-                String orderNo=orderList.get(thisposition).get("orderNo");
-                String type=orderList.get(thisposition).get("type");
-                String title=orderList.get(thisposition).get("title");
-                String finishTime=orderList.get(thisposition).get("time");
-                String parentCategoryName=orderList.get(thisposition).get("parent_category_name");
-                String amount=orderList.get(thisposition).get("amount");
-                Intent intent = new Intent(getActivity(), RepairEvaluateActivity.class);
+            public void onItemSelectClick(View view, int thisPosition) {
+                String orderId = orderList.get(thisPosition).get("id");
+                String orderNo=orderList.get(thisPosition).get("orderNo");
+                String type=orderList.get(thisPosition).get("type");
+                String title=orderList.get(thisPosition).get("title");
+                String finishTime=orderList.get(thisPosition).get("time");
+                String parentCategoryName=orderList.get(thisPosition).get("parent_category_name");
+                String amount=orderList.get(thisPosition).get("amount");
+                Intent intent = new Intent(mActivity, RepairEvaluateActivity.class);
                 intent.putExtra("sendType","1");
                 intent.putExtra("id",orderId);
                 intent.putExtra("orderNo",orderNo);
@@ -119,7 +129,20 @@ public class OrderListFragment extends BaseFragment  {
                 intent.putExtra("finishTime",finishTime);
                 intent.putExtra("realAmount",amount);
                 startActivityForResult(intent, 2);
-
+            }
+        });
+        mAdapter.setClickCallBack(new RepairOrderListAdapter.ItemClickCallBack() {
+            @Override
+            public void onItemClick(int positions) {
+                String cid=orderList.get(positions).get("cid");
+                String ids = orderList.get(positions).get("id");
+                String parentCode=orderList.get(positions).get("parent_category_code");
+                Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
+                intent.putExtra("cid",cid);
+                intent.putExtra("id", ids);
+                intent.putExtra("pos", positions);
+                intent.putExtra("parentCode",parentCode);
+                startActivityForResult(intent, 4);
             }
         });
     }
@@ -128,35 +151,33 @@ public class OrderListFragment extends BaseFragment  {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode==0x004||resultCode==0x005||resultCode==0x006) {
             orderList.clear();
-            myWorkOrderAdapter.notifyDataSetChanged();
-            loadData(1);
+            mAdapter.notifyDataSetChanged();
+            initOrderList(1);
         }
     }
     @Override
     public void initData() {
         customDialog.show();
         orderList.clear();
-        loadData(1);
-        mListView.setXListViewListener(new XListView.IXListViewListener() {
+        initOrderList(1);
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
                 refreshType=0;
-                loadData(1);
+                initOrderList(1);
             }
             @Override
             public void onLoadMore() {
                 refreshType=1;
-                loadData(pageIndex + 1);
+                initOrderList(pageIndex + 1);
             }
         });
-
     }
-    private void loadData(int i) {
+    private void initOrderList(int i) {
         pageIndex =i;
-        pageNo=i;
         String validateURL = UrlUtil.maintainservise_Url;
         HashMap<String, String> textParams = new HashMap<String, String>();
-        String pageNum=String.valueOf(pageNo);
+        String pageNum=String.valueOf(i);
         String statuses=String.valueOf(status);
         textParams.put("userId",userId);
         textParams.put("password",password);
@@ -179,30 +200,29 @@ public class OrderListFragment extends BaseFragment  {
             if (reference == null||reference.isDetached()) {
                 return;
             }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
+            }
+            if (reference.refreshType==0){
+                reference.mRecyclerView.refreshComplete();
+            }else if (reference.refreshType==1){
+                reference.mRecyclerView.loadMoreComplete();
+            }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        reference.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference.refreshType==0){
-                                reference.mListView.stopRefresh(true);
-                            }else if (reference.refreshType==1){
-                                reference.mListView.stopLoadMore();
-                            }
-                            if(reference.jsonArray.length()>0){
-                                if (reference.pageNo==1){
+                            JSONArray jsonArray=object.optJSONArray("data");
+                            if(jsonArray.length()>0){
+                                if (reference.pageIndex<=1){
                                     reference.orderList.clear();
                                 }
                             }
-                            reference.initShow();
+                            reference.onReceiveOrderData(jsonArray);
                         }else {
-                            reference.mListView.stopRefresh(false);
                             reference.onFailure(error);
                         }
                     }catch (Exception e){
@@ -213,7 +233,6 @@ public class OrderListFragment extends BaseFragment  {
                     if (reference.customDialog!=null&&reference.customDialog.isShowing()){
                         reference.customDialog.dismiss();
                     }
-                    reference.mListView.stopRefresh(false);
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
@@ -222,20 +241,8 @@ public class OrderListFragment extends BaseFragment  {
             super.handleMessage(msg);
         }
     }
-    private void onFailure(String error) {
-        new PromptDialog.Builder(mContext)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(error)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
 
-                    }
-                }).show();
-    }
-    private void initShow() {
+    private void onReceiveOrderData(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -272,30 +279,29 @@ public class OrderListFragment extends BaseFragment  {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (orderList.size()==0){
+        if (orderList.size()<1){
+            mAdapter.notifyDataSetChanged();
             layoutNoData.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }else {
             layoutNoData.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-            myWorkOrderAdapter.notifyDataSetChanged();
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    int positions=position-1;
-                    String cid=orderList.get(positions).get("cid");
-                    String ids = orderList.get(positions).get("id");
-                    String parentCode=orderList.get(positions).get("parent_category_code");
-                    Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
-                    intent.putExtra("cid",cid);
-                    intent.putExtra("id", ids);
-                    intent.putExtra("pos", positions);
-                    intent.putExtra("parentCode",parentCode);
-                    startActivityForResult(intent, 4);
-                }
-            });
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mAdapter.notifyDataSetChanged();
         }
     }
+    private void onFailure(String error) {
+        new PromptDialog.Builder(mContext)
+                .setTitle("民生宝")
+                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                .setMessage(error)
+                .setButton1("确定", new PromptDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog, int which) {
+                        dialog.dismiss();
 
+                    }
+                }).show();
+    }
     @Override
     public void onDestroy() {
         if (customDialog!=null&&customDialog.isShowing()){

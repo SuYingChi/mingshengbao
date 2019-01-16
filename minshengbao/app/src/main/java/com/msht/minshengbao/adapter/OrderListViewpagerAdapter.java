@@ -8,12 +8,14 @@ import com.msht.minshengbao.functionActivity.fragment.OrderListFragment;
 
 
 /**
- * Created by hei on 2016/12/26.
+ *
+ * @author hei
+ * @date 2016/12/26
  * 我的订单界面的viewpager适配器
  */
 
 public class OrderListViewpagerAdapter extends FragmentPagerAdapter {
-    public String[] Titles={"全部","未完成","已完成","退款返修"};
+    public String[] mTitles={"全部","未完成","已完成","待评价","退款返修"};
     public OrderListViewpagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -21,14 +23,13 @@ public class OrderListViewpagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         return OrderListFragment.getInstanse(position);
     }
-
     @Override
     public int getCount() {
-        return Titles.length;
+        return mTitles.length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Titles[position];
+        return mTitles[position];
     }
 }
