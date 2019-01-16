@@ -228,20 +228,12 @@ public class JsonUtil {
         ItemPopupAd itemPopupAd = JsonUtil.toBean(json, ItemPopupAd.class);
         return itemPopupAd;
     }*/
-    public static <T> ArrayList<T> jsonArrayToList(String json) {
-        ArrayList<T> itemGoodsLite = JsonUtil.toBean(json, new TypeToken<List<T>>() {
-        }.getType());
-        return itemGoodsLite;
-    }
     public static  ArrayList<String> stringsToList(String json) {
         ArrayList<String> itemGoodsLite = JsonUtil.toBean(json, new TypeToken<List<String>>() {
         }.getType());
         return itemGoodsLite;
     }
-    public static <T> T getPopupAdData(String json, Class<T> clazz) {
-        T itemPopupAd = JsonUtil.toBean(json, clazz);
-        return itemPopupAd;
-    }
+
 
     public static Map<String, String> jSONObjectUnKnowKeyParse(JSONObject itemJson) {
         Map<String, String> map = new HashMap<String, String>();

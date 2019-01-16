@@ -256,7 +256,7 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
         if (TextUtils.isEmpty(searchhisNologin) || searchhisNologin.equals("null")) {
             list = new ArrayList<String>();
         } else {
-            list = JsonUtil.jsonArrayToList(searchhisNologin);
+            list = JsonUtil.stringsToList(searchhisNologin);
         }
         MyApplication.getInstance().setList(list);
         finish();

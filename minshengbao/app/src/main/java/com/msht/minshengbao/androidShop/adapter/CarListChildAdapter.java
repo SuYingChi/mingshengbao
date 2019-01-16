@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.ShopStoreBean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
@@ -228,7 +230,8 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             GlideUtil.loadRemoteImg(context, iv, goodsImageUrl);
             if (obj.has("gift_list")) {
                 JSONArray giftList = obj.optJSONArray("gift_list");
-                List<JSONObject> list = JsonUtil.jsonArrayToList(giftList.toString());
+                List<JSONObject> list = JsonUtil.toBean(giftList.toString(), new TypeToken<List<JSONObject>>() {
+                }.getType());
             }
 
             LinearLayout tvReduce = holder.getView(R.id.ll_reduce);
