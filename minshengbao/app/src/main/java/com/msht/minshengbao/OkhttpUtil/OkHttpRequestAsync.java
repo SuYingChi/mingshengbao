@@ -6,14 +6,17 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -26,7 +29,7 @@ import static com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil.ERROR_SERVICE;
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author hong
- * @date 2019/1/4 
+ * @date 2018/7/2  
  */
 public class OkHttpRequestAsync {
 
@@ -35,7 +38,7 @@ public class OkHttpRequestAsync {
     private final String TAG = OkHttpRequestAsync.class.getSimpleName();
     private Context context;
     private OkHttpClient mOkHttpClient;
-    private ReqCallBack reqCallBack;
+  //  private AbstractMyCallBack reqCallBack;
     private final Handler mHandler;
     public static final MediaType MEDIA_TYPE_NORMAL_FORM = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
     /**既可以提交普通键值对，也可以提交(多个)文件键值对。**/
@@ -82,17 +85,14 @@ public class OkHttpRequestAsync {
     /**
      * 注册回调函数
      */
-    public  void setReqCallBack(ReqCallBack reqCallBack){
-        this.reqCallBack=reqCallBack;
-    }
+
     /**
      * okHttp get异步请求
      * @param actionUrl 接口地址
      * @param paramsMap 请求参数
-     * @param <T> 数据泛型
      * @return
      */
-    public  <T> Call requestGetByAsync(String actionUrl, HashMap<String, String> paramsMap) {
+    public  void requestGetByAsync(String actionUrl, HashMap<String, String> paramsMap,final AbstractMyCallBack reqCallBack) {
         StringBuilder tempParams = new StringBuilder();
         String requestUrl;
         try {
@@ -117,9 +117,8 @@ public class OkHttpRequestAsync {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
-                    if (reqCallBack!=null){
-                        reqCallBack.onRequestFailed(e.toString());
-                    }
+
+                    onResponseRequestFailed(reqCallBack,e.toString());
                 }
 
                 @Override
@@ -127,32 +126,25 @@ public class OkHttpRequestAsync {
                     if (response.isSuccessful()) {
                         if (response.body()!=null){
                             String string = response.body().string();
-                            if (reqCallBack!=null){
-                                reqCallBack.onRequestSuccess(string);
-                            }
+                            onResponseRequestSuccess(reqCallBack,string);
                         }
                     } else {
-                        if (reqCallBack!=null){
-                            reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
-                        }
+                        onResponseRequestFailed(reqCallBack,ERROR_SERVICE);
                     }
                 }
             });
-            return call;
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        return null;
     }
 
     /**
      * okHttp post异步请求
      * @param requestUrl 接口地址
      * @param paramsMap 请求参数
-     * @param <T> 数据泛型
      * @return
      */
-    public  <T> Call requestPostByAsync(String requestUrl, HashMap<String, String> paramsMap) {
+    public  void requestPostByAsync(String requestUrl, HashMap<String, String> paramsMap,final AbstractMyCallBack reqCallBack) {
         try {
             StringBuilder tempParams = new StringBuilder();
             int pos = 0;
@@ -170,9 +162,7 @@ public class OkHttpRequestAsync {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull final IOException e) {
-                    if (reqCallBack!=null){
-                        reqCallBack.onRequestFailed(e.toString());
-                    }
+                    onResponseRequestFailed(reqCallBack,e.toString());
                 }
 
                 @Override
@@ -180,79 +170,24 @@ public class OkHttpRequestAsync {
                     if (response.isSuccessful()) {
                         if (response.body()!=null){
                             String string = response.body().string();
-                            if (reqCallBack!=null){
-                                reqCallBack.onRequestSuccess(string);
-                            }
+                            onResponseRequestSuccess(reqCallBack,string);
                         }
                     } else {
-                        if (reqCallBack!=null){
-                            reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
-                        }
+                        onResponseRequestFailed(reqCallBack,ERROR_SERVICE);
                     }
                 }
             });
-            return call;
+
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        return null;
     }
 
-    /**
-     * okHttp post异步请求表单提交
-     * @param requestUrl 接口地址
-     * @param paramsMap 请求参数
-     * @param <T> 数据泛型
-     * @return
-     */
-    public  <T> Call requestPostByAsyncWithForm(String requestUrl, HashMap<String, String> paramsMap) {
-        try {
-            FormBody.Builder builder = new FormBody.Builder();
-            for (String key : paramsMap.keySet()) {
-                builder.add(key, paramsMap.get(key));
-            }
-            RequestBody formBody = builder.build();
-            final Request request = addHeaderForm().url(requestUrl).post(formBody).build();
-            final Call call = mOkHttpClient.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull final IOException e) {
-                    if (reqCallBack!=null){
-                        reqCallBack.onRequestFailed(e.toString());
-                    }
-                }
 
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        if (response.body()!=null){
-                            String string = response.body().string();
-                            if (reqCallBack!=null){
-                                reqCallBack.onRequestSuccess(string);
-                            }
-                        }
-                    } else {
-                        if (reqCallBack!=null){
-                            reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
-                        }
-                    }
-                }
-            });
-            return call;
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
+    public  void requestPostByAsyncWithMultipart(String requestUrl, HashMap<String, String> paramsMap, final AbstractMyCallBack reqCallBack) {
+        if (reqCallBack == null) {
+         //  reqCallBack = AbstractMyCallBack.callBackDefault;
         }
-        return null;
-    }
-
-    /**
-     * okHttp post Multipart异步请求表单提交
-     * @param requestUrl 接口地址
-     * @param paramsMap 请求参数
-     * @param <T> 数据泛型
-     * @return
-     */
-    public  <T> Call requestPostByAsyncWithMultipart(String requestUrl, HashMap<String, String> paramsMap) {
         try {
             FormBody.Builder builder = new FormBody.Builder();
             for (String key : paramsMap.keySet()) {
@@ -264,42 +199,127 @@ public class OkHttpRequestAsync {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull  IOException e) {
-                    if (reqCallBack!=null){
-                        /*mHandler.post(new Runnable(){
-                            @Override
-                            public void run() {
-                                reqCallBack.onRequestFailed(e.toString());
-                            }
-                        });*/
-                        reqCallBack.onRequestFailed(e.toString());
-                    }
+                    onResponseRequestFailed(reqCallBack,e.toString());
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful()) {
-                       // String string="";
+                        // String string="";
                         if (response.body()!=null){
                             String string = response.body().string();
-                            if (reqCallBack!=null){
-                                reqCallBack.onRequestSuccess(string);
-                            }
+                            onResponseRequestSuccess(reqCallBack,string);
                         }
                     } else {
-                        if (reqCallBack!=null){
-                            reqCallBack.onRequestServiceFailed(ERROR_SERVICE);
-                        }
-
+                        onResponseRequestFailed(reqCallBack,ERROR_SERVICE);
                     }
                 }
             });
-            return call;
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
-        return null;
     }
 
+    /**
+     * okHttp post异步请求表单提交
+     * @param requestUrl 接口地址
+     * @param paramsMap 请求参数
+
+     * @return
+     */
+    public  void requestPostByAsyncWithForm(String requestUrl, HashMap<String, String> paramsMap,final AbstractMyCallBack reqCallBack) {
+        try {
+            FormBody.Builder builder = new FormBody.Builder();
+            for (String key : paramsMap.keySet()) {
+                builder.add(key, paramsMap.get(key));
+            }
+            RequestBody formBody = builder.build();
+            final Request request = addHeaderForm().url(requestUrl).post(formBody).build();
+            final Call call = mOkHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull final IOException e) {
+                    onResponseRequestFailed(reqCallBack,e.toString());
+                }
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        if (response.body()!=null){
+                            String string = response.body().string();
+                            onResponseRequestSuccess(reqCallBack,string);
+                        }
+                    } else {
+                        onResponseRequestFailed(reqCallBack,ERROR_SERVICE);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    public  void requestPostByAsyncWithMultipartFile(String requestUrl, HashMap<String, Object> paramsMap,final AbstractMyCallBack reqCallBack) {
+        try {
+            MultipartBody.Builder multipartBuilder=new MultipartBody.Builder();
+            multipartBuilder.setType(MultipartBody.FORM);
+            for (String key : paramsMap.keySet()) {
+
+                multipartBuilder.addFormDataPart(key, paramsMap.get(key).toString(),RequestBody.create(MEDIA_TYPE_MULTIPART_FORM,(File)paramsMap.get(key)));
+            }
+            MultipartBody multipartBody=multipartBuilder.build();
+            final Request request =addHeaderMultipart().url(requestUrl).post(multipartBody).build();
+            final Call call = mOkHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull final IOException e) {
+                    onResponseRequestFailed(reqCallBack,e.toString());
+                }
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        if (response.body()!=null){
+                            String string = response.body().string();
+                            onResponseRequestSuccess(reqCallBack,string);
+                        }
+                    } else {
+                        onResponseRequestFailed(reqCallBack,ERROR_SERVICE);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    public void onResponseRequestFailed(final AbstractMyCallBack reqCallBack,final String s){
+        mHandler.post(new Runnable(){
+            @Override
+            public void run() {
+                reqCallBack.onResponseFail(s);
+            }
+        });
+    }
+    public void onResponseRequestSuccess(final AbstractMyCallBack reqCallBack,final String s){
+        mHandler.post(new Runnable(){
+                            @Override
+                            public void run() {
+                                reqCallBack.onResponseSuccess(s);
+                            }
+                        });
+    }
+
+    public void onRequestCancel(Object tag){
+        Dispatcher dispatcher = mOkHttpClient.dispatcher();
+        for (Call call : dispatcher.queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
+        for (Call call : dispatcher.runningCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
+    }
     /**
      * 统一为请求添加头信息
      * @return
