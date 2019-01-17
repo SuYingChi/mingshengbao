@@ -232,8 +232,41 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ShopkeywordBean bean = JsonUtil.toBean(s, ShopkeywordBean.class);
-                    List<ShopkeywordBean.DatasBean.GoodsListBean> list = bean.getDatas().getGoods_list();
-                    iKeyWordListView.onSuccess(list, bean.getPage_total());
+                    List<ShopkeywordBean.DatasBean.GoodsListBean> list=new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
+                    int pageTotal = 0;
+                    if(bean!=null) {
+                         list = bean.getDatas().getGoods_list();
+                         pageTotal = bean.getPage_total();
+                    }else {
+                        try {
+                            JSONObject obj = new JSONObject(s);
+                            pageTotal = obj.optInt("page_total");
+                            JSONArray goodarray = obj.optJSONObject("datas").optJSONArray("goods_list");
+                            for(int ii=0;ii<goodarray.length();ii++){
+                                JSONObject good = goodarray.optJSONObject(ii);
+                                String goods_image_url = good.optString("goods_image_url");
+                                String goodName = good.optString("goods_name");
+                                String goods_jingle = good.optString("goods_jingle");
+                                if(goods_jingle==null||goods_jingle.equals("null")){
+                                    goods_jingle="";
+                                }
+                                String goods_salenum  = good.optString("goods_salenum");
+                                String goods_price = good.optString("goods_price");
+                                String goods_id= good.optString("goods_id");
+                                ShopkeywordBean.DatasBean.GoodsListBean goodbean = new ShopkeywordBean.DatasBean.GoodsListBean();
+                                goodbean.setGoods_image_url(goods_image_url);
+                                goodbean.setGoods_name(goodName);
+                                goodbean.setGoods_salenum(goods_salenum);
+                                goodbean.setGoods_jingle(goods_jingle);
+                                goodbean.setGoods_price(goods_price);
+                                goodbean.setGoods_id(goods_id);
+                                list.add(goodbean);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    iKeyWordListView.onSuccess(list, pageTotal);
                 }
             }
         });

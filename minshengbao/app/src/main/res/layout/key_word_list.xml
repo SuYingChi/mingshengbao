@@ -74,23 +74,27 @@
         <TextView
             android:id="@+id/def"
             style="@style/black_title_text"
+            android:gravity="center"
             android:text="默认" />
 
         <TextView
             android:id="@+id/sell"
             style="@style/black_title_text"
+            android:gravity="center"
             android:drawableRight="@drawable/shop_down_triangle"
             android:text="销量" />
 
         <TextView
             android:id="@+id/ren"
             style="@style/black_title_text"
+            android:gravity="center"
             android:drawableRight="@drawable/shop_down_triangle"
             android:text="人气" />
 
         <TextView
             android:id="@+id/price"
             style="@style/black_title_text"
+            android:gravity="center"
             android:drawableRight="@drawable/shop_down_triangle"
             android:text="价格" />
         <ImageView

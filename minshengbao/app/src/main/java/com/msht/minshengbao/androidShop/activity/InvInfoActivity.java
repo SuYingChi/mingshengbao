@@ -115,9 +115,44 @@ public class InvInfoActivity extends ShopBaseActivity implements NeedInvFrgment.
                     finish();
                 } else if (currentFragment.equals(addInvFragment)) {
                     if (addInvChildTab == 0) {
-                        ShopPresenter.addPersonalInvItem(InvInfoActivity.this);
+                        if(getInv_content()==null||getInv_content().equals("")){
+                            PopUtil.showComfirmDialog(InvInfoActivity.this,"","请选择发票内容","","",null,null,true);
+                        }else if(getRecId()==null||getRecId().equals("")){
+                            PopUtil.showComfirmDialog(InvInfoActivity.this,"","请选择发票接收地址","","",null,null,true);
+                        }else {
+                            ShopPresenter.addPersonalInvItem(InvInfoActivity.this);
+                        }
                     } else if (addInvChildTab == 1) {
-                        ShopPresenter.addCompanyNormalInvItem(InvInfoActivity.this);
+                                if(getCompanyInvType()==null||getCompanyInvType().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请选择发票类型","","",null,null,true);
+
+                                }else if(getCNRecId()==null||getCNRecId().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请选择发票接收地址","","",null,null,true);
+
+                                }else if(CNinv_title()==null||CNinv_title().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写发票抬头","","",null,null,true);
+
+                                }else if(getCNSbh()==null||getCNSbh().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写纳税人识别号","","",null,null,true);
+
+                                }else if(getCNBank()==null||getCNBank().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写开户银行","","",null,null,true);
+
+                                }else if(getCNBanknum()==null||getCNBanknum().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写银行账户","","",null,null,true);
+
+                                }else if(getCNComtel()==null||getCNComtel().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写注册电话","","",null,null,true);
+
+                                }else if(getCNComaddr()==null||getCNComaddr().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请填写地址","","",null,null,true);
+
+                                }else if(getCNInv_content()==null||getCNInv_content().equals("")){
+                                    PopUtil.showComfirmDialog(InvInfoActivity.this,"","请选择发票内容","","",null,null,true);
+
+                                }else {
+                                    ShopPresenter.addCompanyNormalInvItem(InvInfoActivity.this);
+                                }
                     }
 
                 }
