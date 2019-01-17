@@ -437,18 +437,29 @@ public class GlideUtil {/*
      * @param imageView
      * @param data
      */
-    public static void loadGifImg(Context context, ImageView imageView, int data, Drawable placeholderDrawble, Drawable errorDrawable) {
+    public static void loadGifImg(Context context, ImageView imageView, int data) {
         RequestOptions options = new RequestOptions()
                 .fitCenter()
                 .dontAnimate()
-                .placeholder(placeholderDrawble)
-                .error(errorDrawable)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .priority(Priority.HIGH);
 
         Glide.with(context)
                 .asGif()
                 .load(data)
+                .apply(options)
+                .into(imageView);
+    }
+
+    public static void loadLocalGifImg(Context context, ImageView imageView, int gifId) {
+        RequestOptions options = new RequestOptions()
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .priority(Priority.HIGH);
+
+        Glide.with(context)
+                .asGif()
+                .load(gifId)
                 .apply(options)
                 .into(imageView);
     }

@@ -192,7 +192,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             case R.id.back:
                 finish();
             case R.id.rlt_recommend:
-                if (recommandList.size() == 0) {
+                if (recommandList.size() <=1) {
                     PopUtil.toastInCenter("无更多推荐人可选");
                 } else {
                     Intent intent1 = new Intent(this, RecommendActivity.class);
@@ -398,11 +398,13 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             JSONArray recommendinfo = datas.optJSONArray("recommend_info");
             for (int i = 0; i < recommendinfo.length(); i++) {
                 JSONObject obj = recommendinfo.optJSONObject(i);
-                recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
+                if(!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))){
+                    recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
+                }
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
-                    if (!TextUtils.isEmpty(re.getRecommend_phone()) || !"null".equals(re.getRecommend_phone())) {
+                    if (!TextUtils.isEmpty(re.getRecommend_phone()) && !"null".equals(re.getRecommend_phone())) {
                         etRecommand.setText(re.getRecommend_phone());
                     }
                     recommendBean = re;
@@ -413,7 +415,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 recommendBean = new RecommendBean("", "1");
             }
             vat_hash = datas.optString("vat_hash");
-            JSONObject obj = datas.optJSONObject("inv_info");
+            //JSONObject obj = datas.optJSONObject("inv_info");
             if (TextUtils.equals(datas.optString("ifshow_inv"), "1")) {
                 isInv = true;
                 llinv.setVisibility(View.VISIBLE);
@@ -423,9 +425,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llinv.setVisibility(View.GONE);
                 rltinv.setVisibility(View.GONE);
             }
-            invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
+           /* invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
             String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
-            tvInv_info.setText(content);
+            tvInv_info.setText(content);*/
+           //默认没有发票
+            invInfoBean = new InvItemBean("不需要发票", true, "","","");
+            tvInv_info.setText("不需要发票");
             freight_hash = datas.optString("freight_hash");
             String predeposit = datas.optString("available_predeposit");
             if (!(TextUtils.isEmpty(predeposit) || TextUtils.equals(predeposit, "null"))) {

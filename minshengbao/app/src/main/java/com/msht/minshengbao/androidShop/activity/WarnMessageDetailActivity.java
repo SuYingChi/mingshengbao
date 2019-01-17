@@ -148,24 +148,4 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
         }
     }
 
-    /*private int CALL_PERMISSIONS_REQUEST = 300;
-    private PermissionListener listener = new PermissionListener() {
-        @SuppressLint("MissingPermission")
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode == CALL_PERMISSIONS_REQUEST) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
-                startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode) {
-            ToastUtil.ToastText(WarnMessageDetailActivity.this, "没有权限");
-        }
-    };
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }*/
 }

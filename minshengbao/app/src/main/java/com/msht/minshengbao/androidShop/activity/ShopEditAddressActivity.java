@@ -91,8 +91,11 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
        etName.setText(bean.getTrue_name());
        etPhone.setText(bean.getMob_phone());
        tvCity.setText(bean.getArea_info());
+       selectCityId = bean.getCity_id();
+       selectAreaId = bean.getAddress_id();
        etAddress.setText(bean.getAddress());
        addressId = bean.getAddress_id();
+
 
     }
 
@@ -185,7 +188,7 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
 
     @Override
     public String isDefault() {
-        return "1";
+        return "0";
     }
 
 

@@ -224,7 +224,12 @@ public class TotalMessageListActivity extends ShopBaseActivity implements OnRefr
                     break;
                 //物流助手
                 case 3:
-                    tvroute.setText(content);
+                    try {
+                        JSONObject obj = new JSONObject(content);
+                        tvroute.setText(obj.optString("msg"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     routetime.setText(time);
                     if(num==0){
                         routenum.setVisibility(View.INVISIBLE);

@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     if (TextUtils.isEmpty(searchhis) || searchhis.equals("null")) {
                         list = new ArrayList<String>();
                     } else {
-                        list = JsonUtil.jsonArrayToList(searchhis);
+                        list = JsonUtil.stringsToList(searchhis);
                     }
                     MyApplication.getInstance().setList(list);
                     EventBus.getDefault().postSticky(new LoginShopEvent(bean));

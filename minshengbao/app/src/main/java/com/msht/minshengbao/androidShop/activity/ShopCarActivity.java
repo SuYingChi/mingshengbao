@@ -78,7 +78,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
     private List<JSONObject> carList = new ArrayList<JSONObject>();
     private List<JSONObject> gotoBuyList = new ArrayList<JSONObject>();
     private String cart_count;
-    private List<JSONObject> guessList;
+   /* private List<JSONObject> guessList;*/
     private boolean isNotifyAdapter = true;
     private List<ShopStoreBean> selectedStoreList = new ArrayList<ShopStoreBean>();
     private List<CarGoodItemBean> selectedGoodList = new ArrayList<CarGoodItemBean>();
@@ -394,8 +394,8 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                     initCarliststate();
                     adapter.notifyDataSetChanged();
                     cart_count = datas.optString("cart_count");
-                    JSONArray guess_like_list = datas.optJSONArray("guess_like_list");
-                    guessList = JsonUtil.jsonArrayToList(guess_like_list.toString());
+                   /* JSONArray guess_like_list = datas.optJSONArray("guess_like_list");
+                    guessList = JsonUtil.jsonArrayToList(guess_like_list.toString());*/
                 } else {
                     isModifyGoodNum = false;
                     int selectedGoodposition = -1;

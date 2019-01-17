@@ -128,6 +128,8 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     TextView tvZengping;
     @BindView(R.id.youhui)
     TextView tvYouhui;
+    @BindView(R.id.ll_inv)
+    LinearLayout llinv;
 
     private String memberId;
     private List<ShopOrderDetailBean.DatasBean.OrderInfoBean.ZengpinListBean> zengpinglist;
@@ -239,7 +241,14 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
             }else {
                 tvTip.setText(orderInfo.getOrder_tips());
             }
-            tvInvo.setText(orderInfo.getInvoice());
+            if(TextUtils.isEmpty(orderInfo.getInvoice())){
+                tvInvo.setVisibility(View.GONE);
+                llinv.setVisibility(View.GONE);
+            }else {
+                tvInvo.setVisibility(View.VISIBLE);
+                llinv.setVisibility(View.VISIBLE);
+                tvInvo.setText(orderInfo.getInvoice());
+            }
             tvStore.setText(orderInfo.getStore_name());
             list.clear();
             list.addAll(orderInfo.getGoods_list());

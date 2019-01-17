@@ -227,7 +227,7 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
             JSONObject jsonObject = new JSONObject(s);
             JSONObject data = jsonObject.getJSONObject("datas");
             String array = data.optString("list");
-            List<String> mapListJson = JsonUtil.jsonArrayToList(array);
+            List<String> mapListJson = JsonUtil.stringsToList(array);
            /* hotAdpter.setmDatas(mapListJson);
             hotAdpter.notifyDataSetChanged();*/
            list.clear();

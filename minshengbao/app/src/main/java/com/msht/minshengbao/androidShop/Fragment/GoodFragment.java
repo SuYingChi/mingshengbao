@@ -132,6 +132,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView kuaidiInfo;
     @BindView(R.id.storeinfo)
     TextView tvstore;
+    @BindView(R.id.ispickupself)
+    TextView tvPickupself;
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -162,7 +164,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private int selectedGuigePosition = 0;
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
-    private ArrayList<String> imagelist = new ArrayList<String>();;
+    private ArrayList<String> imagelist = new ArrayList<String>();
+    private String selectedGuigeName;
+    ;
 
 
     @Override
@@ -243,9 +247,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 holder.getView(R.id.ll_share_wx).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!isWeChatAppInstalled()){
-                            PopUtil.showComfirmDialog(getContext(),"","未安装微信","","",null,null,true);
-                        }else {
+                        if (!isWeChatAppInstalled()) {
+                            PopUtil.showComfirmDialog(getContext(), "", "未安装微信", "", "", null, null, true);
+                        } else {
                             Glide.with(GoodFragment.this).load(shareImageUrl).into(new SimpleTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -330,18 +334,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                             public void onClick(View v) {
                                 if (qrCodeImage != null) {
                                     if (Build.VERSION.SDK_INT >= 23) {
-                                  /*      if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                            AndPermission.with(GoodFragment.this)
-                                                    .requestCode(MY_PERMISSIONS_REQUEST)
-                                                    .permission(
-                                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                                    .send();
-                                        } else {
-                                            Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                                            if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
-                                                PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
-                                            }
-                                        }*/
                                         PermissionUtils.requestPermissions(getContext(), new PermissionUtils.PermissionRequestFinishListener() {
                                             @Override
                                             public void onPermissionRequestSuccess(List<String> permissions) {
@@ -404,42 +396,43 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
         });
     }
-   private void  umengShare(final String shareUrl, final String shareTitle, final String desc,final Bitmap bitmap){
-       ShareAction mShareAction = new ShareAction(getActivity()).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE)
-               .setShareboardclickCallback(new ShareBoardlistener() {
-                   @Override
-                   public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
-                       UMWeb web = new UMWeb(shareUrl);
-                       web.setTitle(shareTitle);
-                       web.setDescription(desc);
-                       web.setThumb(new UMImage(getActivity(), bitmap));
-                       new ShareAction(getActivity()).withMedia(web)
-                               .setPlatform(shareMedia)
-                               .setCallback(new UMShareListener() {
-                                   @Override
-                                   public void onStart(SHARE_MEDIA share_media) {
 
-                                   }
+    private void umengShare(final String shareUrl, final String shareTitle, final String desc, final Bitmap bitmap) {
+        ShareAction mShareAction = new ShareAction(getActivity()).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE)
+                .setShareboardclickCallback(new ShareBoardlistener() {
+                    @Override
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
+                        UMWeb web = new UMWeb(shareUrl);
+                        web.setTitle(shareTitle);
+                        web.setDescription(desc);
+                        web.setThumb(new UMImage(getActivity(), bitmap));
+                        new ShareAction(getActivity()).withMedia(web)
+                                .setPlatform(shareMedia)
+                                .setCallback(new UMShareListener() {
+                                    @Override
+                                    public void onStart(SHARE_MEDIA share_media) {
 
-                                   @Override
-                                   public void onResult(SHARE_MEDIA share_media) {
+                                    }
 
-                                   }
+                                    @Override
+                                    public void onResult(SHARE_MEDIA share_media) {
 
-                                   @Override
-                                   public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                    }
 
-                                   }
+                                    @Override
+                                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
 
-                                   @Override
-                                   public void onCancel(SHARE_MEDIA share_media) {
+                                    }
 
-                                   }
-                               })
-                               .share();
-                   }
-               });
-       mShareAction.open();
+                                    @Override
+                                    public void onCancel(SHARE_MEDIA share_media) {
+
+                                    }
+                                })
+                                .share();
+                    }
+                });
+        mShareAction.open();
     }
 
     private String buildTransaction(final String type) {
@@ -462,7 +455,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
         return result;
     }
-    public  boolean isWeChatAppInstalled() {
+
+    public boolean isWeChatAppInstalled() {
         IWXAPI api = WXAPIFactory.createWXAPI(getContext(), WXEntryActivity.APP_ID);
         if (api.isWXAppInstalled() && api.isWXAppSupportAPI()) {
             return true;
@@ -480,6 +474,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             return false;
         }
     }
+
     @Override
     protected void initData() {
         super.initData();
@@ -502,7 +497,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             tid = datas.optJSONObject("store_info").optString("member_id");
             storeId = datas.optJSONObject("store_info").optString("store_id");
             storeName = datas.optJSONObject("store_info").optString("store_name");
-            tvstore.setText("本产品由"+storeName+"提供售后服务和产品支持");
+            tvstore.setText("本产品由" + storeName + "提供售后服务和产品支持");
             is_favorate = datas.optBoolean("is_favorate");
             if (is_favorate) {
                 iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_collected));
@@ -535,6 +530,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     String guigeName = guigevalueobj.optString(guigeidlist.get(i));
                     if (i == selectedGuigePosition) {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, true));
+                        selectedGuigeName = guigeName;
+                        if(selectedGuigeName==null||guigeName.equals("null")){
+                            selectedGuigeName="";
+                        }
                     } else {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, false));
                     }
@@ -544,36 +543,42 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 guigeList.clear();
             }
             isPickup_self = goods_info.optString("pickup_self");
+            if (TextUtils.equals(isPickup_self, "1")) {
+               tvPickupself.setText("限自提");
+               tvPickupself.setVisibility(View.VISIBLE);
+            }else {
+                tvPickupself.setVisibility(View.INVISIBLE);
+            }
             goods_name = goods_info.optString("goods_name");
             tvgoods_name.setText(goods_name);
             goods_storage = goods_info.optString("goods_storage");
-            if(TextUtils.isEmpty(goods_storage)){
+            if (TextUtils.isEmpty(goods_storage)) {
                 goodStorage = -1;
-            }else {
+            } else {
                 goodStorage = Integer.valueOf(goods_storage);
             }
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
             tvgoods_jingle.setText(goods_jingle);
-            if(TextUtils.isEmpty(goods_info.optString("promotion_price"))){
-                if(TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))){
-                    if(TextUtils.isEmpty(goods_info.optString("goods_price"))){
-                      PopUtil.toastInCenter("没有商品价格");
-                    }else {
-                        goods_price =  goods_info.optString("goods_price");
+            if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                    if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                        PopUtil.toastInCenter("没有商品价格");
+                    } else {
+                        goods_price = goods_info.optString("goods_price");
                     }
-                }else {
-                    goods_price =  goods_info.optString("goods_promotion_price");
+                } else {
+                    goods_price = goods_info.optString("goods_promotion_price");
                 }
-            }else{
+            } else {
                 goods_price = goods_info.optString("promotion_price");
             }
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));
-            if(TextUtils.equals(goods_info.optString("promotion_type"),"xianshi")) {
+            if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
                 goods_marketprice = goods_info.optString("goods_price");
-            }else {
+            } else {
                 goods_marketprice = goods_info.optString("goods_marketprice");
             }
             tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
@@ -603,7 +608,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String goodsId = goodCommendBeanList.get(position).getGoods_id();
-                    doShopItemViewClick("goods",goodsId);
+                    doShopItemViewClick("goods", goodsId);
                 }
             });
             ll_2.setOnClickListener(new View.OnClickListener() {
@@ -613,9 +618,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             if (selectedGoodNum == 1) {
-                tvYixuan.setText("默认x1");
+                tvYixuan.setText(selectedGuigeName+"默认x1");
             } else {
-                tvYixuan.setText(selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
             }
             ll_3.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -645,14 +650,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (TextUtils.isEmpty(getKey())) {
             startActivity(new Intent(getActivity(), LoginActivity.class));
         } else {
-            for(SimpleCarBean bean:caridlist){
-                if(bean.getGoods_id().equals(goodsid)){
+            for (SimpleCarBean bean : caridlist) {
+                if (bean.getGoods_id().equals(goodsid)) {
                     carid = bean.getCart_id();
-                    ShopPresenter.modifyGoodNum(this,this);
+                    ShopPresenter.modifyGoodNum(this, this);
                     return;
                 }
             }
-                ShopPresenter.addCar(this);
+            ShopPresenter.addCar(this);
         }
     }
 
@@ -679,11 +684,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 } else {
                     PopUtil.toastInBottom("暂不支持自提商品购买");
                 }
-            }else {
+            } else {
                 PopUtil.toastInBottom("商品已下架或不支持购买");
             }
         } else {
-           startActivity(new Intent(getActivity(), LoginActivity.class));
+            startActivity(new Intent(getActivity(), LoginActivity.class));
         }
     }
 
@@ -715,7 +720,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     @Override
     public String getCarItemNum() {
-        return selectedGoodNum+"";
+        return selectedGoodNum + "";
     }
 
     @Override
@@ -744,6 +749,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (childposition != selectedGuigePosition) {
             selectedGuigePosition = childposition;
             goodsid = guigeList.get(childposition).getGuigeGoodId();
+            guigename = guigeList.get(childposition).getGuigeName();
+            if (selectedGoodNum == 1) {
+                tvYixuan.setText(selectedGuigeName+"默认x1");
+            } else {
+                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
+            }
             ShopPresenter.getGoodDetail(this);
         }
     }
@@ -753,9 +764,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void setSelectedGoodNum(int num) {
         this.selectedGoodNum = num;
         if (selectedGoodNum == 1) {
-            tvYixuan.setText("默认x1");
+            tvYixuan.setText(selectedGuigeName+"默认x1");
         } else {
-            tvYixuan.setText(selectedGoodNum + "件");
+            tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
         }
     }
 
@@ -827,9 +838,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             caridlist.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                carnum +=good.length();
+                carnum += good.length();
                 for (int ii = 0; ii < good.length(); ii++) {
-                  //  carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
+                    //  carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
                     caridlist.add(new SimpleCarBean(good.optJSONObject(ii).optString("goods_id"), good.optJSONObject(ii).optString("cart_id")));
                 }
             }
@@ -912,27 +923,4 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_no_collected));
     }
 
-   /* @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }
-
-    private PermissionListener listener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
-                    PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
-                }
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                ToastUtil.ToastText(getContext(), "没有权限");
-            }
-        }
-    };*/
 }

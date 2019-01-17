@@ -44,6 +44,8 @@ import com.msht.minshengbao.functionActivity.repairService.LampCircuitActivity;
 import com.msht.minshengbao.functionActivity.repairService.OtherRepairActivity;
 import com.msht.minshengbao.functionActivity.repairService.SanitaryWareActivity;
 
+import java.net.URL;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
@@ -345,7 +347,9 @@ public class AppActivityUtil {
         String code = Uri.parse(url).getQueryParameter("code");
         String id;
         if(TextUtils.isEmpty(code)){
-            if (url.startsWith(ConstantUtil.HTTP)) {
+            if(LinkUrlUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)){
+                onPushStartShop(context,url);
+            }else if (url.startsWith(ConstantUtil.HTTP)) {
                 url = LinkUrlUtil.containMark(context, url);
                 if (isLoginState(context)) {
                     onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
@@ -493,7 +497,6 @@ public class AppActivityUtil {
      */
     private static void onStartMessageList(Context context, String url, int i) {
         String type = Uri.parse(url).getQueryParameter("type");
-        String id = Uri.parse(url).getQueryParameter("id");
         Intent intent = null;
         switch (type) {
             /**燃气工单**/
@@ -519,7 +522,7 @@ public class AppActivityUtil {
             if (i == 1) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-            intent.putExtra("type", type);
+            intent.putExtra("type", Integer.valueOf(type));
             context.startActivity(intent);
         }
     }
@@ -538,29 +541,27 @@ public class AppActivityUtil {
         switch (type) {
             /**燃气工单**/
             case ConstantUtil.VALUE_ONE:
-                intent = new Intent(context, MessageDetailActivity.class);
+              //  intent = new Intent(context, MessageDetailActivity.class);
                 break;
             /**紧急通知**/
             case ConstantUtil.VALUE_TWO:
                 intent = new Intent(context, WarnMessageDetailActivity.class);
+                    if (i == 1) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    intent.putExtra("id", id);
+                    context.startActivity(intent);
                 break;
             /**物流列表**/
             case ConstantUtil.VALUE_THREE:
-                intent = new Intent(context, MessageDetailActivity.class);
+             //   intent = new Intent(context, MessageDetailActivity.class);
                 break;
             /**优惠促销**/
             case ConstantUtil.VALUE_FOUR:
-                intent = new Intent(context, MessageDetailActivity.class);
+             //   intent = new Intent(context, MessageDetailActivity.class);
                 break;
             default:
                 break;
-        }
-        if (intent != null) {
-            if (i == 1) {
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            intent.putExtra("id", id);
-            context.startActivity(intent);
         }
     }
 

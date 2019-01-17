@@ -77,7 +77,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
     private List<JSONObject> carList = new ArrayList<JSONObject>();
     private String sum;
     private String cart_count;
-    private List<JSONObject> guessList;
     private boolean isNotifyAdapter = true;
     private List<ShopStoreBean> selectedStoreList = new ArrayList<ShopStoreBean>();
     private List<CarGoodItemBean> selectedGoodList = new ArrayList<CarGoodItemBean>();
@@ -434,8 +433,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 initCarliststate();
                 adapter.notifyDataSetChanged();
                 cart_count = datas.optString("cart_count");
-                JSONArray guess_like_list = datas.optJSONArray("guess_like_list");
-                guessList = JsonUtil.jsonArrayToList(guess_like_list.toString());
             } else {
                 isModifyGoodNum = false;
                 int selectedGoodposition = -1;

@@ -15,7 +15,7 @@ public class ShopSharePreferenceUtil {
     private String orderType;
 
 
-    public ShopSharePreferenceUtil(String sharePreferencefileName) {
+    private ShopSharePreferenceUtil(String sharePreferencefileName) {
         loginSp = MyApplication.getMsbApplicationContext().getSharedPreferences(sharePreferencefileName, Context.MODE_PRIVATE);
         loginEditor = loginSp.edit();
     }

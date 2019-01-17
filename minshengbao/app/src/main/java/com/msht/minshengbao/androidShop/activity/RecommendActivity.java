@@ -40,9 +40,7 @@ public class RecommendActivity extends ShopBaseActivity {
 
     @Override
     protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);
+
     }
 
     @Override
