@@ -33,6 +33,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.androidShop.Fragment.ShopCarParentFragment;
 import com.msht.minshengbao.androidShop.Fragment.ShopMainFragment;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
@@ -40,18 +41,12 @@ import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
-import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
-import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
-import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.events.CarNumEvent;
-import com.msht.minshengbao.GuideActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpReqCallBack;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.AppShortCutUtil;
-import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -65,7 +60,6 @@ import com.msht.minshengbao.Utils.LocationUtils;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -374,6 +368,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             onGetMessage();
             initGetInformation();
             initPush();
+            onGetBadgeCountMessage();
         }
         checkVersion();
         initBroadcast();
@@ -461,7 +456,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
-        OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
+        /*OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
             @Override
             public void onReqFailed(String errorMsg) {
                 ToastUtil.ToastText(context,errorMsg);
@@ -469,6 +464,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onRequestSuccess(String result) {
                 onAnalysisMessage(result,0);
+
+            }
+        });*/
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                Log.d("Result1=",data.toString());
+                onAnalysisMessage(data.toString(),0);
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                ToastUtil.ToastText(context,data.toString());
             }
         });
     }
@@ -478,7 +485,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
-        OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
+       /* OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
             @Override
             public void onReqFailed(String errorMsg) {
                 ToastUtil.ToastText(context,errorMsg);
@@ -486,6 +493,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onRequestSuccess(String result) {
                 onAnalysisMessage(result,1);
+            }
+        });*/
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisMessage(data.toString(),1);
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                ToastUtil.ToastText(context,data.toString());
             }
         });
        // SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
@@ -498,7 +515,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             JSONObject json =object.optJSONObject("data");
             if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                 if (requestType==0){
-                    onGetBadgeCountMessage();
                     onUnreadMassage(json);
                 }else {
                     onUnBadgeMassage(json);
@@ -989,7 +1005,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         SharedPreferencesUtil.putBoolean(this, SharedPreferencesUtil.FIRST_OPEN, false);
         MobclickAgent.onPause(context);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -1005,6 +1020,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (context!=null){
             SharedPreferencesUtil.putAppAliveState(context, SharedPreferencesUtil.IS_App_ALIVE, false);
         }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 
     @Override
