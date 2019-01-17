@@ -86,6 +86,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
+import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
@@ -642,7 +643,20 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void listPay(final IlistPayView ilistPayView, String paySn, final String orderId) {
+        OkHttpUtils.post().url(ShopConstants.LIST_PAY).tag(ilistPayView).addParams("key", ilistPayView.getKey())
+                .addParams("pay_sn", paySn)
+                .addParams("order_id",orderId)
+                .build().execute(new DataStringCallback(ilistPayView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ilistPayView.onGetListPayInfoSuccess(s,orderId);
+                }
+            }
+        });
+    }
     public static void creatCharge(final IBuyStep4CreatChargeView iBuyStep4CreatChargeView) {
         OkHttpUtils.get().url(ShopConstants.BUY_STEP4).tag(iBuyStep4CreatChargeView).addParams("key", iBuyStep4CreatChargeView.getKey())
                 .addParams("pay_sn", iBuyStep4CreatChargeView.getPay_sn())

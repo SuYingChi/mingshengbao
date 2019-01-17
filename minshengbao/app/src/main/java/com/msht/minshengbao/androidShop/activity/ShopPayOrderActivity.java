@@ -18,6 +18,7 @@ import com.msht.minshengbao.androidShop.adapter.ShopPayMethodsAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
+import com.msht.minshengbao.androidShop.shopBean.BuylistBean;
 import com.msht.minshengbao.androidShop.shopBean.NativePayMethodsBean;
 import com.msht.minshengbao.androidShop.shopBean.NativePayMethodsBean2;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
@@ -46,12 +47,15 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
     ImageView ivback;
     List<NativePayMethodsBean2> payList = new ArrayList<NativePayMethodsBean2>();
     private ShopPayMethodsAdapter adapter;
-    private BuyStep3PayListBean.DatasBean.PayInfoBean payinfo;
     private double payAmount;
     private NativePayMethodsBean2 selectedPayBean;
     private String pdPassword;
     private String charge;
     private String orderId;
+    private BuylistBean buylistBean;
+    private String rcb;
+    private String paySn;
+    private String pd;
 
     @Override
     protected void setLayout() {
@@ -75,12 +79,26 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
             }
         });
         Intent intent = getIntent();
-        BuyStep3PayListBean buyStep3Bean = (BuyStep3PayListBean) intent.getSerializableExtra("buyStep3");
         pdPassword = intent.getStringExtra("pdPassword");
         orderId = intent.getStringExtra("orderId");
-        payinfo = buyStep3Bean.getDatas().getPay_info();
-        payAmount = Double.valueOf(payinfo.getPay_amount()) - Double.valueOf(payinfo.getPayed_amount());
-        tvAmount.setText(String.format("%s", payAmount));
+        BuyStep3PayListBean buyStep3Bean = (BuyStep3PayListBean) intent.getSerializableExtra("buyStep3");
+        if(buyStep3Bean!=null) {
+            BuyStep3PayListBean.DatasBean.PayInfoBean payinfo = buyStep3Bean.getDatas().getPay_info();
+            paySn= payinfo.getPay_sn();
+            pd = payinfo.getMember_available_pd();
+            payAmount = Double.valueOf(payinfo.getPay_amount()) - Double.valueOf(payinfo.getPayed_amount());
+            rcb = payinfo.getMember_available_rcb();
+            tvAmount.setText(String.format("%s", payAmount));
+        }else {
+            BuylistBean buylistBean = (BuylistBean) intent.getSerializableExtra("buylistBean");
+            if(buylistBean!=null) {
+                paySn = buylistBean.getDatas().getPay_info().getPay_sn();
+                pd = buylistBean.getDatas().getPay_info().getMember_available_pd();
+                rcb = buylistBean.getDatas().getPay_info().getMember_available_rcb();
+                payAmount = Double.valueOf(buylistBean.getDatas().getPay_info().getPay_amount()) - Double.valueOf(buylistBean.getDatas().getPay_info().getPayed_amount());
+                tvAmount.setText(String.format("%s", payAmount));
+            }
+        }
         rcl.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         adapter = new ShopPayMethodsAdapter(this, this);
         adapter.setFoot_layoutId(R.layout.item_pay_foot);
@@ -151,7 +169,7 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
 
     @Override
     public String getPay_sn() {
-        return payinfo.getPay_sn();
+        return paySn;
     }
 
     @Override
@@ -166,7 +184,7 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
 
     @Override
     public String getRcb_pay() {
-        if (Double.valueOf(payinfo.getMember_available_rcb()) == 0) {
+        if (Double.valueOf(rcb) == 0) {
             return "0";
         } else return "1";
 
@@ -174,7 +192,7 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
 
     @Override
     public String getPd_pay() {
-        if (Double.valueOf(payinfo.getMember_available_pd()) == 0) return "0";
+        if (Double.valueOf(pd) == 0) return "0";
         else return "1";
     }
 

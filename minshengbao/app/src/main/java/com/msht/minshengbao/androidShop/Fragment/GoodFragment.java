@@ -620,7 +620,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             if (selectedGoodNum == 1) {
                 tvYixuan.setText(selectedGuigeName+"默认x1");
             } else {
-                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName+"  "+selectedGoodNum + "件");
             }
             ll_3.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -753,7 +753,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             if (selectedGoodNum == 1) {
                 tvYixuan.setText(selectedGuigeName+"默认x1");
             } else {
-                tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName+"  "+selectedGoodNum + "件");
             }
             ShopPresenter.getGoodDetail(this);
         }
@@ -766,7 +766,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (selectedGoodNum == 1) {
             tvYixuan.setText(selectedGuigeName+"默认x1");
         } else {
-            tvYixuan.setText(selectedGuigeName+selectedGoodNum + "件");
+            tvYixuan.setText(selectedGuigeName+"   "+selectedGoodNum + "件");
         }
     }
 
