@@ -165,7 +165,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
     private ArrayList<String> imagelist = new ArrayList<String>();
-    private String selectedGuigeName;
+    private String selectedGuigeName="";
     ;
 
 
@@ -540,6 +540,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             } else {
                 guigename = "";
+                selectedGuigeName="";
                 guigeList.clear();
             }
             isPickup_self = goods_info.optString("pickup_self");

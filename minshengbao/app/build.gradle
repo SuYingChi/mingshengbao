@@ -37,16 +37,16 @@ android {
     }
     buildTypes {
         debug {
-  /*          buildConfigField 'String', 'URL_LPG', '"https://lpgtest.msbapp.cn/api"'
+            buildConfigField 'String', 'URL_LPG', '"https://lpgtest.msbapp.cn/api"'
             buildConfigField 'String', 'URL_HEADS', '"http://test.msbapp.cn:8080"'
             buildConfigField 'String', 'URL_MSSB', '"http://120.25.195.173:17080/rwapi"'
             buildConfigField 'String', 'URL_MSSB_GIFT', '"http://test.msbapp.cn:17080"'
             buildConfigField 'String', 'URL_SHOP', '"http://dev.msbapp.cn"'
             buildConfigField 'String', 'PAY_MODE', '"01"'
             buildConfigField 'String', 'MSB_HEADLINE', '"http://112.74.61.244:9990"'
-            signingConfig signingConfigs.debug*/
+            signingConfig signingConfigs.debug
 
-            minifyEnabled false
+            /*minifyEnabled false
             buildConfigField 'String', 'URL_LPG', '"https://lpg.msbapp.cn/api"'
             buildConfigField 'String', 'URL_HEADS', '"https://msbapp.cn"'
             buildConfigField 'String', 'URL_MSSB', '"http://sb-api.msbapp.cn"'
@@ -55,7 +55,7 @@ android {
             buildConfigField 'String', 'PAY_MODE', '"00"'
             buildConfigField 'String', 'MSB_HEADLINE', '"http://112.74.61.244:9990"'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release*/
         }
         release {
             minifyEnabled false
