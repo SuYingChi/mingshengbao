@@ -114,7 +114,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             if(errorBaseData!=null) {
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
             }else {
-             //   PopUtil.toastInCenter(s);
+                PopUtil.toastInCenter(s);
             }
             switch (s) {
                 case "未登录":

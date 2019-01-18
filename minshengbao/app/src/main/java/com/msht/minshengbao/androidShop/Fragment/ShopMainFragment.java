@@ -209,11 +209,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -221,12 +216,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     /*    mImmersionBar = ImmersionBar.with(this);
         mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();*/
         ImmersionBar.setTitleBar(getActivity(), mToolbar);
-    }
-
-    @Override
-    protected void initImmersionBar() {
-        //super.initImmersionBar();
-        //ImmersionBar.setTitleBar(getActivity(), mToolbar);
     }
 
     @Override

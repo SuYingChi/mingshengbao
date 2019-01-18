@@ -187,7 +187,8 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
 
     protected void initImmersionBar() {
         mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.navigationBarColor(R.color.black).init();
+        mImmersionBar.init();
+      /*  mImmersionBar.navigationBarColor(R.color.black).init();*/
     }
 
     protected void setSoftInPutMode() {
@@ -263,7 +264,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             if(errorBaseData!=null) {
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
             }else {
-              //  PopUtil.toastInCenter(s);
+                PopUtil.toastInCenter(s);
             }
             switch (s) {
                 case "未登录":

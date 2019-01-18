@@ -96,7 +96,7 @@ public class MyShopOrderActivity extends ShopBaseActivity {
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
     }
 
     //activity在被横竖屏切换时销毁activity时回调 onsaveinstancestate 保存数据到bundle里，传到在重新创建实例时的oncreat 和 onrestoreinstance时候的 bundle里

@@ -99,7 +99,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true);
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 
