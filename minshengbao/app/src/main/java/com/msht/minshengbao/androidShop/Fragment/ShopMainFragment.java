@@ -722,10 +722,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                /*    Map<String, String> map = new HashMap<String, String>();
-                    map.put("type", type);
-                    map.put("data", data);
-                    doNotAdClick(map);*/
                     doShopItemViewClick(type, data);
                 }
             });

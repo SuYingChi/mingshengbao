@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +50,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -523,6 +525,34 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
                 intent.putExtra("url", data);
                 startActivity(intent);
             }
+        }
+    }
+    protected void doShopItemViewClickByUrl(String url) {
+        Set<String> keys = Uri.parse(url).getQueryParameterNames();
+        String data;
+        if (keys.contains("goods")) {
+            data = Uri.parse(url).getQueryParameter("goods");
+            Intent intent = new Intent(this, ShopGoodDetailActivity.class);
+            intent.putExtra("type", "2");
+            intent.putExtra("goodsid", data);
+            startActivity(intent);
+        } else if (keys.contains("keyword")) {
+            data = Uri.parse(url).getQueryParameter("keyword");
+            Intent intent = new Intent(this, ShopKeywordListActivity.class);
+            intent.putExtra("keyword", data);
+            startActivity(intent);
+        } else if (keys.contains("gc_id")) {
+            data = Uri.parse(url).getQueryParameter("gc_id");
+            Intent intent = new Intent(this, ShopClassDetailActivity.class);
+            int index = data.indexOf("gc_id=");
+            data = data.substring(index + 6).trim();
+            intent.putExtra("data", data);
+            startActivity(intent);
+        } else {
+            data = url;
+            Intent intent = new Intent(this, ShopUrlActivity.class);
+            intent.putExtra("url", data);
+            startActivity(intent);
         }
     }
 }
