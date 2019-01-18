@@ -254,7 +254,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     @Override
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
-            PopUtil.toastInBottom(R.string.network_error);
+            PopUtil.showComfirmDialog(this,"",getResources().getString(R.string.network_error),"","",null,null,true);
             onNetError();
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
             PopUtil.toastInBottom("请登录商城");
@@ -267,15 +267,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
             }else {
                 PopUtil.toastInCenter(s);
-            }
-            switch (s) {
-                case "未登录":
-                    AppUtil.logout();
-                    Intent goLogin = new Intent(this, LoginActivity.class);
-                    startActivity(goLogin);
-                    break;
-                default:
-                    break;
             }
         }
     }

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -30,10 +31,13 @@ import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 import com.msht.minshengbao.androidShop.shopBean.ShopNumBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.functionActivity.GasService.GasServerOrderActivity;
@@ -41,6 +45,7 @@ import com.msht.minshengbao.functionActivity.Invoice.InvoiceHomeActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ConsultRecommendActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.CustomerNoManageActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MySettingActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.MyWalletActivity;
@@ -133,7 +138,23 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     @Override
     public void onError(String s) {
-
+        if (!AppUtil.isNetworkAvailable()) {
+            PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
+            onNetError();
+        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
+            PopUtil.toastInBottom("请登录商城");
+            LogUtils.e(Log.getStackTraceString(new Throwable()));
+            Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
+            getActivity().startActivity(goLogin);
+            getActivity().finish();
+        } else {
+            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
+            if (errorBaseData != null) {
+                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
+            } else {
+                PopUtil.toastInCenter(s);
+            }
+        }
     }
 
     @Override
@@ -161,11 +182,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     }
 
-    @Override
-    public void onGetOrderNumSuccess(String s) {
-
-    }
-
     public void getOrdersNum() {
         ShopPresenter.getOrderNum(this,new DataStringCallback(this){
             @Override
@@ -173,7 +189,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ShopNumBean bean = JsonUtil.toBean(s, ShopNumBean.class);
-                    onGetNumSuccess(bean);
+                    if(bean!=null) {
+                        onGetNumSuccess(bean);
+                    }else {
+                      LoginMyFrag.this.onError(s);
+                    }
                 }
             }
         });
@@ -229,14 +249,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             tvWaitGet.setText(waitGetOrdersNum);
         }
         llwaitget.setClickable(true);
-
-       /* int allOrdersNum =Integer.valueOf(waitEveluateOrdersNum)+Integer.valueOf(waitPayOrdersNum)+Integer.valueOf(waitGetOrdersNum)+Integer.valueOf(refundOrderNum);
-        if (allOrdersNum == 0) {
-            tvAllOrder.setVisibility(View.GONE);
-        } else {
-            tvAllOrder.setVisibility(View.VISIBLE);
-            tvAllOrder.setText(String.format("%d", allOrdersNum));
-        }*/
         llShopOrder.setClickable(true);
     }
     @Override

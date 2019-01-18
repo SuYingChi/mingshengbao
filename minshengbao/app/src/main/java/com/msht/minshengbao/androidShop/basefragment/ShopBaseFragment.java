@@ -106,7 +106,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
     @Override
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
-            PopUtil.toastInBottom(R.string.network_error);
+            PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
             onNetError();
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
             PopUtil.toastInBottom("请登录商城");
@@ -120,17 +120,6 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
             } else {
                 PopUtil.toastInCenter(s);
-            }
-            switch (s) {
-                case "未登录":
-                case "登出返回结果为空":
-                    AppUtil.logout();
-                    Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
-                    startActivity(goLogin);
-                    break;
-                default:
-
-                    break;
             }
         }
     }
