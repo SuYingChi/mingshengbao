@@ -130,7 +130,7 @@ public class MyApplication extends Application {
         Fresco.initialize(this);
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "7dc4d7937bab57666f9188e5667e5930");
         UMShareAPI.get(this);
-        BGASwipeBackHelper.init(this, null);
+        BGASwipeBackHelper.init(this,null);
 
         CrashReport.initCrashReport(getApplicationContext(), "118eae5408", false);
         DisplayImageOptions options = new DisplayImageOptions.Builder()

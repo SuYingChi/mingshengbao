@@ -113,7 +113,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
             if(errorBaseData!=null) {
                 PopUtil.toastInCenter(errorBaseData.getDatas().getError());
-            }else {
+            } else {
                 PopUtil.toastInCenter(s);
             }
             switch (s) {
