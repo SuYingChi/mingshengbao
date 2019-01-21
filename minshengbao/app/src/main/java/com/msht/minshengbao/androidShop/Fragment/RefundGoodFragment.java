@@ -108,6 +108,8 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
             tvNoData.setVisibility(View.VISIBLE);
             return;
         }
+        ivNoOrder.setVisibility(View.INVISIBLE);
+        tvNoData.setVisibility(View.INVISIBLE);
         if (!isRestart) {
             if (pageNum > pageTotal) {
                 refreshLayout.setEnableAutoLoadMore(false);

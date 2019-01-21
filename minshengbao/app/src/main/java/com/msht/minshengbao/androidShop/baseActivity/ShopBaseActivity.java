@@ -21,8 +21,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
@@ -60,7 +62,7 @@ import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
  * @author mshtyfb
  */
 //如果activity在可见时就要刷新数据的话 在onresume里请求数据，如果只需要请求一次的话再oncreat里请求
-public abstract class ShopBaseActivity extends AppCompatActivity implements IBaseView, BGASwipeBackHelper.Delegate {
+public abstract class ShopBaseActivity extends AppCompatActivity implements IBaseView/*, BGASwipeBackHelper.Delegate*/ {
 
     private BGASwipeBackHelper mSwipeBackHelper;
     protected ImmersionBar mImmersionBar;
@@ -80,7 +82,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        initSwipeBackFinish();
+     //   initSwipeBackFinish();
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSoftInPutMode();
@@ -188,9 +190,22 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     }
 
     protected void initImmersionBar() {
-        mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.init();
-      /*  mImmersionBar.navigationBarColor(R.color.black).init();*/
+        mImmersionBar  = ImmersionBar.with(this);
+        //白色状态栏处理
+        mImmersionBar .statusBarDarkFont(true, 0.2f);
+        if (ImmersionBar.hasNavigationBar(this)) {
+            BarParams barParams = ImmersionBar.with(this).getBarParams();
+            if (barParams.fullScreen) {
+                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+            }else {
+                mImmersionBar.init();
+            }
+            /*else {
+                mImmersionBar.fullScreen(true).transparentNavigationBar().init();
+            }*/
+        } else {
+            mImmersionBar.init();
+        }
     }
 
     protected void setSoftInPutMode() {
@@ -198,9 +213,9 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     }
 
 
-    /**
+  /*  *//**
      * 初始化滑动返回。在 super.onCreate(savedInstanceState) 之前调用该方法
-     */
+     *//*
     private void initSwipeBackFinish() {
         mSwipeBackHelper = new BGASwipeBackHelper(this, this);
 
@@ -223,7 +238,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         mSwipeBackHelper.setSwipeBackThreshold(0.3f);
         // 设置底部导航条是否悬浮在内容上，默认值为 false
         mSwipeBackHelper.setIsNavigationBarOverlap(true);
-    }
+    }*/
 
     @Override
     public void showLoading() {
@@ -286,50 +301,50 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         return ShopSharePreferenceUtil.getInstance().getPassword();
     }
 
-    /**
+/*    *//**
      * 是否支持滑动返回。这里在父类中默认返回 true 来支持滑动返回，如果某个界面不想支持滑动返回则重写该方法返回 false 即可
      *
      * @return
-     */
+     *//*
     @Override
     public boolean isSupportSwipeBack() {
         return true;
     }
 
-    /**
+    *//**
      * 正在滑动返回
      *
      * @param slideOffset 从 0 到 1
-     */
+     *//*
     @Override
     public void onSwipeBackLayoutSlide(float slideOffset) {
 
     }
 
-    /**
+    *//**
      * 没达到滑动返回的阈值，取消滑动返回动作，回到默认状态
-     */
+     *//*
     @Override
     public void onSwipeBackLayoutCancel() {
 
     }
 
-    /**
+    *//**
      * 滑动返回执行完毕，销毁当前 Activity
-     */
+     *//*
     @Override
     public void onSwipeBackLayoutExecuted() {
         mSwipeBackHelper.swipeBackward();
-    }
+    }*/
 
-    @Override
+ /*   @Override
     public void onBackPressed() {
         // 正在滑动返回的时候取消返回按钮事件
         if (mSwipeBackHelper.isSliding()) {
             return;
         }
         mSwipeBackHelper.backward();
-    }
+    }*/
 
     @Override
     public void onLogout() {

@@ -385,7 +385,6 @@
         <activity android:name=".androidShop.activity.RecommendActivity" />
         <activity android:name=".androidShop.activity.InvInfoActivity" />
         <activity android:name=".androidShop.activity.ShopPayOrderActivity" />
-        <activity android:name=".androidShop.activity.ShopWaitToPayedOrderActivity" />
         <activity android:name=".androidShop.activity.ShopOrdersDetailActivity" />
         <activity android:name=".androidShop.activity.RefundMoneyActivity" />
         <activity android:name=".androidShop.activity.ReturnGoodDetailActivity" />

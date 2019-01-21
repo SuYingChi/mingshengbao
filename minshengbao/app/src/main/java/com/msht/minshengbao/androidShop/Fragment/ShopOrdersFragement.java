@@ -254,6 +254,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 tvNoData.setVisibility(View.VISIBLE);
                 return;
             }
+            ivNoOrder.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
             if (isRestart) {
                 if (pageNum == 1) {
                     ordersList.clear();

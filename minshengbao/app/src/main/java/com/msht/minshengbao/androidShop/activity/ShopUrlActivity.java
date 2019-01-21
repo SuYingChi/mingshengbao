@@ -40,12 +40,12 @@ public class ShopUrlActivity extends ShopBaseActivity implements MyWebChromeClie
     protected void setLayout() {
         setContentView(R.layout.shop_webview_layout);
     }
+
     @Override
     protected void initImmersionBar() {
-       // super.initImmersionBar();
-       /* mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);*/
+        //H5页面 自带标题栏 不需浸入式
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

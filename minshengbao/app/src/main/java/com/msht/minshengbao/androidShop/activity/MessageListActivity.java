@@ -7,10 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
@@ -47,6 +49,8 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
     ImageView ivback;
     @BindView(R.id.title)
     TextView tvtitle;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     private List<WarnBean.DataBean> dataList = new ArrayList<WarnBean.DataBean>();
     /*   private MessageListAdapter adapter;*/
     private MessageListAdapter2 adapter;
@@ -64,7 +68,8 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
 
     @Override
     protected void initImmersionBar() {
-
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override

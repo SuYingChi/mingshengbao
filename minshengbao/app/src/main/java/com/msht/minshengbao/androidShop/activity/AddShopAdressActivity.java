@@ -60,9 +60,9 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
 
     @Override
     protected void initImmersionBar() {
-      /*  super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);*/
+        super.initImmersionBar();
+        mImmersionBar.keyboardEnable(true);
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override

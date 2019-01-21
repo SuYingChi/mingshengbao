@@ -50,7 +50,6 @@ public class NoCarActivity extends ShopBaseActivity implements IGuessLikeGoodLis
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 

@@ -89,7 +89,8 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     protected void initImmersionBar() {
-        ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override

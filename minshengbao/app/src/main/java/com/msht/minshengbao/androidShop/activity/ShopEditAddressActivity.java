@@ -69,12 +69,6 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
         setContentView(R.layout.add_shop_address);
     }
 
-    @Override
-    protected void initImmersionBar() {
-       /* super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);*/
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,8 +89,12 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
        selectAreaId = bean.getAddress_id();
        etAddress.setText(bean.getAddress());
        addressId = bean.getAddress_id();
+    }
 
-
+    @Override
+    protected void initImmersionBar() {
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @OnClick({R.id.back, R.id.ll_city, R.id.save_address})

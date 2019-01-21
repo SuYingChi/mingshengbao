@@ -177,7 +177,7 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
                             etAmount.setText(String.format("%s", maxAmount));
                             PopUtil.showComfirmDialog(RefundFormMoneyActivity.this, null, "退款金额不能超过商品金额", null, "知道了", null, null, true);
                         }else if(refundMoney <= maxAmount&&refundMoney!=RefundFormMoneyActivity.this.refundMoney){
-                            RefundFormMoneyActivity.this.refundMoney = maxAmount;
+                            RefundFormMoneyActivity.this.refundMoney = refundMoney;
                         }
                     } else {
                         PopUtil.showComfirmDialog(RefundFormMoneyActivity.this, null, "退款金额默认购买金额", null, "知道了", null, null, true);

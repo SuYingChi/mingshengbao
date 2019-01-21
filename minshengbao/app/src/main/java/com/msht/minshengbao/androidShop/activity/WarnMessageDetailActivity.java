@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -44,12 +46,14 @@ import butterknife.BindView;
 public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarnMessageDetailView {
     @BindView(R.id.back)
     ImageView ivback;
-       @BindView(R.id.webview)
-       WebView webView;
+    @BindView(R.id.webview)
+    WebView webView;
     @BindView(R.id.text)
     TextView textview;
     @BindView(R.id.scl)
     ScrollView scl;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     private String id;
     private RichText richText;
     private String mobile;
@@ -61,7 +65,9 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
 
     @Override
     protected void initImmersionBar() {
-
+        super.initImmersionBar();
+        mImmersionBar.keyboardEnable(true);
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -75,7 +81,7 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
                 finish();
             }
         });
-         WebSettings settings = webView.getSettings();
+        WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setDisplayZoomControls(false);
@@ -83,39 +89,41 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
         settings.setSupportZoom(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @SuppressLint("MissingPermission")
             @Override
             public boolean shouldOverrideUrlLoading
                     (WebView view, String url) {
                 //判断用户单击的是那个超连接
-                String tag = "tel:";;
-               if (url != null && url.contains(tag)) {
+                String tag = "tel:";
+                ;
+                if (url != null && url.contains(tag)) {
                     mobile = url.substring(url.lastIndexOf(":") + 1);
-                   if (Build.VERSION.SDK_INT >= 23) {
-                       PermissionUtils.requestPermissions(WarnMessageDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
-                           @Override
-                           public void onPermissionRequestSuccess(List<String> permissions) {
-                               Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
-                               startActivity(intent);
-                           }
-                       }, Permission.CALL_PHONE);
-                   } else {
-                       Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
-                       startActivity(intent);
-                   }
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        PermissionUtils.requestPermissions(WarnMessageDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
+                            @Override
+                            public void onPermissionRequestSuccess(List<String> permissions) {
+                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
+                                startActivity(intent);
+                            }
+                        }, Permission.CALL_PHONE);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
+                        startActivity(intent);
+                    }
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
         webView.setWebChromeClient(new WebChromeClient());
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);  //注意安卓5.0以上的权限
         }
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), id);
     }
+
     @Override
     public void onGetDetailSuccess(String s) {
         try {
@@ -142,7 +150,7 @@ public class WarnMessageDetailActivity extends ShopBaseActivity implements IWarn
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(richText!=null) {
+        if (richText != null) {
             richText.clear();
             richText = null;
         }

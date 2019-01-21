@@ -976,7 +976,7 @@ public class ShopPresenter {
         PostFormBuilder pfbuilder = OkHttpUtils.post().url(ShopConstants.REFUND_ALL_POST).addParams("key", iPostRefundAllView.getKey()).tag(iPostRefundAllView)
                 .addParams("order_id", iPostRefundAllView.getOrderId())
                 .addParams("reason_id", iPostRefundAllView.getReasonId())
-                .addParams("buyer_message ", iPostRefundAllView.getBuyerMessage());
+                .addParams("buyer_message", iPostRefundAllView.getBuyerMessage());
         for (int i = 0; i < picList.size(); i++) {
             pfbuilder.addParams("refund_pic[" + i + "]", picList.get(i));
         }

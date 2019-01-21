@@ -145,6 +145,12 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
                 e.printStackTrace();
             }
         }
+        //刷新到最后一项了，重置标志位
+        if (position == datas.size() - 1) {
+            if (initUnselectState) {
+                initUnselectState = false;
+            }
+        }
     }
 
 

@@ -63,6 +63,9 @@ public class InvInfoActivity extends ShopBaseActivity implements NeedInvFrgment.
 
     @Override
     protected void initImmersionBar() {
+        super.initImmersionBar();
+        mImmersionBar.keyboardEnable(true);
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override
