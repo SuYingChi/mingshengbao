@@ -1,11 +1,21 @@
 package com.msht.minshengbao.androidShop.shopBean;
 
 /**
- * Created by qyf on 2016/3/11.
+ *
  */
 public class BaseData {
     private int code;
     private String datas;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    private String result;
 
     public int getCode() {
         return code;
@@ -28,6 +38,7 @@ public class BaseData {
         return "BaseData{" +
                 "code=" + code +
                 ", datas='" + datas + '\'' +
+                ", result='" + result + '\'' +
                 '}';
     }
 }

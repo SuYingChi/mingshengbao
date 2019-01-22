@@ -16,7 +16,6 @@ public class DataStringCallback extends StringCallback {
     protected    boolean isShowLoadingDialog = true;
     protected IBaseView iView;
     protected boolean isResponseSuccess;
-    protected BaseData baseData;
 
     public DataStringCallback(IBaseView iView) {
         this.iView = iView;
@@ -56,8 +55,8 @@ public class DataStringCallback extends StringCallback {
             isResponseSuccess = false;
             iView.onError("接口返回空字符串");
         }else {
-             baseData = JsonUtil.getBaseData(s);
-             if(baseData==null){
+            BaseData baseData = JsonUtil.getBaseData(s);
+             if(baseData ==null){
                  iView.onError("GSON转换异常");
                  isResponseSuccess = false;
              }else if(baseData.getCode()==400){
@@ -72,6 +71,18 @@ public class DataStringCallback extends StringCallback {
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
+             }else if("failed".equals(baseData.getResult())){
+                 try {
+                     JSONObject object = new JSONObject(s);
+                     if(TextUtils.equals(object.optString("error"),"用户名或密码错误")){
+                         iView.onError("未登录");
+                     }else {
+                         iView.onError(object.optString("error"));
+                     }
+                     isResponseSuccess = false;
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 }
              }else if(baseData.getCode() == 200){
                  isResponseSuccess = true;
              }
