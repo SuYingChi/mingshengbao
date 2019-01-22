@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -77,7 +75,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
     private List<JSONObject> carList = new ArrayList<JSONObject>();
     private String sum;
     private String cart_count;
-    private boolean isNotifyAdapter = true;
+    private boolean isAllSelectedNotifyAdapter = true;
     private List<ShopStoreBean> selectedStoreList = new ArrayList<ShopStoreBean>();
     private List<CarGoodItemBean> selectedGoodList = new ArrayList<CarGoodItemBean>();
     private List<ShopStoreBean> storeList = new ArrayList<ShopStoreBean>();
@@ -118,7 +116,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         adapter.setCarListListener(new CarListAdapter.CarListListener() {
             @Override
             public void onUncheckItem(final JSONObject goodObject, final ShopStoreBean storebject,final int childPosition, final int position) {
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 String cart_id = goodObject.optString("cart_id");
                 String goods_id = goodObject.optString("goods_id");
                 String goods_num = goodObject.optString("goods_num");
@@ -145,7 +143,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             @Override
             public void onUncheckStoreItem(final ShopStoreBean storeObject) {
                 LogUtils.e("------onUncheckStoreItem===" + storeObject);
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (selectedStoreList.contains(storeObject)) {
                     selectedStoreList.remove(storeObject);
                 }
@@ -178,7 +176,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             @Override
             public void onCheckStoreItem(final ShopStoreBean storeObject) {
                 LogUtils.e("-----onCheckStoreItem===" + storeObject);
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (!selectedStoreList.contains(storeObject)) {
                     selectedStoreList.add(storeObject);
                 }
@@ -245,7 +243,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             //此时该店铺下还有商品选中
             @Override
             public void onUnCheckGoodAndUnCheckStoreItem(final ShopStoreBean storeBean) {
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (selectedStoreList.contains(storeBean)) {
                     selectedStoreList.remove(storeBean);
                 }
@@ -263,10 +261,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
             @Override
             public void onGoodDetail(final String goodid) {
-              /*  Map<String, String> map = new HashMap<String, String>();
-                map.put("type", "goods");
-                map.put("data", goodid);
-                doNotAdClick(map);*/
                 doShopItemViewClick("goods", goodid);
             }
 
@@ -298,10 +292,10 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //当未全选时，点击了全选按钮，此时需要notify，设为全选
                 if (!isAllSelected() && isChecked) {
-                    isNotifyAdapter = true;
+                    isAllSelectedNotifyAdapter = true;
                 }
                 //点击全选按钮时，此时未全部选中，
-                if (isNotifyAdapter) {
+                if (isAllSelectedNotifyAdapter) {
                     if (isChecked) {
                         for (JSONObject object : carList) {
                             ShopStoreBean bean = new ShopStoreBean(object.optString("store_name"), object.optString("store_id"));
@@ -331,19 +325,16 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                         gotoBuyList.clear();
                     }
                     initUnselectState = false;
-                    adapter.isSelectAllAndNotify(isChecked, isNotifyAdapter, initUnselectState);
+                    adapter.isSelectAllAndNotify(isChecked, isAllSelectedNotifyAdapter, false);
                 } else if (!initUnselectState) {
-                    //当取消选择列表某项时，此时全选按钮为未选择，但是不触发列表的刷新，只是恢复标志位为默认的true
-                    isNotifyAdapter = true;
+                    //当取消选择列表某项时，此时全选按钮为未选择，但是不再次触发列表的刷新，只是恢复标志位为默认的true
+                    adapter.isSelectAllAndNotify(false, false, false);
+                    isAllSelectedNotifyAdapter = true;
                 } else {
                     initUnselectState = false;
                 }
             }
         });
-       /* if (!getKey().equals("")) {
-            initCarliststate();
-            ShopPresenter.getCarList(this, true);
-        }*/
     }
 
     private boolean isAllSelected() {
@@ -371,8 +362,8 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
 
     private void initCarliststate() {
         initUnselectState = true;
-        isNotifyAdapter = false;
-        adapter.isSelectAllAndNotify(false, isNotifyAdapter, initUnselectState);
+        isAllSelectedNotifyAdapter = false;
+        adapter.isSelectAllAndNotify(false, isAllSelectedNotifyAdapter, initUnselectState);
         cbSelectAll.setChecked(false);
     }
 
@@ -409,9 +400,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             carnum = 0;
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-              /*  for (int ii = 0; ii < good.length(); ii++) {
-                    carnum += Integer.valueOf(good.optJSONObject(ii).optString("goods_num"));
-                }*/
                 carnum += good.length();
             }
             EventBus.getDefault().postSticky(new CarNumEvent(carnum));
@@ -535,21 +523,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                         + entry.getValue());
                 list.add(entry.getValue());
             }
-       /*     String isPickup_self = "";
-            out:
-            for (int ii = 0; ii < list.size(); ii++) {
-                List<ComfirmShopGoodBean.GoodsBean> goods = list.get(ii).getGoods();
-                for (int i = 0; i < goods.size(); i++) {
-                    if (ii == 0 && i == 0) {
-                        isPickup_self = goods.get(i).getPickup_self();
-                    } else if (!goods.get(i).getPickup_self().equals(isPickup_self)) {
-                        isPickup_self = "1";
-                        break out;
-                    }
-                }
-            }*/
-           /* if (!TextUtils.isEmpty(isPickup_self)) {
-                if (TextUtils.equals(isPickup_self, "0")) {*/
                     Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("ifCar", "1");
@@ -557,12 +530,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                     bundle.putSerializable("data", (Serializable) list);
                     intent.putExtras(bundle);
                     startActivity(intent);
-             /*   } else {
-                    PopUtil.toastInBottom("暂不支持自提商品购买");
-                }
-            } else {
-                PopUtil.toastInBottom("请取消选择已下架或不支持购买的商品");
-            }*/
         }
     }
 
