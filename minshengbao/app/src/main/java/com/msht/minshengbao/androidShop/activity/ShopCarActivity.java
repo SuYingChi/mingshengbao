@@ -266,6 +266,11 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
                 doNotAdClick(map);*/;
                 onShopItemViewClick("goods",goodId);
             }
+
+            @Override
+            public void onNotifyFinish() {
+                initUnselectState = false;
+            }
         });
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);

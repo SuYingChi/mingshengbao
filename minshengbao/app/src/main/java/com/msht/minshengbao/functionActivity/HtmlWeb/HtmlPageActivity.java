@@ -27,6 +27,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
@@ -40,10 +41,12 @@ import com.msht.minshengbao.Utils.LinkUrlUtil;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
+import com.msht.minshengbao.androidShop.util.NavigationbarUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -176,6 +179,12 @@ public class HtmlPageActivity extends BaseActivity {
         initSharePlatforms();
     }
     private void initHeader() {
+        View head = findViewById(R.id.id_re_layout);
+        if(mNavigation==null||TextUtils.isEmpty(mNavigation)){
+            head.setVisibility(View.GONE);
+        }else {
+            head.setVisibility(View.VISIBLE);
+        }
         backImg = (ImageView) findViewById(R.id.id_goback);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mNavigation);
@@ -266,6 +275,11 @@ public class HtmlPageActivity extends BaseActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        //webview 会默认浸入显示，适配有虚拟导航栏的机型，顶部间隔状态栏高度，底部部要间隔导航栏高度，否则重叠
+        LinearLayout.LayoutParams para = (LinearLayout.LayoutParams) mRefresh.getLayoutParams();
+        para.setMargins(0, StatusBarCompat.getStatusBarHeight(this),0, NavigationbarUtil.getVirtualBarHeigh(this));
+        mRefresh.setLayoutParams(para);
+
         mWebView =(WebView)findViewById(R.id.id_web_html);
         String useUrl=LinkUrlUtil.containMark(context,mUrl);
         mWebView.loadUrl(useUrl);

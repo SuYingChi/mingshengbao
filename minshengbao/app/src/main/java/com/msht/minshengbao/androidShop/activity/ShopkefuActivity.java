@@ -59,27 +59,12 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChromeCli
             }
         });
         WebSettings settings=webView.getSettings();
-       /* settings.setJavaScriptEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setDefaultTextEncodingName("utf-8");
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
-        settings.setNeedInitialFocus(true);
-        settings.setAppCacheEnabled(true);
-        settings.setLoadsImagesAutomatically(true);
-        settings.setSupportMultipleWindows(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);*/
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setUseWideViewPort(true);
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setSupportZoom(true);
-        //settings.setBuiltInZoomControls(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);

@@ -80,4 +80,5 @@ public class StatusBarCompat {
             activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         }
     }
+
 }

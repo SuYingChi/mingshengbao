@@ -166,6 +166,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private String carid;
     private ArrayList<String> imagelist = new ArrayList<String>();
     private String selectedGuigeName="";
+    private String pintuan_promotion;
     ;
 
 
@@ -514,6 +515,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             showAdv(imagelist);
             JSONObject goods_info = datas.getJSONObject("goods_info");
+            pintuan_promotion = goods_info.optString("pintuan_promotion");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
             JSONObject spec_listObj = datas.optJSONObject("spec_list");
@@ -561,7 +563,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
             tvgoods_jingle.setText(goods_jingle);
-            if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+        /*    if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
                 if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
                     if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
                         PopUtil.toastInCenter("没有商品价格");
@@ -573,7 +575,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             } else {
                 goods_price = goods_info.optString("promotion_price");
-            }
+            }*/
+            goods_price = goods_info.optString("goods_price");
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));
