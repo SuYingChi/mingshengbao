@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -85,6 +86,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -247,7 +249,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.handleMessage(msg);
         }
     }
-
     private void onReceiveVersion() {
         String version = jsonObject.optString("version");
         int versions = Integer.parseInt(version);
@@ -258,7 +259,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(),
                     PackageManager.GET_CONFIGURATIONS);
-            versionCode = pi.versionCode;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1){
+                versionCode = pi.baseRevisionCode;
+            }else {
+                versionCode = pi.versionCode;
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -456,21 +461,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
-        /*OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
-            @Override
-            public void onReqFailed(String errorMsg) {
-                ToastUtil.ToastText(context,errorMsg);
-            }
-            @Override
-            public void onRequestSuccess(String result) {
-                onAnalysisMessage(result,0);
-
-            }
-        });*/
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
-                Log.d("Result1=",data.toString());
                 onAnalysisMessage(data.toString(),0);
             }
             @Override
@@ -485,16 +478,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
-       /* OkHttpRequestManager.getInstance(getApplicationContext()).requestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new OkHttpReqCallBack() {
-            @Override
-            public void onReqFailed(String errorMsg) {
-                ToastUtil.ToastText(context,errorMsg);
-            }
-            @Override
-            public void onRequestSuccess(String result) {
-                onAnalysisMessage(result,1);
-            }
-        });*/
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
@@ -503,6 +486,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void responseReqFailed(Object data) {
                 ToastUtil.ToastText(context,data.toString());
+                AppShortCutUtil.addNumShortCut(context,MainActivity.class,false,"0",true);
             }
         });
        // SendRequestUtil.postDataFromServiceTwo(validateURL,textParams,messageNumHandler);
@@ -519,19 +503,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }else {
                     onUnBadgeMassage(json);
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
     private void initBroadcast() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(MY_ACTION);
         registerReceiver(broadcastReceiver, filter);
     }
-
     /**
      * 接受广播
      */
@@ -605,20 +586,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             JSONObject jsonObj = new JSONObject(s);
                             JSONObject dataObj = jsonObj.getJSONObject("datas");
                             JSONArray jsonArray = dataObj.optJSONArray("cart_list");
-                            int carnum = 0;
+                            int carNum = 0;
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                                carnum +=good.length();
+                                carNum +=good.length();
                             }
-                            if (carnum > 0) {
+                            if (carNum > 0) {
                                 tvCarNum.setVisibility(View.VISIBLE);
-                                tvCarNum.setText(carnum + "");
+                                tvCarNum.setText(carNum+"");
                                 bundle.putInt("index", 1);
                             } else {
                                 tvCarNum.setVisibility(View.GONE);
                                 bundle.putInt("index", 2);
                             }
-                            EventBus.getDefault().postSticky(new CarNumEvent(carnum));
+                            EventBus.getDefault().postSticky(new CarNumEvent(carNum));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -821,7 +802,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onEvent(CarNumEvent carNumEvent) {
         if (carNumEvent.getCarNum() > 0) {
             tvCarNum.setVisibility(View.VISIBLE);
-            tvCarNum.setText(String.format("%d", carNumEvent.getCarNum()));
+            tvCarNum.setText(String.format(Locale.CHINA,"%d", carNumEvent.getCarNum()));
         } else {
             tvCarNum.setVisibility(View.GONE);
         }
@@ -925,8 +906,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
         } else if (requestCode == MY_CAMERA_REQUEST) {
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }else {
-           // AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
         }
     }
     public void initNetBroadcast() {
@@ -1052,15 +1031,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         JSONObject jsonObj = new JSONObject(s);
                         JSONObject dataObj = jsonObj.getJSONObject("datas");
                         JSONArray jsonArray = dataObj.optJSONArray("cart_list");
-                        int carnum = 0;
+                        int carNum = 0;
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONArray good = jsonArray.optJSONObject(i).optJSONArray("goods");
-                            carnum += good.length();
+                            carNum += good.length();
                         }
-                        EventBus.getDefault().postSticky(new CarNumEvent(carnum));
-                        if (carnum > 0) {
+                        EventBus.getDefault().postSticky(new CarNumEvent(carNum));
+                        if (carNum > 0) {
                             tvCarNum.setVisibility(View.VISIBLE);
-                            tvCarNum.setText(String.format("%d", carnum));
+                            tvCarNum.setText(String.format(Locale.CHINA,"%d", carNum));
                         } else {
                             tvCarNum.setVisibility(View.GONE);
                         }

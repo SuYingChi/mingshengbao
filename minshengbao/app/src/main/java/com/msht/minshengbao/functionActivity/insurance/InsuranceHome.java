@@ -102,9 +102,9 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
         mTextView6=(TextView)findViewById(R.id.id_amount6);
         mSecurity =(TextView)findViewById(R.id.id_security);
         mDeadlines=(TextView)findViewById(R.id.id_deadline);
-        DatafillWrite(vSerialsId);
+        onDatafillWrite(vSerialsId);
     }
-    private void DatafillWrite(String vSerialsId) {
+    private void onDatafillWrite(String vSerialsId) {
         mSecurity.setText(vSecuritys+"元");
         mDeadlines.setText(vDeadLines+"年");
         if (vSerialsId.equals("1537981")){
@@ -188,7 +188,7 @@ public class InsuranceHome extends BaseActivity implements CustomRadioGroup.IOnC
             default:
                 break;
         }
-        DatafillWrite(vSerialsId);
+        onDatafillWrite(vSerialsId);
     }
 
     private void CallHotline() {

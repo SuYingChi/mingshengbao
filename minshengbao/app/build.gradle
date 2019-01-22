@@ -46,7 +46,7 @@ android {
             buildConfigField 'String', 'MSB_HEADLINE', '"http://112.74.61.244:9990"'
             signingConfig signingConfigs.debug
 
-           /* minifyEnabled false
+            /* minifyEnabled false
             buildConfigField 'String', 'URL_LPG', '"https://lpg.msbapp.cn/api"'
             buildConfigField 'String', 'URL_HEADS', '"https://msbapp.cn"'
             buildConfigField 'String', 'URL_MSSB', '"http://sb-api.msbapp.cn"'
@@ -136,12 +136,13 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
     implementation(name: 'okhttputils', ext: 'aar')
-    implementation(name: 'slideleftRcl',ext:'aar')
+    implementation(name: 'slideleftRcl', ext: 'aar')
     implementation 'cn.bingoogolapple:bga-swipebacklayout:1.1.8@aar'
     implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
     implementation 'com.zhy:autolayout:1.4.3'
     implementation 'com.zhy:base-rvadapter:3.0.3'
     implementation 'com.bigkoo:pickerview:2.1.0'
-    implementation ('com.zzhoujay.richtext:richtext:3.0.7'){
-        exclude group: 'com.android.support'}
+    implementation('com.zzhoujay.richtext:richtext:3.0.7') {
+        exclude group: 'com.android.support'
+    }
 }

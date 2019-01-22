@@ -31,6 +31,7 @@ import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -39,6 +40,8 @@ import com.msht.minshengbao.adapter.WaterPhotoPickerAdapter;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.msht.minshengbao.functionActivity.repairService.PublishOrderActivity;
 import com.msht.minshengbao.functionActivity.repairService.PublishSuccessActivity;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +50,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.iwf.photopicker.PhotoPicker;
@@ -308,7 +312,7 @@ public class WaterMalfunctionActivity extends BaseActivity {
         SendRequestUtil.postSingleFileToServer(validateURL,fileParams,bitmapHandler);
     }
     private void onSendDataService() {
-        String imgUrl=imgUrlList.toString();
+        String imgUrl=TypeConvertUtil.listToString(imgUrlList);
         String validateURL=UrlUtil.WATER_MALFUNCTION_UPLOAD;
         String estate=tvEstate.getText().toString().trim();
         String equipmentNo=etEquipmentNo.getText().toString().trim();
@@ -325,23 +329,26 @@ public class WaterMalfunctionActivity extends BaseActivity {
     private void onRequestLimit(int position) {
         final int thisPosition=position;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                MPermissionUtils.requestPermissionsResult(this, ConstantUtil.MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
-                    @Override
-                    public void onPermissionGranted(int code) {
-                        if (code==ConstantUtil.MY_CAMERA_REQUEST){
-                            onPickPhoto(thisPosition);
-                        }
-                    }
-                    @Override
-                    public void onPermissionDenied(int code) {
-                        ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
-                    }
-                });
-
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                onPickPhoto(thisPosition);
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"未允许权限通过，部分功能将无法使用");
+                            }
+                        }).start();
             }else {
-                onPickPhoto(position);
+                onPickPhoto(thisPosition);
             }
         }else {
             onPickPhoto(position);

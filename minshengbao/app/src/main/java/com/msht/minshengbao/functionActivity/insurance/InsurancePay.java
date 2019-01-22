@@ -56,7 +56,6 @@ public class InsurancePay extends BaseActivity {
         insurance.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("保险",url);
                 if (url.startsWith("weixin://wap/pay?")){
                     try{
                         Intent intent=new Intent();

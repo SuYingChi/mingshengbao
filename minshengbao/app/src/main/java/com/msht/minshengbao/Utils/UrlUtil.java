@@ -189,6 +189,7 @@ public class UrlUtil {
     public static final String INSURANCE_HISTORY_URL = BuildConfig.URL_HEADS +"/Gas/invoice/history";
     public static final String GET_HOUSE_ADDRESS_URL ="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
     public static final String INSURANCE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/views/insurance/pay.html";
+    public static final String INSURANCE_BUSINESS_DATA=BuildConfig.URL_HEADS+"/api/insurance/get_insurance_list";
     /**
      *myView
      */
