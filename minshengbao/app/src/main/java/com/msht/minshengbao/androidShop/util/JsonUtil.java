@@ -197,6 +197,7 @@ public class JsonUtil {
             BaseData baseData = new BaseData();
             baseData.setCode(object.optInt("code"));
             baseData.setDatas(object.optString("datas"));
+            baseData.setResult(object.optString("result"));
             return baseData;
         } catch (JSONException e) {
             e.printStackTrace();
