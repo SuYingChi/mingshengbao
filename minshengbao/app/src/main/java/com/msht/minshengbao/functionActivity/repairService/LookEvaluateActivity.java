@@ -159,20 +159,24 @@ public class LookEvaluateActivity extends BaseActivity {
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
-        orderNo=data.getStringExtra("orderNo");
-        userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        orderId=data.getStringExtra("id");
-        type= data.getStringExtra("type");
-        parentCategory =data.getStringExtra("parentCategory");
-        title=data.getStringExtra("title");
-        finishTime =data.getStringExtra("finishTime");
-        realAmount =data.getStringExtra("realAmount");
-        evaluateScore =data.getStringExtra("evaluateScore");
-        evaluateInfo =data.getStringExtra("evaluateInfo");
-        String parentCode=data.getStringExtra("parentCode");
-        initfindViewById();
-        initSetCodeImage(parentCode);
+        if (data!=null){
+            orderNo=data.getStringExtra("orderNo");
+            userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
+            password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
+            orderId=data.getStringExtra("id");
+            type= data.getStringExtra("type");
+            parentCategory =data.getStringExtra("parentCategory");
+            title=data.getStringExtra("title");
+            finishTime =data.getStringExtra("finishTime");
+            realAmount =data.getStringExtra("realAmount");
+            evaluateScore =data.getStringExtra("evaluateScore");
+            evaluateInfo =data.getStringExtra("evaluateInfo");
+            String parentCode=data.getStringExtra("parentCode");
+            if (!TextUtils.isEmpty(parentCode)){
+                initSetCodeImage(parentCode);
+            }
+        }
+        initFindViewById();
         initData();
     }
 
@@ -199,27 +203,8 @@ public class LookEvaluateActivity extends BaseActivity {
                 typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
                 break;
         }
-        /*switch (type){
-            case ConstantUtil.VALUE_ONE:
-                typeImg.setImageResource(R.drawable.home_sanitary_xh);
-                break;
-            case ConstantUtil.VALUE_TWO:
-                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
-                break;
-            case ConstantUtil.VALUE_THREE:
-                typeImg.setImageResource(R.drawable.home_lanterns_xh);
-                break;
-            case ConstantUtil.VALUE_FOUR:
-                typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                break;
-            case ConstantUtil.VALUE_FORTY_EIGHT:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-            default:
-                break;
-        }*/
     }
-    private void initfindViewById() {
+    private void initFindViewById() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
         ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
         ((TextView)findViewById(R.id.id_tv_amount)).setText(realAmount);
