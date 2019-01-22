@@ -59,10 +59,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config"
-        >
-    <!--resizeableActivity 属性值适配全面屏，在api24以上适用-->
         tools:ignore="UnusedAttribute">
-
+    <!--resizeableActivity 属性值适配全面屏，在api24以上适用-->
         <!-- resizeableActivity 适配全面屏 -->
 
         <activity
@@ -75,7 +73,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 

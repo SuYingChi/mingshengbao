@@ -28,6 +28,7 @@ import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
@@ -308,8 +309,10 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==ConstantUtil.VALUE1){
-            mList.get(unreadPos).put("flag","1");
-            mAdapter.notifyDataSetChanged();
+            if (mList!=null&&mList.size()>=unreadPos){
+                mList.get(unreadPos).put("flag","1");
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
     private void initData() {
@@ -469,7 +472,7 @@ public class MessageCenterActivity extends BaseActivity implements View.OnClickL
             }
             result.append(string);
         }
-        idLIst=result.toString();
+        idLIst=TypeConvertUtil.listToString(arrayList);
         if (onIsHaveData(idLIst)){
             onDeleteData();
         }
