@@ -36,6 +36,7 @@ import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
+import com.msht.minshengbao.functionActivity.insurance.InsuranceListActivity;
 import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
 import com.msht.minshengbao.functionActivity.repairService.HomeMaintenanceActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
@@ -526,7 +527,6 @@ public class AppActivityUtil {
             context.startActivity(intent);
         }
     }
-
     /**
      * 消息详情
      *
@@ -907,8 +907,10 @@ public class AppActivityUtil {
 
     private static void onInsurance(Context context, String pushUrl) {
         if (isLoginState(context)) {
-            Intent intent = new Intent(context, InsuranceHome.class);
+            //Intent intent = new Intent(context, InsuranceHome.class);
+            Intent intent = new Intent(context, InsuranceListActivity.class);
             context.startActivity(intent);
+
         } else {
             onStartLoginActivity(context, pushUrl);
         }

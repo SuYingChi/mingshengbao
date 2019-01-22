@@ -61,6 +61,9 @@
         android:networkSecurityConfig="@xml/network_security_config"
         >
     <!--resizeableActivity 属性值适配全面屏，在api24以上适用-->
+        tools:ignore="UnusedAttribute">
+
+        <!-- resizeableActivity 适配全面屏 -->
 
         <activity
             android:name=".LaunchActivity"
@@ -81,9 +84,9 @@
                     android:scheme="msht" />
             </intent-filter>
         </activity>
-        <activity android:name=".functionActivity.MainActivity"/>
-            <!--//登录成功后再启动会导致崩盘 暂且不加-->
-        <!-- android:launchMode="singleTask"-->
+        <activity android:name=".functionActivity.MainActivity" />
+        <!-- //登录成功后再启动会导致崩盘 暂且不加 -->
+        <!-- android:launchMode="singleTask" -->
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
@@ -369,7 +372,7 @@
         <activity android:name=".functionActivity.GasService.GasInternetTableRechargeActivity" />
         <activity android:name=".functionActivity.GasService.GasInternetTablePayFeeActivity" />
         <activity android:name=".functionActivity.repairService.RepairOrderListActivity" />
-        <activity android:name=".functionActivity.GasService.GasOrdinaryRecordActivity"></activity>
+        <activity android:name=".functionActivity.GasService.GasOrdinaryRecordActivity" />
         <activity android:name=".androidShop.activity.ShopHomeActivity" />
         <activity android:name=".androidShop.activity.ShopGoodDetailActivity" />
         <activity android:name=".androidShop.activity.ShopClassDetailActivity" />
@@ -393,33 +396,30 @@
         <activity android:name=".androidShop.activity.RefundFormMoneyActivity" />
         <activity android:name=".androidShop.activity.RefundGoodActivity" />
         <activity android:name=".androidShop.activity.ShopOrderRouteActivity" />
-        <activity android:name=".androidShop.activity.ShopOrderEveluateActivity"
-
-            />
+        <activity android:name=".androidShop.activity.ShopOrderEveluateActivity" />
         <activity android:name=".androidShop.activity.ShopSuccessActivity" />
-        <activity android:name=".androidShop.activity.ShopOrderAddEveluateActivity"
-
-            />
+        <activity android:name=".androidShop.activity.ShopOrderAddEveluateActivity" />
         <activity android:name=".androidShop.activity.ShopCollectionActivity" />
         <activity android:name=".androidShop.activity.ShopFootprintActivity" />
         <activity android:name=".androidShop.activity.ShopkefuActivity" />
         <activity android:name=".androidShop.activity.TotalMessageListActivity" />
         <!-- 微信分享注册 -->
         <activity
-            android:name="com.msht.minshengbao.androidShop.wxapi.WXEntryActivity"
+            android:name=".androidShop.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".androidShop.activity.NoLoginCarActivity" />
         <activity android:name=".androidShop.activity.NoCarActivity" />
-        <activity android:name=".androidShop.activity.MyShopOrderActivity"
-            android:launchMode="singleTask"
-            />
+        <activity
+            android:name=".androidShop.activity.MyShopOrderActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".androidShop.activity.ShopMoreGoodActivity" />
         <activity android:name=".androidShop.activity.MessageListActivity" />
         <activity android:name=".androidShop.activity.WarnMessageDetailActivity" />
         <activity android:name=".androidShop.activity.ReturnGoodSendGoodActivity" />
-
+        <activity android:name=".functionActivity.insurance.InsuranceListActivity" />
+        <activity android:name=".functionActivity.HtmlWeb.InsuranceHtmlActivity"></activity>
     </application>
 
 </manifest>

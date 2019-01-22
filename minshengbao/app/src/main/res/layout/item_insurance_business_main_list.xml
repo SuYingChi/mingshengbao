@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/background_gray"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/id_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_width20"
+        android:layout_marginLeft="@dimen/margin_width20"
+        android:layout_marginTop="@dimen/margin_width10"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:textColor="@color/color_383838"
+        android:textSize="@dimen/text_width16"
+        android:text="@string/default_text"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/id_child_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
