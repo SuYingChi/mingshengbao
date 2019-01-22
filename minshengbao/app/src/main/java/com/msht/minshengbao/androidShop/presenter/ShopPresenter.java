@@ -208,7 +208,7 @@ public class ShopPresenter {
                                 for (int ii = 0; ii < jsonarry.length(); ii++) {
                                     JSONObject objj = jsonarry.optJSONObject(ii);
                                     ClassDetailRightBean.DatasBean.GoodsListBean beanb = new ClassDetailRightBean.DatasBean.GoodsListBean();
-                                    beanb.setGoods_price(objj.optString("goods_promotion_price"));
+                                    beanb.setGoods_price(objj.optString("goods_price"));
                                     beanb.setGoods_image_url(objj.optString("goods_image_url"));
                                     beanb.setGoods_name(objj.optString("goods_name"));
                                     beanb.setGoods_id(objj.optString("goods_id"));
