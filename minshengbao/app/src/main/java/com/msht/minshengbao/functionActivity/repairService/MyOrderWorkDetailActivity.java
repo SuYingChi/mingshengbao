@@ -746,6 +746,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         evaluate.putExtra("realAmount", realAmount);
         evaluate.putExtra("evaluateScore", evaluateScore);
         evaluate.putExtra("evaluateInfo", evaluateInfo);
+        evaluate.putExtra("parentCode",parentCode);
         startActivity(evaluate);
     }
     private void onCancelOrder() {

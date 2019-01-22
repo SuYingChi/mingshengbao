@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
@@ -129,10 +128,12 @@ public class IntelligentFarmHmlActivity extends BaseActivity  {
                     }).show();
             return true;
         }
+
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
             return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
         }
+
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
