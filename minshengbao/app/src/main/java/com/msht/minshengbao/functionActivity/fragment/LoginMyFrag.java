@@ -141,19 +141,14 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
             onNetError();
-        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
+        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())|| "未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
             LogUtils.e(Log.getStackTraceString(new Throwable()));
             Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
             getActivity().startActivity(goLogin);
             getActivity().finish();
         } else {
-            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
-            if (errorBaseData != null) {
-                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
-            } else {
-                PopUtil.toastInCenter(s);
-            }
+            PopUtil.toastInCenter(s);
         }
     }
 

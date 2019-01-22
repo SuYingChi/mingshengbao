@@ -6,6 +6,9 @@ import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.Request;
 
 public class DataStringCallback extends StringCallback {
@@ -58,8 +61,17 @@ public class DataStringCallback extends StringCallback {
                  iView.onError("GSON转换异常");
                  isResponseSuccess = false;
              }else if(baseData.getCode()==400){
-                 iView.onError(baseData.getDatas());
-                 isResponseSuccess = false;
+                     try {
+                         JSONObject object = new JSONObject(s);
+                         if(TextUtils.equals(object.optString("login"),"0")){
+                             iView.onError("未登录");
+                         }else {
+                             iView.onError(object.optJSONObject("datas").optString("error"));
+                         }
+                         isResponseSuccess = false;
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
              }else if(baseData.getCode() == 200){
                  isResponseSuccess = true;
              }
