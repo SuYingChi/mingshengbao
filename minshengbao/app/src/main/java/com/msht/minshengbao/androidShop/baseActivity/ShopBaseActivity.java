@@ -280,12 +280,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             startActivity(goLogin);
             this.finish();
         } else {
-            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
-            if(errorBaseData!=null) {
-                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
-            }else {
-                PopUtil.toastInCenter(s);
-            }
+          PopUtil.toastInCenter(s);
         }
     }
 
