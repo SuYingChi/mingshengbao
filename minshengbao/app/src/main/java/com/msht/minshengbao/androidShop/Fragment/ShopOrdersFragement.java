@@ -49,6 +49,7 @@ import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.event.OrderType;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
+import com.msht.minshengbao.androidShop.shopBean.BuylistBean;
 import com.msht.minshengbao.androidShop.shopBean.MyExtendOrderGoodsBean;
 import com.msht.minshengbao.androidShop.shopBean.OrdersItem;
 import com.msht.minshengbao.androidShop.shopBean.OrderslistBean;
@@ -67,6 +68,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 
 import butterknife.BindView;
 
+import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -83,7 +85,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOrdersView, OnRefreshListener, OnLoadMoreListener, ShopOrdersListAdapter.OrdersListListener, IDeleteOrderView, IReceivedOrderView, ICancelOrderView, IOrderQrCodeView, IBuyStep3GetPayListView {
+public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOrdersView, OnRefreshListener, OnLoadMoreListener, ShopOrdersListAdapter.OrdersListListener, IDeleteOrderView, IReceivedOrderView, ICancelOrderView, IOrderQrCodeView, IlistPayView {
     private static final int MY_PERMISSIONS_REQUEST = 200;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -252,6 +254,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 tvNoData.setVisibility(View.VISIBLE);
                 return;
             }
+            ivNoOrder.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
             if (isRestart) {
                 if (pageNum == 1) {
                     ordersList.clear();
@@ -275,264 +279,22 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                     adapter.notifyDataSetChanged();
                     isRestart = false;
                 }
-            } else if (pageNum > pageTotal) {
-                refreshLayout.setEnableAutoLoadMore(false);
-                refreshLayout.finishLoadMoreWithNoMoreData();
-                refreshLayout.setNoMoreData(true);
-                return;
-            } else if (pageNum == 1) {
-                ordersList.clear();
-            }
-            ivNoOrder.setVisibility(View.INVISIBLE);
-            tvNoData.setVisibility(View.INVISIBLE);
-            refreshLayout.setEnableAutoLoadMore(true);
-            refreshLayout.setNoMoreData(false);
-            initOrdersItem(order_group_list);
-            /*for (int i = 0; i < order_group_list.length(); i++) {
-                JSONObject objj = order_group_list.optJSONObject(i);
-                JSONArray order_list = objj.optJSONArray("order_list");
-                String add_time = objj.optString("add_time");
-                final String pay_sn = objj.optString("pay_sn");
-                for (int ii = 0; ii < order_list.length(); ii++) {
-                    JSONObject objjj = order_list.optJSONObject(ii);
-                   *//* OrdersItem ordersItem = JsonUtil.toBean(objjj.toString(), OrdersItem.class);*//*
-                    List<MyExtendOrderGoodsBean> ordersitem = new ArrayList<MyExtendOrderGoodsBean>();
-                    JSONArray extend_order_goods = objjj.optJSONArray("extend_order_goods");
-                    for(int j=0;j<extend_order_goods.length();j++){
-                        JSONObject goodobj = extend_order_goods.optJSONObject(j);
-                       ordersitem.add(new MyExtendOrderGoodsBean(goodobj.optString("goods_image_url"),goodobj.optString("goods_name"), TextUtils.isEmpty(goodobj.optString("goods_spec"))?"":goodobj.optString("goods_spec"),goodobj.optString("goods_price"),goodobj.optString("goods_num")));
-
-                    }
-                    JSONArray zengpinglist = objjj.getJSONArray("zengpin_list");
-                    ArrayList<ZengpingBean> zplist = new ArrayList<ZengpingBean>();
-                    for (int iii = 0; iii < zengpinglist.length(); iii++) {
-                        zplist.add(JsonUtil.toBean(zengpinglist.optJSONObject(iii).toString(),ZengpingBean.class));
-                    }
-                    String store_name = objjj.optString("store_name");
-                    String shipping_fee = objjj.optString("shipping_fee");
-                    String order_state = objjj.optString("order_state");
-                    String state_desc = objjj.optString("state_desc");
-                    final String order_id = objjj.optString("order_id");
-                    String pay_amount = objjj.optString("order_amount");
-                    boolean if_cancel = objjj.optBoolean("if_cancel");
-                    boolean if_refund_cancel = objjj.optBoolean("if_refund_cancel");
-                    boolean if_receive = objjj.optBoolean("if_receive");
-                    boolean if_lock = objjj.optBoolean("if_lock");
-                    boolean if_deliver = objjj.optBoolean("if_deliver");
-                    boolean if_evaluation = objjj.optBoolean("if_evaluation");
-                    boolean if_delete = objjj.optBoolean("if_delete");
-                    boolean if_delivery_receive = objjj.optBoolean("if_delivery_receive");
-                    boolean if_evaluation_again = objjj.optBoolean("if_evaluation_again");
-                    ArrayList<TextView> btnList = new ArrayList<TextView>();
-                    *//*    isIf_receive 是否显示取消订单按钮 true/false*//*
-                    if (if_cancel) {
-                        TextView tvCancel = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvCancel.setLayoutParams(paramas);
-                        tvCancel.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvCancel.setText("取消订单");
-                        tvCancel.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ShopPresenter.cancelOrder(ShopOrdersFragement.this, order_id);
-                            }
-                        });
-                        btnList.add(tvCancel);
-                        *//*    isIf_receive 是否显示确认收货按钮 true/false*//*
-                    }
-                    if (if_receive) {
-                        TextView tvReceive = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvReceive.setLayoutParams(paramas);
-                        tvReceive.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvReceive.setText("确认收货");
-                        tvReceive.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvReceive.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ShopPresenter.receivedOrder(ShopOrdersFragement.this, order_id);
-                            }
-                        });
-                        btnList.add(tvReceive);
-                        *//*    isIf_delete 是否显示删除按钮 true/false*//*
-                    }
-                    if (if_delete) {
-                        TextView tvDelete = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvDelete.setLayoutParams(paramas);
-                        tvDelete.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvDelete.setText("删除订单");
-                        tvDelete.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvDelete.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvDelete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ShopPresenter.deleteOrder(ShopOrdersFragement.this, order_id);
-                            }
-                        });
-                        btnList.add(tvDelete);
-
-                    }
-                    if (if_deliver) {
-                        TextView tvGoodRoute = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvGoodRoute.setLayoutParams(paramas);
-                        tvGoodRoute.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvGoodRoute.setText("物流查询");
-                        tvGoodRoute.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvGoodRoute.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), ShopOrderRouteActivity.class);
-                                intent.putExtra("id", order_id);
-                                if (getActivity() != null) {
-                                    getActivity().startActivity(intent);
-                                }
-                            }
-                        });
-                        btnList.add(tvGoodRoute);
-                    }
-                    if (if_delivery_receive) {
-                        TextView tvGetGoodSelf = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvGetGoodSelf.setLayoutParams(paramas);
-                        tvGetGoodSelf.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvGetGoodSelf.setText("确认提货");
-                        tvGetGoodSelf.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        btnList.add(tvGetGoodSelf);
-                    }
-                    if (if_evaluation) {
-                        TextView tvEvaluation = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvEvaluation.setLayoutParams(paramas);
-                        tvEvaluation.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvEvaluation.setText("评价订单");
-                        tvEvaluation.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvEvaluation.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), ShopOrderEveluateActivity.class);
-                                intent.putExtra("id", order_id);
-                                if (getActivity() != null) {
-                                    getActivity().startActivity(intent);
-                                }
-                            }
-                        });
-                        btnList.add(tvEvaluation);
-                    }   *//*    if_lock 是否显示锁定中状态 true/false*//*
-                    if (if_lock) {
-                        TextView tvLock = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvLock.setLayoutParams(paramas);
-                        tvLock.setText("退货/退款中...");
-                        tvLock.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvLock.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                        btnList.add(tvLock);
-                    }
-                    if ((order_state.equals("20") || if_receive) && !if_lock) {
-                        TextView tvQrReceive = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvQrReceive.setLayoutParams(paramas);
-                        tvQrReceive.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_refund));
-                        tvQrReceive.setText("提货二维码");
-                        tvQrReceive.setTextColor(getContext().getResources().getColor(R.color.msb_color));
-                        tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvQrReceive.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ShopPresenter.getReceiveQrCodeImage(ShopOrdersFragement.this, order_id);
-                            }
-                        });
-                        btnList.add(tvQrReceive);
-                    }
-                    if (if_refund_cancel) {
-                        TextView tvRefund = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvRefund.setLayoutParams(paramas);
-                        tvRefund.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvRefund.setText("申请退款");
-                        tvRefund.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvRefund.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), RefundALLActivity.class);
-                                intent.putExtra("data", order_id);
-                                getActivity().startActivity(intent);
-                            }
-                        });
-                        btnList.add(tvRefund);
-                    }*//*if_evaluation_again 是否显示追加评价按钮 true/false*//*
-                    if (if_evaluation_again) {
-                        TextView tvAddEvaluation = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvAddEvaluation.setLayoutParams(paramas);
-                        tvAddEvaluation.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_cancle));
-                        tvAddEvaluation.setText("追加评价");
-                        tvAddEvaluation.setTextColor(getContext().getResources().getColor(R.color.black));
-                        tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvAddEvaluation.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), ShopOrderAddEveluateActivity.class);
-                                intent.putExtra("id", order_id);
-                                if (getActivity() != null) {
-                                    getActivity().startActivity(intent);
-                                }
-                            }
-                        });
-                        btnList.add(tvAddEvaluation);
-                    }
-                    if (order_state.equals("10")) {
-                        TextView tvPay = new TextView(getContext());
-                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        paramas.gravity = Gravity.CENTER_VERTICAL;
-                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_Modules);
-                        tvPay.setLayoutParams(paramas);
-                        tvPay.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_pay));
-                        tvPay.setText("付款");
-                        tvPay.setTextColor(getContext().getResources().getColor(R.color.white));
-                        tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        tvPay.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ShopPresenter.buyStep3(ShopOrdersFragement.this, pay_sn);
-                            }
-                        });
-                        btnList.add(tvPay);
-                    }
-                    OrderslistBean orderslistBean = new OrderslistBean(ordersitem, pay_amount, add_time, pay_sn, store_name, shipping_fee, order_state, state_desc, btnList, order_id,zplist);
-                    ordersList.add(orderslistBean);
+            } else {
+                if (pageNum > pageTotal) {
+                    refreshLayout.setEnableAutoLoadMore(false);
+                    refreshLayout.finishLoadMoreWithNoMoreData();
+                    refreshLayout.setNoMoreData(true);
+                    return;
+                } else if (pageNum == 1) {
+                    ordersList.clear();
                 }
-            }*/
-
-            adapter.notifyDataSetChanged();
+                ivNoOrder.setVisibility(View.INVISIBLE);
+                tvNoData.setVisibility(View.INVISIBLE);
+                refreshLayout.setEnableAutoLoadMore(true);
+                refreshLayout.setNoMoreData(false);
+                initOrdersItem(order_group_list);
+                adapter.notifyDataSetChanged();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -648,17 +410,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                 public void onClick(View v) {
                     if (qrCodeImage != null) {
                         if (Build.VERSION.SDK_INT >= 23) {
-                           /* if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                AndPermission.with(ShopOrdersFragement.this)
-                                        .requestCode(MY_PERMISSIONS_REQUEST)
-                                        .permission(
-                                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                        .send();
-                            } else {
-                                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                                if (DrawbleUtil.saveImageToGallery(getContext(), bitmap) != null) {
-                                    PopUtil.showAutoDissHookDialog(getContext(), "已保存到本地相册", 200);
-                                }*/
                             PermissionUtils.requestPermissions(getContext(), new PermissionUtils.PermissionRequestFinishListener() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -721,15 +472,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     };*/
 
 
-    @Override
-    public void onBuyStep3(String s,String orderId) {
-        Intent intent = new Intent(getActivity(), ShopPayOrderActivity.class);
-        BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
-        intent.putExtra("buyStep3", buyStep3bean);
-        intent.putExtra("pdPassword", "");
-        intent.putExtra("orderId",   orderId);
-        startActivity(intent);
-    }
 
     public void refreshCurrentTab(int currentTab, boolean isRestart) {
         this.isRestart = isRestart;
@@ -984,7 +726,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvPay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ShopPresenter.buyStep3(ShopOrdersFragement.this, pay_sn,order_id);
+                                ShopPresenter.listPay(ShopOrdersFragement.this, pay_sn,order_id);
                             }
                         });
                         btnList.add(tvPay);
@@ -996,5 +738,15 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onGetListPayInfoSuccess(String s, String orderId) {
+        Intent intent = new Intent(getActivity(), ShopPayOrderActivity.class);
+        BuylistBean buylistBean = JsonUtil.toBean(s, BuylistBean.class);
+        intent.putExtra("buylistBean", buylistBean);
+        intent.putExtra("pdPassword", "");
+        intent.putExtra("orderId",   orderId);
+        startActivity(intent);
     }
 }

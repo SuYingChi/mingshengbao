@@ -269,6 +269,11 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 doNotAdClick(map);*/
                 doShopItemViewClick("goods", goodid);
             }
+
+            @Override
+            public void onNotifyFinish() {
+                initUnselectState = false;
+            }
         });
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);

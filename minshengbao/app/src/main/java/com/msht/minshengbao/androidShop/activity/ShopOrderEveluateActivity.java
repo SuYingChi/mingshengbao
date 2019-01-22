@@ -319,7 +319,7 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 

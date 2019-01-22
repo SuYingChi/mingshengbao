@@ -145,6 +145,13 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
                 e.printStackTrace();
             }
         }
+        //刷新到最后一项了，重置标志位
+        if (position == datas.size() - 1) {
+            if (initUnselectState) {
+                initUnselectState = false;
+                carListListener.onNotifyFinish();
+            }
+        }
     }
 
 
@@ -182,6 +189,8 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
         void onModifyGoodNum(final JSONObject goodObject);
 
         void onGoodDetail(final String goodId);
+
+        void onNotifyFinish();
     }
 
     public void setCarListListener(CarListListener carListChildListener) {

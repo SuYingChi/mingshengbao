@@ -676,7 +676,7 @@ public class AppActivityUtil {
                 intent.putExtra("data", rightUrl);
                 context.startActivity(intent);
             } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
-                Intent intent = new Intent(context, ShopUrlActivity.class);
+                Intent intent = new Intent(context, HtmlPageActivity.class);
                 intent.putExtra("url", rightUrl);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -720,7 +720,7 @@ public class AppActivityUtil {
                     intent.putExtra("data", rightUrl);
                     context.startActivity(intent);
                 } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                    Intent intent = new Intent(context, ShopUrlActivity.class);
+                    Intent intent = new Intent(context, HtmlPageActivity.class);
                     intent.putExtra("url", rightUrl);
                     context.startActivity(intent);
                 } /*else {
@@ -757,7 +757,7 @@ public class AppActivityUtil {
                 intent.putExtra("data", rightUrl);
                 context.startActivity(intent);
             } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                Intent intent = new Intent(context, ShopUrlActivity.class);
+                Intent intent = new Intent(context, HtmlPageActivity.class);
                 intent.putExtra("url", rightUrl);
                 context.startActivity(intent);
             }

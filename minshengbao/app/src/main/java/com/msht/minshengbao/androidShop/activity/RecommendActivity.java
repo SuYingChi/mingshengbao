@@ -40,7 +40,9 @@ public class RecommendActivity extends ShopBaseActivity {
 
     @Override
     protected void initImmersionBar() {
-
+        super.initImmersionBar();
+        mImmersionBar.keyboardEnable(true);
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override

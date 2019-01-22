@@ -209,24 +209,11 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    /*    mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();*/
         ImmersionBar.setTitleBar(getActivity(), mToolbar);
-    }
-
-    @Override
-    protected void initImmersionBar() {
-        //super.initImmersionBar();
-        //ImmersionBar.setTitleBar(getActivity(), mToolbar);
     }
 
     @Override
@@ -324,7 +311,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
 
             @Override
             public void onImageClick(int position, View imageView) {
-                if (itemDataList != null) {
+                if (itemDataList != null&&position<itemDataList.size()) {
                     ShopHomeAdvBean.AdvListBean.ItemBean itemData = itemDataList.get(position);
                     doShopItemViewClick(itemData.getType(), itemData.getData());
                 }
@@ -733,10 +720,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                /*    Map<String, String> map = new HashMap<String, String>();
-                    map.put("type", type);
-                    map.put("data", data);
-                    doNotAdClick(map);*/
                     doShopItemViewClick(type, data);
                 }
             });

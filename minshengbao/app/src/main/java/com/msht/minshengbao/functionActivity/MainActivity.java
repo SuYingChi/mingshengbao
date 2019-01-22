@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
@@ -41,6 +42,7 @@ import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.events.CarNumEvent;
@@ -396,9 +398,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     protected void initImmersionBar() {
-        //在BaseActivity里初始化
-        mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.init();
+        mImmersionBar  = ImmersionBar.with(this);
+        //白色状态栏处理
+        mImmersionBar .statusBarDarkFont(true, 0.2f);
+        if (ImmersionBar.hasNavigationBar(this)) {
+            BarParams barParams = ImmersionBar.with(this).getBarParams();
+            if (barParams.fullScreen) {
+                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+            }else {
+                mImmersionBar.init();
+            }
+            /*else {
+                mImmersionBar.fullScreen(true).transparentNavigationBar().init();
+            }*/
+        } else {
+            mImmersionBar.init();
+        }
     }
 
     private void initRequestPermission() {
@@ -481,6 +496,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
+                LogUtils.e(data.toString());
                 onAnalysisMessage(data.toString(),1);
             }
             @Override

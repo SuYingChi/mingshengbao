@@ -86,6 +86,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
+import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
@@ -207,7 +208,7 @@ public class ShopPresenter {
                                 for (int ii = 0; ii < jsonarry.length(); ii++) {
                                     JSONObject objj = jsonarry.optJSONObject(ii);
                                     ClassDetailRightBean.DatasBean.GoodsListBean beanb = new ClassDetailRightBean.DatasBean.GoodsListBean();
-                                    beanb.setGoods_price(objj.optString("goods_promotion_price"));
+                                    beanb.setGoods_price(objj.optString("goods_price"));
                                     beanb.setGoods_image_url(objj.optString("goods_image_url"));
                                     beanb.setGoods_name(objj.optString("goods_name"));
                                     beanb.setGoods_id(objj.optString("goods_id"));
@@ -231,8 +232,41 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ShopkeywordBean bean = JsonUtil.toBean(s, ShopkeywordBean.class);
-                    List<ShopkeywordBean.DatasBean.GoodsListBean> list = bean.getDatas().getGoods_list();
-                    iKeyWordListView.onSuccess(list, bean.getPage_total());
+                    List<ShopkeywordBean.DatasBean.GoodsListBean> list=new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
+                    int pageTotal = 0;
+                    if(bean!=null) {
+                         list = bean.getDatas().getGoods_list();
+                         pageTotal = bean.getPage_total();
+                    }else {
+                        try {
+                            JSONObject obj = new JSONObject(s);
+                            pageTotal = obj.optInt("page_total");
+                            JSONArray goodarray = obj.optJSONObject("datas").optJSONArray("goods_list");
+                            for(int ii=0;ii<goodarray.length();ii++){
+                                JSONObject good = goodarray.optJSONObject(ii);
+                                String goods_image_url = good.optString("goods_image_url");
+                                String goodName = good.optString("goods_name");
+                                String goods_jingle = good.optString("goods_jingle");
+                                if(goods_jingle==null||goods_jingle.equals("null")){
+                                    goods_jingle="";
+                                }
+                                String goods_salenum  = good.optString("goods_salenum");
+                                String goods_price = good.optString("goods_price");
+                                String goods_id= good.optString("goods_id");
+                                ShopkeywordBean.DatasBean.GoodsListBean goodbean = new ShopkeywordBean.DatasBean.GoodsListBean();
+                                goodbean.setGoods_image_url(goods_image_url);
+                                goodbean.setGoods_name(goodName);
+                                goodbean.setGoods_salenum(goods_salenum);
+                                goodbean.setGoods_jingle(goods_jingle);
+                                goodbean.setGoods_price(goods_price);
+                                goodbean.setGoods_id(goods_id);
+                                list.add(goodbean);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    iKeyWordListView.onSuccess(list, pageTotal);
                 }
             }
         });
@@ -642,7 +676,20 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void listPay(final IlistPayView ilistPayView, String paySn, final String orderId) {
+        OkHttpUtils.post().url(ShopConstants.LIST_PAY).tag(ilistPayView).addParams("key", ilistPayView.getKey())
+                .addParams("pay_sn", paySn)
+                .addParams("order_id",orderId)
+                .build().execute(new DataStringCallback(ilistPayView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ilistPayView.onGetListPayInfoSuccess(s,orderId);
+                }
+            }
+        });
+    }
     public static void creatCharge(final IBuyStep4CreatChargeView iBuyStep4CreatChargeView) {
         OkHttpUtils.get().url(ShopConstants.BUY_STEP4).tag(iBuyStep4CreatChargeView).addParams("key", iBuyStep4CreatChargeView.getKey())
                 .addParams("pay_sn", iBuyStep4CreatChargeView.getPay_sn())
@@ -929,7 +976,7 @@ public class ShopPresenter {
         PostFormBuilder pfbuilder = OkHttpUtils.post().url(ShopConstants.REFUND_ALL_POST).addParams("key", iPostRefundAllView.getKey()).tag(iPostRefundAllView)
                 .addParams("order_id", iPostRefundAllView.getOrderId())
                 .addParams("reason_id", iPostRefundAllView.getReasonId())
-                .addParams("buyer_message ", iPostRefundAllView.getBuyerMessage());
+                .addParams("buyer_message", iPostRefundAllView.getBuyerMessage());
         for (int i = 0; i < picList.size(); i++) {
             pfbuilder.addParams("refund_pic[" + i + "]", picList.get(i));
         }

@@ -59,7 +59,7 @@ public class ShopSuccessActivity extends ShopBaseActivity implements IGuessLikeG
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true);
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 

@@ -89,8 +89,8 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     protected void initImmersionBar() {
-        ImmersionBar.with(this).navigationBarColor(R.color.colorPrimary).init();
-        ImmersionBar.with(this).titleBar(R.id.toolbar).keyboardEnable(true).init();
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override
@@ -172,6 +172,12 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         initNoNetworkLayout();
         carListIntent = new Intent(this, ShopCarActivity.class);
         mToolbar.setAlpha(1);
+        RelativeLayout.LayoutParams blp = (RelativeLayout.LayoutParams) back.getLayoutParams();
+        blp.setMargins(0,ImmersionBar.getStatusBarHeight(this),0,0);
+        back.setLayoutParams(blp);
+        RelativeLayout.LayoutParams mlp = (RelativeLayout.LayoutParams) menu.getLayoutParams();
+        mlp.setMargins(0,ImmersionBar.getStatusBarHeight(this),0,0);
+        menu.setLayoutParams(mlp);
         currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         String msgid = getIntent().getIntExtra("msgid", 0) + "";

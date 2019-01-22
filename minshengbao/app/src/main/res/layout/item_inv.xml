@@ -14,7 +14,7 @@
         android:drawablePadding="@dimen/margin_Modules"
         android:gravity="center_vertical"
         android:padding="@dimen/margin_Modules"
-        android:text="发票简述"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="@dimen/text_15"
         />

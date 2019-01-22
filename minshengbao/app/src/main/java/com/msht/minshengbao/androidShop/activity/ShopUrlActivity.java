@@ -15,70 +15,50 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
+import com.msht.minshengbao.androidShop.util.NavigationbarUtil;
 
 import butterknife.BindView;
 
 public class ShopUrlActivity extends ShopBaseActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     @BindView(R.id.web)
     WebView webView;
-   /* @BindView(R.id.toolbar2)
-    Toolbar mToolbar;
-    @BindView(R.id.back)
-    ImageView back;
-    @BindView(R.id.title)
-    TextView title;*/
     private String url;
 
     @Override
     protected void setLayout() {
         setContentView(R.layout.shop_webview_layout);
     }
+
     @Override
     protected void initImmersionBar() {
-       // super.initImmersionBar();
-       /* mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);*/
+
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         url = getIntent().getStringExtra("url");
-       /* back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
+        //webview 会默认浸入显示，适配有虚拟导航栏的机型，顶部间隔状态栏高度，底部部要间隔导航栏高度，否则重叠
+        RelativeLayout.LayoutParams para = (RelativeLayout.LayoutParams) webView.getLayoutParams();
+        para.setMargins(0, StatusBarCompat.getStatusBarHeight(this),0, NavigationbarUtil.getVirtualBarHeigh(this));
+        webView.setLayoutParams(para);
         WebSettings settings=webView.getSettings();
-       // title.setText("民生商城");
-       /* settings.setJavaScriptEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setDefaultTextEncodingName("utf-8");
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
-        settings.setNeedInitialFocus(true);
-        settings.setAppCacheEnabled(true);
-        settings.setLoadsImagesAutomatically(true);
-        settings.setSupportMultipleWindows(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);*/
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setUseWideViewPort(true);
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(true);
         settings.setSupportZoom(true);
-        //settings.setBuiltInZoomControls(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);

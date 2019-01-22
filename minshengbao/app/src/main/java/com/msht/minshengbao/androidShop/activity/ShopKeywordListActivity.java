@@ -94,7 +94,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true);
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 
@@ -277,32 +277,14 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             ivNoData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
             return;
-        }/*else if (curPage == 1) {
-            datalist.clear();
-            datalist.addAll(list);
-            adapter.setDatas(datalist);
-            adapter.notifyDataSetChanged();
-        } else if (curPage >= pageTotal) {
-            refreshLayout.setEnableAutoLoadMore(false);
-            refreshLayout.finishLoadMoreWithNoMoreData();
-            refreshLayout.setNoMoreData(true);
-        }*/
-        else if (curPage > pageTotal) {
+        } else if (curPage > pageTotal) {
             refreshLayout.setEnableAutoLoadMore(false);
             refreshLayout.finishLoadMoreWithNoMoreData();
             refreshLayout.setNoMoreData(true);
             return;
         } else if (curPage == 1) {
             datalist.clear();
-        } /*else {
-            refreshLayout.setEnableAutoLoadMore(true);
-            refreshLayout.setNoMoreData(false);
-            if (list.size() != 0) {
-                datalist.addAll(list);
-                adapter.setDatas(datalist);
-                adapter.notifyDataSetChanged();
-            }
-        }*/
+        }
         ivNoData.setVisibility(View.INVISIBLE);
         tvNoData.setVisibility(View.INVISIBLE);
         refreshLayout.setEnableAutoLoadMore(true);

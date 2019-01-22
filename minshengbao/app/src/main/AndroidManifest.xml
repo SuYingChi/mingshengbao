@@ -56,9 +56,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
+    <!--resizeableActivity 属性值适配全面屏，在api24以上适用-->
         tools:ignore="UnusedAttribute">
 
         <!-- resizeableActivity 适配全面屏 -->
@@ -206,7 +208,6 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -387,7 +388,6 @@
         <activity android:name=".androidShop.activity.RecommendActivity" />
         <activity android:name=".androidShop.activity.InvInfoActivity" />
         <activity android:name=".androidShop.activity.ShopPayOrderActivity" />
-        <activity android:name=".androidShop.activity.ShopWaitToPayedOrderActivity" />
         <activity android:name=".androidShop.activity.ShopOrdersDetailActivity" />
         <activity android:name=".androidShop.activity.RefundMoneyActivity" />
         <activity android:name=".androidShop.activity.ReturnGoodDetailActivity" />

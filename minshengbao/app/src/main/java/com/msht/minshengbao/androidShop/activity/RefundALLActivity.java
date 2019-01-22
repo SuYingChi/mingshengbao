@@ -102,7 +102,7 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true);
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
@@ -42,6 +45,7 @@ import com.msht.minshengbao.androidShop.util.NetworkChangeReceiver;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -49,18 +53,21 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
+import me.imid.swipebacklayout.lib.SwipeBackLayout;
+import me.imid.swipebacklayout.lib.Utils;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 
 /**
  * @author mshtyfb
  */
 //如果activity在可见时就要刷新数据的话 在onresume里请求数据，如果只需要请求一次的话再oncreat里请求
-public abstract class ShopBaseActivity extends AppCompatActivity implements IBaseView, BGASwipeBackHelper.Delegate {
+public abstract class ShopBaseActivity extends AppCompatActivity implements IBaseView ,SwipeBackActivityBase {
 
-    private BGASwipeBackHelper mSwipeBackHelper;
     protected ImmersionBar mImmersionBar;
     protected LoadingDialog centerLoadingDialog;
     private Context context;
@@ -74,12 +81,16 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     private RelativeLayout layoutNoNetwork;
     private MyApplication application;
     private RelativeLayout layoutEmpty;
+    private SwipeBackActivityHelper mHelper;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        initSwipeBackFinish();
+        //这个框架滑动返回与immersionbar 不兼容
+     //   initSwipeBackFinish();
         super.onCreate(savedInstanceState);
+        mHelper = new SwipeBackActivityHelper(this);
+        mHelper.onActivityCreate();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSoftInPutMode();
         context = this;
@@ -107,6 +118,32 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         //给浸入式页面设置topbar 防止与状态栏重叠
         // ImmersionBar.setTitleBar(this, mToolbar);
 
+    }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mHelper.onPostCreate();
+    }
+    @Override
+    public View findViewById(int id) {
+        View v = super.findViewById(id);
+        if (v == null && mHelper != null)
+            return mHelper.findViewById(id);
+        return v;
+    }
+    @Override
+    public SwipeBackLayout getSwipeBackLayout() {
+        return mHelper.getSwipeBackLayout();
+    }
+    @Override
+    public void setSwipeBackEnable(boolean enable) {
+        getSwipeBackLayout().setEnableGesture(enable);
+    }
+
+    @Override
+    public void scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this);
+        getSwipeBackLayout().scrollToFinishActivity();
     }
 
     private void postUnreadMessageCount() {
@@ -186,40 +223,24 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     }
 
     protected void initImmersionBar() {
-        mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.navigationBarColor(R.color.black).init();
+        mImmersionBar  = ImmersionBar.with(this);
+        //白色状态栏处理
+        mImmersionBar .statusBarDarkFont(true, 0.2f);
+        if (ImmersionBar.hasNavigationBar(this)) {
+            BarParams barParams = ImmersionBar.with(this).getBarParams();
+            //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
+            if (barParams.fullScreen) {
+                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+            }else {
+                mImmersionBar.init();
+            }
+        } else {
+            mImmersionBar.init();
+        }
     }
 
     protected void setSoftInPutMode() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-    }
-
-
-    /**
-     * 初始化滑动返回。在 super.onCreate(savedInstanceState) 之前调用该方法
-     */
-    private void initSwipeBackFinish() {
-        mSwipeBackHelper = new BGASwipeBackHelper(this, this);
-
-        // 「必须在 Application 的 onCreate 方法中执行 BGASwipeBackHelper.init 来初始化滑动返回」
-        // 下面几项可以不配置，这里只是为了讲述接口用法。
-
-        // 设置滑动返回是否可用。默认值为 true
-        mSwipeBackHelper.setSwipeBackEnable(true);
-        // 设置是否仅仅跟踪左侧边缘的滑动返回。默认值为 true
-        mSwipeBackHelper.setIsOnlyTrackingLeftEdge(true);
-        // 设置是否是微信滑动返回样式。默认值为 true
-        mSwipeBackHelper.setIsWeChatStyle(true);
-        // 设置阴影资源 id。默认值为 R.drawable.bga_sbl_shadow
-        mSwipeBackHelper.setShadowResId(R.drawable.bga_sbl_shadow);
-        // 设置是否显示滑动返回的阴影效果。默认值为 true
-        mSwipeBackHelper.setIsNeedShowShadow(true);
-        // 设置阴影区域的透明度是否根据滑动的距离渐变。默认值为 true
-        mSwipeBackHelper.setIsShadowAlphaGradient(true);
-        // 设置触发释放后自动滑动返回的阈值，默认值为 0.3f
-        mSwipeBackHelper.setSwipeBackThreshold(0.3f);
-        // 设置底部导航条是否悬浮在内容上，默认值为 false
-        mSwipeBackHelper.setIsNavigationBarOverlap(false);
     }
 
     @Override
@@ -251,7 +272,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     @Override
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
-            PopUtil.toastInBottom(R.string.network_error);
+            PopUtil.showComfirmDialog(this,"",getResources().getString(R.string.network_error),"","",null,null,true);
             onNetError();
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
             PopUtil.toastInBottom("请登录商城");
@@ -259,21 +280,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             startActivity(goLogin);
             this.finish();
         } else {
-            ErrorBaseData errorBaseData = JsonUtil.toBean(s, ErrorBaseData.class);
-            if(errorBaseData!=null) {
-                PopUtil.toastInCenter(errorBaseData.getDatas().getError());
-            }else {
-              //  PopUtil.toastInCenter(s);
-            }
-            switch (s) {
-                case "未登录":
-                    AppUtil.logout();
-                    Intent goLogin = new Intent(this, LoginActivity.class);
-                    startActivity(goLogin);
-                    break;
-                default:
-                    break;
-            }
+          PopUtil.toastInCenter(s);
         }
     }
 
@@ -292,50 +299,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         return ShopSharePreferenceUtil.getInstance().getPassword();
     }
 
-    /**
-     * 是否支持滑动返回。这里在父类中默认返回 true 来支持滑动返回，如果某个界面不想支持滑动返回则重写该方法返回 false 即可
-     *
-     * @return
-     */
-    @Override
-    public boolean isSupportSwipeBack() {
-        return true;
-    }
-
-    /**
-     * 正在滑动返回
-     *
-     * @param slideOffset 从 0 到 1
-     */
-    @Override
-    public void onSwipeBackLayoutSlide(float slideOffset) {
-
-    }
-
-    /**
-     * 没达到滑动返回的阈值，取消滑动返回动作，回到默认状态
-     */
-    @Override
-    public void onSwipeBackLayoutCancel() {
-
-    }
-
-    /**
-     * 滑动返回执行完毕，销毁当前 Activity
-     */
-    @Override
-    public void onSwipeBackLayoutExecuted() {
-        mSwipeBackHelper.swipeBackward();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // 正在滑动返回的时候取消返回按钮事件
-        if (mSwipeBackHelper.isSliding()) {
-            return;
-        }
-        mSwipeBackHelper.backward();
-    }
 
     @Override
     public void onLogout() {
@@ -488,7 +451,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
                             intent4.putExtra("title", "民生商城");
                             startActivity(intent4);
                         } else if (NetUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                            Intent intent4 = new Intent(this, ShopUrlActivity.class);
+                            Intent intent4 = new Intent(this, HtmlPageActivity.class);
                             intent4.putExtra("url", url);
                             startActivity(intent4);
                         }
@@ -518,10 +481,38 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
                 intent.putExtra("data", data);
                 startActivity(intent);
             } else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                Intent intent = new Intent(this, ShopUrlActivity.class);
+                Intent intent = new Intent(this, HtmlPageActivity.class);
                 intent.putExtra("url", data);
                 startActivity(intent);
             }
+        }
+    }
+    protected void doShopItemViewClickByUrl(String url) {
+        Set<String> keys = Uri.parse(url).getQueryParameterNames();
+        String data;
+        if (keys.contains("goods")) {
+            data = Uri.parse(url).getQueryParameter("goods");
+            Intent intent = new Intent(this, ShopGoodDetailActivity.class);
+            intent.putExtra("type", "2");
+            intent.putExtra("goodsid", data);
+            startActivity(intent);
+        } else if (keys.contains("keyword")) {
+            data = Uri.parse(url).getQueryParameter("keyword");
+            Intent intent = new Intent(this, ShopKeywordListActivity.class);
+            intent.putExtra("keyword", data);
+            startActivity(intent);
+        } else if (keys.contains("gc_id")) {
+            data = Uri.parse(url).getQueryParameter("gc_id");
+            Intent intent = new Intent(this, ShopClassDetailActivity.class);
+            int index = data.indexOf("gc_id=");
+            data = data.substring(index + 6).trim();
+            intent.putExtra("data", data);
+            startActivity(intent);
+        } else {
+            data = url;
+            Intent intent = new Intent(this, HtmlPageActivity.class);
+            intent.putExtra("url", data);
+            startActivity(intent);
         }
     }
 }

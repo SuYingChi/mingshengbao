@@ -58,7 +58,7 @@ public class DataStringCallback extends StringCallback {
                  iView.onError("GSON转换异常");
                  isResponseSuccess = false;
              }else if(baseData.getCode()==400){
-                 iView.onError(s);
+                 iView.onError(baseData.getDatas());
                  isResponseSuccess = false;
              }else if(baseData.getCode() == 200){
                  isResponseSuccess = true;

@@ -38,6 +38,7 @@ import com.msht.minshengbao.androidShop.adapter.ShopOrderGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
+import com.msht.minshengbao.androidShop.shopBean.BuylistBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopOrderDetailBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
@@ -50,6 +51,7 @@ import com.msht.minshengbao.androidShop.viewInterface.ICancelOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.yanzhenjie.permission.Permission;
 
 
@@ -61,7 +63,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopOrderDetailView, ShopOrderGoodListAdapter.ClickAfterSaleListener, ICancelOrderView, IReceivedOrderView, IBuyStep3GetPayListView, IOrderQrCodeView {
+public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopOrderDetailView, ShopOrderGoodListAdapter.ClickAfterSaleListener, ICancelOrderView, IReceivedOrderView, IOrderQrCodeView, IlistPayView {
 
     private String orderId;
     @BindView(R.id.ll_1)
@@ -143,7 +145,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarColor(R.color.black).navigationBarWithKitkatEnable(false).init();
+        mImmersionBar.keyboardEnable(true);
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 
@@ -208,7 +210,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     tvPay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ShopPresenter.buyStep3(ShopOrdersDetailActivity.this, orderInfo.getPay_sn(),orderId);
+                            ShopPresenter.listPay(ShopOrdersDetailActivity.this, orderInfo.getPay_sn(),orderId);
                         }
                     });
                     llbtns.addView(tvPay);
@@ -563,15 +565,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         finish();
     }
 
-    @Override
-    public void onBuyStep3(String s,String orderId) {
-        Intent intent = new Intent(this, ShopPayOrderActivity.class);
-        BuyStep3PayListBean buyStep3bean = JsonUtil.toBean(s, BuyStep3PayListBean.class);
-        intent.putExtra("buyStep3", buyStep3bean);
-        intent.putExtra("pdPassword", "");
-        intent.putExtra("orderId", orderId);
-        startActivity(intent);
-    }
+
 
     @Override
     public void onGetOrderQrCodeSuccess(String s) {
@@ -644,32 +638,18 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         }
     }
 
- /*   @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        AndPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults, listener);
-    }*/
 
     private static final int MY_PERMISSIONS_REQUEST = 200;
     private Drawable qrCodeImage;
     private int CALL_PERMISSIONS_REQUEST = 300;
-/*    private PermissionListener listener = new PermissionListener() {
-        @SuppressLint("MissingPermission")
-        @Override
-        public void onSucceed(int requestCode) {
-            if (requestCode == MY_PERMISSIONS_REQUEST) {
-                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                if (DrawbleUtil.saveImageToGallery(ShopOrdersDetailActivity.this, bitmap) != null) {
-                    PopUtil.showAutoDissHookDialog(ShopOrdersDetailActivity.this, "已保存到本地相册", 200);
-                }
-            } else if (requestCode == CALL_PERMISSIONS_REQUEST) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
-                startActivity(intent);
-            }
-        }
 
-        @Override
-        public void onFailed(int requestCode) {
-            ToastUtil.ToastText(ShopOrdersDetailActivity.this, "没有权限");
-        }
-    };*/
+    @Override
+    public void onGetListPayInfoSuccess(String s, String orderId) {
+        Intent intent = new Intent(this, ShopPayOrderActivity.class);
+        BuylistBean buylistBean = JsonUtil.toBean(s, BuylistBean.class);
+        intent.putExtra("buylistBean", buylistBean);
+        intent.putExtra("pdPassword", "");
+        intent.putExtra("orderId",   orderId);
+        startActivity(intent);
+    }
 }

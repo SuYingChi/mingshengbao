@@ -5,6 +5,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+    </style>
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/forward_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/forward_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/backward_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/backward_exit</item>
     </style>
     <style name="Loading_dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
