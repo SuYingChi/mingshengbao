@@ -348,7 +348,24 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.getJSONObject("datas");
             JSONObject goods_info = datas.getJSONObject("goods_info");
-            goodPrice = goods_info.optString("goods_price");
+            String pintuan_promotion = goods_info.optString("pintuan_promotion");
+            if(TextUtils.equals(pintuan_promotion,"1")||TextUtils.equals(pintuan_promotion,"2")){
+                goodPrice = goods_info.optString("pintuan_goods_price");
+            }else {
+                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                            PopUtil.toastInCenter("没有商品价格");
+                        } else {
+                            goodPrice = goods_info.optString("goods_price");
+                        }
+                    } else {
+                        goodPrice = goods_info.optString("goods_promotion_price");
+                    }
+                } else {
+                    goodPrice = goods_info.optString("promotion_price");
+                }
+            }
             remianNum = goods_info.optString("goods_storage");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");

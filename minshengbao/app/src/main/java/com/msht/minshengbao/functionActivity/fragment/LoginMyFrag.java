@@ -146,7 +146,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             LogUtils.e(Log.getStackTraceString(new Throwable()));
             Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
             getActivity().startActivity(goLogin);
-            getActivity().finish();
         } else {
             PopUtil.toastInCenter(s);
         }

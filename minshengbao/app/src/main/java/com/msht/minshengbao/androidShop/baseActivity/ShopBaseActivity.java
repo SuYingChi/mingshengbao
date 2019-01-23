@@ -278,7 +278,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             PopUtil.toastInBottom("请登录商城");
             Intent goLogin = new Intent(this, LoginActivity.class);
             startActivity(goLogin);
-            this.finish();
         } else {
           PopUtil.toastInCenter(s);
         }

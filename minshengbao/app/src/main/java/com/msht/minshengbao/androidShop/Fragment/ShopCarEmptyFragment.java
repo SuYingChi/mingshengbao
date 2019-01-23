@@ -54,12 +54,6 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
         ad.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int childposition) {
-               /* HashMap<String,String> map= new HashMap<String,String>();
-                String goodsId = datalist.get(childposition).getGoods_id();
-                map.put("type","goods");
-                map.put("data",goodsId);
-                doNotAdClick(map);*/
-
                 String goodsId = datalist.get(childposition).getGoods_id();
                 doShopItemViewClick("goods",goodsId);
             }
