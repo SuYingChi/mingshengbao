@@ -26,7 +26,7 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
     private boolean editstatus = true;
     private boolean isSelectAll;
     private CarListListener carListListener;
-    private boolean isNotifyAdapter=false;
+    private boolean isAllSelectedNotifyAdapter =false;
     private boolean initUnselectState=false;
 
 
@@ -138,8 +138,7 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
                 } else {
                     childAdapter.finishStatus();
                 }
-                childAdapter.setAllSelectNotify(isSelectAll,isNotifyAdapter,initUnselectState);
-               // childAdapter.initUnselectState(true);
+                childAdapter.setAllSelectNotify(isSelectAll, isAllSelectedNotifyAdapter,initUnselectState);
                 childAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -165,14 +164,15 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
         notifyDataSetChanged();
     }
 
-    public void isSelectAllAndNotify(boolean isSelectAll, boolean isNotifyAdapter,boolean initUnselectState) {
+    public void isSelectAllAndNotify(boolean isSelectAll, boolean isAllSelectedNotifyAdapter,boolean initUnselectState) {
         this.isSelectAll = isSelectAll;
-        this.isNotifyAdapter = isNotifyAdapter;
+        this.isAllSelectedNotifyAdapter = isAllSelectedNotifyAdapter;
         this.initUnselectState = initUnselectState;
-           if(isNotifyAdapter) {
+           if(isAllSelectedNotifyAdapter) {
                notifyDataSetChanged();
            }
     }
+
 
 
     public interface CarListListener {

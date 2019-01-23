@@ -563,20 +563,23 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
             tvgoods_jingle.setText(goods_jingle);
-        /*    if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
-                if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
-                    if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
-                        PopUtil.toastInCenter("没有商品价格");
+            if(TextUtils.equals(pintuan_promotion,"1")||TextUtils.equals(pintuan_promotion,"2")){
+                goods_price = goods_info.optString("pintuan_goods_price");
+            }else {
+                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                            PopUtil.toastInCenter("没有商品价格");
+                        } else {
+                            goods_price = goods_info.optString("goods_price");
+                        }
                     } else {
-                        goods_price = goods_info.optString("goods_price");
+                        goods_price = goods_info.optString("goods_promotion_price");
                     }
                 } else {
-                    goods_price = goods_info.optString("goods_promotion_price");
+                    goods_price = goods_info.optString("promotion_price");
                 }
-            } else {
-                goods_price = goods_info.optString("promotion_price");
-            }*/
-            goods_price = goods_info.optString("goods_price");
+            }
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));

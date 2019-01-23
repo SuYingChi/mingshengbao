@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.androidShop.Fragment.ShopCarNoLoginFragment;
 import com.msht.minshengbao.androidShop.adapter.CarListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -79,7 +76,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
     private List<JSONObject> gotoBuyList = new ArrayList<JSONObject>();
     private String cart_count;
    /* private List<JSONObject> guessList;*/
-    private boolean isNotifyAdapter = true;
+    private boolean isAllSelectedNotifyAdapter = true;
     private List<ShopStoreBean> selectedStoreList = new ArrayList<ShopStoreBean>();
     private List<CarGoodItemBean> selectedGoodList = new ArrayList<CarGoodItemBean>();
     private List<ShopStoreBean> storeList = new ArrayList<ShopStoreBean>();
@@ -115,7 +112,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             @Override
             public void onUncheckItem(JSONObject goodObject, ShopStoreBean storebject, int childPosition, int position) {
                 LogUtils.e("------onUncheckItem===" + goodObject);
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 String cart_id = goodObject.optString("cart_id");
                 String goods_id = goodObject.optString("goods_id");
                 String goods_num = goodObject.optString("goods_num");
@@ -144,7 +141,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             @Override
             public void onUncheckStoreItem(ShopStoreBean storeObject) {
                 LogUtils.e("------onUncheckStoreItem===" + storeObject);
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (selectedStoreList.contains(storeObject)) {
                     selectedStoreList.remove(storeObject);
                 }
@@ -177,7 +174,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             @Override
             public void onCheckStoreItem(ShopStoreBean storeObject) {
                 LogUtils.e("-----onCheckStoreItem===" + storeObject);
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (!selectedStoreList.contains(storeObject)) {
                     selectedStoreList.add(storeObject);
                 }
@@ -242,7 +239,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             //此时该店铺下还有商品选中
             @Override
             public void onUnCheckGoodAndUnCheckStoreItem(ShopStoreBean storeBean) {
-                isNotifyAdapter = false;
+                isAllSelectedNotifyAdapter = false;
                 if (selectedStoreList.contains(storeBean)) {
                     selectedStoreList.remove(storeBean);
                 }
@@ -295,10 +292,10 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //当未全选时，点击了全选按钮，此时需要notify，设为全选
                 if (!isAllSelected() && isChecked) {
-                    isNotifyAdapter = true;
+                    isAllSelectedNotifyAdapter = true;
                 }
                 //点击全选按钮时，此时未全部选中，
-                if (isNotifyAdapter) {
+                if (isAllSelectedNotifyAdapter) {
                     if (isChecked) {
                         for (JSONObject object : carList) {
                             ShopStoreBean bean = new ShopStoreBean(object.optString("store_name"), object.optString("store_id"));
@@ -330,10 +327,11 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
 
                     }
                     initUnselectState = false;
-                    adapter.isSelectAllAndNotify(isChecked, isNotifyAdapter, initUnselectState);
+                    adapter.isSelectAllAndNotify(isChecked, isAllSelectedNotifyAdapter, initUnselectState);
                 } else if (!initUnselectState) {
-                    //当取消选择列表某项时，此时全选按钮为未选择，但是不触发列表的刷新，只是恢复标志位为默认的true
-                    isNotifyAdapter = true;
+                    //当取消选择列表某项时，此时全选按钮为未选择，但是不再次触发列表的刷新，只是恢复标志位为默认的true
+                    adapter.isSelectAllAndNotify(false, false, false);
+                    isAllSelectedNotifyAdapter = true;
                 } else {
                     initUnselectState = false;
                 }
@@ -424,8 +422,8 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
 
     private void initCarliststate() {
         initUnselectState = true;
-        isNotifyAdapter = false;
-        adapter.isSelectAllAndNotify(false, isNotifyAdapter, initUnselectState);
+        isAllSelectedNotifyAdapter = false;
+        adapter.isSelectAllAndNotify(false, isAllSelectedNotifyAdapter, initUnselectState);
         cbSelectAll.setChecked(false);
     }
 
