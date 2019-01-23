@@ -907,8 +907,8 @@ public class AppActivityUtil {
 
     private static void onInsurance(Context context, String pushUrl) {
         if (isLoginState(context)) {
-            //Intent intent = new Intent(context, InsuranceHome.class);
-            Intent intent = new Intent(context, InsuranceListActivity.class);
+            Intent intent = new Intent(context, InsuranceHome.class);
+           // Intent intent = new Intent(context, InsuranceListActivity.class);
             context.startActivity(intent);
 
         } else {

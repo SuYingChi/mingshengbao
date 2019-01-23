@@ -4,20 +4,24 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.AppActivityUtil;
-import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -25,8 +29,6 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
-import com.msht.minshengbao.ViewUI.banner.AbstractRecyclerViewBannerBase;
-import com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AutomatePayActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.CustomerNoManageActivity;
@@ -42,6 +44,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.bingoogolapple.bgabanner.BGABanner;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
@@ -50,7 +54,7 @@ import java.util.List;
  * @date 2019/1/7 
  */
 public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickListener {
-    private RecyclerViewBannerNormal mBanner;
+    private BGABanner mCubeBanner;
     private Button btnQuery;
     private EditText etCustomerNo;
     private int requestType=0;
@@ -174,17 +178,15 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (advertisingList.size()>1){
-            mBanner.setAutoPlaying(true);
-        }else {
-            mBanner.setAutoPlaying(false);
-        }
         if (adInformation!=null&&adInformation.size()!=0){
-            mBanner.setVisibility(View.VISIBLE);
+            mCubeBanner.setVisibility(View.VISIBLE);
         }else {
-            mBanner.setVisibility(View.GONE);
+            mCubeBanner.setVisibility(View.GONE);
         }
-        mBanner.initBannerImageView(advertisingList,mAdCycleViewListener);
+        mCubeBanner.setAutoPlayAble(advertisingList.size() > 1);
+        mCubeBanner.setAdapter(new MyImageAdapter());
+        mCubeBanner.setDelegate(new MyImageAdapter());
+        mCubeBanner.setData(advertisingList, null);
     }
     private void onTableData(JSONArray array) {
         tableList.clear();
@@ -299,8 +301,10 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
         initFindViewId();
         initBannerData();
     }
+
     private void initFindViewId() {
-        mBanner=(RecyclerViewBannerNormal)findViewById(R.id.id_banner);
+
+        mCubeBanner = findViewById(R.id.banner);
         findViewById(R.id.id_ordinary_layout).setOnClickListener(this);
         findViewById(R.id.id_ic_layout).setOnClickListener(this);
         findViewById(R.id.id_internet_layout).setOnClickListener(this);
@@ -325,10 +329,18 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
         }
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
     }
-    private AbstractRecyclerViewBannerBase.OnBannerItemClickListener mAdCycleViewListener = new AbstractRecyclerViewBannerBase.OnBannerItemClickListener() {
+    private class MyImageAdapter implements BGABanner.Adapter<ImageView, String>,BGABanner.Delegate<ImageView, String> {
 
         @Override
-        public void onItemClick(int position) {
+        public void fillBannerItem(BGABanner banner, ImageView itemView, @Nullable String model, int position) {
+            Glide.with(itemView.getContext())
+                    .load(model)
+                    .apply(new RequestOptions().placeholder(R.drawable.icon_stub).error(R.drawable.icon_error).dontAnimate().centerCrop())
+                    .into(itemView);
+        }
+
+        @Override
+        public void onBannerItemClick(BGABanner banner, ImageView itemView, @Nullable String model, int position) {
             AdvertisingInfo info=adInformation.get(position);
             String myUrl=info.getUrl();
             String title=info.getTitle();
@@ -336,7 +348,7 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
             String desc=info.getDesc();
             AppActivityUtil.onAppActivityType(context,myUrl,title,share,desc,"gas_start_activity","");
         }
-    };
+    }
     private void onQueryTableType() {
         requestType=1;
         String customerNo=etCustomerNo.getText().toString().trim();

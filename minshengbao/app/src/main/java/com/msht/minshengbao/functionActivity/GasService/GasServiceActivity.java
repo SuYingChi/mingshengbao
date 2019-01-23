@@ -4,17 +4,19 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.banner.AbstractRecyclerViewBannerBase;
-import com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal;
 import com.msht.minshengbao.adapter.GasServiceAdapter;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -38,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.bingoogolapple.bgabanner.BGABanner;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
@@ -47,11 +51,10 @@ import java.util.List;
  */
 public class GasServiceActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
-    private RecyclerViewBannerNormal mBanner;
+    private BGABanner mCubeBanner;
     private GasServiceAdapter homeAdapter;
     private String pid="";
     private String cityId="";
-    private   boolean loginState =false;
     private CustomDialog customDialog;
     private ArrayList<AdvertisingInfo> adInformation = new ArrayList<AdvertisingInfo>();
     private List<String> advertisingList = new ArrayList<>();
@@ -156,12 +159,15 @@ public class GasServiceActivity extends BaseActivity {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (advertisingList.size()>1){
-            mBanner.setAutoPlaying(true);
+        if (adInformation!=null&&adInformation.size()!=0){
+            mCubeBanner.setVisibility(View.VISIBLE);
         }else {
-            mBanner.setAutoPlaying(false);
+            mCubeBanner.setVisibility(View.GONE);
         }
-        mBanner.initBannerImageView(advertisingList,mAdCycleViewListener);
+        mCubeBanner.setAutoPlayAble(advertisingList.size() > 1);
+        mCubeBanner.setAdapter(new MyImageAdapter());
+        mCubeBanner.setDelegate(new MyImageAdapter());
+        mCubeBanner.setData(advertisingList, null);
     }
 
     private void initFunction(JSONArray json) {
@@ -195,7 +201,6 @@ public class GasServiceActivity extends BaseActivity {
         cityId=VariableUtil.cityId;
         mPageName=data.getStringExtra("name");
         setCommonHeader(mPageName);
-        loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         customDialog=new CustomDialog(this, "正在加载");
         initView();
         homeAdapter=new GasServiceAdapter(context,functionList);
@@ -243,7 +248,7 @@ public class GasServiceActivity extends BaseActivity {
     }
     private void initView() {
         mGridView=(MyNoScrollGridView)findViewById(R.id.id_function_view);
-        mBanner=(RecyclerViewBannerNormal)findViewById(R.id.id_banner);
+        mCubeBanner = findViewById(R.id.banner);
     }
     private void initData() {
         if (!TextUtils.isEmpty(pid)){
@@ -266,10 +271,17 @@ public class GasServiceActivity extends BaseActivity {
         }
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,getAdvertisingHandler);
     }
-    private AbstractRecyclerViewBannerBase.OnBannerItemClickListener mAdCycleViewListener = new AbstractRecyclerViewBannerBase.OnBannerItemClickListener() {
+    private class MyImageAdapter implements BGABanner.Adapter<ImageView, String>,BGABanner.Delegate<ImageView, String> {
+        @Override
+        public void fillBannerItem(BGABanner banner, ImageView itemView, @Nullable String model, int position) {
+            Glide.with(itemView.getContext())
+                    .load(model)
+                    .apply(new RequestOptions().placeholder(R.drawable.icon_stub).error(R.drawable.icon_error).dontAnimate().centerCrop())
+                    .into(itemView);
+        }
 
         @Override
-        public void onItemClick(int position) {
+        public void onBannerItemClick(BGABanner banner, ImageView itemView, @Nullable String model, int position) {
             AdvertisingInfo info=adInformation.get(position);
             String myUrl=info.getUrl();
             String title=info.getTitle();
@@ -277,7 +289,7 @@ public class GasServiceActivity extends BaseActivity {
             String desc=info.getDesc();
             AppActivityUtil.onAppActivityType(context,myUrl,title,share,desc,"gas_start_activity","");
         }
-    };
+    }
     private void onPayFee() {
         Intent select=new Intent(context,GasPayFeeActivity.class);
         startActivity(select);

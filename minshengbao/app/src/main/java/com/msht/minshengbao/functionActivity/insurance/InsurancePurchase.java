@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -413,6 +414,7 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         textParams.put("start_date", startTime);
         textParams.put("end_date", stopTime);
         textParams.put("recommend",recommend);
+        Log.d("textParams=",textParams.toString());
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,getinsuranceHandler);
     }
     private boolean match(String name, String idCard, String customer, String address) {

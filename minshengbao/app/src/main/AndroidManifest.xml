@@ -87,7 +87,7 @@
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".functionActivity.GasService.GasServiceActivity" />
+        <activity android:name=".functionActivity.GasService.GasServiceActivity"/>
         <activity android:name=".functionActivity.MyActivity.LoginActivity" />
         <activity android:name=".functionActivity.MyActivity.RegisterActivity" />
         <activity android:name=".functionActivity.MyActivity.FindPasswordActivity" />

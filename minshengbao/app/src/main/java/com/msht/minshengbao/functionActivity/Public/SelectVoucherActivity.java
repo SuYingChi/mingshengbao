@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -232,11 +233,11 @@ public class SelectVoucherActivity extends BaseActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            String remainderDays=voucherList.get(position).get("remainder_days");
-            if (!TextUtils.isEmpty(remainderDays)){
-                remainderDays="剩"+remainderDays+"天";
+            String remainderDay=voucherList.get(position).get("remainder_days");
+            if ((!TextUtils.isEmpty(remainderDay))&&(!remainderDay.equals(ConstantUtil.VALUE_ZERO))){
+                remainderDay="剩"+remainderDay+"天";
                 holder.cnTime.setVisibility(View.VISIBLE);
-                holder.cnTime.setText(remainderDays);
+                holder.cnTime.setText(remainderDay);
             }else {
                 holder.cnTime.setVisibility(View.GONE);
             }
