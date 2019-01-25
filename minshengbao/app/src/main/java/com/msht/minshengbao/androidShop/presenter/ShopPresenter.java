@@ -1328,7 +1328,7 @@ public class ShopPresenter {
                         iView.onError("格式转换异常");
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
-                        iView.onError(bean.getError().toString());
+                        iView.onError(bean.getError()!=null?bean.getError().toString():"无法获取个人消息");
                     } else {
                         isResponseSuccess = true;
                     }
@@ -1362,7 +1362,7 @@ public class ShopPresenter {
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
                         if (bean.getError() != null) {
-                            iView.onError(bean.getError().toString());
+                            iView.onError(bean.getError()!=null?bean.getError().toString():"无法获取个人消息");
                         }
                     } else {
                         isResponseSuccess = true;
