@@ -5,8 +5,10 @@
     android:id="@+id/activity_gas_service"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_gray"
     android:orientation="vertical"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     tools:context="com.msht.minshengbao.functionActivity.GasService.GasServiceActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
@@ -18,36 +20,38 @@
             android:orientation="vertical">
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_12"
-                android:background="@color/background"/>
+                android:layout_height="@dimen/margin_width10"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10"
-                android:paddingBottom="@dimen/margin_20"
-                android:minHeight="@dimen/margin_20">
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:paddingBottom="@dimen/margin_width20">
                 <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                     android:id="@+id/id_function_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:numColumns="4"
-                    android:horizontalSpacing="@dimen/margin_8"
-                    android:verticalSpacing="@dimen/margin_20">
+                    android:horizontalSpacing="@dimen/margin_width8"
+                    android:verticalSpacing="@dimen/margin_width20">
                 </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width20"
-                android:background="@color/background"/>
-            <com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal
-                android:id="@+id/id_banner"
+                android:layout_height="@dimen/margin_width20"/>
+            <cn.bingoogolapple.bgabanner.BGABanner
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width275"
-                android:layout_marginBottom="@dimen/text_width20"
-                app:showIndicator="false"
-                app:orientation="horizontal">
-            </com.msht.minshengbao.ViewUI.banner.RecyclerViewBannerNormal>
+                android:scaleType="fitXY"
+                app:banner_isNumberIndicator="true"
+                app:banner_pointAutoPlayInterval="5000"
+                app:banner_pointContainerBackground="@color/transparent"
+                app:banner_pageChangeDuration="1500"
+                app:banner_placeholderDrawable="@drawable/icon_stub"
+                app:banner_numberIndicatorTextColor="@color/transparent"
+                app:banner_transitionEffect="accordion"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

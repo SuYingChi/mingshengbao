@@ -124,6 +124,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.androidadvance:topsnackbar:1.0.0'
+    implementation 'cn.bingoogolapple:bga-banner:2.2.5@aar'
     //顶部snackBar
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
