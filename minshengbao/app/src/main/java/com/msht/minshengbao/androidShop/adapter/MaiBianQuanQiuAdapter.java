@@ -16,6 +16,8 @@ import com.msht.minshengbao.androidShop.util.StringUtil;
 public class MaiBianQuanQiuAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHomeGoods_3Bean.Goods3Bean.ItemBean> {
 
 
+    private RecyclerItemClick recyclerItemClick;
+
     public MaiBianQuanQiuAdapter(Context context) {
         super(context, R.layout.item_shop_home_goods_1_2);
     }
@@ -29,9 +31,16 @@ public class MaiBianQuanQiuAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHom
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(position);
+                recyclerItemClick.onItemClick(item.getGoods_id());
             }
         });
     }
+    public interface RecyclerItemClick{
+        void onItemClick(String goodId);
+    }
+    public void setRecyclerItemClick(RecyclerItemClick recyclerItemClick){
+        this.recyclerItemClick = recyclerItemClick;
+    }
+
 
 }

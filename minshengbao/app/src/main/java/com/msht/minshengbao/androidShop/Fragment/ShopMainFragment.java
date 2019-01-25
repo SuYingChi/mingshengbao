@@ -39,6 +39,8 @@ import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopMoreGoodActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSearchActivty;
+import com.msht.minshengbao.androidShop.adapter.ChuDianAdapter;
+import com.msht.minshengbao.androidShop.adapter.MaiBianQuanQiuAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeChuDianPagerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopHomeClassPagerAdapter;
@@ -527,17 +529,10 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         });
         AddViewHolder addViewHolder2 = new AddViewHolder(getContext(), R.layout.shop_home_class);
         LinearLayout llIndicators = addViewHolder2.getView(R.id.llIndicators);
-        ShopHomeChuDianPagerAdapter pagerAdapter = new ShopHomeChuDianPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+        ShopHomeChuDianPagerAdapter pagerAdapter = new ShopHomeChuDianPagerAdapter(getContext(), llIndicators, new ChuDianAdapter.ChuDianRecyclerItemClick() {
             @Override
-            public void onItemClick(int position) {
-                /*Map<String, String> map = new HashMap<String, String>();
-                map.put("type", "goods");
-                map.put("data", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
-                map.put("price", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);*/
-
-                doShopItemViewClick("goods", shopHomeGoods_1Bean.getGoods_1().getItem().get(position).getGoods_id());
-
+            public void onItemClick(String goodId) {
+                doShopItemViewClick("goods",goodId);
             }
         });
         final WrapChildHeightViewPager vp = addViewHolder2.getView(R.id.vp);
@@ -588,10 +583,10 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         });
         AddViewHolder addViewHolder2 = new AddViewHolder(getContext(), R.layout.shop_home_class);
         LinearLayout llIndicators = addViewHolder2.getView(R.id.llIndicators);
-        ShopMaiBianQuanQiuPagerAdapter pagerAdapter = new ShopMaiBianQuanQiuPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+        ShopMaiBianQuanQiuPagerAdapter pagerAdapter = new ShopMaiBianQuanQiuPagerAdapter(getContext(), llIndicators, new MaiBianQuanQiuAdapter.RecyclerItemClick() {
             @Override
-            public void onItemClick(int position) {
-                doShopItemViewClick("goods", shopHomeGoods_3Bean.getGoods_3().getItem().get(position).getGoods_id());
+            public void onItemClick(String goodId) {
+                doShopItemViewClick("goods",goodId);
             }
         });
         final WrapChildHeightViewPager vp = addViewHolder2.getView(R.id.vp);
