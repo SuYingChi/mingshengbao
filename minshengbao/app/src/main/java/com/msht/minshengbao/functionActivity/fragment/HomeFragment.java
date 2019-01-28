@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -168,6 +170,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final SpecialTopicHandler specialTopicHandler =new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
+    private Toolbar hearLayout;
 
 
     public HomeFragment() {}
@@ -724,8 +727,13 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         tvCity =(TextView)view.findViewById(R.id.id_tv_city);
         tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
         dragImageView=(DragImageView) view.findViewById(R.id.id_floating_view);
+        hearLayout = (Toolbar)view.findViewById(R.id.toolbar);
     }
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImmersionBar.setTitleBar(getActivity(), hearLayout);
+    }
     private void initCardBanner() {
         mMZBanner.setIndicatorVisible(true);
         mMZBanner.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
@@ -788,17 +796,17 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     public void onScrollChanged(MyScrollview scrollView, int l, int t, int oldl, int oldt) {
         if (t <= 0) {
             //设置标题的背景颜色
-            layoutNavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
+            hearLayout.setBackgroundColor(Color.argb(0, 0, 255, 0));
             tvNavigation.setTextColor(Color.argb(0, 0, 255, 0));
             //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
         } else if (t <= bgHeight) {
             float scale = (float) t / bgHeight;
             float alpha = (255 * scale);
             tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
-            layoutNavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
+            hearLayout.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
         } else {
             //滑动到banner下面设置普通颜色  Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
-            layoutNavigation.setBackgroundResource(R.drawable.shape_change_background);
+            hearLayout.setBackgroundResource(R.drawable.shape_change_background);
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
     }

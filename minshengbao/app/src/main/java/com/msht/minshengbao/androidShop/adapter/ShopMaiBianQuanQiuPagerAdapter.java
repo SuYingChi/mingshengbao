@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ShopMaiBianQuanQiuPagerAdapter extends PagerAdapter {
 
-    private MyHaveHeadViewRecyclerAdapter.OnItemClickListener listener;
+    private MaiBianQuanQiuAdapter.RecyclerItemClick listener;
     private List<View> indicators = new ArrayList<>();//水平分页的指示器
     private List<ShopHomeGoods_3Bean.Goods3Bean.ItemBean> datas = new ArrayList<>();//RecyclerView数据集合
     private Context context;
@@ -35,7 +35,7 @@ public class ShopMaiBianQuanQiuPagerAdapter extends PagerAdapter {
         return indicators;
     }
 
-    public ShopMaiBianQuanQiuPagerAdapter(Context context, LinearLayout llIndicators, MyHaveHeadViewRecyclerAdapter.OnItemClickListener listener) {
+    public ShopMaiBianQuanQiuPagerAdapter(Context context, LinearLayout llIndicators, MaiBianQuanQiuAdapter.RecyclerItemClick listener) {
         this.context = context;
         this.llIndicators = llIndicators;
         this.listener = listener;
@@ -80,7 +80,7 @@ public class ShopMaiBianQuanQiuPagerAdapter extends PagerAdapter {
             list.add(datas.get(i));
         }
         adapter.setDatas(list);
-        adapter.setOnItemClickListener(listener);
+        adapter.setRecyclerItemClick(listener);
         rcl.setAdapter(adapter);
         //初始化指示器。position == 0只初始化一次;且有多页；
         for (int i = 0; position == 0 && getCount() != 1 && i < getCount(); i++) {

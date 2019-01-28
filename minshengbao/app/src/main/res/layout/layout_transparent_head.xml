@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    app:contentInsetStart="0dp">
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@android:color/transparent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/margin_width70">
-    <View
-        android:id="@+id/id_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_width20" />
+   >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -81,3 +85,4 @@
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>
+</android.support.v7.widget.Toolbar>

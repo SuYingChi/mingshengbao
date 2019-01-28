@@ -113,6 +113,9 @@
         <EditText
             android:id="@+id/et_address"
             style="@style/editText"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_Modules"
+            android:paddingBottom="@dimen/margin_Modules"
             android:gravity="right"/>
 
     </LinearLayout>

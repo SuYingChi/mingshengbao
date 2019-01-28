@@ -15,6 +15,8 @@ import com.msht.minshengbao.androidShop.util.StringUtil;
 public class ChuDianAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHomeGoods_1Bean.Goods1Bean.ItemBean> {
 
 
+    private ChuDianRecyclerItemClick chuDianRecyclerItemClick;
+
     public ChuDianAdapter(Context context) {
         super(context, R.layout.item_shop_home_goods_1_2);
     }
@@ -28,9 +30,14 @@ public class ChuDianAdapter extends MyHaveHeadViewRecyclerAdapter<ShopHomeGoods_
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(position);
+                chuDianRecyclerItemClick.onItemClick(item.getGoods_id());
             }
         });
     }
-
+   public interface ChuDianRecyclerItemClick{
+        void onItemClick(String goodId);
+   }
+   public void setChuDianRecyclerItemClick(ChuDianRecyclerItemClick chuDianRecyclerItemClick){
+        this.chuDianRecyclerItemClick = chuDianRecyclerItemClick;
+   }
 }

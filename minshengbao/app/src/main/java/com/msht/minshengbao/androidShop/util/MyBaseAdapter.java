@@ -77,8 +77,8 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
                 layoutId, position);
         convert(holder, getItem(position),position);
 
-        //新增
-        AutoUtils.autoSize(holder.getConvertView());
+      /*  //新增
+        AutoUtils.autoSize(holder.getConvertView());*/
 
         return holder.getConvertView();
     }

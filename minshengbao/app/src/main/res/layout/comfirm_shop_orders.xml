@@ -69,7 +69,12 @@
                 android:layout_marginTop="@dimen/margin_width2"
                 android:background="@color/white"
                 android:padding="@dimen/margin_Modules">
-
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/right_angle"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
                 <TextView
                     android:id="@+id/name"
                     style="@style/grey_small_text" />
@@ -87,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/name"
                     android:layout_marginTop="@dimen/margin_Modules"
+                    android:layout_marginRight="@dimen/margin_Modules"
                     >
                 <TextView
                     android:id="@+id/location"
@@ -95,16 +101,12 @@
                     android:layout_weight="1"
                     android:text=""
                     />
-                    <ImageView
-                        style="@style/image"
-                        android:src="@drawable/right_angle"
-                        android:layout_gravity="center_vertical"
-                        />
                 </LinearLayout>
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:visibility="gone"
                     android:layout_below="@id/ll_location">
 
                     <ImageView
