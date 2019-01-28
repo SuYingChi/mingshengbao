@@ -92,11 +92,10 @@ public class InsuranceListActivity extends BaseActivity {
         });
     }
     private void onAnalysisBusiness(String s) {
-        String M="{\"result_code\": 0, \"error\": null, \"result\": \"success\", \"data\": [{ \"id\": 1, \"s_index\": 1, \"type\": \"燃气险\", \"child\": [{ \"img\": \"https://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20190103/null/58b2973f3aa94fb9ba9b1d0391bb1ee5.png\", \"amount\": 30.0, \"company\": \"太平洋洋保险\", \"id\": 3, \"title\": \"商业燃气险\", \"desc\": \"燃气安全无小事，燃气保险保平安\" },{ \"img\": \"https://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20190103/null/58b2973f3aa94fb9ba9b1d0391bb1ee5.png\", \"amount\": 100.0, \"company\": \"北冰洋保险\", \"id\": 4, \"title\": \"商业燃气险\", \"desc\": \"燃气安全无小事，燃气保险保平安\" }]},{ \"s_index\": 2, \"id\": 2, \"type\": \"意外险\", \"child\": [{ \"img\": \"http://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20181129/199/d7c89a2723fb4af2b12f3e74032912c9.jpg\", \"amount\": 0.0, \"company\": \"人寿保险\", \"id\": 5, \"title\": \"居民燃气险(意外险)\", \"desc\": \"燃气安全无小事，燃气保险保平安\" }]}]}";
-        M=M.replace("\\","");
+       // String M="{\"result_code\": 0, \"error\": null, \"result\": \"success\", \"data\": [{ \"id\": 1, \"s_index\": 1, \"type\": \"燃气险\", \"child\": [{ \"img\": \"https://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20190103/null/58b2973f3aa94fb9ba9b1d0391bb1ee5.png\", \"amount\": 30.0, \"company\": \"太平洋洋保险\", \"id\": 3, \"title\": \"商业燃气险\", \"desc\": \"燃气安全无小事，燃气保险保平安\" },{ \"img\": \"https://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20190103/null/58b2973f3aa94fb9ba9b1d0391bb1ee5.png\", \"amount\": 100.0, \"company\": \"北冰洋保险\", \"id\": 4, \"title\": \"商业燃气险\", \"desc\": \"燃气安全无小事，燃气保险保平安\" }]},{ \"s_index\": 2, \"id\": 2, \"type\": \"意外险\", \"child\": [{ \"img\": \"http://msb.oss-cn-shenzhen.aliyuncs.com/msb_image/test/adImg/float_activity/20181129/199/d7c89a2723fb4af2b12f3e74032912c9.jpg\", \"amount\": 0.0, \"company\": \"人寿保险\", \"id\": 5, \"title\": \"居民燃气险(意外险)\", \"desc\": \"燃气安全无小事，燃气保险保平安\" }]}]}";
         try {
             Gson gson = new Gson();
-            InsuranceBusinessModel model = gson.fromJson(M, InsuranceBusinessModel.class);
+            InsuranceBusinessModel model = gson.fromJson(s, InsuranceBusinessModel.class);
             if (model.getResult().equals(SendRequestUtil.SUCCESS_VALUE)) {
                 dataList.clear();
                 dataList.addAll(model.getData());

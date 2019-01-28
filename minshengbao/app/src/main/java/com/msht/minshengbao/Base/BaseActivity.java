@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -72,8 +73,12 @@ public class BaseActivity extends AppCompatActivity  {
     }
     protected void setCommonHeader(String title) {
         mPageName=title;
+        View  mViewStatusBarPlace = findViewById(R.id.id_status_view);
+        ViewGroup.LayoutParams params = mViewStatusBarPlace.getLayoutParams();
+        params.height = StatusBarCompat.getStatusBarHeight(this);
+        mViewStatusBarPlace.setLayoutParams(params);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
-            findViewById(R.id.id_status_view).setVisibility(View.GONE);
+            mViewStatusBarPlace.setVisibility(View.GONE);
         }
         backImg = (ImageView) findViewById(R.id.id_goback);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);

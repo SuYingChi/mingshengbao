@@ -1,11 +1,14 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,7 +25,10 @@ import android.widget.ProgressBar;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 /**
@@ -35,13 +41,28 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 public class InsuranceHtmlActivity extends BaseActivity {
     private WebView mWebView;
     private ProgressBar progressBar;
+    private String id;
+    private String  userId;
+    private String  password;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insurance_html);
+        //适配华为手机虚拟键遮挡tab的问题
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
         context=this;
         setCommonHeader("购买保险");
+        Intent data=getIntent();
+        if (data!=null){
+            id=data.getStringExtra("id");
+        }
+
+        userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
+        password=SharedPreferencesUtil.getPassword(this,SharedPreferencesUtil.Password,"");
         initFindViewId();
         initWebView();
     }
@@ -60,6 +81,8 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
+        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&userId="+userId+"&password="+password;
+        mWebView.loadUrl(insuranceDetailUrl);
         WebSettings settings=mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
@@ -98,6 +121,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     private class MyWebViewClient extends WebViewClient{
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            String tag="tel";
             if (url.startsWith("weixin://wap/pay?")){
                 try{
                     Intent intent=new Intent();
@@ -108,6 +132,18 @@ public class InsuranceHtmlActivity extends BaseActivity {
                     ToastUtil.ToastText(context,"请安装微信最新版本");
                 }
                 return true;
+            }else if (url.contains(tag)){
+                String mobile=url.substring(url.lastIndexOf("/")+1);
+                Intent mIntent=new Intent(Intent.ACTION_CALL);
+                Uri data=Uri.parse(mobile);
+                mIntent.setData(data);
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)== PackageManager.PERMISSION_GRANTED){
+                    startActivity(mIntent);
+                    return true;
+                }else {
+                    ActivityCompat.requestPermissions(InsuranceHtmlActivity.this,new String[]{Manifest.permission.CALL_PHONE},1);
+                    return true;
+                }
             }else {
                 return false;
             }

@@ -190,6 +190,7 @@ public class UrlUtil {
     public static final String GET_HOUSE_ADDRESS_URL ="http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
     public static final String INSURANCE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/views/insurance/pay.html";
     public static final String INSURANCE_BUSINESS_DATA=BuildConfig.URL_HEADS+"/api/insurance/get_insurance_list";
+    public static final String INSURANCE_DETAIL_URL=BuildConfig.URL_HEADS+"/msb_insurance/insurance_detail.html";
     /**
      *myView
      */
@@ -279,7 +280,7 @@ public class UrlUtil {
     public static final String LPG_QUERY_ORDER_FLOW=BuildConfig.URL_LPG+"/msht/lpgOrder/queryFlow";
     public static final String LPG_DEPOSIT_COUNT_URL=BuildConfig.URL_LPG+"/msht/lpgOrder/depositCount";
     public static final String LPG_GAS_AND_DEPOSIT_URL=BuildConfig.URL_LPG+"/msht/lpgDepositMsg/getGasAndDepositNew";
-    public static final String LPG_QR_CODE_SCAN_URL="https://lpg.msbapp.cn/msht/lpgBottle/getBottleDetail";
+    public static final String LPG_QR_CODE_SCAN_URL=BuildConfig.URL_LPG+"/msht/lpgBottle/getBottleDetail";
     public static final String LPG_TRANSPORTATION_EXPENSE="http://msbapp.cn/lpg_h5/peisongshuoming.html";
     public static final String LPG_OPEN_TREATY="http://msbapp.cn/lpg_h5/kaihuxieyi.html";
     public static final String LPG_DISCOUNT_TABLE="http://msbapp.cn/lpg_h5/huishouzhejia.html";
