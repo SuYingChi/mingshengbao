@@ -2,6 +2,7 @@ package com.msht.minshengbao.androidShop.customerview;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -10,7 +11,7 @@ import android.widget.ScrollView;
 
 import com.msht.minshengbao.androidShop.util.LogUtils;
 
-public class XScrollView extends ScrollView {
+public class XScrollView extends NestedScrollView {
     private OnScrollBottomListener _listener;
     private int _calCount;
     private XScrollViewListener xScrollViewListener;

@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -168,6 +170,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final SpecialTopicHandler specialTopicHandler =new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
+    private Toolbar hearLayout;
 
 
     public HomeFragment() {}
@@ -724,8 +727,13 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         tvCity =(TextView)view.findViewById(R.id.id_tv_city);
         tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
         dragImageView=(DragImageView) view.findViewById(R.id.id_floating_view);
+        hearLayout = (Toolbar)view.findViewById(R.id.toolbar);
     }
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImmersionBar.setTitleBar(getActivity(), hearLayout);
+    }
     private void initCardBanner() {
         mMZBanner.setIndicatorVisible(true);
         mMZBanner.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {

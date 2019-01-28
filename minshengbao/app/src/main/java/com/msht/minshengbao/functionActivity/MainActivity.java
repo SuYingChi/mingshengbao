@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -103,7 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment    homeFrag, myFrag,myNewFrag;
     private Fragment    orderFrag,currentFragment;
     private View        networkLayout;
-    private View        hearLayout;
+    private Toolbar        hearLayout;
     private String      userId;
     private String      password;
     private String      urls;
@@ -347,7 +348,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initImmersionBar();
         context = this;
         //推送统计
         mPageName="首页";
@@ -360,6 +360,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
+        initImmersionBar();
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
         } else {
@@ -407,12 +408,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
             }else {
                 mImmersionBar.init();
+                ImmersionBar.setTitleBar(this, hearLayout);
             }
-            /*else {
-                mImmersionBar.fullScreen(true).transparentNavigationBar().init();
-            }*/
         } else {
             mImmersionBar.init();
+            ImmersionBar.setTitleBar(this, hearLayout);
         }
     }
 
@@ -550,7 +550,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         RadioGroup radioGroupMain = (RadioGroup) findViewById(R.id.radiogroup_main);
         tvNavigation = (TextView) findViewById(R.id.id_tv_navigation);
         tvMassageNum = (TextView) findViewById(R.id.id_main_messnum);
-        hearLayout = findViewById(R.id.id_head_view);
+        hearLayout = (Toolbar)findViewById(R.id.id_head_view);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
         ImageView messageImg =(ImageView)findViewById(R.id.id_massage_img);
         messageImg.setOnClickListener(this);

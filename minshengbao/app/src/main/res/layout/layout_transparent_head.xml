@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    app:contentInsetStart="0dp">
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@android:color/transparent"
@@ -81,3 +88,4 @@
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>
+</android.support.v7.widget.Toolbar>

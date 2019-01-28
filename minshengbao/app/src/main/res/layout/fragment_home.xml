@@ -336,6 +336,12 @@
     </com.msht.minshengbao.ViewUI.widget.MyScrollview>
     </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
     <!--    标题栏  -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:contentInsetStart="0dp">
     <LinearLayout
         android:id="@+id/id_li_navigation"
         android:layout_width="match_parent"
@@ -388,6 +394,7 @@
                 android:textColor="@android:color/transparent"/>
         </RelativeLayout>
     </LinearLayout>
+    </android.support.v7.widget.Toolbar>
     <com.msht.minshengbao.ViewUI.widget.DragImageView
         android:id="@+id/id_floating_view"
         android:layout_width="@dimen/margin_width60"
