@@ -796,17 +796,17 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     public void onScrollChanged(MyScrollview scrollView, int l, int t, int oldl, int oldt) {
         if (t <= 0) {
             //设置标题的背景颜色
-            layoutNavigation.setBackgroundColor(Color.argb(0, 0, 255, 0));
+            hearLayout.setBackgroundColor(Color.argb(0, 0, 255, 0));
             tvNavigation.setTextColor(Color.argb(0, 0, 255, 0));
             //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
         } else if (t <= bgHeight) {
             float scale = (float) t / bgHeight;
             float alpha = (255 * scale);
             tvNavigation.setTextColor(Color.argb((int) alpha, 255, 255, 255));
-            layoutNavigation.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
+            hearLayout.setBackgroundColor(Color.argb((int) alpha, 249, 99, 49));
         } else {
             //滑动到banner下面设置普通颜色  Lnavigation.setBackgroundColor(Color.argb(255, 249, 99, 49));
-            layoutNavigation.setBackgroundResource(R.drawable.shape_change_background);
+            hearLayout.setBackgroundResource(R.drawable.shape_change_background);
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
     }

@@ -346,13 +346,8 @@
         android:id="@+id/id_li_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_width70"
         android:orientation="vertical"
         android:background="@android:color/transparent">
-        <View
-            android:id="@+id/id_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_width20" />
         <RelativeLayout
             android:id="@+id/id_re_navigation"
             android:layout_width="match_parent"
