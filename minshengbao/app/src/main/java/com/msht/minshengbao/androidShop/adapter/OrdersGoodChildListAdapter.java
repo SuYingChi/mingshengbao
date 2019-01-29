@@ -90,6 +90,14 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
                     ordersChildListlistener.onInputUserId(s.toString());
                 }
             });
+            et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!hasFocus){
+                        ordersChildListlistener.onNoHasFocus();
+                    }
+                }
+            });
            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                @Override
                public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -135,6 +143,8 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
         void etVisible(boolean etVisible);
 
         void onInputUserId(String s);
+
+        void onNoHasFocus();
     }
 
     @Override

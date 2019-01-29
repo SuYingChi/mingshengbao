@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
@@ -67,6 +68,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
+import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShopFootprintView;
@@ -1477,6 +1479,39 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iGetWuliuView.onPostReturnGoodSuccess(s);
+                }
+            }
+        });
+    }
+    public static void searchUserId(final ISearchUserIdView iSearchUserIdView,String userId){
+        OkHttpUtils.get().url(ShopConstants.SRARCH_USERID).addParams("customerNo",userId).tag(iSearchUserIdView)
+                .build().execute(new DataStringCallback(iSearchUserIdView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if(isShowLoadingDialog) {
+                    iSearchUserIdView.dismissLoading();
+                }
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iSearchUserIdView.onError("接口返回空字符串");
+                }else {
+                    BaseData baseData = JsonUtil.getBaseData(s);
+                    if(baseData ==null){
+                        iSearchUserIdView.onError("GSON转换异常");
+                    }else if("fail".equals(baseData.getResult())){
+                        try {
+                            JSONObject object = new JSONObject(s);
+                            if(TextUtils.equals(object.optString("error"),"用户名或密码错误")){
+                                iSearchUserIdView.onError("未登录");
+                            }else {
+                                iSearchUserIdView.onUserIdError(object.optString("error"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else if("success".equals(baseData.getResult())){
+                        iSearchUserIdView.onSearchUserIdSuccess(s);
+                    }
                 }
             }
         });

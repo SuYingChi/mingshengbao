@@ -77,7 +77,7 @@ public class ShopConstants {
     public static final String RETURN_GOOD_SENT_POST = BASE_URL+"index.php?act=member_return&op=ship_post";
     public static final String MY_SHOP_NUM = BASE_URL+"index.php?act=member_index";
     public static final String LIST_PAY = BASE_URL+"index.php?act=member_buy&op=list_pay";
-
+    public static final String SRARCH_USERID = BuildConfig.DEBUG?"http://220.174.234.36:8090/GasAPITest/house/customerNoHouse":"http://220.174.234.36:8090/GasAPI/house/customerNoHouse";
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;
     }

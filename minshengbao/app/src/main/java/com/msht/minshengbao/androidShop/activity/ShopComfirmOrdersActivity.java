@@ -36,6 +36,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IBuyStep2View;
 import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAddressListView;
+import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +51,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView {
+public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView, ISearchUserIdView {
 
     private static final int REQUEST_CODE_RECOMMEND = 200;
     private static final int REQUEST_CODE_INV_INFO = 300;
@@ -138,6 +139,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     }
 
     @Override
+    protected void setSoftInPutMode() {
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ivback.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +182,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 @Override
                 public void onInputUserId(String s, int position) {
                     comfirmShopGoodBeans.get(position).setUserId(s);
+                }
+
+                @Override
+                public void onNoFocus(int position) {
+                    String userId = comfirmShopGoodBeans.get(position).getUserId();
+                    ShopPresenter.searchUserId(ShopComfirmOrdersActivity.this,userId);
                 }
             });
             adapter.setDatas(comfirmShopGoodBeans);
@@ -782,6 +794,16 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
         }
         return sf.toString();
+    }
+
+    @Override
+    public void onSearchUserIdSuccess(String s) {
+
+    }
+
+    @Override
+    public void onUserIdError(String error) {
+       PopUtil.showComfirmDialog(this,"","用户号不存在","","",null,null,true);
     }
 
     private class Voucher {

@@ -42,6 +42,11 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
                  public void onInputUserId(String s) {
                      ordersListListener.onInputUserId(s,position);
                  }
+
+                 @Override
+                 public void onNoHasFocus() {
+                     ordersListListener.onNoFocus(position);
+                 }
              });
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
             //自适应自身高度
@@ -72,6 +77,8 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
         void etVisible(boolean etVisible,int position);
 
         void onInputUserId(String s, int position);
+
+        void onNoFocus(int position);
     }
 
     @Override
