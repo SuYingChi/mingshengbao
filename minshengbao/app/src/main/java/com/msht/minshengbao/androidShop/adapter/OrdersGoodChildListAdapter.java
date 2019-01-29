@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
@@ -19,6 +20,7 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
     private final OrdersChildListlistener ordersChildListlistener;
     private String storeName;
     private int storeDoorService;
+    private boolean isNeedEtVisible;
 
     public OrdersGoodChildListAdapter(Context context,OrdersChildListlistener ordersChildListlistener) {
         super(context, R.layout.item_orders_child_car_list);
@@ -65,7 +67,39 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
                 }
             });
         }else if(holder.getItemViewType() == 2){
+           RadioGroup radioGroup = holder.getView(R.id.radio_group);
+           EditText et = holder.getView(R.id.et_userid);
+           if(isNeedEtVisible){
+               et.setVisibility(View.VISIBLE);
+           }else {
+               et.setVisibility(View.GONE);
+           }
+            et.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    ordersChildListlistener.onInputUserId(s.toString());
+                }
+            });
+           radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+               @Override
+               public void onCheckedChanged(RadioGroup group, int checkedId) {
+                   if(checkedId== R.id.no_need_door){
+                       ordersChildListlistener.etVisible(false);
+                   }else if(checkedId == R.id.need_door){
+                       ordersChildListlistener.etVisible(true);
+                   }
+               }
+           });
         }
         else {
             holder.setImage(R.id.iv, goodsBean.getGoods_image_url());
@@ -89,10 +123,18 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
         this.storeDoorService = storeDoorService;
     }
 
+    public void setIsNeedEtVisible(boolean isNeedEtVisible) {
+        this.isNeedEtVisible = isNeedEtVisible;
+    }
+
     public interface OrdersChildListlistener {
          void onMessaged(String message);
 
         void onGoGoodDetail(String goods_id);
+
+        void etVisible(boolean etVisible);
+
+        void onInputUserId(String s);
     }
 
     @Override

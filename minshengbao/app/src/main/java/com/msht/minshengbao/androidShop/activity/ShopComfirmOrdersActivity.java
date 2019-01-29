@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -135,7 +137,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         ImmersionBar.setTitleBar(this, mToolbar);
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +149,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         Intent intent = getIntent();
         bundle = intent.getExtras();
         if (bundle != null) {
-           // comfirmShopGoodBeans = (List<ComfirmShopGoodBean>) bundle.getSerializable("data");
+            // comfirmShopGoodBeans = (List<ComfirmShopGoodBean>) bundle.getSerializable("data");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
             linearLayoutManager.setAutoMeasureEnabled(true);
             //scrollerview 嵌套recycleview，再嵌套recycleview ，使用nestedscrollerview，不能用Scrollerview,并且加上这行代码
@@ -163,7 +164,18 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
                 @Override
                 public void onGoGoodDetail(String goods_id) {
-                    onShopItemViewClick("goods",goods_id);
+                    onShopItemViewClick("goods", goods_id);
+                }
+
+                @Override
+                public void etVisible(boolean etVisible, int position) {
+                    comfirmShopGoodBeans.get(position).setIsNeedEtVisible(etVisible);
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onInputUserId(String s, int position) {
+                    comfirmShopGoodBeans.get(position).setUserId(s);
                 }
             });
             adapter.setDatas(comfirmShopGoodBeans);
@@ -178,7 +190,22 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         } else {
             finish();
         }
+      etRecommand.addTextChangedListener(new TextWatcher() {
+          @Override
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+          }
+
+          @Override
+          public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+          }
+
+          @Override
+          public void afterTextChanged(Editable s) {
+             recommendBean.setRecommend_phone(s.toString());
+          }
+      });
     }
 
 
@@ -192,7 +219,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             case R.id.back:
                 finish();
             case R.id.rlt_recommend:
-                if (recommandList.size() <=1) {
+                if (recommandList.size() <= 1) {
                     PopUtil.toastInCenter("无更多推荐人可选");
                 } else {
                     Intent intent1 = new Intent(this, RecommendActivity.class);
@@ -218,8 +245,24 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
                 } else if (TextUtils.isEmpty(addressId)) {
                     PopUtil.showComfirmDialog(this, "", "请添加收货地址", "", "", null, null, true);
-                } else {
-                    ShopPresenter.buyStep2(this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch);
+                } else if (!isHasStoreServiceGood()) {
+                    PopUtil.showComfirmDialog(this, "", "已确认订单信息无误并提交订单？", "取消", "确认", null, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ShopPresenter.buyStep2(ShopComfirmOrdersActivity.this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch);
+                        }
+                    }, true);
+                } else if (isHasStoreServiceGood()) {
+                    if (isHasEmptyDoorServiceUserId()) {
+                        PopUtil.showComfirmDialog(this, "", "请填写燃气用户号或选择不需要上门安装服务后再提交", "", "", null, null, true);
+                    } else {
+                        PopUtil.showComfirmDialog(this, "", "已确认订单信息无误并提交订单？", "取消", "确认", null, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ShopPresenter.buyStep2(ShopComfirmOrdersActivity.this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch, getUserIds());
+                            }
+                        }, true);
+                    }
                 }
                 break;
 
@@ -260,7 +303,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         }
 
     }
-
 
 
     @Override
@@ -370,6 +412,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 String store_name = storeobj.optString("store_name");
                 comfirmShopGoodBean.setStore_name(store_name);
                 comfirmShopGoodBean.setStoreDoorService(store_door_service);
+                comfirmShopGoodBean.setIsNeedEtVisible(true);
                 JSONArray goodList = storeobj.optJSONArray("goods_list");
                 for (int i = 0; i < goodList.length(); i++) {
                     JSONObject goodobj = goodList.optJSONObject(i);
@@ -399,7 +442,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             JSONArray recommendinfo = datas.optJSONArray("recommend_info");
             for (int i = 0; i < recommendinfo.length(); i++) {
                 JSONObject obj = recommendinfo.optJSONObject(i);
-                if(!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))){
+                if (!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))) {
                     recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
                 }
             }
@@ -426,11 +469,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llinv.setVisibility(View.GONE);
                 rltinv.setVisibility(View.GONE);
             }
-           /* invInfoBean = new InvItemBean(obj.optString("content"), true, obj.optString("inv_id"), obj.optString("inv_title"), obj.optString("inv_code"));
-            String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
-            tvInv_info.setText(content);*/
-           //默认没有发票
-            invInfoBean = new InvItemBean("不需要发票", true, "","","");
+            //默认没有发票
+            invInfoBean = new InvItemBean("不需要发票", true, "", "", "");
             tvInv_info.setText("不需要发票");
             freight_hash = datas.optString("freight_hash");
             String predeposit = datas.optString("available_predeposit");
@@ -548,9 +588,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 goodsTotalSelf -= rpacket;
             }
             goodsTotal = goodsTotalSelf + goods_freight;
-     //       tvTotalGoodsSelf.setText(StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money));
-        //    tvDelivery.setText(StringUtil.getPriceSpannable12String(this, goods_freight + "", R.style.big_money, R.style.big_money));
-        //    tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
             ShopPresenter.buyStep2ChangeAddress(this);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -732,6 +769,21 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         finish();
     }
 
+    public String getUserIds() {
+        // return "3713|1|1,3787|1|888";
+        StringBuilder sf = new StringBuilder();
+        for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
+            if (comfirmShopGoodBeans.get(i).getIsNeedEtVisible()) {
+                if (i == 0) {
+                    sf.append(comfirmShopGoodBeans.get(i).getStore_id()).append("|1|").append(comfirmShopGoodBeans.get(i).getUserId());
+                } else {
+                    sf.append(",").append(comfirmShopGoodBeans.get(i).getStore_id()).append("|1|").append(comfirmShopGoodBeans.get(i).getUserId());
+                }
+            }
+        }
+        return sf.toString();
+    }
+
     private class Voucher {
         public String voucher_price;
         public String voucher_t_id;
@@ -746,5 +798,23 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     public void onError(String s) {
         super.onError(s);
         finish();
+    }
+
+    private boolean isHasStoreServiceGood() {
+        for (ComfirmShopGoodBean bean : comfirmShopGoodBeans) {
+            if (bean.getStoreDoorService() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isHasEmptyDoorServiceUserId() {
+        for (ComfirmShopGoodBean bean : comfirmShopGoodBeans) {
+            if (bean.getStoreDoorService() == 1 && bean.getIsNeedEtVisible() && TextUtils.isEmpty(bean.getUserId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

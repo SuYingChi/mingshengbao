@@ -136,6 +136,14 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ShopPayOrderActivity.this, ShopOrdersDetailActivity.class);
+        intent.putExtra("data", orderId);
+        startActivity(intent);
+        super.onBackPressed();
+    }
+
+    @Override
     public void onCheckChange(boolean isChecked, int position) {
         selectedPayBean = payList.get(position);
         if (!selectedPayBean.isCheck() && isChecked) {

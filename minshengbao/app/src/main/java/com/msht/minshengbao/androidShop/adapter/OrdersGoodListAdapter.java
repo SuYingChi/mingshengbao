@@ -32,6 +32,16 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
                  public void onGoGoodDetail(String goods_id) {
                      ordersListListener.onGoGoodDetail(goods_id);
                  }
+
+                 @Override
+                 public void etVisible(boolean etVisible) {
+                     ordersListListener.etVisible(etVisible,position);
+                 }
+
+                 @Override
+                 public void onInputUserId(String s) {
+                     ordersListListener.onInputUserId(s,position);
+                 }
              });
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
             //自适应自身高度
@@ -43,12 +53,14 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
             childAdapter.setFoot_layoutId(R.layout.items_orders_child_car_list_foot);
             childAdapter.setStoreName(comfirmShopGoodBean.getStore_name());
             childAdapter.setStoreDoorService(comfirmShopGoodBean.getStoreDoorService());
+            childAdapter.setIsNeedEtVisible(comfirmShopGoodBean.getIsNeedEtVisible());
             childAdapter.setDatas(childlist);
             rcl.setAdapter(childAdapter);
         } else if (rcl.getAdapter() instanceof OrdersGoodChildListAdapter) {
             OrdersGoodChildListAdapter childAdapter = (OrdersGoodChildListAdapter) rcl.getAdapter();
             childAdapter.setStoreName(comfirmShopGoodBean.getStore_name());
             childAdapter.setStoreDoorService(comfirmShopGoodBean.getStoreDoorService());
+            childAdapter.setIsNeedEtVisible(comfirmShopGoodBean.getIsNeedEtVisible());
             childAdapter.notifyDataSetChanged();
         }
     }
@@ -56,6 +68,10 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
         void onMessaged(String message,int position);
 
         void onGoGoodDetail(String goods_id);
+
+        void etVisible(boolean etVisible,int position);
+
+        void onInputUserId(String s, int position);
     }
 
     @Override

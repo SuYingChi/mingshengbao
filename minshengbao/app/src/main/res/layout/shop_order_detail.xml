@@ -239,7 +239,7 @@
                     android:gravity="right"
                     android:text=""
                     android:ellipsize="end"
-                    android:textColor="@color/shop_grey"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
             </LinearLayout>
             <LinearLayout

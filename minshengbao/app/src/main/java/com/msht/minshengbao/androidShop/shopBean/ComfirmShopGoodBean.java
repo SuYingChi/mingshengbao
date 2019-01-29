@@ -15,6 +15,14 @@ public class ComfirmShopGoodBean implements Serializable{
     private String store_name;
     private List<GoodsBean> goods;
     private int storeDoorService;
+    private boolean isNeedEtVisible;
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    private String userId;
 
     public ComfirmShopGoodBean() {
     }
@@ -50,6 +58,18 @@ public class ComfirmShopGoodBean implements Serializable{
 
     public int getStoreDoorService() {
         return storeDoorService;
+    }
+
+    public void setIsNeedEtVisible(boolean isNeedEtVisible) {
+        this.isNeedEtVisible = isNeedEtVisible;
+    }
+
+    public boolean getIsNeedEtVisible() {
+        return isNeedEtVisible;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public static class GoodsBean implements Serializable{
