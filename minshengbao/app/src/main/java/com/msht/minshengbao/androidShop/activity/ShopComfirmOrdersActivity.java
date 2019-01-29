@@ -366,8 +366,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 comfirmShopGoodBean.setStore_id(storeId);
                 List<ComfirmShopGoodBean.GoodsBean> comfirmGoodList = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
                 JSONObject storeobj = storeCartList.optJSONObject(storeId);
+                int store_door_service = storeobj.optInt("store_door_service");
                 String store_name = storeobj.optString("store_name");
                 comfirmShopGoodBean.setStore_name(store_name);
+                comfirmShopGoodBean.setStoreDoorService(store_door_service);
                 JSONArray goodList = storeobj.optJSONArray("goods_list");
                 for (int i = 0; i < goodList.length(); i++) {
                     JSONObject goodobj = goodList.optJSONObject(i);
@@ -376,7 +378,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     } else if ("1".equals(goodobj.optString("pickup_self"))) {
                         PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
                     } else if (goodobj.optBoolean("storage_state") && "0".equals(goodobj.optString("pickup_self"))) {
-                        //  String store_name, String storeId,String goods_image_url,String goods_name,String goods_num,String goods_price,String good_id
                         ComfirmShopGoodBean.GoodsBean goodbean = new ComfirmShopGoodBean.GoodsBean(store_name, storeId, goodobj.optString("goods_image_url"), goodobj.optString("goods_name"), goodobj.optString("goods_num"), goodobj.optString("goods_price"), goodobj.optString("goods_id"));
                         goodbean.setCart_id(goodobj.optString("cart_id"));
                         comfirmGoodList.add(goodbean);

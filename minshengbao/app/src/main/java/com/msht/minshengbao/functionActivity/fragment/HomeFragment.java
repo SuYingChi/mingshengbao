@@ -523,11 +523,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
 
     }
     private void onFloatingAdvertisingData(JSONArray array) {
-        if (array.length()>0){
+        if (array!=null&&array.length()>0){
             dragImageView.setVisibility(View.VISIBLE);
-        }else {
-            dragImageView.setVisibility(View.GONE);
-        }
         try {
             JSONObject jsonObject = array.getJSONObject(0);
             String image = jsonObject.getString("image");
@@ -546,8 +543,9 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }catch (JSONException e){
             e.printStackTrace();
         }
-
-
+        }else {
+            dragImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
