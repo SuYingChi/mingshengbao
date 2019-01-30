@@ -379,7 +379,6 @@
         <activity android:name=".androidShop.activity.ShopSearchActivty" />
         <activity android:name=".androidShop.activity.ShopCarActivity" />
         <activity android:name=".androidShop.activity.ShopComfirmOrdersActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             />
         <activity android:name=".androidShop.activity.ShopAddressListActivity" />
         <activity android:name=".androidShop.activity.AddShopAdressActivity" />

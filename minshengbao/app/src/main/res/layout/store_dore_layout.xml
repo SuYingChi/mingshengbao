@@ -57,6 +57,21 @@
             android:textSize="@dimen/text_width18" />
     </RadioGroup>
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_Modules">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_Modules"
+            android:text="燃气用户号"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
     <EditText
         android:id="@+id/et_userid"
         style="@style/editText"
@@ -65,4 +80,5 @@
         android:inputType="number"
         android:hint="请输入燃气用户号"
         />
+    </LinearLayout>
 </LinearLayout>

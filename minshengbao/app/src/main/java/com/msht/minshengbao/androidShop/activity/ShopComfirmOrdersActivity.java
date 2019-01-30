@@ -2,6 +2,7 @@ package com.msht.minshengbao.androidShop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +30,7 @@ import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.InvItemBean;
 import com.msht.minshengbao.androidShop.shopBean.RecommendBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopAddressListBean;
+import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
@@ -81,6 +85,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     LinearLayout llinv;
     @BindView(R.id.rlt_inv_info)
     RelativeLayout rltinv;
+    @BindView(R.id.root)
+    RelativeLayout rootView;
+    @BindView(R.id.ll_edit_bottom)
+    RelativeLayout rltBottom;
     private static final int REQUEST_CODE_ADDRESS = 100;
     private List<ComfirmShopGoodBean> comfirmShopGoodBeans = new ArrayList<ComfirmShopGoodBean>();
     private String ifCarted;
@@ -124,7 +132,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private boolean isInv = true;
     private OrdersGoodListAdapter adapter;
     private Bundle bundle;
-
+    Handler handler = new Handler();
 
     @Override
     protected void setLayout() {
@@ -135,12 +143,14 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     protected void initImmersionBar() {
         super.initImmersionBar();
         mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
+        // 设置android:fitsSystemWindows="true"，在键盘弹起时往上顶布局，但是布局就位置处于statusbar下面,和navigationbar上面
+        //ImmersionBar.setTitleBar源码得知，toolbar高度会自动补上状态高度，就不要使用settitlebar了
+       // ImmersionBar.setTitleBar(this, mToolbar);
     }
 
     @Override
     protected void setSoftInPutMode() {
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @Override
@@ -158,6 +168,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             // comfirmShopGoodBeans = (List<ComfirmShopGoodBean>) bundle.getSerializable("data");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
             linearLayoutManager.setAutoMeasureEnabled(true);
+            linearLayoutManager.setStackFromEnd(true);
             //scrollerview 嵌套recycleview，再嵌套recycleview ，使用nestedscrollerview，不能用Scrollerview,并且加上这行代码
             rcl.setNestedScrollingEnabled(false);
             rcl.setLayoutManager(linearLayoutManager);
@@ -187,7 +198,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 @Override
                 public void onNoFocus(int position) {
                     String userId = comfirmShopGoodBeans.get(position).getUserId();
-                    ShopPresenter.searchUserId(ShopComfirmOrdersActivity.this,userId);
+                    if(!TextUtils.isEmpty(userId)) {
+                        ShopPresenter.searchUserId(ShopComfirmOrdersActivity.this, userId);
+                    }
                 }
             });
             adapter.setDatas(comfirmShopGoodBeans);
@@ -202,22 +215,52 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         } else {
             finish();
         }
-      etRecommand.addTextChangedListener(new TextWatcher() {
-          @Override
-          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        etRecommand.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-          }
+            }
 
-          @Override
-          public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-          }
+            }
 
-          @Override
-          public void afterTextChanged(Editable s) {
-             recommendBean.setRecommend_phone(s.toString());
-          }
-      });
+            @Override
+            public void afterTextChanged(Editable s) {
+                recommendBean.setRecommend_phone(s.toString());
+            }
+        });
+        //优化软键盘弹出时底部跟着弹出
+        rltBottom.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom - oldBottom < -10) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //软键盘弹上去了,动态设置高度为0
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    0);
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            rltBottom.setLayoutParams(params);
+                        }
+                    });
+                } else if (bottom - oldBottom > 10) {
+                    //软键盘弹下去了，动态设置高度，恢复原先控件高度
+                    //（"1"这个高度值可以换做：屏幕高度的1/3）
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            rltBottom.setLayoutParams(params);
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
@@ -803,7 +846,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public void onUserIdError(String error) {
-       PopUtil.showComfirmDialog(this,"","用户号不存在","","",null,null,true);
+       PopUtil.showComfirmDialog(this,"","该燃气用户号不存在","","",null,null,true);
     }
 
     private class Voucher {

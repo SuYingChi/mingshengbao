@@ -230,12 +230,12 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             BarParams barParams = ImmersionBar.with(this).getBarParams();
             //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
             if (barParams.fullScreen) {
-                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).statusBarColor(R.color.msb_color).init();
             }else {
-                mImmersionBar.init();
+                mImmersionBar.statusBarColor(R.color.msb_color).init();
             }
         } else {
-            mImmersionBar.init();
+            mImmersionBar.statusBarColor(R.color.msb_color).init();
         }
     }
 
