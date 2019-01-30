@@ -75,16 +75,11 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
         isViewCreated = true;
     }
 
-    @Override
-    protected void initImmersionBar() {
-
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
+        initImmersionBar();
     }
 
     @Override
@@ -123,7 +118,7 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
 
     @Override
     public void changeCarEmpty() {
-        vp.setCurrentItem(0);
+            vp.setCurrentItem(0);
     }
 
     public void refreshCarFragment() {

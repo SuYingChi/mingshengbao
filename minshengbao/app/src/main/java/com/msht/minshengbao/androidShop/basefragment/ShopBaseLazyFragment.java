@@ -9,13 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.msht.minshengbao.R;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * 当使用viewpager加载Fragment，沉浸式的使用，原理懒加载,如果只需要加载一次页面的数据才使用，否则使用basefrgment
+ * 当使用viewpager加载Fragment，沉浸式的使用，原理懒加载,当可见的时候才加载数据,如果只需要加载一次页面的数据才使用，否则使用basefrgment
  */
 public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
 
@@ -147,8 +149,22 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * 初始化沉浸式
      */
     protected void initImmersionBar() {
-        mImmersionBar = ImmersionBar.with(this);
-        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
+        if(getActivity()!=null) {
+            mImmersionBar = ImmersionBar.with(getActivity(), this);
+            //白色状态栏处理
+            mImmersionBar.statusBarDarkFont(true, 0.2f);
+            if (ImmersionBar.hasNavigationBar(getActivity())) {
+                BarParams barParams = ImmersionBar.with(this).getBarParams();
+                //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
+                if (barParams.fullScreen) {
+                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+                } else {
+                    mImmersionBar.init();
+                }
+            } else {
+                mImmersionBar.init();
+            }
+        }
     }
 
     /**

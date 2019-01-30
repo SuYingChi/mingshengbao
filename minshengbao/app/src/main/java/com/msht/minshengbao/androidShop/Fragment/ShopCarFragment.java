@@ -105,7 +105,11 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         super.onAttach(context);
         carParentListener = (CarParentListener) getParentFragment();
     }
-
+    @Override
+    protected void initImmersionBar() {
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(getActivity(),mToolbar);
+    }
     @Override
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
@@ -349,7 +353,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
         isViewCreated = true;
     }
 
