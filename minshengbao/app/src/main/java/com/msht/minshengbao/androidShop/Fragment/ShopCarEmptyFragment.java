@@ -69,7 +69,6 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
         isViewCreated = true;
     }
 
@@ -87,6 +86,12 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
                 ShopPresenter.guessLikeGoodList(this);
             }
         }
+    }
+
+    @Override
+    protected void initImmersionBar() {
+        super.initImmersionBar();
+        ImmersionBar.setTitleBar(getActivity(),mToolbar);
     }
 
     @Override

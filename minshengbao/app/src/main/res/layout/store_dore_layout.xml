@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    >
+    <TextView
+        android:text="上门安装服务"
+        style="@style/shopBlackTitleText"
+        />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_Modules"
+        android:paddingTop="@dimen/margin_Modules">
+
+        <RadioButton
+            android:id="@+id/no_need_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp5"
+            android:layout_marginRight="@dimen/dp5"
+            android:drawableRight="@drawable/item_carlist_selected"
+            android:drawablePadding="@dimen/margin_width20"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/dp4"
+            android:text="不需要"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
+
+
+        <RadioButton
+            android:id="@+id/need_door"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp5"
+            android:layout_marginRight="@dimen/dp5"
+            android:drawableRight="@drawable/item_carlist_selected"
+            android:drawablePadding="@dimen/margin_width20"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/dp4"
+            android:text="需要"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
+    </RadioGroup>
+    <View
+        android:layout_width="@dimen/margin_width30"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_Modules">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_Modules"
+            android:text="燃气用户号"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_width18" />
+    <EditText
+        android:id="@+id/et_userid"
+        style="@style/editText"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_Modules"
+        android:inputType="number"
+        android:hint="请输入燃气用户号"
+        />
+    </LinearLayout>
+</LinearLayout>

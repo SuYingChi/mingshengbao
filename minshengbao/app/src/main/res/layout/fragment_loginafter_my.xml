@@ -114,11 +114,10 @@
                         android:id="@+id/collected_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shop_red_oval"
                         android:gravity="center"
-                        android:text="3"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_10"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_width16"
                         android:visibility="gone" />
                     <View
                         android:layout_width="0dp"
@@ -154,11 +153,10 @@
                         android:id="@+id/footprint_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shop_red_oval"
                         android:gravity="center"
-                        android:text="3"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_10"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_width16"
                         android:visibility="gone" />
                     <View
                         android:layout_width="0dp"

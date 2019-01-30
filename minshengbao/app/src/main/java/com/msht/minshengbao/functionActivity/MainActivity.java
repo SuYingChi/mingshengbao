@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -613,7 +614,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 bundle.putInt("index", 1);
                             } else {
                                 tvCarNum.setVisibility(View.GONE);
-                                bundle.putInt("index", 2);
+                                bundle.putInt("index", 0);
                             }
                             EventBus.getDefault().postSticky(new CarNumEvent(carNum));
                         } catch (JSONException e) {
@@ -629,7 +630,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             } else {
                 tvCarNum.setVisibility(View.GONE);
                 EventBus.getDefault().postSticky(new CarNumEvent(-1));
-                bundle.putInt("index", 0);
+                bundle.putInt("index", 2);
             }
             shopCarParentFragment.setArguments(bundle);
         }
@@ -803,9 +804,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (shopCarParentFragment == null) {
             shopCarParentFragment = new ShopCarParentFragment();
         }
-        addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
         //在add hide show结构中，重复show的话不会再次回调onvisible ,所以需要外放接口手动触发onvisible时的操作
         shopCarParentFragment.refreshCarFragment();
+        addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1074,4 +1076,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             EventBus.getDefault().postSticky(new CarNumEvent(-1));
         }
     }
+
 }

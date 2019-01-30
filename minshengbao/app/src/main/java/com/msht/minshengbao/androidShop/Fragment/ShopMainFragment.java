@@ -211,10 +211,9 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         }
     }
 
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void initImmersionBar() {
+        super.initImmersionBar();
         ImmersionBar.setTitleBar(getActivity(), mToolbar);
     }
 

@@ -17,7 +17,4 @@ public  interface IBaseView {
 
     void onNetError();
 
-
-
-
 }

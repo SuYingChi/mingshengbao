@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassFirstBean;
@@ -67,6 +68,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
+import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShopFootprintView;
@@ -662,7 +664,37 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void buyStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch,String userIds) {
+        OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
+                .addParams("ifcart", ifCarted)
+                .addParams("cart_id", carid)
+                .addParams("address_id", addressId)
+                .addParams("ifpickup_self", ifpickup_self)
+                .addParams("delivery", iBuyStep2View.getDelivery())
+                .addParams("recommend_phone", recommend_phone)
+                .addParams("vat_hash", vat_hash)
+                .addParams("offpay_hash", offpay_hash)
+                .addParams("offpay_hash_batch", offpay_hash_batch)
+                .addParams("pay_name", iBuyStep2View.getPayName())
+                .addParams("invoice_id", iBuyStep2View.getInvoiceIds())
+                .addParams("voucher", iBuyStep2View.getVoucher())
+                .addParams("pd_pay", iBuyStep2View.getPd_pay())
+                .addParams("password", iBuyStep2View.getPassword())
+                .addParams("fcode", iBuyStep2View.getFcode())
+                .addParams("rcb_pay", iBuyStep2View.getRcb_pay())
+                .addParams("rpt", iBuyStep2View.getRpt())
+                .addParams("pay_message", iBuyStep2View.getPay_message())
+                .addParams("door_service", userIds)
+                .build().execute(new DataStringCallback(iBuyStep2View, false) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iBuyStep2View.onBuyStep2Success(s);
+                }
+            }
+        });
+    }
     public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn,final String orderId) {
         OkHttpUtils.post().url(ShopConstants.BUY_STEP3).tag(iBuyStep3GetPayListView).addParams("key", iBuyStep3GetPayListView.getKey())
                 .addParams("pay_sn", paySn)
@@ -1447,6 +1479,39 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iGetWuliuView.onPostReturnGoodSuccess(s);
+                }
+            }
+        });
+    }
+    public static void searchUserId(final ISearchUserIdView iSearchUserIdView,String userId){
+        OkHttpUtils.get().url(ShopConstants.SRARCH_USERID).addParams("customerNo",userId).tag(iSearchUserIdView)
+                .build().execute(new DataStringCallback(iSearchUserIdView) {
+            @Override
+            public void onResponse(String s, int i) {
+                if(isShowLoadingDialog) {
+                    iSearchUserIdView.dismissLoading();
+                }
+                if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
+                    isResponseSuccess = false;
+                    iSearchUserIdView.onError("接口返回空字符串");
+                }else {
+                    BaseData baseData = JsonUtil.getBaseData(s);
+                    if(baseData ==null){
+                        iSearchUserIdView.onError("GSON转换异常");
+                    }else if("fail".equals(baseData.getResult())){
+                        try {
+                            JSONObject object = new JSONObject(s);
+                            if(TextUtils.equals(object.optString("error"),"用户名或密码错误")){
+                                iSearchUserIdView.onError("未登录");
+                            }else {
+                                iSearchUserIdView.onUserIdError(object.optString("error"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else if("success".equals(baseData.getResult())){
+                        iSearchUserIdView.onSearchUserIdSuccess(s);
+                    }
                 }
             }
         });

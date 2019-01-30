@@ -523,11 +523,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
 
     }
     private void onFloatingAdvertisingData(JSONArray array) {
-        if (array.length()>0){
+        if (array!=null&&array.length()>0){
             dragImageView.setVisibility(View.VISIBLE);
-        }else {
-            dragImageView.setVisibility(View.GONE);
-        }
         try {
             JSONObject jsonObject = array.getJSONObject(0);
             String image = jsonObject.getString("image");
@@ -546,8 +543,9 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }catch (JSONException e){
             e.printStackTrace();
         }
-
-
+        }else {
+            dragImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -1019,16 +1017,18 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
 
     private void onSaveHotRepair(JSONArray array) {
         try {
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject jsonObject = array.getJSONObject(i);
-                String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
-                String code = jsonObject.getString("code");
-                HashMap<String, String> maps = new HashMap<String, String>();
-                maps.put("id", id);
-                maps.put("name", name);
-                maps.put("code", code);
-                hotList.add(maps);
+            if(array!=null) {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject jsonObject = array.getJSONObject(i);
+                    String id = jsonObject.getString("id");
+                    String name = jsonObject.getString("name");
+                    String code = jsonObject.getString("code");
+                    HashMap<String, String> maps = new HashMap<String, String>();
+                    maps.put("id", id);
+                    maps.put("name", name);
+                    maps.put("code", code);
+                    hotList.add(maps);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

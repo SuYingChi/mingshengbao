@@ -406,7 +406,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 tvEvaluation.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvEvaluation.setText("评价订单");
                 tvEvaluation.setTextColor(this.getResources().getColor(R.color.black));
-                tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                 tvEvaluation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

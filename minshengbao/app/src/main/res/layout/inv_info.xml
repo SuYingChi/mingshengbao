@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-   <!-- 当时用了immetionbar的 settitle 后，?actionBarSize会自动加上状态栏高度-->
+   <!-- 当时用了immetionbar的 settitle 后，Toolbar会自动加上状态栏高度-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="@color/msb_color"
         app:contentInsetStart="0dp"
         >
     <RelativeLayout
