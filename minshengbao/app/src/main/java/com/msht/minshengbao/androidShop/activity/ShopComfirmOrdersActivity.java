@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.StatusBarUtil;
 import com.msht.minshengbao.androidShop.adapter.OrdersGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -143,16 +146,13 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     protected void initImmersionBar() {
         super.initImmersionBar();
         mImmersionBar.keyboardEnable(true);
+        //此属性与浸入式冲突,设置状态栏颜色不生效，
+        //mImmersionBar.statusBarColor(R.color.msb_color);
+        StatusBarCompat.compat(this,getResources().getColor(R.color.msb_color));
         // 设置android:fitsSystemWindows="true"，在键盘弹起时往上顶布局，但是布局就位置处于statusbar下面,和navigationbar上面
         //ImmersionBar.setTitleBar源码得知，toolbar高度会自动补上状态高度，就不要使用settitlebar了
-       // ImmersionBar.setTitleBar(this, mToolbar);
+        // ImmersionBar.setTitleBar(this, mToolbar);
     }
-
-    @Override
-    protected void setSoftInPutMode() {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
