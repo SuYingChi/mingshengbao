@@ -716,7 +716,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         mMZBanner = (MZBannerView) view.findViewById(R.id.banner);
         layoutNotOpen =view.findViewById(R.id.id_not_open);
         layoutHaveData =view.findViewById(R.id.id_layout_havedata);
-        layoutSelectCity =(RelativeLayout)view.findViewById(R.id.id_re_city);
+        layoutSelectCity =view.findViewById(R.id.id_city_layout);
         layoutNavigation=(LinearLayout) view.findViewById(R.id.id_li_navigation);
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
         mAdView = (ImageCycleView)view.findViewById(R.id.ad_view);
@@ -839,12 +839,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_re_city:
+            case R.id.id_city_layout:
                 Intent city = new Intent(mContext, SelectCityActivity.class);
                 startActivityForResult(city, REQUEST_CODE);
                 break;
             case R.id.id_layout_air:
-
                 if (isLoginState(mContext)){
                     airConditioner();
                 }else {

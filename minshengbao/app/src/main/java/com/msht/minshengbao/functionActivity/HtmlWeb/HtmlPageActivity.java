@@ -185,7 +185,7 @@ public class HtmlPageActivity extends BaseActivity {
         }else {
             head.setVisibility(View.VISIBLE);
         }
-        backImg = (ImageView) findViewById(R.id.id_goback);
+        backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mNavigation);
         TextView tvRightText=findViewById(R.id.id_tv_rightText);

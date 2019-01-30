@@ -57,8 +57,7 @@ import java.util.HashMap;
 public class GasInternetTablePayFeeActivity extends BaseActivity {
 
     private Button btnSend;
-    private TextView tvpayableAmount;
-    private TextView tvSubtract;
+    private TextView tvpayableAmount;;
     private ListViewForScrollView forScrollView;
     private PayWayAdapter mAdapter;
     private String userId,voucherId;
@@ -67,10 +66,10 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
     private String charge;
     private String channels="";
     private String orderId="";
-    private String totalAmount;
     private String mCustomerNo;
-    private String discountAmount;
     private String payableAmount;
+    private String totalAmount;
+    private String discountAmount;
     private double doubleBalance;
     private int requestCode=0;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
@@ -240,7 +239,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
     }
     private void onGetBalanceData() {
         doubleBalance=jsonObject.optDouble("balance");
-        double doubleAmount=Double.valueOf(discountAmount);
+        double doubleAmount=Double.valueOf(payableAmount);
         if (doubleAmount<=doubleBalance){
             VariableUtil.balance="余额充足";
         }else {
@@ -314,12 +313,12 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
         if (data!=null){
-            totalAmount=data.getStringExtra("totalAmount");
-            discountAmount=data.getStringExtra("discountAmount");
             payId =data.getStringExtra("payId");
             payableAmount=data.getStringExtra("payableAmount");
             mCustomerNo=data.getStringExtra("customerNo");
-            String gasCapacity=data.getStringExtra("gasCapacity");
+            totalAmount=data.getStringExtra("totalAmount");
+            discountAmount=data.getStringExtra(" discountAmount");
+
         }
         VariableUtil.payPos =-1;
         initFindViewId();
@@ -348,15 +347,15 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
     private void initFindViewId() {
         forScrollView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         tvpayableAmount =(TextView)findViewById(R.id.id_real_fee);
-        tvSubtract =(TextView)findViewById(R.id.id_discount_amount);
-        TextView tvShouldAmount =(TextView)findViewById(R.id.id_should_fee);
+        TextView tvDiscountAmount=(TextView)findViewById(R.id.id_coupon_fee);
+        TextView tvTotalAmountText=(TextView)findViewById(R.id.id_should_fee);
         btnSend =(Button)findViewById(R.id.id_btn_pay) ;
-        String totalAmountText="¥"+totalAmount;
         String payableAmountText="¥"+payableAmount;
         String discountAmountText="¥"+discountAmount;
-        tvShouldAmount.setText(totalAmountText);
+        String totalAmountText= "¥"+totalAmount;
+        tvDiscountAmount.setText(discountAmountText);
+        tvTotalAmountText.setText(totalAmountText);
         tvpayableAmount.setText(payableAmountText);
-        tvSubtract.setText(discountAmountText);
         btnSend.setEnabled(false);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override

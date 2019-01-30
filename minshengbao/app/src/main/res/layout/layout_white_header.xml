@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_width50">
         <ImageView
-            android:id="@+id/id_goback"
+            android:id="@+id/id_back"
             android:padding="@dimen/margin_width5"
             android:layout_width="@dimen/margin_width30"
             android:layout_height="@dimen/margin_width30"

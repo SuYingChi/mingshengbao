@@ -31,7 +31,7 @@ public class ConsultRecommendActivity extends AppCompatActivity {
         String mPageName = "咨询建议";
         ((TextView)findViewById(R.id.tv_navigation)).setText(mPageName);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

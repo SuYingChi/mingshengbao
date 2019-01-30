@@ -127,7 +127,7 @@ public class WaterFriendShareActivity extends BaseActivity implements View.OnCli
                 MPermissionUtils.requestPermissionsResult(this, ConstantUtil.MY_CAMERA_REQUEST, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new MPermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted(int code) {
-                        onCodeShare();;
+                        onCodeShare();
                     }
                     @Override
                     public void onPermissionDenied(int code) {

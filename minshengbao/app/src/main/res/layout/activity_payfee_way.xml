@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:text="优惠金额："
+                    android:text="@string/discount_Amount"
                     android:textColor="@color/black1"
                     android:textSize="@dimen/text_width16"
                     />

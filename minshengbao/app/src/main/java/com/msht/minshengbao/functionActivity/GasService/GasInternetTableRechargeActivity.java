@@ -44,8 +44,8 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
     private Button   btnRecharge;
     private String   mAddress;
     private String   mCustomerNo;
-    private String   mLastGasNum;
-    private String   mLastTime;
+   // private String   mLastGasNum;
+    //private String   mLastTime;
     private String   meterNo;
     private String   mGasNum;
     private String   mAmount="0";
@@ -77,6 +77,7 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
                         JSONObject jsonObject =object.optJSONObject("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.onReceiveExpanseData(jsonObject);
+
                         }else {
                             ToastUtil.ToastText(activity.context,error);
                         }
@@ -94,19 +95,17 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
         }
     }
     private void onReceiveExpanseData(JSONObject jsonObject) {
-        String totalAmount=jsonObject.optString("totalAmount");
-        String gasCapacity=jsonObject.optString("gasCapacity");
-        String discountAmount=jsonObject.optString("discountAmount");
         String payId=jsonObject.optString("payId");
         String customerNo=jsonObject.optString("customerNo");
+        String totalAmount=jsonObject.optString("totalAmount");
+        String discountAmount=jsonObject.optString("discountAmount");
         String payableAmount=jsonObject.optString("payableAmount");
         Intent intent=new Intent(context,GasInternetTablePayFeeActivity.class);
-        intent.putExtra("totalAmount",totalAmount);
-        intent.putExtra("gasCapacity",gasCapacity);
-        intent.putExtra("discountAmount",discountAmount);
         intent.putExtra("payId",payId);
         intent.putExtra("customerNo",customerNo);
         intent.putExtra("payableAmount",payableAmount);
+        intent.putExtra("discountAmount",discountAmount);
+        intent.putExtra("totalAmount",totalAmount);
         startActivityForResult(intent,1);
     }
     @Override
@@ -123,8 +122,8 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
         if (data!=null){
             mAddress=data.getStringExtra("address");
             mCustomerNo=data.getStringExtra("customerNo");
-            mLastGasNum=data.getStringExtra("lastRechargeAmount");
-            mLastTime=data.getStringExtra("lastRechargeTime");
+            //mLastGasNum=data.getStringExtra("lastRechargeAmount");
+           // mLastTime=data.getStringExtra("lastRechargeTime");
             meterNo=data.getStringExtra("meterNo");
         }
         initFindViewId();
@@ -144,15 +143,16 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
     }
     private void initFindViewId() {
         etGasNum=(EditText)findViewById(R.id.id_et_gasNum);
-        TextView tvLastTime=(TextView)findViewById(R.id.id_last_time);
-        TextView tvLastGasNum=(TextView)findViewById(R.id.id_last_gasNum);
+       // TextView tvLastTime=(TextView)findViewById(R.id.id_last_time);
+        //TextView tvLastGasNum=(TextView)findViewById(R.id.id_last_gasNum);
         TextView tvCustomerNo=(TextView)findViewById(R.id.id_customerNo);
         TextView tvAddress=(TextView)findViewById(R.id.id_tv_address);
         btnRecharge=(Button)findViewById(R.id.id_btn_recharge);
         tvCustomerNo.setText(mCustomerNo);
         tvAddress.setText(mAddress);
-        tvLastGasNum.setText(mLastGasNum);
-        tvLastTime.setText(mLastTime);
+       // String mLastAmount="¥"+mLastGasNum;
+       // tvLastGasNum.setText(mLastAmount);
+       // tvLastTime.setText(mLastTime);
         etGasNum.addTextChangedListener(new MyTextWatcher());
         findViewById(R.id.id_recharge_record).setOnClickListener(this);
         findViewById(R.id.id_price_explain).setOnClickListener(this);
@@ -183,16 +183,14 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
         startActivity(name);
     }
     private void onGasFeeRecharge() {
-        String gasCapacity=etGasNum.getText().toString().trim();
+        String amount=etGasNum.getText().toString().trim();
         customDialog.show();
         String validateURL=UrlUtil.INTERNET_TABLE_PAYMENT;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        textParams.put("gasCapacity",gasCapacity);
+        textParams.put("amount",amount);
         textParams.put("meterNo",meterNo);
-        String M=validateURL+"?"+textParams.toString();
-        Log.d("textParams=",validateURL+"?"+textParams.toString());
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void onGasPrice() {

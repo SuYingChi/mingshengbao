@@ -73,6 +73,7 @@ public class RepairEvaluateActivity extends BaseActivity {
                         String result=object.optString("result");
                         String error = object.optString("error");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            activity.setResult(4);
                             activity.initShow();    //提示评价成功
                         }else {
                             activity.onFailure(error);
@@ -98,7 +99,6 @@ public class RepairEvaluateActivity extends BaseActivity {
                 .setButton1("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        setResult(2);
                         dialog.dismiss();
                         finish();
                     }

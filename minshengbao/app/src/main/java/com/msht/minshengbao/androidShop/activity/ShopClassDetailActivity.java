@@ -68,6 +68,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+
 public class ShopClassDetailActivity extends ShopBaseActivity implements IShopClassDetailView, OnRefreshLoadMoreListener, OnRefreshListener, ClassDetailRightAdapter.AddCarListener, IShopGoodDetailView, ICarListView, IModifyCarGoodNumView, IShopAllClassView, IWarnMessageDetailView {
     @BindView(R.id.rcl)
     RecyclerView rclLeft;
@@ -123,8 +124,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private int carNum = -1;
     private String carid;
-
-
     @Override
     protected void setLayout() {
         setContentView(R.layout.class_detail);
@@ -220,8 +219,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         });
         ShopPresenter.getAllClass(this);
     }
-
-
     @Override
     protected void onResume() {
         super.onResume();

@@ -7,20 +7,25 @@
     android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context=".functionActivity.HtmlWeb.InsuranceHtmlActivity">
-    <FrameLayout
+    <include layout="@layout/layout_header" android:id="@+id/id_webHeader"/>
+    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
+        android:id="@+id/id_vertical_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background_gray">
-        <WebView
-            android:id="@+id/id_insurance_webView"
+        android:layout_height="match_parent">
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </WebView>
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center" />
-        <include layout="@layout/layout_insurance_header" />
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:background="@color/background_gray">
+            <WebView
+                android:id="@+id/id_insurance_webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </WebView>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
 </LinearLayout>

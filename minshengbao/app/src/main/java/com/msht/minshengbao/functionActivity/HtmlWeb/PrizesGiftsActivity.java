@@ -61,7 +61,7 @@ public class PrizesGiftsActivity extends BaseActivity {
     }
 
     private void initHeader() {
-        backImg = (ImageView) findViewById(R.id.id_goback);
+        backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mNavigation);
         backImg.setOnClickListener(new View.OnClickListener() {

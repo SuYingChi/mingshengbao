@@ -71,8 +71,14 @@ public class InsuranceListActivity extends BaseActivity {
             public void onItemClick(View view, int mainPosition, int secondPosition) {
                 InsuranceBusinessModel.DataBean.ChildBean childBean=dataList.get(mainPosition).getChild().get(secondPosition);
                 String id=String.valueOf(childBean.getId());
+                String imageUrl=childBean.getImg();
+                String desc=childBean.getDesc();
+                String title=childBean.getTitle();
                 Intent intent=new Intent(context,InsuranceHtmlActivity.class);
                 intent.putExtra("id",id);
+                intent.putExtra("imageUrl",imageUrl);
+                intent.putExtra("desc",desc);
+                intent.putExtra("title",title);
                 startActivity(intent);
             }
         });

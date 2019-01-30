@@ -65,8 +65,8 @@ public class PayRecordAdapter extends RecyclerView.Adapter<PayRecordAdapter.MyVi
                 myViewHolder.tvText2.setText("支付状态");
                 myViewHolder.tvText3.setText("充值时间");
                 myViewHolder.tvText4.setText("上表状态");
-                myViewHolder.tvText4.setVisibility(View.VISIBLE);
-                myViewHolder.cnWriteCardState.setVisibility(View.VISIBLE);
+                myViewHolder.tvText4.setVisibility(View.GONE);
+                myViewHolder.cnWriteCardState.setVisibility(View.GONE);
                 break;
                 default:
                     myViewHolder.cnWriteCardState.setText(writeCardState);
@@ -77,21 +77,6 @@ public class PayRecordAdapter extends RecyclerView.Adapter<PayRecordAdapter.MyVi
                     myViewHolder.cnWriteCardState.setVisibility(View.GONE);
                     break;
         }
-        /*if (!writeCardState.equals("0")){
-            myViewHolder.cnWriteCardState.setText(writeCardState);
-            myViewHolder.tvText1.setText("充值金额");
-            myViewHolder.tvText2.setText("充值渠道");
-            myViewHolder.tvText3.setText("充值时间");
-            myViewHolder.tvText4.setVisibility(View.VISIBLE);
-            myViewHolder.cnWriteCardState.setVisibility(View.VISIBLE);
-        }else {
-            myViewHolder.cnWriteCardState.setText(writeCardState);
-            myViewHolder.tvText1.setText("订单金额");
-            myViewHolder.tvText2.setText("缴费渠道");
-            myViewHolder.tvText3.setText("缴费时间");
-            myViewHolder.tvText4.setVisibility(View.GONE);
-            myViewHolder.cnWriteCardState.setVisibility(View.GONE);
-        }*/
     }
     @Override
     public long getItemId(int position) {

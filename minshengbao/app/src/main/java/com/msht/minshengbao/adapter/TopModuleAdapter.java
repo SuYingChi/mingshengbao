@@ -89,7 +89,7 @@ public class TopModuleAdapter extends BaseAdapter {
                 holder.imgFunction.setImageResource(R.drawable.lpg_home_xh);
                 break;
             case ConstantUtil.DRINKING_WATER:
-                holder.imgFunction.setImageResource(R.drawable.water_app_xh);
+                holder.imgFunction.setImageResource(R.drawable.water_icon_xh);
                 break;
             case ConstantUtil.GAS_SERVE:
                 holder.imgFunction.setImageResource(R.drawable.home_gassever_xh);

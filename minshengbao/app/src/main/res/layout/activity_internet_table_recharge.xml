@@ -53,6 +53,7 @@
                 android:minHeight="@dimen/margin_width45"
                 android:background="@color/white">
                 <TextView
+                    android:id="@+id/id_address_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_width10"
@@ -65,6 +66,10 @@
                     android:id="@+id/id_tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/id_address_text"
+                    android:layout_toRightOf="@+id/id_address_text"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/margin_width10"
@@ -77,7 +82,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"/>
-            <RelativeLayout
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/margin_width45"
@@ -90,7 +95,7 @@
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
-                    android:text="@string/last_recharge_gasNum"/>
+                    android:text="@string/last_recharge_amount"/>
                 <TextView
                     android:id="@+id/id_last_gasNum"
                     android:layout_width="wrap_content"
@@ -134,7 +139,7 @@
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width10"/>
+                android:layout_height="@dimen/margin_width10"/>-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,7 +154,7 @@
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
-                    android:text="@string/recharge_gas_num"/>
+                    android:text="@string/recharge_amount_text"/>
                 <EditText
                     android:id="@+id/id_et_gasNum"
                     android:layout_width="wrap_content"
@@ -166,9 +171,9 @@
                     android:background="@null"
                     android:inputType="number"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/red"
                     android:textSize="@dimen/text_width16"
-                    android:hint="@string/please_input_gas_num"/>
+                    android:hint="@string/please_input_gas_amount"/>
                 <TextView
                     android:id="@+id/id_unit"
                     android:layout_width="wrap_content"
@@ -180,7 +185,7 @@
                     android:layout_centerVertical="true"
                     android:textColor="@color/app_text"
                     android:textSize="@dimen/text_width16"
-                    android:text="@string/gas_unit"/>
+                    android:text="@string/RMB_YUAN"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout

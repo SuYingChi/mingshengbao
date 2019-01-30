@@ -191,6 +191,7 @@ public class UrlUtil {
     public static final String INSURANCE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/views/insurance/pay.html";
     public static final String INSURANCE_BUSINESS_DATA=BuildConfig.URL_HEADS+"/api/insurance/get_insurance_list";
     public static final String INSURANCE_DETAIL_URL=BuildConfig.URL_HEADS+"/msb_insurance/insurance_detail.html";
+    public static final String INSURANCE_BTN_URL=BuildConfig.URL_HEADS+"/msb_insurance/new_number.html";
     /**
      *myView
      */

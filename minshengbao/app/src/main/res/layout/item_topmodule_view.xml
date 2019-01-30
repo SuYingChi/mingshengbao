@@ -11,6 +11,7 @@
             android:id="@+id/id_function_img"
             android:layout_width="@dimen/margin_width38"
             android:layout_height="@dimen/margin_width38"
+            android:contentDescription="@string/picture_text"
             android:layout_centerHorizontal="true"
             android:src="@drawable/top_shopmall_xh" />
     </RelativeLayout>

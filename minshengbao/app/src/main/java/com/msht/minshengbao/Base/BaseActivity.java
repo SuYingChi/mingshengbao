@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -48,6 +49,11 @@ public class BaseActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarCompat.setStatusBar(this);
+        //适配华为手机虚拟键遮挡tab的问题
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
+       // StatusBarCompat.setTranslucentStatusBar(this);
         /**
          * 友盟统计
          */
@@ -80,7 +86,7 @@ public class BaseActivity extends AppCompatActivity  {
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             mViewStatusBarPlace.setVisibility(View.GONE);
         }
-        backImg = (ImageView) findViewById(R.id.id_goback);
+        backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override

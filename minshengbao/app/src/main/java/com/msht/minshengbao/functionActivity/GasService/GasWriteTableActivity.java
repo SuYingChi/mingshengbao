@@ -39,7 +39,7 @@ public class GasWriteTableActivity extends AppCompatActivity {
     }
     private void initHeader() {
         ((TextView)findViewById(R.id.tv_navigation)).setText("自助抄表") ;
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

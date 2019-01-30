@@ -27,7 +27,7 @@ public class IncomeExpenseActivity extends AppCompatActivity  {
         initView();
     }
     private void findViews() {
-        findViewById(R.id.id_goback).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.id_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

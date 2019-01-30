@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -48,7 +49,6 @@ public class GasPayRecordActivity extends BaseActivity {
     private String    validateURL = UrlUtil.PayRecors_HistoryUrl;
     private View      layoutNoData;
     private XRecyclerView mRecyclerView;
-    private TextView  tvNoData;
     private int refreshType;
     private PayRecordAdapter adapter;
     private int pageIndex=0;

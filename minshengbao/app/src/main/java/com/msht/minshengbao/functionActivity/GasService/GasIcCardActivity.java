@@ -48,7 +48,6 @@ public class GasIcCardActivity extends BaseActivity implements View.OnClickListe
         initView();
     }
     private void initView() {
-        findViewById(R.id.id_goback).setOnClickListener(this);
         findViewById(R.id.id_btn_scan).setOnClickListener(this);
         findViewById(R.id.id_operation_step).setOnClickListener(this);
         findViewById(R.id.id_near_machine).setOnClickListener(this);
