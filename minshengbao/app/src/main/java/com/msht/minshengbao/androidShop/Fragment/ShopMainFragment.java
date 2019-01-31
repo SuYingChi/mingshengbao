@@ -368,6 +368,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             }else {
                                 Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
                                 intent.putExtra("url", data);
+                                intent.putExtra("navigate", homeClassList.get(position).getTitle());
                                 startActivity(intent);
                             }
                         }else if("keyword".equals(type)){
