@@ -681,7 +681,18 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 break;
         }
     }
-
+    public  void onSelectedCity (String city,String cityId){
+        mCity=city;
+        //   flag=data.getStringExtra("flag");
+        this.cityId=cityId;
+        VariableUtil.City=mCity;
+        VariableUtil.cityId=cityId;
+        tvCity.setText(mCity);
+        functionList.clear();
+        hotList.clear();
+        functionData();
+        initCardData();
+    }
     private void initData() {
         String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
        // OkHttpRequestManager.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,geturlHandler);

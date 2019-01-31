@@ -24,7 +24,6 @@
         <!-- 顶部 -->
         <include layout="@layout/layout_transparent_head"
             android:id="@+id/id_head_view"
-            android:visibility="gone"
             />
         <RelativeLayout
             android:id="@+id/id_network_layout"
