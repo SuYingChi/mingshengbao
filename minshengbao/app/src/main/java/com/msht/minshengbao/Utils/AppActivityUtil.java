@@ -21,7 +21,9 @@ import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivit
 import com.msht.minshengbao.functionActivity.GasService.GasEmergencyRescueActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasInstallActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasInternetTableActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIntroduceActivity;
+import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
@@ -224,7 +226,6 @@ public class AppActivityUtil {
             }
         }
     }
-
     public static void startActivityTopCode(Context context, String code, String id, String name) {
         if (context != null) {
             switch (code) {
@@ -233,6 +234,12 @@ public class AppActivityUtil {
                     break;
                 case ConstantUtil.GAS_PAY:
                     onGasPay(context, "");
+                    break;
+                case ConstantUtil.GAS_NORMAL_PAY:
+                    onStartGasNormalPay(context, code);
+                    break;
+                case ConstantUtil.GAS_IOT:
+                    onStartGasIot(context, code);
                     break;
                 case ConstantUtil.GAS_METER:
                     onGasMeter(context, "");
@@ -310,6 +317,7 @@ public class AppActivityUtil {
             }
         }
     }
+
 
     private static void startActivityShop(Context context, String code) {
         if (context != null) {
@@ -623,6 +631,27 @@ public class AppActivityUtil {
         }
     }
 
+    private static void onStartGasIot(Context context, String code) {
+
+        if (isLoginState(context)) {
+            Intent intent = new Intent(context, GasInternetTableActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            onStartLoginActivity(context, "");
+        }
+    }
+
+    private static void onStartGasNormalPay(Context context, String code) {
+
+        if (isLoginState(context)) {
+            Intent intent = new Intent(context, GasPayFeeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            onStartLoginActivity(context, "");
+        }
+    }
     private static void onPushGasMeter(Context context, String pushUrl) {
         if (isLoginState(context)) {
             Intent intent = new Intent(context, GasWriteTableActivity.class);

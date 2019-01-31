@@ -83,6 +83,9 @@ public class ConstantUtil {
     public static final String GAS_METER="gas_meter";
     public static final String GAS_IC_CARD="gas_iccard";
     public static final String GAS_SERVE="gas_serve";
+    public static final String GAS_NORMAL_PAY="gas_normal_pay";
+    public static final String GAS_IOT="gas_iot";
+
     public static final String REPAIR="repair";
     public static final String CLEAN="clean";
     public static final String CONVENIENCE_SERVICE="convenience_service";

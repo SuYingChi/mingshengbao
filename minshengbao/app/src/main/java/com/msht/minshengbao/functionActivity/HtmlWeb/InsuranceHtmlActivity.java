@@ -81,6 +81,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     private String  title;
     private String  imageUrl;
     private String  desc;
+    private String  phone;
     private Bitmap mBitmap;
     private String shareDesc;
 
@@ -105,6 +106,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
         shareDesc="安全无小事，保险保平安，这款"+title+"蛮实惠的，快来看看吧";
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this,SharedPreferencesUtil.Password,"");
+        phone=SharedPreferencesUtil.getUserName(this,SharedPreferencesUtil.UserName,"");
         initFindViewId();
         initHeader();
         initWebView();
@@ -232,7 +234,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
         }
     }
     private void onWeiXin() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&isShow=1";
+        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         UMWeb web = new UMWeb(insuranceDetailUrl);
         web.setTitle(ShareDefaultContent.title);
         web.setDescription(shareDesc);
@@ -244,7 +246,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
 
     private void onFriendCircle() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&isShow=1";
+        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         UMWeb web = new UMWeb(insuranceDetailUrl);
         web.setTitle(shareDesc);
         web.setDescription(shareDesc);
@@ -256,7 +258,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
 
     private void onQrCode() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&isShow=1";
+        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         if (mBitmap!=null&&!mBitmap.isRecycled()){
             onShowQrCodeDialog(mBitmap);
         }else {
@@ -288,7 +290,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
 
     private void onLinkShare() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&isShow=1";
+        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         ClipboardManager cm=(ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData=ClipData.newPlainText("Label",insuranceDetailUrl);
         if (cm != null) {
