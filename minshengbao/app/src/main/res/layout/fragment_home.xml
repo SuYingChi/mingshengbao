@@ -364,7 +364,9 @@
                 android:background="@drawable/shape_oval_back_button"
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginStart="@dimen/margin_width10"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:visibility="invisible"
+                >
                 <TextView
                     android:id="@+id/id_tv_city"
                     android:layout_width="wrap_content"

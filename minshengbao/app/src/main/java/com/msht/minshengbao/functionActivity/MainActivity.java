@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -53,9 +54,11 @@ import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.AppShortCutUtil;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
+import com.msht.minshengbao.events.LocationEvent;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
+import com.msht.minshengbao.functionActivity.Public.SelectCityActivity;
 import com.msht.minshengbao.functionActivity.fragment.HomeFragment;
 import com.msht.minshengbao.functionActivity.fragment.LoginMyFrag;
 import com.msht.minshengbao.functionActivity.fragment.MyFragment;
@@ -134,6 +137,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ShopMainFragment shopMainFrag;
     private ShopCarParentFragment shopCarParentFragment;
     private TextView tvCarNum;
+    private View layoutSelectCity;
+    private TextView tvCity;
+    private final int REQUEST_CODE=100;
 
 
     private static class RequestHandler extends Handler {
@@ -455,6 +461,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 0x004:
                 ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
                 break;
+            //获取昵称设置返回数据
+            case REQUEST_CODE:
+                if(data!=null){
+                    if (resultCode==2){
+                        String mCity = data.getStringExtra("mCity");
+                        //   flag=data.getStringExtra("flag");
+                        String cityId = data.getStringExtra("Id");
+                        tvCity.setText(mCity);
+                        if(homeFrag instanceof HomeFragment){
+                            ((HomeFragment) homeFrag).onSelectedCity(mCity,cityId);
+                        }
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -583,6 +603,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         layoutParams.leftMargin = marginleft;
         layoutParams.topMargin = (int) (getResources().getDimension(R.dimen.margin_5));
         tvCarNum.setLayoutParams(layoutParams);
+        layoutSelectCity =findViewById(R.id.id_city_layout);
+        layoutSelectCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent city = new Intent(MainActivity.this, SelectCityActivity.class);
+                startActivityForResult(city, REQUEST_CODE);
+            }
+        });
+        tvCity = (TextView) findViewById(R.id.id_tv_city);
     }
 
     private void initTab(int index) {
@@ -815,7 +844,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
         clickTab2Layout();
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(LocationEvent locationEvent) {
+        tvCity.setText(locationEvent.city);
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(CarNumEvent carNumEvent) {
         if (carNumEvent.getCarNum() > 0) {
@@ -1076,5 +1108,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             EventBus.getDefault().postSticky(new CarNumEvent(-1));
         }
     }
-
 }

@@ -61,6 +61,7 @@ import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.util.StringUtil;
+import com.msht.minshengbao.events.LocationEvent;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
@@ -97,6 +98,7 @@ import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -681,7 +683,18 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 break;
         }
     }
-
+    public  void onSelectedCity (String city,String cityId){
+        mCity=city;
+        //   flag=data.getStringExtra("flag");
+        this.cityId=cityId;
+        VariableUtil.City=mCity;
+        VariableUtil.cityId=cityId;
+        tvCity.setText(mCity);
+        functionList.clear();
+        hotList.clear();
+        functionData();
+        initCardData();
+    }
     private void initData() {
         String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
        // OkHttpRequestManager.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,geturlHandler);
@@ -923,6 +936,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 times++;
             }
         }
+        EventBus.getDefault().post(new LocationEvent(mCity,""));
         functionData();
         initCardData();
     }
