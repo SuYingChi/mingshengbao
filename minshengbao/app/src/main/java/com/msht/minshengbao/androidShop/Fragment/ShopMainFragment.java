@@ -75,6 +75,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.events.CarNumEvent;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -341,31 +342,46 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         ShopHomeClassPagerAdapter pagerAdapter = new ShopHomeClassPagerAdapter(getContext(), llIndicators, new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                    if (position != homeClassList.size() - 1) {
-                        String data = homeClassList.get(position).getData();
-                        if (data.contains("gc_id=")) {
-                            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                            int index = data.indexOf("gc_id=");
-                            data = data.substring(index + 6).trim();
-                            intent.putExtra("data", data);
-                            intent.putExtra("title", homeClassList.get(position).getTitle());
-                            startActivity(intent);
-                        } else if (data.contains("keyword=")) {
-                            int index = data.indexOf("keyword=");
-                            String shopkeyword = data.substring(index + 8).trim();
+                String data = homeClassList.get(position).getData();
+                String type = homeClassList.get(position).getType();
+                    if ((!BuildConfig.DEBUG&&position != homeClassList.size() - 1)||BuildConfig.DEBUG){
+                        if("url".equals(type)) {
+                            if (data.contains("gc_id=")) {
+                                Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                                int index = data.indexOf("gc_id=");
+                                data = data.substring(index + 6).trim();
+                                intent.putExtra("data", data);
+                                intent.putExtra("title", homeClassList.get(position).getTitle());
+                                startActivity(intent);
+                            } else if (data.contains("keyword=")) {
+                                int index = data.indexOf("keyword=");
+                                String shopkeyword = data.substring(index + 8).trim();
+                                Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
+                                intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                                startActivity(intent);
+                            } else if (data.contains("goods_id=")) {
+                                int index = data.indexOf("goods_id=");
+                                String goodsid = data.substring(index + 9).trim();
+                                Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
+                                intent.putExtra("goodsid", goodsid);
+                                startActivity(intent);
+                            }else {
+                                Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
+                                intent.putExtra("url", data);
+                                startActivity(intent);
+                            }
+                        }else if("keyword".equals(type)){
                             Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                            intent.putExtra("keyword", StringUtil.toURLDecoder(shopkeyword));
+                            intent.putExtra("keyword", data);
                             startActivity(intent);
-                        } else if (data.contains("goods_id=")) {
-                            int index = data.indexOf("goods_id=");
-                            String goodsid = data.substring(index + 9).trim();
+                        }else if("goods".equals(type)){
                             Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
-                            intent.putExtra("goodsid", goodsid);
+                            intent.putExtra("goodsid", data);
                             startActivity(intent);
                         }
-                    } else {
-                        Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
-                        getActivity().startActivity(intent);
+                    } else if(!BuildConfig.DEBUG&&position == homeClassList.size() - 1){
+                            Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
+                            getActivity().startActivity(intent);
                     }
             }
         });
