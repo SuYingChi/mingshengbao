@@ -54,6 +54,7 @@ import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.AppShortCutUtil;
 import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
+import com.msht.minshengbao.events.LocationEvent;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
@@ -843,7 +844,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
         clickTab2Layout();
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(LocationEvent locationEvent) {
+        tvCity.setText(locationEvent.city);
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(CarNumEvent carNumEvent) {
         if (carNumEvent.getCarNum() > 0) {

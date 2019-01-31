@@ -48,7 +48,7 @@
                 android:maxWidth="@dimen/margin_width80"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="海口"/>
+                android:text=""/>
             <ImageView
                 android:layout_width="@dimen/margin_width10"
                 android:layout_height="@dimen/margin_width10"

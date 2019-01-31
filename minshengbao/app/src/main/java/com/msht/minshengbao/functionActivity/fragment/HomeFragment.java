@@ -61,6 +61,7 @@ import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.util.StringUtil;
+import com.msht.minshengbao.events.LocationEvent;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
@@ -97,6 +98,7 @@ import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -934,6 +936,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 times++;
             }
         }
+        EventBus.getDefault().post(new LocationEvent(mCity,""));
         functionData();
         initCardData();
     }
