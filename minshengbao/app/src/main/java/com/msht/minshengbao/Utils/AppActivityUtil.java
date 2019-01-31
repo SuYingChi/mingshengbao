@@ -60,6 +60,7 @@ public class AppActivityUtil {
         if (context != null && (!TextUtils.isEmpty(url))) {
             switch (LinkUrlUtil.getDomain(url)) {
                 case ConstantUtil.SHOP_DOMAIN:
+                case ConstantUtil.DEBUG_SHOP_DOMAIN:
                     onShopMallPage(context, url);
                     break;
                 case ConstantUtil.VEGETABLE_DOMAIN:
