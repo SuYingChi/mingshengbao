@@ -74,7 +74,7 @@
     <color name="nc_bg">#f0f2f5</color>
     <color name="nc_text_dark">#232326</color>
     <color name="nc_border">#F0EFF4</color>
-    <color name="nc_text">#868686</color>
+    <color name="nc_text">#ff333333</color>
     <color name="nc_ming_grade_bg">#ED5564</color>
     <color name="commission_bg">#f0f2f5</color>
     <color name="shop_grey">#30000000</color>
