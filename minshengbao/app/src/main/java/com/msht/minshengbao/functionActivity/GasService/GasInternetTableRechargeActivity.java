@@ -154,33 +154,18 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
        // tvLastGasNum.setText(mLastAmount);
        // tvLastTime.setText(mLastTime);
         etGasNum.addTextChangedListener(new MyTextWatcher());
-        findViewById(R.id.id_recharge_record).setOnClickListener(this);
-        findViewById(R.id.id_price_explain).setOnClickListener(this);
         btnRecharge.setOnClickListener(this);
         btnRecharge.setEnabled(false);
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.id_recharge_record:
-                onRechargeRecord();
-                break;
-            case R.id.id_price_explain:
-                onGasPrice();
-                break;
             case R.id.id_btn_recharge:
                 onGasFeeRecharge();
                 break;
                 default:
                     break;
         }
-    }
-    private void onRechargeRecord() {
-        Intent name=new Intent(context, GasPayRecordActivity.class);
-        name.putExtra("customerNo",mCustomerNo);
-        name.putExtra("address",mAddress);
-        name.putExtra("urlType","2");
-        startActivity(name);
     }
     private void onGasFeeRecharge() {
         String amount=etGasNum.getText().toString().trim();
@@ -193,13 +178,7 @@ public class GasInternetTableRechargeActivity extends BaseActivity implements Vi
         textParams.put("meterNo",meterNo);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-    private void onGasPrice() {
-        String url= UrlUtil.Gasprice_Url;
-        Intent price=new Intent(context,HtmlPageActivity.class);
-        price.putExtra("navigate","气价说明");
-        price.putExtra("url",url);
-        startActivity(price);
-    }
+
     private class MyTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }

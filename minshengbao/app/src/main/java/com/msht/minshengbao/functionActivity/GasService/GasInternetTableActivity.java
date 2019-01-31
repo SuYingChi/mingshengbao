@@ -33,6 +33,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.msht.minshengbao.adapter.GetHouseAdapter;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2019/1/8 
  */
-public class GasInternetTableActivity extends BaseActivity {
+public class GasInternetTableActivity extends BaseActivity implements View.OnClickListener {
     private TextView   tvNoDataTip;
     private ListView mLstView;
     private String userId;
@@ -64,6 +65,7 @@ public class GasInternetTableActivity extends BaseActivity {
     private ArrayList<HashMap<String, String>> tableList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String,  String>> houseList = new ArrayList<HashMap<String,  String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
+
     private static class RequestHandler extends Handler {
         private WeakReference<GasInternetTableActivity> mWeakReference;
         public RequestHandler(GasInternetTableActivity activity) {
@@ -351,6 +353,8 @@ public class GasInternetTableActivity extends BaseActivity {
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initFindViewId() {
+        findViewById(R.id.id_recharge_record).setOnClickListener(this);
+        findViewById(R.id.id_price_explain).setOnClickListener(this);
         tvNoDataTip=(TextView)findViewById(R.id.id_tv_tip);
         mLstView=(ListView)findViewById(R.id.id_address_dataList);
         findViewById(R.id.id_newAdd_btn).setOnClickListener(new View.OnClickListener() {
@@ -361,6 +365,35 @@ public class GasInternetTableActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()){
+            case R.id.id_recharge_record:
+                onRechargeRecord();
+                break;
+            case R.id.id_price_explain:
+                onGasPrice();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void onRechargeRecord() {
+        Intent name=new Intent(context, GasInternetRecodeListActivity.class);
+        startActivity(name);
+    }
+
+    private void onGasPrice() {
+        String url= UrlUtil.Gasprice_Url;
+        Intent price=new Intent(context,HtmlPageActivity.class);
+        price.putExtra("navigate","气价说明");
+        price.putExtra("url",url);
+        startActivity(price);
+    }
+
     private void onIcCardTable() {
         Intent card=new Intent(context,GasIcCardActivity.class);
         startActivity(card);

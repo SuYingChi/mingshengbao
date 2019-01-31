@@ -63,7 +63,6 @@
     <string name="message_setting_comeback">The user comes back from the settings page.</string>
 
 
-
     <string name="network_error">网络连接断开，请检查网络设置。</string>
     <string name="load_more_text">正在加载...</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>

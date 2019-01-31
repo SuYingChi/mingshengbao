@@ -56,11 +56,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="UnusedAttribute">
-    <!--resizeableActivity 属性值适配全面屏，在api24以上适用-->
+
+        <!-- resizeableActivity 属性值适配全面屏，在api24以上适用 -->
         <!-- resizeableActivity 适配全面屏 -->
 
         <activity
@@ -73,6 +74,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -87,7 +89,7 @@
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".functionActivity.GasService.GasServiceActivity"/>
+        <activity android:name=".functionActivity.GasService.GasServiceActivity" />
         <activity android:name=".functionActivity.MyActivity.LoginActivity" />
         <activity android:name=".functionActivity.MyActivity.RegisterActivity" />
         <activity android:name=".functionActivity.MyActivity.FindPasswordActivity" />
@@ -205,6 +207,7 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
+
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -378,8 +381,7 @@
         <activity android:name=".androidShop.activity.ShopUrlActivity" />
         <activity android:name=".androidShop.activity.ShopSearchActivty" />
         <activity android:name=".androidShop.activity.ShopCarActivity" />
-        <activity android:name=".androidShop.activity.ShopComfirmOrdersActivity"
-            />
+        <activity android:name=".androidShop.activity.ShopComfirmOrdersActivity" />
         <activity android:name=".androidShop.activity.ShopAddressListActivity" />
         <activity android:name=".androidShop.activity.AddShopAdressActivity" />
         <activity android:name=".androidShop.activity.ShopEditAddressActivity" />
@@ -417,7 +419,8 @@
         <activity android:name=".androidShop.activity.WarnMessageDetailActivity" />
         <activity android:name=".androidShop.activity.ReturnGoodSendGoodActivity" />
         <activity android:name=".functionActivity.insurance.InsuranceListActivity" />
-        <activity android:name=".functionActivity.HtmlWeb.InsuranceHtmlActivity"></activity>
+        <activity android:name=".functionActivity.HtmlWeb.InsuranceHtmlActivity" />
+        <activity android:name=".functionActivity.GasService.GasInternetRecodeListActivity"></activity>
     </application>
 
 </manifest>

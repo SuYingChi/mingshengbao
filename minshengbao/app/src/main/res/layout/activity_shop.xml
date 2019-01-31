@@ -13,7 +13,7 @@
         android:background="@color/colorOrange"
         android:visibility="gone">
         <ImageView
-            android:id="@+id/id_goback"
+            android:id="@+id/id_back"
             android:padding="@dimen/margin_5"
             android:layout_width="40dp"
             android:layout_height="40dp"

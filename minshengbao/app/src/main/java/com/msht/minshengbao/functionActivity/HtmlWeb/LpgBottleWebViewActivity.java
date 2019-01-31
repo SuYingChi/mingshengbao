@@ -46,7 +46,7 @@ public class LpgBottleWebViewActivity extends BaseActivity  {
         initEvent();
     }
     private void setHeaderTitle() {
-        backImg = (ImageView) findViewById(R.id.id_goback);
+        backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText("民生宝");
     }

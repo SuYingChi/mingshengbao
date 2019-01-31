@@ -1,5 +1,6 @@
 package com.msht.minshengbao.Utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -62,7 +63,7 @@ public class AndroidWorkaround {
             hasNavigationBar = rs.getBoolean(id);
         }
         try {
-            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            @SuppressLint("PrivateApi") Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
             Method m = systemPropertiesClass.getMethod("get", String.class);
             String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
             if ("1".equals(navBarOverride)) {
@@ -71,7 +72,7 @@ public class AndroidWorkaround {
                 hasNavigationBar = true;
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return hasNavigationBar;
     }

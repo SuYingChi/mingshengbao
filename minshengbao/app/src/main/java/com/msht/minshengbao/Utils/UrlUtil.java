@@ -166,6 +166,8 @@ public class UrlUtil {
     public static final String Voucher_CanuseUrl= BuildConfig.URL_HEADS +"/Gas/coupon/can_use_list";
     public static final String RECHARGE_CREATE_ORDER_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_create_order";
     public static final String RECHARGE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_pay";
+    public static final String INTERNET_RECHARGE_RECODE_LIST=BuildConfig.URL_HEADS+"/Gas/payment/iotPaymentSearch";
+
     /**
      * 城市服务
      */

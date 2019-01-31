@@ -230,37 +230,5 @@
                 android:textColor="@color/white" />
         </LinearLayout>
     </ScrollView>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_width45"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:background="@color/background_gray">
-        <TextView
-            android:id="@+id/id_recharge_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorOrange"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/text_width14"
-            android:text="@string/recharge_record"/>
-        <View
-            android:layout_width="@dimen/margin_width1"
-            android:layout_height="@dimen/margin_width20"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/margin_width8"
-            android:layout_marginLeft="@dimen/margin_width8"
-            android:layout_marginEnd="@dimen/margin_width8"
-            android:layout_marginRight="@dimen/margin_width8"
-            android:background="@color/colorOrange"/>
-        <TextView
-            android:id="@+id/id_price_explain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorOrange"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/text_width14"
-            android:text="@string/gas_price_explain"/>
-    </LinearLayout>
+
 </LinearLayout>

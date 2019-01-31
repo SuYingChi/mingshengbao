@@ -1,10 +1,12 @@
 package com.msht.minshengbao.functionActivity.MyActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.event.LoginShopEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.LoginShopBean;
@@ -32,6 +35,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnRegister, btnFindPassword, btnLogin;
     private EditText etUserName, etPassword;
@@ -53,6 +57,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private String mPassword;
     private String pushUrl;
     private CustomDialog customDialog;
+    private Context context;
+    private static final String mPageName="登录页面";
     public static final String MY_ACTION = "ui";
     private final LogonHandler logonHandler=new LogonHandler(this);
     private static class LogonHandler extends Handler{
@@ -159,8 +165,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
+        StatusBarCompat.setStatusBar(this);
         context=this;
-        mPageName ="登录界面";
         PushAgent.getInstance(context).onAppStart();
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
@@ -267,6 +273,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return false;
         }
         return true;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+        MobclickAgent.onResume(context);
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+        MobclickAgent.onPause(context);
+
     }
     @Override
     protected void onDestroy() {

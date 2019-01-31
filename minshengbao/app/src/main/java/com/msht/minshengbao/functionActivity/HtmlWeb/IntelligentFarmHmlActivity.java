@@ -1,5 +1,6 @@
 package com.msht.minshengbao.functionActivity.HtmlWeb;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,10 +45,11 @@ public class IntelligentFarmHmlActivity extends BaseActivity  {
         initEvent();
     }
     private void initHeader() {
-        backImg = (ImageView) findViewById(R.id.id_goback);
+        backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mNavigation);
     }
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWeBView() {
         mWebView =(WebView)findViewById(R.id.id_web_html);
         mWebView.loadUrl(mUrl);

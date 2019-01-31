@@ -61,7 +61,7 @@ public class VegetableGentlemenActivity extends AppCompatActivity implements MyW
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_status_view).setVisibility(View.GONE);
         }
-        backImage = (ImageView) findViewById(R.id.id_goback);
+        backImage = (ImageView) findViewById(R.id.id_back);
         TextView tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mPageName);
     }

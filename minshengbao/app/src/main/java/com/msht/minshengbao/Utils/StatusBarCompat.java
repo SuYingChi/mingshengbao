@@ -74,21 +74,18 @@ public class StatusBarCompat {
      * @param activity
      */
     public static void setStatusBar(Activity activity){
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             activity.getWindow().setNavigationBarColor(Color.parseColor("#ff000000"));
         }
        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
            if (ImmersionBar.hasNavigationBar(activity)){
                activity.getWindow().getDecorView().setFitsSystemWindows(true);
-           }else {
-               activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
            }
+           activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
     }
-
     public static void setTranslucentStatusBar(Activity activity){
         // 5.0以上系统状态栏透明
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

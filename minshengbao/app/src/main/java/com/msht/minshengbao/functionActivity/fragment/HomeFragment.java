@@ -954,12 +954,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private void functionData() {
         String functionUrl=UrlUtil.HOME_FUNCTION_URL;
         try {
-            functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201811", "UTF-8");
+            functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201901", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,getFunctionHandler);
-        //SendRequestUtil.getDataFromService(function,getFunctionHandler);
     }
 
     private void onTipTopModule() {

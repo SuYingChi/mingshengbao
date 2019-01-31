@@ -517,7 +517,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
-                LogUtils.e(data.toString());
                 onAnalysisMessage(data.toString(),1);
             }
             @Override
