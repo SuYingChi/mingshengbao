@@ -293,6 +293,7 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
 
     private void onNewAddCustomerNo() {
         Intent addAddress = new Intent(context, AddCustomerNoActivity.class);
+        addAddress.putExtra("enterType",1);
         startActivityForResult(addAddress, 1);
     }
 

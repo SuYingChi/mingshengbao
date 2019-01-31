@@ -180,4 +180,10 @@ public class GasInternetRecodeListActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
+    }
 }

@@ -361,6 +361,7 @@ public class GasInternetTableActivity extends BaseActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 Intent addAddress=new Intent(context,AddCustomerNoActivity.class);
+                addAddress.putExtra("enterType",2);
                 startActivityForResult(addAddress, 1);
             }
         });
