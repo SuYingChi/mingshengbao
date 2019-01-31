@@ -127,8 +127,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_expense_query);
         context=this;
-        mPageName="燃气费用";
-        setCommonHeader(mPageName);
+        setCommonHeader("欠费查询");
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -181,7 +180,7 @@ public class GasExpenseQueryActivity extends BaseActivity {
     private void initView() {
         tvPrice =(TextView)findViewById(R.id.id_tv_rightText);
         tvPrice.setVisibility(View.VISIBLE);
-        tvPrice.setText("缴费记录");
+        tvPrice.setText("气价说明");
         View layoutData =findViewById(R.id.id_layout_data);
         View layoutNoData =findViewById(R.id.id_nodata_layout);
         View layoutBtn =findViewById(R.id.id_layout_btn);

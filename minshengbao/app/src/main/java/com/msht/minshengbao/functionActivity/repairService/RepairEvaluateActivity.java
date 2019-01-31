@@ -29,7 +29,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-
 /**
  * Demo class
  * 〈一句话功能简述〉

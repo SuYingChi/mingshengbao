@@ -63,7 +63,7 @@
             android:layout_marginLeft="@dimen/margin_20"
             android:layout_marginRight="@dimen/margin_20"
             android:minHeight="@dimen/margin_width45"
-            android:text="@string/gas_add_new_address"
+            android:text="@string/ensure_text"
             android:textColor="@color/white"
             android:textSize="@dimen/text_18"
             android:background="@drawable/selector_touch_button_change"

@@ -70,7 +70,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
     private String payableAmount;
     private String totalAmount;
     private String discountAmount;
-    private double doubleBalance;
+   // private double doubleBalance;
     private int requestCode=0;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private JSONObject jsonObject;
@@ -238,7 +238,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
                 }).show();
     }
     private void onGetBalanceData() {
-        doubleBalance=jsonObject.optDouble("balance");
+        double doubleBalance=jsonObject.optDouble("balance");
         double doubleAmount=Double.valueOf(payableAmount);
         if (doubleAmount<=doubleBalance){
             VariableUtil.balance="余额充足";
@@ -317,7 +317,7 @@ public class GasInternetTablePayFeeActivity extends BaseActivity {
             payableAmount=data.getStringExtra("payableAmount");
             mCustomerNo=data.getStringExtra("customerNo");
             totalAmount=data.getStringExtra("totalAmount");
-            discountAmount=data.getStringExtra(" discountAmount");
+            discountAmount=data.getStringExtra("discountAmount");
 
         }
         VariableUtil.payPos =-1;

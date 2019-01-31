@@ -223,7 +223,7 @@
                 android:layout_marginTop="@dimen/margin_width45"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/recharge"
+                android:text="@string/ensure_send"
                 android:textSize="@dimen/text_width18"
                 android:background="@drawable/selector_touch_button_change"
                 android:layout_marginBottom="@dimen/margin_width20"

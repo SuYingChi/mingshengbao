@@ -966,9 +966,10 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (rightTopList.size() != 0) {
+        if (rightTopList!=null&&rightTopList.size()!= 0) {
             topmoduleAdapter.notifyDataSetChanged();
             cardView.setVisibility(View.VISIBLE);
+            mTopModule.setNumColumns(rightTopList.size());
         } else {
             cardView.setVisibility(View.GONE);
         }
