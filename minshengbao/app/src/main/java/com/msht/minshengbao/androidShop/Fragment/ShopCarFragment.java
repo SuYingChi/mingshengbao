@@ -526,13 +526,17 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                         + entry.getValue());
                 list.add(entry.getValue());
             }
-                    Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ifCar", "1");
-                    bundle.putString("isPickup_self", "0");
-                    bundle.putSerializable("data", (Serializable) list);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+            if(list.size()>0) {
+                Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ifCar", "1");
+                bundle.putString("isPickup_self", "0");
+                bundle.putSerializable("data", (Serializable) list);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }else {
+                PopUtil.showComfirmDialog(getContext(), null, "没有可购买商品，请去除库存不足和自取商品", null, "好的", null, null, true);
+            }
         }
     }
 

@@ -265,7 +265,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         url = getOrdersUrl(pageNum);
                         ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
                     }else if(pageNum==lastPageNum){
-                       // initOrdersItem(order_group_list);
                         adapter.notifyDataSetChanged();
                         isRestart = false;
                     }
