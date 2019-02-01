@@ -229,6 +229,7 @@
             android:layout_toRightOf="@id/youhuinum"
             android:text=""
             android:textSize="@dimen/text_12"
+            android:lines="1"
             android:textColor="@color/gray_black" />
         <TextView
             android:id="@+id/youhuitime"
