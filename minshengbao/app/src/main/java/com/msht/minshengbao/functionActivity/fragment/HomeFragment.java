@@ -1072,7 +1072,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private void onHomeAdvertisingDialog(JSONArray array){
         long curDate=DateUtils.getCurDateLong("MM-dd");
         long date=SharedPreferencesUtil.getDateLong(mContext,SharedPreferencesUtil.SAVE_DATE,0);
-        if (array.length()>0){
+        if (array!=null&&array.length()>0){
             try {
                 JSONObject jsonObject = array.getJSONObject(0);
                 String image = jsonObject.getString("image");

@@ -228,6 +228,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (recommendBean == null) {
+                    recommendBean = new RecommendBean("", "1");
+                }
                 recommendBean.setRecommend_phone(s.toString());
             }
         });
@@ -862,7 +865,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     public void onError(String s) {
         super.onError(s);
-        finish();
+       /* finish();*/
     }
 
     private boolean isHasStoreServiceGood() {
