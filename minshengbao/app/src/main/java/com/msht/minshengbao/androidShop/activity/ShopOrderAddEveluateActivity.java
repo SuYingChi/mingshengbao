@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,9 +30,12 @@ import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IPostAddEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopInitAddEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.Permission;
 
@@ -64,6 +68,7 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
     private List<UploadEvaluatePicBean> postedPicList = new ArrayList<UploadEvaluatePicBean>();
     private ArrayList<String> photos;
     private int uploadPosition;
+    private boolean isCompress=true;
 
     @Override
     protected void setLayout() {
@@ -277,12 +282,14 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
 
                         @Override
                         public void onSuccess(File file) {
+                            isCompress = true;
                             ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, file,file.getName());
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             // TODO 当压缩过去出现问题时调用
+                            isCompress = false;
                             ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files,files.getName());;
                         }
                     }).launch();
@@ -327,14 +334,14 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
 
                                 @Override
                                 public void onSuccess(File file) {
+                                    isCompress = true;
                                     ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, file, file.getName());
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    // TODO 当压缩过去出现问题时调用
+                                    isCompress = false;
                                     ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files, files.getName());
-                                    ;
                                 }
                             }).launch();
                 }
@@ -380,16 +387,54 @@ public class ShopOrderAddEveluateActivity extends ShopBaseActivity implements IU
 //图片上传失败
     @Override
     public void onError(String s) {
-        super.onError(s);
-        LogUtils.e("图片上传失败"+"uploadPosition==="+uploadPosition+"filename==="+photos.get(uploadPosition));
+        if (!AppUtil.isNetworkAvailable()) {
+            PopUtil.showComfirmDialog(this,"",getResources().getString(R.string.network_error),"","",null,null,true);
+            onNetError();
+        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
+            PopUtil.toastInBottom("请登录商城");
+            Intent goLogin = new Intent(this, LoginActivity.class);
+            startActivity(goLogin);
+        } else if(!isCompress){
+            //原图上传失败才显示
+            PopUtil.toastInCenter(s);
+        }
         if (uploadPosition < photos.size() - 1) {
             tvPushEvaluate.setBackgroundColor(getResources().getColor(R.color.shop_grey));
             tvPushEvaluate.setClickable(false);
-            uploadPosition += 1;
-            File files = new File(photos.get(uploadPosition));
-            String fileName = photos.get(uploadPosition);
-            ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files, fileName);
-        }else {
+            //压缩上传不成功，则用原图再次尝试上传，原图上传不成功，则上传下一张
+            if(isCompress) {
+                final File files = new File(photos.get(uploadPosition));
+                isCompress =false;
+                ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files, files.getName());
+            }else {
+                uploadPosition += 1;
+                final File files = new File(photos.get(uploadPosition));
+                Luban.with(ShopOrderAddEveluateActivity.this)
+                        .load(files)
+                        .setCompressListener(new OnCompressListener() {
+                            @Override
+                            public void onStart() {
+                            }
+
+                            @Override
+                            public void onSuccess(File file) {
+                                isCompress = true;
+                                ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, file, file.getName());
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                isCompress = false;
+                                ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files, files.getName());
+
+                            }
+                        }).launch();
+            }
+        }else if(isCompress&&uploadPosition == photos.size() - 1){
+            final File files = new File(photos.get(uploadPosition));
+            isCompress = false;
+            ShopPresenter.uploadEvaluatePic(ShopOrderAddEveluateActivity.this, files, files.getName());
+        }else if(!isCompress&&uploadPosition == photos.size() - 1){
             tvPushEvaluate.setBackgroundColor(getResources().getColor(R.color.msb_color));
             tvPushEvaluate.setClickable(true);
         }
