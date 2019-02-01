@@ -865,7 +865,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     public void onError(String s) {
         super.onError(s);
-       /* finish();*/
+        finish();
     }
 
     private boolean isHasStoreServiceGood() {
