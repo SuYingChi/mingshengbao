@@ -70,7 +70,7 @@ public class GasInternetRecodeListActivity extends BaseActivity {
         mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         adapter=new GetAddressAdapter(context,recordList,pos);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setPullRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnabled(false);
         adapter.setClickCallBack(new GetAddressAdapter.ItemClickCallBack() {
             @Override
@@ -126,20 +126,12 @@ public class GasInternetRecodeListActivity extends BaseActivity {
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
-                if (refreshType==0){
-                    mRecyclerView.refreshComplete();
-                }else if (refreshType==1){
-                    mRecyclerView.loadMoreComplete();
-                }
+                mRecyclerView.refreshComplete();
                 onReceiveRecordData(data.toString());
             }
             @Override
             public void responseReqFailed(Object data) {
-                if (refreshType==0){
-                    mRecyclerView.refreshComplete();
-                }else if (refreshType==1){
-                    mRecyclerView.loadMoreComplete();
-                }
+                mRecyclerView.refreshComplete();
                 ToastUtil.ToastText(context,data.toString());
             }
         });
@@ -180,7 +172,6 @@ public class GasInternetRecodeListActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

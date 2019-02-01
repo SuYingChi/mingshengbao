@@ -191,7 +191,7 @@ public class LpgDepositOrderDetailActivity extends BaseActivity {
         String validateURL= UrlUtil.LPG_QUERY_ORDER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("id",orderId);
-        textParams.put("orderKey",orderType);
+        textParams.put("orderType",orderType);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initFindViewId() {

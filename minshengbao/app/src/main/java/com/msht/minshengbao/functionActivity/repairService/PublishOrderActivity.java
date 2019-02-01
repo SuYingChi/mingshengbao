@@ -339,9 +339,9 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 String mAddress=data.getStringExtra("mAddress");
                 String name=data.getStringExtra("name");
                 String phone=data.getStringExtra("phone");
-               // cityId=data.getStringExtra("cityId");
-               // latitude=data.getStringExtra("latitude");
-               // longitude=data.getStringExtra("longitude");
+                /*cityId=data.getStringExtra("cityId");
+                latitude=data.getStringExtra("latitude");
+                longitude=data.getStringExtra("longitude");*/
                 if (TextUtils.isEmpty(name)){
                     ttvName.setText(phone);
                 }else {
@@ -538,7 +538,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 onStartPriceTable();
                 break;
             case R.id.id_data:
-              //  onSelectData();
                 onSelectDateDay();
                 break;
             case R.id.id_time:
