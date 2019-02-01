@@ -188,6 +188,7 @@ public class RefundMoneyActivity extends ShopBaseActivity implements IRefundMone
                 good.setGoods_price(data.getGoods_price());
                 good.setGoods_spec(data.getGoods_spec()==null?"":data.getGoods_spec().toString());
                 good.setGoods_image(data.getGoods_image());
+                good.setGoods_id(data.getGoods_id());
                 goodList.add(good);
             }
             adapter.notifyDataSetChanged();
