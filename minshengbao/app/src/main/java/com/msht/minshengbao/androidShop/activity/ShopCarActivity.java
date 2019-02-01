@@ -519,13 +519,18 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             }*/
            /* if (!TextUtils.isEmpty(isPickup_self)) {
                 if (TextUtils.equals(isPickup_self, "0")) {*/
-            Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("ifCar", "1");
-            bundle.putString("isPickup_self", "0");
-            bundle.putSerializable("data", (Serializable) list);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            if(list.size()>0) {
+                Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ifCar", "1");
+                bundle.putString("isPickup_self", "0");
+                bundle.putSerializable("data", (Serializable) list);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+            else {
+                    PopUtil.showComfirmDialog(this, null, "没有可购买商品，请去除库存不足和自取商品", null, "好的", null, null, true);
+                }
              /*   } else {
                     PopUtil.toastInBottom("暂不支持自提商品购买");
                 }

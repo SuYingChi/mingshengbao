@@ -36,11 +36,13 @@ import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOnSelectedReasonItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.Permission;
 
@@ -96,6 +98,7 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
     private static final int MY_PERMISSIONS_REQUEST = 100;
     private ArrayList<String> photos;
     private int uploadPosition;
+    private boolean isCompress=true;
 
     @Override
     protected void setLayout() {
@@ -349,12 +352,14 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
 
                                 @Override
                                 public void onSuccess(File file) {
+                                    isCompress = true;
                                     ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, file);
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
                                     // TODO 当压缩过去出现问题时调用
+                                    isCompress = false;
                                     ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);
                                     ;
                                 }
@@ -400,12 +405,14 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
 
                         @Override
                         public void onSuccess(File file) {
+                            isCompress = true;
                             ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, file);
                         }
 
                         @Override
                         public void onError(Throwable e) {
                             // TODO 当压缩过去出现问题时调用
+                            isCompress = false;
                             ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);;
                         }
                     }).launch();
@@ -467,7 +474,7 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
     //图片上传失败
     @Override
     public void onError(String s) {
-        super.onError(s);
+      /*  super.onError(s);
         LogUtils.e("图片上传失败"+"uploadPosition==="+uploadPosition+"filename==="+photos.get(uploadPosition));
         if (uploadPosition < photos.size() - 1) {
             tvPost.setBackgroundColor(getResources().getColor(R.color.shop_grey));
@@ -476,6 +483,57 @@ public class RefundFormMoneyActivity extends ShopBaseActivity implements IOnSele
             File files = new File(photos.get(uploadPosition));
             ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);
         }else {
+            tvPost.setBackgroundColor(getResources().getColor(R.color.msb_color));
+            tvPost.setClickable(true);
+        }*/
+        if (!AppUtil.isNetworkAvailable()) {
+            PopUtil.showComfirmDialog(this, "", getResources().getString(R.string.network_error), "", "", null, null, true);
+            onNetError();
+        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey()) || "未登录".equals(s)) {
+            PopUtil.toastInBottom("请登录商城");
+            Intent goLogin = new Intent(this, LoginActivity.class);
+            startActivity(goLogin);
+        } else if (!isCompress) {
+            //原图上传失败才显示
+            PopUtil.toastInCenter(s);
+        }
+        if (uploadPosition < photos.size() - 1) {
+            tvPost.setBackgroundColor(getResources().getColor(R.color.shop_grey));
+            tvPost.setClickable(false);
+            //压缩上传不成功，则用原图再次尝试上传，原图上传不成功，则上传下一张
+            if (isCompress) {
+                final File files = new File(photos.get(uploadPosition));
+                isCompress =false;
+                ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);
+            } else {
+                uploadPosition += 1;
+                final File files = new File(photos.get(uploadPosition));
+                Luban.with(RefundFormMoneyActivity.this)
+                        .load(files)
+                        .setCompressListener(new OnCompressListener() {
+                            @Override
+                            public void onStart() {
+                            }
+
+                            @Override
+                            public void onSuccess(File file) {
+                                isCompress = true;
+                                ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, file);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                isCompress = false;
+                                ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);
+
+                            }
+                        }).launch();
+            }
+        } else if (isCompress && uploadPosition == photos.size() - 1) {
+            final File files = new File(photos.get(uploadPosition));
+            isCompress = false;
+            ShopPresenter.postRefundPic(RefundFormMoneyActivity.this, files);
+        } else if (!isCompress && uploadPosition == photos.size() - 1) {
             tvPost.setBackgroundColor(getResources().getColor(R.color.msb_color));
             tvPost.setClickable(true);
         }
