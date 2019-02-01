@@ -409,7 +409,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
     private void onNewCustomerNo() {
         Intent intent=new Intent(context,AddCustomerNoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,ConstantUtil.VALUE1);
     }
     private class MyWebChromeClient extends WebChromeClient {
         @Override
@@ -448,8 +448,6 @@ public class InsuranceHtmlActivity extends BaseActivity {
             }
         }
     }
-
-
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {}

@@ -89,12 +89,10 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error=object.optString("error");
-                        JSONArray array =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            JSONArray array =object.optJSONArray("data");
                             if (activity.requestType==0){
-                                if (array.length()>0){
-                                    activity.initAdvertisingData(array);
-                                }
+                                activity.initAdvertisingData(array);
                             }else {
                                 activity.onTableData(array);
                             }
@@ -163,30 +161,34 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
     private void initAdvertisingData(JSONArray array) {
         adInformation.clear();
         advertisingList.clear();
-        try {
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject jsonObject = array.getJSONObject(i);
-                AdvertisingInfo info = new AdvertisingInfo();
-                info.setImages(jsonObject.getString("image"));
-                info.setUrl(jsonObject.getString("url"));
-                info.setDesc(jsonObject.optString("desc"));
-                info.setTitle(jsonObject.optString("title"));
-                info.setShare(jsonObject.optString("share"));
-                adInformation.add(info);
-                advertisingList.add(jsonObject.optString("image"));
+        if (array!=null&&array.length()!=0){
+            try {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject jsonObject = array.getJSONObject(i);
+                    AdvertisingInfo info = new AdvertisingInfo();
+                    info.setImages(jsonObject.getString("image"));
+                    info.setUrl(jsonObject.getString("url"));
+                    info.setDesc(jsonObject.optString("desc"));
+                    info.setTitle(jsonObject.optString("title"));
+                    info.setShare(jsonObject.optString("share"));
+                    adInformation.add(info);
+                    advertisingList.add(jsonObject.optString("image"));
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
             }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        if (adInformation!=null&&adInformation.size()!=0){
-            mCubeBanner.setVisibility(View.VISIBLE);
+            if (adInformation!=null&&adInformation.size()!=0){
+                mCubeBanner.setVisibility(View.VISIBLE);
+            }else {
+                mCubeBanner.setVisibility(View.GONE);
+            }
+            mCubeBanner.setAutoPlayAble(advertisingList.size() > 1);
+            mCubeBanner.setAdapter(new MyImageAdapter());
+            mCubeBanner.setDelegate(new MyImageAdapter());
+            mCubeBanner.setData(advertisingList, null);
         }else {
             mCubeBanner.setVisibility(View.GONE);
         }
-        mCubeBanner.setAutoPlayAble(advertisingList.size() > 1);
-        mCubeBanner.setAdapter(new MyImageAdapter());
-        mCubeBanner.setDelegate(new MyImageAdapter());
-        mCubeBanner.setData(advertisingList, null);
     }
     private void onTableData(JSONArray array) {
         tableList.clear();
