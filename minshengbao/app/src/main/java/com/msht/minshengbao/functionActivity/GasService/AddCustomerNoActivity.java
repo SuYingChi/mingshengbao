@@ -1,6 +1,7 @@
 package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -11,7 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -21,7 +26,10 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.EnsureAddress;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
+import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +50,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
     private String userId,password;
     private String customerNo;
     private int   requestCode=0;
+    private int   enterType=0;
     private CustomDialog customDialog;
     private final  RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
@@ -145,6 +154,10 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         context=this;
         mPageName="添加客户号";
         setCommonHeader(mPageName);
+        Intent data=getIntent();
+        if (data!=null){
+            enterType=data.getIntExtra("enterType",0);
+        }
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -188,11 +201,128 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                 String txt= etCustomerNo.getText().toString().trim();
                 requestCode=0;
                 customerNo= txt;
-              //  address="";
-                addHouseAddress();
+                if (enterType==1||enterType==2){
+                    onCheckTable();
+                }else {
+                    addHouseAddress();
+                }
                 break;
             default:
                 break;
+        }
+    }
+
+    private void onCheckTable() {
+        String customerNo=etCustomerNo.getText().toString().trim();
+        customDialog.show();
+        String validateURL=UrlUtil.GET_TABLE_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        textParams.put("CustomerNo",customerNo);
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onReceiveTableData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                ToastUtil.ToastText(context,data.toString());
+            }
+        });
+    }
+
+    private void onReceiveTableData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                JSONArray array=object.optJSONArray("data");
+                if (array!=null&&array.length()!=0){
+                    JSONObject json = array.optJSONObject(0);
+                    int  tableType = json.optInt("lx");
+                    switch (tableType){
+                        case 11:
+                            onOrdinaryTableExpense();
+                            break;
+                        case 17:
+                            onInternetTable();
+                            break;
+                        case 12:
+                            onOtherTable();
+                            break;
+                        default:
+                            break;
+                    }
+                }else {
+                    onErrorTipDialog("该用户号无表具");
+                }
+            }else {
+                onErrorTipDialog( error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    private void onOtherTable() {
+        addHouseAddress();
+    }
+    private void onInternetTable() {
+        if (enterType==1){
+            new PromptDialog.Builder(context)
+                    .setTitle("温馨提示")
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage("该用户号所属的表类型为物联网表，添加后将不会在普表里出现")
+                    .setButton1("取消", new PromptDialog.OnClickListener() {
+
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setButton2("继续添加", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            addHouseAddress();
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }else {
+            addHouseAddress();
+        }
+    }
+    private void onOrdinaryTableExpense() {
+        if (enterType==2){
+            new PromptDialog.Builder(context)
+                    .setTitle("温馨提示")
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage("该用户号所属的表类型为普表，添加后将不会在物联网表里出现")
+                    .setButton1("取消", new PromptDialog.OnClickListener() {
+
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setButton2("继续添加", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            addHouseAddress();
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }else {
+            addHouseAddress();
         }
     }
     private void addHouseAddress(){
@@ -214,5 +344,6 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

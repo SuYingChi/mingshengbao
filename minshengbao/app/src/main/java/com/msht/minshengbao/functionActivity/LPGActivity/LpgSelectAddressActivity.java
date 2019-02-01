@@ -71,7 +71,6 @@ public class LpgSelectAddressActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String msgError = object.optString("msg");

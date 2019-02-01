@@ -960,7 +960,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(functionUrl, OkHttpRequestUtil.TYPE_GET,null,getFunctionHandler);
     }
-
     private void onTipTopModule() {
         try {
             for (int i = 0; i < rightTopArray.length(); i++) {

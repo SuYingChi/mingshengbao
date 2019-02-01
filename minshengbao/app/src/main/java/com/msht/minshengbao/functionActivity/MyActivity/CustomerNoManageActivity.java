@@ -300,6 +300,7 @@ public class CustomerNoManageActivity extends BaseActivity implements View.OnCli
             case R.id.id_btn_customer:
                 Intent addAddress=new Intent(CustomerNoManageActivity.this,AddCustomerNoActivity.class);
                 addAddress.putExtra("addresscode", ADDRESS_CODE);
+                addAddress.putExtra("enterType",0);
                 startActivityForResult(addAddress, 3);
                 break;
             default:

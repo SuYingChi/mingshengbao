@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
@@ -104,13 +106,8 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestType==0){
                                 reference.initShow(jsonObject);
-                            }else if (reference.requestType==1){
-                                reference.onHouseData(jsonObject);
                             }
                         }else {
-                            if (reference.requestType==1){
-                                reference.tvAddress.setText("");
-                            }
                             reference.onFailure(error);
                         }
                     }catch (Exception e){
@@ -289,14 +286,39 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
         }
     };
     private void onSearchHouseData() {
-        requestType=1;
         String validateURL = UrlUtil.HouseSearch_Url;
         customer= etCustomerNo.getText().toString().trim();
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customer);
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,getinsuranceHandler);
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                tvAddress.setText("");
+                ToastUtil.ToastText(context,data.toString());
+            }
+        });
+    }
+
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            JSONObject jsonObject =object.optJSONObject("data");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                onHouseData(jsonObject);
+            }else {
+               tvAddress.setText("");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -365,6 +387,8 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
                 onFailure("手机号码格式不正确");
             }else if ((!TextUtils.isEmpty(email))&&!RegularExpressionUtil.isEmail(email)){
                 onFailure("电子邮箱格式不正确");
+            }else if (TextUtils.isEmpty(address)){
+                onFailure("您输入用户号不正确，请重新输入！");
             }else if (!checkBox.isChecked()){
                 onFailure("请您先勾选保险协议");
             }else {
@@ -490,5 +514,6 @@ public class InsurancePurchase extends BaseActivity implements View.OnClickListe
             customDialog.dismiss();
         }
         super.onDestroy();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }
