@@ -272,6 +272,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
             @Override
             public void isEnablecbSeletced(boolean b) {
                 cbSelectAll.setClickable(b);
+                cbEdit.setClickable(b);
             }
         });
         rcl.setAdapter(adapter);

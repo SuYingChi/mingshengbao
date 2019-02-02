@@ -276,6 +276,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             @Override
             public void isEnablecbSeletced(boolean b) {
                 cbSelectAll.setClickable(b);
+                cbEdit.setClickable(b);
             }
         });
         rcl.setAdapter(adapter);
