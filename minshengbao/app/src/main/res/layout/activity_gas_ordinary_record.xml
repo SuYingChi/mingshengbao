@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context=".functionActivity.GasService.GasOrdinaryRecordActivity">
    <include layout="@layout/layout_header"/>
@@ -19,7 +20,7 @@
             android:footerDividersEnabled="true">
         </com.jcodecraeer.xrecyclerview.XRecyclerView>
         <include layout="@layout/layout_no_data_view"
-            android:id="@+id/id_nodata_view"
+            android:id="@+id/id_no_data_view"
             android:visibility="gone"/>
     </FrameLayout>
 </LinearLayout>

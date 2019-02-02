@@ -137,7 +137,7 @@
                         android:layout_marginBottom="@dimen/margin_width5"
                         android:layout_centerVertical="true"
                         android:textSize="@dimen/text_width16"
-                        android:textColor="@color/color_383838"
+                        android:textColor="@color/app_text"
                         android:text="@string/pay_fee_customerNo_check"/>
                 </RelativeLayout>
                 <RelativeLayout

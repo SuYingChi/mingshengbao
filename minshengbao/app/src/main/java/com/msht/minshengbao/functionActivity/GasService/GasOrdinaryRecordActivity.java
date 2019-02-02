@@ -45,10 +45,9 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
     private String    password;
     private XRecyclerView mRecyclerView;
     private int pos=-1;
-    private TextView tvNoData;
     private int refreshType;
-    private JSONArray jsonArray;
     private GetAddressAdapter adapter;
+    private View     noDataLayout;
     private int pageIndex=0;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
 
@@ -76,14 +75,9 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        reference.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference.jsonArray.length()>0){
-                                if (reference.pageIndex==1){
-                                    reference.recordList.clear();
-                                }
-                                reference.onReceiveRecordData();
-                            }
+                            JSONArray jsonArray =object.optJSONArray("data");
+                            reference.onReceiveRecordData(jsonArray);
                         }else {
                             reference.onFailure(error);
                         }
@@ -112,30 +106,34 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
                     }
                 }).show();
     }
-    private void onReceiveRecordData() {
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String address = jsonObject.getString("address");
-                String customerNo = jsonObject.getString("customerNo");
-
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("name", address);
-                map.put("customerNo", customerNo);
-                recordList.add(map);
+    private void onReceiveRecordData(JSONArray jsonArray) {
+        if (jsonArray!=null&&jsonArray.length()>0){
+            if (pageIndex==1){
+                recordList.clear();
             }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        if (recordList!=null&&recordList.size()!=0){
-            mRecyclerView.setVisibility(View.VISIBLE);
-            adapter.notifyDataSetChanged();
+            try {
+                for (int i = 0; i <jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String address = jsonObject.getString("address");
+                    String customerNo = jsonObject.getString("customerNo");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("name", address);
+                    map.put("customerNo", customerNo);
+                    recordList.add(map);
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            if (recordList!=null&&recordList.size()!=0){
+                noDataLayout.setVisibility(View.GONE);
+                adapter.notifyDataSetChanged();
+            }else {
+                noDataLayout.setVisibility(View.VISIBLE);
+            }
         }else {
-            tvNoData.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            noDataLayout.setVisibility(View.VISIBLE);
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,8 +142,9 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         setCommonHeader("缴费记录");
-        tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
+        TextView tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
         tvNoData.setText("当前没有客户号");
+        noDataLayout=findViewById(R.id.id_no_data_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView=(XRecyclerView )findViewById(R.id.id_pay_record_view);
