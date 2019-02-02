@@ -75,7 +75,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
@@ -88,6 +90,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
                     android:text="地址信息"/>
@@ -97,9 +100,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:gravity="end"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"/>
                 <TextView
                     android:id="@+id/id_tv_address"
@@ -108,7 +114,9 @@
                     android:layout_below="@+id/id_phone"
                     android:layout_marginTop="@dimen/margin_width10"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:gravity="end"
                     android:paddingBottom="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"/>
@@ -135,6 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:layout_centerVertical="true"
                         android:text="退单提示："
                         android:textSize="@dimen/text_width16"
@@ -145,8 +154,11 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:layout_toRightOf="@+id/text3"
+                        android:layout_toEndOf="@+id/text3"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/colorOrange"/>
@@ -170,6 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:src="@drawable/star_one_h"/>
                     <ImageView
@@ -177,7 +190,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:src="@drawable/forward_m"
                         />
@@ -186,7 +201,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_img_forward1"
+                        android:layout_toStartOf="@+id/id_img_forward1"
                         android:layout_marginRight="@dimen/margin_width5"
+                        android:layout_marginEnd="@dimen/margin_width5"
                         android:text="查看评价"
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/colorOrange"/>
@@ -216,6 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:textColor="@color/color_383838"
                         android:text="保修卡"
                         android:textSize="@dimen/text_width16"/>
@@ -225,7 +243,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_img_forward4"
+                        android:layout_toStartOf="@+id/id_img_forward4"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="天"
                         android:textSize="@dimen/text_18"/>
                     <TextView
@@ -234,7 +254,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/text14"
+                        android:layout_toStartOf="@+id/text14"
                         android:layout_marginRight="@dimen/margin_width3"
+                        android:layout_marginEnd="@dimen/margin_width3"
                         android:textSize="@dimen/text_width16"
                         android:text="2"/>
                     <ImageView
@@ -242,7 +264,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_marginEnd="@dimen/margin_width6"
                         android:layout_centerVertical="true"
                         android:src="@drawable/forward_m"
                         />
@@ -268,7 +292,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_15"
+                        android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:textColor="@color/color_383838"
                         android:text="支付方式"
                         android:textSize="@dimen/text_width16"
@@ -279,7 +304,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="微信支付"
                         android:textColor="@color/color_383838"
                         android:textSize="@dimen/text_width16"/>
@@ -304,6 +331,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:text="代金券"
                         android:textColor="@color/color_383838"
                         android:textSize="@dimen/text_width16"/>
@@ -313,7 +341,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/id_img_forward3"
+                        android:layout_toEndOf="@+id/id_img_forward3"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="元"
                         android:textSize="@dimen/text_width16"/>
                     <TextView
@@ -322,7 +352,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/id_img_forward3"
+                        android:layout_toStartOf="@+id/id_img_forward3"
                         android:layout_marginRight="@dimen/margin_width3"
+                        android:layout_marginEnd="@dimen/margin_width3"
                         android:textSize="@dimen/text_width16"
                         android:text="@string/default_value0"/>
                     <ImageView
@@ -330,7 +362,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width6"
+                        android:layout_marginEnd="@dimen/margin_width6"
                         android:layout_centerVertical="true"
                         android:src="@drawable/forward_m"
                         />
@@ -353,6 +387,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:text="优  惠"
                         android:textColor="@color/color_383838"
                         android:textSize="@dimen/text_width16"
@@ -363,7 +398,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="元"
                         android:textSize="@dimen/text_width16"/>
                     <TextView
@@ -372,7 +409,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/text11"
+                        android:layout_toStartOf="@+id/text11"
                         android:layout_marginRight="@dimen/margin_width3"
+                        android:layout_marginEnd="@dimen/margin_width3"
                         android:textSize="@dimen/text_width16"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -393,6 +432,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
                         android:textColor="@color/color_383838"
                         android:text="实付款:"
                         android:textSize="@dimen/text_width16" />
@@ -402,7 +442,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="元"
                         android:textSize="@dimen/text_width16"/>
                     <TextView
@@ -411,7 +453,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/text13"
+                        android:layout_toStartOf="@+id/text13"
                         android:layout_marginRight="@dimen/margin_width3"
+                        android:layout_marginEnd="@dimen/margin_width3"
                         android:textColor="@color/colorOrange"
                         android:textSize="@dimen/text_width16"/>
                 </RelativeLayout>

@@ -98,6 +98,7 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
                         if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestType == 0) {
                                 JSONArray jsonArray = object.optJSONArray("data");
+                                reference.houseList.clear();
                                 reference.onCustomerAddressData(jsonArray);
                             } else {
                                 JSONObject jsonObject = object.optJSONObject("data");

@@ -75,7 +75,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_width15"
                 android:text="上门检测费"
-                android:textSize="@dimen/text_14"
+                android:textSize="@dimen/text_width14"
                 />
             <TextView
                 android:id="@+id/text"
@@ -109,7 +109,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_width15"
                 android:text="配件材料费"
-                android:textSize="@dimen/text_14"
+                android:textSize="@dimen/text_width14"
                 />
             <TextView
                 android:id="@+id/text8"

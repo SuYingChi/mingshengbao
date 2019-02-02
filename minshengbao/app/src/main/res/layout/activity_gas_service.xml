@@ -25,12 +25,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:layout_marginTop="@dimen/margin_width10"
                 android:paddingBottom="@dimen/margin_width20">
                 <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
                     android:id="@+id/id_function_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_width10"
                     android:layout_centerHorizontal="true"
                     android:numColumns="4"
                     android:horizontalSpacing="@dimen/margin_width8"

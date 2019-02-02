@@ -81,6 +81,7 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                                     activity.showDialogs(address);
                                 }
                             }else if (activity.requestCode==1){
+                                activity.setResult(1);
                                 activity.onAddSuccess();
                             }
                         }else {
@@ -127,7 +128,6 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
                 .setButton1("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        setResult(1);
                         dialog.dismiss();
                         finish();
                     }

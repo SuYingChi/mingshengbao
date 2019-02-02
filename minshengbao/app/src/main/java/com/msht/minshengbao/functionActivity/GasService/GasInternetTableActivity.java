@@ -89,6 +89,7 @@ public class GasInternetTableActivity extends BaseActivity implements View.OnCli
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestType==0){
                                 activity.jsonArray =object.optJSONArray("data");
+                                activity.houseList.clear();
                                 activity.onCustomerAddressData();
                             }else if (activity.requestType==1){
                                 JSONArray array=object.optJSONArray("data");
