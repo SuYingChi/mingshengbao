@@ -143,7 +143,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         setCommonHeader("缴费记录");
         TextView tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
-        tvNoData.setText("当前没有客户号");
+        tvNoData.setText("当前没有用户号");
         noDataLayout=findViewById(R.id.id_no_data_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
