@@ -52,6 +52,11 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
             freeFreight = obj.optString("free_freight");
         }
         RecyclerView rcl = holder.getView(R.id.rcl);
+        if(position==0){
+            carListListener.isEnablecbSeletced(false);
+        }else if(position==datas.size()-1){
+            carListListener.isEnablecbSeletced(true);
+        }
         if (rcl.getAdapter() == null) {
             final List<JSONObject> childList = new ArrayList<JSONObject>();
             final CarListChildAdapter childAdapter = new CarListChildAdapter(context);
@@ -191,6 +196,8 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
         void onGoodDetail(final String goodId);
 
         void onNotifyFinish();
+
+        void isEnablecbSeletced(boolean b);
     }
 
     public void setCarListListener(CarListListener carListChildListener) {

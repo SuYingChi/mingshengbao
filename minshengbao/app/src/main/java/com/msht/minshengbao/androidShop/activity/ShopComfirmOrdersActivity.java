@@ -210,7 +210,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             if (TextUtils.equals(isPickup_self, "0")) {
                 ShopPresenter.getAddressList(this, false);
             } else {
-                PopUtil.toastInBottom("暂不支持自提商品购买");
+              //  PopUtil.toastInBottom("暂不支持自提商品购买");
+                ShopPresenter.getAddressList(this, false);
             }
         } else {
             finish();
@@ -476,9 +477,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     JSONObject goodobj = goodList.optJSONObject(i);
                     if (!goodobj.optBoolean("storage_state")) {
                         PopUtil.toastInBottom("已为您取消购买已下架或库存不足的商品");
-                    } else if ("1".equals(goodobj.optString("pickup_self"))) {
+                    } /*else if ("1".equals(goodobj.optString("pickup_self"))) {
                         PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
-                    } else if (goodobj.optBoolean("storage_state") && "0".equals(goodobj.optString("pickup_self"))) {
+                    } */else if (goodobj.optBoolean("storage_state") /*&& "0".equals(goodobj.optString("pickup_self"))*/) {
                         ComfirmShopGoodBean.GoodsBean goodbean = new ComfirmShopGoodBean.GoodsBean(store_name, storeId, goodobj.optString("goods_image_url"), goodobj.optString("goods_name"), goodobj.optString("goods_num"), goodobj.optString("goods_price"), goodobj.optString("goods_id"));
                         goodbean.setCart_id(goodobj.optString("cart_id"));
                         comfirmGoodList.add(goodbean);

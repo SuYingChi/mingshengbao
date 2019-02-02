@@ -444,7 +444,16 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                     startActivity(intent);
                     selectNum = 1;
                 } else {
-                    PopUtil.toastInBottom("暂不支持自提商品购买");
+                  //  PopUtil.toastInBottom("暂不支持自提商品购买");
+//临时添加
+                    Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ifCar", "0");
+                    bundle.putString("isPickup_self", "0");
+                    bundle.putSerializable("data", (Serializable) list);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    selectNum = 1;
                 }
             }
         } else {

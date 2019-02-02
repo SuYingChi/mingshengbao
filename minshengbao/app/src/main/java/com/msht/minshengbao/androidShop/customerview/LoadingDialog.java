@@ -23,19 +23,7 @@ public class LoadingDialog extends Dialog {
 
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                if (LoadingDialog.this.isShowing()) {
-                    LoadingDialog.this.dismiss();
-                }
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
