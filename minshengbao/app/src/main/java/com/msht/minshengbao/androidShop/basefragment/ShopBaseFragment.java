@@ -96,7 +96,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
 
 
     protected void hideCenterLoadingDialog() {
-        if (centerLoadingDialog != null && centerLoadingDialog.isShowing() && this.getContext() != null) {
+        if (centerLoadingDialog != null && centerLoadingDialog.isShowing() && getActivity()!=null&&!getActivity().isFinishing()) {
             centerLoadingDialog.dismiss();
         }
     }
