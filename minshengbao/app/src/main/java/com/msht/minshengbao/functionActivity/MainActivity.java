@@ -269,11 +269,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(),
                     PackageManager.GET_CONFIGURATIONS);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1){
-                versionCode = pi.baseRevisionCode;
-            }else {
-                versionCode = pi.versionCode;
-            }
+            versionCode = pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

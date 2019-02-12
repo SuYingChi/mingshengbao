@@ -43,11 +43,8 @@ public class GasInternetRecodeListActivity extends BaseActivity {
     private String    password;
     private XRecyclerView mRecyclerView;
     private int pos=-1;
-    private TextView tvNoData;
-    private int refreshType;
-    private JSONArray jsonArray;
+    private View     noDataLayout;
     private GetAddressAdapter adapter;
-    private int pageIndex=0;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
 
 
@@ -59,8 +56,9 @@ public class GasInternetRecodeListActivity extends BaseActivity {
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         setCommonHeader("充值记录");
-        tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
-        tvNoData.setText("当前没有客户号");
+        TextView tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
+        tvNoData.setText("当前没有用户号");
+        noDataLayout=findViewById(R.id.id_no_data_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView=(XRecyclerView )findViewById(R.id.id_pay_record_view);
@@ -102,23 +100,20 @@ public class GasInternetRecodeListActivity extends BaseActivity {
         initData();
     }
     private void initData() {
-        loadData(1);
+        loadData();
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                refreshType=0;
-                loadData(1);
+                loadData();
             }
             @Override
             public void onLoadMore() {
-                refreshType=1;
-                loadData(pageIndex + 1);
+
             }
         });
     }
 
-    private void loadData(int i) {
-        pageIndex=i;
+    private void loadData() {
         String validateURL = UrlUtil.INTERNET_RECHARGE_RECODE_LIST;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
@@ -143,10 +138,8 @@ public class GasInternetRecodeListActivity extends BaseActivity {
             String error = object.optString("error");
             JSONArray jsonArray =object.optJSONArray("data");
             if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                if (jsonArray.length()>0){
-                    if (pageIndex==1){
-                        recordList.clear();
-                    }
+                if (jsonArray!=null&&jsonArray.length()>0){
+                    recordList.clear();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String address = jsonObject.getString("address");
@@ -157,13 +150,17 @@ public class GasInternetRecodeListActivity extends BaseActivity {
                         recordList.add(map);
                     }
                     if (recordList!=null&&recordList.size()!=0){
+                        noDataLayout.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
                         adapter.notifyDataSetChanged();
                     }else {
-                        tvNoData.setVisibility(View.VISIBLE);
+                        noDataLayout.setVisibility(View.VISIBLE);
                         mRecyclerView.setVisibility(View.GONE);
                     }
+                }else {
+                    noDataLayout.setVisibility(View.VISIBLE);
                 }
+
             }else {
                 ToastUtil.ToastText(context,error);
             }

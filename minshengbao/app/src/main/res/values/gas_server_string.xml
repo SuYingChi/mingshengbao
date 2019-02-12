@@ -28,7 +28,7 @@
     <string name="new_add_customerNo">+ 新增</string>
     <string name="new_add_customerNo_text">+ 添加用户号</string>
     <string name="ordinary_table_pay">普表缴费</string>
-    <string name="pay_fee_customerNo_check">缴费户号查询</string>
+    <string name="pay_fee_customerNo_check">用户号查询缴费方式</string>
     <string name="pay_fee_customerNo">缴费户号</string>
     <string name="please_input_payFee_customerNo">请输入用户号</string>
     <string name="please_input_gas_amount">请输入充值金额</string>

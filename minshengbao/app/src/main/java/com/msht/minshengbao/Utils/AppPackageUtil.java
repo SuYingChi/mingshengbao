@@ -28,6 +28,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static com.umeng.socialize.utils.ContextUtil.getPackageName;
+
 /**
  * 工具类
  *
@@ -47,6 +49,18 @@ public class AppPackageUtil {
         return versionName;
     }
 
+    public static int getPackageVersionCode(Context context){
+        if (context!=null){
+            try {
+                PackageInfo pi = context.getPackageManager().getPackageInfo(getPackageName(),
+                        PackageManager.GET_CONFIGURATIONS);
+                return pi.versionCode;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
     @SuppressLint("NewApi")
