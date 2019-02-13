@@ -48,11 +48,7 @@ public class BaseActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //适配华为手机虚拟键遮挡tab的问题
-       if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
-        }
-        StatusBarCompat.setStatusBar(this);
+        initStatusBarAndNavigationBar();
        // StatusBarCompat.setTranslucentStatusBar(this);
         /**
          * 友盟统计
@@ -66,6 +62,15 @@ public class BaseActivity extends AppCompatActivity  {
             snackBar.dismiss();
         }
     }
+
+    protected void initStatusBarAndNavigationBar() {
+        //适配华为手机虚拟键遮挡tab的问题
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
+        StatusBarCompat.setStatusBar(this);
+    }
+
     private void setSnackBar() {
         snackBar = TSnackbar
                 .make(findViewById(android.R.id.content), "网络连接失败,请检查您的网络设置", TSnackbar.LENGTH_LONG)

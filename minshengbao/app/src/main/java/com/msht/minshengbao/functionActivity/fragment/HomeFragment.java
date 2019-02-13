@@ -695,7 +695,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         functionData();
         initCardData();
     }
-    private void initData() {
+    public void initData() {
         String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
        // OkHttpRequestManager.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,geturlHandler);
         SendRequestUtil.getDataFromServiceTwo(validateURL,geturlHandler);
@@ -1127,4 +1127,5 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         LocationUtils.setonDestroy();//销毁定位客户端，同时销毁本地定位服务
         super.onDestroy();
     }
+
 }
