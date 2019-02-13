@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
@@ -353,6 +354,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initImmersionBar();
         context = this;
         //推送统计
         mPageName="首页";
@@ -365,7 +367,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
-        initImmersionBar();
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
         } else {

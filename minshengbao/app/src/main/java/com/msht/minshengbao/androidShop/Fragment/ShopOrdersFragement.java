@@ -480,8 +480,10 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
             lastPageNum = pageNum;
             pageNum = 1;
             url = getOrdersUrl(pageNum);
-            refreshLayout.setNoMoreData(false);
-            refreshLayout.setEnableAutoLoadMore(true);
+            if(refreshLayout!=null) {
+                refreshLayout.setNoMoreData(false);
+                refreshLayout.setEnableAutoLoadMore(true);
+            }
             if (!getKey().equals("")) {
                 ShopPresenter.getShopOrdersList(ShopOrdersFragement.this, true);
             }
