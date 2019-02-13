@@ -62,6 +62,7 @@ import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.ViewUI.widget.MyScrollview;
 import com.msht.minshengbao.functionActivity.repairService.RepairOrderListActivity;
 import com.umeng.analytics.MobclickAgent;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     @Override
     public void dismissLoading() {
-        if (centerLoadingDialog != null && centerLoadingDialog.isShowing() && !isDetached()) {
+        if (centerLoadingDialog != null && centerLoadingDialog.isShowing()&&getActivity()!=null&&!getActivity().isFinishing()) {
             centerLoadingDialog.dismiss();
         }
     }
@@ -501,6 +502,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+        OkHttpUtils.getInstance().cancelTag(this);
     }
     @Override
     public void onClick(View v) {
