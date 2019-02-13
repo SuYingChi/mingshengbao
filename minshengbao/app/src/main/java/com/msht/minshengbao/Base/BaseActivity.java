@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -49,7 +50,7 @@ public class BaseActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //适配华为手机虚拟键遮挡tab的问题
-       if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
             AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
         }
         StatusBarCompat.setStatusBar(this);

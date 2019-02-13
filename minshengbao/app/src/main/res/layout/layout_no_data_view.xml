@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/id_img"
-            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_width20"
             android:layout_marginBottom="@dimen/margin_width10"
             android:text="亲，您没有可开发票的订单"
             android:textSize="@dimen/text_16"/>
