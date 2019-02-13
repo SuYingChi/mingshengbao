@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
@@ -195,6 +196,9 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
+            initImmersionBar();
+        }
     }
 
     //是否拒绝网络请求的响应；true表示拒绝；false表示接收，默认false，在onDestroy中设置为true。

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 
 import butterknife.ButterKnife;
@@ -143,6 +144,14 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      */
     protected void initData() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
+            initImmersionBar();
+        }
     }
 
     /**

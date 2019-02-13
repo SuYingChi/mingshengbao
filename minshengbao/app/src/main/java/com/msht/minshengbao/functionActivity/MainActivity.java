@@ -354,7 +354,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initImmersionBar();
         context = this;
         //推送统计
         mPageName="首页";
@@ -367,6 +366,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
+        initImmersionBar();
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
         } else {
@@ -1025,6 +1025,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
+        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
+          initImmersionBar();
+        }
     }
 
     @Override
