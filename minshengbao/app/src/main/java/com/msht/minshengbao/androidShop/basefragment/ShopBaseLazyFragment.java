@@ -150,7 +150,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
     public void onResume() {
         super.onResume();
         if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
-            initImmersionBar();
+
         }
     }
 
@@ -158,7 +158,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * 初始化沉浸式
      */
     protected void initImmersionBar() {
-        if(getActivity()!=null) {
+        if(getActivity()!=null&&!isDetached()) {
             mImmersionBar = ImmersionBar.with(getActivity(), this);
             //白色状态栏处理
             mImmersionBar.statusBarDarkFont(true, 0.2f);

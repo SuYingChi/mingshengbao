@@ -197,7 +197,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         super.onResume();
         MobclickAgent.onResume(this);
         if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
-            initImmersionBar();
+
         }
     }
 
@@ -227,19 +227,21 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     }
 
     protected void initImmersionBar() {
-        mImmersionBar  = ImmersionBar.with(this);
-        //白色状态栏处理
-        mImmersionBar .statusBarDarkFont(true, 0.2f);
-        if (ImmersionBar.hasNavigationBar(this)) {
-            BarParams barParams = ImmersionBar.with(this).getBarParams();
-            //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
-            if (barParams.fullScreen) {
-                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-            }else {
+        if(!isFinishing()) {
+            mImmersionBar = ImmersionBar.with(this);
+            //白色状态栏处理
+            mImmersionBar.statusBarDarkFont(true, 0.2f);
+            if (ImmersionBar.hasNavigationBar(this)) {
+                BarParams barParams = ImmersionBar.with(this).getBarParams();
+                //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
+                if (barParams.fullScreen) {
+                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+                } else {
+                    mImmersionBar.init();
+                }
+            } else {
                 mImmersionBar.init();
             }
-        } else {
-            mImmersionBar.init();
         }
     }
 

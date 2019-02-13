@@ -409,20 +409,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     protected void initImmersionBar() {
-        mImmersionBar  = ImmersionBar.with(this);
-        //白色状态栏处理
-        mImmersionBar .statusBarDarkFont(true, 0.2f);
-        if (ImmersionBar.hasNavigationBar(this)) {
-            BarParams barParams = ImmersionBar.with(this).getBarParams();
-            if (barParams.fullScreen) {
-                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-            }else {
+        if(!isFinishing()) {
+            mImmersionBar = ImmersionBar.with(this);
+            //白色状态栏处理
+            mImmersionBar.statusBarDarkFont(true, 0.2f);
+            if (ImmersionBar.hasNavigationBar(this)) {
+                BarParams barParams = ImmersionBar.with(this).getBarParams();
+                if (barParams.fullScreen) {
+                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+                } else {
+                    mImmersionBar.init();
+                    ImmersionBar.setTitleBar(this, hearLayout);
+                }
+            } else {
                 mImmersionBar.init();
                 ImmersionBar.setTitleBar(this, hearLayout);
             }
-        } else {
-            mImmersionBar.init();
-            ImmersionBar.setTitleBar(this, hearLayout);
         }
     }
 
@@ -1025,9 +1027,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
-        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
-          initImmersionBar();
-        }
     }
 
     @Override
