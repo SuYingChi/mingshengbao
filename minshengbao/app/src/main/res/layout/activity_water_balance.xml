@@ -22,9 +22,6 @@
                 android:layout_height="wrap_content"
                 android:divider="@null">
             </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
-            <include layout="@layout/layout_no_data_view"
-                android:id="@+id/id_nodata_view"
-                android:visibility="gone"/>
         </LinearLayout>
     </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
 </LinearLayout>

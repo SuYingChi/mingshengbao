@@ -24,13 +24,12 @@ public class ServerSuccessActivity extends BaseActivity {
         context=this;
         mPageName ="服务提交成功";
         setContentView(R.layout.activity_server_success);
-        findViewById(R.id.id_goback).setVisibility(View.GONE);
+        findViewById(R.id.id_back).setVisibility(View.GONE);
         Intent data=getIntent();
         String navigation=data.getStringExtra("navigation");
         boolean firstSever= SharedPreferencesUtil.getBoolean(this, SharedPreferencesUtil.First_server, true);
         boolean booleanFirst=data.getBooleanExtra("boolean",false);
         setCommonHeader(navigation);
-
         if (booleanFirst){
             if (firstSever){
                 findViewById(R.id.id_layout_second).setVisibility(View.GONE);

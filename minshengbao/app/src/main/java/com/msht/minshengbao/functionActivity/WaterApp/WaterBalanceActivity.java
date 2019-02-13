@@ -52,7 +52,6 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
     private String   account="";
     private TextView tvTotalAmount;
     private TextView tvGiveAmount;
-    private View layoutNoData;
     private int      pageNo=1;
     private int pageIndex=0;
     private LoadMoreListView mListView;
@@ -188,13 +187,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         }catch (JSONException e){
             e.printStackTrace();
         }
-        if (mList.size()!=0&&mList!=null){
-            layoutNoData.setVisibility(View.GONE);
-            mAdapter.notifyDataSetChanged();
-        }else {
-            mAdapter.notifyDataSetChanged();
-            layoutNoData.setVisibility(View.VISIBLE);
-        }
+        mAdapter.notifyDataSetChanged();
     }
     private void onReceiveAccountData(JSONObject json) {
         String type=json.optString("type");
@@ -310,7 +303,6 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         View view=findViewById(R.id.id_re_layout);
         view.setBackgroundResource(R.drawable.shape_change_blue_bg);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
-        layoutNoData=findViewById(R.id.id_nodata_view);
         rightImg=(ImageView)findViewById(R.id.id_right_img);
         View layoutAccountHeader=getLayoutInflater().inflate(R.layout.layout_water_balance_hearder,null);
         mListView=(LoadMoreListView) findViewById(R.id.id_order_list);

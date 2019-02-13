@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
