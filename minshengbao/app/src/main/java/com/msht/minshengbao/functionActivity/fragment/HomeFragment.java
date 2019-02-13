@@ -42,6 +42,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.gyf.barlibrary.BarParams;
 import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
@@ -173,6 +174,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
     private Toolbar hearLayout;
+    private ImmersionBar mImmersionBar;
 
 
     public HomeFragment() {}
@@ -695,7 +697,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         functionData();
         initCardData();
     }
-    private void initData() {
+    public void initData() {
         String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
        // OkHttpRequestManager.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL,OkHttpRequestManager.TYPE_GET,null,geturlHandler);
         SendRequestUtil.getDataFromServiceTwo(validateURL,geturlHandler);
@@ -743,8 +745,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), hearLayout);
+        if(getActivity()!=null&&!isDetached()) {
+            ImmersionBar.setTitleBar(getActivity(), hearLayout);
+        }
     }
+
     private void initCardBanner() {
         mMZBanner.setIndicatorVisible(true);
         mMZBanner.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
@@ -1126,5 +1131,9 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     public void onDestroy() {
         LocationUtils.setonDestroy();//销毁定位客户端，同时销毁本地定位服务
         super.onDestroy();
+        if (mImmersionBar != null) {
+            mImmersionBar.destroy();
+        }
     }
+
 }

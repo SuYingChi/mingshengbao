@@ -27,8 +27,9 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tab"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@color/white"
+            android:padding="@dimen/margin_Modules"
             app:tabGravity="fill"
             app:tabMode="fixed"
             app:tabTextAppearance="@style/MyTabLayoutTextAppearance"

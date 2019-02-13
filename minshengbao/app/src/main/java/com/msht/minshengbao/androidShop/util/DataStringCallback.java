@@ -34,16 +34,19 @@ public class DataStringCallback extends StringCallback {
 
     @Override
     public void onError(okhttp3.Call call, Exception e, int i) {
-        e.printStackTrace();
+        if(e!=null) {
+            e.printStackTrace();
+            if(!TextUtils.isEmpty(e.getMessage())&&e.getMessage().contains("timeout")){
+                iView.onError("网络连接超时，请重试");
+            }else {
+                iView.onError(TextUtils.isEmpty(e.getMessage())?"":e.getMessage());
+            }
+        }else {
+            iView.onError("");
+        }
         if(isShowLoadingDialog) {
             iView.dismissLoading();
         }
-        if(e.getMessage().toString().contains("timeout")){
-            iView.onError("网络连接超时，请重试");
-        }else {
-            iView.onError(e.getMessage().toString());
-        }
-
     }
 
     @Override

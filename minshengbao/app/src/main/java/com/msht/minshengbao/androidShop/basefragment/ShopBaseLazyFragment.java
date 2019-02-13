@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 
 import butterknife.ButterKnife;
@@ -145,11 +146,19 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
+
+        }
+    }
+
     /**
      * 初始化沉浸式
      */
     protected void initImmersionBar() {
-        if(getActivity()!=null) {
+        if(getActivity()!=null&&!isDetached()) {
             mImmersionBar = ImmersionBar.with(getActivity(), this);
             //白色状态栏处理
             mImmersionBar.statusBarDarkFont(true, 0.2f);

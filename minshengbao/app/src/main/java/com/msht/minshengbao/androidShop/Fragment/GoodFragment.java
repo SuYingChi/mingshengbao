@@ -860,9 +860,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             }
             if (carnum > 0) {
-                goodDetailActivityListener.hasAddedCar(carnum + "");
+                if(goodDetailActivityListener!=null) {
+                    goodDetailActivityListener.hasAddedCar(carnum + "");
+                }
             } else {
-                goodDetailActivityListener.noAddedCar();
+                if(goodDetailActivityListener!=null) {
+                    goodDetailActivityListener.noAddedCar();
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

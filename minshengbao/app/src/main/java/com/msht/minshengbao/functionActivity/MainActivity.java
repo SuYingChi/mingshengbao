@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
@@ -79,6 +80,7 @@ import com.umeng.message.PushAgent;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+import com.zhy.http.okhttp.OkHttpUtils;
 //import com.yanzhenjie.permission.PermissionListener;
 
 
@@ -140,6 +142,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private View layoutSelectCity;
     private TextView tvCity;
     private final int REQUEST_CODE=100;
+    private boolean isOnNewIntent=false;
 
 
     private static class RequestHandler extends Handler {
@@ -400,22 +403,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void initStatusBarAndNavigationBar() {
+
+    }
 
     protected void initImmersionBar() {
-        mImmersionBar  = ImmersionBar.with(this);
-        //白色状态栏处理
-        mImmersionBar .statusBarDarkFont(true, 0.2f);
-        if (ImmersionBar.hasNavigationBar(this)) {
-            BarParams barParams = ImmersionBar.with(this).getBarParams();
-            if (barParams.fullScreen) {
-                mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-            }else {
+        if(!isFinishing()) {
+            mImmersionBar = ImmersionBar.with(this);
+            //白色状态栏处理
+            mImmersionBar.statusBarDarkFont(true, 0.2f);
+            if (ImmersionBar.hasNavigationBar(this)) {
+                BarParams barParams = ImmersionBar.with(this).getBarParams();
+                if (barParams.fullScreen) {
+                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
+                } else {
+                    mImmersionBar.init();
+                    ImmersionBar.setTitleBar(this, hearLayout);
+                }
+            } else {
                 mImmersionBar.init();
                 ImmersionBar.setTitleBar(this, hearLayout);
             }
-        } else {
-            mImmersionBar.init();
-            ImmersionBar.setTitleBar(this, hearLayout);
         }
     }
 
@@ -553,7 +562,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String data = intent.getStringExtra("broadcast");
             if (data.equals(VariableUtil.VALUE_ONE)) {
-                finish();  //接受到广播后把上一级的MainActivity 消除
+             /*   finish(); */ //接受到广播后把上一级的MainActivity 消除
+                ((RadioButton) findViewById(R.id.radio_home)).setChecked(true);
             } else if (data.equals(VariableUtil.VALUE_TWO)) {
                 tvMassageNum.setVisibility(View.GONE);
                 VariableUtil.messageNum = 0;
@@ -660,29 +670,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
       switch (index){
           case 0:
-              if (!homeFrag.isAdded()) {
-                  FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-                  trans.remove(homeFrag).commit();
-                  getSupportFragmentManager().beginTransaction()
-                          .add(R.id.content_layout, homeFrag).commit();
-                  currentFragment = homeFrag;
-                  clickCode = 0x001;
-              } else {
-                  clickCode = 0x001;
-                  addOrShowFragment(getSupportFragmentManager().beginTransaction(), homeFrag);
-              }
+             ((RadioButton) findViewById(R.id.radio_home)).setChecked(true);
               break;
           case 1:
               ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
-              clickTab2Layout();
+            //  clickTab2Layout();
               break;
           case 2:
               ((RadioButton) findViewById(R.id.radio_order)).setChecked(true);
-              clickTab3Layout();
+             // clickTab3Layout();
               break;
           case 3:
               ((RadioButton) findViewById(R.id.radio_me)).setChecked(true);
-              clickTab4Layout();
+             // clickTab4Layout();
               break;
               default:break;
       }
@@ -818,6 +818,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (shopMainFrag == null) {
             shopMainFrag = new ShopMainFragment();
         }
+        if(mImmersionBar==null){
+            initImmersionBar();
+        }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopMainFrag);
     }
 
@@ -830,6 +833,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         //在add hide show结构中，重复show的话不会再次回调onvisible ,所以需要外放接口手动触发onvisible时的操作
         shopCarParentFragment.refreshCarFragment();
+        if(mImmersionBar==null){
+            initImmersionBar();
+        }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
 
     }
@@ -837,7 +843,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(GoShopMainEvent messageEvent) {
         ((RadioButton) findViewById(R.id.radio_mall)).setChecked(true);
-        clickTab2Layout();
+      //  clickTab2Layout();
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(LocationEvent locationEvent) {
@@ -1045,26 +1051,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             SharedPreferencesUtil.putAppAliveState(context, SharedPreferencesUtil.IS_App_ALIVE, false);
         }
         OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
+        OkHttpUtils.getInstance().cancelTag(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        isOnNewIntent = true;
+        if (getIntent() != null) {
+            int index = getIntent().getIntExtra("index", 0);
+            initTab(index);
+            if (isLoginState(context)){
+                onGetMessage();
+                initGetInformation();
+                initPush();
+                onGetBadgeCountMessage();
+            }
+        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         refreshCarNum();
-        if (currentFragment instanceof ShopCarParentFragment) {
-            ((ShopCarParentFragment)currentFragment).refreshCarFragment();
-        }
-        if (currentFragment instanceof LoginMyFrag) {
-            ((LoginMyFrag) currentFragment).getOrdersNum();
-        } else if (currentFragment instanceof ShopMainFragment) {
-            ((ShopMainFragment) currentFragment).getMessageCount();
-        }
-        if (isLoginState(context) && NetWorkUtil.isNetWorkEnable(this)) {
-            onGetMessage();
+        if (!isOnNewIntent) {
+            if (currentFragment instanceof ShopCarParentFragment) {
+                ((ShopCarParentFragment) currentFragment).refreshCarFragment();
+            }
+            if (currentFragment instanceof LoginMyFrag) {
+                ((LoginMyFrag) currentFragment).getOrdersNum();
+            } else if (currentFragment instanceof ShopMainFragment) {
+                ((ShopMainFragment) currentFragment).getMessageCount();
+            }
+            if (isLoginState(context) && NetWorkUtil.isNetWorkEnable(this)) {
+                onGetMessage();
+            } else {
+                tvMassageNum.setVisibility(View.GONE);
+                VariableUtil.messageNum = 0;
+            }
         }else {
-            tvMassageNum.setVisibility(View.GONE);
-            VariableUtil.messageNum=0;
+            isOnNewIntent = false;
         }
+
     }
 
     private void refreshCarNum() {
@@ -1103,4 +1132,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             EventBus.getDefault().postSticky(new CarNumEvent(-1));
         }
     }
+
 }

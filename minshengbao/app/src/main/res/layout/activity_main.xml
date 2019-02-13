@@ -84,7 +84,7 @@
             android:button="@null"
             android:textColor="@drawable/radio_home_textcolor"
             android:textSize="@dimen/text_width12"
-            android:checked="true"
+            android:checked="false"
             android:drawableTop="@drawable/radio_home_button"
             android:text="首页"
             android:layout_height="@dimen/margin_width50"/>

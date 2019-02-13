@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     MyApplication.getInstance().setList(list);
                     EventBus.getDefault().postSticky(new LoginShopEvent(bean));
-                    Intent broadcast=new Intent();
+                   Intent broadcast=new Intent();
                     broadcast.setAction(MY_ACTION);
                     broadcast.putExtra("broadcast", "1");
                     sendBroadcast(broadcast);
