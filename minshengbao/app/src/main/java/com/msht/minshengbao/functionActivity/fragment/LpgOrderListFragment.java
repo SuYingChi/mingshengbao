@@ -146,21 +146,21 @@ public class LpgOrderListFragment extends BaseFragment {
             super.handleMessage(msg);
         }
     }
-
     private void showNotify(String error) {
-        new PromptDialog.Builder(getActivity())
-                .setTitle(R.string.my_dialog_title)
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(error)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
+        if (mContext!=null){
+            new PromptDialog.Builder(mContext)
+                    .setTitle(R.string.my_dialog_title)
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage(error)
+                    .setButton1("确定", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            dialog.dismiss();
 
-                    }
-                }).show();
+                        }
+                    }).show();
+        }
     }
-
     private void onReceiveOrderData() {
 
         try {

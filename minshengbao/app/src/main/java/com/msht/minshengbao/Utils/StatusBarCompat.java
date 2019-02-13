@@ -105,6 +105,4 @@ public class StatusBarCompat {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-
-
 }
