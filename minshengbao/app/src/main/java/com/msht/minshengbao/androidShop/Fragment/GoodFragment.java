@@ -680,7 +680,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             comfirmShopGoodBean.setGoods(list2);
             list.add(comfirmShopGoodBean);
             if (!TextUtils.isEmpty(isPickup_self)) {
-                if (TextUtils.equals(isPickup_self, "0")) {
                     Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("ifCar", "0");
@@ -688,17 +687,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     bundle.putSerializable("data", (Serializable) list);
                     intent.putExtras(bundle);
                     startActivity(intent);
-                } else {
-                  //  PopUtil.toastInBottom("暂不支持自提商品购买");
-//临时添加
-                    Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ifCar", "0");
-                    bundle.putString("isPickup_self", "0");
-                    bundle.putSerializable("data", (Serializable) list);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
             } else {
                 PopUtil.toastInBottom("商品已下架或不支持购买");
             }

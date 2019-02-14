@@ -499,6 +499,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
             PopUtil.showComfirmDialog(getContext(), null, "请选择至少一件商品", null, "好的", null, null, true);
         } else {
             Map<String, ComfirmShopGoodBean> map = new HashMap<String, ComfirmShopGoodBean>();
+            String isPickUpSelf = gotoBuyList.get(0).optString("pickup_self");
             for (JSONObject jsonObject : gotoBuyList) {
                 String store_id = jsonObject.optString("store_id");
                 String store_name = jsonObject.optString("store_name");
@@ -507,7 +508,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 }/*else if("1".equals(jsonObject.optString("pickup_self"))){
                     PopUtil.toastInBottom("暂不支持购买自提商品，已为您取消购买所选自提商品");
                     //临时修改
-                }*/else if (jsonObject.optBoolean("storage_state")/*&&"0".equals(jsonObject.optString("pickup_self"))*/) {
+                }*/else if (jsonObject.optBoolean("storage_state")&&isPickUpSelf.equals(jsonObject.optString("pickup_self"))) {
                     if (!map.containsKey(store_id)) {
                         List<ComfirmShopGoodBean.GoodsBean> list = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
                         ComfirmShopGoodBean.GoodsBean bean = JsonUtil.toBean(jsonObject.toString(), ComfirmShopGoodBean.GoodsBean.class);
@@ -525,6 +526,9 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                         }
                         bean.setGoods(list);
                     }
+                }else if(jsonObject.optBoolean("storage_state")&&!isPickUpSelf.equals(jsonObject.optString("pickup_self"))){
+                    PopUtil.toastInBottom("自提商品不可与普通商品一起购买");
+                    return;
                 }
             }
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
@@ -537,7 +541,7 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
                 Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("ifCar", "1");
-                bundle.putString("isPickup_self", "0");
+                bundle.putString("isPickup_self", isPickUpSelf);
                 bundle.putSerializable("data", (Serializable) list);
                 intent.putExtras(bundle);
                 startActivity(intent);

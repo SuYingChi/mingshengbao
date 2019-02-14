@@ -423,6 +423,7 @@
         <activity android:name=".functionActivity.insurance.InsuranceListActivity" />
         <activity android:name=".functionActivity.HtmlWeb.InsuranceHtmlActivity" />
         <activity android:name=".functionActivity.GasService.GasInternetRecodeListActivity"></activity>
+        <activity android:name=".androidShop.activity.ShopSelectSiteActivity" />
     </application>
 
 </manifest>

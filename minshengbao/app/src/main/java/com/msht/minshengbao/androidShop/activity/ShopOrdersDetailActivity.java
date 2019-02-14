@@ -132,7 +132,14 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
     TextView tvYouhui;
     @BindView(R.id.ll_inv)
     LinearLayout llinv;
-
+    @BindView(R.id.ll_site)
+    LinearLayout llsite;
+    @BindView(R.id.sitename)
+    TextView tvSiteName;
+    @BindView(R.id.site_phone)
+    TextView tvSitePhone;
+    @BindView(R.id.tv_site)
+    TextView tvsite;
     private String memberId;
     private List<ShopOrderDetailBean.DatasBean.OrderInfoBean.ZengpinListBean> zengpinglist;
     private String store_phone;
@@ -489,6 +496,22 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
             if (llbtns.getChildCount() == 1) {
                 llbtns.setVisibility(View.GONE);
             }
+            try {
+                JSONObject ordersobj = new JSONObject(s).optJSONObject("datas").optJSONObject("order_info");
+                if(ordersobj.has("delivery_info")){
+                    JSONObject obj = ordersobj.optJSONObject("delivery_info");
+                    llsite.setVisibility(View.VISIBLE);
+                    tvSiteName.setText(obj.optString("dlyp_name"));
+                    tvSitePhone.setText(obj.optString("dlyp_mobile"));
+                    tvsite.setText(obj.optString("dlyp_address_info"));
+                }else {
+                    llsite.setVisibility(View.GONE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 

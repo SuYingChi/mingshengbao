@@ -82,6 +82,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
+import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
@@ -101,6 +102,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShopPresenter {
+
+    private static Object siteList;
 
     public static void loginShop(String usrname, String password, final ILoginShopView iLoginShopView) {
         //测试账号
@@ -654,6 +657,7 @@ public class ShopPresenter {
                 .addParams("rcb_pay", iBuyStep2View.getRcb_pay())
                 .addParams("rpt", iBuyStep2View.getRpt())
                 .addParams("pay_message", iBuyStep2View.getPay_message())
+                .addParams("dlyp_id",iBuyStep2View.getDlypId())
                 .build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {
@@ -1360,7 +1364,7 @@ public class ShopPresenter {
                         iView.onError("格式转换异常");
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
-                        iView.onError(bean.getError()!=null?bean.getError().toString():"暂无消息");
+                        iView.onError(bean.getError()!=null?bean.getError().toString():"");
                     } else {
                         isResponseSuccess = true;
                     }
@@ -1394,7 +1398,7 @@ public class ShopPresenter {
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
                         if (bean.getError() != null) {
-                            iView.onError(bean.getError()!=null?bean.getError().toString():"暂无消息");
+                            iView.onError(bean.getError()!=null?bean.getError().toString():"");
                         }
                     } else {
                         isResponseSuccess = true;
@@ -1512,6 +1516,19 @@ public class ShopPresenter {
                     }else if("success".equals(baseData.getResult())){
                         iSearchUserIdView.onSearchUserIdSuccess(s);
                     }
+                }
+            }
+        });
+    }
+
+    public static void  getSiteList(final ISiteListView iSiteListView) {
+        OkHttpUtils.get().url(ShopConstants.SITE_LIST).tag(iSiteListView)
+                .build().execute(new DataStringCallback(iSiteListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iSiteListView.onGetSiteListSuccess(s);
                 }
             }
         });
