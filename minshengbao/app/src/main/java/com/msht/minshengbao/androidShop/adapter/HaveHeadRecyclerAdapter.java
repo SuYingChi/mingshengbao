@@ -22,7 +22,7 @@ public abstract class HaveHeadRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     protected Context context;
     protected List<T> datas;
     protected int layoutId;
-    private int head_layoutId = Integer.MIN_VALUE;
+    protected int head_layoutId = Integer.MIN_VALUE;
     protected String monetary_unit;
     protected OnItemClickListener onItemClickListener;//像listview一样添加点击事件
     protected MyApplication application = MyApplication.getInstance();
