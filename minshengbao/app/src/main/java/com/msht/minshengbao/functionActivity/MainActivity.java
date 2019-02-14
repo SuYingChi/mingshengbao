@@ -40,6 +40,7 @@ import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.Fragment.ShopCarParentFragment;
 import com.msht.minshengbao.androidShop.Fragment.ShopMainFragment;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
@@ -419,11 +420,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
                 } else {
                     mImmersionBar.init();
-                    ImmersionBar.setTitleBar(this, hearLayout);
                 }
             } else {
                 mImmersionBar.init();
-                ImmersionBar.setTitleBar(this, hearLayout);
             }
         }
     }
@@ -577,6 +576,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tvNavigation = (TextView) findViewById(R.id.id_tv_navigation);
         tvMassageNum = (TextView) findViewById(R.id.id_main_messnum);
         hearLayout = (Toolbar)findViewById(R.id.id_head_view);
+        hearLayout.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         findViewById(R.id.id_goback).setVisibility(View.GONE);
         ImageView messageImg =(ImageView)findViewById(R.id.id_massage_img);
         messageImg.setOnClickListener(this);
@@ -1028,6 +1028,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
+        initImmersionBar();
     }
 
     @Override
