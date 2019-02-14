@@ -52,7 +52,7 @@ public class CarListAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObject> {
             freeFreight = obj.optString("free_freight");
         }
         RecyclerView rcl = holder.getView(R.id.rcl);
-        if(position==0){
+        if(datas.size()>1&&position==0){
             carListListener.isEnablecbSeletced(false);
         }else if(position==datas.size()-1){
             carListListener.isEnablecbSeletced(true);

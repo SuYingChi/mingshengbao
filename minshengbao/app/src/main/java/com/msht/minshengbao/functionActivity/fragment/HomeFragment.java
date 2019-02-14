@@ -49,6 +49,7 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.Dialog.HomeAdvertisingDialog;
 import com.msht.minshengbao.ViewUI.widget.DragImageView;
 import com.msht.minshengbao.ViewUI.widget.MarqueeView;
@@ -741,13 +742,14 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
         dragImageView=(DragImageView) view.findViewById(R.id.id_floating_view);
         hearLayout = (Toolbar)view.findViewById(R.id.toolbar);
+        hearLayout.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(getActivity()!=null&&!isDetached()) {
+        /*if(getActivity()!=null&&!isDetached()) {
             ImmersionBar.setTitleBar(getActivity(), hearLayout);
-        }
+        }*/
     }
 
     private void initCardBanner() {

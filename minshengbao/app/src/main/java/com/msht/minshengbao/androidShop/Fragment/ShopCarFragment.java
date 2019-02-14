@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.adapter.CarListAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -95,10 +96,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         return R.layout.shop_car_list;
     }
 
-    @Override
-    protected boolean isLazyLoad() {
-        return false;
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -106,13 +103,13 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         carParentListener = (CarParentListener) getParentFragment();
     }
     @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(getActivity(),mToolbar);
+    protected boolean isImmersionBarEnabled() {
+        return false;
     }
     @Override
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
         rcl.setLayoutManager(linearLayoutManager);
        // rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         adapter = new CarListAdapter(getContext());

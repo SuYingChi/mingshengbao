@@ -89,7 +89,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
         if (mImmersionBar != null)
             mImmersionBar.destroy();
     }
-
+//配合viewpager使用 传统方式不回调
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);

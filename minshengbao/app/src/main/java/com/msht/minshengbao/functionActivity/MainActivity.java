@@ -822,6 +822,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             initImmersionBar();
         }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopMainFrag);
+        shopMainFrag.getMessageCount();
     }
 
     private void clickTab3Layout() {
@@ -832,11 +833,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             shopCarParentFragment = new ShopCarParentFragment();
         }
         //在add hide show结构中，重复show的话不会再次回调onvisible ,所以需要外放接口手动触发onvisible时的操作
-        shopCarParentFragment.refreshCarFragment();
         if(mImmersionBar==null){
             initImmersionBar();
         }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
+        shopCarParentFragment.refreshCarFragment();
 
     }
 
