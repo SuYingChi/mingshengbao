@@ -843,7 +843,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public String getDlypId() {
-        return siteBean.getDlyp_id();
+        if(siteBean!=null) {
+            return siteBean.getDlyp_id();
+        }else {
+            return "";
+        }
     }
 
 
