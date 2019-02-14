@@ -79,26 +79,6 @@ public class SelectSiteAreaDialog extends Dialog {
             }
         });
         rcl.setAdapter(adapter);
-        rcl.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager l = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int adapterNowPos = l.findFirstCompletelyVisibleItemPosition();
-                int nowLastPos = l.findLastCompletelyVisibleItemPosition();
-                int selectPosition;
-                LogUtils.e("adapterNowPos==" + adapterNowPos + "-------nowLastPos==" + nowLastPos);
-                if ((nowLastPos + adapterNowPos) % 2 != 0) {
-                    selectPosition = (nowLastPos + adapterNowPos) / 2 + 1;
-                } else {
-                    selectPosition = (nowLastPos + adapterNowPos) / 2;
-                }
-                if(list.size()!=0){
-                    //循环滚动要取余
-                    iGetInvContentView.onSelectedInvContentItem(selectPosition % list.size());
-                }
-            }
-        });
     }
 
     public void notifyRcl() {
