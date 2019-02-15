@@ -29,10 +29,6 @@ public class ShopCarNoLoginFragment extends ShopBaseLazyFragment {
         return R.layout.no_login_car;
     }
     @Override
-    protected boolean isImmersionBarEnabled() {
-        return false;
-    }
-    @Override
     protected void initView() {
         mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
       tvLogin.setOnClickListener(new View.OnClickListener() {

@@ -91,10 +91,6 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
     }
 
     @Override
-    protected boolean isImmersionBarEnabled() {
-        return false;
-    }
-    @Override
     public void onGetGuessLikeGoodSuccess(String s) {
         datalist.clear();
         datalist.addAll(JsonUtil.toBean(s,GuessLikeBean.class).getDatas().getGuess_like_list());

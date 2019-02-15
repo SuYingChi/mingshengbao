@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormGoodListAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopRouteAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -54,16 +55,11 @@ public class ShopOrderRouteActivity extends ShopBaseActivity implements ISearchD
         setContentView(R.layout.route);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         orderId = getIntent().getStringExtra("id");
         msgid = getIntent().getIntExtra("msgid", 0) + "";
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);

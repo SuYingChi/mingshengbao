@@ -103,10 +103,6 @@ public class ShopCarFragment extends ShopBaseLazyFragment implements ICarListVie
         carParentListener = (CarParentListener) getParentFragment();
     }
     @Override
-    protected boolean isImmersionBarEnabled() {
-        return false;
-    }
-    @Override
     protected void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);

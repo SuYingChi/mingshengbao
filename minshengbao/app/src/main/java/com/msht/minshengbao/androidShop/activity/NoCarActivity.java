@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.GuessLikeAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -47,15 +48,11 @@ public class NoCarActivity extends ShopBaseActivity implements IGuessLikeGoodLis
         setContentView(R.layout.car_empty_activity);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

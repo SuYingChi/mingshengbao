@@ -71,12 +71,6 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
         setContentView(R.layout.shop_search);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true).navigationBarWithKitkatEnable(false).init();
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.MsgUserListAdapter;
 import com.msht.minshengbao.androidShop.adapter.SiteListAdapter;
@@ -60,6 +61,7 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         adapter = new SiteListAdapter(this, R.layout.item_shop_site,dataList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
@@ -88,12 +90,6 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
             }
         });
         ShopPresenter.getSiteList(this);
-    }
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
     }
     @Override
     public void onGetSiteListSuccess(String s) {

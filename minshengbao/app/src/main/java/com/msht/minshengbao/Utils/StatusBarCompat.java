@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.msht.minshengbao.R;
 
 /**
  *

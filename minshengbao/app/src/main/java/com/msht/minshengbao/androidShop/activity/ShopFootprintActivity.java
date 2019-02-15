@@ -84,12 +84,6 @@ public class ShopFootprintActivity extends ShopBaseActivity implements IGetShopF
     }
 
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     public void onGetClearFootprintSuccess(String s) {

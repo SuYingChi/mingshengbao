@@ -215,12 +215,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             ShopPresenter.getMsgCount(this);
         }
     }
-
-    @Override
-    protected boolean isImmersionBarEnabled() {
-        return false;
-    }
-
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         refreshLayout.setNoMoreData(false);

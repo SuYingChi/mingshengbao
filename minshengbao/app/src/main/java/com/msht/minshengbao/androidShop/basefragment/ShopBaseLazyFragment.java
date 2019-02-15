@@ -13,6 +13,8 @@ import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -118,7 +120,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * @return the boolean
      */
     protected boolean isImmersionBarEnabled() {
-        return true;
+        return false;
     }
 
     /**
@@ -158,7 +160,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * 初始化沉浸式
      */
     protected void initImmersionBar() {
-        if(getActivity()!=null&&!isDetached()) {
+        if(!OSUtils.isEMUI3_0()) {
             mImmersionBar = ImmersionBar.with(getActivity(), this);
             //白色状态栏处理
             mImmersionBar.statusBarDarkFont(true, 0.2f);
@@ -173,6 +175,12 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
             } else {
                 mImmersionBar.init();
             }
+        }else {
+            //适配华为手机虚拟键遮挡tab的问题
+            if (AndroidWorkaround.checkDeviceHasNavigationBar(getContext())) {
+                AndroidWorkaround.assistActivity(mRootView.findViewById(android.R.id.content));
+            }
+            StatusBarCompat.setStatusBar(getActivity());
         }
     }
 

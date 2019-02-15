@@ -17,6 +17,7 @@ import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.MessageListAdapter2;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -66,15 +67,11 @@ public class MessageListActivity extends ShopBaseActivity implements OnRefreshLo
         setContentView(R.layout.warn_list);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

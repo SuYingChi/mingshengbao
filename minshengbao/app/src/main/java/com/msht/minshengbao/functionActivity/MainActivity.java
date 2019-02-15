@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.DownloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.Fragment.ShopCarParentFragment;
 import com.msht.minshengbao.androidShop.Fragment.ShopMainFragment;
@@ -48,6 +50,7 @@ import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.NavigationbarUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.events.CarNumEvent;
@@ -367,7 +370,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
-        initImmersionBar();
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
         } else {
@@ -406,11 +408,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initStatusBarAndNavigationBar() {
-
-    }
-
-    protected void initImmersionBar() {
-        if(!isFinishing()) {
+        if(!OSUtils.isEMUI3_0()) {
             mImmersionBar = ImmersionBar.with(this);
             //白色状态栏处理
             mImmersionBar.statusBarDarkFont(true, 0.2f);
@@ -424,6 +422,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             } else {
                 mImmersionBar.init();
             }
+        }else {
+            //适配华为手机虚拟键遮挡tab的问题
+            if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+                AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+            }
+           StatusBarCompat.setStatusBar(this);
+
         }
     }
 
@@ -818,9 +823,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (shopMainFrag == null) {
             shopMainFrag = new ShopMainFragment();
         }
-        if(mImmersionBar==null){
-            initImmersionBar();
-        }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopMainFrag);
         shopMainFrag.getMessageCount();
     }
@@ -833,9 +835,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             shopCarParentFragment = new ShopCarParentFragment();
         }
         //在add hide show结构中，重复show的话不会再次回调onvisible ,所以需要外放接口手动触发onvisible时的操作
-        if(mImmersionBar==null){
-            initImmersionBar();
-        }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
         shopCarParentFragment.refreshCarFragment();
 
@@ -1028,7 +1027,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
-        initImmersionBar();
+
     }
 
     @Override

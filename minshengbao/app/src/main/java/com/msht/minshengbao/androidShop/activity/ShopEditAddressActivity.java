@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.SelectAddressDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -73,6 +74,7 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,11 +93,6 @@ public class ShopEditAddressActivity extends ShopBaseActivity implements IEditAd
        addressId = bean.getAddress_id();
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @OnClick({R.id.back, R.id.ll_city, R.id.save_address})
     public void onViewClicked(View view) {
