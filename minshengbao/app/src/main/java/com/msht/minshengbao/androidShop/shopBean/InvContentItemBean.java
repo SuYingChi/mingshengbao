@@ -24,4 +24,22 @@ public class InvContentItemBean {
     public boolean getSelected() {
         return selected;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InvContentItemBean)) return false;
+
+        InvContentItemBean that = (InvContentItemBean) o;
+
+        if (selected != that.selected) return false;
+        return content.equals(that.content);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = content.hashCode();
+        result = 31 * result + (selected ? 1 : 0);
+        return result;
+    }
 }

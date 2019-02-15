@@ -7,13 +7,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:contentInsetStart="0dp">
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="?actionBarSize"
         android:background="@color/msb_color"
         android:orientation="horizontal">
 
@@ -115,7 +115,56 @@
                     android:layout_marginTop="@dimen/margin_Modules" />
 
             </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_site"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        style="@style/image"
+                        android:src="@drawable/shop_location" />
+
+                    <TextView
+                        style="@style/shopMsbcolorTitleText"
+                        android:text="自提服务站"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_width2"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:padding="@dimen/margin_Modules">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                    <TextView
+                        android:id="@+id/sitename"
+                        style="@style/grey_small_text" />
+                    <TextView
+                        android:id="@+id/site_phone"
+                        android:layout_marginLeft="@dimen/margin_width35"
+                        style="@style/grey_small_text" />
+                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_site"
+                            style="@style/grey_small_text"
+                            android:text=""
+                            />
+                </LinearLayout>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -482,10 +531,10 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="@dimen/margin_Modules">
-        <View
+       <!-- <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            ></View>
+            ></View>-->
     </LinearLayout>
 </LinearLayout>

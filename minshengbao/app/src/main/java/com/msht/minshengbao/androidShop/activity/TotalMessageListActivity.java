@@ -17,6 +17,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.MsgUserListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -93,6 +94,7 @@ public class TotalMessageListActivity extends ShopBaseActivity implements OnRefr
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         adapter = new MsgUserListAdapter(this, dataList);
         rcl.setLayoutManager(new LinearLayoutManager(this));
         adapter.addBtn(R.layout.delete_btn_layout, new ComplexRecyclerViewAdapter.OnItemBtnClickListener() {
@@ -133,12 +135,6 @@ public class TotalMessageListActivity extends ShopBaseActivity implements OnRefr
         ShopPresenter.getChatUserList(this);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     public void onGetChatUserListSuccess(String s) {

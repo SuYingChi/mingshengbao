@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.GuessLikeAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -45,6 +46,7 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
 
     @Override
     protected void initView() {
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rcl.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setAutoMeasureEnabled(true);
@@ -86,12 +88,6 @@ public  class ShopCarEmptyFragment extends ShopBaseLazyFragment implements IGues
                 ShopPresenter.guessLikeGoodList(this);
             }
         }
-    }
-
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(getActivity(),mToolbar);
     }
 
     @Override

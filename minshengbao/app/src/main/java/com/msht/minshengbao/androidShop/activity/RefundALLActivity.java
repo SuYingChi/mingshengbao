@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormGoodListAdapter;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormPhotoPickerAdapter;
@@ -102,17 +103,12 @@ public class RefundALLActivity extends ShopBaseActivity implements IRefundAllFor
         setContentView(R.layout.refund_all_form_activity);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

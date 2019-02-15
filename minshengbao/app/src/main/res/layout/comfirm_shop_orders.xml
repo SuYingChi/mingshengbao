@@ -159,7 +159,62 @@
                         android:textSize="@dimen/text_width18" />
                 </RelativeLayout>
             </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_site"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:background="@color/white"
+                android:orientation="horizontal">
 
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/shop_location" />
+
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="请选择服务站"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width2"
+                android:background="@color/white"
+                android:padding="@dimen/margin_Modules">
+                <ImageView
+                    style="@style/image"
+                    android:src="@drawable/right_angle"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
+                <TextView
+                    android:id="@+id/sitename"
+                    style="@style/grey_small_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sitename"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:layout_marginRight="@dimen/margin_Modules"
+                    >
+                    <TextView
+                        android:id="@+id/tv_site"
+                        style="@style/grey_small_text"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="请选择服务站"
+                        />
+                </LinearLayout>
+            </RelativeLayout>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

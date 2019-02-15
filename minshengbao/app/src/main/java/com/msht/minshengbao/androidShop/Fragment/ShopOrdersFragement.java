@@ -35,6 +35,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.RefundALLActivity;
@@ -129,6 +130,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
 
     @Override
     protected void initView() {
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
        // rcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -205,7 +207,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
         isViewCreated = true;
     }
 
@@ -235,6 +236,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     public String getState_type() {
         return state_type;
     }
+
 
     @Override
     public void onGetShopOrdersList(String s) {

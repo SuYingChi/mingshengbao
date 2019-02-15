@@ -28,6 +28,8 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.StatusBarUtil;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZHolderCreator;
 import com.msht.minshengbao.ViewUI.CardVMZBanner.holder.MZViewHolder;
@@ -117,6 +119,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     private List<ShopHomeClassBean.ClassBean.ItemBean> homeClassList;
     private MZBannerView mMZBanner;
     private Integer msgCount;
+    private boolean isViewCreated;
 
 
     @Override
@@ -124,16 +127,17 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         return R.layout.shop_main_fragment;
     }
 
-    //适配民生宝mainactivity add hide show结构，创建fragment的时候就请求数据，懒加载适用于搭配viewpager
     @Override
     protected boolean isLazyLoad() {
         return false;
     }
 
+    //适配民生宝mainactivity add hide show结构，创建fragment的时候就请求数据，懒加载适用于搭配viewpager
     @Override
     protected void initView() {
         super.initView();
         ViewGroup.LayoutParams bannerParams = imageCycleView.getLayoutParams();
+        mToolbar.setPadding(0,StatusBarCompat.getStatusBarHeight(getContext()),0,0);
         ViewGroup.LayoutParams titleBarParams = mToolbar.getLayoutParams();
         final int bannerHeight = bannerParams.height - titleBarParams.height;
         Log.e("scrollChanged", "bannerParams.height=" + DimenUtil.px2dip(bannerParams.height) + "titleBarParams.height=" + titleBarParams.height + "ImmersionBar.getStatusBarHeight(getActivity()=" + ImmersionBar.getStatusBarHeight(getActivity()));
@@ -211,13 +215,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             ShopPresenter.getMsgCount(this);
         }
     }
-
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
-    }
-
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         refreshLayout.setNoMoreData(false);

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.BaseLazyFragmentPagerAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
@@ -58,6 +59,7 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
     @Override
     protected void initView() {
         super.initView();
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
         f0 = new RefundMoneyFragment();
         f1 = new RefundGoodFragment();
         list.add(f0);
@@ -74,11 +76,6 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
                 getActivity().finish();
             }
         });
-    }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
     }
     @OnClick({R.id.refund_money, R.id.refund_good})
     public void onViewClicked(View view) {

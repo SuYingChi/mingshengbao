@@ -13,6 +13,8 @@ import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -89,7 +91,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
         if (mImmersionBar != null)
             mImmersionBar.destroy();
     }
-
+//配合viewpager使用 传统方式不回调
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -118,7 +120,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * @return the boolean
      */
     protected boolean isImmersionBarEnabled() {
-        return true;
+        return false;
     }
 
     /**
@@ -158,21 +160,15 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      * 初始化沉浸式
      */
     protected void initImmersionBar() {
-        if(getActivity()!=null&&!isDetached()) {
-            mImmersionBar = ImmersionBar.with(getActivity(), this);
-            //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
-            if (ImmersionBar.hasNavigationBar(getActivity())) {
-                BarParams barParams = ImmersionBar.with(this).getBarParams();
-                //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
-                if (barParams.fullScreen) {
-                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-                } else {
-                    mImmersionBar.init();
-                }
-            } else {
-                mImmersionBar.init();
+        if(!OSUtils.isEMUI3_0()) {
+            mImmersionBar = ImmersionBar.with(this);
+            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
+        }else {
+            //适配华为手机虚拟键遮挡tab的问题
+            if (AndroidWorkaround.checkDeviceHasNavigationBar(getContext())) {
+                AndroidWorkaround.assistActivity(mRootView.findViewById(android.R.id.content));
             }
+            StatusBarCompat.setStatusBar(getActivity());
         }
     }
 

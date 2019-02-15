@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
@@ -28,13 +29,8 @@ public class ShopCarNoLoginFragment extends ShopBaseLazyFragment {
         return R.layout.no_login_car;
     }
     @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(getActivity(),mToolbar);
-    }
-    @Override
     protected void initView() {
-
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
       tvLogin.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {

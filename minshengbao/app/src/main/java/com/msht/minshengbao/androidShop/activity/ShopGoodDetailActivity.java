@@ -87,15 +87,12 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         setContentView(R.layout.shop_good_detail);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
         data = intent.getStringExtra("goodsid");

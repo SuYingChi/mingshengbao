@@ -64,10 +64,6 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
     }
 
     //在add hide show结构中，重复show的话不会再次回调onvisible
-    @Override
-    protected boolean isLazyLoad() {
-        return false;
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -75,11 +71,9 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
         isViewCreated = true;
     }
 
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initImmersionBar();
+    protected boolean isImmersionBarEnabled() {
+        return false;
     }
 
     @Override

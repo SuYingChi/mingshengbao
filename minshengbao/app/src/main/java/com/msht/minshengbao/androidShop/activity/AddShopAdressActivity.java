@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.SelectAddressDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -58,16 +59,11 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
         setContentView(R.layout.add_shop_address);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
     }
 
     @OnClick({R.id.back, R.id.ll_city, R.id.save_address})

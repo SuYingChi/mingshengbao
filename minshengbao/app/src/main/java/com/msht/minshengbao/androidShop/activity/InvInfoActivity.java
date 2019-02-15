@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.Fragment.AddInvFragment;
 import com.msht.minshengbao.androidShop.Fragment.NeedInvFrgment;
 import com.msht.minshengbao.androidShop.Fragment.NoNeedInvFragment;
@@ -61,12 +62,6 @@ public class InvInfoActivity extends ShopBaseActivity implements NeedInvFrgment.
         setContentView(R.layout.inv_info);
     }
 
-    @Override
-    protected void initImmersionBar() {
-        super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
-        ImmersionBar.setTitleBar(this, mToolbar);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,6 +157,7 @@ public class InvInfoActivity extends ShopBaseActivity implements NeedInvFrgment.
 
             }
         });
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
     }
 
 

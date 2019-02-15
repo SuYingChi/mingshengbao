@@ -24,4 +24,5 @@ public interface IBuyStep2View extends IBaseView{
 
     void onBuyStep2Success(String s);
 
+    String getDlypId();
 }

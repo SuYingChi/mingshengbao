@@ -29,8 +29,10 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
@@ -92,7 +94,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         super.onCreate(savedInstanceState);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSoftInPutMode();
         context = this;
         application = MyApplication.getInstance();
@@ -227,21 +229,15 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     }
 
     protected void initImmersionBar() {
-        if(!isFinishing()) {
+        if(!OSUtils.isEMUI3_0()) {
             mImmersionBar = ImmersionBar.with(this);
-            //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
-            if (ImmersionBar.hasNavigationBar(this)) {
-                BarParams barParams = ImmersionBar.with(this).getBarParams();
-                //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
-                if (barParams.fullScreen) {
-                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-                } else {
-                    mImmersionBar.init();
-                }
-            } else {
-                mImmersionBar.init();
+            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
+        }else {
+            //适配华为手机虚拟键遮挡tab的问题
+            if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+                AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
             }
+            StatusBarCompat.setStatusBar(this);
         }
     }
 
@@ -284,7 +280,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             PopUtil.toastInBottom("请登录商城");
             Intent goLogin = new Intent(this, LoginActivity.class);
             startActivity(goLogin);
-        } else {
+        } else if(!TextUtils.isEmpty(s)){
           PopUtil.toastInCenter(s);
         }
     }
