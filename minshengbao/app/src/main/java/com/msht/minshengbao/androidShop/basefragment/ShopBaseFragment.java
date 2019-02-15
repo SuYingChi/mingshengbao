@@ -111,7 +111,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             LogUtils.e(Log.getStackTraceString(new Throwable()));
             Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
             getActivity().startActivity(goLogin);
-        } else {
+        } else if(!TextUtils.isEmpty(s)){
             PopUtil.toastInCenter(s);
         }
     }
