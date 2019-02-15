@@ -236,7 +236,7 @@ public class UrlUtil {
     public static final String INVOICE_CONTROL_URL=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_hide";
     public static final String INVOICE_DATA_TYPE=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_detail";
     public static final String GAS_INVOICE_QUESTION_URL =BuildConfig.URL_HEADS+"/gas_h5/Interrogative_answer.html";
-
+    public static final String SELF_DELIVERY_ADDRESS=BuildConfig.URL_HEADS+"/Gas/invoice/self_delivery_address";
     /**
      * 维修服务
     */

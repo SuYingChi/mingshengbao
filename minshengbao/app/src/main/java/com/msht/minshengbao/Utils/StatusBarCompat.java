@@ -76,10 +76,10 @@ public class StatusBarCompat {
      */
     public static void setStatusBar(Activity activity){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            activity.getWindow().setNavigationBarColor(Color.parseColor("#ff000000"));
-        }
-       if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
+           // activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+           // activity.getWindow().setNavigationBarColor(Color.parseColor("#ff000000"));
+            activity.getWindow().setNavigationBarColor(Color.BLACK);
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
            if (ImmersionBar.hasNavigationBar(activity)){
                activity.getWindow().getDecorView().setFitsSystemWindows(true);
            }
@@ -106,6 +106,4 @@ public class StatusBarCompat {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-
-
 }

@@ -49,6 +49,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
     private GetAddressAdapter adapter;
     private View     noDataLayout;
     private int pageIndex=0;
+    private CustomDialog  customDialog;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
 
     private final PayRecordHandler payRecordHandler =new PayRecordHandler(this);
@@ -63,6 +64,9 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
             final GasOrdinaryRecordActivity reference=mWeakReference.get();
             if (reference==null||reference.isFinishing()){
                 return;
+            }
+            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
+                reference.customDialog.dismiss();
             }
             if (reference.refreshType==0){
                 reference.mRecyclerView.refreshComplete();
@@ -142,6 +146,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         setCommonHeader("缴费记录");
+        customDialog=new CustomDialog(this, "正在加载");
         TextView tvNoData =(TextView)findViewById(R.id.id_tv_nodata);
         tvNoData.setText("当前没有用户号");
         noDataLayout=findViewById(R.id.id_no_data_view);
@@ -186,6 +191,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         requestData();
     }
     private void requestData() {
+        customDialog.show();
         loadData(1);
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -207,5 +213,12 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         textParams.put("userId",userId);
         textParams.put("password",password);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
     }
 }

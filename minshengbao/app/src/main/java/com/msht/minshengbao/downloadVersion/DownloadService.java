@@ -1,4 +1,4 @@
-package com.msht.minshengbao.DownloadVersion;
+package com.msht.minshengbao.downloadVersion;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;

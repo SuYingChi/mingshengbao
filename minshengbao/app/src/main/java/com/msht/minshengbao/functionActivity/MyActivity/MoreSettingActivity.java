@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.downloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ACache;

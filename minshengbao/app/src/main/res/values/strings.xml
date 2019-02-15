@@ -92,6 +92,9 @@
     <string name="city_text">城市</string>
     <!--保险   -->
     <string name="total_text">共计:</string>
+    <string name="delivery_way">配送方式</string>
+    <string name="post_mail">邮寄</string>
+    <string name="pick_up_oneself">自提</string>
 
     <!--优惠劵  -->
     <string name="effective_date">有效期至:</string>

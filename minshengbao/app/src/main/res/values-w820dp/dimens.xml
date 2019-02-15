@@ -32,6 +32,7 @@
     <dimen name="margin_width80">160dp</dimen>
     <dimen name="margin_width75">130dp</dimen>
     <dimen name="margin_width70">140dp</dimen>
+    <dimen name="margin_width65">130dp</dimen>
     <dimen name="margin_width60">120dp</dimen>
     <dimen name="margin_width56">112dp</dimen>
     <dimen name="margin_width55">110dp</dimen>

@@ -19,11 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
@@ -34,6 +37,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.Public.SelectPickUpSiteActivity;
 
 import org.json.JSONObject;
 
@@ -59,9 +63,9 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
     private LinearLayout layoutView;
     private LinearLayout layoutTaxpayer;
     private LinearLayout layoutCompany;
-    private LinearLayout layoutCamara;
+    private LinearLayout layoutCamera;
     private Button btnPersonal, btnCompany;
-    private Button btnCommen, btnZengzhi, btnSend;
+    private Button btnCommon, btnZengzhi, btnSend;
     private TextView  etAddress;
     private EditText etName;
     private EditText etRecipients, etPhone;
@@ -69,13 +73,15 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
     private EditText etCompanyTel, etCompanyAddress;
     private TextView tvTitle;
     private TextView tvRightText;
-    private RelativeLayout layoutDistrict;
+    private TextView tvAddressTitle;
+    private View    layoutDistrict;
     private String  userId,password,type="1";
     private String  name,content,amount;
     private String  recipients, phoneNum;
     private String  address,identyfyNo,bank;
     private String  bankcard,companyTel, companyAddress;
     private String  relateOrder;
+    private String  deliveryType="1";
     private File    certeFile =null;
     private boolean booleanType =false;
     private boolean booleanInvoice =false;
@@ -169,25 +175,25 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         initEvent();
     }
     private void initHeader() {
-        findViewById(R.id.id_status_view).setVisibility(View.GONE);
         tvRightText =(TextView) findViewById(R.id.id_tv_rightText);
         tvRightText.setVisibility(View.VISIBLE);
         tvRightText.setText("说明");
     }
     private void initView() {
         licenseImage =(ImageView)findViewById(R.id.id_license_img);
-        btnCommen =(Button)findViewById(R.id.id_btn_commen);
+        btnCommon =(Button)findViewById(R.id.id_btn_commen);
         btnZengzhi =(Button)findViewById(R.id.id_btn_zengzhi);
         btnSend =(Button)findViewById(R.id.id_btn_send);
         btnPersonal =(Button)findViewById(R.id.id_btn_personal);
         btnCompany =(Button)findViewById(R.id.id_btn_company);
-        layoutDistrict =(RelativeLayout)findViewById(R.id.id_re_district);
+        layoutDistrict =findViewById(R.id.id_re_district);
         layoutView =(LinearLayout)findViewById(R.id.id_li_view);
         layoutTaxpayer =(LinearLayout)findViewById(R.id.id_taxpayer_layout);
         layoutCompany =(LinearLayout)findViewById(R.id.id_company_layout);;
-        layoutCamara =(LinearLayout)findViewById(R.id.id_camara_layout);;
+        layoutCamera =(LinearLayout)findViewById(R.id.id_camara_layout);;
         etAddress=(TextView) findViewById(R.id.id_tv_address);
         tvTitle =(TextView) findViewById(R.id.id_tv_title);
+        tvAddressTitle=(TextView)findViewById(R.id.id_address_title) ;
         etName =(EditText)findViewById(R.id.id_et_name);
         etRecipients =(EditText)findViewById(R.id.id_et_recipient);
         etPhone =(EditText)findViewById(R.id.id_et_phone);
@@ -201,8 +207,9 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         btnSend.setEnabled(false);
     }
     private void initEvent() {
+        RadioGroup radioGroupMain = (RadioGroup) findViewById(R.id.id_group);
         tvRightText.setOnClickListener(this);
-        btnCommen.setOnClickListener(this);
+        btnCommon.setOnClickListener(this);
         btnZengzhi.setOnClickListener(this);
         btnCompany.setOnClickListener(this);
         btnPersonal.setOnClickListener(this);
@@ -210,8 +217,14 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         layoutDistrict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, SelectAddressActivity.class);
-                startActivityForResult(intent,1);
+                if(deliveryType.equals(ConstantUtil.VALUE_ONE)){
+                    Intent intent=new Intent(context, SelectAddressActivity.class);
+                    startActivityForResult(intent,1);
+                }else {
+                    Intent intent=new Intent(context, SelectPickUpSiteActivity.class);
+                    startActivityForResult(intent,1);
+                }
+
             }
         });
         MyTextWatcher myTextWatcher = new MyTextWatcher();
@@ -220,6 +233,25 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         etPhone.addTextChangedListener(myTextWatcher);
         etAddress.addTextChangedListener(myTextWatcher);
         btnSend.setOnClickListener(this);
+        radioGroupMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.id_radio_mail_post:
+                        deliveryType="1";
+                        tvAddressTitle.setText("选择地址：");
+                        etAddress.setText("");
+                        break;
+                    case R.id.id_radio_pick:
+                        etAddress.setText("");
+                        deliveryType="2";
+                        tvAddressTitle.setText("选择自提点：");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
     private class MyTextWatcher implements TextWatcher{
         @Override
@@ -244,30 +276,30 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                 break;
             case R.id.id_btn_commen:
                 booleanInvoice =false;
-                btnCommen.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnCommon.setBackgroundResource(R.drawable.shape_orange_corner_button);
                 btnZengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
                 if (booleanType){
                     type="3";
                     layoutView.setVisibility(View.VISIBLE);
                     layoutTaxpayer.setVisibility(View.VISIBLE);
                     layoutCompany.setVisibility(View.GONE);
-                    layoutCamara.setVisibility(View.GONE);
+                    layoutCamera.setVisibility(View.GONE);
                     etBank.setHint("请输入您的开户银行（选填）");
                     etBankcard.setHint("请输入您的开户账号（选填）");
                 }else {
                     type="1";
                     layoutView.setVisibility(View.GONE);
-                    layoutCamara.setVisibility(View.GONE);
+                    layoutCamera.setVisibility(View.GONE);
                     layoutTaxpayer.setVisibility(View.GONE);
                 }
                 break;
             case R.id.id_btn_zengzhi:
                 booleanInvoice =true;
                 type="2";
-                btnCommen.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
+                btnCommon.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
                 btnZengzhi.setBackgroundResource(R.drawable.shape_orange_corner_button);
                 layoutView.setVisibility(View.VISIBLE);
-                layoutCamara.setVisibility(View.VISIBLE);
+                layoutCamera.setVisibility(View.VISIBLE);
                 layoutTaxpayer.setVisibility(View.VISIBLE);
                 layoutCompany.setVisibility(View.VISIBLE);
                 layoutView.setVisibility(View.VISIBLE);
@@ -278,12 +310,12 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                 booleanType =false;
                 booleanInvoice =false;
                 type="1";
-                btnCommen.setBackgroundResource(R.drawable.shape_orange_corner_button);
+                btnCommon.setBackgroundResource(R.drawable.shape_orange_corner_button);
                 btnPersonal.setBackgroundResource(R.drawable.shape_orange_corner_button);
                 btnCompany.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
                 btnZengzhi.setVisibility(View.GONE);
                 layoutView.setVisibility(View.GONE);
-                layoutCamara.setVisibility(View.GONE);
+                layoutCamera.setVisibility(View.GONE);
                 layoutTaxpayer.setVisibility(View.GONE);
                 break;
             case R.id.id_btn_company:
@@ -291,7 +323,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                 if (booleanInvoice){
                     type="2";
                     layoutView.setVisibility(View.VISIBLE);
-                    layoutCamara.setVisibility(View.VISIBLE);
+                    layoutCamera.setVisibility(View.VISIBLE);
                     layoutTaxpayer.setVisibility(View.VISIBLE);
                     layoutCompany.setVisibility(View.VISIBLE);
                     layoutView.setVisibility(View.VISIBLE);
@@ -303,7 +335,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                     layoutView.setVisibility(View.VISIBLE);
                     layoutTaxpayer.setVisibility(View.VISIBLE);
                     layoutCompany.setVisibility(View.GONE);
-                    layoutCamara.setVisibility(View.GONE);
+                    layoutCamera.setVisibility(View.GONE);
                     btnZengzhi.setBackgroundResource(R.drawable.shape_back_gray_corner_button);
                     etBank.setHint("请输入您的开户银行（选填）");
                     etBankcard.setHint("请输入您的开户账号（选填）");
@@ -412,8 +444,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         content   = tvTitle.getText().toString().trim();
         recipients= etRecipients.getText().toString().trim();
         phoneNum = etPhone.getText().toString().trim();
-        String district  =etAddress.getText().toString().trim();
-        address=district;
+        address=etAddress.getText().toString().trim();
         identyfyNo= etTaxpayerNum.getText().toString().trim();
         bank      = etBank.getText().toString().trim();
         bankcard  = etBankcard.getText().toString().trim();
@@ -512,5 +543,6 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+
     }
 }

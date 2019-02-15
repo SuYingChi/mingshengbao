@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.ViewUI.Dialog.PublicEnsureInfoDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
@@ -339,9 +340,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 String mAddress=data.getStringExtra("mAddress");
                 String name=data.getStringExtra("name");
                 String phone=data.getStringExtra("phone");
-                /*cityId=data.getStringExtra("cityId");
-                latitude=data.getStringExtra("latitude");
-                longitude=data.getStringExtra("longitude");*/
                 if (TextUtils.isEmpty(name)){
                     ttvName.setText(phone);
                 }else {
@@ -611,29 +609,28 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         address= tvAddress.getText().toString().trim();
         appointDate =date+"  "+time;
         info=textString+otherInfo;
-        final EnsurePublish ensurePublish=new EnsurePublish(this);
-        ensurePublish.setTitleText("确认信息");
-        ensurePublish.setNameText(username);
-        ensurePublish.setTypeText(mMainType);
-        ensurePublish.setPhoneText(phone);
-        ensurePublish.setAddressText(address);
-        ensurePublish.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensurePublish.dismiss();
-            }
-        });
-        ensurePublish.setOnpositiveListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensurePublish.dismiss();
-                customDialog.show();
-                requestType =1;
-                btnSendOrder.setEnabled(false);
-                requestService();
-            }
-        });
-        ensurePublish.show();
+        new PublicEnsureInfoDialog(context).builder()
+                .setCanceledOnTouchOutside(true)
+                .setCancelable(true)
+                .setTitleText1("维修项目:")
+                .setTitleText2("姓名:")
+                .setTitleText3("电话号码:")
+                .setTitleText4("推荐码:")
+                .setTitleText5("地址：")
+                .setContentText1(mMainType)
+                .setContentText2(username)
+                .setContentText3(phone)
+                .setContentText4(recommend)
+                .setContentText5(address)
+                .setOnPositiveClickListener(new PublicEnsureInfoDialog.OnPositiveClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customDialog.show();
+                        requestType =1;
+                        btnSendOrder.setEnabled(false);
+                        requestService();
+                    }
+                }).show();
     }
     private void requestService() {
         String source="";

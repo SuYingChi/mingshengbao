@@ -14,18 +14,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,7 +34,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
-import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.downloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
@@ -305,7 +301,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     }
-
     private void onUnreadMassage(JSONObject json) {
         VariableUtil.messageNum=json.optInt("num");
         String messageCount;
@@ -1015,7 +1010,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         MobclickAgent.onResume(context);
         // ZhugeSDK.getInstance().init(getApplicationContext());
-
     }
 
     @Override
