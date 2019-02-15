@@ -94,7 +94,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         super.onCreate(savedInstanceState);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSoftInPutMode();
         context = this;
         application = MyApplication.getInstance();
@@ -291,7 +291,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             PopUtil.toastInBottom("请登录商城");
             Intent goLogin = new Intent(this, LoginActivity.class);
             startActivity(goLogin);
-        } else {
+        } else if(!TextUtils.isEmpty(s)){
           PopUtil.toastInCenter(s);
         }
     }
