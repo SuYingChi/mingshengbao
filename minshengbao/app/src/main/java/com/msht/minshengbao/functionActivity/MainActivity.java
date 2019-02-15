@@ -13,18 +13,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,10 +30,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.gyf.barlibrary.BarParams;
 import com.gyf.barlibrary.ImmersionBar;
-import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
-import com.msht.minshengbao.DownloadVersion.DownloadService;
+import com.msht.minshengbao.downloadVersion.DownloadService;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.androidShop.Fragment.ShopCarParentFragment;
@@ -46,7 +41,6 @@ import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.events.CarNumEvent;
@@ -412,7 +406,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if(!isFinishing()) {
             mImmersionBar = ImmersionBar.with(this);
             //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
+           // mImmersionBar.statusBarDarkFont(true, 0.2f);
             if (ImmersionBar.hasNavigationBar(this)) {
                 BarParams barParams = ImmersionBar.with(this).getBarParams();
                 if (barParams.fullScreen) {
@@ -837,7 +831,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             initImmersionBar();
         }
         addOrShowFragment(getSupportFragmentManager().beginTransaction(), shopCarParentFragment);
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

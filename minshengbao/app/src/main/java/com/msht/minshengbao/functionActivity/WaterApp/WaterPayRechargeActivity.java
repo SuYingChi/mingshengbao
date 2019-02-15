@@ -322,13 +322,6 @@ public class WaterPayRechargeActivity extends BaseActivity {
                     }
                 }).show();
     }
-   /* private void rechargeSuccess() {
-        Intent success=new Intent(context,WaterSuccessActivity.class);
-        success.putExtra("amount",amount);
-        startActivity(success);
-        setResult(0x002);
-        finish();
-    }*/
     private void onRechargeSuccess(String lottery, String s){
         String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=water_recharge_pay_success_201811"
                 +"&event_relate_id="+orderId;

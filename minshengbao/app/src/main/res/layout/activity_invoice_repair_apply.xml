@@ -4,8 +4,7 @@
     android:id="@+id/activity_apply_invoice"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@drawable/shape_change_background"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.Invoice.InvoiceRepairApplyActivity">
     <include layout="@layout/layout_header"/>
@@ -15,28 +14,31 @@
         android:background="@color/background">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_text0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:text="申请人类型："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <Button
                     android:id="@+id/id_btn_personal"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/margin_30"
                     android:layout_toRightOf="@+id/id_text0"
-                    android:layout_marginLeft="@dimen/margin_15"
+                    android:layout_toEndOf="@+id/id_text0"
+                    android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:layout_centerVertical="true"
                     android:text="个人"
                     android:background="@drawable/shape_orange_corner_button"
@@ -46,7 +48,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/margin_30"
                     android:layout_toRightOf="@+id/id_btn_personal"
-                    android:layout_marginLeft="@dimen/margin_30"
+                    android:layout_toEndOf="@+id/id_btn_personal"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     android:layout_centerVertical="true"
                     android:text="企业"
                     android:background="@drawable/shape_back_gray_corner_button"
@@ -55,30 +59,33 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:background="@color/line_gray">
             </View>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:text="发票类型："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <Button
                     android:id="@+id/id_btn_commen"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/margin_30"
+                    android:layout_height="@dimen/margin_width30"
                     android:layout_toRightOf="@+id/id_text1"
-                    android:layout_marginLeft="@dimen/margin_30"
+                    android:layout_toEndOf="@+id/id_text1"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     android:layout_centerVertical="true"
                     android:text="普通发票"
                     android:background="@drawable/shape_orange_corner_button"
@@ -88,7 +95,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/margin_30"
                     android:layout_toRightOf="@+id/id_btn_commen"
-                    android:layout_marginLeft="@dimen/margin_30"
+                    android:layout_toEndOf="@+id/id_btn_commen"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:layout_marginStart="@dimen/margin_width30"
                     android:layout_centerVertical="true"
                     android:text="增值税专用发票"
                     android:background="@drawable/shape_back_gray_corner_button"
@@ -102,7 +111,7 @@
             </View>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
+                android:layout_height="@dimen/margin_width10"
                 android:background="@color/touch_backgroud">
             </View>
             <View
@@ -114,22 +123,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:text="发票抬头："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <EditText
                     android:id="@+id/id_et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_text2"
-                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_toEndOf="@+id/id_text2"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginStart="@dimen/margin_width20"
                     android:layout_centerVertical="true"
                     android:hint="请输入您的发票抬头"
                     android:background="@null"/>
@@ -143,8 +155,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
                     android:background="@color/line_gray">
                 </View>
                 <RelativeLayout
@@ -157,16 +169,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="纳税人识别号："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_taxpayer_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_text9"
-                        android:layout_marginLeft="@dimen/margin_5"
+                        android:layout_toEndOf="@+id/id_text9"
+                        android:layout_marginLeft="@dimen/margin_width5"
+                        android:layout_marginStart="@dimen/margin_width5"
                         android:layout_centerVertical="true"
                         android:hint="请输入您的纳税人识别号(必填)"
                         android:background="@null"/>
@@ -175,42 +190,44 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:background="@color/line_gray">
             </View>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_10"
+                android:layout_height="@dimen/margin_width10"
                 android:background="@color/touch_backgroud">
             </View>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:background="@color/line_gray">
             </View>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_text5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
                     android:text="收  件  人："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <EditText
                     android:id="@+id/id_et_recipient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_text5"
-                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_toEndOf="@+id/id_text5"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginStart="@dimen/margin_width20"
                     android:layout_centerVertical="true"
                     android:hint="请输入您的名字"
                     android:background="@null"/>
@@ -218,23 +235,24 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
                 android:background="@color/line_gray">
             </View>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
                     android:id="@+id/id_text6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:text="联系电话："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <EditText
                     android:id="@+id/id_et_phone"
@@ -243,32 +261,91 @@
                     android:inputType="phone"
                     android:maxLength="11"
                     android:layout_toRightOf="@+id/id_text6"
-                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_toEndOf="@+id/id_text6"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginStart="@dimen/margin_width20"
                     android:layout_centerVertical="true"
                     android:hint="请输入您的联系电话"
                     android:background="@null"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
-                android:background="@color/line_gray">
+                android:layout_height="@dimen/margin_width10"
+                android:background="@color/touch_backgroud">
             </View>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width50"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/id_delivery_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true"
+                    android:text="@string/delivery_way"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/title_tv"/>
+                <RadioGroup
+                    android:id="@+id/id_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/id_delivery_text"
+                    android:layout_toRightOf="@+id/id_delivery_text"
+                    android:layout_marginStart="@dimen/margin_width30"
+                    android:layout_marginLeft="@dimen/margin_width30"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/id_radio_mail_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/margin_width10"
+                        android:paddingRight="@dimen/margin_width10"
+                        android:checked="true"
+                        android:minWidth="@dimen/margin_width25"
+                        android:minHeight="@dimen/margin_width25"
+                        android:button="@drawable/selector_circle_checked"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/title_tv"
+                        android:text="@string/post_mail"/>
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:id="@+id/id_radio_pick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/margin_width10"
+                        android:paddingRight="@dimen/margin_width10"
+                        android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:minWidth="@dimen/margin_width25"
+                        android:minHeight="@dimen/margin_width25"
+                        android:button="@drawable/selector_circle_checked"
+                        android:textSize="@dimen/text_width16"
+                        android:textColor="@color/title_tv"
+                        android:text="@string/pick_up_oneself"/>
+                </RadioGroup>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_re_district"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_touch_background"
-                android:minHeight="@dimen/margin_50">
+                android:minHeight="@dimen/margin_width50">
                 <TextView
-                    android:id="@+id/id_text7"
+                    android:id="@+id/id_address_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
                     android:text="所在地址："
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"/>
                 <TextView
                     android:id="@+id/id_tv_address"
@@ -276,13 +353,29 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_6"
                     android:layout_marginBottom="@dimen/margin_6"
-                    android:layout_toRightOf="@+id/id_text7"
-                    android:layout_marginRight="@dimen/margin_5"
-                    android:textSize="@dimen/text_16"
+                    android:layout_toRightOf="@+id/id_address_title"
+                    android:layout_toEndOf="@+id/id_address_title"
+                    android:layout_toStartOf="@+id/id_forward_img"
+                    android:layout_toLeftOf="@+id/id_forward_img"
+                    android:layout_marginRight="@dimen/margin_width5"
+                    android:layout_marginEnd="@dimen/margin_width5"
+                    android:textSize="@dimen/text_width16"
                     android:textColor="@color/title_tv"
-                    android:layout_marginLeft="@dimen/margin_20"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginStart="@dimen/margin_width20"
                     android:layout_centerVertical="true"
-                    android:hint="点击选择地区"/>
+                    android:hint="点击选择"/>
+                <ImageView
+                    android:id="@+id/id_forward_img"
+                    android:layout_width="@dimen/margin_width15"
+                    android:layout_height="@dimen/margin_width15"
+                    android:contentDescription="@string/picture_text"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:src="@drawable/forward_2x"/>
 
             </RelativeLayout>
             <View
@@ -317,16 +410,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="开户银行："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_bank"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_text10"
-                        android:layout_marginLeft="@dimen/margin_20"
+                        android:layout_toEndOf="@+id/id_text10"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_centerVertical="true"
                         android:hint="请输入您的开户银行"
                         android:background="@null"/>
@@ -334,22 +430,23 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
                     android:background="@color/line_gray">
                 </View>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/margin_50">
+                    android:minHeight="@dimen/margin_width50">
                     <TextView
                         android:id="@+id/id_text11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="开户账号："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <EditText
                         android:id="@+id/id_et_bankcard"
@@ -357,7 +454,9 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:layout_toRightOf="@+id/id_text11"
-                        android:layout_marginLeft="@dimen/margin_20"
+                        android:layout_toEndOf="@+id/id_text11"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
                         android:hint="请输入您的开户账号"
                         android:background="@null"/>
@@ -370,23 +469,24 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginRight="@dimen/margin_width10"
                         android:background="@color/line_gray">
                     </View>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:minHeight="@dimen/margin_50">
+                        android:minHeight="@dimen/margin_width50">
                         <TextView
                             android:id="@+id/id_text12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_marginLeft="@dimen/margin_width10"
+                            android:layout_marginStart="@dimen/margin_width10"
                             android:text="企业电话："
-                            android:textSize="@dimen/text_16"
+                            android:textSize="@dimen/text_width16"
                             android:textColor="@color/title_tv"/>
                         <EditText
                             android:id="@+id/id_et_company_tel"
@@ -394,7 +494,9 @@
                             android:layout_height="wrap_content"
                             android:inputType="phone"
                             android:layout_toRightOf="@+id/id_text12"
-                            android:layout_marginLeft="@dimen/margin_20"
+                            android:layout_toEndOf="@+id/id_text12"
+                            android:layout_marginStart="@dimen/margin_width20"
+                            android:layout_marginLeft="@dimen/margin_width20"
                             android:layout_centerVertical="true"
                             android:hint="请输入您的企业电话（必填）"
                             android:background="@null"/>
@@ -408,22 +510,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:minHeight="@dimen/margin_50">
+                        android:minHeight="@dimen/margin_width50">
                         <TextView
                             android:id="@+id/id_text13"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_marginLeft="@dimen/margin_width10"
+                            android:layout_marginStart="@dimen/margin_width10"
                             android:text="企业地址："
-                            android:textSize="@dimen/text_16"
+                            android:textSize="@dimen/text_width16"
                             android:textColor="@color/title_tv"/>
                         <EditText
                             android:id="@+id/id_et_company_addr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/id_text13"
-                            android:layout_marginLeft="@dimen/margin_20"
+                            android:layout_toEndOf="@+id/id_text13"
+                            android:layout_marginStart="@dimen/margin_width20"
+                            android:layout_marginLeft="@dimen/margin_width20"
                             android:layout_centerVertical="true"
                             android:hint="请输入您的企业地址（必填）"
                             android:background="@null"/>
@@ -441,7 +546,7 @@
                 android:orientation="vertical">
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_10"
+                    android:layout_height="@dimen/margin_width10"
                     android:background="@color/touch_backgroud"/>
                 <View
                     android:layout_width="match_parent"
@@ -452,24 +557,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:minHeight="@dimen/margin_50">
+                    android:minHeight="@dimen/margin_width50">
                     <TextView
                         android:id="@+id/id_text3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="发票内容："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <TextView
                         android:id="@+id/id_tv_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_text3"
-                        android:layout_marginLeft="@dimen/margin_20"
+                        android:layout_toEndOf="@+id/id_text3"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_centerVertical="true"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"
                         android:text="维修服务费"
                         android:background="@null"/>
@@ -477,43 +585,47 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="@dimen/margin_10"
-                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
                     android:background="@color/line_gray">
                 </View>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:minHeight="@dimen/margin_50">
+                    android:minHeight="@dimen/margin_width50">
                     <TextView
                         android:id="@+id/id_text4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:text="发票金额："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                     <TextView
                         android:id="@+id/id_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_text4"
-                        android:layout_marginLeft="@dimen/margin_20"
+                        android:layout_toEndOf="@+id/id_text4"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginLeft="@dimen/margin_width20"
                         android:layout_centerVertical="true"
-                        android:text="100.00"
                         android:textColor="@color/colorOrange"
-                        android:textSize="@dimen/text_18"
+                        android:textSize="@dimen/text_width18"
                         />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_amount"
-                        android:layout_marginLeft="@dimen/margin_3"
+                        android:layout_toEndOf="@+id/id_amount"
+                        android:layout_marginStart="@dimen/margin_width3"
+                        android:layout_marginLeft="@dimen/margin_width3"
                         android:layout_centerVertical="true"
-                        android:text="元"
-                        android:textSize="@dimen/text_18"
+                        android:text="@string/RMB_YUAN"
+                        android:textSize="@dimen/text_width16"
                         />
                 </RelativeLayout>
 
@@ -543,12 +655,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:minHeight="@dimen/margin_50">
+                    android:minHeight="@dimen/margin_width50">
                     <ImageView
                         android:id="@+id/id_img"
-                        android:layout_width="@dimen/margin_25"
-                        android:layout_height="@dimen/margin_25"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_width="@dimen/margin_width25"
+                        android:layout_height="@dimen/margin_width25"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:src="@drawable/send_img_h"
                         android:layout_centerVertical="true"/>
                     <TextView
@@ -557,9 +670,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/id_img"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_img"
+                        android:layout_marginLeft="@dimen/margin_width10"
                         android:text="上传营业执照扫描件："
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_width16"
                         android:textColor="@color/title_tv"/>
                 </RelativeLayout>
                 <View
@@ -575,9 +689,11 @@
                         android:id="@+id/id_license_img"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginLeft="@dimen/margin_15"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginBottom="@dimen/margin_20"
+                        android:contentDescription="@string/picture_text"
+                        android:layout_marginLeft="@dimen/margin_width15"
+                        android:layout_marginStart="@dimen/margin_width15"
+                        android:layout_marginTop="@dimen/margin_width10"
+                        android:layout_marginBottom="@dimen/margin_width20"
                         android:src="@drawable/camara_m"/>
                 </RelativeLayout>
             </LinearLayout>

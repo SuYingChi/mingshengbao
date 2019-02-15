@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="activity_protocol">《充返活动说明》</string>
-    <string name="immediately_recharge">立即充值</string>
+    <string name="activity_protocol">《充返活动协议》</string>
+    <string name="immediately_recharge">立即支付</string>
     <string name="result_notice1">启动设备成功，请开始灌装吧</string>
     <string name="result_notice2">很抱歉，此设备已离线，您可以使用IC卡购水~</string>
     <string name="result_notice3">其他异常，敬请谅解</string>
@@ -41,7 +41,7 @@
     <string name="click_look"><u>点击查看</u></string>
     <string name="recharge_award_tip">充值领取大礼包，100%有奖</string>
     <string name="recharge_meal_tip">充值800元赠送450元</string>
-    <string name="pay_fee_agree_tip">点击立即充值表示，您已经同意</string>
+    <string name="pay_fee_agree_tip">点击立即充值,表示您已经同意</string>
     <string name="select_share_way">选择分享方式</string>
     <string name="wei_xin">微信</string>
     <string name="wei_xin_circle">朋友圈</string>
