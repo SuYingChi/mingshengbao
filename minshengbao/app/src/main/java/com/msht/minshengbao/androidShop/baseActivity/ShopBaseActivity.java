@@ -231,18 +231,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     protected void initImmersionBar() {
         if(!OSUtils.isEMUI3_0()) {
             mImmersionBar = ImmersionBar.with(this);
-            //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
-            if (ImmersionBar.hasNavigationBar(this)) {
-                BarParams barParams = ImmersionBar.with(this).getBarParams();
-                if (barParams.fullScreen) {
-                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-                } else {
-                    mImmersionBar.init();
-                }
-            } else {
-                mImmersionBar.init();
-            }
+            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
             //适配华为手机虚拟键遮挡tab的问题
             if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {

@@ -161,20 +161,8 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
      */
     protected void initImmersionBar() {
         if(!OSUtils.isEMUI3_0()) {
-            mImmersionBar = ImmersionBar.with(getActivity(), this);
-            //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
-            if (ImmersionBar.hasNavigationBar(getActivity())) {
-                BarParams barParams = ImmersionBar.with(this).getBarParams();
-                //如果在有虚拟导航栏的时候全屏显示了，则取消全屏
-                if (barParams.fullScreen) {
-                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-                } else {
-                    mImmersionBar.init();
-                }
-            } else {
-                mImmersionBar.init();
-            }
+            mImmersionBar = ImmersionBar.with(this);
+            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
             //适配华为手机虚拟键遮挡tab的问题
             if (AndroidWorkaround.checkDeviceHasNavigationBar(getContext())) {

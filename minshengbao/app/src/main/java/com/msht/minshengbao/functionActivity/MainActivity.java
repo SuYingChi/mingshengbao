@@ -372,7 +372,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
         if (savedInstanceState != null) {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, "Myfragment");
-        } else {
+        } else if(getIntent() !=null){
             int index = getIntent().getIntExtra("index", 0);
             initTab(index);
         }
@@ -410,25 +410,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void initStatusBarAndNavigationBar() {
         if(!OSUtils.isEMUI3_0()) {
             mImmersionBar = ImmersionBar.with(this);
-            //白色状态栏处理
-            mImmersionBar.statusBarDarkFont(true, 0.2f);
-            if (ImmersionBar.hasNavigationBar(this)) {
-                BarParams barParams = ImmersionBar.with(this).getBarParams();
-                if (barParams.fullScreen) {
-                    mImmersionBar.fullScreen(false).navigationBarColor(R.color.black).init();
-                } else {
-                    mImmersionBar.init();
-                }
-            } else {
-                mImmersionBar.init();
-            }
-        }else {
+            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
+     }else {
             //适配华为手机虚拟键遮挡tab的问题
             if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
                 AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
             }
            StatusBarCompat.setStatusBar(this);
-
         }
     }
 

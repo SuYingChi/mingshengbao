@@ -148,7 +148,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-        mImmersionBar.keyboardEnable(true);
+       /* mImmersionBar.keyboardEnable(true);*/
         //此属性与浸入式冲突,设置状态栏颜色不生效，
         //mImmersionBar.statusBarColor(R.color.msb_color);
         StatusBarCompat.compat(this,getResources().getColor(R.color.msb_color));
