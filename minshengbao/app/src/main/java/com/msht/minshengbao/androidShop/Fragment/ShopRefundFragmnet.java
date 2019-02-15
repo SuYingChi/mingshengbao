@@ -77,11 +77,6 @@ public class ShopRefundFragmnet extends ShopBaseLazyFragment  {
             }
         });
     }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
-    }
     @OnClick({R.id.refund_money, R.id.refund_good})
     public void onViewClicked(View view) {
         switch (view.getId()) {

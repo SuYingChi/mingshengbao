@@ -207,7 +207,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImmersionBar.setTitleBar(getActivity(), mToolbar);
         isViewCreated = true;
     }
 
@@ -237,6 +236,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
     public String getState_type() {
         return state_type;
     }
+
 
     @Override
     public void onGetShopOrdersList(String s) {

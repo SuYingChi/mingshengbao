@@ -95,14 +95,15 @@ public class MyShopOrderActivity extends ShopBaseActivity {
 
 
     //activity在被横竖屏切换时销毁activity时回调 onsaveinstancestate 保存数据到bundle里，传到在重新创建实例时的oncreat 和 onrestoreinstance时候的 bundle里
-    @Override
+    //只是保留必要数据，横竖屏切换时fragment也要重新创建，不能保留fragment
+    /*@Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("index", fragmentIndex);
         outState.putInt("indexChild", fragmentIndex == 0 ? orderstype : refundindex);
         getSupportFragmentManager().putFragment(outState, "f2", f2);
         getSupportFragmentManager().putFragment(outState, "f3", f3);
-    }
+    }*/
    /*
     singletask模式的activity
     onPause
