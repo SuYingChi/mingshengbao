@@ -66,16 +66,18 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
         rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                SiteBean.DatasBean.AddrListBean siteBean = dataList.get(position);
-                Intent intent = new Intent();
-                intent.putExtra("site", siteBean);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
+        if(getIntent().getBooleanExtra("onClick",true)) {
+            adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    SiteBean.DatasBean.AddrListBean siteBean = dataList.get(position);
+                    Intent intent = new Intent();
+                    intent.putExtra("site", siteBean);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
         rcl.setAdapter(adapter);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
