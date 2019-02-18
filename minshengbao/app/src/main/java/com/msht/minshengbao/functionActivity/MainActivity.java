@@ -135,7 +135,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private final RequestHandler requestHandler = new RequestHandler(this);
     private final PushHandler pushHandler = new PushHandler(this);
     private final VersionHandler versionHandler = new VersionHandler(this);
-    private ImmersionBar mImmersionBar;
     private ShopMainFragment shopMainFrag;
     private ShopCarParentFragment shopCarParentFragment;
     private TextView tvCarNum;
@@ -401,15 +400,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    @Override
-    protected void initStatusBarAndNavigationBar() {
-        if(!OSUtils.isEMUI3_0()) {
-            mImmersionBar = ImmersionBar.with(this);
-            mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
-     }else {
-           StatusBarCompat.setTranslucentStatusBar(this);
-        }
-    }
+
 
     private void initRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1022,9 +1013,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         if (receiver != null) {
             unregisterReceiver(receiver);
-        }
-        if (mImmersionBar != null) {
-            mImmersionBar.destroy();
         }
         if (context!=null){
             SharedPreferencesUtil.putAppAliveState(context, SharedPreferencesUtil.IS_App_ALIVE, false);

@@ -164,7 +164,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
             mImmersionBar = ImmersionBar.with(this);
             mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
-            StatusBarCompat.setTranslucentStatusBar(getActivity());
+            StatusBarCompat.setStatusBar(getActivity());
         }
     }
 

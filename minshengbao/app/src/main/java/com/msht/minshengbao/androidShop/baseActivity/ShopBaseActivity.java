@@ -233,7 +233,7 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             mImmersionBar = ImmersionBar.with(this);
             mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
-            StatusBarCompat.setTranslucentStatusBar(this);
+            StatusBarCompat.setStatusBar(this);
         }
     }
 
