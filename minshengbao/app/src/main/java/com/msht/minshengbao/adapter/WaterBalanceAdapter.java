@@ -101,11 +101,12 @@ public class WaterBalanceAdapter extends BaseAdapter {
                 if (childType.equals(ConstantUtil.VALUE_TWO)){
                     holder.cnContent.setText("充值退款");
                     amountText="-"+amountText;
+                    holder.cnAmount.setTextColor(Color.parseColor("#FFF96331"));
                     holder.cnAmount.setTextColor(Color.parseColor("#FF30A949"));
                 }else {
                     holder.cnContent.setText("消费退款");
                     amountText="+"+amountText;
-                    holder.cnAmount.setTextColor(Color.parseColor("#FFF96331"));
+                    holder.cnAmount.setTextColor(Color.parseColor("#FF30A949"));
                 }
                 break;
             case ConstantUtil.VALUE_SIX:

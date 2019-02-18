@@ -197,7 +197,6 @@ public class MyApplication extends Application {
             @Override
             public void launchApp(Context context, UMessage msg) {
                 if (!msg.extra.isEmpty()){
-                    LogUtils.e(msg.extra.get("url"));
                     String url=msg.extra.get("url");
                     if (AppActivityUtil.isAppAlive(context)){
                         if (AppActivityUtil.isLoginState(context)){
@@ -226,7 +225,6 @@ public class MyApplication extends Application {
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
                 if (!msg.extra.isEmpty()){
-                    LogUtils.e(msg.extra.get("url"));
                     String url=msg.extra.get("url");
                     if (AppActivityUtil.isAppAlive(context)){
                         if (AppActivityUtil.isLoginState(context)){

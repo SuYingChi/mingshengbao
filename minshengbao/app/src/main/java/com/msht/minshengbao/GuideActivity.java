@@ -1,11 +1,14 @@
 package com.msht.minshengbao;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +32,12 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        if(Build.VERSION.SDK_INT>=16){
+            Window window=getWindow();
+            WindowManager.LayoutParams params=window.getAttributes();
+            params.systemUiVisibility=View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            window.setAttributes(params);
+        }
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < PICS.length; i++) {
             View view = LayoutInflater.from(this).inflate(PICS[i], null);

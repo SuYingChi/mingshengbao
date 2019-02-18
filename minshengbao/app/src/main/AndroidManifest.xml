@@ -87,7 +87,6 @@
             android:name=".functionActivity.MainActivity"
             android:launchMode="singleTask" />
         <!-- //登录成功后再启动会导致崩盘 暂且不加 -->
-        <!-- android:launchMode="singleTask" -->
         <activity
             android:name=".GuideActivity"
             android:theme="@style/FullscreenTheme" />
