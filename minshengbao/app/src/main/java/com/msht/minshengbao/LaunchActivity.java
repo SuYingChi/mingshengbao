@@ -20,8 +20,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.NetUtil;
+import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
@@ -135,10 +137,7 @@ public class LaunchActivity extends AppCompatActivity {
         finish();
     }
     private void onStartShopActivity(String contentUrl) {
-        Intent intent=new Intent(mContext, ShopActivity.class);
-        intent.putExtra("url",contentUrl);
-        intent.putExtra("first",1);
-        startActivity(intent);
+        AppActivityUtil.onStartUrl(this,contentUrl);
         finish();
     }
     private void onShowAdImage(String logoUrl) {    //支持动画

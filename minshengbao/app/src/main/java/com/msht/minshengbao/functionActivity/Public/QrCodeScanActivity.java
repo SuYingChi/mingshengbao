@@ -25,7 +25,9 @@ import com.google.zxing.client.android.AnimeViewCallback;
 import com.google.zxing.client.android.AutoScannerView;
 import com.google.zxing.client.android.BaseCaptureActivity;
 import com.google.zxing.client.android.FlowLineView;
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.functionActivity.GasService.IcCardExpenseActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.LpgBottleWebViewActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity;
@@ -188,7 +190,7 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
                         break;
                     case VariableUtil.VALUE_THREE:
                         String url=jsonObject.optString("url");
-                        goHtmlWeb(url);
+                        AppActivityUtil.onStartUrl(this,url);
                         break;
                         default:
                             break;

@@ -33,12 +33,11 @@
     <!-- 三星手机更新应用桌面角标需要的权限 -->
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="com.sec.android.provider.badge..permission.WRITE" />
-
     <uses-feature android:name="android.hardware.nfc.hce" />
 
-    <permission
+   <!-- <permission
         android:name="oem.permission.SENDMAIL"
-        android:protectionLevel="normal" />
+        android:protectionLevel="normal" />-->
     <permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -125,8 +124,8 @@
         <service
             android:name=".downloadVersion.DownloadService"
             android:enabled="true"
-            android:exported="true"
-            android:permission="oem.permission.SENDMAIL" />
+            android:exported="false"/>
+          <!-- android:permission="oem.permission.SENDMAIL" />-->
         <!-- Ping++ SDK -->
         <activity
             android:name="com.pingplusplus.android.PaymentActivity"
