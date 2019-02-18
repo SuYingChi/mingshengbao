@@ -510,7 +510,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 String url= UrlUtil.RECHARGE_BACK_AGREE;
                 Intent intent=new Intent(context, AgreeTreatyActivity.class);
                 intent.putExtra("url",url);
-                intent.putExtra("navigation","充返活动说明");
+                intent.putExtra("navigation","充返活动协议");
                 startActivity(intent);
             }
         });

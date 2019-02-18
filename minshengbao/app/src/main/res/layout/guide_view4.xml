@@ -11,10 +11,10 @@
         android:minWidth="@dimen/margin_width126"
         android:minHeight="@dimen/margin_width35"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/margin_width40"
+        android:layout_marginBottom="@dimen/margin_width45"
         android:background="@drawable/selector_touch_button_change"
         android:text="立即使用"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_width18"
         android:visibility="visible" />
 

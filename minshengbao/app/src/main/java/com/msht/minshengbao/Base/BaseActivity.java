@@ -49,8 +49,8 @@ public class BaseActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initStatusBarAndNavigationBar();
-       // StatusBarCompat.setTranslucentStatusBar(this);
+        //initStatusBarAndNavigationBar();
+        StatusBarCompat.setTranslucentStatusBar(this);
         /**
          * 友盟统计
          */
@@ -67,7 +67,7 @@ public class BaseActivity extends AppCompatActivity  {
     protected void initStatusBarAndNavigationBar() {
         //适配华为手机虚拟键遮挡tab的问题
         if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+          //  AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
         }
         StatusBarCompat.setStatusBar(this);
     }

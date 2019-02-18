@@ -289,10 +289,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_order);
-        //适配华为手机虚拟键遮挡tab的问题
-        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
-            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
-        }
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         context=this;

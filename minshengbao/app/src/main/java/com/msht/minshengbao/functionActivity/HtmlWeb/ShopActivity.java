@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.Utils.LinkUrlUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.PublicPayWayActivity;
@@ -55,7 +56,7 @@ import java.io.UnsupportedEncodingException;
  * @author hong
  * @date 2016/05/20
  */
-public class ShopActivity extends AppCompatActivity implements MyWebChromeClient.OpenFileChooserCallBack {
+public class ShopActivity extends BaseActivity implements MyWebChromeClient.OpenFileChooserCallBack {
     private View layoutNavigation;
     private WebView shopWeb;
     private ProgressBar progressBar;
@@ -67,7 +68,6 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     private boolean shopState;
     private int First=0;
     private String mFirst="0";
-    private Context mContext;
     private final String mPageName ="商城";
     private String loginUrl=UrlUtil.SHOP_LOGIN;
     private String targetUrl=UrlUtil.SHOP_HOME_URL;
@@ -87,7 +87,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
-        mContext=this;
+        context=this;
         username = SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName, "");
         password = SharedPreferencesUtil.getpassw(this, SharedPreferencesUtil.passw, "");
         loginState= SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
@@ -111,7 +111,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     }
 
     private void initWebView() {
-        String versionName=AppPackageUtil.getPackageVersionName(mContext);
+        String versionName=AppPackageUtil.getPackageVersionName(context);
         versionName =versionName.replace("v","");
         final String data = "username="+ username + "&password=" + password+"&client="+client
                 +"&version="+ versionName;
@@ -160,7 +160,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
                         finish();
                     }else {
                         view.postUrl(loginUrl,bytes);
-                        SharedPreferencesUtil.putLstate(mContext,SharedPreferencesUtil.Shopstate,true);
+                        SharedPreferencesUtil.putLstate(context,SharedPreferencesUtil.Shopstate,true);
                     }
                 }else if (url!=null&&url.contains(URL_VALUE)){
                     pingPay(url);
@@ -221,7 +221,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     private void pingPay(String shopUrl) {
         String payAmount=Uri.parse(shopUrl).getQueryParameter("pay_amount");
         String payUrl=LinkUrlUtil.replaceParams(shopUrl,"op","pay_new");
-        Intent pay=new Intent(mContext, PublicPayWayActivity.class);
+        Intent pay=new Intent(context, PublicPayWayActivity.class);
         pay.putExtra("amount",payAmount);
         pay.putExtra("url",payUrl);
         startActivityForResult(pay,PAY_CODE);
@@ -303,7 +303,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
     }
     private void takePicture() {
         imageFileName =System.currentTimeMillis() + ".jpg";
-        mSourceIntent = ImageUtil.takeBigPicture(mContext, imageFileName);
+        mSourceIntent = ImageUtil.takeBigPicture(context, imageFileName);
         startActivityForResult(mSourceIntent, REQUEST_CODE_IMAGE_CAPTURE);
     }
     private void selectPicture() {
@@ -326,16 +326,16 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
             @Override
             public void onPermissionDenied(int code) {
                 restoreUploadMsg();
-                ToastUtil.ToastText(mContext,"没有权限您将无法进行扫描操作！");
+                ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
             }
         });
     }
     private boolean isPermission(int limit) {
         boolean permissionStatue;
         if (limit==0){
-            permissionStatue=ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+            permissionStatue=ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
         }else {
-            permissionStatue=ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED;
+            permissionStatue=ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED;
         }
         return permissionStatue;
     }
@@ -359,7 +359,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
        // settings.setBuiltInZoomControls(true);
     }
     private void synCookies(String targetUrl){
-        CookieSyncManager.createInstance(mContext);
+        CookieSyncManager.createInstance(context);
         CookieManager cookieManager=CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.removeSessionCookie();
@@ -439,14 +439,14 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
                     } else  {
                         // for android 5.0+
                         if (mUploadCallbackAboveL == null) {
-                            ToastUtil.ToastText(mContext,"空数据");
+                            ToastUtil.ToastText(context,"空数据");
                             return;
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                             String filepath=ImageUtil.getExistPath()+ imageFileName;
                             File photoFile=new File(filepath);
                             if (photoFile.exists()){
-                                Toast.makeText(mContext,filepath,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,filepath,Toast.LENGTH_SHORT).show();
                                 Uri uri = Uri.fromFile(photoFile);
                                 mUploadCallbackAboveL.onReceiveValue(new Uri[]{uri});
                             }
@@ -481,7 +481,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
                     } else {
                         // for android 5.0+
                         if (mUploadCallbackAboveL == null) {
-                            ToastUtil.ToastText(mContext,"空数据");
+                            ToastUtil.ToastText(context,"空数据");
                             return;
                         }
                         String sourcePath = ImageUtil.retrievePath(this, mSourceIntent, data);
@@ -490,7 +490,7 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
                             break;
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                            Toast.makeText(mContext,sourcePath,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,sourcePath,Toast.LENGTH_SHORT).show();
                             File photoFile=new File(sourcePath);
                             if (photoFile!=null){
                                 Uri uri = Uri.fromFile(photoFile);
@@ -556,19 +556,5 @@ public class ShopActivity extends AppCompatActivity implements MyWebChromeClient
             shopWeb = null;
         }
 
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(mPageName);
-        MobclickAgent.onResume(mContext);
-      //  ZhugeSDK.getInstance().init(getApplicationContext());
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(mPageName);
-        MobclickAgent.onPause(mContext);
     }
 }
