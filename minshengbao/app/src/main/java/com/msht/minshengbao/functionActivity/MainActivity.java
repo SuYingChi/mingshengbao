@@ -356,8 +356,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //推送统计
         mPageName="首页";
         PushAgent.getInstance(context).onAppStart();
-        userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
+   /*     userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
+        password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");*/
       //  StatusBarCompat.compat(this,0x00ffffff);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
@@ -490,8 +490,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void onGetBadgeCountMessage() {
         String validateURL = UrlUtil.BADGE_COUNT_URL;
         HashMap<String, String> textParams = new HashMap<String, String>(3);
-        textParams.put("userId",userId);
-        textParams.put("password",password);
+        textParams.put("userId",SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,""));
+        textParams.put("password",SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,""));
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
@@ -872,8 +872,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String deviceData = SharedPreferencesUtil.getDeviceData(this, SharedPreferencesUtil.DeviceToken, "");
         String validateURL = UrlUtil.PUSH_DEVICE_TOKEN;
         Map<String, String> textParams = new HashMap<String, String>();
-        textParams.put("userId", userId);
-        textParams.put("password", password);
+        textParams.put("userId", SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,""));
+        textParams.put("password", SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,""));
         textParams.put("deviceType", "2");
         textParams.put("token", deviceData);
         SendRequestUtil.postDataFromServiceThree(validateURL, textParams, pushHandler);
@@ -882,8 +882,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initGetInformation() {
         String validateURL = UrlUtil.USER_INFO_GAS_URL;
         Map<String, String> textParams = new HashMap<String, String>();
-        textParams.put("userId", userId);
-        textParams.put("password", password);
+        textParams.put("userId",SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,""));
+        textParams.put("password", SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,""));
         SendRequestUtil.postDataFromService(validateURL, textParams, requestHandler);
     }
 
