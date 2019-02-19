@@ -4,11 +4,14 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -158,6 +161,26 @@ public class MyApplication extends Application {
     public static MyApplication getInstance() {
         return instance;
     }
+/*
+
+    @Override
+    public Resources getResources() {
+        Resources resources = super.getResources();
+        if (resources != null && resources.getConfiguration().fontScale != 1) {
+            Configuration newConfig = resources.getConfiguration();
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            newConfig.fontScale = 1;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Context configurationContext = createConfigurationContext(newConfig);
+                resources = configurationContext.getResources();
+                displayMetrics.scaledDensity = displayMetrics.density * newConfig.fontScale;
+            } else {
+                resources.updateConfiguration(newConfig, displayMetrics);
+            }
+        }
+        return resources;
+    }
+*/
 
     private void initUPush() {
         PushAgent mPushAgent = PushAgent.getInstance(this);

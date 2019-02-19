@@ -77,6 +77,7 @@ public class ConstantUtil {
 
     public static final String MSB_APP="msbapp";
     public static final String SHOP="shop";
+    public static final String SERVICE_STATION="service_station";
     public static final String WATER="water";
     public static final String VEGETABLE="scxs";
     public static final String GAS_PAY="gas_pay";

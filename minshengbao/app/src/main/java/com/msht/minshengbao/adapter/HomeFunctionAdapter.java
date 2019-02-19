@@ -124,6 +124,9 @@ public class HomeFunctionAdapter extends BaseAdapter {
             case ConstantUtil.GAS_IC_CARD:
                 holder.imgFunction.setImageResource(R.drawable.top_iccard_xh);
                 break;
+            case ConstantUtil.SERVICE_STATION:
+                holder.imgFunction.setImageResource(R.drawable.home_default_xh);
+                break;
                 default:
                     holder.imgFunction.setImageResource(R.drawable.home_default_xh);
                     break;
