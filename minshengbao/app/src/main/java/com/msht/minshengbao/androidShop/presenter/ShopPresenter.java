@@ -30,6 +30,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IBuyStep4CreatChargeView;
 import com.msht.minshengbao.androidShop.viewInterface.ICancelOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
+import com.msht.minshengbao.androidShop.viewInterface.IChainReceiveView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IClearShopFootprintView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteAddressView;
@@ -1291,7 +1292,19 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void chainReceive(final IChainReceiveView iChainReceiveView, final String orderId) {
+        OkHttpUtils.post().url(ShopConstants.CHAIN_RECEVICE).addParams("key", iChainReceiveView.getKey()).tag(iChainReceiveView)
+                .addParams("order_id", orderId)
+                .build().execute(new DataStringCallback(iChainReceiveView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iChainReceiveView.onChainReceiveSuccess(orderId);
+                }
+            }
+        });
+    }
     public static void getMsgCount(final IGetMsgCountView iGetMsgCountView) {
         OkHttpUtils.get().url(ShopConstants.MSH_COUNT).addParams("key", iGetMsgCountView.getKey()).tag(iGetMsgCountView)
                 .build().execute(new DataStringCallback(iGetMsgCountView) {

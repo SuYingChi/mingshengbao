@@ -26,7 +26,9 @@ public class SiteListAdapter extends HaveHeadRecyclerAdapter<SiteBean.DatasBean.
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(position);
+                if(onItemClickListener!=null) {
+                    onItemClickListener.onItemClick(position);
+                }
             }
         });
     }

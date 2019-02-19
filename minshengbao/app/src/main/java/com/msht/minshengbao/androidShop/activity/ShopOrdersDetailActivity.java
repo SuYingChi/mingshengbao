@@ -49,6 +49,7 @@ import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.ICancelOrderView;
+import com.msht.minshengbao.androidShop.viewInterface.IChainReceiveView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
@@ -64,7 +65,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopOrderDetailView, ShopOrderGoodListAdapter.ClickAfterSaleListener, ICancelOrderView, IReceivedOrderView, IOrderQrCodeView, IlistPayView {
+public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopOrderDetailView, ShopOrderGoodListAdapter.ClickAfterSaleListener, ICancelOrderView, IReceivedOrderView, IOrderQrCodeView, IlistPayView, IChainReceiveView {
 
     private String orderId;
     @BindView(R.id.ll_1)
@@ -204,12 +205,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     TextView tvPay = new TextView(this);
                     LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     paramas.gravity = Gravity.CENTER_VERTICAL;
-                    paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                    paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                     tvPay.setLayoutParams(paramas);
                     tvPay.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_pay));
                     tvPay.setText("支付订单");
                     tvPay.setTextColor(this.getResources().getColor(R.color.white));
-                    tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                     tvPay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -329,12 +330,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvCancel = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvCancel.setLayoutParams(paramas);
                 tvCancel.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvCancel.setText("取消订单");
                 tvCancel.setTextColor(this.getResources().getColor(R.color.black));
-                tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvCancel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -349,12 +350,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvGoodRoute = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvGoodRoute.setLayoutParams(paramas);
                 tvGoodRoute.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvGoodRoute.setText("物流查询");
                 tvGoodRoute.setTextColor(this.getResources().getColor(R.color.black));
-                tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvGoodRoute.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvGoodRoute.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -369,12 +370,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvReceive = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvReceive.setLayoutParams(paramas);
                 tvReceive.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvReceive.setText("确认收货");
                 tvReceive.setTextColor(this.getResources().getColor(R.color.black));
-                tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -383,19 +384,20 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 });
                 llbtns.addView(tvReceive);
             }
-            if (orderInfo.isIf_delivery_receive()) {
+            if (!orderInfo.isIf_receive()&&orderInfo.isIf_delivery_receive()) {
                 TextView tvGetGoodSelf = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvGetGoodSelf.setLayoutParams(paramas);
                 tvGetGoodSelf.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvGetGoodSelf.setText("确认提货");
                 tvGetGoodSelf.setTextColor(this.getResources().getColor(R.color.black));
-                tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvGetGoodSelf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvGetGoodSelf.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ShopPresenter.chainReceive(ShopOrdersDetailActivity.this,orderId);
                     }
                 });
                 llbtns.addView(tvGetGoodSelf);
@@ -404,12 +406,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvEvaluation = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvEvaluation.setLayoutParams(paramas);
                 tvEvaluation.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvEvaluation.setText("评价订单");
                 tvEvaluation.setTextColor(this.getResources().getColor(R.color.black));
-                tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvEvaluation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -424,23 +426,23 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvLock = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvLock.setLayoutParams(paramas);
                 tvLock.setText("退货/退款中...");
                 tvLock.setTextColor(this.getResources().getColor(R.color.black));
-                tvLock.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvLock.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 llbtns.addView(tvLock);
             }/*  if_refund_cancel 是否显示退款按钮 true/false*/
             if (orderInfo.isIf_refund_cancel()) {
                 TextView tvRefund = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvRefund.setLayoutParams(paramas);
                 tvRefund.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvRefund.setText("申请退款");
                 tvRefund.setTextColor(this.getResources().getColor(R.color.black));
-                tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvRefund.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvRefund.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -455,12 +457,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvAddEvaluation = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvAddEvaluation.setLayoutParams(paramas);
                 tvAddEvaluation.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_cancle));
                 tvAddEvaluation.setText("追加评价");
                 tvAddEvaluation.setTextColor(this.getResources().getColor(R.color.black));
-                tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvAddEvaluation.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvAddEvaluation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -475,12 +477,12 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 TextView tvQrReceive = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
-                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_Modules);
+                paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
                 tvQrReceive.setLayoutParams(paramas);
                 tvQrReceive.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_refund));
                 tvQrReceive.setText("提货二维码");
                 tvQrReceive.setTextColor(getResources().getColor(R.color.msb_color));
-                tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvQrReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -517,12 +519,6 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         this.store_phone = store_phone;
         if (!TextUtils.isEmpty(store_phone)) {
             if (Build.VERSION.SDK_INT >= 23) {
-             /*   if (ContextCompat.checkSelfPermission(ShopOrdersDetailActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-           */        /* AndPermission.with(ShopOrdersDetailActivity.this)
-                            .requestCode(CALL_PERMISSIONS_REQUEST)
-                            .permission(
-                                    Manifest.permission.CALL_PHONE)
-                            .send();*/
            PermissionUtils.requestPermissions(ShopOrdersDetailActivity.this, new PermissionUtils.PermissionRequestFinishListener() {
                @Override
                public void onPermissionRequestSuccess(List<String> permissions) {
@@ -530,10 +526,6 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                    startActivity(intent);
                }
            },Permission.CALL_PHONE);
-               /* } else {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
-                    startActivity(intent);
-                }*/
             } else {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + store_phone));
                 startActivity(intent);
@@ -670,5 +662,10 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
         intent.putExtra("pdPassword", "");
         intent.putExtra("orderId",   orderId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onChainReceiveSuccess(String s) {
+        ShopPresenter.getOrderDetail(this);
     }
 }

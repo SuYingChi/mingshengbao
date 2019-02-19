@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -49,8 +50,7 @@ public class BaseActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //initStatusBarAndNavigationBar();
-        StatusBarCompat.setTranslucentStatusBar(this);
+        initStatusBarAndNavigationBar();
         /**
          * 友盟统计
          */
@@ -65,11 +65,11 @@ public class BaseActivity extends AppCompatActivity  {
     }
 
     protected void initStatusBarAndNavigationBar() {
-        //适配华为手机虚拟键遮挡tab的问题
-        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
-          //  AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        if(!OSUtils.isEMUI3_0()) {
+            StatusBarCompat.setTranslucentStatusBar(this);
+        }else {
+            StatusBarCompat.setStatusBar(this);
         }
-        StatusBarCompat.setStatusBar(this);
     }
 
     private void setSnackBar() {

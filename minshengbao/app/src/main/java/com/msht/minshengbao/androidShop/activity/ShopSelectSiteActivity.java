@@ -47,6 +47,8 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
     Toolbar mToolbar;
     @BindView(R.id.rlt)
     RelativeLayout rlt;
+    @BindView(R.id.total)
+    TextView tvtatal;
     private List<SiteBean.DatasBean.AddrListBean> dataList= new ArrayList<SiteBean.DatasBean.AddrListBean>();
     private List<SiteBean.DatasBean.AddrListBean> allSiteList= new ArrayList<SiteBean.DatasBean.AddrListBean>();
     private SiteListAdapter adapter;
@@ -66,16 +68,18 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
         rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                SiteBean.DatasBean.AddrListBean siteBean = dataList.get(position);
-                Intent intent = new Intent();
-                intent.putExtra("site", siteBean);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
+        if(getIntent().getBooleanExtra("onClick",true)) {
+            adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    SiteBean.DatasBean.AddrListBean siteBean = dataList.get(position);
+                    Intent intent = new Intent();
+                    intent.putExtra("site", siteBean);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
         rcl.setAdapter(adapter);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +101,7 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
         if(siteBean!=null) {
             dataList.addAll(siteBean.getDatas().getAddr_list());
             allSiteList.addAll(siteBean.getDatas().getAddr_list());
+            tvtatal.setText(String.format("全部门店共%d家", allSiteList.size()));
             adapter.notifyDataSetChanged();
             InvContentItemBean invItemBean = new InvContentItemBean("所有区域", true);
             areaList.add(invItemBean);

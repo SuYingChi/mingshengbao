@@ -38,6 +38,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
+import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
@@ -134,6 +135,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView tvstore;
     @BindView(R.id.ispickupself)
     TextView tvPickupself;
+    @BindView(R.id.zitistore)
+    TextView tvZiti;
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -549,8 +552,18 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             if (TextUtils.equals(isPickup_self, "1")) {
                tvPickupself.setText("限自提");
                tvPickupself.setVisibility(View.VISIBLE);
+               tvZiti.setVisibility(View.VISIBLE);
+               tvZiti.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       Intent intent = new Intent(getActivity(), ShopSelectSiteActivity.class);
+                       intent.putExtra("onClick",false);
+                       startActivity(intent);
+                   }
+               });
             }else {
                 tvPickupself.setVisibility(View.INVISIBLE);
+                tvZiti.setVisibility(View.INVISIBLE);
             }
             goods_name = goods_info.optString("goods_name");
             tvgoods_name.setText(goods_name);

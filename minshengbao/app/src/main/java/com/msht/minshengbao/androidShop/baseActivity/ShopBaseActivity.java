@@ -233,10 +233,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             mImmersionBar = ImmersionBar.with(this);
             mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
-            //适配华为手机虚拟键遮挡tab的问题
-            if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
-                AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
-            }
             StatusBarCompat.setStatusBar(this);
         }
     }

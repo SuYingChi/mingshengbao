@@ -69,6 +69,17 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
+                  <View
+                      android:layout_width="0dp"
+                      android:layout_height="match_parent"
+                      android:layout_weight="1"/>
+                  <TextView
+                      android:id="@+id/zitistore"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textColor="@color/msb_color"
+                      android:text="自提门店信息"
+                      android:textSize="@dimen/text_14" />
               </LinearLayout>
                 <TextView
                     android:id="@+id/goods_jingle"

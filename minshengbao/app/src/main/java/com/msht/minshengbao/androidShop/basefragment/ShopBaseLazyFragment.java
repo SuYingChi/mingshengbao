@@ -164,10 +164,6 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
             mImmersionBar = ImmersionBar.with(this);
             mImmersionBar.statusBarDarkFont(true,0.2f).navigationBarEnable(false).init();
         }else {
-            //适配华为手机虚拟键遮挡tab的问题
-            if (AndroidWorkaround.checkDeviceHasNavigationBar(getContext())) {
-                AndroidWorkaround.assistActivity(mRootView.findViewById(android.R.id.content));
-            }
             StatusBarCompat.setStatusBar(getActivity());
         }
     }
