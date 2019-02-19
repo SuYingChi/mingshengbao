@@ -72,7 +72,7 @@ public class RepairEvaluateActivity extends BaseActivity {
                         String result=object.optString("result");
                         String error = object.optString("error");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.setResult(4);
+                            activity.setResult(2);
                             activity.initShow();    //提示评价成功
                         }else {
                             activity.onFailure(error);

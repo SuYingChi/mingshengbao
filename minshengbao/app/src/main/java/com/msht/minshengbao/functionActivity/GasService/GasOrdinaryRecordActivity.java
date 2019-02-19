@@ -215,6 +215,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,payRecordHandler);
     }
 
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (customDialog!=null&&customDialog.isShowing()){

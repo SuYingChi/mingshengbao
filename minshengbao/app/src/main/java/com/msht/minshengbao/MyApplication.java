@@ -177,9 +177,9 @@ public class MyApplication extends Application {
     public static MyApplication getInstance() {
         return instance;
     }
-/*
 
-    @Override
+
+   /* @Override
     public Resources getResources() {
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1) {
@@ -195,8 +195,8 @@ public class MyApplication extends Application {
             }
         }
         return resources;
-    }
-*/
+    }*/
+
 
     private void initUPush() {
         PushAgent mPushAgent = PushAgent.getInstance(this);

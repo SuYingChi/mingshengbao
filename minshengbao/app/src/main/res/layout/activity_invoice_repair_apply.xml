@@ -277,7 +277,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/margin_width50"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/id_delivery_text"
                     android:layout_width="wrap_content"

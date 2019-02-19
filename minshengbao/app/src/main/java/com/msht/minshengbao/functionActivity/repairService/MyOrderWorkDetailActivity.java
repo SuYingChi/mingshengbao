@@ -76,7 +76,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String realMoney;
     private String phoneNo;
     private String parentCode;
-    private int    requestCode=0;
+    private int    requestType=0;
 
     private JSONObject jsonObject;
     private CustomDialog customDialog;
@@ -103,10 +103,10 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                         String results=object.optString("result");
                         String error = object.optString("error");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference.requestCode==0){
+                            if (reference. requestType==0){
                                 reference.jsonObject =object.optJSONObject("data");
                                 reference.onReceiveData();
-                            }else if (reference.requestCode==1){
+                            }else if (reference. requestType==1){
                                 reference.success();
                             }
                         }else {
@@ -155,6 +155,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             tvRemarkInfo.setText(info);
         }
         //onSetTypeImage(type);
+        Log.d("StatusView=",status);
         onSetStatusView(status);
         onSetGuaranteeStopDayView();
     }
@@ -205,6 +206,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                     layoutEvaluate.setVisibility(View.GONE);
                 }
                 layoutButton.setVisibility(View.VISIBLE);
+                btnEvaluate.setVisibility(View.GONE);
                 finishInfo();
                 break;
             case ConstantUtil.VALUE_NINE:
@@ -325,30 +327,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             }
         }
     }
-
-    private void onSetTypeImage(String type) {
-        switch (type){
-            case ConstantUtil.VALUE_ONE:
-                typeImg.setImageResource(R.drawable.home_sanitary_xh);
-                break;
-            case ConstantUtil.VALUE_TWO:
-                typeImg.setImageResource(R.drawable.home_appliance_fix_xh);
-                break;
-            case ConstantUtil.VALUE_THREE:
-                typeImg.setImageResource(R.drawable.home_lanterns_xh);
-                break;
-            case ConstantUtil.VALUE_FOUR:
-                typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                break;
-            case ConstantUtil.VALUE_FORTY_EIGHT:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-            default:
-                typeImg.setImageResource(R.drawable.home_appliance_clean_xh);
-                break;
-        }
-    }
-
     private void finishInfo() {
         serveTime =jsonObject.optString("serve_time");
         realAmount =jsonObject.optString("real_amount");
@@ -468,7 +446,8 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 //评价成功
                 if (resultCode==2){
                     setResult(0x004);
-                    finish();
+                    requestType=0;
+                    requestService();
                 }else if (resultCode==3){
                     couponId=data.getStringExtra("voucherId");
                     String disAmount=data.getStringExtra("amount");
@@ -549,8 +528,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         btnRefund.setOnClickListener(this);
     }
     private void initData() {
-        customDialog.show();
-        requestCode=0;
+        requestType=0;
         requestService();
     }
     private void initEvent() {
@@ -765,7 +743,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
 
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        requestCode=1;
+                        requestType=1;
                         requestService();
                         dialog.dismiss();
                     }
@@ -775,9 +753,9 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private void requestService() {
         customDialog.show();
         String validateURL ="";
-        if (requestCode==0){
+        if ( requestType==0){
             validateURL = UrlUtil.RepairOrder_detailUrl;
-        }else if (requestCode==1){
+        }else if ( requestType==1){
             validateURL =UrlUtil.RepairOrder_cancelUrl;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();

@@ -930,10 +930,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     public void initNetBroadcast() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetBroadcastReceiver();
-        registerReceiver(receiver, filter);
+        if (receiver==null){
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            receiver = new NetBroadcastReceiver();
+            if (!receiver.isOrderedBroadcast()){
+                registerReceiver(receiver, filter);
+            }
+        }
     }
 
     @Override

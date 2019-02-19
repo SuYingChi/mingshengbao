@@ -11,6 +11,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -32,6 +34,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.extra.CashierInputFilter;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -59,14 +62,17 @@ import top.zibin.luban.OnCompressListener;
  */
 public class RefundApplyActivity extends BaseActivity {
     private EditText etProblem;
+    private EditText etRefundAmount;
     private Button btnSend;
     private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
+    private String parentCode;
     private Context   context;
     private String    orderNo,refundId;
     private String    userId,password;
     private String    id, parentCategory;
-    private String     finishTime;
+    private String    finishTime;
+    private String    realAmount;
     private String    title;
     private int thisPosition =-1;
     private int k=0;
@@ -244,14 +250,23 @@ public class RefundApplyActivity extends BaseActivity {
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
-        id=data.getStringExtra("id");
-        orderNo=data.getStringExtra("orderNo");
-        title=data.getStringExtra("title");
-        finishTime =data.getStringExtra("finishTime");
-        parentCategory =data.getStringExtra("parentCategory");
-        String parentCode=data.getStringExtra("parentCode");
+        if (data!=null){
+            id=data.getStringExtra("id");
+            orderNo=data.getStringExtra("orderNo");
+            title=data.getStringExtra("title");
+            finishTime =data.getStringExtra("finishTime");
+            parentCategory =data.getStringExtra("parentCategory");
+            parentCode=data.getStringExtra("parentCode");
+            realAmount=data.getStringExtra("realAmount");
+        }
         initView();
         initSetCodeImage(parentCode);
+        if (!TextUtils.isEmpty(realAmount)){
+            double maxValue = Double.parseDouble(realAmount);
+            InputFilter[] filters={new CashierInputFilter(0,maxValue)};
+            //设置金额输入的过滤器，保证只能输入金额类型
+            etRefundAmount.setFilters(filters);
+        }
         mAdapter = new PhotoPickerAdapter(imgPaths);
         mPhotoGridView.setAdapter(mAdapter);
         mPhotoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -384,7 +399,10 @@ public class RefundApplyActivity extends BaseActivity {
         ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
         ((TextView)findViewById(R.id.id_tv_title)).setText(title);
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
+        String realAmountText=realAmount+"元";
+        ((TextView)findViewById(R.id.id_max_amount)).setText(realAmountText);
         etProblem =(EditText)findViewById(R.id.id_et_problem);
+        etRefundAmount=(EditText)findViewById(R.id.id_refund_amount);
         btnSend =(Button)findViewById(R.id.id_btn_send);
         mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         btnSend.setOnClickListener(new View.OnClickListener() {
