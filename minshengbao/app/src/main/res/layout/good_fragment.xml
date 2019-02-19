@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_red"
-                    android:layout_marginLeft="@dimen/margin_Modules"
+                    android:layout_marginLeft="@dimen/margin_width20"
                     android:layout_marginTop="@dimen/margin_Modules"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_14"
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/msb_color"
                         android:text="查看门店信息"
-                        android:layout_marginTop="@dimen/margin_Modules"
+                        android:layout_marginTop="@dimen/margin_width20"
                         android:visibility="invisible"
                         android:textSize="@dimen/text_14" />
                 </LinearLayout>

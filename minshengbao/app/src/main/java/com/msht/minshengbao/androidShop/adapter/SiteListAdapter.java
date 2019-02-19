@@ -1,7 +1,9 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.text.TextPaint;
 import android.view.View;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
@@ -21,6 +23,9 @@ public class SiteListAdapter extends HaveHeadRecyclerAdapter<SiteBean.DatasBean.
     @Override
     public void convert(RecyclerHolder holder, SiteBean.DatasBean.AddrListBean addrListBean, final int position) {
         holder.setText(R.id.sitename, addrListBean.getDlyp_address_name());
+        TextView tv = holder.getView(R.id.sitename);
+        TextPaint tp = tv.getPaint();
+        tp.setFakeBoldText(true);
         holder.setText(R.id.sitePhone, addrListBean.getDlyp_mobile());
         holder.setText(R.id.siteAddress, addrListBean.getDlyp_address());
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
