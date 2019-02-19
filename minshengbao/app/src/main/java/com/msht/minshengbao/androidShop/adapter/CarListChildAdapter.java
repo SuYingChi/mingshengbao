@@ -138,6 +138,11 @@ public class CarListChildAdapter extends MyHaveHeadViewRecyclerAdapter<JSONObjec
             } else {
                 tvGoodsPrice.setVisibility(View.INVISIBLE);
             }
+            if("1".equals(obj.optString("pickup_self"))){
+                holder.getView(R.id.ispickupself).setVisibility(View.VISIBLE);
+            }else {
+                holder.getView(R.id.ispickupself).setVisibility(View.INVISIBLE);
+            }
             final CheckBox cbSelect = holder.getView(R.id.select);
             //点击选择商品的时候根据情况发起notifyDataSetChanged() 让店铺的CheckBox发生改变
             cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

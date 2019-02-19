@@ -8,6 +8,6 @@
     <corners android:radius="20dp" />
     <padding android:right="@dimen/dp5"
         android:left="@dimen/dp5"
-        android:top="@dimen/margin_width3"
-        android:bottom="@dimen/margin_width3"/>
+        android:top="@dimen/dp1"
+        android:bottom="@dimen/dp1"/>
 </shape>
