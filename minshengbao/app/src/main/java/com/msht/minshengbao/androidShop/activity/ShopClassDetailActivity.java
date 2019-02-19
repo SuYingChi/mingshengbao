@@ -190,6 +190,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 onShopItemViewClick("goods", goodsId);
             }
         });
+        classDetailRightAdapter.setDatas(rightDataList);
         rclRight.setAdapter(classDetailRightAdapter);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
@@ -278,7 +279,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             if (rightCurrenPage == 1) {
                 rightDataList.clear();
                 rightDataList.addAll(list);
-                classDetailRightAdapter.setDatas(rightDataList);
                 classDetailRightAdapter.notifyDataSetChanged();
             } else if (rightCurrenPage > page_total) {
                 refreshLayout.setEnableAutoLoadMore(false);
@@ -289,7 +289,6 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 refreshLayout.setNoMoreData(false);
                 if (list.size() != 0) {
                     rightDataList.addAll(list);
-                    classDetailRightAdapter.setDatas(rightDataList);
                     classDetailRightAdapter.notifyDataSetChanged();
                 }
             }

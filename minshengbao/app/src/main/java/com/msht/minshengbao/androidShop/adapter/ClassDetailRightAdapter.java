@@ -23,7 +23,7 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
 
     @Override
     public void convert(RecyclerHolder holder, final ClassDetailRightBean.DatasBean.GoodsListBean goodsListBean, final int position) {
-        final ImageView iv = holder.getView(R.id.iv);
+      /*  final ImageView iv = holder.getView(R.id.iv);
         iv.post(new Runnable() {
             @Override
             public void run() {
@@ -34,7 +34,9 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
                 iv.setLayoutParams(params);
                 GlideUtil.loadByImageView(context,iv,goodsListBean.getGoods_image_url());
             }
-        });
+        });*/
+        ImageView iv = holder.getView(R.id.iv);
+        GlideUtil.loadRemoteImg(context,iv,goodsListBean.getGoods_image_url());
         TextView tv = holder.getView(R.id.name);
         tv.setText(goodsListBean.getGoods_name().trim());
         TextView tvPrice = holder.getView(R.id.price);
