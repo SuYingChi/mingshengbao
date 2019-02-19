@@ -216,8 +216,6 @@ public class ConstantUtil {
     public final static String LENOVO = "LENOVO";
 
 
-
-
     public static String getDeviceInfo(Context context) {
         try {
             org.json.JSONObject json = new org.json.JSONObject();

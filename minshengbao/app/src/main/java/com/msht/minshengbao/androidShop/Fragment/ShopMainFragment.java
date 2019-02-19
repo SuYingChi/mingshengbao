@@ -341,7 +341,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
             public void onItemClick(int position) {
                 String data = homeClassList.get(position).getData();
                 String type = homeClassList.get(position).getType();
-                    if ((!BuildConfig.DEBUG&&position != homeClassList.size() - 1)||BuildConfig.DEBUG){
                         if("url".equals(type)) {
                             if (data.contains("gc_id=")) {
                                 Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
@@ -362,7 +361,10 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                                 Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
                                 intent.putExtra("goodsid", goodsid);
                                 startActivity(intent);
-                            }else {
+                            }else if("更多商品".equals(homeClassList.get(position).getTitle())){
+                                Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
+                                getActivity().startActivity(intent);
+                            } else {
                                 Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
                                 intent.putExtra("url", data);
                                 intent.putExtra("navigate", homeClassList.get(position).getTitle());
@@ -377,11 +379,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                             intent.putExtra("goodsid", data);
                             startActivity(intent);
                         }
-                    } else if(!BuildConfig.DEBUG&&position == homeClassList.size() - 1){
-                            Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
-                            getActivity().startActivity(intent);
                     }
-            }
         });
         final WrapChildHeightViewPager vp = addViewHolder.getView(R.id.vp);
         vp.setNoScroll(false);
