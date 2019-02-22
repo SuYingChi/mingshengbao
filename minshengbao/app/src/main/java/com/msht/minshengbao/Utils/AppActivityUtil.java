@@ -404,7 +404,7 @@ public class AppActivityUtil {
                     onPushHomeMaintenance(context, id, "家居维修");
                     break;
                 case ConstantUtil.MESSAGE:
-                    onStartMessage(context, url);
+                    onPushStartMessage(context, url);
                     break;
                 case ConstantUtil.MESSAGE_DETAIL:
                     onStartMessageDetail(context, url, 1);
@@ -425,6 +425,8 @@ public class AppActivityUtil {
             }
         }
     }
+
+
 
     public static void onPushActivity(Context context, String url) {
         String code = Uri.parse(url).getQueryParameter("code");
@@ -574,6 +576,21 @@ public class AppActivityUtil {
         }
     }
 
+    /**
+     * 未推出后台点击消息
+     * @param context
+     * @param pushUrl
+     */
+    private static void onPushStartMessage(Context context, String pushUrl) {
+
+        if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+            Intent intent = new Intent(context, TotalMessageListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }else {
+            AppActivityUtil.onLoginActivity(context, pushUrl);
+        }
+    }
     /**
      * 消息中心
      *

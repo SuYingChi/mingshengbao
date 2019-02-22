@@ -15,7 +15,6 @@ public class DateUtils {
      * @return
      */
     public static long getCurTimeLong(){
-        Date date=new Date(System.currentTimeMillis());
         return System.currentTimeMillis();
     }
     /**

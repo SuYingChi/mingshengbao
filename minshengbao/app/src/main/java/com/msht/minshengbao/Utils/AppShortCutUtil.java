@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,16 +33,21 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.RemoteViews;
 
 import com.msht.minshengbao.LaunchActivity;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 /**
@@ -76,8 +82,9 @@ public class AppShortCutUtil {
     public static void addNumShortCut(Context context, Class<?> clazz, boolean isShowNum, String num, boolean isStroke) {
         if (Build.MANUFACTURER.equalsIgnoreCase(ConstantUtil.XIAOMI)) {
             //小米
-           // xiaoMiShortCut(context, clazz, num);
-            smallMiShortCut(context,num);
+            if (isShowNum){
+                smallMiShortCut(context,num);
+            }
         } else if (Build.MANUFACTURER.equalsIgnoreCase(ConstantUtil.SAMSUNG)) {
             //三星
             samSungShortCut(context, num);
@@ -101,7 +108,6 @@ public class AppShortCutUtil {
      *
      */
     public static void viVoShortCut(Context context, String num) {
-        Log.e(TAG, "vivoShortCut....");
         Intent localIntent = new Intent("launcher.action.CHANGE_APPLICATION_NOTIFICATION_NUM");
         localIntent.putExtra("packageName", context.getPackageName());
         String launchClassName = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()).getComponent().getClassName();
@@ -121,11 +127,11 @@ public class AppShortCutUtil {
             }
             Notification notification = new NotificationCompat.Builder(context,"channel_notice")
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setWhen(System.currentTimeMillis())
                     .setContentTitle("未读消息")
-                    .setContentText("您有" +number + "条未读消息")
+                    .setContentText("您有"+String.valueOf(number)+"条未读消息")
                     .setTicker("ticker")
-                    .setAutoCancel(true)
+                    .setAutoCancel(false)
+                    .setContentIntent(getPendingIntent(context))
                     .build();
             try {
                 Field field = notification.getClass().getDeclaredField("extraNotification");
@@ -144,11 +150,56 @@ public class AppShortCutUtil {
                         "android.intent.extra.update_application_message_text", String.valueOf(number == 0 ? "" : number));
                 context.sendBroadcast(localIntent);
             }
-            manager.notify(1000,notification);
-
+            if (number==0){
+                manager.cancel(1000);
+                SharedPreferencesUtil.putStringData(context, "number", "10");
+            }else {
+                SharedPreferencesUtil.putStringData(context, "number", "0");
+                manager.notify(1000,notification);
+            }
         }
     }
-
+    /**
+     *
+     * @param context
+     * @param info
+     * @return
+     */
+    public static RemoteViews getRemoteViews(Context context, String info) {
+        RemoteViews remoteviews = new RemoteViews(context.getPackageName(),R.layout.layout_message_notification);
+        remoteviews.setImageViewResource(R.id.id_icon_img,R.mipmap.ic_launcher);
+        remoteviews.setTextViewText(R.id.id_tv_title,"未读消息");
+        remoteviews.setTextViewText(R.id.id_content_text,info);
+        remoteviews.setTextViewText(R.id.id_time,DateUtils.getDateToString(System.currentTimeMillis(),"HH:mm"));
+        //找到对应的控件（R.id.download_notification_root），为控件添加点击事件getPendingIntent(context)
+        remoteviews.setOnClickPendingIntent(R.id.id_root_layout,getPendingIntent(context));
+        return remoteviews;
+    }
+    /**
+     * 给通知栏添加点击事件，实现具体操作,我们这里将信息发送到Service中，在服务中去做具体操作。也可以不将信息发送到Service中
+     * @param context 上下文
+     * @return
+     */
+    private static PendingIntent getPendingIntent(Context context) {
+        Intent resultIntent =null;
+        if (AppActivityUtil.isAppAlive(context)){
+            if (!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+                resultIntent= new Intent(context, TotalMessageListActivity.class);
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               // return PendingIntent.getActivity(context,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            }else {
+                resultIntent= new Intent(context, LoginActivity.class);
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                resultIntent.putExtra("pushUrl","msbapp://msbapp?code=message");
+               // return PendingIntent.getActivity(context,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            }
+        }else {
+            resultIntent = new Intent(context, MainActivity.class);
+            resultIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+            resultIntent.putExtra("pushUrl","msbapp://msbapp?code=message");
+        }
+        return PendingIntent.getActivity(context,0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     /***
      * 在小米应用图标的快捷方式上加数字<br>
      *

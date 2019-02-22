@@ -111,8 +111,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment    orderFrag,currentFragment;
     private View        networkLayout;
     private Toolbar        hearLayout;
-    private String      userId;
-    private String      password;
     private String      urls;
     private boolean     versionState;
     private JSONObject  objectJson;
@@ -122,6 +120,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static  final String MY_ACTION = "ui";
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final int MY_CAMERA_REQUEST=3;
+    private String messageCount="0";
     private int     clickCode =0x001;
     /**
      * USE_COUPON_CODE 优惠券使用返回
@@ -318,7 +317,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
     private void onUnBadgeMassage(JSONObject json) {
         int badgeCount=json.optInt("num");
-        String messageCount="0";
         if (badgeCount!=0){
             if (badgeCount>MAX_MASSAGE){
                 messageCount=String.valueOf(MAX_MASSAGE);
@@ -326,9 +324,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }else {
                 messageCount=String.valueOf(badgeCount);
             }
-            AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
+          //  AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
         }else {
-            AppShortCutUtil.addNumShortCut(context,MainActivity.class,false,messageCount,true);
+           // messageCount=SharedPreferencesUtil.getStringData(context, "number", "10");
+          //  AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
         }
 
     }
@@ -356,9 +355,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //推送统计
         mPageName="首页";
         PushAgent.getInstance(context).onAppStart();
-   /*     userId=SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-        password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");*/
-      //  StatusBarCompat.compat(this,0x00ffffff);
         if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
         }
@@ -473,8 +469,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void onGetMessage() {
         String validateURL = UrlUtil.MESSAGE_UNREAD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
-        textParams.put("userId",userId);
-        textParams.put("password",password);
+        textParams.put("userId",SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,""));
+        textParams.put("password",SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,""));
         textParams.put("key",ShopSharePreferenceUtil.getInstance().getKey());
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
@@ -982,7 +978,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         MobclickAgent.onKillProcess(context);
-                        // ZhugeSDK.getInstance().flush(getApplicationContext());//诸葛数据
                         Gson gson = new Gson();
                         String data = gson.toJson(MyApplication.getInstance().getList());
                         if (!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())) {
@@ -990,11 +985,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         } else {
                             ShopSharePreferenceUtil.setShopSpStringValue("noLoginSearch", data);
                         }
+                        new Handler().postDelayed(runnable,3000);
                         finish();
                     }
                 })
                 .show();
     }
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+          //  String messageCount=SharedPreferencesUtil.getStringData(context, "number", "10");
+            AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
+        }
+    };
 
     @Override
     public void onResume() {
