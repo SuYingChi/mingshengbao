@@ -204,9 +204,6 @@
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
 
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"

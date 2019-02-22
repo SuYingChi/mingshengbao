@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.OrdersGoodListAdapter;
@@ -151,7 +152,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
        /* mImmersionBar.keyboardEnable(true);*/
         //此属性与浸入式冲突,设置状态栏颜色不生效，
         //mImmersionBar.statusBarColor(R.color.msb_color);
-        StatusBarCompat.compat(this,getResources().getColor(R.color.msb_color));
+        if(!OSUtils.isEMUI3_0()) {
+            StatusBarCompat.compat(this,getResources().getColor(R.color.msb_color));
+        }else {
+            StatusBarCompat.setStatusBar(this);
+        }
         // 设置android:fitsSystemWindows="true"，在键盘弹起时往上顶布局，但是布局就位置处于statusbar下面,和navigationbar上面
         //ImmersionBar.setTitleBar源码得知，toolbar高度会自动补上状态高度，就不要使用settitlebar了
         // ImmersionBar.setTitleBar(this, mToolbar);
