@@ -80,7 +80,7 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
                     PopUtil.showComfirmDialog(this,"","请填写姓名",null,"知道了",null,null,true);
                 }else if(TextUtils.isEmpty(etPhone.getText().toString())){
                     PopUtil.showComfirmDialog(this,"","请填写有效收货联系电话",null,"知道了",null,null,true);
-                }else if(TextUtils.isEmpty(selectCityId)||TextUtils.isEmpty(selectAreaId)){
+                }else if(TextUtils.isEmpty(selectCityId)||(areaList.size()>0&&TextUtils.isEmpty(selectAreaId))){
                     PopUtil.showComfirmDialog(this,"","请选择城市",null,"知道了",null,null,true);
                 }else if(TextUtils.isEmpty(etAddress.getText().toString())){
                     PopUtil.showComfirmDialog(this,"","请填写详细收货地址",null,"知道了",null,null,true);
