@@ -121,7 +121,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     @Override
     public void showLoading() {
 
-        if (!isDetached() && centerLoadingDialog == null) {
+        if (this.getActivity() != null && !this.getActivity().isFinishing() && centerLoadingDialog == null) {
             centerLoadingDialog = new LoadingDialog(getContext());
             centerLoadingDialog.show();
         } else if (!isDetached() && !centerLoadingDialog.isShowing()) {

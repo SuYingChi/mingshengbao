@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -213,7 +214,7 @@ public class PopUtil {
         });
     }
 
-    public static void showAutoDissHookDialog(Context mContext, String tips, int delayMillis) {
+    public static void showAutoDissHookDialog(final Context mContext, String tips, int delayMillis) {
         LayoutInflater inflaterDl = LayoutInflater.from(mContext);
         final LinearLayout layout = (LinearLayout) inflaterDl.inflate(
                 R.layout.dialog_autodissmiss_tips, null);
@@ -226,8 +227,11 @@ public class PopUtil {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                dialog.show();
-                dialog.getWindow().setContentView(layout);
+                if(mContext instanceof Activity) {
+                    if(!((Activity) mContext).isFinishing()) {
+                        dialog.show();
+                        dialog.getWindow().setContentView(layout);
+                    } }
             }
         }, delayMillis);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -236,8 +240,12 @@ public class PopUtil {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (dialog != null)
-                            dialog.dismiss();
+                        if (mContext instanceof Activity) {
+                            if (!((Activity) mContext).isFinishing()) {
+                                if (dialog != null)
+                                    dialog.dismiss();
+                            }
+                        }
                     }
                 }, 1500);
             }
