@@ -364,8 +364,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 } else {
                     iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_no_selected));
                 }
+                //没有收货地址，用户添加了地址后回到该页面时需要重新走一遍流程
                 if (TextUtils.isEmpty(freight_hash)) {
-                    PopUtil.toastInCenter("参数缺失");
+                    ShopPresenter.getAddressList(this, false);
                 } else if (TextUtils.isEmpty(selectedAddressBean.getCity_id())) {
                     PopUtil.toastInCenter("无效城市id");
                 } else if (TextUtils.isEmpty(selectedAddressBean.getArea_id())) {
