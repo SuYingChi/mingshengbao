@@ -156,26 +156,32 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.optJSONObject("datas");
             JSONArray area_list = datas.optJSONArray("area_list");
-            for (int i = 0; i < area_list.length(); i++) {
-                JSONObject area = area_list.optJSONObject(i);
-                String area_Id = area.optString("area_id");
-                String area_name = area.optString("area_name");
-                AreaBean bean;
+            if(area_list.length()==0){
+                selectAreaId="";
+                selectArea_name="";
+                tvCity.setText(selectProvince_name + selectCity_name);
+            }else {
+                for (int i = 0; i < area_list.length(); i++) {
+                    JSONObject area = area_list.optJSONObject(i);
+                    String area_Id = area.optString("area_id");
+                    String area_name = area.optString("area_name");
+                    AreaBean bean;
 
-                if(area_list.length()<4&&i==area_list.length()-1){
-                    bean = new AreaBean(area_Id, area_name, true);
-                    selectAreaId = area_Id;
-                    selectArea_name = area_name;
-                    tvCity.setText(selectProvince_name+selectCity_name+selectArea_name);
-                }else if (i == 3) {
-                    bean = new AreaBean(area_Id, area_name, true);
-                    selectAreaId = area_Id;
-                    selectArea_name = area_name;
-                    tvCity.setText(selectProvince_name+selectCity_name+selectArea_name);
-                } else {
-                    bean = new AreaBean(area_Id, area_name, false);
+                    if (area_list.length() < 4 && i == area_list.length() - 1) {
+                        bean = new AreaBean(area_Id, area_name, true);
+                        selectAreaId = area_Id;
+                        selectArea_name = area_name;
+                        tvCity.setText(selectProvince_name + selectCity_name + selectArea_name);
+                    } else if (i == 3) {
+                        bean = new AreaBean(area_Id, area_name, true);
+                        selectAreaId = area_Id;
+                        selectArea_name = area_name;
+                        tvCity.setText(selectProvince_name + selectCity_name + selectArea_name);
+                    } else {
+                        bean = new AreaBean(area_Id, area_name, false);
+                    }
+                    areaList.add(bean);
                 }
-                areaList.add(bean);
             }
             selectAddressDialog.notifyRcl3();
         } catch (JSONException e) {
