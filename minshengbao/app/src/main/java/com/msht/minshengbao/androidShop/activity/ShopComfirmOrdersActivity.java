@@ -914,7 +914,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     public void onError(String s) {
         super.onError(s);
-        finish();
+        if(s.equals("地区请求失败")){
+          PopUtil.showComfirmDialog(this,"","请更换有效的收货地址","","好的",null,null,true);
+        } else{
+            finish();
+        }
     }
 
     private boolean isHasStoreServiceGood() {
