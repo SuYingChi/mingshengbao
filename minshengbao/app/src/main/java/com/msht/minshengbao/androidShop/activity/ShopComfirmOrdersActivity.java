@@ -149,18 +149,19 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     protected void initImmersionBar() {
         super.initImmersionBar();
-       /* mImmersionBar.keyboardEnable(true);*/
+        /* mImmersionBar.keyboardEnable(true);*/
         //此属性与浸入式冲突,设置状态栏颜色不生效，
         //mImmersionBar.statusBarColor(R.color.msb_color);
-        if(!OSUtils.isEMUI3_0()) {
-            StatusBarCompat.compat(this,getResources().getColor(R.color.msb_color));
-        }else {
+        if (!OSUtils.isEMUI3_0()) {
+            StatusBarCompat.compat(this, getResources().getColor(R.color.msb_color));
+        } else {
             StatusBarCompat.setStatusBar(this);
         }
         // 设置android:fitsSystemWindows="true"，在键盘弹起时往上顶布局，但是布局就位置处于statusbar下面,和navigationbar上面
         //ImmersionBar.setTitleBar源码得知，toolbar高度会自动补上状态高度，就不要使用settitlebar了
         // ImmersionBar.setTitleBar(this, mToolbar);
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,7 +207,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 @Override
                 public void onNoFocus(int position) {
                     String userId = comfirmShopGoodBeans.get(position).getUserId();
-                    if(!TextUtils.isEmpty(userId)) {
+                    if (!TextUtils.isEmpty(userId)) {
                         ShopPresenter.searchUserId(ShopComfirmOrdersActivity.this, userId);
                     }
                 }
@@ -219,14 +220,14 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             if (TextUtils.equals(isPickup_self, "0")) {
                 llsite.setVisibility(View.GONE);
             } else {
-              llsite.setVisibility(View.VISIBLE);
-              llsite.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                      Intent intent = new Intent(ShopComfirmOrdersActivity.this,ShopSelectSiteActivity.class);
-                      startActivityForResult(intent,SELECT_SITE);
-                  }
-              });
+                llsite.setVisibility(View.VISIBLE);
+                llsite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ShopComfirmOrdersActivity.this, ShopSelectSiteActivity.class);
+                        startActivityForResult(intent, SELECT_SITE);
+                    }
+                });
             }
         } else {
             finish();
@@ -319,11 +320,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
                 } else if (TextUtils.isEmpty(addressId)) {
                     PopUtil.showComfirmDialog(this, "", "请添加收货地址", "", "", null, null, true);
-                }else if(isPickup_self.equals("1")&&siteBean==null){
+                } else if (isPickup_self.equals("1") && siteBean == null) {
                     PopUtil.showComfirmDialog(this, "", "请选择服务站", "", "", null, null, true);
 
-                }
-                else if (!isHasStoreServiceGood()) {
+                } else if (!isHasStoreServiceGood()) {
                     PopUtil.showComfirmDialog(this, "", "已确认订单信息无误并提交订单？", "取消", "确认", null, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -364,7 +364,15 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 } else {
                     iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_no_selected));
                 }
-                ShopPresenter.buyStep2ChangeAddress(this);
+                if (TextUtils.isEmpty(freight_hash)) {
+                    PopUtil.toastInCenter("参数缺失");
+                } else if (TextUtils.isEmpty(selectedAddressBean.getCity_id())) {
+                    PopUtil.toastInCenter("无效城市id");
+                } else if (TextUtils.isEmpty(selectedAddressBean.getArea_id())) {
+                    PopUtil.toastInCenter("无效区域id");
+                } else {
+                    ShopPresenter.buyStep2ChangeAddress(this);
+                }
             }
         } else if (requestCode == REQUEST_CODE_RECOMMEND && resultCode == RESULT_OK) {
             if (data != null) {
@@ -378,7 +386,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 String content = invInfoBean.getInv_title() + " " + (invInfoBean.getInv_code().equals("null") ? "" : invInfoBean.getInv_code()) + " " + invInfoBean.getInv_content();
                 tvInv_info.setText(content);
             }
-        }else if (requestCode == SELECT_SITE && resultCode == RESULT_OK) {
+        } else if (requestCode == SELECT_SITE && resultCode == RESULT_OK) {
             if (data != null) {
                 siteBean = (SiteBean.DatasBean.AddrListBean) data.getSerializableExtra("site");
                 tvSiteName.setText(siteBean.getDlyp_address_name());
@@ -485,7 +493,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         try {
             JSONObject jsonObject = new JSONObject(s);
             datas = jsonObject.optJSONObject("datas");
-            if(datas.has("delivery_info")){
+            if (datas.has("delivery_info")) {
                 JSONObject deliveryobj = datas.optJSONObject("delivery_info");
                 tvSiteName.setText(deliveryobj.optString("dlyp_address_name"));
                 tvSite.setText(String.format("%s%s", deliveryobj.optString("dlyp_area_info"), deliveryobj.optString("dlyp_address")));
@@ -509,7 +517,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     JSONObject goodobj = goodList.optJSONObject(i);
                     if (!goodobj.optBoolean("storage_state")) {
                         PopUtil.toastInBottom("已为您取消购买已下架或库存不足的商品");
-                    } else  {
+                    } else {
                         ComfirmShopGoodBean.GoodsBean goodbean = new ComfirmShopGoodBean.GoodsBean(store_name, storeId, goodobj.optString("goods_image_url"), goodobj.optString("goods_name"), goodobj.optString("goods_num"), goodobj.optString("goods_price"), goodobj.optString("goods_id"));
                         goodbean.setCart_id(goodobj.optString("cart_id"));
                         comfirmGoodList.add(goodbean);
@@ -848,9 +856,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public String getDlypId() {
-        if(siteBean!=null) {
+        if (siteBean != null) {
             return siteBean.getDlyp_id();
-        }else {
+        } else {
             return "";
         }
     }
@@ -889,7 +897,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public void onUserIdError(String error) {
-       PopUtil.showComfirmDialog(this,"","该燃气用户号不存在","","",null,null,true);
+        PopUtil.showComfirmDialog(this, "", "该燃气用户号不存在", "", "", null, null, true);
     }
 
     private class Voucher {
