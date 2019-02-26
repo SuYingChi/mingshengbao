@@ -160,7 +160,59 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_Modules"
                 android:orientation="vertical">
-
+                <LinearLayout
+                    android:id="@+id/ll_voucher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/white"
+                    android:padding="@dimen/margin_Modules"
+                    >
+                    <ImageView
+                      android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/voucher"
+                        android:layout_gravity="center_vertical"
+                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_Modules"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/ll_4"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/margin_Modules"
+                                android:text="领券"
+                                android:textColor="@color/nc_text"
+                                android:textSize="@dimen/text_14" />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/margin_Modules"
+                                android:src="@drawable/right_angle" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@id/ll_4"
+                            >
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rcl_voucher"
+                        style="@style/rcl"
+                        android:layout_width="wrap_content"
+                        />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
                 <TextView
                     android:id="@+id/storeinfo"
                     android:layout_width="match_parent"
@@ -169,6 +221,7 @@
                     android:gravity="center_horizontal"
                     android:padding="@dimen/margin_Modules"
                     android:text=""
+                    android:layout_marginTop="@dimen/margin_Modules"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
 

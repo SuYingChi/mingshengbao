@@ -17,6 +17,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,9 +42,13 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
+import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
+import com.msht.minshengbao.androidShop.adapter.SiteListAdapter;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
+import com.msht.minshengbao.androidShop.shopBean.SiteBean;
+import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
@@ -137,6 +144,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView tvPickupself;
     @BindView(R.id.zitistore)
     TextView tvZiti;
+    @BindView(R.id.ll_voucher)
+    LinearLayout llvouvher;
+    @BindView(R.id.rcl_voucher)
+    RecyclerView rclVoucher;
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -649,6 +660,24 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             goodDetailActivityListener.onGetGoodDetailSuccess();
+          if(datas.has("voucher")){
+              JSONArray voucherArray = datas.optJSONArray("voucher");
+              if(voucherArray.length()>0){
+                  llvouvher.setVisibility(View.VISIBLE);
+                  List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
+                  for(int i=0;i<voucherArray.length();i++){
+                     voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(),VoucherBean.class));
+                  }
+                  HorizontalVoucherAdpter adapter = new HorizontalVoucherAdpter(getContext(), R.layout.voucher_text, voucherList);
+                  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+                  rclVoucher.setLayoutManager(linearLayoutManager);
+                  rclVoucher.setAdapter(adapter);
+              }else {
+                  llvouvher.setVisibility(View.GONE);
+              }
+          }else{
+              llvouvher.setVisibility(View.GONE);
+          }
         } catch (JSONException e) {
             e.printStackTrace();
         }
