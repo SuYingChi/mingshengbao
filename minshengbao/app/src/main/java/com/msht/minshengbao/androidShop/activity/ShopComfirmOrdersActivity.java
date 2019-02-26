@@ -95,6 +95,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     TextView tvSiteName;
     @BindView(R.id.tv_site)
     TextView tvSite;
+    @BindView(R.id.llrecommend)
+    LinearLayout llrecommend;
     private static final int REQUEST_CODE_ADDRESS = 100;
     private List<ComfirmShopGoodBean> comfirmShopGoodBeans = new ArrayList<ComfirmShopGoodBean>();
     private String ifCarted;
@@ -566,6 +568,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 isInv = false;
                 llinv.setVisibility(View.GONE);
                 rltinv.setVisibility(View.GONE);
+            }
+            if(datas.optInt("ifrecommend")==1){
+                llrecommend.setVisibility(View.VISIBLE);
+            }else {
+                llrecommend.setVisibility(View.GONE);
             }
             //默认没有发票
             invInfoBean = new InvItemBean("不需要发票", true, "", "", "");
