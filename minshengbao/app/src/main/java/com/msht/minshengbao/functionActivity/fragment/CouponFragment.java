@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.load.model.ModelLoader;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
 import com.msht.minshengbao.Base.BaseFragment;
@@ -46,7 +47,7 @@ public class CouponFragment extends BaseFragment {
     private Button btnShare;
     private XListView xListView;
     private CouponAdapter mAdapter;
-    private int pageNo=1;
+  //  private int pageNo=1;
     private int pageIndex=0;
     private int refreshType;
     private JSONArray jsonArray;
@@ -61,11 +62,6 @@ public class CouponFragment extends BaseFragment {
             case 0:
                 couponFragment.status="1";
                 break;
-            case 1:
-                couponFragment.status="2";
-                break;
-            case 2:
-                couponFragment.status="3";
             default:
                 break;
         }
@@ -100,11 +96,34 @@ public class CouponFragment extends BaseFragment {
                                 reference.xListView.stopLoadMore();
                             }
                             if(reference.jsonArray.length()>0){
-                                if (reference.pageNo==1){
+                                if (reference.pageIndex==1&& "1".equals(reference.status)){
                                     reference.couponList.clear();
                                 }
                             }
                             reference.onGetCouponData();
+                            switch (reference.status){
+                                case "1":
+                                    reference.loadData(reference.pageIndex,"2");
+                                    break;
+                                case "2":
+                                    reference.loadData(reference.pageIndex,"3");
+                                    break;
+                                case "3":
+                                    reference.status="1";
+                                    if (reference.couponList.size()==0){
+                                      //  if (reference.status.equals(VariableUtil.VALUE_ONE)){
+                                            reference.layoutNoData.setVisibility(View.VISIBLE);
+                                       /* }else {
+                                            reference.layoutNoData.setVisibility(View.GONE);
+                                        }*/
+                                    }else {
+                                        reference.layoutNoData.setVisibility(View.GONE);
+                                        reference.mAdapter.notifyDataSetChanged();
+                                    }
+                                    break;
+                                    default:break;
+                            }
+
                         }else {
                             reference.onFailure(error);
                         }
@@ -150,16 +169,6 @@ public class CouponFragment extends BaseFragment {
             }
         }catch (JSONException e){
             e.printStackTrace();
-        }
-        if (couponList.size()==0){
-            if (status.equals(VariableUtil.VALUE_ONE)){
-                layoutNoData.setVisibility(View.VISIBLE);
-            }else {
-                layoutNoData.setVisibility(View.GONE);
-            }
-        }else {
-            layoutNoData.setVisibility(View.GONE);
-            mAdapter.notifyDataSetChanged();
         }
     }
     private void onFailure(String error) {
@@ -216,30 +225,30 @@ public class CouponFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 refreshType=0;
-                loadData(1);
+                loadData(1,"1");
             }
             @Override
             public void onLoadMore() {
                 refreshType=1;
-                loadData(pageIndex + 1);
+                loadData(pageIndex + 1,"1");
             }
         });
     }
     @Override
     public void initData() {
         customDialog.show();
-        loadData(1);
+        loadData(1,"1");
     }
-    private void loadData(int i) {
+    private void loadData(int i,String status) {
         pageIndex =i;
-        pageNo=i;
+        this.status = status;
+     //   pageNo=i;
         String validateURL = UrlUtil.Counpon_Url;
         HashMap<String, String> textParams = new HashMap<String, String>();
-        String pageNum=String.valueOf(pageNo);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("status",status);
-        textParams.put("page",pageNum);
+        textParams.put("page",i+"");
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override
