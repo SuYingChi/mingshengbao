@@ -996,6 +996,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     @Override
     public void onGetVoucherSuccess(String s) {
-
+         PopUtil.showAutoDissHookDialog(getContext(),"成功领取代金券",0);
     }
 }
