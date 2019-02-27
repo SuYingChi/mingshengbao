@@ -44,6 +44,7 @@ import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.adapter.SiteListAdapter;
+import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
@@ -52,6 +53,7 @@ import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -100,7 +102,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -148,6 +150,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     LinearLayout llvouvher;
     @BindView(R.id.rcl_voucher)
     RecyclerView rclVoucher;
+    List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -181,6 +184,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private ArrayList<String> imagelist = new ArrayList<String>();
     private String selectedGuigeName="";
     private String pintuan_promotion;
+    private GoodFmVoucherDialog voucherDialog;
     ;
 
 
@@ -664,7 +668,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
               JSONArray voucherArray = datas.optJSONArray("voucher");
               if(voucherArray.length()>0){
                   llvouvher.setVisibility(View.VISIBLE);
-                  List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
                   for(int i=0;i<voucherArray.length();i++){
                      voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(),VoucherBean.class));
                   }
@@ -672,6 +675,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                   LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
                   rclVoucher.setLayoutManager(linearLayoutManager);
                   rclVoucher.setAdapter(adapter);
+                  llvouvher.setOnClickListener(new View.OnClickListener() {
+                      @Override
+                      public void onClick(View v) {
+                          showVoucherCarDialog();
+                      }
+                  });
               }else {
                   llvouvher.setVisibility(View.GONE);
               }
@@ -694,6 +703,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         return goodsid;
     }
 
+    private void showVoucherCarDialog() {
+        if (getActivity()!=null&&!getActivity().isFinishing() && voucherDialog == null) {
+            voucherDialog = new GoodFmVoucherDialog(getContext(),this, voucherList);
+            voucherDialog.show();
+        } else if (getActivity()!=null&&!getActivity().isFinishing() && !voucherDialog.isShowing()) {
+            voucherDialog.show();
+        }
+    }
     @Override
     public void addCar() {
         if (TextUtils.isEmpty(getKey())) {
@@ -972,4 +989,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_no_collected));
     }
 
+    @Override
+    public void onGetVoucher(String voucherid) {
+       ShopPresenter.getVoucher(this,voucherid);
+    }
+
+    @Override
+    public void onGetVoucherSuccess(String s) {
+
+    }
 }

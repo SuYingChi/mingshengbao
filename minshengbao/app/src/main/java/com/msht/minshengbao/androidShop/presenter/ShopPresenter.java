@@ -46,6 +46,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IGetInvContentView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
@@ -1496,6 +1497,19 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iGetWuliuView.onPostReturnGoodSuccess(s);
+                }
+            }
+        });
+    }
+    public static void getVoucher(final IGetVoucherView iGetVoucherView,String tid) {
+        OkHttpUtils.post().url(ShopConstants.GET_VOUCHER).addParams("key", iGetVoucherView.getKey()).tag(iGetVoucherView)
+                .addParams("tid", tid)
+                .build().execute(new DataStringCallback(iGetVoucherView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetVoucherView.onGetVoucherSuccess(s);
                 }
             }
         });
