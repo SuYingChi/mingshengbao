@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.customerview;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.OrderVoucherListAdpter;
@@ -25,7 +28,8 @@ public class OrderVoucherDialog extends Dialog {
     private  ISelectedVoucherView iSelectedVoucherView;
     @BindView(R.id.rcl)
     RecyclerView rcl;
-
+    @BindView(R.id.dismiss)
+    TextView dismiss;
     private Context context;
     private OrderVoucherListAdpter adapter;
 
@@ -75,6 +79,16 @@ public class OrderVoucherDialog extends Dialog {
         adapter.setOrderVoucherListener(iSelectedVoucherView);
         adapter.setFoot_layoutId(R.layout.order_voucher_foot,null);
         rcl.setAdapter(adapter);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof Activity) {
+                    if(!((Activity) context).isFinishing()){
+                        dismiss();
+                    }
+                }
+            }
+        });
     }
 
     public List<OrderVoucherBean> getVoucherList() {

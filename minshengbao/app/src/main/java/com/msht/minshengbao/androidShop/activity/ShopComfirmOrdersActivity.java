@@ -553,7 +553,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 if (voucherInfo instanceof JSONObject) {
                     String voucherTid = ((JSONObject) voucherInfo).optString("voucher_t_id");
                     String voucherPrice = ((JSONObject) voucherInfo).optString("voucher_price");
-                    String voucherDesc = ((JSONObject) voucherInfo).optString("desc");
+                    String voucherDesc = ((JSONObject) voucherInfo).optString("voucher_title")+":"+((JSONObject) voucherInfo).optString("voucher_price");
                     JSONObject store_voucher_list = storeobj.optJSONObject("store_voucher_list");
                     List<String> vidList = JsonUtil.getJsonObjectKeyList(store_voucher_list);
                     List<OrderVoucherBean> list = new ArrayList<OrderVoucherBean>();
@@ -564,7 +564,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         String voucher_start_date = voucherobj.optString("voucher_start_date");
                         String limitTime = voucherobj.optString("voucher_end_date");
                         String vlimitAmount = voucherobj.optString("voucher_limit");
-                        String desc = voucherobj.optString("desc");
+                        String desc = vtitle+":"+voucherobj.optString("voucher_price");
                         list.add(new OrderVoucherBean(vtid, vtitle, limitTime, vlimitAmount, voucherTid.equals(vtid), voucher_start_date, voucherobj.optString("voucher_price"),desc));
                     }
                     comfirmShopGoodBean.setVoucherInfo(voucherTid, voucherPrice, voucherDesc);

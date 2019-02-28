@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.customerview;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.CircleScrollerRecyclerAdapter;
@@ -35,7 +38,8 @@ public class GoodFmVoucherDialog extends Dialog {
     private final IGetVoucherView iGetVoucherView;
     @BindView(R.id.rcl)
     RecyclerView rcl;
-
+    @BindView(R.id.dismiss)
+    TextView dismiss;
     private Context context;
     private GoodFmVoucherAdpter adapter;
 
@@ -88,6 +92,17 @@ public class GoodFmVoucherDialog extends Dialog {
             }
         });
         rcl.setAdapter(adapter);
+
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(context instanceof Activity) {
+                    if(!((Activity) context).isFinishing()){
+                        dismiss();
+                    }
+                }
+            }
+        });
     }
 
 }

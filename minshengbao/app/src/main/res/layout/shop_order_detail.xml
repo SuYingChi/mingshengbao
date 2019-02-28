@@ -288,7 +288,7 @@
                     android:gravity="right"
                     android:text=""
                     android:ellipsize="end"
-                    android:textColor="@color/black"
+                    android:textColor="@color/msb_color"
                     android:textSize="@dimen/text_14" />
             </LinearLayout>
             <LinearLayout
