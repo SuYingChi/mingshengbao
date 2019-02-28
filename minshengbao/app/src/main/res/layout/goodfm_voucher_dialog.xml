@@ -24,6 +24,7 @@
         android:layout_gravity="center_horizontal"
         />
     <TextView
+        android:id="@+id/dismiss"
         style="@style/shopBlackTitleText"
         android:text="完成"
         android:layout_width="match_parent"

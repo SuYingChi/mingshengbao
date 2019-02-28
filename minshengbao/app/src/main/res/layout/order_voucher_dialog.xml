@@ -26,6 +26,7 @@
         android:layout_marginTop="@dimen/margin_Modules"
          />
     <TextView
+        android:id="@+id/dismiss"
         style="@style/shopBlackTitleText"
         android:text="完成"
         android:layout_width="match_parent"
