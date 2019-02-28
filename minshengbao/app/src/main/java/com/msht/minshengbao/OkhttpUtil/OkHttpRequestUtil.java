@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.msht.minshengbao.androidShop.util.MLoggerInterceptor;
+
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +50,7 @@ public class OkHttpRequestUtil implements ReqCallBack{
 
         //初始化OkHttpClient
         mOkHttpClient = new OkHttpClient().newBuilder()
+                .addInterceptor(new MLoggerInterceptor("http", true))
                 //设置超时时间
                 .connectTimeout(15, TimeUnit.SECONDS)
                 //设置读取超时时间

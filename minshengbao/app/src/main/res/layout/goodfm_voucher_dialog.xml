@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <TextView
+        android:text="优惠"
+       style="@style/shopBlackTitleText" />
+    <TextView
+        android:text="领券"
+        style="@style/shopBlackTitleText"
+        android:layout_gravity="left"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcl"
+        style="@style/rcl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+    <TextView
+        android:text="已领取的代金券可以在我的钱包里查看"
+        style="@style/grey_small_text"
+        android:layout_gravity="center_horizontal"
+        />
+    <TextView
+        style="@style/shopBlackTitleText"
+        android:text="完成"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/margin_width35"
+        android:layout_marginRight="@dimen/margin_width35"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/btn_red"
+         />
+</LinearLayout>

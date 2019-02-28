@@ -17,6 +17,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -39,12 +42,18 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
+import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
+import com.msht.minshengbao.androidShop.adapter.SiteListAdapter;
+import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
+import com.msht.minshengbao.androidShop.shopBean.SiteBean;
+import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -93,7 +102,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -137,6 +146,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView tvPickupself;
     @BindView(R.id.zitistore)
     TextView tvZiti;
+    @BindView(R.id.ll_voucher)
+    LinearLayout llvouvher;
+    @BindView(R.id.rcl_voucher)
+    RecyclerView rclVoucher;
+    List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -170,6 +184,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private ArrayList<String> imagelist = new ArrayList<String>();
     private String selectedGuigeName="";
     private String pintuan_promotion;
+    private GoodFmVoucherDialog voucherDialog;
     ;
 
 
@@ -649,6 +664,29 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             goodDetailActivityListener.onGetGoodDetailSuccess();
+          if(datas.has("voucher")){
+              JSONArray voucherArray = datas.optJSONArray("voucher");
+              if(voucherArray.length()>0){
+                  llvouvher.setVisibility(View.VISIBLE);
+                  for(int i=0;i<voucherArray.length();i++){
+                     voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(),VoucherBean.class));
+                  }
+                  HorizontalVoucherAdpter adapter = new HorizontalVoucherAdpter(getContext(), R.layout.voucher_text, voucherList);
+                  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+                  rclVoucher.setLayoutManager(linearLayoutManager);
+                  rclVoucher.setAdapter(adapter);
+                  llvouvher.setOnClickListener(new View.OnClickListener() {
+                      @Override
+                      public void onClick(View v) {
+                          showVoucherCarDialog();
+                      }
+                  });
+              }else {
+                  llvouvher.setVisibility(View.GONE);
+              }
+          }else{
+              llvouvher.setVisibility(View.GONE);
+          }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -665,6 +703,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         return goodsid;
     }
 
+    private void showVoucherCarDialog() {
+        if (getActivity()!=null&&!getActivity().isFinishing() && voucherDialog == null) {
+            voucherDialog = new GoodFmVoucherDialog(getContext(),this, voucherList);
+            voucherDialog.show();
+        } else if (getActivity()!=null&&!getActivity().isFinishing() && !voucherDialog.isShowing()) {
+            voucherDialog.show();
+        }
+    }
     @Override
     public void addCar() {
         if (TextUtils.isEmpty(getKey())) {
@@ -943,4 +989,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         iv.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_no_collected));
     }
 
+    @Override
+    public void onGetVoucher(String voucherid) {
+       ShopPresenter.getVoucher(this,voucherid);
+    }
+
+    @Override
+    public void onGetVoucherSuccess(String s) {
+         PopUtil.showAutoDissHookDialog(getContext(),"成功领取代金券",0);
+    }
 }

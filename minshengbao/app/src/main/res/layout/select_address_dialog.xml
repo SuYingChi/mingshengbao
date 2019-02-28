@@ -19,22 +19,19 @@
        <android.support.v7.widget.RecyclerView
            style="@style/rcl"
            android:id="@+id/province"
-           android:layout_width="0dp"
-           android:layout_weight="1"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            />
        <android.support.v7.widget.RecyclerView
            style="@style/rcl"
            android:id="@+id/city"
-           android:layout_width="0dp"
-           android:layout_weight="1"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            />
        <android.support.v7.widget.RecyclerView
            style="@style/rcl"
            android:id="@+id/area"
-           android:layout_width="0dp"
-           android:layout_weight="1"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            />
    </LinearLayout>

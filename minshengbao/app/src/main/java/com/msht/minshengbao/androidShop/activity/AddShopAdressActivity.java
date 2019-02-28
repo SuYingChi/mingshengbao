@@ -80,7 +80,7 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
                     PopUtil.showComfirmDialog(this,"","请填写姓名",null,"知道了",null,null,true);
                 }else if(TextUtils.isEmpty(etPhone.getText().toString())){
                     PopUtil.showComfirmDialog(this,"","请填写有效收货联系电话",null,"知道了",null,null,true);
-                }else if(TextUtils.isEmpty(selectCityId)||TextUtils.isEmpty(selectAreaId)){
+                }else if(TextUtils.isEmpty(selectCityId)||(areaList.size()>0&&TextUtils.isEmpty(selectAreaId))){
                     PopUtil.showComfirmDialog(this,"","请选择城市",null,"知道了",null,null,true);
                 }else if(TextUtils.isEmpty(etAddress.getText().toString())){
                     PopUtil.showComfirmDialog(this,"","请填写详细收货地址",null,"知道了",null,null,true);
@@ -156,26 +156,32 @@ public class AddShopAdressActivity extends ShopBaseActivity implements IAddAddre
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.optJSONObject("datas");
             JSONArray area_list = datas.optJSONArray("area_list");
-            for (int i = 0; i < area_list.length(); i++) {
-                JSONObject area = area_list.optJSONObject(i);
-                String area_Id = area.optString("area_id");
-                String area_name = area.optString("area_name");
-                AreaBean bean;
+            if(area_list.length()==0){
+                selectAreaId="";
+                selectArea_name="";
+                tvCity.setText(selectProvince_name + selectCity_name);
+            }else {
+                for (int i = 0; i < area_list.length(); i++) {
+                    JSONObject area = area_list.optJSONObject(i);
+                    String area_Id = area.optString("area_id");
+                    String area_name = area.optString("area_name");
+                    AreaBean bean;
 
-                if(area_list.length()<4&&i==area_list.length()-1){
-                    bean = new AreaBean(area_Id, area_name, true);
-                    selectAreaId = area_Id;
-                    selectArea_name = area_name;
-                    tvCity.setText(selectProvince_name+selectCity_name+selectArea_name);
-                }else if (i == 3) {
-                    bean = new AreaBean(area_Id, area_name, true);
-                    selectAreaId = area_Id;
-                    selectArea_name = area_name;
-                    tvCity.setText(selectProvince_name+selectCity_name+selectArea_name);
-                } else {
-                    bean = new AreaBean(area_Id, area_name, false);
+                    if (area_list.length() < 4 && i == area_list.length() - 1) {
+                        bean = new AreaBean(area_Id, area_name, true);
+                        selectAreaId = area_Id;
+                        selectArea_name = area_name;
+                        tvCity.setText(selectProvince_name + selectCity_name + selectArea_name);
+                    } else if (i == 3) {
+                        bean = new AreaBean(area_Id, area_name, true);
+                        selectAreaId = area_Id;
+                        selectArea_name = area_name;
+                        tvCity.setText(selectProvince_name + selectCity_name + selectArea_name);
+                    } else {
+                        bean = new AreaBean(area_Id, area_name, false);
+                    }
+                    areaList.add(bean);
                 }
-                areaList.add(bean);
             }
             selectAddressDialog.notifyRcl3();
         } catch (JSONException e) {

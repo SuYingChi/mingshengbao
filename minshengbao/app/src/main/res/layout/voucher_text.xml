@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_Modules"
+    android:paddingRight="@dimen/margin_Modules"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<TextView
+    android:id="@+id/tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/msb_color"
+    android:textSize="@dimen/text_width12"
+    android:paddingLeft="@dimen/dp5"
+    android:paddingRight="@dimen/dp5"
+   android:background="@drawable/voucher_back"/>
+</LinearLayout>

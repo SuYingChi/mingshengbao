@@ -45,7 +45,7 @@ public class MyShopOrderActivity extends ShopBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        if (savedInstanceState != null) {
+     /*   if (savedInstanceState != null) {
             int currentFragmentIndex = savedInstanceState.getInt("index", 0);
             int indexChilde = savedInstanceState.getInt("indexChild", 0);
             f2 = (ShopOrdersFragement) getSupportFragmentManager().getFragment(savedInstanceState, "f2");
@@ -66,7 +66,7 @@ public class MyShopOrderActivity extends ShopBaseActivity {
                 f3.refreshCurrentTab(refundindex, false);
             }
 
-        } else if (getIntent() != null) {
+        } else */if (getIntent() != null) {
             f2 = new ShopOrdersFragement();
             f3 = new ShopRefundFragmnet();
             this.fragmentIndex = getIntent().getIntExtra("index", 0);
