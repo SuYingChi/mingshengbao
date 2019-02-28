@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -97,6 +98,7 @@ public class LaunchActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
+                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -137,7 +139,7 @@ public class LaunchActivity extends AppCompatActivity {
         finish();
     }
     private void onStartShopActivity(String contentUrl) {
-        AppActivityUtil.onStartUrl(this,contentUrl);
+        AppActivityUtil.onStartUrl(this,contentUrl,"");
         finish();
     }
     private void onShowAdImage(String logoUrl) {    //支持动画

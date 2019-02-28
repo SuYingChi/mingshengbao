@@ -118,7 +118,9 @@
             <Button
                 android:id="@+id/id_btn_evaluate"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/margin_width30"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width25"
+                android:minWidth="@dimen/margin_width60"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="@dimen/margin_width10"
@@ -129,6 +131,7 @@
                 android:textColor="@color/white"
                 android:background="@drawable/selector_touch_button_change"
                 android:text="@string/go_evaluate"
+                android:textSize="@dimen/text_width12"
                 android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>

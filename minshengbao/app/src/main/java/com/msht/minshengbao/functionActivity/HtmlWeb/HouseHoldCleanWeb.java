@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,12 +34,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ShareDefaultContent;
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.FileUtil;
 import com.msht.minshengbao.Utils.LinkUrlUtil;
 import com.msht.minshengbao.Utils.QrCodeUtil;
+import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
@@ -56,8 +61,12 @@ import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -76,11 +85,29 @@ public class HouseHoldCleanWeb extends BaseActivity {
     private String  password;
     private String  title;
     private String  desc;
+    private String  share="0";
+    private String  shareTitle;
+    private String  activityCode;
+    private String  deviceToken;
     private String  phone;
     private String shareDesc="家电清洗";
     private Bitmap mBitmap;
     private static final String BTN_URL="add_address.html";
-
+    private final RequestHandler requestHandler=new RequestHandler(this);
+    private static class RequestHandler extends Handler {
+        private WeakReference<HouseHoldCleanWeb> mWeakReference;
+        public RequestHandler(HouseHoldCleanWeb activity) {
+            mWeakReference=new WeakReference<HouseHoldCleanWeb>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final HouseHoldCleanWeb activity=mWeakReference.get();
+            if (activity==null||activity.isFinishing()){
+                return;
+            }
+            super.handleMessage(msg);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +117,19 @@ public class HouseHoldCleanWeb extends BaseActivity {
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this,SharedPreferencesUtil.Password,"");
         phone=SharedPreferencesUtil.getUserName(this,SharedPreferencesUtil.UserName,"");
+        Intent data=getIntent();
+        if (data!=null){
+            desc=data.getStringExtra("desc");
+            shareTitle=data.getStringExtra("title");
+            activityCode=data.getStringExtra("activityCode")+"_share";
+        }
+        desc="给家电洗洗澡，让洁净充满你的生活。搞活动有优惠哦，赶紧来下单吧！";
         initFindViewId();
         initHeader();
         initWebView();
     }
 
     private void initFindViewId() {
-
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         mWebView=(WebView)findViewById(R.id.id_insurance_webView);
     }
@@ -219,6 +252,19 @@ public class HouseHoldCleanWeb extends BaseActivity {
         });
     }
 
+
+    private void onRequestShareSuccess() {
+
+        String validateURL = UrlUtil.SUCCESS_SHARE_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("share_code",activityCode);
+        textParams.put("token","");
+        textParams.put("phone",phone);
+        textParams.put("device_token",deviceToken);
+        textParams.put("relate_info",UrlUtil.HOUSE_HOLD_CLEAN_WEB);
+        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
     private void onRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -257,8 +303,8 @@ public class HouseHoldCleanWeb extends BaseActivity {
             e.printStackTrace();
         }
         UMWeb web = new UMWeb(shareUrl);
-        web.setTitle(ShareDefaultContent.title);
-        web.setDescription(shareDesc);
+        web.setTitle(shareDesc);
+        web.setDescription(desc);
         web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
         new ShareAction(HouseHoldCleanWeb.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN)
@@ -278,7 +324,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
         }
         UMWeb web = new UMWeb(shareUrl);
         web.setTitle(shareDesc);
-        web.setDescription(shareDesc);
+        web.setDescription(desc);
         web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
         new ShareAction(HouseHoldCleanWeb.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
@@ -396,6 +442,9 @@ public class HouseHoldCleanWeb extends BaseActivity {
             }else if (url.contains(BTN_URL)){
                 onManageAddress();
                 return true;
+            }else if (url.startsWith(ConstantUtil.MSB_APP)){
+                AppActivityUtil.onAppActivityType(context,url,"民生宝","0","","","");
+                return true;
             }else {
                 return false;
             }
@@ -463,6 +512,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
         public void onStart(SHARE_MEDIA shareMedia) {}
         @Override
         public void onResult(SHARE_MEDIA platform) {
+            onRequestShareSuccess();
             ToastUtil.ToastText(context, " 分享成功啦");
         }
         @Override
@@ -474,5 +524,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
             ToastUtil.ToastText(context," 分享取消了");
         }
     };
+
 
 }

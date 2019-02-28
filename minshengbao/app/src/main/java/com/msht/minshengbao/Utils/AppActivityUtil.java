@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.androidShop.activity.MessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
-import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.activity.WarnMessageDetailActivity;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
@@ -34,21 +32,17 @@ import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
 import com.msht.minshengbao.functionActivity.LPGActivity.LpgMyAccountActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
-import com.msht.minshengbao.functionActivity.MessageDetailActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.Public.AllServiceActivity;
 import com.msht.minshengbao.functionActivity.WaterApp.WaterMainActivity;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceHome;
 import com.msht.minshengbao.functionActivity.insurance.InsuranceListActivity;
-import com.msht.minshengbao.functionActivity.repairService.HomeApplianceCleanActivity;
 import com.msht.minshengbao.functionActivity.repairService.HomeMaintenanceActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseApplianceFixActivity;
 import com.msht.minshengbao.functionActivity.repairService.HouseKeepingActivity;
 import com.msht.minshengbao.functionActivity.repairService.LampCircuitActivity;
 import com.msht.minshengbao.functionActivity.repairService.OtherRepairActivity;
 import com.msht.minshengbao.functionActivity.repairService.SanitaryWareActivity;
-
-import java.net.URL;
 
 /**
  * Demo class
@@ -126,7 +120,7 @@ public class AppActivityUtil {
                 break;
             case ConstantUtil.HOUSEHOLD_CLEAN:
                 id = Uri.parse(url).getQueryParameter("id");
-                onHouseHoldClean(context, id, "家电清洗");
+                onHouseHoldClean(context, id,  "家电清洗",code);
                 break;
             case ConstantUtil.HOME_MAINTENANCE:
                 id = Uri.parse(url).getQueryParameter("id");
@@ -144,7 +138,7 @@ public class AppActivityUtil {
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
                         onHomeMaintenance(context, id, name);
                     } else {
-                        onHouseHoldClean(context, id, name);
+                        onHouseHoldClean(context, id, name,code);
                     }
                     break;
                 case ConstantUtil.HOUSEHOLD_REPAIR:
@@ -276,7 +270,7 @@ public class AppActivityUtil {
                     onDrinkingWater(context, "");
                     break;
                 case ConstantUtil.HOUSEHOLD_CLEAN:
-                    onHouseHoldClean(context, id, name);
+                    onHouseHoldClean(context, id, name, code);
                     break;
                 case ConstantUtil.HOUSEKEEPING_CLEAN:
                     onHouseKeepingClean(context, id, name);
@@ -369,7 +363,7 @@ public class AppActivityUtil {
             }else if (url.startsWith(ConstantUtil.HTTP)) {
                 url = LinkUrlUtil.containMark(context, url);
                 if (isLoginState(context)) {
-                    onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
+                    onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
                 } else {
                     onStartLoginActivity(context, url);
                 }
@@ -410,7 +404,7 @@ public class AppActivityUtil {
                     break;
                 case ConstantUtil.HOUSEHOLD_CLEAN:
                     id = Uri.parse(url).getQueryParameter("id");
-                    onPushHouseHoldClean(context, id, "家电清洗");
+                    onPushHouseHoldClean(context, id, "家电清洗",code);
                     break;
                 case ConstantUtil.HOME_MAINTENANCE:
                     id = Uri.parse(url).getQueryParameter("id");
@@ -429,7 +423,7 @@ public class AppActivityUtil {
                     if (url.startsWith(ConstantUtil.HTTP)) {
                         url = LinkUrlUtil.containMark(context, url);
                         if (isLoginState(context)) {
-                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
+                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
                         } else {
                             onStartLoginActivity(context, url);
                         }
@@ -496,7 +490,7 @@ public class AppActivityUtil {
                 break;
             case ConstantUtil.HOUSEHOLD_CLEAN:
                 id = Uri.parse(url).getQueryParameter("id");
-                onHouseHoldClean(context, id, "家电清洗");
+                onHouseHoldClean(context, id, "家电清洗",code);
                 break;
             case ConstantUtil.HOME_MAINTENANCE:
                 id = Uri.parse(url).getQueryParameter("id");
@@ -523,7 +517,7 @@ public class AppActivityUtil {
                 if (url.startsWith(ConstantUtil.HTTP)) {
                     url = LinkUrlUtil.containMark(context, url);
                     if (isLoginState(context)) {
-                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "");
+                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
                     } else {
                         onStartLoginActivity(context, url);
                     }
@@ -642,12 +636,13 @@ public class AppActivityUtil {
         intent.putExtra("typeName", name);
         context.startActivity(intent);
     }
-    private static void onPushHouseHoldClean(Context context, String id, String name) {
+    private static void onPushHouseHoldClean(Context context, String id, String name,String code) {
       //  Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
         Intent intent = new Intent(context, HouseHoldCleanWeb.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         /*intent.putExtra("pid", id);
         intent.putExtra("typeName", name);*/
+        intent.putExtra("activityCode",code);
         context.startActivity(intent);
     }
     private static void onPushHouseKeepingClean(Context context, String id, String name) {
@@ -774,7 +769,7 @@ public class AppActivityUtil {
         }
     }
 
-    public static void onStartUrl(Context context, String rightUrl) {
+    public static void onStartUrl(Context context, String rightUrl,String code) {
         if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 if (rightUrl.contains("keyword=")) {
                     int index = rightUrl.indexOf("keyword=");
@@ -806,7 +801,7 @@ public class AppActivityUtil {
         }else {
             if (!rightUrl.equals(VariableUtil.NULL_VALUE)) {
                 if (isLoginState(context)) {
-                    onStartHtmlActivity(context, rightUrl, "民生宝", "", "", "", "");
+                    onStartHtmlActivity(context, rightUrl, "民生宝", "", "", code, "");
                 } else {
                     onStartLoginActivity(context, "");
                 }
@@ -936,11 +931,12 @@ public class AppActivityUtil {
         }
     }
 
-    private static void onHouseHoldClean(Context context, String id, String name) {
+    private static void onHouseHoldClean(Context context,  String id, String name,String code) {
         //Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
         Intent intent = new Intent(context, HouseHoldCleanWeb.class);
         /*intent.putExtra("pid", id);
         intent.putExtra("typeName", name);*/
+        intent.putExtra("activityCode",code);
         context.startActivity(intent);
     }
 

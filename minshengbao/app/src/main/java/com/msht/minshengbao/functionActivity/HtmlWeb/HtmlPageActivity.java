@@ -199,6 +199,10 @@ public class HtmlPageActivity extends BaseActivity {
         if (TextUtils.isEmpty(desc)||desc.equals(ConstantUtil.NULL_VALUE)){
             desc="";
         }
+        if (mUrl.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
+            shareTitle="家电清洗";
+            desc="给家电洗洗澡，让洁净充满你的生活。搞活动有优惠哦，赶紧来下单吧！";
+        }
         initHeader();
         initWeBView();
         initEvent();

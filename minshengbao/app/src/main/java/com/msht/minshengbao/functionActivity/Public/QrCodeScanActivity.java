@@ -190,7 +190,7 @@ public class QrCodeScanActivity extends BaseCaptureActivity {
                         break;
                     case VariableUtil.VALUE_THREE:
                         String url=jsonObject.optString("url");
-                        AppActivityUtil.onStartUrl(this,url);
+                        AppActivityUtil.onStartUrl(this,url,"");
                         break;
                         default:
                             break;

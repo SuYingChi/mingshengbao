@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -73,7 +74,6 @@ public class HouseApplianceFixActivity extends BaseActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");

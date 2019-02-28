@@ -158,7 +158,7 @@ public class AllServiceActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 } else if (!TextUtils.isEmpty(url)){
-                    AppActivityUtil.onStartUrl(context,url);
+                    AppActivityUtil.onStartUrl(context,url,code);
                 }else {
                     AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
                 }

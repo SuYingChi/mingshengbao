@@ -521,6 +521,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             case 0x004:
                 if (resultCode==0x004){
                     setResult(0x004);
+                    finish();
                 }
                 break;
             case 0x005:

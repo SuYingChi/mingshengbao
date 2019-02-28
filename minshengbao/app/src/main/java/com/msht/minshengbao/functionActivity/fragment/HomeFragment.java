@@ -637,7 +637,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String name=functionList.get(position).get("name");
                 String url=functionList.get(position).get("url");
                 if (!TextUtils.isEmpty(url)){
-                    AppActivityUtil.onStartUrl(mContext,url);
+                    AppActivityUtil.onStartUrl(mContext,url,codes);
                 }else {
                     AppActivityUtil.startActivityCode(mContext,codes,Id,name,hasNext);
                 }
@@ -669,7 +669,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String name=rightTopList.get(position).get("name");
                 String url=rightTopList.get(position).get("url");
                 if (!TextUtils.isEmpty(url)){
-                    AppActivityUtil.onStartUrl(mContext,url);
+                    AppActivityUtil.onStartUrl(mContext,url,codes);
                 }else {
                     AppActivityUtil.startActivityTopCode(mContext,codes,Id,name);
                 }
@@ -984,16 +984,17 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                             Intent intent = new Intent(mContext, HouseHoldCleanWeb.class);
                             startActivity(intent);
                         }else {
-                            AppActivityUtil.onStartUrl(mContext,url);
+                            AppActivityUtil.onStartUrl(mContext,url,code);
                         }
                     }else {
                         if (isLoginState(mContext)){
-                            Intent intent=new Intent(mContext,PublishOrderActivity.class);
+                            /*Intent intent=new Intent(mContext,PublishOrderActivity.class);
                             intent.putExtra("id",cid);
                             intent.putExtra("name",childName);
                             intent.putExtra("mMainType",parentName);
                             intent.putExtra("code",code);
-                            startActivity(intent);
+                            startActivity(intent);*/
+                            AppActivityUtil.startActivityCode(mContext,code,cid,title,"0");
                         } else {
                             AppActivityUtil.onStartLoginActivity(mContext,"");
                         }
