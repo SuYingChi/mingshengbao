@@ -22,11 +22,13 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.OrdersGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
+import com.msht.minshengbao.androidShop.customerview.OrderVoucherDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep2SuccessBean;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.InvItemBean;
+import com.msht.minshengbao.androidShop.shopBean.OrderVoucherBean;
 import com.msht.minshengbao.androidShop.shopBean.RecommendBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopAddressListBean;
 import com.msht.minshengbao.androidShop.shopBean.SiteBean;
@@ -40,6 +42,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAddressListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
+import com.msht.minshengbao.androidShop.viewInterface.ISelectedVoucherView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +57,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView, ISearchUserIdView {
+public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView, ISearchUserIdView, ISelectedVoucherView {
 
     private static final int REQUEST_CODE_RECOMMEND = 200;
     private static final int REQUEST_CODE_INV_INFO = 300;
@@ -115,8 +118,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private double voucher = 0;
     private Map<String, Voucher> voucherInfoMap = new HashMap<String, Voucher>();
     private Map<String, List<JSONObject>> storeMansongMap = new HashMap<String, List<JSONObject>>();
-    private Map<String, List<JSONObject>> voucherListMap = new HashMap<String, List<JSONObject>>();
-    private Map<String, JSONObject> voucherListSingleMap = new HashMap<String, JSONObject>();
     private String rpacketTId;
     private JSONObject rpackeObj;
     private List<JSONObject> rptList = new ArrayList<JSONObject>();
@@ -142,6 +143,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private Bundle bundle;
     Handler handler = new Handler();
     private SiteBean.DatasBean.AddrListBean siteBean;
+    private OrderVoucherDialog voucherDialog;
+    private int storeVoucherPosition=0;
 
     @Override
     protected void setLayout() {
@@ -213,6 +216,12 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         ShopPresenter.searchUserId(ShopComfirmOrdersActivity.this, userId);
                     }
                 }
+
+                @Override
+                public void onShowVoucherList(List<OrderVoucherBean> voucherList,int position) {
+                   // storeVoucherPosition=position;
+                    showVoucherListDialog(voucherList,position);
+                }
             });
             adapter.setDatas(comfirmShopGoodBeans);
             rcl.setAdapter(adapter);
@@ -283,6 +292,22 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 }
             }
         });
+    }
+
+    private void showVoucherListDialog(List<OrderVoucherBean> voucherList,int storeVoucherPosition) {
+        if (!isFinishing() && voucherDialog == null) {
+            this.storeVoucherPosition=storeVoucherPosition;
+            voucherDialog = new OrderVoucherDialog(this, this, voucherList);
+            voucherDialog.show();
+        } else if (!isFinishing() && !voucherDialog.isShowing()) {
+            if (storeVoucherPosition==this.storeVoucherPosition) {
+                voucherDialog.show();
+            } else {
+                this.storeVoucherPosition=storeVoucherPosition;
+                voucherDialog.refreshData(voucherList, false);
+                voucherDialog.show();
+            }
+        }
     }
 
 
@@ -486,8 +511,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         storeMansongMap.clear();
         voucher = 0;
         voucherInfoMap.clear();
-        voucherListSingleMap.clear();
-        voucherListMap.clear();
         goods_freight = 0;
         goodsTotalSelf = 0;
         rptList.clear();
@@ -525,6 +548,30 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         goodbean.setCart_id(goodobj.optString("cart_id"));
                         comfirmGoodList.add(goodbean);
                     }
+                }
+                Object voucherInfo = storeobj.opt("store_voucher_info");
+                if (voucherInfo instanceof JSONObject) {
+                    String voucherTid = ((JSONObject) voucherInfo).optString("voucher_t_id");
+                    String voucherPrice = ((JSONObject) voucherInfo).optString("voucher_price");
+                    String voucherDesc = ((JSONObject) voucherInfo).optString("desc");
+                    JSONObject store_voucher_list = storeobj.optJSONObject("store_voucher_list");
+                    List<String> vidList = JsonUtil.getJsonObjectKeyList(store_voucher_list);
+                    List<OrderVoucherBean> list = new ArrayList<OrderVoucherBean>();
+                    for (String vid : vidList) {
+                        JSONObject voucherobj = store_voucher_list.optJSONObject(vid);
+                        String vtid = voucherobj.optString("voucher_t_id");
+                        String vtitle = voucherobj.optString("voucher_title");
+                        String voucher_start_date = voucherobj.optString("voucher_start_date");
+                        String limitTime = voucherobj.optString("voucher_end_date");
+                        String vlimitAmount = voucherobj.optString("voucher_limit");
+                        String desc = voucherobj.optString("desc");
+                        list.add(new OrderVoucherBean(vtid, vtitle, limitTime, vlimitAmount, voucherTid.equals(vtid), voucher_start_date, voucherobj.optString("voucher_price"),desc));
+                    }
+                    comfirmShopGoodBean.setVoucherInfo(voucherTid, voucherPrice, voucherDesc);
+                    comfirmShopGoodBean.setHasVoucher(true);
+                    comfirmShopGoodBean.setVoucherList(list);
+                } else {
+                    comfirmShopGoodBean.setHasVoucher(false);
                 }
                 if (comfirmGoodList.size() != 0) {
                     comfirmShopGoodBean.setGoods(comfirmGoodList);
@@ -569,9 +616,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llinv.setVisibility(View.GONE);
                 rltinv.setVisibility(View.GONE);
             }
-            if(datas.optInt("ifrecommend")==1){
+            if (datas.optInt("ifrecommend") == 1) {
                 llrecommend.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 llrecommend.setVisibility(View.GONE);
             }
             //默认没有发票
@@ -597,46 +644,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         storeMansongRuleList.add(store_mansong_rule);
                     }
                     storeMansongMap.put(bean.getStore_id(), storeMansongRuleList);
-                }
-
-                if (datas.opt("store_voucher_info") instanceof JSONObject) {
-                    JSONObject store_voucher_info = datas.optJSONObject("store_voucher_info");
-                    voucher += Double.valueOf(store_voucher_info.optString("voucher_price"));
-                    String voucher_t_id = store_voucher_info.optString("voucher_t_id");
-                    Voucher voucherBean = new Voucher(voucher_t_id, store_voucher_info.optString("voucher_price"));
-                    voucherInfoMap.put(bean.getStore_id(), voucherBean);
-                } else if (datas.opt("store_voucher_info") instanceof JSONArray && ((JSONArray) datas.opt("store_voucher_info")).length() == 0 || datas.opt("store_voucher_info") == null) {
-                    LogUtils.e("店铺" + bean.getStore_name() + "无代金券信息");
-                } else if (datas.opt("store_voucher_info") instanceof JSONArray && ((JSONArray) datas.opt("store_voucher_info")).length() > 0) {
-                    Map<String, List<JSONObject>> storeVoucherinfoMap = new HashMap<String, List<JSONObject>>();
-                    JSONArray store_voucher_info = datas.optJSONArray("store_voucher_info");
-                    List<JSONObject> storeVoucherinfoList = new ArrayList<JSONObject>();
-                    for (int i = 0; i < store_voucher_info.length(); i++) {
-                        JSONObject store_voucher = store_voucher_info.optJSONObject(i);
-                        storeVoucherinfoList.add(store_voucher);
-                    }
-                    storeVoucherinfoMap.put(bean.getStore_id(), storeVoucherinfoList);
-                }
-
-                if (datas.opt("store_voucher_list") instanceof JSONObject) {
-                    JSONObject store_voucher_list = datas.optJSONObject("store_voucher_list");
-                    if (voucherInfoMap.containsKey(bean.getStore_id())) {
-                        Voucher voucherBean = voucherInfoMap.get(bean.getStore_id());
-                        if (store_voucher_list.has(voucherBean.voucher_t_id)) {
-                            JSONObject voucherObj = store_voucher_list.optJSONObject(voucherBean.voucher_t_id);
-                            voucherListSingleMap.put(voucherBean.voucher_t_id, voucherObj);
-                        }
-                    }
-                } else if (datas.opt("store_voucher_list") instanceof JSONArray && ((JSONArray) datas.opt("store_voucher_list")).length() == 0 || datas.opt("store_voucher_list") == null) {
-                    LogUtils.e("店铺" + bean.getStore_name() + "无代金券");
-                } else if (datas.opt("store_voucher_list") instanceof JSONArray && ((JSONArray) datas.opt("store_voucher_list")).length() > 0) {
-                    JSONArray store_voucher_list = datas.optJSONArray("store_voucher_list");
-                    List<JSONObject> storeVoucherinfoList = new ArrayList<JSONObject>();
-                    for (int i = 0; i < store_voucher_list.length(); i++) {
-                        JSONObject store_voucher = store_voucher_list.optJSONObject(i);
-                        storeVoucherinfoList.add(store_voucher);
-                    }
-                    voucherListMap.put(bean.getStore_id(), storeVoucherinfoList);
                 }
                 JSONObject store_cart_list = datas.optJSONObject("store_cart_list");
                 JSONObject storeObj = store_cart_list.optJSONObject(bean.getStore_id());
@@ -681,8 +688,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     rptList.add(rpt_obj);
                 }
             }
+
             //自身价格减去满减，优惠，红包加上运费
-            goodsTotalSelf = goodsTotalSelf - discount - voucher;
+            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice();
             if (rpackeObj != null) {
                 goodsTotalSelf -= Double.valueOf(rpackeObj.optString("rpacket_price"));
             } else if (rptList.size() > 0) {
@@ -697,6 +705,17 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private double refreshTotalVoucherPrice() {
+        voucher = 0;
+        for(int i=0;i<comfirmShopGoodBeans.size();i++){
+            ComfirmShopGoodBean bean = comfirmShopGoodBeans.get(i);
+            if(bean.isHasVoucher()) {
+               voucher+=Double.valueOf(bean.getVoucherPrice());
+            }
+        }
+        return voucher;
     }
 
     @Override
@@ -774,19 +793,21 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public String getVoucher() {
-        if (!voucherListSingleMap.isEmpty()) {
-            StringBuilder sf = new StringBuilder();
-            for (Map.Entry<String, JSONObject> entry : voucherListSingleMap.entrySet()) {
-                JSONObject obj = entry.getValue();
-                if (TextUtils.isEmpty(sf.toString())) {
-                    sf.append(obj.optString("voucher_id")).append("|").append(obj.optString("voucher_store_id")).append(obj.optString("voucher_price"));
-                } else {
-                    sf.append(",").append(obj.optString("voucher_id")).append("|").append(obj.optString("voucher_store_id")).append(obj.optString("voucher_price"));
-                }
-            }
-            return sf.toString();
-        }
-        return "";
+        // voucher_t_id|store_id|voucher_price
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+       for(int i=0;i<comfirmShopGoodBeans.size();i++){
+           ComfirmShopGoodBean bean = comfirmShopGoodBeans.get(i);
+           if(bean.isHasVoucher()&& !"0".equals(bean.getVoucherPrice())) {
+               if (index == 0) {
+                   sb.append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
+               } else {
+                   sb.append(",").append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
+               }
+               index++;
+           }
+       }
+        return sb.toString();
     }
 
     @Override
@@ -908,6 +929,55 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         PopUtil.showComfirmDialog(this, "", "该燃气用户号不存在", "", "", null, null, true);
     }
 
+    @Override
+    public void onItemCheckedChange(List<OrderVoucherBean> datas, int position, Boolean isCheck) {
+        if(!datas.get(position).isSelected()&&isCheck) {
+            datas.get(position).setSelected(true);
+            for (int i = 0; i < datas.size(); i++) {
+                OrderVoucherBean bean2 = datas.get(i);
+                if (bean2.isSelected() && i != position) {
+                    bean2.setSelected(false);
+                    datas.set(i, bean2);
+                    break;
+                }
+            }
+            voucherDialog.refreshData(datas, true);
+            comfirmShopGoodBeans.get(storeVoucherPosition).setVoucherInfo(datas.get(position).getVtid(), datas.get(position).getVoucherPrice(), datas.get(position).getDesc());
+            adapter.notifyDataSetChanged();
+            goodsTotal-=goodsTotalSelf;
+            goodsTotalSelf += voucher;
+            refreshTotalVoucherPrice();
+            goodsTotalSelf -= voucher;
+            goodsTotal+=goodsTotalSelf;
+            tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
+            tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
+        }
+    }
+
+    @Override
+    public void noSelectedVoucher(List<OrderVoucherBean> datas,boolean isChecked) {
+        if(isChecked) {
+            for (int i = 0; i < datas.size(); i++) {
+                OrderVoucherBean bean2 = datas.get(i);
+                if (bean2.isSelected()) {
+                    bean2.setSelected(false);
+                    datas.set(i, bean2);
+                    break;
+                }
+            }
+            voucherDialog.refreshData(datas, false);
+            comfirmShopGoodBeans.get(storeVoucherPosition).setVoucherInfo("", "0", "不使用代金券");
+            adapter.notifyDataSetChanged();
+            goodsTotal-=goodsTotalSelf;
+            goodsTotalSelf += voucher;
+            refreshTotalVoucherPrice();
+            goodsTotalSelf -= voucher;
+            goodsTotal+=goodsTotalSelf;
+            tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
+            tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
+        }
+    }
+
     private class Voucher {
         public String voucher_price;
         public String voucher_t_id;
@@ -921,9 +991,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     @Override
     public void onError(String s) {
         super.onError(s);
-        if(s.equals("地区请求失败")){
-          PopUtil.showComfirmDialog(this,"","请更换有效的收货地址","","好的",null,null,true);
-        } else{
+        if (s.equals("地区请求失败")) {
+            PopUtil.showComfirmDialog(this, "", "请更换有效的收货地址", "", "好的", null, null, true);
+        } else {
             finish();
         }
     }
