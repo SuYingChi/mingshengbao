@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_width10"
         android:background="@color/background_gray" />
-    <include layout="@layout/layout_line_gray"/>
     <RelativeLayout
         android:id="@+id/id_re_expanse"
         android:layout_width="match_parent"
@@ -22,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:text="订单费用"
             android:textColor="@color/title_tv"
             android:textSize="@dimen/text_width16"
@@ -32,7 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/text10"
+            android:layout_toStartOf="@+id/text10"
             android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/text_16"/>
         <TextView

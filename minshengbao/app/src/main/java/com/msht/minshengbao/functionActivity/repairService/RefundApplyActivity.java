@@ -8,22 +8,23 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
@@ -34,6 +35,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
 import com.msht.minshengbao.extra.CashierInputFilter;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Action;
@@ -64,6 +66,9 @@ public class RefundApplyActivity extends BaseActivity {
     private EditText etProblem;
     private EditText etRefundAmount;
     private Button btnSend;
+    private ImageView downwardImg;
+    private View layoutCategory;
+    private View layoutCategoryButton;
     private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
     private String parentCode;
@@ -71,6 +76,8 @@ public class RefundApplyActivity extends BaseActivity {
     private String    orderNo,refundId;
     private String    userId,password;
     private String    id, parentCategory;
+    private String    categoryDesc;
+    private String    additionalInfo;
     private String    finishTime;
     private String    realAmount;
     private String    title;
@@ -254,18 +261,23 @@ public class RefundApplyActivity extends BaseActivity {
             id=data.getStringExtra("id");
             orderNo=data.getStringExtra("orderNo");
             title=data.getStringExtra("title");
+            categoryDesc=data.getStringExtra("categoryDesc");
+            additionalInfo=data.getStringExtra("additionalInfo");
             finishTime =data.getStringExtra("finishTime");
             parentCategory =data.getStringExtra("parentCategory");
             parentCode=data.getStringExtra("parentCode");
             realAmount=data.getStringExtra("realAmount");
         }
+        initSpecDetail();
         initView();
         initSetCodeImage(parentCode);
+        initEvent();
         if (!TextUtils.isEmpty(realAmount)){
             double maxValue = Double.parseDouble(realAmount);
             InputFilter[] filters={new CashierInputFilter(0,maxValue)};
             //设置金额输入的过滤器，保证只能输入金额类型
             etRefundAmount.setFilters(filters);
+            etRefundAmount.setHint(realAmount);
         }
         mAdapter = new PhotoPickerAdapter(imgPaths);
         mPhotoGridView.setAdapter(mAdapter);
@@ -274,7 +286,7 @@ public class RefundApplyActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT >= 23) {
                     thisPosition =position;
-                    initphoto(position);
+                    initPhoto(position);
                 } else {
                     if (position == imgPaths.size()) {
                         PhotoPicker.builder()
@@ -298,6 +310,40 @@ public class RefundApplyActivity extends BaseActivity {
 
     }
 
+    private void initEvent() {
+        layoutCategoryButton.setTag(0);
+        layoutCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag=(Integer)view.getTag();
+                switch (tag){
+                    case 0:
+                        layoutCategory.setVisibility(View.VISIBLE);
+                        downwardImg.setRotation(180);
+                        view.setTag(1);
+                        break;
+                    case 1:
+                        layoutCategory.setVisibility(View.GONE);
+                        downwardImg.setRotation(0);
+                        view.setTag(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+    private void initSpecDetail() {
+        ArrayList<HashMap<String ,String>> additionalList=new ArrayList <HashMap<String ,String>>();
+        additionalList.clear();
+        additionalList.addAll(GsonImpl.getAdditionalList(additionalInfo));
+        RecyclerView mRecyclerView=(RecyclerView)findViewById(R.id.id_category_detail);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        RepairAdditionalInfoAdapter mAdditionalAdapter=new RepairAdditionalInfoAdapter(context,additionalList);
+        mRecyclerView.setAdapter(mAdditionalAdapter);
+    }
     private void initSetCodeImage(String parentCode) {
         ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
         switch (parentCode) {
@@ -357,7 +403,7 @@ public class RefundApplyActivity extends BaseActivity {
             startActivityForResult(intent, thisPosition);
         }
     }
-    private void initphoto(int position) {
+    private void initPhoto(int position) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
             AndPermission.with(this)
                     .runtime()
@@ -397,8 +443,11 @@ public class RefundApplyActivity extends BaseActivity {
     private void initView() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
         ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
-        ((TextView)findViewById(R.id.id_tv_title)).setText(title);
+        ((TextView)findViewById(R.id.id_tv_title)).setText(categoryDesc);
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
+        downwardImg=(ImageView)findViewById(R.id.id_downward_img) ;
+        layoutCategory=findViewById(R.id.id_category_layout);
+        layoutCategoryButton=findViewById(R.id.id_category_button);
         String realAmountText=realAmount+"元";
         ((TextView)findViewById(R.id.id_max_amount)).setText(realAmountText);
         etProblem =(EditText)findViewById(R.id.id_et_problem);
@@ -409,19 +458,28 @@ public class RefundApplyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 btnSend.setEnabled(false);
-                requestService();
+                if (!TextUtils.isEmpty(etProblem.getText().toString())){
+                    requestService();
+                }else {
+                    ToastUtil.ToastText(context,"请您输入退款说明");
+                }
             }
         });
     }
     private void requestService() {
         customDialog.show();
         String mDescribe = etProblem.getText().toString().trim();
+        String refundAmount=etRefundAmount.getText().toString().trim();
+        if (TextUtils.isEmpty(refundAmount)){
+            refundAmount=realAmount;
+        }
         String validateURL = UrlUtil.RefundApply_Url;
-        HashMap<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>(6);
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
         textParams.put("info", mDescribe);
+        textParams.put("refund_amount",refundAmount);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     @Override

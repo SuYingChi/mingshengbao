@@ -308,6 +308,7 @@ public class InvoiceGasApplyActivity extends BaseActivity implements View.OnClic
         textParams.put("name",invoiceName);
         textParams.put("company_address",address);
         textParams.put("taxpayer_num", taxpayerNum);
+        textParams.put("version","201902");
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL,OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler) ;
 
     }

@@ -11,6 +11,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +20,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.Utils.CallBackUtils;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.GsonImpl;
+import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
+import com.msht.minshengbao.adapter.RepairOrderListAdapter;
 import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
@@ -33,11 +39,13 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -49,14 +57,17 @@ import java.util.HashMap;
 public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnClickListener {
     private ImageView typeImg, forwardImg;
     private ImageView evaluateImg;
+    private ImageView downwardImg;
     private TextView tvTitle, tvType, tvOrderNo, tvPhone;
     private TextView tvCreateTime, tvAppointTime;
     private TextView tvAddress, tvRemarkInfo, tvCancelInfo;
-    private TextView tvMasterName, tvPayAmount;
+    private TextView tvMasterName, tvPayAmount,tvOrderUserName;
     private TextView tvDetectFee, tvMaterialFee, tvServeFee;
     private TextView tvTotalAmount, tvMustPay, tvTotalCoupon;
     private TextView tvUseCoupon, tvPayWay, reasonTitle;
     private TextView tvStatus, tvGuaranteeDay;
+    private TextView tvEstimateAmount;
+    private TextView tvRefundAmount;
     private Button btnCancel, btnEvaluate;
     private Button btnReFix,btnRefund;
     private View layoutExpense, layoutVoucher, layoutPayFee;
@@ -66,6 +77,10 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private View layoutMaster, layoutCostDetail, layoutButton, layoutFixCard;
     private View viewFixCard;
     private View viewCoupon, viewPayAmount;
+    private View estimateLayout;
+    private View layoutCategoryButton;
+    private View layoutCategory;
+    private View layoutRefund;
     private String userId,password,id,cid;
     private String orderId, address,type;
     private String phone,title,orderNo, couponId="0";
@@ -76,9 +91,11 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String realMoney;
     private String phoneNo;
     private String parentCode;
+    private String categoryDesc;
+    private String additionalInfo;
     private int    requestType=0;
-
-    private JSONObject jsonObject;
+    private RepairAdditionalInfoAdapter mAdditionalAdapter;
+    private ArrayList<HashMap<String ,String>> additionalList=new ArrayList <HashMap<String ,String>>();
     private CustomDialog customDialog;
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private final DetailHandler requestHandler = new DetailHandler(this);
@@ -104,8 +121,8 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                         String error = object.optString("error");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference. requestType==0){
-                                reference.jsonObject =object.optJSONObject("data");
-                                reference.onReceiveData();
+                                JSONObject  jsonObject =object.optJSONObject("data");
+                                reference.onReceiveData(jsonObject);
                             }else if (reference. requestType==1){
                                 reference.success();
                             }
@@ -128,23 +145,28 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         setResult(0x001);
         finish();
     }
-    private void onReceiveData() {
-        orderId=jsonObject.optString("id");
-        type=jsonObject.optString("type");
-        String status=jsonObject.optString("status");
-        String statusInfo =jsonObject.optString("status_info");
-        String info=jsonObject.optString("info");
-        address=jsonObject.optString("address");
-        phone=jsonObject.optString("phone");
-        title=jsonObject.optString("title");
-        parentCategory =jsonObject.optString("parent_category");
-        String appointTime=jsonObject.optString("appoint_time");
-        orderNo=jsonObject.optString("orderNo");
-        String createTime =jsonObject.optString("createTime");
+    private void onReceiveData(JSONObject jsonObject) {
+        orderId= jsonObject.optString("id");
+        type= jsonObject.optString("type");
+        String status= jsonObject.optString("status");
+        String statusInfo = jsonObject.optString("status_info");
+        String info= jsonObject.optString("info");
+        String orderUserName=jsonObject.optString("username");
+        address= jsonObject.optString("address");
+        tvOrderUserName.setText(orderUserName);
+        phone= jsonObject.optString("phone");
+        title= jsonObject.optString("title");
+        categoryDesc= jsonObject.optString("category_desc");
+        additionalInfo=jsonObject.optString("additional_info");
+        parentCategory = jsonObject.optString("parent_category");
+        String appointTime= jsonObject.optString("appoint_time");
+        orderNo= jsonObject.optString("orderNo");
+        String createTime = jsonObject.optString("createTime");
+        String estimateAmount= jsonObject.optString("estimated_price")+"元";
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
-        tvTitle.setText(title);
+        tvTitle.setText(categoryDesc);
         tvAppointTime.setText(appointTime);
         tvOrderNo.setText(orderNo);
         tvCreateTime.setText(createTime);
@@ -154,30 +176,47 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }else {
             tvRemarkInfo.setText(info);
         }
-        //onSetTypeImage(type);
-        Log.d("StatusView=",status);
-        onSetStatusView(status);
-        onSetGuaranteeStopDayView();
+        if (TextUtils.isEmpty(estimateAmount)||estimateAmount.equals(ConstantUtil.NULL_VALUE)
+                ||estimateAmount.equals(ConstantUtil.VALUE_ZERO2)||estimateAmount.equals(ConstantUtil.VALUE_ZERO1)){
+            estimateLayout.setVisibility(View.GONE);
+        }else {
+            estimateLayout.setVisibility(View.VISIBLE);
+        }
+        tvEstimateAmount.setText(estimateAmount);
+        onSetStatusView(jsonObject,status);
+        onSetGuaranteeStopDayView(jsonObject);
+        try {
+            JSONArray jsonArray=new JSONArray(jsonObject.optString("additional_info"));
+            additionalList.clear();
+            additionalList.addAll(GsonImpl.getAdditionalList(jsonArray));
+            mAdditionalAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
-    private void onSetStatusView(String status) {
+    private void onSetStatusView(JSONObject jsonObject, String status) {
         switch (status){
             case ConstantUtil.VALUE_ONE:
+                layoutRefund.setVisibility(View.GONE);
                 btnCancel.setVisibility(View.VISIBLE);
                 layoutButton.setVisibility(View.GONE);
                 layoutFixCard.setVisibility(View.GONE);
                 break;
             case ConstantUtil.VALUE_TWO:
+                layoutRefund.setVisibility(View.GONE);
                 btnCancel.setVisibility(View.GONE);
                 layoutButton.setVisibility(View.GONE);
                 layoutFixCard.setVisibility(View.GONE);
                 break;
             case ConstantUtil.VALUE_THREE:
+                layoutRefund.setVisibility(View.GONE);
                 layoutButton.setVisibility(View.GONE);
                 btnCancel.setVisibility(View.VISIBLE);
                 layoutFixCard.setVisibility(View.GONE);
-                onJsonMaster();
+                onJsonMaster(jsonObject);
                 break;
             case ConstantUtil.VALUE_FOUR:
+                layoutRefund.setVisibility(View.GONE);
                 String repairManCancelInfo=jsonObject.optString("repair_man_cancel_info");
                 layoutRepairCancel.setVisibility(View.VISIBLE);
                 tvCancelInfo.setText(repairManCancelInfo);
@@ -186,16 +225,19 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 layoutFixCard.setVisibility(View.GONE);
                 break;
             case ConstantUtil.VALUE_FIVE:
+                layoutRefund.setVisibility(View.GONE);
                 layoutButton.setVisibility(View.GONE);
                 layoutFixCard.setVisibility(View.GONE);
-                onJsonMaster();
+                onJsonMaster(jsonObject);
                  break;
             case ConstantUtil.VALUE_SIX:
-                onJsonMaster();
-                onStatusSix();
+                layoutRefund.setVisibility(View.GONE);
+                onJsonMaster(jsonObject);
+                onStatusSix(jsonObject);
                 break;
             case ConstantUtil.VALUE_SEVER:
-                onStatusSeven();
+                layoutRefund.setVisibility(View.GONE);
+                onStatusSeven(jsonObject);
                 break;
             case ConstantUtil.VALUE_EIGHT:
                 if (jsonObject.has("evaluate_score")){
@@ -207,12 +249,14 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 }
                 layoutButton.setVisibility(View.VISIBLE);
                 btnEvaluate.setVisibility(View.GONE);
-                finishInfo();
+                layoutRefund.setVisibility(View.GONE);
+                finishInfo(jsonObject);
                 break;
             case ConstantUtil.VALUE_NINE:
                 String refuseReason=jsonObject.optString("refuse_reason");
                 layoutRepairCancel.setVisibility(View.VISIBLE);
                 viewPayAmount.setVisibility(View.GONE);
+                layoutRefund.setVisibility(View.GONE);
                 tvCancelInfo.setText(refuseReason);
                 reasonTitle.setText("拒单提示：");
                 break;
@@ -224,22 +268,26 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 }else {
                     layoutEvaluate.setVisibility(View.GONE);
                 }
+                tvRefundAmount.setText(jsonObject.optString("refund_amount"));
                 layoutButton.setVisibility(View.GONE);
-                finishInfo();
+                layoutRefund.setVisibility(View.VISIBLE);
+                finishInfo(jsonObject);
                 break;
             case ConstantUtil.VALUE_ELEVEN:
+                layoutRefund.setVisibility(View.GONE);
                 layoutButton.setVisibility(View.GONE);
                 layoutFixCard.setVisibility(View.GONE);
                 break;
             case ConstantUtil.VALUE_FOURTEEN:
-                onStatusFourTeen();
+                layoutRefund.setVisibility(View.GONE);
+                onStatusFourTeen(jsonObject);
                 break;
                 default:
                     break;
 
         }
     }
-    private void onStatusFourTeen() {
+    private void onStatusFourTeen(JSONObject jsonObject) {
         String repairManCancelInfo=jsonObject.optString("repair_man_cancel_info");
         reasonTitle.setText("改单原因：");
         layoutRepairCancel.setVisibility(View.VISIBLE);
@@ -248,7 +296,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutButton.setVisibility(View.GONE);
         layoutFixCard.setVisibility(View.GONE);
     }
-    private void onStatusSix() {
+    private void onStatusSix(JSONObject jsonObject) {
         layoutButton.setVisibility(View.GONE);
         serveTime =jsonObject.optString("serve_time");
         String couponFlag=jsonObject.optString("coupon_flag");
@@ -262,13 +310,13 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutMaster.setVisibility(View.VISIBLE);
         viewCoupon.setVisibility(View.VISIBLE);
         tvGuaranteeDay.setText(guaranteeDay);
-        onShowFee();
+        onShowFee(jsonObject);
         realMoney =amount;
         tvMustPay.setText(amount);
         tvPayAmount.setText("¥"+ realMoney);
         layoutRealAmount.setVisibility(View.VISIBLE);
     }
-    private void onStatusSeven() {
+    private void onStatusSeven(JSONObject jsonObject) {
         layoutButton.setVisibility(View.VISIBLE);
         serveTime =jsonObject.optString("serve_time");
         realAmount =jsonObject.optString("real_amount");
@@ -283,7 +331,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutCoupon.setVisibility(View.VISIBLE);
         layoutRealAmount.setVisibility(View.VISIBLE);
         tvGuaranteeDay.setText(guaranteeDay);
-        onShowFee();
+        onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
         if (TextUtils.isEmpty(couponAmount)){
             tvTotalCoupon.setText(ConstantUtil.VALUE_ZERO2);
@@ -295,7 +343,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         viewPayAmount.setVisibility(View.GONE);
     }
 
-    private void onSetGuaranteeStopDayView() {
+    private void onSetGuaranteeStopDayView(JSONObject jsonObject) {
         if (jsonObject.has("guarantee_stop_day")){
             String guaranteeStopDay=jsonObject.optString("guarantee_stop_day");
             String curDate= DateUtils.getCurDate("yyyy-MM-dd");
@@ -327,7 +375,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             }
         }
     }
-    private void finishInfo() {
+    private void finishInfo(JSONObject jsonObject) {
         serveTime =jsonObject.optString("serve_time");
         realAmount =jsonObject.optString("real_amount");
         payMethod =jsonObject.optString("pay_method");
@@ -341,7 +389,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutPayWay.setVisibility(View.VISIBLE);
         layoutCoupon.setVisibility(View.VISIBLE);
         layoutRealAmount.setVisibility(View.VISIBLE);
-        onShowFee();
+        onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
         if (TextUtils.isEmpty(couponAmount)){
             tvTotalCoupon.setText(ConstantUtil.VALUE_ZERO2);
@@ -362,7 +410,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             evaluateImg.setImageResource(R.drawable.star_five_h);
         }
     }
-    private void onShowFee() {
+    private void onShowFee(JSONObject jsonObject) {
         amount=jsonObject.optString("amount");
         String detectFee=jsonObject.optString("detect_fee");
         String materialFee=jsonObject.optString("material_fee");
@@ -373,7 +421,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvMaterialFee.setText(materialFee);
         tvServeFee.setText(serveFee);
     }
-    private void onJsonMaster() {
+    private void onJsonMaster(JSONObject jsonObject) {
         String distributeTime =jsonObject.optString("distribute_time");
         repairmanId =jsonObject.optString("repairman_id");
         repairmanName =jsonObject.optString("repairman_name");
@@ -406,16 +454,24 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         cid=data.getStringExtra("cid");
         id=data.getStringExtra("id");
         parentCode=data.getStringExtra("parentCode");
+        categoryDesc=data.getStringExtra("categoryDesc");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         initFindViewId();
         initSetCodeImage(parentCode);
+        RecyclerView mRecyclerView=(RecyclerView)findViewById(R.id.id_category_detail);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mAdditionalAdapter=new RepairAdditionalInfoAdapter(context,additionalList);
+        mRecyclerView.setAdapter(mAdditionalAdapter);
         initData();
         initEvent();
 
     }
 
     private void initSetCodeImage(String parentCode) {
+        tvTitle.setText(categoryDesc);
         switch (parentCode) {
             case ConstantUtil.SANITARY_WARE:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
@@ -477,16 +533,20 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }
     }
     private void initFindViewId() {
+
         typeImg =(ImageView)findViewById(R.id.id_img_type);
+        downwardImg=(ImageView)findViewById(R.id.id_downward_img) ;
         forwardImg =(ImageView)findViewById(R.id.id_img_forward2);
         evaluateImg =(ImageView)findViewById(R.id.id_evaluate_status);
         btnCancel =(Button)findViewById(R.id.id_cancel_order);
         btnEvaluate =(Button)findViewById(R.id.id_evaluate_order);
         tvStatus =(TextView) findViewById(R.id.id_tv_status);
         tvTitle =(TextView)findViewById(R.id.id_tv_title);
+        tvEstimateAmount=(TextView)findViewById(R.id.id_estimate_price) ;
         tvType =(TextView)findViewById(R.id.id_tv_type);
         tvAppointTime =(TextView)findViewById(R.id.id_tv_appoint_time);
         tvOrderNo =(TextView)findViewById(R.id.id_orderNo);
+        tvOrderUserName=(TextView)findViewById(R.id.id_order_userName) ;
         tvPhone =(TextView)findViewById(R.id.id_phone);
         tvCreateTime =(TextView)findViewById(R.id.id_create_time);
         tvAddress =(TextView)findViewById(R.id.id_tv_address);
@@ -503,12 +563,16 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvUseCoupon =(TextView)findViewById(R.id.id_use_coupon);
         tvPayWay =(TextView)findViewById(R.id.id_tv_payway);
         tvPayAmount =(TextView)findViewById(R.id.id_pay_amount);
+        tvRefundAmount=(TextView)findViewById(R.id.id_refund_amount);
         tvGuaranteeDay =(TextView)findViewById(R.id.id_tv_date);
-        layoutFixCard =findViewById(R.id.id_re_fixcard);
+        layoutFixCard =findViewById(R.id.id_re_fixCard);
         layoutButton =findViewById(R.id.id_re_button);
         layoutPayFee =findViewById(R.id.id_re_pay);
+        estimateLayout=findViewById(R.id.id_estimate_layout);
         btnReFix =(Button)findViewById(R.id.id_btn_refix);
         btnRefund=(Button)findViewById(R.id.id_btn_refund);
+        layoutCategory=findViewById(R.id.id_category_layout);
+        layoutCategoryButton=findViewById(R.id.id_category_button);
         layoutVoucher =findViewById(R.id.id_re_voucher);
         layoutExpense =findViewById(R.id.id_re_expanse);
         layoutPhone =findViewById(R.id.id_re_phone);
@@ -524,6 +588,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         viewExpense =findViewById(R.id.id_li_expense);
         viewPayAmount =findViewById(R.id.id_li_pay);
         viewFixCard =findViewById(R.id.id_li_fixcard);
+        layoutRefund=findViewById(R.id.id_re_refund);
         btnReFix.setOnClickListener(this);
         btnRefund.setOnClickListener(this);
     }
@@ -541,6 +606,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutVoucher.setOnClickListener(this);
         layoutFixCard.setOnClickListener(this);
         layoutExpense.setTag(0);
+        layoutCategoryButton.setTag(0);
         layoutExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,6 +621,26 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                         forwardImg.setImageResource(R.drawable.forward_m);
                         viewExpense.setVisibility(View.GONE);
                         v.setTag(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        layoutCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag=(Integer)view.getTag();
+                switch (tag){
+                    case 0:
+                        layoutCategory.setVisibility(View.VISIBLE);
+                        downwardImg.setRotation(180);
+                        view.setTag(1);
+                        break;
+                    case 1:
+                        layoutCategory.setVisibility(View.GONE);
+                        downwardImg.setRotation(0);
+                        view.setTag(0);
                         break;
                     default:
                         break;
@@ -592,7 +678,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             case R.id.id_btn_refund:
                 onRefund();
                 break;
-            case R.id.id_re_fixcard:
+            case R.id.id_re_fixCard:
                 onFixCard();
                 break;
             default:
@@ -615,6 +701,8 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         repeat.putExtra("orderNo",orderNo);
         repeat.putExtra("type",type);
         repeat.putExtra("title",title);
+        repeat.putExtra("categoryDesc",categoryDesc);
+        repeat.putExtra("additionalInfo",additionalInfo);
         repeat.putExtra("parentCategory", parentCategory);
         repeat.putExtra("finishTime", finishTime);
         repeat.putExtra("phone",phone);
@@ -628,7 +716,9 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         fund.putExtra("orderNo",orderNo);
         fund.putExtra("type",type);
         fund.putExtra("title",title);
+        fund.putExtra("categoryDesc",categoryDesc);
         fund.putExtra("parentCategory", parentCategory);
+        fund.putExtra("additionalInfo",additionalInfo);
         fund.putExtra("parentCode",parentCode);
         fund.putExtra("finishTime", finishTime);
         fund.putExtra("realAmount", realAmount);
@@ -636,7 +726,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     }
     private void getVoucher() {
         Intent voucher=new Intent(context, SelectVoucherActivity.class);
-        voucher.putExtra("pay_amount",amount);
+        voucher.putExtra("payAmount",amount);
         voucher.putExtra("category","1");
         startActivityForResult(voucher,1);
     }
@@ -721,6 +811,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         evaluate.putExtra("title",title);
         evaluate.putExtra("finishTime", finishTime);
         evaluate.putExtra("parentCategory", parentCategory);
+        evaluate.putExtra("categoryDesc",categoryDesc);
         evaluate.putExtra("realAmount", realAmount);
         evaluate.putExtra("evaluateScore", evaluateScore);
         evaluate.putExtra("evaluateInfo", evaluateInfo);
@@ -771,6 +862,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         evaluate.putExtra("orderNo",orderNo);
         evaluate.putExtra("type",type);
         evaluate.putExtra("title",title);
+        evaluate.putExtra("categoryDesc",categoryDesc);
         evaluate.putExtra("parentCategory", parentCategory);
         evaluate.putExtra("finishTime", finishTime);
         evaluate.putExtra("realAmount", realAmount);

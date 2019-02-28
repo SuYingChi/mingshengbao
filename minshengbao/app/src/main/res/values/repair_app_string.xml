@@ -2,6 +2,9 @@
 <resources
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
+    <string name="address_info">地址信息</string>
+    <string name="evaluate_text">评价</string>
+    <string name="look_evaluate_text">查看评价</string>
     <string name="repair_type">维修类型:</string>
     <string name="price_table">价格表</string>
     <string name="please_input_refund_amount">请输入退款金额</string>
@@ -14,9 +17,18 @@
     <string name="upload_repair_picture">上传维修部位照片</string>
     <string name="send_order">提交订单</string>
     <string name="upload_most_four_picture">最多只能上传4张图片</string>
+    <string name="reRepair_text">返修</string>
     <string name="no_server_order">无服务订单</string>
     <string name="refund_amount">退款金额</string>
     <string name="refund_amount_tip">退款提示：最多可退</string>
-    
+    <string name="refund_tip">退款提示：</string>
+    <string name="refund_explain">退款说明</string>
+    <string name="refund_text">退款</string>
+    <string name="reFixCard_text">报修卡</string>
+    <string name="estimate_amount">预估费用</string>
+    <string name="pay_way">支付方式</string>
+    <string name="category_detail">规格详情</string>
+    <string name="go_evaluate">去评价</string>
+    <string name="orderNo_text">订单编号：</string>
     
 </resources>

@@ -116,6 +116,7 @@ public class OrderListFragment extends BaseFragment  {
                 String orderNo=orderList.get(thisPosition).get("orderNo");
                 String type=orderList.get(thisPosition).get("type");
                 String title=orderList.get(thisPosition).get("title");
+                String categoryDesc=orderList.get(thisPosition).get("categoryDesc");
                 String finishTime=orderList.get(thisPosition).get("time");
                 String parentCategoryName=orderList.get(thisPosition).get("parent_category_name");
                 String amount=orderList.get(thisPosition).get("amount");
@@ -126,6 +127,7 @@ public class OrderListFragment extends BaseFragment  {
                 intent.putExtra("type",type);
                 intent.putExtra("title",title);
                 intent.putExtra("parentCategory",parentCategoryName);
+                intent.putExtra("categoryDesc",categoryDesc);
                 intent.putExtra("finishTime",finishTime);
                 intent.putExtra("realAmount",amount);
                 startActivityForResult(intent, 2);
@@ -136,11 +138,13 @@ public class OrderListFragment extends BaseFragment  {
             public void onItemClick(int positions) {
                 String cid=orderList.get(positions).get("cid");
                 String ids = orderList.get(positions).get("id");
+                String categoryDesc=orderList.get(positions).get("categoryDesc");
                 String parentCode=orderList.get(positions).get("parent_category_code");
                 Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
                 intent.putExtra("cid",cid);
                 intent.putExtra("id", ids);
                 intent.putExtra("pos", positions);
+                intent.putExtra("categoryDesc",categoryDesc);
                 intent.putExtra("parentCode",parentCode);
                 startActivityForResult(intent, 4);
             }
@@ -210,6 +214,7 @@ public class OrderListFragment extends BaseFragment  {
             }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
+                    Log.d("msg.obj=",msg.obj.toString());
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -251,6 +256,7 @@ public class OrderListFragment extends BaseFragment  {
                 String parentCategoryName=jsonObject.optString("parent_category_name");
                 String parentCategoryCode=jsonObject.optString("parent_category_code");
                 String categoryName=jsonObject.optString("category_name");
+                String categoryDesc=jsonObject.optString("category_desc");
                 String categoryCode=jsonObject.optString("category_code");
                 String orderNo=jsonObject.optString("orderNo");
                 String title = jsonObject.getString("title");
@@ -268,6 +274,7 @@ public class OrderListFragment extends BaseFragment  {
                 map.put("parent_category_code",parentCategoryCode);
                 map.put("category_name",categoryName);
                 map.put("category_code",categoryCode);
+                map.put("categoryDesc",categoryDesc);
                 map.put("type", type);
                 map.put("title", title);
                 map.put("status", status);

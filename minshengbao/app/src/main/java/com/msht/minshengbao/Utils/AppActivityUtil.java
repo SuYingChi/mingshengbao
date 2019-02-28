@@ -28,6 +28,7 @@ import com.msht.minshengbao.functionActivity.GasService.GasPayFeeHomeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasRepairActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HouseHoldCleanWeb;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.VegetableGentlemenActivity;
@@ -217,6 +218,12 @@ public class AppActivityUtil {
                 case ConstantUtil.GAS_IC_CARD:
                     onIcCard(context, "");
                     break;
+                case ConstantUtil.GAS_NORMAL_PAY:
+                    onStartGasNormalPay(context, code);
+                    break;
+                case ConstantUtil.GAS_IOT:
+                    onStartGasIot(context, code);
+                    break;
                 case ConstantUtil.LPG_NAME:
                     onLpgService(context, "");
                     break;
@@ -385,6 +392,12 @@ public class AppActivityUtil {
                 case ConstantUtil.GAS_METER:
                     onPushGasMeter(context, url);
                     break;
+                case ConstantUtil.GAS_NORMAL_PAY:
+                    onPushGasNormalPay(context,code);
+                    break;
+                case ConstantUtil.GAS_IOT:
+                    onPushGasIot(context, code);
+                    break;
                 case ConstantUtil.GAS_PAY:
                     onPushGasPay(context, url);
                     break;
@@ -426,6 +439,24 @@ public class AppActivityUtil {
         }
     }
 
+    private static void onPushGasIot(Context context, String code) {
+        if (isLoginState(context)) {
+            Intent intent = new Intent(context, GasInternetTableActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            onStartLoginActivity(context, "");
+        }
+    }
+    private static void onPushGasNormalPay(Context context, String code) {
+        if (isLoginState(context)) {
+            Intent intent = new Intent(context, GasPayFeeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            onStartLoginActivity(context, "");
+        }
+    }
 
 
     public static void onPushActivity(Context context, String url) {
@@ -611,15 +642,14 @@ public class AppActivityUtil {
         intent.putExtra("typeName", name);
         context.startActivity(intent);
     }
-
     private static void onPushHouseHoldClean(Context context, String id, String name) {
-        Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
+      //  Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
+        Intent intent = new Intent(context, HouseHoldCleanWeb.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("pid", id);
-        intent.putExtra("typeName", name);
+        /*intent.putExtra("pid", id);
+        intent.putExtra("typeName", name);*/
         context.startActivity(intent);
     }
-
     private static void onPushHouseKeepingClean(Context context, String id, String name) {
         Intent intent = new Intent(context, HouseKeepingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -627,7 +657,6 @@ public class AppActivityUtil {
         intent.putExtra("typeName", name);
         context.startActivity(intent);
     }
-
     private static void onPushIcCard(Context context, String pushUrl) {
         if (isLoginState(context)) {
             Intent intent = new Intent(context, GasIcCardActivity.class);
@@ -637,7 +666,6 @@ public class AppActivityUtil {
             AppActivityUtil.onStartLoginActivity(context, pushUrl);
         }
     }
-
     private static void onPushGasPay(Context context, String pushUrl) {
         if (isLoginState(context)) {
             Intent intent = new Intent(context, GasPayFeeHomeActivity.class);
@@ -652,7 +680,7 @@ public class AppActivityUtil {
 
         if (isLoginState(context)) {
             Intent intent = new Intent(context, GasInternetTableActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } else {
             onStartLoginActivity(context, "");
@@ -663,7 +691,7 @@ public class AppActivityUtil {
 
         if (isLoginState(context)) {
             Intent intent = new Intent(context, GasPayFeeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } else {
             onStartLoginActivity(context, "");
@@ -775,11 +803,14 @@ public class AppActivityUtil {
                     intent.putExtra("index",1);
                     context.startActivity(intent);
                 }*/
-        } else {
-            Intent other = new Intent(context, HtmlPageActivity.class);
-            other.putExtra("url", rightUrl);
-            other.putExtra("navigate", "民生宝");
-            context.startActivity(other);
+        }else {
+            if (!rightUrl.equals(VariableUtil.NULL_VALUE)) {
+                if (isLoginState(context)) {
+                    onStartHtmlActivity(context, rightUrl, "民生宝", "", "", "", "");
+                } else {
+                    onStartLoginActivity(context, "");
+                }
+            }
         }
     }
 
@@ -906,9 +937,10 @@ public class AppActivityUtil {
     }
 
     private static void onHouseHoldClean(Context context, String id, String name) {
-        Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
-        intent.putExtra("pid", id);
-        intent.putExtra("typeName", name);
+        //Intent intent = new Intent(context, HomeApplianceCleanActivity.class);
+        Intent intent = new Intent(context, HouseHoldCleanWeb.class);
+        /*intent.putExtra("pid", id);
+        intent.putExtra("typeName", name);*/
         context.startActivity(intent);
     }
 

@@ -181,10 +181,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.handleMessage(msg);
         }
     }
-
-
-
-
     private static class PushHandler extends Handler{
         private WeakReference<MainActivity> mWeakReference;
 

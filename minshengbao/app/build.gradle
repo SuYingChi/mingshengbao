@@ -140,7 +140,7 @@ dependencies {
     implementation(name: 'slideleftRcl', ext: 'aar')
     //侧滑返回 配合immetionbar
     implementation 'me.imid.swipebacklayout.lib:library:1.3.0'
-   // implementation 'com.gyf.barlibrary:barlibrary:2.3.3'
+    // implementation 'com.gyf.barlibrary:barlibrary:2.3.3'
     implementation 'com.gyf.immersionbar:immersionbar:2.3.3-beta15'
     implementation 'com.zhy:autolayout:1.4.3'
     implementation 'com.zhy:base-rvadapter:3.0.3'

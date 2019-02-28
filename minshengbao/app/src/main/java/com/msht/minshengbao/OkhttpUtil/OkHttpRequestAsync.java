@@ -61,7 +61,7 @@ public class OkHttpRequestAsync {
     public static OkHttpRequestAsync getInstance(Context context, OkHttpClient okHttpClient) {
         OkHttpRequestAsync inst = mInstance;
         if (inst == null) {
-            synchronized (OkHttpRequestUtil.class) {
+            synchronized (OkHttpRequestManager.class) {
                 inst = mInstance;
                 if (inst == null) {
                     inst = new OkHttpRequestAsync(context,okHttpClient);

@@ -531,6 +531,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         textParams.put("company_tel",companyTel);
         textParams.put("company_address", companyAddress);
         textParams.put("relate_order",relateOrder);
+        textParams.put("deliveryType",deliveryType);
         if (certeFile !=null){
             fileParams.put("business_license_img", certeFile);
         }

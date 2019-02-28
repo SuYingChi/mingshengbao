@@ -7,6 +7,7 @@
     <string name="bill_detail">账单明细</string>
     <string name="customerNo_manager">用户号管理</string>
     <string name="coupon_text">代金劵</string>
+    <string name="discount_text">优   惠</string>
     <string name="customer_no_text">用户号</string>
     <string name="current_noHave_customerNo">当前没有添加户号，请添加</string>
     <string name="deduct_gas_prestore_fee_text">扣除燃气预存款:</string>

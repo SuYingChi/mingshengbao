@@ -52,13 +52,11 @@ public class StatusBarCompat {
             statusBarView.setBackgroundColor(color);
             contentView.addView(statusBarView, lp);
         }
-
     }
     public static void compat(Activity activity)
     {
         compat(activity, INVALID_VAL);
     }
-
     public static int getStatusBarHeight(Context context)
     {
         int result = 0;

@@ -104,7 +104,7 @@ public class InvoiceGasDetailActivity extends BaseActivity {
         String statusDes="";
         switch (status){
             case 3:
-                statusDes="电子发票待发票";
+                statusDes="电子发票待开票";
                 layoutLook.setVisibility(View.GONE);
                 break;
             case 4:

@@ -10,6 +10,8 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
@@ -39,6 +42,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectTable;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
+import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -75,6 +79,11 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private String textString="";
     private String repeatId;
     private String userId,password;
+    private String categoryDesc;
+    private String additionalInfo;
+    private View layoutCategory;
+    private View layoutCategoryButton;
+    private ImageView downwardImg;
     private int thisPosition =-1;
     private int mPosition=-1;
     private Button btnSend;
@@ -169,6 +178,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                                     reference.customDialog.dismiss();
                                 }
                                 reference.btnSend.setEnabled(true);
+                                reference.setResult(0x004);;
                                 reference.onShowDialog("您的返修申请已经提交");
                             }
                         }else {
@@ -211,6 +221,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         }else {
             customDialog.dismiss();
             btnSend.setEnabled(true);
+            setResult(0x004);
             onShowDialog("您的返修申请已经提交");
         }
     }
@@ -253,7 +264,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-                        setResult(0x004);
                         finish();
                     }
                 }).show();
@@ -281,21 +291,40 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         Intent data=getIntent();
         customDialog=new CustomDialog(this, "正在加载");
-        reid=data.getStringExtra("reid");
-        orderId=data.getStringExtra("id");
-        orderNo=data.getStringExtra("orderNo");
-        title=data.getStringExtra("title");
-        phone=data.getStringExtra("phone");
-        finishTime =data.getStringExtra("finishTime");
-        address=data.getStringExtra("address");
-        parentCategory =data.getStringExtra("parentCategory");
-        String parentCode=data.getStringExtra("parentCode");
+        String parentCode="";
+        if (data!=null){
+            reid=data.getStringExtra("reid");
+            orderId=data.getStringExtra("id");
+            orderNo=data.getStringExtra("orderNo");
+            title=data.getStringExtra("title");
+            phone=data.getStringExtra("phone");
+            finishTime =data.getStringExtra("finishTime");
+            address=data.getStringExtra("address");
+            parentCategory =data.getStringExtra("parentCategory");
+            parentCode=data.getStringExtra("parentCode");
+            categoryDesc=data.getStringExtra("categoryDesc");
+            additionalInfo=data.getStringExtra("additionalInfo");
+        }
         initView();
+        initSpecDetail();
         initSetCodeImage(parentCode);
         initTimeData();
         initData();
         initEvent();
     }
+
+    private void initSpecDetail() {
+        ArrayList<HashMap<String ,String>> additionalList=new ArrayList <HashMap<String ,String>>();
+        additionalList.clear();
+        additionalList.addAll(GsonImpl.getAdditionalList(additionalInfo));
+        RecyclerView mRecyclerView=(RecyclerView)findViewById(R.id.id_category_detail);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        RepairAdditionalInfoAdapter mAdditionalAdapter=new RepairAdditionalInfoAdapter(context,additionalList);
+        mRecyclerView.setAdapter(mAdditionalAdapter);
+    }
+
     private void initSetCodeImage(String parentCode) {
         ImageView typeImg =(ImageView)findViewById(R.id.id_img_type);
         switch (parentCode) {
@@ -341,10 +370,13 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private void initView() {
         ((TextView)findViewById(R.id.id_orderNo)).setText(orderNo);
         ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
-        ((TextView)findViewById(R.id.id_tv_title)).setText(title);
+        ((TextView)findViewById(R.id.id_tv_title)).setText(categoryDesc);
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
         ((TextView)findViewById(R.id.id_phone)).setText(phone);
         ((TextView)findViewById(R.id.id_tv_address)).setText(address);
+        downwardImg=(ImageView)findViewById(R.id.id_downward_img) ;
+        layoutCategory=findViewById(R.id.id_category_layout);
+        layoutCategoryButton=findViewById(R.id.id_category_button);
         etProblem =(EditText)findViewById(R.id.id_et_info);
         multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
         mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
@@ -398,6 +430,28 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                     textString=sb.toString();
                 }else {
                     textString="";
+                }
+            }
+        });
+
+        layoutCategoryButton.setTag(0);
+        layoutCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag=(Integer)view.getTag();
+                switch (tag){
+                    case 0:
+                        layoutCategory.setVisibility(View.VISIBLE);
+                        downwardImg.setRotation(180);
+                        view.setTag(1);
+                        break;
+                    case 1:
+                        layoutCategory.setVisibility(View.GONE);
+                        downwardImg.setRotation(0);
+                        view.setTag(0);
+                        break;
+                    default:
+                        break;
                 }
             }
         });

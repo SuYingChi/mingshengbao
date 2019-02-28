@@ -75,6 +75,9 @@ public class ConstantUtil {
     public static final  String VALUE_FIFTEEN="15";
     public static final  String VALUE_FIFTY="50";
 
+    public static final String SUCCESS_VALUE="success";
+    public static final String FAILURE_VALUE="fail";
+    public static final String CANCEL_VALUE="cancel";
     public static final String MSB_APP="msbapp";
     public static final String SHOP="shop";
     public static final String SERVICE_STATION="service_station";

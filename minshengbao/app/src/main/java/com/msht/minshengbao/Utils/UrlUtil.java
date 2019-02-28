@@ -99,7 +99,7 @@ public class UrlUtil {
     public static final String SPECIAL_TOPIC_URL =BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
     public static final String ADVERTISING_URL=BuildConfig.URL_HEADS+"/api/app/get_activity_by_code ";
     public static final String BADGE_COUNT_URL=BuildConfig.URL_HEADS+"/Gas/message/badgeCount";
-
+    public static final String HOT_RECOMMEND_URL=BuildConfig.URL_HEADS+"/api/serve_city/hot_recommend";
     /**分享*/
     public static final String SUCCESS_SHARE_URL=BuildConfig.URL_HEADS+"/msht_operation_platform/app_share/app_share_success";
 
@@ -254,6 +254,8 @@ public class UrlUtil {
     public static final String LookEvalute_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/eval_info";
     public static final String RefundApply_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/refund";
     public static final String RefundImg_Url= BuildConfig.URL_HEADS +"/Gas/repairOrder/refund_img";
+    public static final String HOUSE_HOLD_CLEAN_WEB=BuildConfig.URL_HEADS +"/household_cleaning/index.html";
+
     /**
      * 热门维修
      */

@@ -87,29 +87,32 @@
                     android:layout_height="@dimen/margin_width10"
                     android:background="@color/background_gray"/>
                 <include layout="@layout/layout_line_gray"/>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width45"
-                    android:background="@color/white" >
+                    android:background="@color/white">
+
                     <View
                         android:id="@+id/id_view0"
                         android:layout_width="@dimen/margin_width3"
                         android:layout_height="@dimen/margin_width18"
-                        android:background="@color/colorOrange"
-                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/margin_width10"
-                        android:layout_centerVertical="true"/>
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:background="@color/colorOrange" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/id_view0"
-                        android:layout_toEndOf="@+id/id_view0"
-                        android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/margin_width10"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_toEndOf="@+id/id_view0"
+                        android:layout_toRightOf="@+id/id_view0"
                         android:text="@string/special_topic_activity"
-                        android:textSize="@dimen/text_width18"
-                        android:textColor="#ff4f4f4f"/>
+                        android:textColor="#ff4f4f4f"
+                        android:textSize="@dimen/text_width18" />
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <RelativeLayout
@@ -131,146 +134,45 @@
                     </com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width10"
-                    android:background="@color/background_gray"/>
-                <include layout="@layout/layout_line_gray"/>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width45"
-                    android:background="@color/white" >
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <View
-                        android:id="@+id/id_view1"
-                        android:layout_width="@dimen/margin_width3"
-                        android:layout_height="@dimen/margin_width18"
-                        android:background="@color/colorOrange"
-                        android:layout_marginLeft="@dimen/margin_width10"
-                        android:layout_marginStart="@dimen/margin_width10"
-                        android:layout_centerVertical="true"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/id_view1"
-                        android:layout_toEndOf="@+id/id_view1"
-                        android:layout_marginStart="@dimen/margin_width10"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_centerVertical="true"
-                        android:text="@string/hot_recommend"
-                        android:textSize="@dimen/text_width18"
-                        android:textColor="#ff4f4f4f"/>
-
-                </RelativeLayout>
-                <include layout="@layout/layout_line_gray"/>
-                <RelativeLayout
-                    android:id="@+id/id_layout_air"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/white"
-                    >
-                    <RelativeLayout
-                        android:id="@+id/id_layout_lenterns"
-                        android:layout_width="@dimen/margin_imgHight"
-                        android:layout_height="@dimen/margin_imgHight"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_5"
-                        android:background="@mipmap/home_hotrecommend_xh">
-                    </RelativeLayout>
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_width10"
+                        android:background="@color/background_gray"/>
+                    <include layout="@layout/layout_line_gray"/>
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_100"
-                        android:layout_toRightOf="@+id/id_layout_lenterns"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_15"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_10"
-                        >
-                        <TextView
-                            android:id="@+id/id_hot_text1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="空调清洗"
-                            android:textSize="@dimen/text_width16"
-                            android:textColor="#ff4f4f4f"/>
-                        <TextView
-                            android:id="@+id/id_hot_text2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/id_hot_text1"
-                            android:layout_marginTop="@dimen/margin_10"
-                            android:text="高温杀毒，杜绝尘螨！"
-                            android:textSize="@dimen/text_width14"
-                            android:textColor="#ff4f4f4f"/>
+                        android:layout_height="@dimen/margin_width45"
+                        android:background="@color/white" >
+                        <View
+                            android:id="@+id/id_view1"
+                            android:layout_width="@dimen/margin_width3"
+                            android:layout_height="@dimen/margin_width18"
+                            android:background="@color/colorOrange"
+                            android:layout_marginLeft="@dimen/margin_width10"
+                            android:layout_marginStart="@dimen/margin_width10"
+                            android:layout_centerVertical="true"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/id_hot_text2"
-                            android:layout_marginTop="@dimen/margin_8"
-                            android:text="明码标价给您最优惠的选择"
-                            android:textSize="@dimen/text_width14"
+                            android:layout_toRightOf="@+id/id_view1"
+                            android:layout_toEndOf="@+id/id_view1"
+                            android:layout_marginStart="@dimen/margin_width10"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_centerVertical="true"
+                            android:text="@string/hot_recommend"
+                            android:textSize="@dimen/text_width18"
                             android:textColor="#ff4f4f4f"/>
                     </RelativeLayout>
-                </RelativeLayout>
-                <include layout="@layout/layout_line_gray"/>
-                <RelativeLayout
-                    android:id="@+id/id_layout_over"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@color/white"
-                    >
-                    <RelativeLayout
-                        android:id="@+id/id_layout_gasover"
-                        android:layout_width="@dimen/margin_imgHight"
-                        android:layout_height="@dimen/margin_imgHight"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginTop="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_5"
-                        android:background="@mipmap/home_hot_gasover_2xh">
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:id="@+id/id_layout_text"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/id_hot_recommend"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/margin_100"
-                        android:layout_toRightOf="@+id/id_layout_gasover"
-                        android:layout_marginTop="@dimen/margin_15"
-                        android:layout_marginBottom="@dimen/margin_10"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_marginRight="@dimen/margin_10">
-                        <TextView
-                            android:id="@+id/id_hot_text3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="燃气灶维修"
-                            android:textSize="@dimen/text_width16"
-                            android:textColor="#ff4f4f4f"/>
-                        <TextView
-                            android:id="@+id/id_hot_text4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/id_hot_text3"
-                            android:layout_marginTop="@dimen/margin_10"
-                            android:text="修的放心，用的舒心！"
-                            android:textSize="@dimen/text_width14"
-                            android:textColor="#ff4f4f4f"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/id_hot_text4"
-                            android:layout_marginTop="@dimen/margin_8"
-                            android:text="以最快的速度给您最好的服务"
-                            android:textSize="@dimen/text_width14"
-                            android:textColor="#ff4f4f4f"/>
-                    </RelativeLayout>
-                </RelativeLayout>
+                        android:layout_height="wrap_content">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <View
                     android:layout_width="match_parent"
@@ -289,16 +191,19 @@
                         android:layout_height="@dimen/margin_width18"
                         android:background="@color/colorOrange"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"/>
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="热门维修"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/id_view2"
-                        android:layout_marginLeft="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_view2"
+                        android:layout_marginLeft="@dimen/margin_width10"
+                        android:layout_marginStart="@dimen/margin_width10"
                         android:textSize="@dimen/text_width18"
-                        android:textColor="#ff4f4f4f"
+                        android:textColor="@color/color_383838"
                         android:id="@+id/textView" />
 
                 </RelativeLayout>

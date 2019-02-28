@@ -18,6 +18,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -45,16 +47,22 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.gyf.barlibrary.BarParams;
 import com.msht.minshengbao.Base.BaseHomeFragment;
 import com.gyf.barlibrary.ImmersionBar;
+import com.msht.minshengbao.Bean.HotRecommendBean;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.DateUtils;
+import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.NetUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.ViewUI.Dialog.HomeAdvertisingDialog;
 import com.msht.minshengbao.ViewUI.widget.DragImageView;
 import com.msht.minshengbao.ViewUI.widget.MarqueeView;
 import com.msht.minshengbao.adapter.HomeFunctionAdapter;
+import com.msht.minshengbao.adapter.HotRecommendAdapter;
 import com.msht.minshengbao.adapter.HotRepairAdapter;
+import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
 import com.msht.minshengbao.adapter.TopModuleAdapter;
 import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.Bean.ActivityInfo;
@@ -62,6 +70,7 @@ import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.events.LocationEvent;
 import com.msht.minshengbao.functionActivity.Electricvehicle.ElectricHomeActivity;
@@ -69,6 +78,7 @@ import com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasPayFeeActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasServiceActivity;
 import com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity;
+import com.msht.minshengbao.functionActivity.HtmlWeb.HouseHoldCleanWeb;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.functionActivity.HtmlWeb.IcbcHtml;
 import com.msht.minshengbao.functionActivity.HtmlWeb.IntelligentFarmHmlActivity;
@@ -135,6 +145,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private MyNoScrollGridView  mTopModule;
     private HomeFunctionAdapter homeFunctionAdapter;
     private HotRepairAdapter hotRepairAdapter;
+    private HotRecommendAdapter hotRecommendAdapter;
     private TopModuleAdapter topmoduleAdapter;
     private TextView tvCity, tvNavigation;
     private TextView tvNotOpen;
@@ -166,6 +177,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private ArrayList<HashMap<String, String>> hotList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> rightTopList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> headLineList = new ArrayList<HashMap<String, String>>();
+   // private ArrayList<HashMap<String, String>> hotRecommendList = new ArrayList<HashMap<String, String>>();
+    private List<HotRecommendBean.DataBean> hotRecommendList=new ArrayList<HotRecommendBean.DataBean>();
     private List<CharSequence> headLineInfo = new ArrayList<>();
     private MZBannerView mMZBanner;
     private final GetAdvertisingHandler getAdvertisingHandler=new GetAdvertisingHandler(this);
@@ -175,8 +188,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
     private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
     private Toolbar hearLayout;
-    private ImmersionBar mImmersionBar;
-
 
     public HomeFragment() {}
     private static class GetAdvertisingHandler extends Handler{
@@ -560,9 +571,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_home,null,false);
             //view = inflater.inflate(R.layout.fragment_orderlist, container, false);
         }
-        VariableUtil.cityPos =-1;
         initView(mRootView);
-
         VariableUtil.cityPos = -1;
         initRefresh();
         topmoduleAdapter = new TopModuleAdapter(mContext, rightTopList);
@@ -571,6 +580,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         mGridView.setAdapter(homeFunctionAdapter);
         hotRepairAdapter = new HotRepairAdapter(mContext, hotList);
         mHotGrid.setAdapter(hotRepairAdapter);
+        RecyclerView mRecyclerView=(RecyclerView)mRootView.findViewById(R.id.id_hot_recommend) ;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        hotRecommendAdapter=new HotRecommendAdapter(mContext,hotRecommendList);
+        mRecyclerView.setAdapter(hotRecommendAdapter);
         onStartActivity();
         initCardBanner();
         initLocation();
@@ -581,7 +596,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     }
 
     private void initMarqueeViewData() {
-
         String requestUrl=UrlUtil.HOME_MSB_APP_HEADLINE;
         try {
             requestUrl =requestUrl +"?num="+ URLEncoder.encode("4", "UTF-8");
@@ -608,6 +622,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 initData();
                 functionData();
                 initCardData();
+                initHotRecommend();
             }
         });
     }
@@ -679,6 +694,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                         hotList.clear();
                         functionData();
                         initCardData();
+                        initHotRecommend();
+
                     }
                 }
                 break;
@@ -697,6 +714,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         hotList.clear();
         functionData();
         initCardData();
+        initHotRecommend();
     }
     public void initData() {
         String validateURL = UrlUtil.HOME_ADVERTISEMENT_URL;
@@ -722,8 +740,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private void initView(View view) {
         marqueeView = (MarqueeView)view.findViewById(R.id.id_marqueeView);
         layoutHeadLine=view.findViewById(R.id.id_marquee_layout);
-        view.findViewById(R.id.id_layout_air).setOnClickListener(this);
-        view.findViewById(R.id.id_layout_over).setOnClickListener(this);
         view.findViewById(R.id.id_headLine_more).setOnClickListener(this);
         cardView=(CardView)view.findViewById(R.id.id_card_view);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)view.findViewById(R.id.id_swipe_refresh);
@@ -742,7 +758,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         tvNotOpen =(TextView)view.findViewById(R.id.id_tv_nodata);
         dragImageView=(DragImageView) view.findViewById(R.id.id_floating_view);
         hearLayout = (Toolbar)view.findViewById(R.id.toolbar);
-        hearLayout.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()),0,0);
+        hearLayout.setPadding(0, StatusBarCompat.getStatusBarHeight(mContext),0,0);
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -861,20 +877,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 Intent city = new Intent(mContext, SelectCityActivity.class);
                 startActivityForResult(city, REQUEST_CODE);
                 break;
-            case R.id.id_layout_air:
-                if (isLoginState(mContext)){
-                    airConditioner();
-                }else {
-                    AppActivityUtil.onStartLoginActivity(mContext,"");
-                }
-                break;
-            case R.id.id_layout_over:
-                if (isLoginState(mContext)){
-                    hoodsClean();
-                }else {
-                    AppActivityUtil.onStartLoginActivity(mContext,"");
-                }
-                break;
             case R.id.id_headLine_more:
                 onMoreHeadLine();
                 break;
@@ -932,9 +934,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             } else {
                 VariableUtil.City = mCity;
                 tvCity.setText(mCity);
-                String text = "ErrCode:"
-                        + aMapLocation.getErrorCode() + ", errInfo:"
-                        + aMapLocation.getErrorInfo();
                 ToastUtil.ToastText(mContext, "获取位置信息失败");
                 if (times == 2) {
                     LocationUtils.mLocationClient.stopLocation();
@@ -946,8 +945,66 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         EventBus.getDefault().post(new LocationEvent(mCity,""));
         functionData();
         initCardData();
+        initHotRecommend();
     }
+    private void initHotRecommend() {
+        String validateURL = UrlUtil.HOT_RECOMMEND_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("city_id",cityId);
+        textParams.put("city_name",mCity);
+        OkHttpRequestManager.getInstance(mContext.getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisMessage(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                ToastUtil.ToastText(mContext,data.toString());
+            }
+        });
 
+    }
+    private void onAnalysisMessage(String s) {
+        final HotRecommendBean bean=GsonImpl.get().toObject(s,HotRecommendBean.class);
+        if (bean.getResult().equals(ConstantUtil.SUCCESS_VALUE)){
+            hotRecommendList.clear();
+            hotRecommendList.addAll(bean.getData());
+            hotRecommendAdapter.notifyDataSetChanged();
+            hotRecommendAdapter.setClickCallBack(new HotRecommendAdapter.ItemClickCallBack() {
+                @Override
+                public void onItemClick(int pos) {
+                    String code=bean.getData().get(pos).getCode();
+                    String url=bean.getData().get(pos).getUrl();
+                    String parentName=bean.getData().get(pos).getParent_name();
+                    String cid=bean.getData().get(pos).getCid();
+                    String title=bean.getData().get(pos).getTitle();
+                    String childName=bean.getData().get(pos).getChild_name();
+                    if (!TextUtils.isEmpty(url)){
+                        if (code.equals(ConstantUtil.HOUSEHOLD_CLEAN)){
+                            Intent intent = new Intent(mContext, HouseHoldCleanWeb.class);
+                            startActivity(intent);
+                        }else {
+                            AppActivityUtil.onStartUrl(mContext,url);
+                        }
+                    }else {
+                        if (isLoginState(mContext)){
+                            Intent intent=new Intent(mContext,PublishOrderActivity.class);
+                            intent.putExtra("id",cid);
+                            intent.putExtra("name",childName);
+                            intent.putExtra("mMainType",parentName);
+                            intent.putExtra("code",code);
+                            startActivity(intent);
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        }
+                    }
+                }
+            });
+        }else {
+            ToastUtil.ToastText(mContext,bean.getError());
+        }
+
+    }
     private void initCardData() {
         String functionUrl=UrlUtil.SPECIAL_TOPIC_URL;
         try {
@@ -957,11 +1014,10 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }
         SendRequestUtil.getDataFromService(functionUrl,specialTopicHandler);
     }
-
     private void functionData() {
         String functionUrl=UrlUtil.HOME_FUNCTION_URL;
         try {
-            functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201901", "UTF-8");
+            functionUrl =functionUrl +"?city_id="+ URLEncoder.encode(cityId, "UTF-8")+"&city_name="+URLEncoder.encode(mCity, "UTF-8")+"&version="+URLEncoder.encode("201902", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -993,7 +1049,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             cardView.setVisibility(View.GONE);
         }
     }
-
     private void onFunction() {
         //记录是否提供燃气服务模块
         VariableUtil.BoolCode = true;
@@ -1023,7 +1078,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             homeFunctionAdapter.notifyDataSetChanged();
         }
     }
-
     private void getHotFix() {
         String functionUrl = UrlUtil.HOT_REPAIR_URL;
         String function = "";
@@ -1133,9 +1187,9 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     public void onDestroy() {
         LocationUtils.setonDestroy();//销毁定位客户端，同时销毁本地定位服务
         super.onDestroy();
-        if (mImmersionBar != null) {
+        /*if (mImmersionBar != null) {
             mImmersionBar.destroy();
-        }
+        }*/
     }
 
 }

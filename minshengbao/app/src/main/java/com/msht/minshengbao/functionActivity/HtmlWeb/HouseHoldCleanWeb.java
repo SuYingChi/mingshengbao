@@ -16,8 +16,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,29 +28,26 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ShareDefaultContent;
-import com.msht.minshengbao.Utils.AndroidWorkaround;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.FileUtil;
+import com.msht.minshengbao.Utils.LinkUrlUtil;
 import com.msht.minshengbao.Utils.QrCodeUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.ActionShareDialog;
-import com.msht.minshengbao.ViewUI.Dialog.ActionSheetDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.QrCodeDialog;
-import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
-import com.msht.minshengbao.androidShop.util.NavigationbarUtil;
-import com.msht.minshengbao.functionActivity.GasService.AddCustomerNoActivity;
-import com.msht.minshengbao.functionActivity.WaterApp.WaterFriendShareActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
+import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -61,6 +56,8 @@ import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -68,38 +65,28 @@ import java.util.List;
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
  * @author hong
- * @date 2019/1/18  
+ * @date 2019/2/20  
  */
-public class InsuranceHtmlActivity extends BaseActivity {
+public class HouseHoldCleanWeb extends BaseActivity {
     private WebView mWebView;
     private ProgressBar progressBar;
-    private VerticalSwipeRefreshLayout mRefresh;
     private TextView tvRightText;
     private String id;
     private String  userId;
     private String  password;
     private String  title;
-    private String  imageUrl;
     private String  desc;
     private String  phone;
+    private String shareDesc="家电清洗";
     private Bitmap mBitmap;
-    private String shareDesc;
-
+    private static final String BTN_URL="add_address.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insurance_html);
+        setContentView(R.layout.activity_house_hold_clean_web);
         context=this;
         mPageName="购买保险";
-        Intent data=getIntent();
-        if (data!=null){
-            id=data.getStringExtra("id");
-            title=data.getStringExtra("title");
-            imageUrl=data.getStringExtra("imageUrl");
-            desc=data.getStringExtra("desc");
-        }
-        shareDesc="安全无小事，保险保平安，这款"+title+"蛮实惠的，快来看看吧";
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this,SharedPreferencesUtil.Password,"");
         phone=SharedPreferencesUtil.getUserName(this,SharedPreferencesUtil.UserName,"");
@@ -108,8 +95,15 @@ public class InsuranceHtmlActivity extends BaseActivity {
         initWebView();
     }
 
+    private void initFindViewId() {
+
+        progressBar=(ProgressBar)findViewById(R.id.progressBar);
+        mWebView=(WebView)findViewById(R.id.id_insurance_webView);
+    }
+
     private void initHeader() {
-        View  mViewStatusBarPlace = findViewById(R.id.id_status_view);
+
+        View mViewStatusBarPlace = findViewById(R.id.id_status_view);
         ViewGroup.LayoutParams params = mViewStatusBarPlace.getLayoutParams();
         params.height = StatusBarCompat.getStatusBarHeight(this);
         mViewStatusBarPlace.setLayoutParams(params);
@@ -148,29 +142,6 @@ public class InsuranceHtmlActivity extends BaseActivity {
         tvNavigationTile.setText(mPageName);
     }
 
-    private void initFindViewId() {
-        progressBar=(ProgressBar)findViewById(R.id.progressBar);
-        mWebView=(WebView)findViewById(R.id.id_insurance_webView);
-        mRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_vertical_refresh);
-        mRefresh.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-        //webview 会默认浸入显示，适配有虚拟导航栏的机型，顶部间隔状态栏高度，底部部要间隔导航栏高度，否则重叠
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mWebView.reload();
-            }
-        });
-        mRefresh.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
-            @Override
-            public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-                return mWebView.getScrollY()>0;
-            }
-        });
-    }
-
     private void onActionShareDialog() {
 
         new ActionShareDialog(this)
@@ -193,14 +164,59 @@ public class InsuranceHtmlActivity extends BaseActivity {
                             case 3:
                                 onLinkShare();
                                 break;
-                                default:
-                                    onWeiXin();
-                                    break;
+                            default:
+                                onWeiXin();
+                                break;
                         }
 
 
                     }
                 }).show();
+
+    }
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView() {
+        String useUrl= UrlUtil.HOUSE_HOLD_CLEAN_WEB;
+        try {
+            useUrl = LinkUrlUtil.containMark(context,useUrl)+"&city_id="+VariableUtil.cityId+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        mWebView.loadUrl(useUrl);
+        WebSettings settings=mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setDefaultTextEncodingName("utf-8");
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(true);
+        settings.setNeedInitialFocus(true);
+        settings.setAppCacheEnabled(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setSupportMultipleWindows(true);
+        settings.setDomStorageEnabled(true);
+        settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
+        mWebView.requestFocusFromTouch();
+        mWebView.setWebViewClient(new MyWebViewClient());
+        mWebView.setWebChromeClient(new MyWebChromeClient());
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK ) {
+                        if(mWebView.canGoBack()){
+                            mWebView.goBack();
+                            return true;
+                        }else {
+                            finish();
+                        }
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void onRequestPermission() {
@@ -230,35 +246,62 @@ public class InsuranceHtmlActivity extends BaseActivity {
         }
     }
     private void onWeiXin() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
-        UMWeb web = new UMWeb(insuranceDetailUrl);
+        String shareUrl=UrlUtil.HOUSE_HOLD_CLEAN_WEB;
+        try {
+            if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
+                shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }else {
+                shareUrl=shareUrl+"&isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        UMWeb web = new UMWeb(shareUrl);
         web.setTitle(ShareDefaultContent.title);
         web.setDescription(shareDesc);
-        web.setThumb(new UMImage(context, imageUrl));
-        new ShareAction(InsuranceHtmlActivity.this).withMedia(web)
+        web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
+        new ShareAction(HouseHoldCleanWeb.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN)
                 .setCallback(umShareListener)
                 .share();
     }
-
     private void onFriendCircle() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
-        UMWeb web = new UMWeb(insuranceDetailUrl);
+        String shareUrl=UrlUtil.HOUSE_HOLD_CLEAN_WEB;
+        try {
+            if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
+                shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }else {
+                shareUrl=shareUrl+"&isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        UMWeb web = new UMWeb(shareUrl);
         web.setTitle(shareDesc);
         web.setDescription(shareDesc);
-        web.setThumb(new UMImage(context, imageUrl));
-        new ShareAction(InsuranceHtmlActivity.this).withMedia(web)
+        web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
+        new ShareAction(HouseHoldCleanWeb.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
                 .setCallback(umShareListener)
                 .share();
     }
 
     private void onQrCode() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
+
+        String shareUrl=UrlUtil.HOUSE_HOLD_CLEAN_WEB;
+        try {
+            if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
+                shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }else {
+                shareUrl=shareUrl+"&isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if (mBitmap!=null&&!mBitmap.isRecycled()){
             onShowQrCodeDialog(mBitmap);
         }else {
-            mBitmap=QrCodeUtil.createQRCodeBitmap(insuranceDetailUrl,300);
+            mBitmap=QrCodeUtil.createQRCodeBitmap(shareUrl,300);
             onShowQrCodeDialog(mBitmap);
         }
     }
@@ -276,8 +319,8 @@ public class InsuranceHtmlActivity extends BaseActivity {
                 .setOnShareButtonClickListener(new QrCodeDialog.OnShareButtonClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UMImage image = new UMImage(InsuranceHtmlActivity.this, mBitmap);
-                        new ShareAction(InsuranceHtmlActivity.this).withMedia(image)
+                        UMImage image = new UMImage(HouseHoldCleanWeb.this, mBitmap);
+                        new ShareAction(HouseHoldCleanWeb.this).withMedia(image)
                                 .setPlatform(SHARE_MEDIA.WEIXIN)
                                 .setCallback(umShareListener)
                                 .share();
@@ -286,9 +329,18 @@ public class InsuranceHtmlActivity extends BaseActivity {
     }
 
     private void onLinkShare() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
+        String shareUrl=UrlUtil.HOUSE_HOLD_CLEAN_WEB;
+        try {
+            if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
+                shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }else {
+                shareUrl=shareUrl+"&isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         ClipboardManager cm=(ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData mClipData=ClipData.newPlainText("Label",insuranceDetailUrl);
+        ClipData mClipData=ClipData.newPlainText("Label",shareUrl);
         if (cm != null) {
             cm.setPrimaryClip(mClipData);
             ToastUtil.ToastText(context,"已复制到剪切板");
@@ -304,55 +356,16 @@ public class InsuranceHtmlActivity extends BaseActivity {
                     mWebView.reload();
                 }
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private void initWebView() {
-        String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&userId="+userId+"&item="+password;
-        mWebView.loadUrl(insuranceDetailUrl);
-        WebSettings settings=mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setDefaultTextEncodingName("utf-8");
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
-        settings.setNeedInitialFocus(true);
-        settings.setAppCacheEnabled(true);
-        settings.setLoadsImagesAutomatically(true);
-        settings.setSupportMultipleWindows(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-        mWebView.requestFocusFromTouch();
-        mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setWebChromeClient(new  MyWebChromeClient());
-        mWebView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK ) {
-                        if(mWebView.canGoBack()){
-                            mWebView.goBack();
-                            return true;
-                        }else {
-                            finish();
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-    }
-    private class MyWebViewClient extends WebViewClient{
+    private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             String tag="tel";
-            if (url.contains(UrlUtil.INSURANCE_DETAIL_URL)){
+            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
                 tvRightText.setVisibility(View.VISIBLE);
             }else {
                 tvRightText.setVisibility(View.GONE);
@@ -377,11 +390,11 @@ public class InsuranceHtmlActivity extends BaseActivity {
                     startActivity(mIntent);
                     return true;
                 }else {
-                    ActivityCompat.requestPermissions(InsuranceHtmlActivity.this,new String[]{Manifest.permission.CALL_PHONE},1);
+                    ActivityCompat.requestPermissions(HouseHoldCleanWeb.this,new String[]{Manifest.permission.CALL_PHONE},1);
                     return true;
                 }
-            }else if (url.equals(UrlUtil.INSURANCE_BTN_URL)){
-                onNewCustomerNo();
+            }else if (url.contains(BTN_URL)){
+                onManageAddress();
                 return true;
             }else {
                 return false;
@@ -396,15 +409,17 @@ public class InsuranceHtmlActivity extends BaseActivity {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
-            if (url.contains(UrlUtil.INSURANCE_DETAIL_URL)){
+            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
                 tvRightText.setVisibility(View.VISIBLE);
             }else {
                 tvRightText.setVisibility(View.GONE);
             }
         }
+
     }
-    private void onNewCustomerNo() {
-        Intent intent=new Intent(context,AddCustomerNoActivity.class);
+
+    private void onManageAddress() {
+        Intent intent=new Intent(context,AddressManageActivity.class);
         startActivityForResult(intent,ConstantUtil.VALUE1);
     }
     private class MyWebChromeClient extends WebChromeClient {
@@ -438,7 +453,6 @@ public class InsuranceHtmlActivity extends BaseActivity {
             super.onProgressChanged(view, newProgress);
             if (newProgress==100){
                 progressBar.setVisibility(View.GONE);
-                mRefresh.setRefreshing(false);
             }else {
                 progressBar.setVisibility(View.VISIBLE);
             }
@@ -460,4 +474,5 @@ public class InsuranceHtmlActivity extends BaseActivity {
             ToastUtil.ToastText(context," 分享取消了");
         }
     };
+
 }

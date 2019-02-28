@@ -44,6 +44,7 @@ public class RepairEvaluateActivity extends BaseActivity {
     private String evalScore="0";
     private String userId,password;
     private String id, parentCategory;
+    private String categoryDesc;
     private String type, finishTime;
     private String title, realAmount;
     private String sendType="0";
@@ -128,6 +129,7 @@ public class RepairEvaluateActivity extends BaseActivity {
         orderNo=data.getStringExtra("orderNo");
         type= data.getStringExtra("type");
         title=data.getStringExtra("title");
+        categoryDesc=data.getStringExtra("categoryDesc");
         finishTime =data.getStringExtra("finishTime");
         parentCategory =data.getStringExtra("parentCategory");
         realAmount =data.getStringExtra("realAmount");
@@ -175,7 +177,7 @@ public class RepairEvaluateActivity extends BaseActivity {
                 break;
         }
         tvOrderNo.setText(orderNo);
-        tvTitle.setText(title);
+        tvTitle.setText(categoryDesc);
         tvType.setText(parentCategory);
         tvAmount.setText(realAmount);
         tvTime.setText(finishTime);

@@ -5,6 +5,7 @@
     android:id="@+id/activity_rpair_evaluate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.repairService.RepairEvaluateActivity">
     <include layout="@layout/layout_header"/>
@@ -12,31 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:minHeight="@dimen/margin_45">
+        android:minHeight="@dimen/margin_width45">
         <TextView
             android:id="@+id/id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:text="订单编号："
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_width16"
             android:textColor="@color/black1"/>
         <TextView
             android:id="@+id/id_orderNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/id_text"
+            android:layout_toEndOf="@+id/id_text"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textSize="@dimen/text_18"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textSize="@dimen/text_width16"
             />
         <TextView
             android:id="@+id/id_tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:textColor="@color/colorOrange"
             />
@@ -49,42 +55,54 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_70">
+        android:minHeight="@dimen/margin_width70">
         <ImageView
             android:id="@+id/id_img_type"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/margin_width45"
+            android:layout_height="@dimen/margin_width45"
+            android:contentDescription="@string/picture_text"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_15"/>
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_width15"
+            android:layout_marginBottom="@dimen/margin_width15"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/id_img_type"
-            android:layout_marginLeft="@dimen/margin_15">
+            android:layout_toEndOf="@+id/id_img_type"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15">
             <TextView
                 android:id="@+id/id_tv_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_18"
-                android:textColor="#414141"
-                />
+                android:textSize="@dimen/text_width18"
+                android:textColor="#414141"/>
             <TextView
                 android:id="@+id/id_tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
                 android:layout_below="@+id/id_tv_type"
-                android:layout_marginTop="@dimen/margin_10"
-                />
+                android:layout_toStartOf="@+id/id_create_time"
+                android:layout_toLeftOf="@+id/id_create_time"
+                android:layout_marginRight="@dimen/margin_width5"
+                android:layout_marginEnd="@dimen/margin_width5"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/text_width14"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/id_tv_amount"
-                android:layout_marginRight="@dimen/margin_5"
+                android:layout_toStartOf="@+id/id_tv_amount"
+                android:layout_marginRight="@dimen/margin_width5"
+                android:layout_marginEnd="@dimen/margin_width5"
                 android:text="价位:"
-                android:textSize="@dimen/text_16"
+                android:textSize="@dimen/text_width16"
                 android:textColor="@color/title_tv"
                 />
             <TextView
@@ -92,9 +110,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
                 android:textColor="@color/title_tv"
-                android:textSize="@dimen/text_16"/>
+                android:textSize="@dimen/text_width16"/>
             <TextView
                 android:id="@+id/id_create_time"
                 android:layout_width="wrap_content"
@@ -102,12 +122,16 @@
                 android:layout_below="@+id/id_tv_amount"
                 android:layout_marginTop="@dimen/margin_10"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
-                android:text="2164164164"
-                android:textSize="@dimen/text_14"/>
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:textSize="@dimen/text_width12"/>
         </RelativeLayout>
     </RelativeLayout>
-    <include layout="@layout/layout_line_gray"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_width10"
+        android:background="@color/background_gray"/>
     <RelativeLayout
         android:id="@+id/id_layout_star"
         android:layout_width="match_parent"
@@ -117,8 +141,9 @@
             android:id="@+id/id_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width10"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_18"
+            android:textSize="@dimen/text_width18"
             android:textColor="@color/title_tv"
             android:text="总体评价"/>
         <com.msht.minshengbao.ViewUI.RatingBar
@@ -126,8 +151,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:layout_marginTop="30dp"
+            android:layout_below="@+id/id_text1"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:layout_marginTop="@dimen/margin_width20"
             hedgehog:clickable="true"
             hedgehog:halfstart="true"
             hedgehog:starCount="5"
@@ -141,20 +167,21 @@
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_10"
+        android:layout_height="@dimen/margin_width10"
         android:background="@color/background_gray"/>
     <RelativeLayout
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_marginTop="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_width15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:text="评语"
             android:textColor="#444444"
-            android:textSize="@dimen/text_18"/>
+            android:textSize="@dimen/text_width18"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -163,10 +190,11 @@
         <EditText
             android:id="@+id/id_tv_evaluation"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:paddingLeft="@dimen/margin_15"
-            android:paddingTop="@dimen/margin_5"
-            android:gravity="left|top"
+            android:layout_height="@dimen/margin_width100"
+            android:paddingLeft="@dimen/margin_width15"
+            android:paddingRight="@dimen/margin_width15"
+            android:paddingTop="@dimen/margin_width5"
+            android:gravity="start|top"
             android:background="@null"
             android:maxLength="120"
             android:hint="请输入您对本次服务的评语"/>
@@ -174,9 +202,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_10"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:layout_below="@+id/id_tv_evaluation"
-            android:layout_marginBottom="@dimen/margin_6"
+            android:layout_marginBottom="@dimen/margin_width6"
             android:text="最多120字符"/>
     </RelativeLayout>
     <RelativeLayout
@@ -186,11 +216,12 @@
             android:id="@+id/id_btn_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_45"
-            android:layout_marginTop="@dimen/margin_20"
-            android:layout_marginLeft="@dimen/margin_20"
-            android:layout_marginRight="@dimen/margin_20"
-            android:textSize="@dimen/text_16"
+            android:minHeight="@dimen/margin_width45"
+            android:layout_marginTop="@dimen/margin_width45"
+            android:layout_marginLeft="@dimen/margin_width45"
+            android:layout_marginRight="@dimen/margin_width45"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:textSize="@dimen/text_width16"
             android:text="提交评价"
             android:textColor="@color/white"
             android:background="@drawable/selector_touch_button_change"/>

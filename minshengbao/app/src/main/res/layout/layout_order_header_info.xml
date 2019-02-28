@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
@@ -13,6 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:text="订单编号："
             android:textSize="@dimen/text_width16"
@@ -22,16 +24,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/id_text"
+            android:layout_toEndOf="@+id/id_text"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_width10"
-            android:textSize="@dimen/text_width16"
-            />
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textSize="@dimen/text_width16"/>
         <TextView
             android:id="@+id/id_tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
             android:layout_centerVertical="true"
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/text_width16"/>
@@ -49,35 +54,89 @@
             android:layout_width="@dimen/margin_width45"
             android:layout_height="@dimen/margin_width45"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_width15"/>
+            android:contentDescription="@string/picture_text"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"/>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/id_img_type"
-            android:layout_marginLeft="@dimen/margin_width15">
+            android:layout_toEndOf="@+id/id_img_type"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15">
             <TextView
                 android:id="@+id/id_tv_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width10"
                 android:textSize="@dimen/text_width18"
-                android:textColor="#414141"
-                />
+                android:textColor="@color/color_383838"/>
             <TextView
                 android:id="@+id/id_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_below="@+id/id_tv_type"
+                android:layout_toLeftOf="@+id/id_category_button"
+                android:layout_toStartOf="@+id/id_category_button"
+                android:layout_marginEnd="@dimen/margin_width6"
+                android:layout_marginRight="@dimen/margin_width6"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/margin_width12"
+                android:textSize="@dimen/text_width14"/>
+            <TextView
+                android:id="@+id/id_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:textSize="@dimen/text_width14"/>
+            <RelativeLayout
+                android:id="@+id/id_category_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/id_tv_type"
-                android:layout_marginTop="@dimen/margin_width10"
-                android:textSize="@dimen/text_width14"/>
+                android:layout_marginTop="@dimen/margin_width12"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_alignParentEnd="true"
+                android:background="@color/white"
+                android:layout_alignParentRight="true">
+                <TextView
+                    android:id="@+id/id_category_spec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/category_detail"
+                    android:textSize="@dimen/text_width12"
+                    android:textColor="@color/colorOrange"/>
+                <ImageView
+                    android:id="@+id/id_downward_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/picture_text"
+                    android:layout_toEndOf="@+id/id_category_spec"
+                    android:layout_toRightOf="@+id/id_category_spec"
+                    android:src="@drawable/downward"/>
+            </RelativeLayout>
         </RelativeLayout>
-        <TextView
-            android:id="@+id/id_create_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:textSize="@dimen/text_width14"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/id_category_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_width10"
+        android:background="@color/white"
+        android:visibility="gone">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_category_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 </LinearLayout>

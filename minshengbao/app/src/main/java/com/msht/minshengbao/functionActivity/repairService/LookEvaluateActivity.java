@@ -41,6 +41,7 @@ public class LookEvaluateActivity extends BaseActivity {
     private Button btnAdd;
     private View layoutAdd, layoutMaster;
     private TextView  tvEvaluation, tvMasterEva, userAddEva;
+    private String categoryDesc;
     private String    userId,password,orderId;
     private String    type, finishTime,orderNo;
     private String    title, realAmount, parentCategory;
@@ -167,6 +168,7 @@ public class LookEvaluateActivity extends BaseActivity {
             type= data.getStringExtra("type");
             parentCategory =data.getStringExtra("parentCategory");
             title=data.getStringExtra("title");
+            categoryDesc=data.getStringExtra("categoryDesc");
             finishTime =data.getStringExtra("finishTime");
             realAmount =data.getStringExtra("realAmount");
             evaluateScore =data.getStringExtra("evaluateScore");
@@ -209,7 +211,7 @@ public class LookEvaluateActivity extends BaseActivity {
         ((TextView)findViewById(R.id.id_tv_type)).setText(parentCategory);
         ((TextView)findViewById(R.id.id_tv_amount)).setText(realAmount);
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
-        ((TextView)findViewById(R.id.id_tv_title)).setText(title);
+        ((TextView)findViewById(R.id.id_tv_title)).setText(categoryDesc);
         tvMasterEva =(TextView)findViewById(R.id.id_master_massage);
         userAddEva =(TextView)findViewById(R.id.id_again_massage);
         mRatingBar=(RatingBar)findViewById(R.id.id_ratingbar);
@@ -236,6 +238,7 @@ public class LookEvaluateActivity extends BaseActivity {
                 intent.putExtra("type",type);
                 intent.putExtra("title",title);
                 intent.putExtra("parentCategory", parentCategory);
+                intent.putExtra("categoryDesc",categoryDesc);
                 intent.putExtra("finishTime", finishTime);
                 intent.putExtra("realAmount", realAmount);
                 startActivityForResult(intent,0x003);

@@ -65,7 +65,7 @@ public class MyWorkOrderAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_repair_order, null);
             holder.serviceIMG=(ImageView) convertView.findViewById(R.id.id_img_type);
-            holder.bnStatus =(Button) convertView.findViewById(R.id.id_btn_evalute);
+            holder.bnStatus =(Button) convertView.findViewById(R.id.id_btn_evaluate);
             holder.cnStatus =(TextView)convertView.findViewById(R.id.id_tv_status);
             holder.cnOrder =(TextView)convertView.findViewById(R.id.id_orderNo) ;
             holder.cnType =(TextView)convertView.findViewById(R.id.id_tv_type);

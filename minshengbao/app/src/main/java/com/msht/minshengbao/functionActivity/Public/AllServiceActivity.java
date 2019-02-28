@@ -158,10 +158,10 @@ public class AllServiceActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 } else if (!TextUtils.isEmpty(url)){
-                        AppActivityUtil.onStartUrl(context,url);
-                    }else {
-                        AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
-                    }
+                    AppActivityUtil.onStartUrl(context,url);
+                }else {
+                    AppActivityUtil.onAllServiceStartActivity(context,mainCode,code,serveId,name,"0");
+                }
             }
         });
     }

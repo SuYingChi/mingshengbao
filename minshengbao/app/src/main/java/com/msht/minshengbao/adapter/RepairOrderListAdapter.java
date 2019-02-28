@@ -92,47 +92,47 @@ public class RepairOrderListAdapter extends RecyclerView.Adapter<RepairOrderList
         }
         if (status.equals("1")) {
             myViewHolder.bnStatus.setVisibility(View.GONE);
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("2")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("3")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("4")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("5")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("6")){
             myViewHolder.bnStatus.setVisibility(View.GONE);
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("7")){
             myViewHolder.cnTime.setVisibility(View.VISIBLE);
             myViewHolder.bnStatus.setVisibility(View.VISIBLE);
-            myViewHolder.createTime.setVisibility(View.GONE);
+            myViewHolder.createTime.setVisibility(View.INVISIBLE);
         }else if (status.equals("8")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("9")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }else if (status.equals("10")){
-            myViewHolder.cnTime.setVisibility(View.GONE);
+            myViewHolder.cnTime.setVisibility(View.INVISIBLE);
             myViewHolder.bnStatus.setVisibility(View.GONE);
             myViewHolder.createTime.setVisibility(View.VISIBLE);
         }
         myViewHolder.cnOrder.setText(orderList.get(position).get("orderNo"));
-        myViewHolder.cnTitle.setText(orderList.get(position).get("title"));
+        myViewHolder.cnTitle.setText(orderList.get(position).get("categoryDesc"));
         myViewHolder.cnTime.setText(orderList.get(position).get("time"));
         myViewHolder.createTime.setText(orderList.get(position).get("time"));
         myViewHolder.bnStatus.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +173,7 @@ public class RepairOrderListAdapter extends RecyclerView.Adapter<RepairOrderList
         private MyViewHolder(View view){
             super(view);
             serviceImage=(ImageView) view.findViewById(R.id.id_img_type);
-            bnStatus =(Button) view.findViewById(R.id.id_btn_evalute);
+            bnStatus =(Button) view.findViewById(R.id.id_btn_evaluate);
             cnStatus =(TextView)view.findViewById(R.id.id_tv_status);
             cnOrder =(TextView)view.findViewById(R.id.id_orderNo) ;
             cnType =(TextView)view.findViewById(R.id.id_tv_type);
