@@ -564,7 +564,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         String voucher_start_date = voucherobj.optString("voucher_start_date");
                         String limitTime = voucherobj.optString("voucher_end_date");
                         String vlimitAmount = voucherobj.optString("voucher_limit");
-                        String desc = voucherobj.optString("desc");
+                        String desc = vtitle+":"+voucherobj.optString("voucher_price");
                         list.add(new OrderVoucherBean(vtid, vtitle, limitTime, vlimitAmount, voucherTid.equals(vtid), voucher_start_date, voucherobj.optString("voucher_price"),desc));
                     }
                     comfirmShopGoodBean.setVoucherInfo(voucherTid, voucherPrice, voucherDesc);
