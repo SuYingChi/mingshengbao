@@ -16,6 +16,26 @@ public class ComfirmShopGoodBean implements Serializable{
     private List<GoodsBean> goods;
     private int storeDoorService;
     private boolean isNeedEtVisible;
+    private boolean hasVoucher;
+    private List<OrderVoucherBean> voucherList;
+
+    public String getVoucherTid() {
+        return voucherTid;
+    }
+
+    public String getVoucherPrice() {
+        return voucherPrice;
+    }
+
+    public String getVoucherDesc() {
+        return voucherDesc;
+    }
+
+
+
+    private String voucherTid;
+    private String voucherPrice;
+    private String voucherDesc;
 
 
     public String getUserId() {
@@ -70,6 +90,29 @@ public class ComfirmShopGoodBean implements Serializable{
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setVoucherInfo(String voucherTid, String voucherPrice, String voucherDesc) {
+        this.voucherTid = voucherTid;
+        this.voucherPrice = voucherPrice;
+        this.voucherDesc = voucherDesc;
+    }
+
+
+    public boolean isHasVoucher() {
+        return hasVoucher;
+    }
+
+    public void setHasVoucher(boolean hasVoucher) {
+        this.hasVoucher = hasVoucher;
+    }
+
+    public List<OrderVoucherBean> getVoucherList() {
+        return voucherList;
+    }
+
+    public void setVoucherList(List<OrderVoucherBean> voucherList) {
+        this.voucherList = voucherList;
     }
 
     public static class GoodsBean implements Serializable{

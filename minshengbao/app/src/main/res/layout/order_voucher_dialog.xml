@@ -2,34 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/nc_bg"
+    >
     <TextView
-        android:text="优惠"
-       style="@style/shopBlackTitleText" />
-    <TextView
-        android:text="领券"
-        style="@style/shopBlackTitleText"
+        android:text="可用优惠券"
         android:layout_gravity="left"
+       style="@style/shopBlackTitleText" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shop_grey"
+        android:layout_marginLeft="@dimen/margin_Modules"
+        android:layout_marginRight="@dimen/margin_Modules"
+        android:layout_marginTop="@dimen/margin_Modules"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcl"
         style="@style/rcl"
         android:layout_width="match_parent"
+        android:layout_marginRight="@dimen/margin_Modules"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_Modules"
          />
-    <TextView
-        android:text="已领取的代金券可以在我的钱包里查看"
-        style="@style/grey_small_text"
-        android:layout_gravity="center_horizontal"
-        />
     <TextView
         style="@style/shopBlackTitleText"
         android:text="完成"
         android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/margin_width35"
-        android:layout_marginRight="@dimen/margin_width35"
-        android:layout_marginBottom="@dimen/margin_width35"
+        android:layout_margin="@dimen/margin_width40"
         android:textColor="@color/white"
         android:gravity="center"
         android:background="@drawable/btn_red"

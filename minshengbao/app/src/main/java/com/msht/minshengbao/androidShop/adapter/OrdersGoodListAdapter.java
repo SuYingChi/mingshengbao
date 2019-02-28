@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
+import com.msht.minshengbao.androidShop.shopBean.OrderVoucherBean;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
     }
     @Override
     public void convert(RecyclerHolder holder, ComfirmShopGoodBean comfirmShopGoodBean, final int position) {
+        //嵌套后出现问题 终极大招
+        holder.setIsRecyclable(false);
         RecyclerView rcl = holder.getView(R.id.rcl);
         if (rcl.getAdapter() == null) {
              OrdersGoodChildListAdapter childAdapter = new OrdersGoodChildListAdapter(context, new OrdersGoodChildListAdapter.OrdersChildListlistener() {
@@ -47,6 +50,11 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
                  public void onNoHasFocus() {
                      ordersListListener.onNoFocus(position);
                  }
+
+                 @Override
+                 public void onShowVoucherDialog(List<OrderVoucherBean> voucherList) {
+                     ordersListListener.onShowVoucherList(voucherList,position);
+                 }
              });
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
             //自适应自身高度
@@ -59,26 +67,34 @@ public class OrdersGoodListAdapter extends MyHaveHeadViewRecyclerAdapter <Comfir
             childAdapter.setStoreName(comfirmShopGoodBean.getStore_name());
             childAdapter.setStoreDoorService(comfirmShopGoodBean.getStoreDoorService());
             childAdapter.setIsNeedEtVisible(comfirmShopGoodBean.getIsNeedEtVisible());
+            childAdapter.isHasVoucher(comfirmShopGoodBean.isHasVoucher());
+            childAdapter.setVoucherinfo(comfirmShopGoodBean.getVoucherTid(),comfirmShopGoodBean.getVoucherPrice(),comfirmShopGoodBean.getVoucherDesc());
             childAdapter.setDatas(childlist);
+            childAdapter.setVoucherList(comfirmShopGoodBean.getVoucherList());
             rcl.setAdapter(childAdapter);
         } else if (rcl.getAdapter() instanceof OrdersGoodChildListAdapter) {
             OrdersGoodChildListAdapter childAdapter = (OrdersGoodChildListAdapter) rcl.getAdapter();
             childAdapter.setStoreName(comfirmShopGoodBean.getStore_name());
             childAdapter.setStoreDoorService(comfirmShopGoodBean.getStoreDoorService());
             childAdapter.setIsNeedEtVisible(comfirmShopGoodBean.getIsNeedEtVisible());
+            childAdapter.isHasVoucher(comfirmShopGoodBean.isHasVoucher());
+            childAdapter.setVoucherList(comfirmShopGoodBean.getVoucherList());
+            childAdapter.setVoucherinfo(comfirmShopGoodBean.getVoucherTid(),comfirmShopGoodBean.getVoucherPrice(),comfirmShopGoodBean.getVoucherDesc());
             childAdapter.notifyDataSetChanged();
         }
     }
     public interface  OrdersListListener{
-        void onMessaged(String message,int position);
+        void onMessaged(String message, int position);
 
         void onGoGoodDetail(String goods_id);
 
-        void etVisible(boolean etVisible,int position);
+        void etVisible(boolean etVisible, int position);
 
         void onInputUserId(String s, int position);
 
         void onNoFocus(int position);
+
+        void onShowVoucherList(List<OrderVoucherBean> voucherList, int position);
     }
 
     @Override
