@@ -1191,6 +1191,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         /*if (mImmersionBar != null) {
             mImmersionBar.destroy();
         }*/
+        OkHttpRequestManager.getInstance(mContext).requestCancel(this);
+
     }
 
 }

@@ -174,9 +174,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
         });
         tvNavigationTile.setText(mPageName);
     }
-
     private void onActionShareDialog() {
-
         new ActionShareDialog(this)
                 .builder()
                 .setCancelable(false)
@@ -303,7 +301,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
             e.printStackTrace();
         }
         UMWeb web = new UMWeb(shareUrl);
-        web.setTitle(shareDesc);
+        web.setTitle(desc);
         web.setDescription(desc);
         web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
         new ShareAction(HouseHoldCleanWeb.this).withMedia(web)

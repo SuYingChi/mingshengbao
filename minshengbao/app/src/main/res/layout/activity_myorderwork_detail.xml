@@ -193,6 +193,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_width10"
+                    android:background="@color/background_gray"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width50">
@@ -227,7 +231,6 @@
                         android:textSize="@dimen/text_width16"
                         android:textColor="@color/colorOrange"/>
                 </RelativeLayout>
-                <include layout="@layout/layout_line_gray"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/id_li_fixcard"

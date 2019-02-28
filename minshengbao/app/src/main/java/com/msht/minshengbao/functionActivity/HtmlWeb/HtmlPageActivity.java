@@ -566,7 +566,7 @@ public class HtmlPageActivity extends BaseActivity {
             e.printStackTrace();
         }
         UMWeb web = new UMWeb(shareUrl);
-        web.setTitle(shareTitle);
+        web.setTitle(desc);
         web.setDescription(desc);
         web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
         new ShareAction(HtmlPageActivity.this).withMedia(web)
