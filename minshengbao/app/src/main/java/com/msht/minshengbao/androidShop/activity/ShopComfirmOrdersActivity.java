@@ -553,7 +553,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 if (voucherInfo instanceof JSONObject) {
                     String voucherTid = ((JSONObject) voucherInfo).optString("voucher_t_id");
                     String voucherPrice = ((JSONObject) voucherInfo).optString("voucher_price");
-                    String voucherDesc = ((JSONObject) voucherInfo).optString("desc");
+                    String voucherDesc = ((JSONObject) voucherInfo).optString("voucher_title")+":"+((JSONObject) voucherInfo).optString("voucher_price");
                     JSONObject store_voucher_list = storeobj.optJSONObject("store_voucher_list");
                     List<String> vidList = JsonUtil.getJsonObjectKeyList(store_voucher_list);
                     List<OrderVoucherBean> list = new ArrayList<OrderVoucherBean>();

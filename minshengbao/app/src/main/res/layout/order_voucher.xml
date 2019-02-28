@@ -23,6 +23,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/desc"
         android:layout_toRightOf="@id/tv"
+        android:gravity="right"
 
         />
 </RelativeLayout>
