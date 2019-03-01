@@ -1038,6 +1038,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 initPush();
                 onGetBadgeCountMessage();
             }
+            String pushUrl=getIntent().getStringExtra("pushUrl");
+            if (!TextUtils.isEmpty(pushUrl)){
+                AppActivityUtil.onPushActivity(context,pushUrl);
+            }
         }
     }
 

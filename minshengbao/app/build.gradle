@@ -7,8 +7,8 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2000054
-        versionName "v4.7.1"
+        versionCode 2000056
+        versionName "v4.8.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "arm64-v8a", "armeabi", "armeabi-v7a", "x86", "x86_64", "mips"

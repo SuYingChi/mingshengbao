@@ -120,7 +120,12 @@ public class AppActivityUtil {
                 break;
             case ConstantUtil.HOUSEHOLD_CLEAN:
                 id = Uri.parse(url).getQueryParameter("id");
-                onHouseHoldClean(context, id,  "家电清洗",code);
+                if (isLoginState(context)){
+                    onHouseHoldClean(context, id,  "家电清洗",code);
+                }else {
+                    onStartLoginActivity(context, url);
+                }
+
                 break;
             case ConstantUtil.HOME_MAINTENANCE:
                 id = Uri.parse(url).getQueryParameter("id");
@@ -138,7 +143,12 @@ public class AppActivityUtil {
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
                         onHomeMaintenance(context, id, name);
                     } else {
-                        onHouseHoldClean(context, id, name,code);
+                        if (isLoginState(context)){
+                            onHouseHoldClean(context, id, name,code);
+                        }else {
+                            onStartLoginActivity(context,"");
+                        }
+
                     }
                     break;
                 case ConstantUtil.HOUSEHOLD_REPAIR:
@@ -270,7 +280,12 @@ public class AppActivityUtil {
                     onDrinkingWater(context, "");
                     break;
                 case ConstantUtil.HOUSEHOLD_CLEAN:
-                    onHouseHoldClean(context, id, name, code);
+                    if (isLoginState(context)){
+                        onHouseHoldClean(context, id, name, code);
+                    }else {
+                        onStartLoginActivity(context,"");
+                    }
+
                     break;
                 case ConstantUtil.HOUSEKEEPING_CLEAN:
                     onHouseKeepingClean(context, id, name);
@@ -404,7 +419,11 @@ public class AppActivityUtil {
                     break;
                 case ConstantUtil.HOUSEHOLD_CLEAN:
                     id = Uri.parse(url).getQueryParameter("id");
-                    onPushHouseHoldClean(context, id, "家电清洗",code);
+                    if (isLoginState(context)){
+                        onPushHouseHoldClean(context, id, "家电清洗",code);
+                    }else {
+                        onStartLoginActivity(context,url);
+                    }
                     break;
                 case ConstantUtil.HOME_MAINTENANCE:
                     id = Uri.parse(url).getQueryParameter("id");
@@ -490,7 +509,12 @@ public class AppActivityUtil {
                 break;
             case ConstantUtil.HOUSEHOLD_CLEAN:
                 id = Uri.parse(url).getQueryParameter("id");
-                onHouseHoldClean(context, id, "家电清洗",code);
+                if (isLoginState(context)){
+                    onHouseHoldClean(context, id, "家电清洗",code);
+                }else {
+                    onStartLoginActivity(context,url);
+                }
+
                 break;
             case ConstantUtil.HOME_MAINTENANCE:
                 id = Uri.parse(url).getQueryParameter("id");
