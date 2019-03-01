@@ -355,7 +355,6 @@ public class RefundApplyActivity extends BaseActivity {
                 break;
             case ConstantUtil.HOUSEHOLD_REPAIR:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
                 break;
             case ConstantUtil.OTHER_REPAIR:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
@@ -457,8 +456,8 @@ public class RefundApplyActivity extends BaseActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnSend.setEnabled(false);
                 if (!TextUtils.isEmpty(etProblem.getText().toString())){
+                    btnSend.setEnabled(false);
                     requestService();
                 }else {
                     ToastUtil.ToastText(context,"请您输入退款说明");

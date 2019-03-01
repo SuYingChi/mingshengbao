@@ -514,8 +514,24 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                 sendService();
             }
         }else {
-            customDialog.show();
-            sendService();
+            new PromptDialog.Builder(this)
+                    .setTitle("民生宝")
+                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                    .setMessage("您申请的发票工作人员将会在五个工作日内致电您领取，谢谢！")
+                    .setButton1("取消", new PromptDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setButton2("确定", new PromptDialog.OnClickListener() {
+                @Override
+                public void onClick(Dialog dialog, int which) {
+                    dialog.dismiss();
+                    customDialog.show();
+                    sendService();
+                }
+            })
+                    .show();
         }
     }
     private void sendService() {
