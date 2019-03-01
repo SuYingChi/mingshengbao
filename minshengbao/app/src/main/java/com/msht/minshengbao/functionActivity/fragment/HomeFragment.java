@@ -962,7 +962,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 ToastUtil.ToastText(mContext,data.toString());
             }
         });
-
     }
     private void onAnalysisMessage(String s) {
         final HotRecommendBean bean=GsonImpl.get().toObject(s,HotRecommendBean.class);
@@ -979,26 +978,21 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     String cid=bean.getData().get(pos).getCid();
                     String title=bean.getData().get(pos).getTitle();
                     String childName=bean.getData().get(pos).getChild_name();
-                    if (!TextUtils.isEmpty(url)){
-                        if (code.equals(ConstantUtil.HOUSEHOLD_CLEAN)){
-                            Intent intent = new Intent(mContext, HouseHoldCleanWeb.class);
-                            startActivity(intent);
+                    if (isLoginState(mContext)){
+                        if (!TextUtils.isEmpty(url)){
+                            if (code.equals(ConstantUtil.HOUSEHOLD_CLEAN)){
+                                Intent intent = new Intent(mContext, HouseHoldCleanWeb.class);
+                                startActivity(intent);
+                            }else {
+                                AppActivityUtil.onStartUrl(mContext,url,code);
+                            }
                         }else {
-                            AppActivityUtil.onStartUrl(mContext,url,code);
+                            AppActivityUtil.startActivityCode(mContext,code,cid,title,"0");
                         }
                     }else {
-                        if (isLoginState(mContext)){
-                            /*Intent intent=new Intent(mContext,PublishOrderActivity.class);
-                            intent.putExtra("id",cid);
-                            intent.putExtra("name",childName);
-                            intent.putExtra("mMainType",parentName);
-                            intent.putExtra("code",code);
-                            startActivity(intent);*/
-                            AppActivityUtil.startActivityCode(mContext,code,cid,title,"0");
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
-                        }
+                        AppActivityUtil.onStartLoginActivity(mContext,url);
                     }
+
                 }
             });
         }else {

@@ -213,7 +213,7 @@ public class HtmlPageActivity extends BaseActivity {
         backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
         tvNavigationTile.setText(mNavigation);
-         tvRightText=findViewById(R.id.id_tv_rightText);
+        tvRightText=findViewById(R.id.id_tv_rightText);
         tvRightText.setText("分享");
         if ((!TextUtils.isEmpty(share))&&share.equals(ConstantUtil.VALUE_ONE)){
             tvRightText.setVisibility(View.VISIBLE);
@@ -260,7 +260,6 @@ public class HtmlPageActivity extends BaseActivity {
                             }
                         }).show();
 
-               // mShareAction.open();
             }
         });
         backImg.setOnClickListener(new View.OnClickListener() {
@@ -364,18 +363,6 @@ public class HtmlPageActivity extends BaseActivity {
         mWebView.setWebChromeClient(new MyWebChromeClient());
     }
     private void initEvent() {
-//       mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//           @Override
-//           public void onRefresh() {
-//               mWebView.reload();
-//           }
-//       });
-//        mRefresh.setOnChildScrollUpCallback(new SwipeRefreshLayout.OnChildScrollUpCallback() {
-//            @Override
-//            public boolean canChildScrollUp(SwipeRefreshLayout parent, @Nullable View child) {
-//                return mWebView.getScrollY()>0;
-//            }
-//        });
         mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -484,12 +471,13 @@ public class HtmlPageActivity extends BaseActivity {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            if (!TextUtils.isEmpty(title)){
-                tvNavigationTile.setText(title);
-            }else {
-                tvNavigationTile.setText(mNavigation);
+            if (mUrl.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
+                if (!TextUtils.isEmpty(title)){
+                    tvNavigationTile.setText(title);
+                }else {
+                    tvNavigationTile.setText(mNavigation);
+                }
             }
-
         }
     }
     @Override
