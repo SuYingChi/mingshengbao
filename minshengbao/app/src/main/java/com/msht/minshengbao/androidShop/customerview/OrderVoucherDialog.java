@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.OrderVoucherListAdpter;
 import com.msht.minshengbao.androidShop.shopBean.OrderVoucherBean;
+import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ISelectedVoucherView;
 
 import java.util.List;
@@ -67,14 +68,12 @@ public class OrderVoucherDialog extends Dialog {
         setCanceledOnTouchOutside(true);
         WindowManager.LayoutParams attributes = this.getWindow().getAttributes();
         attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
-        attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        attributes.height = DimenUtil.dip2px(400);
         attributes.gravity = Gravity.BOTTOM;
         attributes.alpha=1;
         this.getWindow().setAttributes(attributes);
         LinearLayoutManager llm = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        llm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(llm);
-        rcl.setNestedScrollingEnabled(false);
         adapter = new OrderVoucherListAdpter(context,R.layout.item_order_voucher, list);
         adapter.setOrderVoucherListener(iSelectedVoucherView);
         adapter.setFoot_layoutId(R.layout.order_voucher_foot,null);

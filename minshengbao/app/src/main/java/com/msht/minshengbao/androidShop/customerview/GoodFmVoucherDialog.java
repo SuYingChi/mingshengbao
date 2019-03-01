@@ -22,6 +22,7 @@ import com.msht.minshengbao.androidShop.adapter.InvContentAdapter;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.InvContentItemBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
+import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvContentView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
@@ -77,13 +78,11 @@ public class GoodFmVoucherDialog extends Dialog {
         setCanceledOnTouchOutside(true);
         WindowManager.LayoutParams attributes = this.getWindow().getAttributes();
         attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
-        attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        attributes.height = DimenUtil.dip2px(400);
         attributes.gravity = Gravity.BOTTOM;
         this.getWindow().setAttributes(attributes);
         LinearLayoutManager llm = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        llm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(llm);
-        rcl.setNestedScrollingEnabled(false);
         adapter = new GoodFmVoucherAdpter(context,R.layout.item_goodfm_voucher, list);
         adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener(){
             @Override
