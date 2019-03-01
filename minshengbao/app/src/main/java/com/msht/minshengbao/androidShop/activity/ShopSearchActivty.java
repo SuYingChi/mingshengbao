@@ -122,7 +122,7 @@ public class ShopSearchActivty extends ShopBaseActivity implements IShopSearchVi
                 }
             }
         });*/
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 5);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         gridLayoutManager.setAutoMeasureEnabled(true);
         gv.setNestedScrollingEnabled(false);
         gv.setLayoutManager(gridLayoutManager);
