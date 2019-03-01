@@ -116,6 +116,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
+                        Log.d("additional_info=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -162,7 +163,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         String appointTime= jsonObject.optString("appoint_time");
         orderNo= jsonObject.optString("orderNo");
         String createTime = jsonObject.optString("createTime");
-        String estimateAmount= jsonObject.optString("estimated_price")+"元";
+        String estimateAmount= jsonObject.optString("estimated_price");
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
@@ -181,18 +182,14 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             estimateLayout.setVisibility(View.GONE);
         }else {
             estimateLayout.setVisibility(View.VISIBLE);
+            estimateAmount=estimateAmount+"元";
         }
         tvEstimateAmount.setText(estimateAmount);
         onSetStatusView(jsonObject,status);
         onSetGuaranteeStopDayView(jsonObject);
-        try {
-            JSONArray jsonArray=new JSONArray(jsonObject.optString("additional_info"));
-            additionalList.clear();
-            additionalList.addAll(GsonImpl.getAdditionalList(jsonArray));
-            mAdditionalAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        additionalList.clear();
+        additionalList.addAll(GsonImpl.getAdditionalList(jsonObject.optString("additional_info")));
+        mAdditionalAdapter.notifyDataSetChanged();
     }
     private void onSetStatusView(JSONObject jsonObject, String status) {
         switch (status){
@@ -244,6 +241,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                     layoutEvaluate.setVisibility(View.VISIBLE);
                     evaluateScore =jsonObject.optString("evaluate_score");
                     evaluateInfo =jsonObject.optString("evaluate_info");
+                    onEvaluateImg(evaluateScore);
                 }else {
                     layoutEvaluate.setVisibility(View.GONE);
                 }
@@ -265,6 +263,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                     layoutEvaluate.setVisibility(View.VISIBLE);
                     evaluateScore =jsonObject.optString("evaluate_score");
                     evaluateInfo =jsonObject.optString("evaluate_info");
+                    onEvaluateImg(evaluateScore);
                 }else {
                     layoutEvaluate.setVisibility(View.GONE);
                 }
@@ -287,6 +286,30 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
 
         }
     }
+
+    private void onEvaluateImg(String evaluateScore) {
+        switch (evaluateScore){
+            case ConstantUtil.VALUE_ONE:
+                evaluateImg.setImageResource(R.drawable.star_one_h);
+                break;
+            case ConstantUtil.VALUE_TWO:
+                evaluateImg.setImageResource(R.drawable.star_two_h);
+                break;
+            case ConstantUtil.VALUE_THREE:
+                evaluateImg.setImageResource(R.drawable.star_three_h);
+                break;
+            case ConstantUtil.VALUE_FOUR:
+                evaluateImg.setImageResource(R.drawable.star_four_h);
+                break;
+            case ConstantUtil.VALUE_FIVE:
+                evaluateImg.setImageResource(R.drawable.star_five_h);
+                break;
+                default:
+                    evaluateImg.setImageResource(R.drawable.star_four_h);
+                    break;
+        }
+    }
+
     private void onStatusFourTeen(JSONObject jsonObject) {
         String repairManCancelInfo=jsonObject.optString("repair_man_cancel_info");
         reasonTitle.setText("改单原因：");
@@ -333,6 +356,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvGuaranteeDay.setText(guaranteeDay);
         onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
+
         if (TextUtils.isEmpty(couponAmount)){
             tvTotalCoupon.setText(ConstantUtil.VALUE_ZERO2);
         }else {
@@ -389,6 +413,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutPayWay.setVisibility(View.VISIBLE);
         layoutCoupon.setVisibility(View.VISIBLE);
         layoutRealAmount.setVisibility(View.VISIBLE);
+        Log.d("additional_info2=","dfhbfdhbdf");
         onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
         if (TextUtils.isEmpty(couponAmount)){
@@ -398,17 +423,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }
         finishTime =jsonObject.optString("finish_time");
         viewPayAmount.setVisibility(View.GONE);
-        if (evaluateInfo.equals(ConstantUtil.VALUE_ONE)){
-            evaluateImg.setImageResource(R.drawable.star_one_h);
-        }else if (evaluateScore.equals(ConstantUtil.VALUE_TWO)){
-            evaluateImg.setImageResource(R.drawable.star_two_h);
-        }else if (evaluateScore.equals(ConstantUtil.VALUE_THREE)){
-            evaluateImg.setImageResource(R.drawable.star_three_h);
-        }else if (evaluateScore.equals(ConstantUtil.VALUE_FOUR)){
-            evaluateImg.setImageResource(R.drawable.star_four_h);
-        }else if (evaluateScore.equals(ConstantUtil.VALUE_FIVE)){
-            evaluateImg.setImageResource(R.drawable.star_five_h);
-        }
     }
     private void onShowFee(JSONObject jsonObject) {
         amount=jsonObject.optString("amount");

@@ -81,6 +81,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     private String  title;
     private String  imageUrl;
     private String  desc;
+    private static final  String shareTitle="居民燃气险";
     private String  phone;
     private Bitmap mBitmap;
     private String shareDesc;
@@ -232,7 +233,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     private void onWeiXin() {
         String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         UMWeb web = new UMWeb(insuranceDetailUrl);
-        web.setTitle(ShareDefaultContent.title);
+        web.setTitle(title);
         web.setDescription(shareDesc);
         web.setThumb(new UMImage(context, imageUrl));
         new ShareAction(InsuranceHtmlActivity.this).withMedia(web)
