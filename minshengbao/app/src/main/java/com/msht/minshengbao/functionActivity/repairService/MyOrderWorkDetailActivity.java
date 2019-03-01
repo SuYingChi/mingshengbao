@@ -286,7 +286,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
 
         }
     }
-
     private void onEvaluateImg(String evaluateScore) {
         switch (evaluateScore){
             case ConstantUtil.VALUE_ONE:
@@ -356,7 +355,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvGuaranteeDay.setText(guaranteeDay);
         onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
-
         if (TextUtils.isEmpty(couponAmount)){
             tvTotalCoupon.setText(ConstantUtil.VALUE_ZERO2);
         }else {
@@ -413,7 +411,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutPayWay.setVisibility(View.VISIBLE);
         layoutCoupon.setVisibility(View.VISIBLE);
         layoutRealAmount.setVisibility(View.VISIBLE);
-        Log.d("additional_info2=","dfhbfdhbdf");
         onShowFee(jsonObject);
         tvMustPay.setText(realAmount);
         if (TextUtils.isEmpty(couponAmount)){

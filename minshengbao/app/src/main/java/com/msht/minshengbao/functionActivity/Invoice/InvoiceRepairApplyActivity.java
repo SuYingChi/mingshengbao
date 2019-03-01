@@ -111,7 +111,12 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                         String results=object.optString("result");
                         String error = object.optString("error");
                         if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onSuccess();
+                            activity.setResult(1);
+                            if (activity.deliveryType.equals(ConstantUtil.VALUE_ONE)){
+                                activity.onSuccess("您的发票已申请成功！");
+                            }else {
+                                activity.onSuccess("您的发票申请已成功提交，工作人员将在五个工作日内致电您领取发票！");
+                            }
                         } else {
                             activity.noticeDialog(error);
                         }
@@ -127,16 +132,15 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
             super.handleMessage(msg);
         }
     }
-    private void onSuccess() {
+    private void onSuccess(String s) {
         new PromptDialog.Builder(this)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage("您的发票已申请成功！")
+                .setMessage(s)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
 
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        setResult(1);
                         dialog.dismiss();
                         finish();
 
@@ -483,35 +487,37 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
     }
 
     private void requestServer(double doubleAmount) {
-        if (doubleAmount<OVER_AMOUNT){
-            new PromptDialog.Builder(this)
-                    .setTitle("民生宝")
-                    .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                    .setMessage("由于您的发票金额还未满400元，我们" +
-                            "会通过顺丰到付的方式给您邮寄发票，" +
-                            "签收时请将邮费会给快递小哥哦")
-                    .setButton1("我再想想", new PromptDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setButton2("我很确定", new PromptDialog.OnClickListener() {
-
-                        @Override
-                        public void onClick(Dialog dialog, int which) {
-                            dialog.dismiss();
-                            customDialog.show();
-                            sendService();
-                        }
-                    })
-                    .show();
+        if (deliveryType.equals(ConstantUtil.VALUE_ONE)){
+            if (doubleAmount<OVER_AMOUNT){
+                new PromptDialog.Builder(this)
+                        .setTitle("民生宝")
+                        .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                        .setMessage("由于您的发票金额还未满400元，我们" +
+                                "会通过顺丰到付的方式给您邮寄发票，" +
+                                "签收时请将邮费会给快递小哥哦")
+                        .setButton1("我再想想", new PromptDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).setButton2("我很确定", new PromptDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog, int which) {
+                                dialog.dismiss();
+                                customDialog.show();
+                                sendService();
+                            }
+                        })
+                        .show();
+            }else {
+                customDialog.show();
+                sendService();
+            }
         }else {
             customDialog.show();
             sendService();
         }
     }
-
     private void sendService() {
         String validateURL= UrlUtil.INVOICE_APPLY_URL;
         Map<String, String> textParams = new HashMap<String, String>();
@@ -531,7 +537,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         textParams.put("company_tel",companyTel);
         textParams.put("company_address", companyAddress);
         textParams.put("relate_order",relateOrder);
-        textParams.put("deliveryType",deliveryType);
+        textParams.put("delivery_type",deliveryType);
         if (certeFile !=null){
             fileParams.put("business_license_img", certeFile);
         }
