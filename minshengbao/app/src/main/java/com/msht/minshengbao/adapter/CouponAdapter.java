@@ -138,7 +138,7 @@ public class CouponAdapter extends BaseAdapter {
                     break;
                     default:break;
             }
-            holder.cnName.setText(haveuseList.get(position).get("voucher_title"));
+            holder.cnName.setText(haveuseList.get(position).get("store_name"));
             holder.cnEndDate.setText(haveuseList.get(position).get("voucher_end_date_text"));
             String limitUse = "买满" + haveuseList.get(position).get("voucher_limit") + "元可用";
             holder.cnScope.setText(limitUse);

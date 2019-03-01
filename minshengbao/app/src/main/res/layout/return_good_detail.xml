@@ -217,7 +217,8 @@
                 <TextView
                     android:id="@+id/state"
                     style="@style/shopMsbcolorTitleText"
-                    android:textColor="@color/shop_grey" />
+                    android:textColor="@color/home_bar_text_normal"
+                    android:textSize="@dimen/text_14"/>
             </LinearLayout>
 
             <LinearLayout
@@ -238,7 +239,8 @@
                 <TextView
                     android:id="@+id/seller_message"
                     style="@style/shopBlackTitleText"
-                    android:textSize="@dimen/text_14" />
+                    android:textColor="@color/home_bar_text_normal"
+                    android:textSize="@dimen/text_14"/>
             </LinearLayout>
 
             <TextView
@@ -267,7 +269,8 @@
                 <TextView
                     android:id="@+id/caiwu_state"
                     style="@style/shopMsbcolorTitleText"
-                    android:textColor="@color/shop_grey" />
+                    android:textColor="@color/home_bar_text_normal"
+                    android:textSize="@dimen/text_14" />
             </LinearLayout>
 
             <LinearLayout
@@ -302,7 +305,8 @@
                     <TextView
                         android:id="@+id/pay_method"
                         style="@style/shopMsbcolorTitleText"
-                        android:textColor="@color/shop_grey" />
+                        android:textColor="@color/home_bar_text_normal"
+                        android:textSize="@dimen/text_14"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -323,7 +327,8 @@
                     <TextView
                         android:id="@+id/online_refund"
                         style="@style/shopMsbcolorTitleText"
-                        android:textColor="@color/shop_grey" />
+                        android:textColor="@color/home_bar_text_normal"
+                        android:textSize="@dimen/text_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -369,7 +374,8 @@
                     <TextView
                         android:id="@+id/rcb_amount"
                         style="@style/shopMsbcolorTitleText"
-                        android:textColor="@color/shop_grey" />
+                        android:textColor="@color/home_bar_text_normal"
+                        android:textSize="@dimen/text_14" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
