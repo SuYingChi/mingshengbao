@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.Dialog.QrCodeDialog;
 import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -113,7 +115,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house_hold_clean_web);
         context=this;
-        mPageName="购买保险";
+        mPageName="家电清洗";
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this,SharedPreferencesUtil.Password,"");
         phone=SharedPreferencesUtil.getUserName(this,SharedPreferencesUtil.UserName,"");
@@ -122,6 +124,11 @@ public class HouseHoldCleanWeb extends BaseActivity {
             desc=data.getStringExtra("desc");
             shareTitle=data.getStringExtra("title");
             activityCode=data.getStringExtra("activityCode")+"_share";
+        }
+        if (!TextUtils.isEmpty(shareTitle)){
+            mPageName=shareTitle;
+        }else {
+            mPageName="家电清洗";
         }
         desc="给家电洗洗澡，让洁净充满你的生活。搞活动有优惠哦，赶紧来下单吧！";
         initFindViewId();
@@ -440,6 +447,9 @@ public class HouseHoldCleanWeb extends BaseActivity {
             }else if (url.contains(BTN_URL)){
                 onManageAddress();
                 return true;
+            }else if (url.contains(UrlUtil.APP_PAY_SUCCESS_PAGE_URL)){
+                onStartSuccess(url);
+                return true;
             }else if (url.startsWith(ConstantUtil.MSB_APP)){
                 AppActivityUtil.onAppActivityType(context,url,"民生宝","0","","","");
                 return true;
@@ -452,7 +462,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
             handler.proceed(); // 接受所有网站的证书
             super.onReceivedSslError(view, handler, error);
         }
-
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
@@ -463,6 +472,16 @@ public class HouseHoldCleanWeb extends BaseActivity {
             }
         }
 
+    }
+
+    private void onStartSuccess(String url) {
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url","");
+        success.putExtra("type","1");
+        success.putExtra("pageUrl",url);
+        success.putExtra("navigation","民生宝");
+        startActivity(success);
+        finish();
     }
 
     private void onManageAddress() {

@@ -124,21 +124,10 @@ public class InvoiceHistoryActivity extends BaseActivity {
                 String amount  = jsonObject.getString("amount");
                 String time    = jsonObject.getString("time");
                 String invoiceId=jsonObject.optString("invoiceId");
-                String statusDes="";
+                String statusDesc=jsonObject.optString("statusDesc");
                 String invoiceTypeName="纸质发票";
-                switch (status){
-                    case ConstantUtil.VALUE_ONE:
-                        statusDes="待寄出";
-                        break;
-                    case ConstantUtil.VALUE_TWO:
-                        statusDes="已寄出";
-                        break;
-                    default:
-                        statusDes="未知状态";
-                        break;
-                }
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("statusDes",statusDes);
+                map.put("statusDesc",statusDesc);
                 map.put("name",name);
                 map.put("content",name);
                 map.put("waybill_num", waybillNum);

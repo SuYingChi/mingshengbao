@@ -292,6 +292,7 @@ public class UrlUtil {
     /**
      * HTML5页面
      */
+    public static final String APP_PAY_SUCCESS_PAGE_URL =BuildConfig.URL_HEADS+"/Gas/app/app_pay_success_page";
     public static final String APP_PAY_SUCCESS_PAGE =BuildConfig.URL_HEADS+"/Gas/app/app_pay_success_page?";
     public static final String INSURANCE_EXPLAIN_URL="http://msbapp.cn/insurance/toubaoshuoming.html";
     public static final String RECHARGE_BACK_AGREE =BuildConfig.URL_HEADS+"/water_h5/chongfanxieyi.html";

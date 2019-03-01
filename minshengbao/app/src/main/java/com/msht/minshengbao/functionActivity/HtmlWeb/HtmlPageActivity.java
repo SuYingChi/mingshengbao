@@ -62,6 +62,7 @@ import com.msht.minshengbao.androidShop.util.NavigationbarUtil;
 import com.msht.minshengbao.functionActivity.MyActivity.AddAddressActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
+import com.msht.minshengbao.functionActivity.Public.PaySuccessActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -410,6 +411,9 @@ public class HtmlPageActivity extends BaseActivity {
             }else if (url.contains(BTN_URL)){
                 onManageAddress();
                 return true;
+            }else if (url.contains(UrlUtil.APP_PAY_SUCCESS_PAGE_URL)){
+                onStartSuccess(url);
+                return true;
             }else if (url.startsWith(ConstantUtil.MSB_APP)){
                 AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"");
                 return true;
@@ -438,7 +442,15 @@ public class HtmlPageActivity extends BaseActivity {
             }
         }
     }
-
+    private void onStartSuccess(String url) {
+        Intent success=new Intent(context,PaySuccessActivity.class);
+        success.putExtra("url","");
+        success.putExtra("type","1");
+        success.putExtra("pageUrl",url);
+        success.putExtra("navigation","民生宝");
+        startActivity(success);
+        finish();
+    }
     private void onManageAddress() {
         Intent intent=new Intent(context,AddressManageActivity.class);
         startActivityForResult(intent,ConstantUtil.VALUE1);

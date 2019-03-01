@@ -50,7 +50,7 @@ public class InvoiceHistoryAdapter extends RecyclerView.Adapter<InvoiceHistoryAd
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final  int thisPosition=position;
         holder.tvName.setText(mList.get(position).get("content"));
-        holder.tvStatus.setText(mList.get(position).get("statusDes"));
+        holder.tvStatus.setText(mList.get(position).get("statusDesc"));
         holder.tvTime.setText(mList.get(position).get("time"));
         holder.tvAmount.setText(mList.get(position).get("amount"));
         holder.tvTitle.setText(mList.get(position).get("invoiceTypeName"));

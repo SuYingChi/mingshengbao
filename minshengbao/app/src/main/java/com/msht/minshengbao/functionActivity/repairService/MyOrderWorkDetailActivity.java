@@ -93,6 +93,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String parentCode;
     private String categoryDesc;
     private String additionalInfo;
+    private String estimateAmount;
     private int    requestType=0;
     private RepairAdditionalInfoAdapter mAdditionalAdapter;
     private ArrayList<HashMap<String ,String>> additionalList=new ArrayList <HashMap<String ,String>>();
@@ -116,7 +117,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-                        Log.d("additional_info=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -163,7 +163,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         String appointTime= jsonObject.optString("appoint_time");
         orderNo= jsonObject.optString("orderNo");
         String createTime = jsonObject.optString("createTime");
-        String estimateAmount= jsonObject.optString("estimated_price");
+        estimateAmount= jsonObject.optString("estimated_price");
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
@@ -177,16 +177,9 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }else {
             tvRemarkInfo.setText(info);
         }
-        if (TextUtils.isEmpty(estimateAmount)||estimateAmount.equals(ConstantUtil.NULL_VALUE)
-                ||estimateAmount.equals(ConstantUtil.VALUE_ZERO2)||estimateAmount.equals(ConstantUtil.VALUE_ZERO1)){
-            estimateLayout.setVisibility(View.GONE);
-        }else {
-            estimateLayout.setVisibility(View.VISIBLE);
-            estimateAmount=estimateAmount+"元";
-        }
-        tvEstimateAmount.setText(estimateAmount);
         onSetStatusView(jsonObject,status);
         onSetGuaranteeStopDayView(jsonObject);
+        onEstimateView(estimateAmount);
         additionalList.clear();
         additionalList.addAll(GsonImpl.getAdditionalList(jsonObject.optString("additional_info")));
         mAdditionalAdapter.notifyDataSetChanged();
@@ -233,7 +226,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 onStatusSix(jsonObject);
                 break;
             case ConstantUtil.VALUE_SEVER:
-                layoutRefund.setVisibility(View.GONE);
                 onStatusSeven(jsonObject);
                 break;
             case ConstantUtil.VALUE_EIGHT:
@@ -251,6 +243,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 finishInfo(jsonObject);
                 break;
             case ConstantUtil.VALUE_NINE:
+                onEstimateView(estimateAmount);
                 String refuseReason=jsonObject.optString("refuse_reason");
                 layoutRepairCancel.setVisibility(View.VISIBLE);
                 viewPayAmount.setVisibility(View.GONE);
@@ -285,6 +278,16 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                     break;
 
         }
+    }
+    private void onEstimateView(String estimateAmount){
+        if (TextUtils.isEmpty(estimateAmount)||estimateAmount.equals(ConstantUtil.NULL_VALUE)
+                ||estimateAmount.equals(ConstantUtil.VALUE_ZERO2)||estimateAmount.equals(ConstantUtil.VALUE_ZERO1)){
+            estimateLayout.setVisibility(View.GONE);
+        }else {
+            estimateLayout.setVisibility(View.VISIBLE);
+            estimateAmount=estimateAmount+"元";
+        }
+        tvEstimateAmount.setText(estimateAmount);
     }
     private void onEvaluateImg(String evaluateScore) {
         switch (evaluateScore){

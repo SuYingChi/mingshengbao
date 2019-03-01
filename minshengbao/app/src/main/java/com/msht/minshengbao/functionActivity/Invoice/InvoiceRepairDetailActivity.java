@@ -163,13 +163,20 @@ public class InvoiceRepairDetailActivity extends BaseActivity implements View.On
                 layoutDelivery.setVisibility(View.VISIBLE);
                 tvStatusDes.setText("纸质发票已寄出");
                 break;
+            case 7:
+                layoutDelivery.setVisibility(View.GONE);
+                tvStatusDes.setText("纸质发票待自提");
+                break;
+            case 8:
+                layoutDelivery.setVisibility(View.GONE);
+                tvStatusDes.setText("纸质发票已自提");
+                break;
             default:
-                layoutDelivery.setVisibility(View.VISIBLE);
+                layoutDelivery.setVisibility(View.GONE);
                 tvStatusDes.setText("纸质发票");
                 break;
         }
     }
-
     private void onSetVisibleView(int type) {
         switch (type){
             case 1:

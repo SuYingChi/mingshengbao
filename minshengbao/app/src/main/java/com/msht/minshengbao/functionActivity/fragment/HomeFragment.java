@@ -982,6 +982,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                         if (!TextUtils.isEmpty(url)){
                             if (code.equals(ConstantUtil.HOUSEHOLD_CLEAN)){
                                 Intent intent = new Intent(mContext, HouseHoldCleanWeb.class);
+                                intent.putExtra("title",title);
+                                intent.putExtra("activityCode",code);
                                 startActivity(intent);
                             }else {
                                 AppActivityUtil.onStartUrl(mContext,url,code);

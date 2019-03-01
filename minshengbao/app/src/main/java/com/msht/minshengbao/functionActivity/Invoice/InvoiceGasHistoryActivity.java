@@ -124,23 +124,23 @@ public class InvoiceGasHistoryActivity extends BaseActivity {
                 String time    = jsonObject.getString("time");
                 String invoiceType=jsonObject.optString("invoiceType");
                 String status  =jsonObject.optString("status");
-                String statusDes="";
+                String statusDesc="";
                 String invoiceTypeName="";
                 switch (status){
                     case ConstantUtil.VALUE_THREE:
-                        statusDes="待开票";
+                        statusDesc="待开票";
                         break;
                     case ConstantUtil.VALUE_FOUR:
-                        statusDes="开票中";
+                        statusDesc="开票中";
                         break;
                     case ConstantUtil.VALUE_FIVE:
-                        statusDes="开票失败";
+                        statusDesc="开票失败";
                         break;
                     case ConstantUtil.VALUE_SIX:
-                        statusDes="开票成功";
+                        statusDesc="开票成功";
                         break;
                     default:
-                        statusDes="未知状态";
+                        statusDesc="未知状态";
                         break;
                 }
                 if (invoiceType.equals(ConstantUtil.VALUE_ONE)){
@@ -149,7 +149,7 @@ public class InvoiceGasHistoryActivity extends BaseActivity {
                     invoiceTypeName="纸质发票";
                 }
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("statusDes", statusDes);
+                map.put("statusDesc", statusDesc);
                 map.put("name",name);
                 map.put("title", title);
                 map.put("amount",amount);

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.functionActivity.Public.SelectAddressActivity;
 import com.msht.minshengbao.R;
@@ -112,11 +113,7 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                         String error = object.optString("error");
                         if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             activity.setResult(1);
-                            if (activity.deliveryType.equals(ConstantUtil.VALUE_ONE)){
-                                activity.onSuccess("您的发票已申请成功！");
-                            }else {
-                                activity.onSuccess("您的发票申请已成功提交，工作人员将在五个工作日内致电您领取发票！");
-                            }
+                            activity.onSuccess("您的发票已申请成功！");
                         } else {
                             activity.noticeDialog(error);
                         }
@@ -457,7 +454,11 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
         double doubleAmount=Double.parseDouble(amount);
         switch (type){
             case VariableUtil.VALUE_ONE:
-                requestServer(doubleAmount);
+                if (!RegularExpressionUtil.isPhone(phoneNum)){
+                    noticeDialog("您输入联系电话不正确");
+                }else {
+                    requestServer(doubleAmount);
+                }
                 break;
             case VariableUtil.VALUE_TWO:
                 if (TextUtils.isEmpty(etTaxpayerNum.getText().toString())){
@@ -470,6 +471,8 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                     noticeDialog("请输入您的企业电话");
                 }else if (TextUtils.isEmpty(etCompanyAddress.getText().toString())){
                     noticeDialog("请输入您的企业地址");
+                }else if (!RegularExpressionUtil.isPhone(phoneNum)){
+                    noticeDialog("您输入联系电话不正确");
                 }else {
                     requestServer(doubleAmount);
                 }
@@ -477,6 +480,8 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
             case VariableUtil.VALUE_THREE:
                 if (TextUtils.isEmpty(etTaxpayerNum.getText().toString())){
                     noticeDialog("请输入您的纳税人识别号");
+                }else  if (!RegularExpressionUtil.isPhone(phoneNum)){
+                    noticeDialog("您输入联系电话不正确");
                 }else {
                     requestServer(doubleAmount);
                 }
@@ -485,7 +490,6 @@ public class InvoiceRepairApplyActivity extends BaseActivity implements View.OnC
                 break;
         }
     }
-
     private void requestServer(double doubleAmount) {
         if (deliveryType.equals(ConstantUtil.VALUE_ONE)){
             if (doubleAmount<OVER_AMOUNT){
