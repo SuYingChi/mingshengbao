@@ -304,7 +304,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 voucherDialog.show();
             } else {
                 this.storeVoucherPosition=storeVoucherPosition;
-                voucherDialog.refreshData(voucherList, false);
+                voucherDialog = new OrderVoucherDialog(this, this, voucherList);
                 voucherDialog.show();
             }
         }

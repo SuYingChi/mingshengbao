@@ -17,7 +17,7 @@ public class OrderVoucherListAdpter extends HaveHeadAndFootRecyclerAdapter<Order
 
 
     private ISelectedVoucherView iSelectedVoucherView;
-    private boolean isUseVoucher=true;
+    private boolean isUseVoucher = true;
 
     public OrderVoucherListAdpter(Context context, int layoutId, List<OrderVoucherBean> datas) {
         super(context, layoutId, datas);
@@ -25,7 +25,7 @@ public class OrderVoucherListAdpter extends HaveHeadAndFootRecyclerAdapter<Order
 
     @Override
     public void convert(RecyclerHolder holder, OrderVoucherBean voucherBean, final int position) {
-        if(holder.getItemViewType()==Integer.MAX_VALUE){
+        if (holder.getItemViewType() == Integer.MAX_VALUE) {
             final CheckBox checkBox = (CheckBox) holder.getView(R.id.select);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -38,11 +38,11 @@ public class OrderVoucherListAdpter extends HaveHeadAndFootRecyclerAdapter<Order
                         //取消选中后，可以更改
                         checkBox.setClickable(true);
                     }
-                    iSelectedVoucherView.noSelectedVoucher(datas,isChecked);
+                    iSelectedVoucherView.noSelectedVoucher(datas, isChecked);
                 }
             });
             checkBox.setChecked(!isUseVoucher);
-        }else {
+        } else {
             holder.setText(R.id.user_limit, "使用说明:订单满" + voucherBean.getVlimitAmount() + "元可用");
             holder.setText(R.id.amount, "¥" + voucherBean.getVoucherPrice());
             holder.setText(R.id.time_limit, "有效期" + voucherBean.getStartLimit() + "—" + voucherBean.getLimitTime());
@@ -65,11 +65,12 @@ public class OrderVoucherListAdpter extends HaveHeadAndFootRecyclerAdapter<Order
             checkBox.setChecked(voucherBean.isSelected());
         }
     }
-   public void  setOrderVoucherListener(ISelectedVoucherView iSelectedVoucherView){
+
+    public void setOrderVoucherListener(ISelectedVoucherView iSelectedVoucherView) {
         this.iSelectedVoucherView = iSelectedVoucherView;
     }
 
     public void isUseVoucher(boolean isUseVoucher) {
-        this.isUseVoucher=isUseVoucher;
+        this.isUseVoucher = isUseVoucher;
     }
 }
