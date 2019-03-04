@@ -85,9 +85,11 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
             RadioGroup radioGroup = holder.getView(R.id.radio_group);
             EditText et = holder.getView(R.id.et_userid);
             if (isNeedEtVisible) {
-                et.setVisibility(View.VISIBLE);
+                holder.getView(R.id.lluserid).setVisibility(View.VISIBLE);
+                radioGroup.check(R.id.need_door);
             } else {
-                et.setVisibility(View.GONE);
+                holder.getView(R.id.lluserid).setVisibility(View.GONE);
+                radioGroup.check(R.id.no_need_door);
             }
             et.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -116,9 +118,9 @@ public class OrdersGoodChildListAdapter extends MyHaveHeadAndFootRecyclerAdapter
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (checkedId == R.id.no_need_door) {
-                        ordersChildListlistener.etVisible(false);
-                    } else if (checkedId == R.id.need_door) {
+                    if (checkedId == R.id.no_need_door&&isNeedEtVisible) {
+                            ordersChildListlistener.etVisible(false);
+                    } else if (checkedId == R.id.need_door&&!isNeedEtVisible) {
                         ordersChildListlistener.etVisible(true);
                     }
                 }
