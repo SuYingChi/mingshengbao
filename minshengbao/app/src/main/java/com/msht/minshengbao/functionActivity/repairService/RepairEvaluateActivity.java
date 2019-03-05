@@ -41,7 +41,7 @@ public class RepairEvaluateActivity extends BaseActivity {
     private EditText  etEvaluation;
     private Button btnSendEva;
     private String orderNo;
-    private String evalScore="0";
+    private String evalScore="3";
     private String userId,password;
     private String id, parentCategory;
     private String categoryDesc;
@@ -186,7 +186,7 @@ public class RepairEvaluateActivity extends BaseActivity {
         mRatingBar.setStarEmptyDrawable(getResources().getDrawable(R.drawable.star_empty));
         mRatingBar.setStarFillDrawable(getResources().getDrawable(R.drawable.star_full));
         mRatingBar.setStarCount(5);
-        mRatingBar.setStar(0f);
+        mRatingBar.setStar(3f);
         mRatingBar.halfStar(true);
         mRatingBar.setmClickable(true);
         mRatingBar.setStarImageWidth(120f);

@@ -47,7 +47,7 @@
                         android:layout_width="wrap_content"
                         android:minHeight="@dimen/margin_width30"
                         android:layout_height="wrap_content"
-                        android:text="@string/please_select_customerNo"
+                        android:text="@string/please_select"
                         android:textColor="@color/white"
                         android:id="@+id/id_btn_selectaddress"
                         android:background="@drawable/shape_orange_corner_button"

@@ -7,7 +7,7 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2000056
+        versionCode 2000057
         versionName "v4.8.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {

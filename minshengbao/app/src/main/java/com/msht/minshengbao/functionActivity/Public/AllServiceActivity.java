@@ -173,7 +173,7 @@ public class AllServiceActivity extends BaseActivity {
         String functionUrl = UrlUtil.ALL_SERVE_CATALOG_URL;
         String function = "";
         try {
-            function = functionUrl + "?city_id=" + URLEncoder.encode(cityId, "UTF-8") + "&city_name=" + URLEncoder.encode(mCity, "UTF-8") + "&version=" + URLEncoder.encode("201901", "UTF-8");
+            function = functionUrl + "?city_id=" + URLEncoder.encode(cityId, "UTF-8") + "&city_name=" + URLEncoder.encode(mCity, "UTF-8") + "&version=" + URLEncoder.encode("201902", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
