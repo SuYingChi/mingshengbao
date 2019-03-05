@@ -62,9 +62,10 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
             final WaterMainActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
-            }
-            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                activity.customDialog.dismiss();
+            }else {
+                if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                    activity.customDialog.dismiss();
+                }
             }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:

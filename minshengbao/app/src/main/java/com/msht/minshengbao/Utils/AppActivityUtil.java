@@ -470,83 +470,83 @@ public class AppActivityUtil {
             onStartLoginActivity(context, "");
         }
     }
-
-
     public static void onPushActivity(Context context, String url) {
         String code = Uri.parse(url).getQueryParameter("code");
         String id;
-        switch (code) {
-            case ConstantUtil.SHOP:
-                onShopMallPage(context,url);
-                break;
-            case ConstantUtil.WATER:
-                onDrinkingWater(context, url);
-                break;
-            case ConstantUtil.DRINKING_WATER:
-                onDrinkingWater(context, url);
-                break;
-            case ConstantUtil.LPG_NAME:
-                onLpgService(context, url);
-                break;
-            case ConstantUtil.VEGETABLE:
-                onVegetableModel(context, url);
-                break;
-            case ConstantUtil.INSURANCE:
-                onInsurance(context, url);
-                break;
-            case ConstantUtil.GAS_METER:
-                onGasMeter(context, url);
-                break;
-            case ConstantUtil.GAS_PAY:
-                onGasPay(context, url);
-                break;
-            case ConstantUtil.GAS_IC_CARD:
-                onIcCard(context, url);
-                break;
-            case ConstantUtil.HOUSEKEEPING_CLEAN:
-                id = Uri.parse(url).getQueryParameter("id");
-                onHouseKeepingClean(context, id, "家政保洁");
-                break;
-            case ConstantUtil.HOUSEHOLD_CLEAN:
-                id = Uri.parse(url).getQueryParameter("id");
-                if (isLoginState(context)){
-                    onHouseHoldClean(context, id, "家电清洗",code);
-                }else {
-                    onStartLoginActivity(context,url);
-                }
-
-                break;
-            case ConstantUtil.HOME_MAINTENANCE:
-                id = Uri.parse(url).getQueryParameter("id");
-                onHomeMaintenance(context, id, "家居维修");
-                break;
-            case ConstantUtil.MESSAGE:
-                onStartMessage(context,url);
-                break;
-            case ConstantUtil.MESSAGE_DETAIL:
-                if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
-                    onStartMessageDetail(context, url, 0);
-                }else {
-                    AppActivityUtil.onStartLoginActivity(context, url);
-                }
-                break;
-            case ConstantUtil.MESSAGE_LIST:
-                if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
-                    onStartMessageList(context, url, 0);
-                }else {
-                    AppActivityUtil.onStartLoginActivity(context, url);
-                }
-                break;
-            default:
-                if (url.startsWith(ConstantUtil.HTTP)) {
-                    url = LinkUrlUtil.containMark(context, url);
-                    if (isLoginState(context)) {
-                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
-                    } else {
-                        onStartLoginActivity(context, url);
+        if (!TextUtils.isEmpty(code)){
+            switch (code) {
+                case ConstantUtil.SHOP:
+                    onShopMallPage(context,url);
+                    break;
+                case ConstantUtil.WATER:
+                    onDrinkingWater(context, url);
+                    break;
+                case ConstantUtil.DRINKING_WATER:
+                    onDrinkingWater(context, url);
+                    break;
+                case ConstantUtil.LPG_NAME:
+                    onLpgService(context, url);
+                    break;
+                case ConstantUtil.VEGETABLE:
+                    onVegetableModel(context, url);
+                    break;
+                case ConstantUtil.INSURANCE:
+                    onInsurance(context, url);
+                    break;
+                case ConstantUtil.GAS_METER:
+                    onGasMeter(context, url);
+                    break;
+                case ConstantUtil.GAS_PAY:
+                    onGasPay(context, url);
+                    break;
+                case ConstantUtil.GAS_IC_CARD:
+                    onIcCard(context, url);
+                    break;
+                case ConstantUtil.HOUSEKEEPING_CLEAN:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    onHouseKeepingClean(context, id, "家政保洁");
+                    break;
+                case ConstantUtil.HOUSEHOLD_CLEAN:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    if (isLoginState(context)){
+                        onHouseHoldClean(context, id, "家电清洗",code);
+                    }else {
+                        onStartLoginActivity(context,url);
                     }
-                }
-                break;
+
+                    break;
+                case ConstantUtil.HOME_MAINTENANCE:
+                    id = Uri.parse(url).getQueryParameter("id");
+                    onHomeMaintenance(context, id, "家居维修");
+                    break;
+                case ConstantUtil.MESSAGE:
+                    onStartMessage(context,url);
+                    break;
+                case ConstantUtil.MESSAGE_DETAIL:
+                    if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+                        onStartMessageDetail(context, url, 0);
+                    }else {
+                        AppActivityUtil.onStartLoginActivity(context, url);
+                    }
+                    break;
+                case ConstantUtil.MESSAGE_LIST:
+                    if(!TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())){
+                        onStartMessageList(context, url, 0);
+                    }else {
+                        AppActivityUtil.onStartLoginActivity(context, url);
+                    }
+                    break;
+                default:
+                    if (url.startsWith(ConstantUtil.HTTP)) {
+                        url = LinkUrlUtil.containMark(context, url);
+                        if (isLoginState(context)) {
+                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+                        } else {
+                            onStartLoginActivity(context, url);
+                        }
+                    }
+                    break;
+            }
         }
     }
 

@@ -38,6 +38,7 @@ import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ShareDefaultContent;
 import com.msht.minshengbao.Utils.AndroidWorkaround;
+import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.FileUtil;
 import com.msht.minshengbao.Utils.QrCodeUtil;
@@ -371,16 +372,8 @@ public class InsuranceHtmlActivity extends BaseActivity {
                 return true;
             }else if (url.contains(tag)){
                 String mobile=url.substring(url.lastIndexOf("/")+1);
-                Intent mIntent=new Intent(Intent.ACTION_CALL);
-                Uri data=Uri.parse(mobile);
-                mIntent.setData(data);
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)== PackageManager.PERMISSION_GRANTED){
-                    startActivity(mIntent);
-                    return true;
-                }else {
-                    ActivityCompat.requestPermissions(InsuranceHtmlActivity.this,new String[]{Manifest.permission.CALL_PHONE},1);
-                    return true;
-                }
+                CallPhoneUtil.callPhone(context,mobile);
+                return true;
             }else if (url.equals(UrlUtil.INSURANCE_BTN_URL)){
                 onNewCustomerNo();
                 return true;
