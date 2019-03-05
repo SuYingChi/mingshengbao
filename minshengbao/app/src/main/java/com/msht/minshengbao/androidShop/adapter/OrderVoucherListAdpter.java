@@ -59,10 +59,11 @@ public class OrderVoucherListAdpter extends HaveHeadAndFootRecyclerAdapter<Order
                         //取消选中后，可以更改
                         checkBox.setClickable(true);
                     }
-                    //用户check的状态 //列表数据刷新的是绑定的数据，因为与之前用户check的状态一致，不会再走进去oncheckchange
+                    //用户check的状态
                     iSelectedVoucherView.onItemCheckedChange(datas, position, isChecked);
                 }
             });
+            //列表数据刷新的是绑定的数据，因为与之前用户check的状态一致，不会再走进去oncheckchange
             checkBox.setChecked(voucherBean.isSelected());
         }
     }
