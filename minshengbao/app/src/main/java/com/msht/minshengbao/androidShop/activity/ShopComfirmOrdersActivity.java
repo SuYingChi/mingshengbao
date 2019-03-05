@@ -138,6 +138,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     Toolbar mToolbar;
     @BindView(R.id.back)
     ImageView ivback;
+    @BindView(R.id.im)
+    ImageView im;
     private boolean isInv = true;
     private OrdersGoodListAdapter adapter;
     private Bundle bundle;
@@ -592,6 +594,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 if (!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))) {
                     recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
                 }
+            }
+            if(recommandList.size()==0){
+                im.setVisibility(View.INVISIBLE);
+            }else {
+                im.setVisibility(View.VISIBLE);
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {

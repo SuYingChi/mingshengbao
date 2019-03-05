@@ -250,6 +250,7 @@
                     android:id="@+id/im"
                     style="@style/image"
                     android:padding="@dimen/margin_width15"
+                    android:visibility="invisible"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/margin_Modules"
