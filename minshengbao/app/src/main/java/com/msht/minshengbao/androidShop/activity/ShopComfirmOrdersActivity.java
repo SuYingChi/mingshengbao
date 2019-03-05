@@ -304,7 +304,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 voucherDialog.show();
             } else {
                 this.storeVoucherPosition=storeVoucherPosition;
-                voucherDialog = new OrderVoucherDialog(this, this, voucherList);
+                voucherDialog .refreshData(voucherList, !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice()));
                 voucherDialog.show();
             }
         }
@@ -956,7 +956,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public void noSelectedVoucher(List<OrderVoucherBean> datas,boolean isChecked) {
-        if(isChecked) {
+        if(isChecked&& !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice())) {
             for (int i = 0; i < datas.size(); i++) {
                 OrderVoucherBean bean2 = datas.get(i);
                 if (bean2.isSelected()) {
