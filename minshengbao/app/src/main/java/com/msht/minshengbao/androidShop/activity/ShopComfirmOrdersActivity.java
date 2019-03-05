@@ -935,7 +935,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     public void onUserIdError(String error) {
         PopUtil.showComfirmDialog(this, "", "该燃气用户号不存在", "", "", null, null, true);
     }
-   //用户更改check的状态与当前check状态绑定数据不一致时执行绑定数据更刷新列表操作
+   //用户更改check的状态与当前check状态绑定数据不一致时执行绑定数据更刷新列表操作,防止从这里触发notify 在adpter里oncheckchange又回调这里再次notify，造成死循环
     @Override
     public void onItemCheckedChange(List<OrderVoucherBean> datas, int position, Boolean isCheck) {
         if(!datas.get(position).isSelected()&&isCheck) {
