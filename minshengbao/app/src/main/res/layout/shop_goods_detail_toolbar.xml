@@ -32,7 +32,6 @@
             android:padding="@dimen/margin_Modules"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
             app:tabTextColor="@color/black" />
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

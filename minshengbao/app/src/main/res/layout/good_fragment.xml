@@ -168,6 +168,10 @@
                     android:background="@color/white"
                     android:padding="@dimen/margin_Modules"
                     >
+                    <TextView
+                        style="@style/grey_small_text"
+                        android:text="优惠"
+                        />
                     <ImageView
                       android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

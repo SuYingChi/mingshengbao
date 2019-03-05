@@ -13,7 +13,7 @@
         android:padding="@dimen/dp1"
         android:textColor="@color/black"
         android:textSize="@dimen/text_width14"
-        android:gravity="left"
+        android:gravity="center"
         android:background="@drawable/btn_normal_unselect"
         />
 </LinearLayout>

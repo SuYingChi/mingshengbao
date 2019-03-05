@@ -138,6 +138,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     Toolbar mToolbar;
     @BindView(R.id.back)
     ImageView ivback;
+    @BindView(R.id.im)
+    ImageView im;
     private boolean isInv = true;
     private OrdersGoodListAdapter adapter;
     private Bundle bundle;
@@ -304,7 +306,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 voucherDialog.show();
             } else {
                 this.storeVoucherPosition=storeVoucherPosition;
-                voucherDialog.refreshData(voucherList, false);
+                voucherDialog .refreshData(voucherList, !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice()));
                 voucherDialog.show();
             }
         }
@@ -592,6 +594,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 if (!TextUtils.isEmpty(obj.optString("recommend_phone")) && !"null".equals(obj.optString("recommend_phone"))) {
                     recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
                 }
+            }
+            if(recommandList.size()==0){
+                im.setVisibility(View.INVISIBLE);
+            }else {
+                im.setVisibility(View.VISIBLE);
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
@@ -928,7 +935,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     public void onUserIdError(String error) {
         PopUtil.showComfirmDialog(this, "", "该燃气用户号不存在", "", "", null, null, true);
     }
-
+   //用户更改check的状态与当前check状态绑定数据不一致时执行绑定数据更刷新列表操作
     @Override
     public void onItemCheckedChange(List<OrderVoucherBean> datas, int position, Boolean isCheck) {
         if(!datas.get(position).isSelected()&&isCheck) {
@@ -956,7 +963,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public void noSelectedVoucher(List<OrderVoucherBean> datas,boolean isChecked) {
-        if(isChecked) {
+        if(isChecked&& !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice())) {
             for (int i = 0; i < datas.size(); i++) {
                 OrderVoucherBean bean2 = datas.get(i);
                 if (bean2.isSelected()) {

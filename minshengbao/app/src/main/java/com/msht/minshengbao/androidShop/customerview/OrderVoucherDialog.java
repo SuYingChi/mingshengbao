@@ -97,6 +97,7 @@ public class OrderVoucherDialog extends Dialog {
     public void refreshData(List<OrderVoucherBean> voucherList, boolean isUseVoucher) {
         list = voucherList;
         adapter.isUseVoucher(isUseVoucher);
+        adapter.setDatas(list);
         adapter.notifyDataSetChanged();
     }
 }
