@@ -361,7 +361,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                                 Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
                                 intent.putExtra("goodsid", goodsid);
                                 startActivity(intent);
-                            }else if("更多商品".equals(homeClassList.get(position).getTitle())){
+                            }else if("更多商品".equals(homeClassList.get(position).getTitle())||"更多分类".equals(homeClassList.get(position).getTitle())){
                                 Intent intent = new Intent(getActivity(), ShopMoreGoodActivity.class);
                                 getActivity().startActivity(intent);
                             } else {
