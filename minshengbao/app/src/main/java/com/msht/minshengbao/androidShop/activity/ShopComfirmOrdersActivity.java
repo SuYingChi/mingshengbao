@@ -241,6 +241,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         startActivityForResult(intent, SELECT_SITE);
                     }
                 });
+                PopUtil.showTipsDialog(ShopComfirmOrdersActivity.this);
             }
         } else {
             finish();

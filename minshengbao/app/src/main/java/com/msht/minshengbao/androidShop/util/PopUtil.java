@@ -213,7 +213,34 @@ public class PopUtil {
             }
         });
     }
-
+    public static void showTipsDialog(Context mContext ) {
+        LayoutInflater inflaterDl = LayoutInflater.from(mContext);
+        LinearLayout layout = (LinearLayout) inflaterDl.inflate(
+                R.layout.tips, null);
+        final AlertDialog dialog = new AlertDialog.Builder(mContext).create();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.shape_white_layout);
+        TextView btnOk = (TextView) layout.findViewById(R.id.ok_btn);
+        TextView title = (TextView) layout.findViewById(R.id.title);
+        title.setText("温馨提示");
+        TextView tip = (TextView) layout.findViewById(R.id.tip);
+        tip.setText("本品限服务站提货，直邮");
+        TextView tips2 = (TextView) layout.findViewById(R.id.tips2);
+        tips2.setText("请到民生超市");
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnOk.setText("我知道了");
+        dialog.show();
+        dialog.getWindow().setContentView(layout);
+        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
+        attributes.width = (int)(DimenUtil.getScreenWidth()*0.75);
+        dialog.getWindow().setAttributes(attributes);
+    }
     public static void showAutoDissHookDialog(final Context mContext, String tips, int delayMillis) {
         LayoutInflater inflaterDl = LayoutInflater.from(mContext);
         final LinearLayout layout = (LinearLayout) inflaterDl.inflate(
