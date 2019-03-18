@@ -67,7 +67,7 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
               cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                   @Override
                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                      carListChildListener.onGoodItemCheckChange(position-1,isChecked);
+                      carListChildListener.onGoodItemCheckChange(position,isChecked);
                   }
               });
               cbSelect.setChecked(datasBean.isSelected());
@@ -92,7 +92,7 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
                           PopUtil.showComfirmDialog(context, "提示", "请选择至少一件该商品", null, "好", null, null, true);
                       } else {
                           tvNum.setText(String.valueOf(num -1+ ""));
-                              carListChildListener.onModifyItemNum(position-1,num-1);
+                              carListChildListener.onModifyItemNum(position,num-1);
                           }
                       }
               });
@@ -114,7 +114,7 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
                           PopUtil.showComfirmDialog(context, "提示", "库存量不足", null, "好", null, null, true);
                       }else {
                           tvNum.setText(String.valueOf(num +1+ ""));
-                          carListChildListener.onModifyItemNum(position-1,num+1);
+                          carListChildListener.onModifyItemNum(position,num+1);
                       }
                   }
               });

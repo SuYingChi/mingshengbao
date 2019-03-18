@@ -121,13 +121,13 @@ public abstract class HaveHeadAndFootRecyclerAdapter<T> extends RecyclerView.Ada
             convert(holder, footData, position);
         }//有头无尾
         else if(head_layoutId !=Integer.MIN_VALUE&&foot_layoutId == Integer.MAX_VALUE){
-            convert(holder, datas.get(position-1),position);
+            convert(holder, datas.get(position-1),position-1);
         }//无头有尾
         else if(head_layoutId ==Integer.MIN_VALUE&&foot_layoutId != Integer.MAX_VALUE){
             convert(holder, datas.get(position),position);
         }//有头有尾
         else if(head_layoutId !=Integer.MIN_VALUE&&foot_layoutId != Integer.MAX_VALUE){
-            convert(holder, datas.get(position-1),position);
+            convert(holder, datas.get(position-1),position-1);
         }//子类没有头布局，当一般recycleview使用
         else {
             convert(holder, datas.get(position),position);
