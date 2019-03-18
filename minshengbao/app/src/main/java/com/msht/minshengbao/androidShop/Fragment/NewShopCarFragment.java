@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -397,14 +398,32 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                         dataList.remove(shopCarBean);
                     } else {
                         int index = dataList.indexOf(shopCarBean);
-                        for (ShopCarBean.DatasBean.goodBean goodBean : shopCarBean.getDatasBean().getGoodBeanList()) {
+                        //当list 数据量大的时候for each出现ConcurrentModificationException异常
+                        List<ShopCarBean.DatasBean.goodBean> goodlist = shopCarBean.getDatasBean().getGoodBeanList();
+                        for (int i=0;i<goodlist.size();i++) {
+                            ShopCarBean.DatasBean.goodBean goodBean = goodlist.get(i);
                             if (goodBean.isSelected()) {
                                 dataList.get(index).getDatasBean().getGoodBeanList().remove(goodBean);
                             }
                         }
+                      /*  //解决方法
+                        for (ShopCarBean bean : dataList) {
+                            if (bean.equals(shopCarBean)) {
+                                List<ShopCarBean.DatasBean.goodBean> goodlist = bean.getDatasBean().getGoodBeanList();
+                                Iterator<ShopCarBean.DatasBean.goodBean> iterator2 = goodlist.iterator();
+                                while (iterator2.hasNext()) {
+                                    ShopCarBean.DatasBean.goodBean good = iterator2.next();
+                                    if (good.isSelected()) {
+                                        iterator2.remove();
+                                    }
+                                }
+                                break;
+                            }
+                        }*/
                     }
                 }
                 updateAmount();
+                adapter.notifyDataSetChanged();
             }
         });
     }

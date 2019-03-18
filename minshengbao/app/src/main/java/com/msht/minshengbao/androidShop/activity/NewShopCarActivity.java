@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -467,7 +468,10 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
                         dataList.remove(shopCarBean);
                     } else {
                         int index = dataList.indexOf(shopCarBean);
-                        for (ShopCarBean.DatasBean.goodBean goodBean : shopCarBean.getDatasBean().getGoodBeanList()) {
+                        List<ShopCarBean.DatasBean.goodBean> goodlist = shopCarBean.getDatasBean().getGoodBeanList();
+                        //当list 数据量大的时候for each出现ConcurrentModificationException异常
+                        for (int i=0;i<goodlist.size();i++) {
+                            ShopCarBean.DatasBean.goodBean goodBean = goodlist.get(i);
                             if (goodBean.isSelected()) {
                                 dataList.get(index).getDatasBean().getGoodBeanList().remove(goodBean);
                             }
@@ -475,6 +479,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
                     }
                 }
                 updateAmount();
+                adapter.notifyDataSetChanged();
             }
         });
     }
