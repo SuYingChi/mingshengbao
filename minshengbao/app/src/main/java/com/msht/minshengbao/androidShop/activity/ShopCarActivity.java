@@ -463,6 +463,7 @@ public class ShopCarActivity extends ShopBaseActivity implements ICarListView, O
         if (selectedGoodList.size() == 0) {
             PopUtil.showComfirmDialog(this, null, "请至少选择一件商品", null, "好的", null, null, true);
         } else {
+
             ShopPresenter.deleteCarItems(this);
         }
 

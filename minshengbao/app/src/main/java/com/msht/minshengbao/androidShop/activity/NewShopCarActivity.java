@@ -1,4 +1,4 @@
-package com.msht.minshengbao.androidShop.Fragment;
+package com.msht.minshengbao.androidShop.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +15,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Base.ListBaseAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
-import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.adapter.NewCarListAdapter;
-import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
+import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopCarBean;
@@ -43,62 +42,48 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarListAdapter.CarListListener, OnRefreshListener, ICarListView, IModifyCarGoodNumView, IDeleteCarItemView {
-    @BindView(R.id.toolbar)
+public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAdapter.CarListListener, OnRefreshListener, ICarListView, IModifyCarGoodNumView, IDeleteCarItemView {
+    @BindView(R.id.toolbar2)
     Toolbar mToolbar;
-    @BindView(R.id.refresh_layout)
-    SmartRefreshLayout refreshLayout;
     @BindView(R.id.rcl)
     RecyclerView rcl;
-    @BindView(R.id.total_money)
-    TextView tvToatl;
-    @BindView(R.id.buy)
-    TextView tvBuy;
+    @BindView(R.id.refresh_layout)
+    SmartRefreshLayout refreshLayout;
+    @BindView(R.id.edit)
+    CheckBox cbEdit;
     @BindView(R.id.ll_edit_bottom)
     LinearLayout ll_edit_bottom;
     @BindView(R.id.ll_finish_bottom)
     LinearLayout ll_finish_bottom;
-    @BindView(R.id.edit)
-    CheckBox cbEdit;
     @BindView(R.id.select_all)
     CheckBox cbSelectAll;
-    private CarParentListener carParentListener;
+    @BindView(R.id.total_money)
+    TextView tvToatl;
     private List<ShopCarBean> dataList = new ArrayList<ShopCarBean>();
     private NewCarListAdapter adapter;
-    private boolean isViewCreated;
-    private boolean isEdited = false;
-    private String cart_id;
-    private int goods_num;
+    private boolean isEdited;
     private int modifyPosition;
     private int modifyChilposition;
+    private String cart_id;
+    private int goods_num;
+    List<ShopCarBean> selectedGoodlist = new ArrayList<ShopCarBean>();
 
-    public interface CarParentListener {
-        void changeEmpty();
+    @Override
+    protected void setLayout() {
+        setContentView(R.layout.car_list);
     }
 
     @Override
-    protected int setLayoutId() {
-        return R.layout.shop_car_list;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        carParentListener = (CarParentListener) getParentFragment();
-    }
-
-    @Override
-    protected void initView() {
-        super.initView();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(getContext()), 0, 0);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this), 0, 0);
         rcl.setLayoutManager(linearLayoutManager);
-        adapter = new NewCarListAdapter(getContext(), R.layout.item_car_list, dataList);
+        adapter = new NewCarListAdapter(this, R.layout.item_car_list, dataList);
         adapter.setCarListListener(this);
         rcl.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(this);
@@ -124,6 +109,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 adapter.notifyDataSetChanged();
             }
         });
+
         cbSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -149,33 +135,113 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
             }
         });
     }
-
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        isViewCreated = true;
-    }
-
-    @Override
-    protected void initData() {
+    protected void onResume() {
+        super.onResume();
         if (!getKey().equals("")) {
             ShopPresenter.getCarList(this, true);
         }
     }
-
-    @Override
-    protected void onVisible() {
-        super.onVisible();
-        if (isViewCreated) {
-            if (!getKey().equals("")) {
-                ShopPresenter.getCarList(this, true);
+    private void updateAmount() {
+        double total = 0;
+        for (ShopCarBean shopCarBean : dataList) {
+            for (ShopCarBean.DatasBean.goodBean goodbean : shopCarBean.getDatasBean().getGoodBeanList()) {
+                if (goodbean.isSelected()) {
+                    total += Double.valueOf(goodbean.getGoodPrice()) * goodbean.getGoodNum();
+                }
             }
+        }
+        tvToatl.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, total + "", R.style.big_money, R.style.big_money)));
+
+    }
+
+    private boolean isAllStoreChecked() {
+        for (ShopCarBean bean : dataList) {
+            if (!bean.isCheckStore()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    @Override
+    public void onGoodItemCheckChange(int chilposition, int position, boolean isCheck) {
+        if (!dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).isSelected() && isCheck) {
+            dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).setSelected(true);
+            if (isStoreAllGoodChecked(dataList.get(position).getDatasBean().getGoodBeanList())) {
+                dataList.get(position).setCheckStore(true);
+                adapter.notifyDataSetChanged();
+                if(isAllStoreChecked()){
+                    cbSelectAll.setChecked(true);
+                }
+            }
+            updateAmount();
+        } else if (dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).isSelected() && !isCheck) {
+            dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).setSelected(false);
+            if (dataList.get(position).isCheckStore()) {
+                dataList.get(position).setCheckStore(false);
+                adapter.notifyDataSetChanged();
+            }
+            updateAmount();
+            cbSelectAll.setChecked(false);
         }
     }
 
-    //适配首页的add hide show架构，如果显示的同时做更新操作需要外放接口供父容器调用
-    public void refreshCarList() {
-        ShopPresenter.getCarList(this, true);
+    private boolean isStoreAllGoodChecked(List<ShopCarBean.DatasBean.goodBean> goodBeanList) {
+        for (ShopCarBean.DatasBean.goodBean goodbean : goodBeanList) {
+            if (!goodbean.isSelected()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onStoreCheckChange(int position, boolean isCheck) {
+        if (!dataList.get(position).isCheckStore() && isCheck) {
+            dataList.get(position).setCheckStore(true);
+            for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
+                if (!goodbean.isSelected()) {
+                    goodbean.setSelected(true);
+                }
+            }
+            updateAmount();
+            if (isAllStoreChecked()) {
+                cbSelectAll.setChecked(true);
+            }
+        } else if (dataList.get(position).isCheckStore() && !isCheck) {
+            dataList.get(position).setCheckStore(false);
+            for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
+                if (goodbean.isSelected()) {
+                    goodbean.setSelected(false);
+                }
+            }
+            updateAmount();
+            cbSelectAll.setChecked(false);
+        }
+    }
+
+    @Override
+    public void onModifyItemNum(int chilposition, int position, int num) {
+        modifyPosition = position;
+        modifyChilposition = chilposition;
+        cart_id = dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).getCarId();
+        goods_num = num;
+        ShopPresenter.modifyGoodNum(this, this);
+    }
+
+    @Override
+    public void onGotoGoodDetail(String goodid) {
+        Intent intent = new Intent(this, ShopGoodDetailActivity.class);
+        startActivity(intent.putExtra("goodsid", goodid));
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
+        if (!getKey().equals("")) {
+            ShopPresenter.getCarList(this, false);
+        }
     }
 
     @Override
@@ -225,7 +291,8 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 dataList.add(shopCarbean);
             }
             if (dataList.size() == 0) {
-                carParentListener.changeEmpty();
+                startActivity(new Intent(this, NoCarActivity.class));
+                finish();
             }
             updateAmount();
             adapter.notifyDataSetChanged();
@@ -235,27 +302,32 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
         }
     }
 
-    private void updateAmount() {
-        double total = 0;
-        for (ShopCarBean shopCarBean : dataList) {
-            for (ShopCarBean.DatasBean.goodBean goodbean : shopCarBean.getDatasBean().getGoodBeanList()) {
-                if (goodbean.isSelected()) {
-                    total += Double.valueOf(goodbean.getGoodPrice()) * goodbean.getGoodNum();
-                }
-            }
-        }
-        tvToatl.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(getContext(), total + "", R.style.big_money, R.style.big_money)));
+    @Override
+    public String getCarId() {
+        return cart_id;
     }
 
     @Override
-    public void onError(String s) {
-        super.onError(s);
-        refreshLayout.finishRefresh();
+    public String getCarItemNum() {
+        return goods_num+"";
     }
 
-    @OnClick({R.id.buy2, R.id.delete, R.id.buy})
+    @Override
+    public void onModifyGoodNumSuccess(String s) {
+        PopUtil.showAutoDissHookDialog(this, "购物车数量修改成功", 100, new OnDissmissLisenter() {
+            @Override
+            public void onDissmiss() {
+                dataList.get(modifyPosition).getDatasBean().getGoodBeanList().get(modifyChilposition).setGoodNum(goods_num);
+                updateAmount();
+            }
+        });
+    }
+    @OnClick({R.id.back, R.id.buy2, R.id.delete, R.id.buy})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
             case R.id.buy:
             case R.id.buy2:
                 goToBuy();
@@ -271,9 +343,10 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
         if (isHasGoodChecked()) {
             ShopPresenter.deleteCarItems(this);
         } else {
-            PopUtil.showComfirmDialog(getContext(), null, "请至少选择一件商品", null, "好的", null, null, true);
+            PopUtil.showComfirmDialog(this, null, "请至少选择一件商品", null, "好的", null, null, true);
         }
     }
+
 
     private void goToBuy() {
         if (isHasGoodChecked()) {
@@ -302,9 +375,9 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 }
             }
             if (buyList.size() == 0) {
-                PopUtil.showComfirmDialog(getContext(), null, "请选择至少一件有库存和未下架的商品", null, "好的", null, null, true);
+                PopUtil.showComfirmDialog(this, null, "请选择至少一件有库存和未下架的商品", null, "好的", null, null, true);
             } else if (isSingleType(buyList)) {
-                Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
+                Intent intent = new Intent(this, ShopComfirmOrdersActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("ifCar", "1");
                 bundle.putString("isPickup_self", buyList.get(0).getGoods().get(0).getPickup_self());
@@ -312,14 +385,30 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 intent.putExtras(bundle);
                 startActivity(intent);
             } else {
-                PopUtil.showComfirmDialog(getContext(), null, "不可同时购买自提商品和普通商品哦亲", null, "好的", null, null, true);
+                PopUtil.showComfirmDialog(this, null, "不可同时购买自提商品和普通商品哦亲", null, "好的", null, null, true);
             }
         } else {
-            PopUtil.showComfirmDialog(getContext(), null, "请选择至少一件商品", null, "好的", null, null, true);
+            PopUtil.showComfirmDialog(this, null, "请选择至少一件商品", null, "好的", null, null, true);
         }
-
     }
-
+    private boolean isStoreHasGoodChecked(List<ShopCarBean.DatasBean.goodBean> goodBeanList) {
+        for (ShopCarBean.DatasBean.goodBean goodbean : goodBeanList) {
+            if (goodbean.isSelected()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isHasGoodChecked() {
+        for (ShopCarBean bean : dataList) {
+            for (ShopCarBean.DatasBean.goodBean goodbean : bean.getDatasBean().getGoodBeanList()) {
+                if (goodbean.isSelected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     private boolean isSingleType(List<ComfirmShopGoodBean> buyList) {
         String pickUpSelf = buyList.get(0).getGoods().get(0).getPickup_self();
         for (ComfirmShopGoodBean comfirmShopGoodBean : buyList) {
@@ -332,34 +421,15 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
         }
         return true;
     }
-
-    @Override
-    public String getCarId() {
-        return cart_id;
-    }
-
-    @Override
-    public String getCarItemNum() {
-        return goods_num + "";
-    }
-
-    @Override
-    public void onModifyGoodNumSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(getContext(), "购物车数量修改成功", 100, new OnDissmissLisenter() {
-            @Override
-            public void onDissmiss() {
-                dataList.get(modifyPosition).getDatasBean().getGoodBeanList().get(modifyChilposition).setGoodNum(goods_num);
-                updateAmount();
-            }
-        });
-    }
-
     @Override
     public Context getViewContext() {
-        return getContext();
+        return this;
     }
-
-    List<ShopCarBean> selectedGoodlist = new ArrayList<ShopCarBean>();
+    @Override
+    public void onError(String s) {
+        super.onError(s);
+        refreshLayout.finishRefresh();
+    }
 
     @Override
     public String getSelectCartList() {
@@ -389,7 +459,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
 
     @Override
     public void onDeleteCarItemsSuccess(String s) {
-        PopUtil.showAutoDissHookDialog(getContext(), "购物车删除成功", 0, new OnDissmissLisenter() {
+        PopUtil.showAutoDissHookDialog(this, "购物车删除成功", 0, new OnDissmissLisenter() {
             @Override
             public void onDissmiss() {
                 for (ShopCarBean shopCarBean : selectedGoodlist) {
@@ -407,116 +477,5 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 updateAmount();
             }
         });
-    }
-
-
-    @Override
-    public void onGoodItemCheckChange(int chilposition, int position, boolean isCheck) {
-        if (!dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).isSelected() && isCheck) {
-            dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).setSelected(true);
-            if (isStoreAllGoodChecked(dataList.get(position).getDatasBean().getGoodBeanList())) {
-                dataList.get(position).setCheckStore(true);
-                adapter.notifyDataSetChanged();
-                if (isAllStoreChecked()) {
-                    cbSelectAll.setChecked(true);
-                }
-            }
-            updateAmount();
-        } else if (dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).isSelected() && !isCheck) {
-            dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).setSelected(false);
-            if (dataList.get(position).isCheckStore()) {
-                dataList.get(position).setCheckStore(false);
-                adapter.notifyDataSetChanged();
-            }
-            updateAmount();
-            cbSelectAll.setChecked(false);
-        }
-    }
-
-    private boolean isStoreAllGoodChecked(List<ShopCarBean.DatasBean.goodBean> goodBeanList) {
-        for (ShopCarBean.DatasBean.goodBean goodbean : goodBeanList) {
-            if (!goodbean.isSelected()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isStoreHasGoodChecked(List<ShopCarBean.DatasBean.goodBean> goodBeanList) {
-        for (ShopCarBean.DatasBean.goodBean goodbean : goodBeanList) {
-            if (goodbean.isSelected()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isHasGoodChecked() {
-        for (ShopCarBean bean : dataList) {
-            for (ShopCarBean.DatasBean.goodBean goodbean : bean.getDatasBean().getGoodBeanList()) {
-                if (goodbean.isSelected()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isAllStoreChecked() {
-        for (ShopCarBean bean : dataList) {
-            if (!bean.isCheckStore()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onStoreCheckChange(int position, boolean isCheck) {
-        if (!dataList.get(position).isCheckStore() && isCheck) {
-            dataList.get(position).setCheckStore(true);
-            for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
-                if (!goodbean.isSelected()) {
-                    goodbean.setSelected(true);
-                }
-            }
-            updateAmount();
-            if (isAllStoreChecked()) {
-                cbSelectAll.setChecked(true);
-            }
-        } else if (dataList.get(position).isCheckStore() && !isCheck) {
-            dataList.get(position).setCheckStore(false);
-            for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
-                if (goodbean.isSelected()) {
-                    goodbean.setSelected(false);
-                }
-            }
-            updateAmount();
-            cbSelectAll.setChecked(false);
-        }
-    }
-
-    @Override
-    public void onModifyItemNum(int chilposition, int position, int num) {
-        modifyPosition = position;
-        modifyChilposition = chilposition;
-        cart_id = dataList.get(position).getDatasBean().getGoodBeanList().get(chilposition).getCarId();
-        goods_num = num;
-        ShopPresenter.modifyGoodNum(this, this);
-    }
-
-    @Override
-    public void onGotoGoodDetail(String goodid) {
-        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
-        startActivity(intent.putExtra("goodsid", goodid));
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        refreshLayout.setNoMoreData(false);
-        refreshLayout.setEnableAutoLoadMore(true);
-        if (!getKey().equals("")) {
-            ShopPresenter.getCarList(this, false);
-        }
     }
 }

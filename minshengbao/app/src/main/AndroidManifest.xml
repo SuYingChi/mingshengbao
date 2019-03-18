@@ -424,6 +424,7 @@
         <activity android:name=".functionActivity.Public.SelectPickUpSiteActivity" />
         <activity android:name=".androidShop.activity.ShopSelectSiteActivity" />
         <activity android:name=".functionActivity.HtmlWeb.HouseHoldCleanWeb"></activity>
+        <activity android:name=".androidShop.activity.NewShopCarActivity" />
     </application>
 
 </manifest>

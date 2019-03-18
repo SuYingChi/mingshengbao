@@ -54,9 +54,9 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
               holder.setText(R.id.remain_num,String.format("库存量：%s件", goodsStorage));
               holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context, datasBean.getGoodPrice(), R.style.small_money, R.style.small_money));
               if(datasBean.isEdite()){
-                  holder.getView(R.id.price).setVisibility(View.VISIBLE);
-              }else {
                   holder.getView(R.id.price).setVisibility(View.INVISIBLE);
+              }else {
+                  holder.getView(R.id.price).setVisibility(View.VISIBLE);
               }
               if("1".equals(datasBean.getIsPickupSelf())){
                   holder.getView(R.id.ispickupself).setVisibility(View.VISIBLE);
@@ -67,11 +67,11 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
               cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                   @Override
                   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                      carListChildListener.onGoodItemCheckChange(position,isChecked);
+                      carListChildListener.onGoodItemCheckChange(position-1,isChecked);
                   }
               });
               cbSelect.setChecked(datasBean.isSelected());
-              TextView tvNum = holder.getView(R.id.number);
+              final TextView tvNum = holder.getView(R.id.number);
               tvNum.setText(String.format("%d", datasBean.getGoodNum()));
               holder.setImage(R.id.iv,datasBean.getGoodImage());
               LinearLayout tvReduce = holder.getView(R.id.ll_reduce);
@@ -91,7 +91,8 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
                       } else if (num ==1) {
                           PopUtil.showComfirmDialog(context, "提示", "请选择至少一件该商品", null, "好", null, null, true);
                       } else {
-                              carListChildListener.onModifyItemNum(position,num);
+                          tvNum.setText(String.valueOf(num -1+ ""));
+                              carListChildListener.onModifyItemNum(position-1,num-1);
                           }
                       }
               });
@@ -112,7 +113,8 @@ public class NewCarListChildAdapter extends HaveHeadAndFootRecyclerAdapter<ShopC
                       } else if (num >= goodsStorageNum) {
                           PopUtil.showComfirmDialog(context, "提示", "库存量不足", null, "好", null, null, true);
                       }else {
-                          carListChildListener.onModifyItemNum(position,num);
+                          tvNum.setText(String.valueOf(num +1+ ""));
+                          carListChildListener.onModifyItemNum(position-1,num+1);
                       }
                   }
               });
