@@ -23,6 +23,7 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
 
     @Override
     public void convert(RecyclerHolder holder, final ClassDetailRightBean.DatasBean.GoodsListBean goodsListBean, final int position) {
+        //以下做法会造成图片显示异常
       /*  final ImageView iv = holder.getView(R.id.iv);
         iv.post(new Runnable() {
             @Override

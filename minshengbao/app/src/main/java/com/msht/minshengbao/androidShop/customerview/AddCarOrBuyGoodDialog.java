@@ -92,7 +92,7 @@ public class AddCarOrBuyGoodDialog extends Dialog {
         attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
         this.getWindow().setAttributes(attributes);
         if(TextUtils.isEmpty(iShopGoodDetailView.getGuigeName())) {
-            llguige.setVisibility(View.INVISIBLE);
+            llguige.setVisibility(View.GONE);
         }else {
             llguige.setVisibility(View.VISIBLE);
             tvGuigeName.setText(iShopGoodDetailView.getGuigeName());

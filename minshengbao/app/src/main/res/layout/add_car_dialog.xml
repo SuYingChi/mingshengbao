@@ -89,18 +89,18 @@
             >
             <ImageView
                 android:id="@+id/iv"
-                android:layout_width="@dimen/margin_width122"
-                android:layout_height="@dimen/margin_width122"
+                android:layout_width="@dimen/margin_width80"
+                android:layout_height="@dimen/margin_width80"
                 android:layout_alignParentLeft="true"
+                android:layout_marginRight="@dimen/margin_Modules"
                 android:layout_marginLeft="@dimen/margin_Modules" />
 
             <TextView
                 android:id="@+id/dialog_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_Modules"
                 android:layout_toRightOf="@id/iv"
-                android:lines="2"
+                android:maxLines="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_width18"
 
@@ -109,7 +109,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv"
+                android:layout_below="@id/dialog_name"
                 android:layout_alignLeft="@id/dialog_name"
                 android:layout_alignRight="@id/dialog_name"
                 android:orientation="vertical">
@@ -126,41 +126,39 @@
                     android:id="@+id/dialog_remain_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_Modules"
                     android:text="库存量"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_15"
 
                     />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llguige"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/guigeName"
-                    style="@style/shopBlackTitleText"
-                    android:layout_gravity="left"
-                    android:textSize="@dimen/text_15"
-                     />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/guigercl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-            </LinearLayout>
         </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/llguige"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlt"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/guigeName"
+            style="@style/shopBlackTitleText"
+            android:layout_gravity="left"
+            android:textSize="@dimen/text_15"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/guigercl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/rlt_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-       android:layout_below="@id/rlt"
+       android:layout_below="@id/llguige"
         android:paddingBottom="@dimen/margin_Modules"
         >
         <TextView
@@ -168,8 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_Modules"
-            android:layout_marginTop="@dimen/margin_Modules"
-
+            android:layout_centerVertical="true"
             android:text="购买数量"
             android:textColor="@color/black"
             android:textSize="@dimen/text_width18" />
@@ -180,8 +177,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_Modules"
-
-            android:layout_marginTop="@dimen/margin_Modules" />
+            android:layout_centerVertical="true"
+            />
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_bottom"

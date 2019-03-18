@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/iv"
-            android:layout_width="@dimen/margin_width122"
-            android:layout_height="@dimen/margin_width122"
+            android:layout_width="@dimen/margin_width80"
+            android:layout_height="@dimen/margin_width80"
             android:layout_below="@+id/head"
             android:layout_marginBottom="@dimen/margin_Modules"
             android:layout_marginTop="@dimen/margin_Modules"

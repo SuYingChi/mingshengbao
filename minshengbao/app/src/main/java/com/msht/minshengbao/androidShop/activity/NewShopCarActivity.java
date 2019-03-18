@@ -139,7 +139,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
     @Override
     protected void onResume() {
         super.onResume();
-        if (!getKey().equals("")) {
+        if (!getKey().equals("")&& !isHasGoodChecked()) {
             ShopPresenter.getCarList(this, true);
         }
     }
@@ -467,13 +467,16 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
                     if (shopCarBean.isCheckStore()) {
                         dataList.remove(shopCarBean);
                     } else {
+                        //当list 数据量大的时候for each  goodlist 会出现ConcurrentModificationException异常
+                        //解决方法
                         int index = dataList.indexOf(shopCarBean);
-                        List<ShopCarBean.DatasBean.goodBean> goodlist = shopCarBean.getDatasBean().getGoodBeanList();
-                        //当list 数据量大的时候for each里面使用remove add 会出现ConcurrentModificationException异常
-                        for (int i=0;i<goodlist.size();i++) {
-                            ShopCarBean.DatasBean.goodBean goodBean = goodlist.get(i);
-                            if (goodBean.isSelected()) {
-                                dataList.get(index).getDatasBean().getGoodBeanList().remove(goodBean);
+                        ShopCarBean bean = dataList.get(index);
+                        List<ShopCarBean.DatasBean.goodBean> goodlist = bean.getDatasBean().getGoodBeanList();
+                        Iterator<ShopCarBean.DatasBean.goodBean> iterator2 = goodlist.iterator();
+                        while (iterator2.hasNext()) {
+                            ShopCarBean.DatasBean.goodBean good = iterator2.next();
+                            if (good.isSelected()) {
+                                iterator2.remove();
                             }
                         }
                     }

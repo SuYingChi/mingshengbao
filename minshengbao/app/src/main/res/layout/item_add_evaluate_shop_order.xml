@@ -28,7 +28,7 @@
             style="@style/shopMsbcolorTitleText"
             android:layout_alignBottom="@id/iv"
             android:layout_toRightOf="@id/iv"
-            android:lines="2"
+            android:maxLines="2"
             android:textColor="@color/black" />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView

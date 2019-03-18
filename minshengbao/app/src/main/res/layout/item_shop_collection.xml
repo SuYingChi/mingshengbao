@@ -17,7 +17,7 @@
         android:layout_alignTop="@id/iv"
         android:layout_toRightOf="@id/iv"
         android:textColor="@color/black"
-        android:lines="2"
+        android:maxLines="2"
         android:ellipsize="end"
         />
 

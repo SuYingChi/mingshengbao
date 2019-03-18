@@ -168,7 +168,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
     protected void onVisible() {
         super.onVisible();
         if (isViewCreated) {
-            if (!getKey().equals("")) {
+            if (!getKey().equals("") && !isHasGoodChecked()) {
                 ShopPresenter.getCarList(this, true);
             }
         }
@@ -176,7 +176,9 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
 
     //适配首页的add hide show架构，如果显示的同时做更新操作需要外放接口供父容器调用
     public void refreshCarList() {
-        ShopPresenter.getCarList(this, true);
+        if (!isHasGoodChecked()) {
+            ShopPresenter.getCarList(this, true);
+        }
     }
 
     @Override
@@ -397,29 +399,18 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                     if (shopCarBean.isCheckStore()) {
                         dataList.remove(shopCarBean);
                     } else {
+                        //当list 数据量大的时候for each  goodlist 会出现ConcurrentModificationException异常
+                        //解决方法
                         int index = dataList.indexOf(shopCarBean);
-                        //当list 数据量大的时候for each里面使用remove add 会出现ConcurrentModificationException异常
-                        List<ShopCarBean.DatasBean.goodBean> goodlist = shopCarBean.getDatasBean().getGoodBeanList();
-                        for (int i=0;i<goodlist.size();i++) {
-                            ShopCarBean.DatasBean.goodBean goodBean = goodlist.get(i);
-                            if (goodBean.isSelected()) {
-                                dataList.get(index).getDatasBean().getGoodBeanList().remove(goodBean);
+                        ShopCarBean bean = dataList.get(index);
+                        List<ShopCarBean.DatasBean.goodBean> goodlist = bean.getDatasBean().getGoodBeanList();
+                        Iterator<ShopCarBean.DatasBean.goodBean> iterator2 = goodlist.iterator();
+                        while (iterator2.hasNext()) {
+                            ShopCarBean.DatasBean.goodBean good = iterator2.next();
+                            if (good.isSelected()) {
+                                iterator2.remove();
                             }
                         }
-                      /*  //解决方法
-                        for (ShopCarBean bean : dataList) {
-                            if (bean.equals(shopCarBean)) {
-                                List<ShopCarBean.DatasBean.goodBean> goodlist = bean.getDatasBean().getGoodBeanList();
-                                Iterator<ShopCarBean.DatasBean.goodBean> iterator2 = goodlist.iterator();
-                                while (iterator2.hasNext()) {
-                                    ShopCarBean.DatasBean.goodBean good = iterator2.next();
-                                    if (good.isSelected()) {
-                                        iterator2.remove();
-                                    }
-                                }
-                                break;
-                            }
-                        }*/
                     }
                 }
                 updateAmount();
@@ -503,6 +494,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
             if (isAllStoreChecked()) {
                 cbSelectAll.setChecked(true);
             }
+            adapter.notifyDataSetChanged();
         } else if (dataList.get(position).isCheckStore() && !isCheck) {
             dataList.get(position).setCheckStore(false);
             for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
@@ -512,6 +504,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
             }
             updateAmount();
             cbSelectAll.setChecked(false);
+            adapter.notifyDataSetChanged();
         }
     }
 
