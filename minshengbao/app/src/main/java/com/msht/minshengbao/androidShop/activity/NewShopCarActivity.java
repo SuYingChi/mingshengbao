@@ -209,6 +209,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
             if (isAllStoreChecked()) {
                 cbSelectAll.setChecked(true);
             }
+            adapter.notifyDataSetChanged();
         } else if (dataList.get(position).isCheckStore() && !isCheck) {
             dataList.get(position).setCheckStore(false);
             for (ShopCarBean.DatasBean.goodBean goodbean : dataList.get(position).getDatasBean().getGoodBeanList()) {
@@ -218,6 +219,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
             }
             updateAmount();
             cbSelectAll.setChecked(false);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -297,6 +299,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
             }
             updateAmount();
             adapter.notifyDataSetChanged();
+            cbSelectAll.setChecked(false);
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -230,6 +230,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
             }
             updateAmount();
             adapter.notifyDataSetChanged();
+            cbSelectAll.setChecked(false);
 
         } catch (JSONException e) {
             e.printStackTrace();
