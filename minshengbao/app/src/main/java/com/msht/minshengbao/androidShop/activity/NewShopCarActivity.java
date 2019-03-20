@@ -139,7 +139,7 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
     @Override
     protected void onResume() {
         super.onResume();
-        if (!getKey().equals("")&& !isHasGoodChecked()) {
+        if (!getKey().equals("")) {
             ShopPresenter.getCarList(this, true);
         }
     }
@@ -483,6 +483,14 @@ public class NewShopCarActivity extends ShopBaseActivity implements NewCarListAd
                 }
                 updateAmount();
                 adapter.notifyDataSetChanged();
+                int carnum = 0;
+                for(ShopCarBean shopCarBean:dataList){
+                    carnum+=shopCarBean.getDatasBean().getGoodBeanList().size();
+                }
+                EventBus.getDefault().postSticky(new CarNumEvent(carnum));
+                if (dataList.size() == 0) {
+                    startActivity(new Intent(NewShopCarActivity.this,NoCarActivity.class));
+                }
             }
         });
     }

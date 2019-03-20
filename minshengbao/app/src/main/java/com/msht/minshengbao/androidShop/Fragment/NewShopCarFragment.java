@@ -168,7 +168,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
     protected void onVisible() {
         super.onVisible();
         if (isViewCreated) {
-            if (!getKey().equals("") && !isHasGoodChecked()) {
+            if (!getKey().equals("")) {
                 ShopPresenter.getCarList(this, true);
             }
         }
@@ -176,9 +176,7 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
 
     //适配首页的add hide show架构，如果显示的同时做更新操作需要外放接口供父容器调用
     public void refreshCarList() {
-        if (!isHasGoodChecked()) {
             ShopPresenter.getCarList(this, true);
-        }
     }
 
     @Override
@@ -415,6 +413,14 @@ public class NewShopCarFragment extends ShopBaseLazyFragment implements NewCarLi
                 }
                 updateAmount();
                 adapter.notifyDataSetChanged();
+                int carnum = 0;
+                for(ShopCarBean shopCarBean:dataList){
+                    carnum+=shopCarBean.getDatasBean().getGoodBeanList().size();
+                }
+                EventBus.getDefault().postSticky(new CarNumEvent(carnum));
+                if (dataList.size() == 0) {
+                    carParentListener.changeEmpty();
+                }
             }
         });
     }
