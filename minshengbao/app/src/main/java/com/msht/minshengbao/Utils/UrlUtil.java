@@ -65,6 +65,15 @@ public class UrlUtil {
     public static final String WATER_PRIZES_GIFTS=BuildConfig.URL_MSSB_GIFT+"/rw_front/lqlp.html";
     public static final String WATER_SERVICE_CENTER=BuildConfig.URL_MSSB_GIFT+"/rw_front/customer_center.html";
     public static final String WATER_GIFTS_RECHARGE_WEB="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e0da2a76aae5110&redirect_uri=http%3a%2f%2fsb-fx.msbapp.cn%2frw_front%2frecharge.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+    public static final String WATER_COUPON_LIST=BuildConfig.URL_MSSB+"/coupon/list";
+    public static final String WATER_GET_COUPON=BuildConfig.URL_MSSB+"/coupon/getCoupons";
+    public static final String WATER_VALID_SHARE_URL=BuildConfig.URL_MSSB+"/coupon/validShare";
+    public static final String WATER_RED_PACKET_SHARE_LINK="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9e0da2a76aae5110";
+    public static final String WATER_RED_PACKET_VALUE="&response_type=code&scope=snsapi_userinfo&state=123&connect_redirect=1#wechat_redirect";
+    public static final String WATER_RED_PACKET_LINK=BuildConfig.URL_MSSB_SHARE+"/rw_front/weixin_shouquan.html?";
+    public static final String WATER_RED_PACKET_CANCEL=BuildConfig.URL_MSSB+"/coupon/cancelShare";
+    public static final String WATER_RED_PACKET_CREATE=BuildConfig.URL_MSSB+"/coupon/create";
+    public static final String WATER_RECHARGE_SUCCESS_PAGE=BuildConfig.URL_MSSB_APP+"/rw_front/recharge_result.html?";
     /**
      * 商城
      */
@@ -126,6 +135,7 @@ public class UrlUtil {
     public static final String INTERNET_TABLE_LAST_DATA=BuildConfig.URL_HEADS+"/Gas/payment/meterTypeSearch";
     public static final String INTERNET_TABLE_PAYMENT=BuildConfig.URL_HEADS+"/Gas/payment/requestPaymentGas";
     public static final String GET_CUSTOMER_NO_URL=BuildConfig.URL_HEADS+"/get_usernum.html";
+    public static final String GET_PAY_HISTORY=BuildConfig.URL_HEADS+"/Gas/payment/customerno_history_new";
     /**
      * ic卡
      */

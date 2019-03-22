@@ -321,20 +321,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 messageCount=String.valueOf(badgeCount);
             }
           //  AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
-        }else {
-           // messageCount=SharedPreferencesUtil.getStringData(context, "number", "10");
-          //  AppShortCutUtil.addNumShortCut(context,MainActivity.class,true,messageCount,true);
         }
-
     }
-
     private void onPersonalInformation() {
         String sex = objectJson.optString("sex");
         String phoneNo = objectJson.optString("phone");
         SharedPreferencesUtil.putSex(this, SharedPreferencesUtil.Sex, sex);
         SharedPreferencesUtil.putPhoneNumber(this, SharedPreferencesUtil.PhoneNumber, phoneNo);
     }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (currentFragment != null) {
@@ -342,7 +336,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         super.onSaveInstanceState(outState);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,9 +344,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //推送统计
         mPageName="首页";
         PushAgent.getInstance(context).onAppStart();
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
+        /*if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
             findViewById(R.id.id_view).setVisibility(View.GONE);
-        }
+        }*/
         versionState =SharedPreferencesUtil.getBoolean(this,SharedPreferencesUtil.VersionState,false);
         initView();
         if (savedInstanceState != null) {
@@ -365,9 +358,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         refreshCarNum();
         initRequestPermission();
         if (isLoginState(context)){
-           /* if (NetWorkUtil.isNetWorkEnable(this)){
-                onGetMessage();
-            }*/
             onGetMessage();
             initGetInformation();
             initPush();
@@ -391,9 +381,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     }
-
-
-
     private void initRequestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

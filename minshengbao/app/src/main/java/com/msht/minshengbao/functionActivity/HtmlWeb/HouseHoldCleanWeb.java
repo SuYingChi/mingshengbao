@@ -212,7 +212,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
                 }).show();
 
     }
-    @SuppressLint("SetJavaScriptEnabled")
+
     private void initWebView() {
         String useUrl= UrlUtil.HOUSE_HOLD_CLEAN_WEB;
         try {
@@ -230,7 +230,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
         settings.setLoadWithOverviewMode(true);
         settings.setSupportZoom(true);
         settings.setNeedInitialFocus(true);
-        settings.setAppCacheEnabled(true);
+        settings.setAppCacheEnabled(false);
         settings.setLoadsImagesAutomatically(true);
         settings.setSupportMultipleWindows(true);
         settings.setDomStorageEnabled(true);
@@ -416,12 +416,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             String tag="tel";
-            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
-                tvRightText.setVisibility(View.VISIBLE);
-            }else {
-                tvRightText.setVisibility(View.GONE);
-
-            }
             if (url.startsWith("weixin://wap/pay?")){
                 try{
                     Intent intent=new Intent();
@@ -465,11 +459,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
-            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
-                tvRightText.setVisibility(View.VISIBLE);
-            }else {
-                tvRightText.setVisibility(View.GONE);
-            }
         }
 
     }

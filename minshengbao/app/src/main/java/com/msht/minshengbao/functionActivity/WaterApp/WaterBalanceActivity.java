@@ -1,19 +1,20 @@
 package com.msht.minshengbao.functionActivity.WaterApp;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
@@ -23,14 +24,12 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
 import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
-import com.msht.minshengbao.adapter.LpgMyBottleAdapter;
 import com.msht.minshengbao.adapter.WaterBalanceAdapter;
-import com.msht.minshengbao.adapter.WaterOrderAdapter;
+import com.msht.minshengbao.adapter.WaterMealAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,20 +48,16 @@ import java.util.Map;
  * @date 2018/7/2  
  */
 public class WaterBalanceActivity extends BaseActivity implements View.OnClickListener {
-    private String   account="";
+    private MyNoScrollGridView mGridView;
     private TextView tvTotalAmount;
     private TextView tvGiveAmount;
-    private int      pageNo=1;
-    private int pageIndex=0;
-    private LoadMoreListView mListView;
-    private WaterBalanceAdapter mAdapter;
+    private WaterMealAdapter waterMealAdapter;
     private VerticalSwipeRefreshLayout mSwipeRefresh;
     private ArrayList<HashMap<String, String>> orderList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> mListType = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-
     private final BalanceHandler balanceHandler=new BalanceHandler(this);
-    private final RequestHandler requestHandler=new RequestHandler(this);
     private static class BalanceHandler extends Handler {
         private WeakReference< WaterBalanceActivity> mWeakReference;
         public BalanceHandler( WaterBalanceActivity activity) {
@@ -74,120 +69,37 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
             final  WaterBalanceActivity activity=mWeakReference.get();
             if (activity==null||activity.isFinishing()){
                 return;
-            }
-            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                activity.customDialog.dismiss();
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
-                        String message = object.optString("message");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.mSwipeRefresh.setRefreshing(false);
-                            JSONObject json =object.optJSONObject("data");
-                            activity.onReceiveAccountData(json);
-                        }else {
-                            ToastUtil.ToastText(activity.context,message);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    activity.mSwipeRefresh.setRefreshing(false);
-                    ToastUtil.ToastText(activity.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
-    private static class RequestHandler extends Handler{
-        private WeakReference< WaterBalanceActivity> mWeakReference;
-        public RequestHandler( WaterBalanceActivity activity) {
-            mWeakReference=new WeakReference< WaterBalanceActivity>(activity);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final  WaterBalanceActivity activity =mWeakReference.get();
-            if (activity==null||activity.isFinishing()){
-                return;
-            }
-            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                activity.customDialog.dismiss();
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
-                        String error = object.optString("message");
-                        JSONObject jsonObject =object.optJSONObject("data");
-                        boolean firstPage=jsonObject.optBoolean("firstPage");
-                        boolean lastPage=jsonObject.optBoolean("lastPage");
-                        JSONArray jsonArray=jsonObject.optJSONArray("list");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.mSwipeRefresh.setRefreshing(false);
-                            if (lastPage){
-                                activity.mListView.loadComplete(false);
+            }else {
+                if (activity.customDialog!=null&&activity.customDialog.isShowing()){
+                    activity.customDialog.dismiss();
+                }
+                switch (msg.what) {
+                    case SendRequestUtil.SUCCESS:
+                        try {
+                            JSONObject object = new JSONObject(msg.obj.toString());
+                            String results=object.optString("result");
+                            String message = object.optString("message");
+                            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                                activity.mSwipeRefresh.setRefreshing(false);
+                                JSONObject json =object.optJSONObject("data");
+                                activity.onReceiveAccountData(json);
                             }else {
-                                activity.mListView.loadComplete(true);
+                                ToastUtil.ToastText(activity.context,message);
                             }
-                            if(jsonArray.length()>0){
-                                if (activity.pageNo==1){
-                                    activity.mList.clear();
-                                }
-                            }
-                            activity.onReceiveIncomeData(jsonArray);
-                        }else {
-                            ToastUtil.ToastText(activity.context,error);
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    activity.mAdapter.notifyDataSetChanged();
-                    activity.mSwipeRefresh.setRefreshing(false);
-                    ToastUtil.ToastText(activity.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
+                        break;
+                    case SendRequestUtil.FAILURE:
+                        activity.mSwipeRefresh.setRefreshing(false);
+                        ToastUtil.ToastText(activity.context,msg.obj.toString());
+                        break;
+                    default:
+                        break;
+                }
             }
             super.handleMessage(msg);
         }
-    }
-
-    private void onReceiveIncomeData(JSONArray jsonArray) {
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-                String type = json.getString("type");
-                String childType=json.optString("childType");
-                String payType= json.getString("payType");
-                String amount = json.getString("amount");
-                String orderNo =json.optString("orderNo");
-                String payTypeName=json.optString("payTypeName");
-                String createTime=json.optString("createTime");
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("type", type);
-                map.put("payType", payType);
-                map.put("childType",childType);
-                map.put("payTypeName",payTypeName);
-                map.put("amount", amount);
-                map.put("orderNo",orderNo);
-                map.put("createTime",createTime);
-                mList.add(map);
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        mAdapter.notifyDataSetChanged();
     }
     private void onReceiveAccountData(JSONObject json) {
         String type=json.optString("type");
@@ -211,21 +123,97 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         customDialog=new CustomDialog(this, "正在加载");
         mPageName="我的余额(水宝)";
         setCommonHeader(mPageName);
-        account= SharedPreferencesUtil.getUserName(context, SharedPreferencesUtil.UserName,"");
         initView();
         initRefresh();
-        mAdapter=new WaterBalanceAdapter(context,mList);
-        mListView.setAdapter(mAdapter);
+        VariableUtil.MealPos=-1;
+        waterMealAdapter=new WaterMealAdapter(context, mListType);
+        mGridView.setAdapter(waterMealAdapter);
         initData();
-        initOrderData(1);
-        mListView.setLoadMoreListener(new ILoadMoreCallback() {
+        initRechargeData();
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void loadMore() {
-                initOrderData(pageIndex + 1);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String amount= mListType.get(i).get("amount");
+                String giveFee = mListType.get(i).get("giveFee");
+                String packId=mListType.get(i).get("id");
+                VariableUtil.MealPos=i;
+                waterMealAdapter.notifyDataSetChanged();
+                Intent intent=new Intent(context,WaterPayRechargeActivity.class);
+                intent.putExtra("amount",amount);
+                intent.putExtra("giveFee",giveFee);
+                intent.putExtra("packId",packId);
+                startActivityForResult(intent,1);
             }
         });
     }
+    private void initRechargeData() {
+        String validateURL= UrlUtil.WATER_RECHARGE_MEAL;
+        HashMap<String, String> textParams = new HashMap<String, String>(2);
+        textParams.put("type","1");
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                try {
+                    JSONObject object = new JSONObject(data.toString());
+                    String results=object.optString("result");
+                    String message = object.optString("message");
+                    if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                        JSONArray jsonArray =object.optJSONArray("data");
+                        saveData(jsonArray);
+                    }else {
+                       ToastUtil.ToastText(context, message);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                ToastUtil.ToastText(context, data.toString());
+            }
+        });
 
+    }
+    private void saveData(JSONArray jsonArray) {
+        mListType.clear();
+        waterMealAdapter.notifyDataSetChanged();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                String id = json.getString("id");
+                String type=json.getString("type");
+                String amount=json.getString("amount");
+                String activityId="";
+                String title="";
+                String activityType="";
+                String scope="";
+                String giveFee="0";
+                if (!json.isNull("activity")){
+                    JSONObject object=json.getJSONObject("activity");
+                    activityId=object.optString("id");
+                    title=object.optString("title");
+                    activityType=object.optString("type");
+                    scope=object.optString("scope");
+                    giveFee=object.optString("giveFee");
+                }
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("id", id);
+                map.put("type",type);
+                map.put("amount",amount);
+                map.put("activityId",activityId);
+                map.put("title",title);
+                map.put("activityType",activityType);
+                map.put("scoped",scope);
+                map.put("giveFee",giveFee);
+                mListType.add(map);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        if (mListType.size()!=0){
+            waterMealAdapter.notifyDataSetChanged();
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -233,15 +221,21 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
             case ConstantUtil.VALUE2:
                 if (resultCode==ConstantUtil.VALUE1){
                     initData();
-                    initOrderData(1);
                     setResult(1);
                 }
                 break;
+                case ConstantUtil.VALUE1:
+                    VariableUtil.MealPos=-1;
+                    waterMealAdapter.notifyDataSetChanged();
+                    if (resultCode==ConstantUtil.VALUE2){
+                        initData();
+                        setResult(1);
+                    }
+                    break;
                 default:
                     break;
         }
     }
-
     private void initRefresh() {
         mSwipeRefresh.setProgressViewEndTarget(false,100);
         mSwipeRefresh.setProgressViewOffset(false,2,20);
@@ -257,39 +251,9 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onRefresh() {
                 initData();
-                initOrderData(1);
+                initRechargeData();
             }
         });
-        /** SwipeRefreshLayout 与ListView滑动冲突  **/
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) { }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                boolean enable = false;
-                if(mListView != null && mListView.getChildCount() > 0){
-                    // check if the first item of the list is visible
-                    boolean firstItemVisible = mListView.getFirstVisiblePosition() == 0;
-                    // check if the top of the first item is visible
-                    boolean topOfFirstItemVisible = mListView.getChildAt(0).getTop() == 0;
-                    // enabling or disabling the refresh layout
-                    enable = firstItemVisible && topOfFirstItemVisible;
-                }
-                mSwipeRefresh.setEnabled(enable);
-            }
-        });
-    }
-
-    private void initOrderData(int i) {
-        pageIndex =i;
-        pageNo=i;
-        String validateURL = UrlUtil.WATER_BALANCE_DETAIL;
-        HashMap<String, String> textParams = new HashMap<String, String>();
-        String pageNum=String.valueOf(pageNo);
-        textParams.put("account",VariableUtil.waterAccount);
-        textParams.put("pageNo",pageNum);
-        textParams.put("pageSize","16");
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initData() {
         customDialog.show();
@@ -304,14 +268,11 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         view.setBackgroundResource(R.drawable.shape_change_blue_bg);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
         rightImg=(ImageView)findViewById(R.id.id_right_img);
-        View layoutAccountHeader=getLayoutInflater().inflate(R.layout.layout_water_balance_hearder,null);
-        mListView=(LoadMoreListView) findViewById(R.id.id_order_list);
-        mListView.addHeaderView(layoutAccountHeader);
-        tvGiveAmount =(TextView)layoutAccountHeader.findViewById(R.id.id_give_fee);
-        tvTotalAmount =(TextView)layoutAccountHeader.findViewById(R.id.id_total_amount);
-        layoutAccountHeader.findViewById(R.id.id_tv_detail).setOnClickListener(this);
-        layoutAccountHeader.findViewById(R.id.id_forward_img).setOnClickListener(this);
-
+        mGridView=(MyNoScrollGridView)findViewById(R.id.id_recharge_view);
+        tvGiveAmount =(TextView)findViewById(R.id.id_give_fee);
+        tvTotalAmount =(TextView)findViewById(R.id.id_total_amount);
+        findViewById(R.id.id_tv_detail).setOnClickListener(this);
+        findViewById(R.id.id_forward_img).setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -324,11 +285,18 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
                 default:
                     break;
         }
-
+    }
+    private void onRecharge() {
+        Intent intent=new Intent(context,WaterBalanceDetailActivity.class);
+        startActivityForResult(intent,2);
     }
 
-    private void onRecharge() {
-        Intent intent=new Intent(context,WaterRechargeActivity.class);
-        startActivityForResult(intent,2);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

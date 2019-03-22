@@ -50,14 +50,14 @@ public class OkHttpRequestUtil implements ReqCallBack{
 
         //初始化OkHttpClient
         mOkHttpClient = new OkHttpClient().newBuilder()
-                .addInterceptor(new MLoggerInterceptor("http", true))
+               // .addInterceptor(new MLoggerInterceptor("http", true))
                 //设置超时时间
                 .connectTimeout(15, TimeUnit.SECONDS)
                 //设置读取超时时间
                 .readTimeout(12, TimeUnit.SECONDS)
                 //设置写入超时时间
                 .writeTimeout(12, TimeUnit.SECONDS)
-                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory(),SSLSocketClient.getX509TrustManager())
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 .build();
 

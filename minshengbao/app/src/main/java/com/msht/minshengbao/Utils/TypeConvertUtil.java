@@ -1,5 +1,7 @@
 package com.msht.minshengbao.Utils;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,4 +30,57 @@ public class TypeConvertUtil {
         }
         return result;
     }
+
+    /**把String转化为float
+     *
+     * @param number
+     * @param defaultValue
+     * @return
+     */
+    public static float convertToFloat(String number, float defaultValue) {
+        if (TextUtils.isEmpty(number)) {
+            return defaultValue;
+        }
+        try {
+            return Float.parseFloat(number);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+
+    }
+
+    /**把String转化为double
+     * @param number 字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static double convertToDouble(String number, double defaultValue) {
+        if (TextUtils.isEmpty(number)) {
+            return defaultValue;
+        }
+        try {
+            return Double.parseDouble(number);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+
+    }
+
+    /**把String转化为int
+     *
+     * @param number
+     * @param defaultValue
+     * @return
+     */
+    public static int convertToInt(String number, int defaultValue) {
+        if (TextUtils.isEmpty(number)) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(number);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
 }

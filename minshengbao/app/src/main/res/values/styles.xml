@@ -161,6 +161,13 @@
         <!--多选?-->
         <item name="item_multiChooseable">false</item>
     </style>
+    <style name="Theme.picker" parent="AppTheme">
+        <item name="android:editTextStyle">@style/Widget.EditText.White</item>
+    </style>
+    <style name="Widget.EditText.White" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/black1</item>
+        <item name="android:textSize">@dimen/text_width16</item>
+    </style>
     <style name="MyRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/selector_my_evalute_ratingbar</item>
         <item name="android:minHeight">60dip</item>

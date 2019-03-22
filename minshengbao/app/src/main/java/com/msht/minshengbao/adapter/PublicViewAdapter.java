@@ -20,7 +20,7 @@ public class PublicViewAdapter extends FragmentPagerAdapter {
     }
     @Override
     public Fragment getItem(int position) {
-        return WaterIncomeFra.getinstance(position);
+        return WaterIncomeFra.getInstance(position);
     }
 
     @Override

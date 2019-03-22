@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -159,10 +160,15 @@ public class ScanCodeResultActivity extends BaseActivity {
         String  purifyWaterTds=jsonObject.optString("purifyWaterTds");
         int     networkStatus=jsonObject.optInt("networkStatus");
         int     workStatus=jsonObject.optInt("workStatus");
+        String  chargeWay=jsonObject.optString("chargeWay");
         tvEquipment.setText(equipment);
         tvEstate.setText(communityName);
         tvTDS.setText(purifyWaterTds);
-        tvFeeStandard.setText("0.3元/升");
+        if (chargeWay.equals(ConstantUtil.VALUE_ONE)){
+            tvFeeStandard.setText("免费");
+        }else {
+            tvFeeStandard.setText("0.3元/升");
+        }
         if (networkStatus==1){
             if (workStatus==1){
                 initData();
@@ -187,30 +193,42 @@ public class ScanCodeResultActivity extends BaseActivity {
         switch (code){
             case ConstantUtil.VALUE_CODE_0000:
                 result=context.getString(R.string.result_notice1);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.green_light));
                 break;
             case ConstantUtil.VALUE_CODE_0009:
                 result=context.getString(R.string.result_notice4);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
             case ConstantUtil.VALUE_CODE_0010:
                 result=context.getString(R.string.result_notice3);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
             case ConstantUtil.VALUE_CODE_0011:
                 result=context.getString(R.string.result_notice5);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
             case ConstantUtil.VALUE_CODE_0012:
                 result=context.getString(R.string.result_notice4);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
             case ConstantUtil.VALUE_CODE_1008:
                 result=context.getString(R.string.result_notice2);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
             case ConstantUtil.VALUE_CODE_1009:
                 result=context.getString(R.string.result_notice6);
+                tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                 break;
                 default:
                     result=context.getString(R.string.result_notice3);
+                    tvNotice.setTextColor(ContextCompat.getColor(context,R.color.red));
                     break;
         }
-        new WaterPublicDialog(context).builder()
+        btnKnow.setVisibility(View.VISIBLE);
+        btnLaunch.setVisibility(View.GONE);
+        tvNotice.setVisibility(View.VISIBLE);
+        tvNotice.setText(result);
+        /*new WaterPublicDialog(context).builder()
                 .setCancelable(false)
                 .setCanceledOnTouchOutside(true)
                 .setButtonText("好的")
@@ -223,7 +241,7 @@ public class ScanCodeResultActivity extends BaseActivity {
                     public void onClick(View v) {
                         finish();
                     }
-                }).show();
+                }).show();*/
 
     }
     private void onResultData(JSONObject jsonObject) {

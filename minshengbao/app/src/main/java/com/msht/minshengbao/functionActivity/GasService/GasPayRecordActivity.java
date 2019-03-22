@@ -1,6 +1,7 @@
 package com.msht.minshengbao.functionActivity.GasService;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -164,6 +165,9 @@ public class GasPayRecordActivity extends BaseActivity {
                 String state = jsonObject.getString("state");
                 String payMethod=jsonObject.getString("pay_method");
                 String payTime=jsonObject.getString("pay_time");
+                String usageAmount=jsonObject.optString("usageAmount");
+                String overdueFine=jsonObject.optString("overdueFine");
+                String totalDiscountAmt=jsonObject.optString("totalDiscountAmt");
                 String writeCardState="0";
                 String tableType;
                 switch (urlType){
@@ -181,7 +185,7 @@ public class GasPayRecordActivity extends BaseActivity {
                         break;
                 }
                 if (jsonObject.has("writecard_state")){
-                    writeCardState=jsonObject.getString("writecard_state");
+                    writeCardState=jsonObject.optString("writecard_state");
                 }
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("customerNo", customerNo);
@@ -192,6 +196,9 @@ public class GasPayRecordActivity extends BaseActivity {
                 map.put("payTime",payTime);
                 map.put("writeCardState",writeCardState);
                 map.put("tableType",tableType);
+                map.put("usageAmount",usageAmount);
+                map.put("overdueFine",overdueFine);
+                map.put("totalDiscountAmt",totalDiscountAmt);
                 recordList.add(map);
             }
         }catch (JSONException e){
@@ -226,6 +233,27 @@ public class GasPayRecordActivity extends BaseActivity {
         initHeader();
         initView();
         initData();
+       adapter.setClickCallBack(new PayRecordAdapter.ItemClickCallBack() {
+            @Override
+            public void onItemClick(int pos) {
+                if (urlType.equals(VariableUtil.VALUE_ZERO)){
+                    String customerNo=recordList.get(pos).get("customerNo");
+                    String payTime=recordList.get(pos).get("payTime");
+                    String usageAmount=recordList.get(pos).get("usageAmount");
+                    String overdueFine=recordList.get(pos).get("overdueFine");
+                    String totalDiscountAmt=recordList.get(pos).get("totalDiscountAmt");
+                    String amount=recordList.get(pos).get("amount");
+                    Intent intent=new Intent(context,GasPayDetailActivity.class);
+                    intent.putExtra("customerNo",customerNo);
+                    intent.putExtra("payTime",payTime);
+                    intent.putExtra("usageAmount",usageAmount);
+                    intent.putExtra("overdueFine",overdueFine);
+                    intent.putExtra("totalDiscountAmt",totalDiscountAmt);
+                    intent.putExtra("amount",amount);
+                    startActivity(intent);
+                }
+            }
+        });
     }
     private void initHeader() {
         ((TextView)findViewById(R.id.id_customerText)).setText(customerNo);
@@ -238,7 +266,8 @@ public class GasPayRecordActivity extends BaseActivity {
     private void loadData(int i) {
         pageIndex =i;
         if (urlType.equals(VariableUtil.VALUE_ZERO)){
-            validateURL = UrlUtil.PayRecors_HistoryUrl;
+           // validateURL = UrlUtil.GET_PAY_HISTORY;
+            validateURL="http://192.168.3.162:8080/Gas/payment/customerno_history_new";
         }else if (urlType.equals(VariableUtil.VALUE_ONE)){
             validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
         }else if (urlType.equals(VariableUtil.VALUE_TWO)){

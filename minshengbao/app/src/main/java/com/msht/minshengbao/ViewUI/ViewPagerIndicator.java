@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -42,6 +41,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
     private Path indicatorPath;
 
+    private int mTextViewWidth =0;
 
     /**
      * 手指滑动时的偏移量
@@ -77,10 +77,12 @@ public class ViewPagerIndicator extends LinearLayout {
      * 标题选中时的颜色
      */
     private static final int COLOR_TEXT_HIGHLIGHTCOLOR = 0xFFFFFFFF;
+    private static final int COLOR_DIVIDE_LINE=0x44444444;
 
 
     private int colorNormal = COLOR_TEXT_NORMAL;
     private int colorHigh = COLOR_TEXT_HIGHLIGHTCOLOR;
+    private int colorDivide=COLOR_DIVIDE_LINE;
 
 
     public ViewPagerIndicator(Context context) {
@@ -94,7 +96,7 @@ public class ViewPagerIndicator extends LinearLayout {
         mPaint.setAntiAlias(true);
         colorNormal=getResources().getColor(R.color.desc);
         colorHigh=getResources().getColor(R.color.colorPrimary);
-        mPaint.setColor(getResources().getColor(R.color.colorAccent));
+        mPaint.setColor(getResources().getColor(R.color.colorPrimary));
         mPaint.setStyle(Style.FILL);
         mPaint.setPathEffect(new CornerPathEffect(3));
     }
@@ -117,7 +119,7 @@ public class ViewPagerIndicator extends LinearLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mIndicatorWidth = w / mTabVisibleCount;
+        this.mIndicatorWidth = w / mTabVisibleCount;
         initIndicator();
     }
 
@@ -126,14 +128,13 @@ public class ViewPagerIndicator extends LinearLayout {
     /**
      * 设置tab的标题
      *
-     * @param datas
+     * @param data
      */
-    private void setTabItemTitles(String[] datas) {
+    private void setTabItemTitles(String[] data) {
         // 如果传入的list有值，则移除布局文件中设置的view
-        if (datas != null && datas.length > 0) {
+        if (data != null && data.length > 0) {
             this.removeAllViews();
-            this.mTabTitles = datas;
-
+            this.mTabTitles = data;
             boolean flags = false;
             for (String title : mTabTitles) {
                 if (flags) {
@@ -158,13 +159,11 @@ public class ViewPagerIndicator extends LinearLayout {
                                        int positionOffsetPixels) {
                 scroll(position, positionOffset);
             }
-
             @Override
             public void onPageSelected(int position) {
                 resetTextViewColor();
                 highLightTextView(position*2);
             }
-
             @Override
             public void onPageScrollStateChanged(int i) {
 
@@ -176,11 +175,11 @@ public class ViewPagerIndicator extends LinearLayout {
         }
         mTabVisibleCount=mTitle.length;
         setTabItemTitles(mTitle);
-
         // 设置当前页
         mViewPager.setCurrentItem(pos);
         // 高亮
-       // highLightTextView(pos);
+        highLightTextView(pos*2);
+
     }
 
     /**
@@ -239,7 +238,12 @@ public class ViewPagerIndicator extends LinearLayout {
         TextView tv = new TextView(getContext());
         LayoutParams lp = new LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.width = getScreenWidth() / mTabVisibleCount;
+
+       if (mTextViewWidth ==0){
+            lp.width = getScreenWidth() / mTabVisibleCount;
+        }else {
+            lp.width= mTextViewWidth / mTabVisibleCount;
+        }
         lp.gravity=Gravity.CENTER;
         tv.setGravity(Gravity.CENTER);
         tv.setTextColor(colorNormal);
@@ -255,7 +259,7 @@ public class ViewPagerIndicator extends LinearLayout {
         LayoutParams lp = new LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         lp.width = getRawSize(TypedValue.COMPLEX_UNIT_DIP,0.5f);
-        view.setBackgroundColor(0x44444444);
+        view.setBackgroundColor(colorDivide);
         view.setLayoutParams(lp);
         return view;
     }
@@ -287,8 +291,26 @@ public class ViewPagerIndicator extends LinearLayout {
         mTranslationX = getWidth() / mTabVisibleCount * (position + offset);
         invalidate();
     }
+    public void setColorHigh(int color){
+        this.colorHigh=color;
+    }
+    public void setColorDivide(int color){
+        this.colorDivide=color;
+    }
 
-
+    public void setPaintStyle(Style style){
+        if (mPaint!=null){
+            mPaint.setStyle(style);
+        }
+    }
+    public void setPaintColorHigh(int color){
+        if (mPaint!=null){
+            mPaint.setColor(color);
+        }
+    }
+    public void setTextViewWidth(int width){
+        this.mTextViewWidth =width;
+    }
     /**
      * 获得屏幕的宽度
      *
@@ -305,12 +327,11 @@ public class ViewPagerIndicator extends LinearLayout {
     public int getRawSize(int unit, float size) {
         Context c = getContext();
         Resources r;
-
-        if (c == null)
+        if (c == null){
             r = Resources.getSystem();
-        else
+        }else {
             r = c.getResources();
-
+        }
         return (int) TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
     }
 

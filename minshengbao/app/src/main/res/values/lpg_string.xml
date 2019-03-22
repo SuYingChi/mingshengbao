@@ -67,7 +67,7 @@
     <string name="steel_discount_amount">折价</string>
     <string name="send_gas_order_text">送气订单</string>
     <string name="transfer_trajectory">气瓶流转轨迹</string>
-    <string name="update_new_user">换个新账户</string>
+    <string name="update_new_user">添加账户</string>
     <string name="unit_count">单</string>
     <string name="unit_one">个</string>
     <string name="have_used">已使用了</string>

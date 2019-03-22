@@ -536,7 +536,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }else {
             layoutHeadLine.setVisibility(View.GONE);
         }
-
     }
     private void onFloatingAdvertisingData(JSONArray array) {
         if (array!=null&&array.length()>0){
@@ -604,7 +603,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,headLineHandler);
     }
-
     private void initRefresh() {
         mSwipeRefresh.setProgressViewEndTarget(false, 100);
         mSwipeRefresh.setProgressViewOffset(false, 2, 45);
@@ -626,7 +624,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             }
         });
     }
-
     private void onStartActivity() {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -844,7 +841,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
     }
-
     public static class BannerViewHolder implements MZViewHolder<ActivityInfo> {
         private ImageView mImageView;
 
@@ -869,7 +865,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     .into(mImageView);
         }
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -887,7 +882,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 break;
         }
     }
-
     private void onMoreHeadLine() {
         Intent intent=new Intent(mContext,MsbHeadLineActivity.class);
         startActivity(intent);
@@ -900,7 +894,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         intent.putExtra("code",ConstantUtil.AIR_CONDITIONER_CLEAN);
         startActivity(intent);
     }
-
     private void hoodsClean() {
         Intent intent=new Intent(mContext,PublishOrderActivity.class);
         intent.putExtra("id","10");
@@ -909,7 +902,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         intent.putExtra("code",ConstantUtil.GAS_STOVE_REPAIR);
         startActivity(intent);
     }
-
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
@@ -994,13 +986,11 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     }else {
                         AppActivityUtil.onStartLoginActivity(mContext,url);
                     }
-
                 }
             });
         }else {
             ToastUtil.ToastText(mContext,bean.getError());
         }
-
     }
     private void initCardData() {
         String functionUrl=UrlUtil.SPECIAL_TOPIC_URL;
@@ -1085,7 +1075,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(function, OkHttpRequestUtil.TYPE_GET, null, getHotHandler);
     }
-
     private void onSaveHotRepair(JSONArray array) {
         try {
             if(array!=null) {
@@ -1108,7 +1097,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             hotRepairAdapter.notifyDataSetChanged();
         }
     }
-
     private void initAdvertisingData() {
         String requestUrl=UrlUtil.ADVERTISING_URL;
         String code="pop_up_activity";
@@ -1122,7 +1110,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         }
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,getAdvertisingHandler);
     }
-
     /**
      * 限制每天只显示一次弹框
      * @param array 数据集
@@ -1149,7 +1136,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                             })
                             .show();
                 }
-
             }catch (JSONException e){
                 e.printStackTrace();
             }
@@ -1172,7 +1158,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         mMZBanner.start();
         MobclickAgent.onPageStart(mPageName);
     }
-
     @Override
     public void onPause() {
         super.onPause();

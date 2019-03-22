@@ -94,7 +94,6 @@ public class MyApplication extends Application {
             }
         });
 
-
     }
 
     public void setList(List<String> list) {
@@ -112,8 +111,7 @@ public class MyApplication extends Application {
         return instance.getApplicationContext();
 
     }
-
-    @Override
+   /* @Override
     public void onConfigurationChanged(Configuration newConfig) {
         if (newConfig.fontScale != 1)//非默认值
             getResources();
@@ -128,7 +126,7 @@ public class MyApplication extends Application {
             res.updateConfiguration(newConfig, res.getDisplayMetrics());
         }
         return res;
-    }
+    }*/
     @Override
     public void onCreate() {
         super.onCreate();
@@ -178,8 +176,7 @@ public class MyApplication extends Application {
         return instance;
     }
 
-
-   /* @Override
+   /*@Override
     public Resources getResources() {
         Resources resources = super.getResources();
         if (resources != null && resources.getConfiguration().fontScale != 1) {
@@ -190,14 +187,13 @@ public class MyApplication extends Application {
                 Context configurationContext = createConfigurationContext(newConfig);
                 resources = configurationContext.getResources();
                 displayMetrics.scaledDensity = displayMetrics.density * newConfig.fontScale;
+                resources.updateConfiguration(newConfig, displayMetrics);
             } else {
                 resources.updateConfiguration(newConfig, displayMetrics);
             }
         }
         return resources;
     }*/
-
-
     private void initUPush() {
         PushAgent mPushAgent = PushAgent.getInstance(this);
         /*通知栏按数量显示 **/
@@ -214,7 +210,6 @@ public class MyApplication extends Application {
             public void onFailure(String s, String s1) {
             }
         });
-
         UmengMessageHandler messageHandler = new UmengMessageHandler() {
             @Override
             public void dealWithNotificationMessage(Context context, UMessage uMessage) {
@@ -235,7 +230,7 @@ public class MyApplication extends Application {
         UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
             @Override
             public void launchApp(Context context, UMessage msg) {
-                if (!msg.extra.isEmpty()){
+                if ((!msg.extra.isEmpty()&&(!TextUtils.isEmpty(msg.extra.get("url"))))){
                     String url=msg.extra.get("url");
                     if (AppActivityUtil.isAppAlive(context)){
                         if (AppActivityUtil.isLoginState(context)){
@@ -250,17 +245,14 @@ public class MyApplication extends Application {
                     super.launchApp(context, msg);
                 }
             }
-
             @Override
             public void openUrl(Context context, UMessage msg) {
                 super.openUrl(context, msg);
             }
-
             @Override
             public void openActivity(Context context, UMessage msg) {
                 super.openActivity(context, msg);
             }
-
             @Override
             public void dealWithCustomAction(Context context, UMessage msg) {
                 if (!msg.extra.isEmpty()){

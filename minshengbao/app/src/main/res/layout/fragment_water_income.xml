@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     tools:context="com.msht.minshengbao.functionActivity.fragment.WaterIncomeFra">
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -9,13 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
             android:id="@+id/id_income_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@null">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
-        <include layout="@layout/layout_line_gray"/>
+        </com.jcodecraeer.xrecyclerview.XRecyclerView>
     </LinearLayout>
     <include layout="@layout/layout_no_data_view"
         android:id="@+id/id_nodata_view"

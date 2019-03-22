@@ -152,9 +152,8 @@ public class GasServerOrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas_server_order);
         context=this;
-        mPageName="燃气服务";
         customDialog=new CustomDialog(this, "正在加载");
-        setCommonHeader(mPageName);
+        setCommonHeader("燃气工单");
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, "");
         initView();

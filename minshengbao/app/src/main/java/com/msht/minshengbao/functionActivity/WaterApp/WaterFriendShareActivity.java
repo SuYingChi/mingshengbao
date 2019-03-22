@@ -30,6 +30,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.QrCodeDialog;
 import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Demo class
@@ -177,7 +179,7 @@ public class WaterFriendShareActivity extends BaseActivity implements View.OnCli
     private void onShareFriendCircle() {
         String shareUrl= ShareDefaultContent.waterShareUrl+"?phone="+account;
         UMWeb web = new UMWeb(shareUrl);
-        web.setTitle(ShareDefaultContent.waterTitle);
+        web.setTitle(ShareDefaultContent.waterText);
         web.setDescription(ShareDefaultContent.waterText);
         web.setThumb(new UMImage(context, R.drawable.purified_water));
         new ShareAction(WaterFriendShareActivity.this).withMedia(web)
@@ -232,6 +234,29 @@ public class WaterFriendShareActivity extends BaseActivity implements View.OnCli
         @Override
         public void onCancel(SHARE_MEDIA platform) {
             ToastUtil.ToastText(context,platform + " 分享取消了");
+        }
+    };
+    private UMAuthListener authListener = new UMAuthListener() {
+
+
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
+        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media, int i) {
+
         }
     };
     @Override

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.functionActivity.HtmlWeb.PrizesGiftsActivity;
@@ -21,7 +22,8 @@ import com.msht.minshengbao.functionActivity.HtmlWeb.PrizesGiftsActivity;
  * @date 2018/7/2  
  */
 public class WaterSuccessActivity extends BaseActivity {
-    private String   amount;
+    private String   amount="0";
+    private String   giveFee="0";
     private String   account;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,11 @@ public class WaterSuccessActivity extends BaseActivity {
         mPageName="充值结果";
         context=this;
         account= SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
-        amount=getIntent().getStringExtra("amount")+"元";
+        Intent data=getIntent();
+        if (data!=null){
+            amount=data.getStringExtra("amount");
+            giveFee=data.getStringExtra("giveFee");
+        }
         setCommonHeader(mPageName);
         initView();
     }
@@ -39,7 +45,11 @@ public class WaterSuccessActivity extends BaseActivity {
         layoutHeader.setBackgroundResource(R.drawable.shape_change_blue_bg);
         TextView tvAccount =(TextView)findViewById(R.id.id_tv_account);
         TextView tvAmount =(TextView)findViewById(R.id.id_tv_amount);
-        tvAmount.setText(amount);
+        TextView tvGiveFee=(TextView)findViewById(R.id.id_give_text);
+        String   giveText="(含赠送"+giveFee+")";
+        double doubleAmount=TypeConvertUtil.convertToDouble(amount,0)+TypeConvertUtil.convertToDouble(giveFee,0);
+        tvAmount.setText(String.valueOf(doubleAmount));
+        tvGiveFee.setText(giveText);
         tvAccount.setText(VariableUtil.waterAccount);
         findViewById(R.id.id_advertising_img).setOnClickListener(new View.OnClickListener() {
             @Override

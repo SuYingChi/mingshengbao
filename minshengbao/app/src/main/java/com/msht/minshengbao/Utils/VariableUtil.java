@@ -25,6 +25,7 @@ public class VariableUtil {
     public static boolean networkStatus=true;
     public static boolean isCurrent=false;
     public static String waterAccount="";
+    public static String mDateString="";
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
     public static final  String VALUE_ONE=  "1";

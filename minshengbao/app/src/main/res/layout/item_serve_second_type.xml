@@ -16,8 +16,8 @@
             android:gravity="center"
             android:layout_centerInParent="true"
             android:text="电动车"
-            android:textSize="@dimen/text_14"
+            android:textSize="@dimen/text_width14"
             android:theme="@style/AppTheme"
-            android:textColor="@color/desc"/>
+            android:textColor="@color/color_383838"/>
     </RelativeLayout>
 </LinearLayout>

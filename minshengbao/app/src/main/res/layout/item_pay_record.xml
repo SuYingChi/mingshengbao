@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/gray_black">
     <LinearLayout
+        android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_white_layout"
@@ -23,7 +24,7 @@
                 android:layout_marginStart="@dimen/margin_width10"
                 android:layout_marginTop="@dimen/margin_width10"
                 android:layout_marginBottom="@dimen/margin_width10"
-                android:text="缴费金额"
+                android:text="@string/pay_amount"
                 android:textSize="@dimen/text_width16"
                 android:textColor="@color/black1"/>
             <TextView
@@ -31,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="100.00"
                 android:textColor="@color/colorOrange"
                 android:textSize="@dimen/text_width20"
                 android:textStyle="bold"
@@ -73,7 +73,7 @@
                 android:layout_marginLeft="@dimen/margin_width10"
                 android:layout_marginStart="@dimen/margin_width10"
                 android:layout_marginTop="@dimen/margin_width10"
-                android:text="缴费时间"
+                android:text="@string/pay_time"
                 android:textColor="@color/black1"
                 android:textSize="@dimen/text_width16"/>
             <TextView

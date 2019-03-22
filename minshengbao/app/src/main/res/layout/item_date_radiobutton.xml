@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/margin_width45">
+    <RadioButton
+        android:id="@+id/id_radio_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/margin_width45"
+        android:paddingLeft="@dimen/margin_width10"
+        android:paddingRight="@dimen/margin_width10"
+        android:checked="true"
+        android:textSize="@dimen/text_width16"
+        android:textColor="@drawable/selector_radio_blue_black_text"
+        android:background="@drawable/selector_radio_background"
+        android:button="@null"/>
+</RelativeLayout>

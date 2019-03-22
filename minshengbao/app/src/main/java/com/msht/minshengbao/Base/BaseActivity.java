@@ -1,10 +1,13 @@
 package com.msht.minshengbao.Base;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +57,7 @@ public class BaseActivity extends AppCompatActivity  {
         /**
          * 友盟统计
          */
-        PushAgent.getInstance(context).onAppStart();
+        PushAgent.getInstance(this).onAppStart();
         EventBus.getDefault().register(this);
         setSnackBar();
         if (!VariableUtil.networkStatus){
@@ -121,6 +124,24 @@ public class BaseActivity extends AppCompatActivity  {
 
     public void setOnDestroy(boolean onDestroy) {
         isOnDestroy = onDestroy;
+    }
+    @Override
+    public Resources getResources() {
+        Resources resources = super.getResources();
+        if (resources != null && resources.getConfiguration().fontScale != 1) {
+            Configuration newConfig = resources.getConfiguration();
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            newConfig.fontScale = 1;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Context configurationContext = createConfigurationContext(newConfig);
+                resources = configurationContext.getResources();
+                displayMetrics.scaledDensity = displayMetrics.density * newConfig.fontScale;
+                resources.updateConfiguration(newConfig, displayMetrics);
+            } else {
+                resources.updateConfiguration(newConfig, displayMetrics);
+            }
+        }
+        return resources;
     }
     @Override
     public void onResume() {

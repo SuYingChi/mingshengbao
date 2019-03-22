@@ -6,8 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent"
     app:contentInsetStart="0dp"
-    android:clickable="false"
-    >
+    android:clickable="false">
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -35,6 +34,8 @@
             android:id="@+id/id_city_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/id_goback"
+            android:layout_toEndOf="@+id/id_goback"
             android:background="@drawable/shape_oval_back_button"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginStart="@dimen/margin_width10"

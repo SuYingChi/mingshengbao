@@ -43,6 +43,10 @@ public class CouponAdapter extends BaseAdapter {
         this.listener=listener;
     }
     public interface OnClickVoucherListener{
+        /**
+         *
+         * @param storeId
+         */
         void onClickVoucher(String storeId);
     }
     @Override

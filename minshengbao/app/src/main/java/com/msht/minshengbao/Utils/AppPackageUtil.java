@@ -17,7 +17,9 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
@@ -174,5 +176,18 @@ public class AppPackageUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 获得屏幕的宽度
+     *
+     * @return
+     */
+    public static int getScreenWidth(Context context) {
+        WindowManager wm = (WindowManager)context.getSystemService(
+                Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.widthPixels;
     }
 }

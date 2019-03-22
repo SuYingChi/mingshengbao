@@ -44,7 +44,6 @@ public class PrizesGiftsActivity extends BaseActivity {
     private WebView mWebView;
     private String    mUrl, mNavigation;
     private ProgressBar progressBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +58,6 @@ public class PrizesGiftsActivity extends BaseActivity {
         initWeBView();
         initEvent();
     }
-
     private void initHeader() {
         backImg = (ImageView) findViewById(R.id.id_back);
         tvNavigationTile = (TextView) findViewById(R.id.tv_navigation);
@@ -72,6 +70,14 @@ public class PrizesGiftsActivity extends BaseActivity {
                 }else {
                     finish();
                 }
+            }
+        });
+        TextView tvClose=(TextView)findViewById(R.id.id_close);
+        tvClose.setVisibility(View.VISIBLE);
+        tvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

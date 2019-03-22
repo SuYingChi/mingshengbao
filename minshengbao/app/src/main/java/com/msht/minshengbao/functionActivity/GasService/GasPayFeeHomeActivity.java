@@ -448,9 +448,9 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
 
     private void onQuestionText() {
         String url= UrlUtil.GET_CUSTOMER_NO_URL;
-        Intent intent=new Intent(context,HtmlPageActivity.class);
-        intent.putExtra("navigate","获取方式");
+        Intent intent=new Intent(context,GetGasCustomerNoActivity.class);
         intent.putExtra("url",url);
+        intent.putExtra("navigate","获取方式");
         startActivity(intent);
     }
     private void onAutomatePay() {

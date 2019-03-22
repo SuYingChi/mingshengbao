@@ -72,6 +72,7 @@
     <dimen name="text_width20">17.8sp</dimen>
     <dimen name="text_width22">20sp</dimen>
     <dimen name="text_width25">22.2sp</dimen>
+    <dimen name="text_width30">26.4sp</dimen>
     <dimen name="text_width35">31.1sp</dimen>
     <dimen name="text_width40">35.6sp</dimen>
     <dimen name="text_width50">44.4sp</dimen>

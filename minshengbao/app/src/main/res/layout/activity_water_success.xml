@@ -96,12 +96,23 @@
                     android:id="@+id/id_tv_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/id_give_text"
+                    android:layout_toLeftOf="@+id/id_give_text"
+                    android:layout_marginRight="@dimen/margin_width5"
+                    android:layout_marginEnd="@dimen/margin_width5"
+                    android:textColor="@color/title_tv"
+                    android:textSize="@dimen/text_width16" />
+                <TextView
+                    android:id="@+id/id_give_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
-                    android:textColor="@color/title_tv"
+                    android:textColor="@color/app_text"
                     android:textSize="@dimen/text_width16" />
             </RelativeLayout>
             <include layout="@layout/layout_line_gray" />

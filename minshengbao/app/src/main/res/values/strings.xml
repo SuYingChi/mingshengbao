@@ -41,7 +41,10 @@
     <string name="near_ic_card_machine">附近IC卡充值机</string>
     <string name="gas_price_explain">气价说明</string>
     <!--非模块 -->
+    <string name="all_text">全部</string>
+    <string name="consumption_text">消费</string>
     <string name="scan_code">扫一扫</string>
+    <string name="select_date">选择日期</string>
     <string name="balance">余额</string>
     <string name="recharge">充值</string>
     <string name="balance_detail_text">余额明细</string>

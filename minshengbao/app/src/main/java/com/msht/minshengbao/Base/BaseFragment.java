@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by hei on 2016/12/26.
  *
@@ -86,5 +88,7 @@ public abstract class BaseFragment extends Fragment{
      * 初始化数据
      */
     public abstract void initData();
+
+
 
 }

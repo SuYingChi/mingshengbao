@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/margin_width5"
     android:paddingLeft="@dimen/margin_width5"
     android:paddingRight="@dimen/margin_width5"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/id_layout_back"
         android:layout_width="match_parent"

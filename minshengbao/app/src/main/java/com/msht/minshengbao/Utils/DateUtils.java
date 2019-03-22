@@ -2,11 +2,14 @@ package com.msht.minshengbao.Utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by hong on 2017/9/22.
+ *
+ * @author hong
+ * @date 2017/9/22
  */
 
 public class DateUtils {
@@ -72,6 +75,63 @@ public class DateUtils {
     }
 
     /**
+     * 将yyyy年MM月dd日转化yyyy-MM-dd
+     * @param dateString
+     * @return
+     */
+    public static String getStringDate(String dateString,String originString,String newString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(originString,Locale.CHINA);
+        SimpleDateFormat format = new SimpleDateFormat(newString,Locale.CHINA);
+        Date date=new Date();
+        try{
+             date = dateFormat.parse(dateString);
+        } catch(ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return format.format(date);
+    }
+
+    /**
+     * 获取年份
+     * @param dateString
+     * @param pattern
+     * @return
+     */
+    public static int getYearDate(String dateString, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
+        //Date date;
+        Calendar calendar=Calendar.getInstance();
+        try{
+            Date date = dateFormat.parse(dateString);
+            calendar.setTime(date);
+        } catch(ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return calendar.get(Calendar.YEAR);
+    }
+    /**
+     * 获取月份
+     * @param dateString
+     * @param pattern
+     * @return
+     */
+    public static int getMonthDate(String dateString, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern,Locale.CHINA);
+        //Date date;
+        Calendar calendar=Calendar.getInstance();
+        try{
+            Date date = dateFormat.parse(dateString);
+            calendar.setTime(date);
+        } catch(ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return calendar.get(Calendar.MONTH);
+    }
+
+    /**
      * 比较两个日期的大小，日期格式为yyyy-MM-dd
      *
      * @param str1 the first date
@@ -95,5 +155,26 @@ public class DateUtils {
             isBigger = true;
         }
         return isBigger;
+    }
+
+    /**
+     * 得到指定月的天数
+     * */
+    public static int getMonthLastDay(int year, int month)
+    {
+        Calendar a = Calendar.getInstance();
+        a.set(Calendar.YEAR, year);
+        a.set(Calendar.MONTH, month - 1);
+        a.set(Calendar.DATE, 1);//把日期设置为当月第一天
+        a.roll(Calendar.DATE, -1);//日期回滚一天，也就是最后一天
+        return a.get(Calendar.DATE);
+    }
+    /**
+     * 获取某年某月有多少天
+     */
+    public static int getDayOfMonth(int year, int month) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, 0); //输入类型为int类型
+        return c.get(Calendar.DAY_OF_MONTH);
     }
 }

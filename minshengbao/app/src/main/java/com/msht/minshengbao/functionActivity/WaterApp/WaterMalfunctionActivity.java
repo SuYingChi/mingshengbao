@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -261,8 +262,7 @@ public class WaterMalfunctionActivity extends BaseActivity {
         findViewById(R.id.id_scan_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,WaterScanCodeActivity.class);
-                startActivityForResult(intent,3);
+                requestPermission();
             }
         });
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -273,6 +273,38 @@ public class WaterMalfunctionActivity extends BaseActivity {
         });
     }
 
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                onStartScanActivity();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
+                            }
+                        }).start();
+            }else {
+                onStartScanActivity();
+            }
+        }else {
+            onStartScanActivity();
+        }
+    }
+
+    private void onStartScanActivity() {
+        Intent intent=new Intent(context,WaterScanCodeActivity.class);
+        startActivityForResult(intent,3);
+    }
     private void onDataCalculate() {
         btnSend.setEnabled(false);
         if (imgPaths.size()!=0){

@@ -29,6 +29,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.HtmlWeb.PrizesGiftsActivity;
 
 /**
  * Demo class
@@ -43,26 +44,42 @@ public class PaySuccessActivity extends BaseActivity {
     private String successUrl=UrlUtil.APP_PAY_SUCCESS_PAGE;
     private static final String BTN_URL ="http://get/event/activityBtn";
     private String activityUrl="";
-    private String activityCode;
+    private String activityCode="";
+    private String userPhone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_success);
         context=this;
         mPageName="支付结果";
+        String type="";
+        String mNavigation="支付结果";
         String userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
-        final String type=getIntent().getStringExtra("type");
-        String mNavigation=getIntent().getStringExtra("navigation");
-        activityUrl=getIntent().getStringExtra("url");
-        successUrl=getIntent().getStringExtra("pageUrl");
-        activityCode=Uri.parse(successUrl).getQueryParameter("event_code");
+        userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
+        Intent data=getIntent();
+        if (data!=null){
+            type=getIntent().getStringExtra("type");
+            mNavigation=getIntent().getStringExtra("navigation");
+            activityUrl=getIntent().getStringExtra("url");
+            successUrl=getIntent().getStringExtra("pageUrl");
+        }
+        if(TextUtils.isEmpty(successUrl)){
+            activityCode=Uri.parse(successUrl).getQueryParameter("event_code");
+        }
         ImageView payImage=(ImageView)findViewById(R.id.id_pay_img);
         TextView tvNotice=(TextView)findViewById(R.id.id_pay_text);
         TextView tvNavigation=(TextView)findViewById(R.id.tv_navigation);
+        TextView tvRightText=(TextView)findViewById(R.id.id_tv_rightText);
+        tvRightText.setText("完成");
         Button btnKnow=(Button)findViewById(R.id.id_btn_know) ;
         View layoutMain=findViewById(R.id.id_failure_layout);
         successPage=(WebView)findViewById(R.id.id_success_page);
         tvNavigation.setText(mNavigation);
+        if (successUrl.contains(UrlUtil.WATER_RECHARGE_SUCCESS_PAGE)){
+            tvRightText.setVisibility(View.VISIBLE);
+        }else {
+            tvRightText.setVisibility(View.GONE);
+        }
         switch (type){
             case VariableUtil.VALUE_ZERO:
                 payImage.setImageResource(R.drawable.payfailure_3xh);
@@ -96,6 +113,14 @@ public class PaySuccessActivity extends BaseActivity {
                 finish();
             }
         });
+        tvRightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (successUrl.contains(UrlUtil.WATER_RECHARGE_SUCCESS_PAGE)){
+                    onGetGiftPrize();
+                }
+            }
+        });
     }
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
@@ -122,6 +147,9 @@ public class PaySuccessActivity extends BaseActivity {
                     }else {
                         finish();
                     }
+                }else if (url.contains(UrlUtil.WATER_PRIZES_GIFTS)){
+                   onGetGiftPrize();
+                   return true;
                 }else {
                     AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"");
                     return true;
@@ -130,8 +158,17 @@ public class PaySuccessActivity extends BaseActivity {
             }
 
         });
-
     }
+    private void onGetGiftPrize() {
+        String url=UrlUtil.WATER_PRIZES_GIFTS+"?phone="+userPhone;
+        Intent intent=new Intent(context, PrizesGiftsActivity.class);
+        intent.putExtra("url",url);
+        intent.putExtra("navigate","领取礼品");
+        intent.putExtra("flag",0);
+        startActivity(intent);
+        finish();
+    }
+
     private class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onJsAlert(WebView view, String url, String message,

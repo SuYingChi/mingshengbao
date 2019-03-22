@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
@@ -45,7 +46,7 @@ import java.lang.ref.WeakReference;
  * @author hong
  * @date 2018/7/2  
  */
-public class LaunchActivity extends AppCompatActivity {
+public class LaunchActivity extends BaseActivity {
     private Context mContext;
     private final String     mPageName = "启动页";
     private TextView         tvTime;
@@ -73,7 +74,7 @@ public class LaunchActivity extends AppCompatActivity {
             }
             switch (msg.what) {
                 case GO_HOME:
-                    activity.goHome();
+                    activity.goHome("");
                     break;
                 case GO_GUIDE:
                     activity.goGuide();
@@ -98,7 +99,6 @@ public class LaunchActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-                        Log.d("msg.obj=",msg.obj.toString());
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
@@ -110,6 +110,10 @@ public class LaunchActivity extends AppCompatActivity {
                                 activity.layoutFrame.setVisibility(View.VISIBLE);
                                 activity.logoBottom.setVisibility(View.VISIBLE);
                                 activity.onShowAdImage(logoUrl);
+                            }else {
+                                activity.startCountDownTime(5);
+                                activity.layoutFrame.setVisibility(View.GONE);
+                                activity.logoBottom.setVisibility(View.GONE);
                             }
                         }else {
                             activity.init();   //计时
@@ -187,7 +191,7 @@ public class LaunchActivity extends AppCompatActivity {
                 if (isFirstOpen){
                     goGuide();
                 }else {
-                    goHome();
+                    goHome("");
                 }
             }
         });
@@ -196,13 +200,7 @@ public class LaunchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if ((!TextUtils.isEmpty(contentUrl))&&(!contentUrl.equals(ConstantUtil.NULL_VALUE))){
                     touchStatus=false;
-                    if (NetUtil.getDomain(contentUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)){
-                        goHome();
-                        onStartShopActivity(contentUrl);
-                    }else{
-                        goHome();
-                        onStartWebActivity(contentUrl);
-                    }
+                    goHome(contentUrl);
                 }
             }
         });
@@ -212,7 +210,7 @@ public class LaunchActivity extends AppCompatActivity {
         if (isFirstOpen){
             goGuide();
         }else {
-            goHome();
+            goHome("");
         }
     }
     private void startCountDownTime(long time) {
@@ -229,7 +227,7 @@ public class LaunchActivity extends AppCompatActivity {
                     if (isFirstOpen){
                         goGuide();
                     }else {
-                        goHome();
+                        goHome("");
                     }
                 }
             }
@@ -250,15 +248,16 @@ public class LaunchActivity extends AppCompatActivity {
             mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
         }
     }
-    private void goHome() {
-        Intent intent = new Intent(LaunchActivity.this, MainActivity.class);
-        LaunchActivity.this.startActivity(intent);
-        LaunchActivity.this.finish();
+    private void goHome(String contentUrl) {
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.putExtra("pushUrl",contentUrl);
+        startActivity(intent);
+        finish();
     }
     private void goGuide() {
-        Intent intent = new Intent(LaunchActivity.this, GuideActivity.class);
-        LaunchActivity.this.startActivity(intent);
-        LaunchActivity.this.finish();
+        Intent intent = new Intent(mContext, GuideActivity.class);
+        startActivity(intent);
+        finish();
     }
     private void timeCancel() {
         if (timer!=null){

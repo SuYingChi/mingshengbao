@@ -1,5 +1,6 @@
 package com.msht.minshengbao.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,19 @@ import java.util.HashMap;
  */
 
 public class PayRecordAdapter extends RecyclerView.Adapter<PayRecordAdapter.MyViewHolder> {
+
+
+    public void setClickCallBack(ItemClickCallBack clickCallBack) {
+        this.clickCallBack = clickCallBack;
+    }
+    public interface ItemClickCallBack{
+        /**
+         * item回调
+         * @param pos 下标
+         */
+        void onItemClick(int pos);
+    }
+    private ItemClickCallBack clickCallBack;
     private ArrayList<HashMap<String, String>> recordList = new ArrayList<HashMap<String, String>>();
     public PayRecordAdapter(Context context, ArrayList<HashMap<String, String>> List) {
         super();
@@ -35,7 +49,7 @@ public class PayRecordAdapter extends RecyclerView.Adapter<PayRecordAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
         myViewHolder.cnMoney.setText("¥"+recordList.get(position).get("amount"));
         myViewHolder.cnPayWay.setText(recordList.get(position).get("payMethod"));
         myViewHolder.cnTime.setText(recordList.get(position).get("payTime"));
@@ -77,6 +91,14 @@ public class PayRecordAdapter extends RecyclerView.Adapter<PayRecordAdapter.MyVi
                     myViewHolder.cnWriteCardState.setVisibility(View.GONE);
                     break;
         }
+        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickCallBack!=null){
+                    clickCallBack.onItemClick(position);
+                }
+            }
+        });
     }
     @Override
     public long getItemId(int position) {

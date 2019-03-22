@@ -31,7 +31,6 @@ import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
 import com.msht.minshengbao.androidShop.activity.TotalMessageListActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
-import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 import com.msht.minshengbao.androidShop.shopBean.ShopNumBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
@@ -99,12 +98,12 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
     private LoadingDialog centerLoadingDialog;
 
-    private TextView tvWaitEveluate;
+    private TextView tvWaitEvaluate;
     private TextView tvWaitGet;
     private TextView tvWaitPay;
     private TextView tvAllOrder;
 
-    private TextView tvRrfundOrder;
+    private TextView tvRefundOrder;
     private LinearLayout llShopOrder;
     private LinearLayout llrefund;
     private LinearLayout llwaitEveluate;
@@ -129,14 +128,12 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }
 
     }
-
     @Override
     public void dismissLoading() {
         if (centerLoadingDialog != null && centerLoadingDialog.isShowing()&&getActivity()!=null&&!getActivity().isFinishing()) {
             centerLoadingDialog.dismiss();
         }
     }
-
     @Override
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
@@ -146,12 +143,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             PopUtil.toastInBottom("请登录商城");
             LogUtils.e(Log.getStackTraceString(new Throwable()));
             Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
-            getActivity().startActivity(goLogin);
+            startActivity(goLogin);
         } else {
             PopUtil.toastInCenter(s);
         }
     }
-
     @Override
     public String getKey() {
         return ShopSharePreferenceUtil.getInstance().getKey();
@@ -214,18 +210,18 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
         String refundOrderNum = bean.getDatas().getMember_info().getReturnX();
         if ("0".equals(refundOrderNum)) {
-                tvRrfundOrder.setVisibility(View.GONE);
+                tvRefundOrder.setVisibility(View.GONE);
             } else {
-                tvRrfundOrder.setVisibility(View.VISIBLE);
-                tvRrfundOrder.setText(refundOrderNum);
+                tvRefundOrder.setVisibility(View.VISIBLE);
+                tvRefundOrder.setText(refundOrderNum);
             }
             llrefund.setClickable(true);
         String waitEveluateOrdersNum = bean.getDatas().getMember_info().getOrder_noeval_count();
         if ("0".equals(waitEveluateOrdersNum)) {
-            tvWaitEveluate.setVisibility(View.GONE);
+            tvWaitEvaluate.setVisibility(View.GONE);
         } else {
-            tvWaitEveluate.setVisibility(View.VISIBLE);
-            tvWaitEveluate.setText(waitEveluateOrdersNum);
+            tvWaitEvaluate.setVisibility(View.VISIBLE);
+            tvWaitEvaluate.setText(waitEveluateOrdersNum);
         }
         llwaitEveluate.setClickable(true);
         String waitPayOrdersNum = bean.getDatas().getMember_info().getOrder_nopay_count();
@@ -381,11 +377,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 getActivity().startActivity(intent);
             }
         });
-        tvWaitEveluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
+        tvWaitEvaluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
         tvWaitGet = (TextView) view.findViewById(R.id.wait_get_order_num);
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
         tvAllOrder = (TextView) view.findViewById(R.id.shop_order_num);
-        tvRrfundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
+        tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
 
     }
 

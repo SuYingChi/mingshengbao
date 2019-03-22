@@ -3,6 +3,7 @@ package com.msht.minshengbao.functionActivity.WaterApp;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.msht.minshengbao.Base.BaseActivity;
 import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.Model.YiPayModel;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.DateUtils;
@@ -28,10 +30,12 @@ import com.msht.minshengbao.Utils.SecretKeyUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.ViewUI.Dialog.WaterRedPacketDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PayWayAdapter;
@@ -61,15 +65,20 @@ public class WaterPayRechargeActivity extends BaseActivity {
     private String userId;
     private String password;
     private String userPhone;
-    private String amount="0.0" ;
+    private String amount="0.0";
+    private String realAmount="0.0";
     private double doubleBalance;
     private String giveFee;
     private String orderId;
+    private String couponCode="";
     private String packId;
     private String channels;
     private int requestCode=0;
     private String charge,id;
     private EditText etRecommend;
+    private TextView tvAmount;
+    private TextView tvOriginAmount;
+    private TextView tvDescribeText;
     private Button   btnSend;
     private ListViewForScrollView mListView;
     private PayWayAdapter mAdapter;
@@ -253,7 +262,6 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                   // onRechargeSuccess("","1");
                     requestResult();
                    // rechargeSuccess();
                 }else {
@@ -273,7 +281,6 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 if (amount.equals(VariableUtil.VALUE_ZERO1)|| amount.equals(VariableUtil.VALUE_ZERO2)
                         || amount.equals(VariableUtil.VALUE_ZERO)){
                     setResult(0x002);
-                   // onRechargeSuccess("","1");
                     requestResult();
                    // rechargeSuccess();
                 }else {
@@ -285,11 +292,16 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 break;
                 default:
                     setResult(0x002);
-                   // onRechargeSuccess("","1");
                     requestResult();
-                    // rechargeSuccess();
+                   // rechargeSuccess();
                     break;
         }
+    }
+    private void rechargeSuccess() {
+        Intent success=new Intent(context,WaterSuccessActivity.class);
+        success.putExtra("amount",amount);
+        success.putExtra("giveFee",giveFee);
+        startActivity(success);
     }
     private void onPayResult(JSONObject json) {
         String status=json.optString("status");
@@ -323,14 +335,14 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 }).show();
     }
     private void onRechargeSuccess(String lottery, String s){
-        String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=water_recharge_pay_success_201811"
-                +"&event_relate_id="+orderId;
+        String pageUrl=UrlUtil.WATER_RECHARGE_SUCCESS_PAGE+"phone="+VariableUtil.waterAccount+"&payFee="+amount+"&giveFee="+giveFee;
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("url",lottery);
         success.putExtra("pageUrl",pageUrl);
         success.putExtra("type",s);
         success.putExtra("navigation","水宝充值");
         startActivity(success);
+        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -343,11 +355,13 @@ public class WaterPayRechargeActivity extends BaseActivity {
         VariableUtil.balance=null;
         VariableUtil.MealPos=-1;
         VariableUtil.payPos =-1;
+        VariableUtil.mPos=-1;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         Intent data=getIntent();
         amount=data.getStringExtra("amount");
+        realAmount=amount;
         giveFee=data.getStringExtra("giveFee");
         packId=data.getStringExtra("packId");
         initFindViewId();
@@ -411,7 +425,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
                         case ConstantUtil.VALUE_MINUS1:
                             setResult(0x002);
                             requestResult();
-                           // onRechargeSuccess("","1");
+                          //  rechargeSuccess();
                             break;
                         case ConstantUtil.VALUE0:
                             onShowDialog("充值提示","取消支付");
@@ -433,7 +447,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
             case SendRequestUtil.SUCCESS_VALUE:
                 setResult(0x002);
                 requestResult();
-               // onRechargeSuccess("","1");
+               // rechargeSuccess();
                 break;
             case SendRequestUtil.FAILURE_VALUE:
                 onShowDialog("充值提示","充值失败");
@@ -474,14 +488,14 @@ public class WaterPayRechargeActivity extends BaseActivity {
         String validateURL= UrlUtil.WATER_PAY_ORDER_URL;
         TreeMap<String, String> treeMap = new TreeMap<String, String>();
         treeMap.put("type","8");
-        treeMap.put("amount",amount);
+        treeMap.put("amount",realAmount);
         treeMap.put("orderId",orderId);
         treeMap.put("channel",channels);
         String sign=SecretKeyUtil.getKeySign(treeMap);
         JSONObject object=new JSONObject();
         try{
             object.put("type","8");
-            object.put("amount",amount);
+            object.put("amount",realAmount);
             object.put("orderId",orderId);
             object.put("channel",channels);
         }catch (JSONException e){
@@ -495,11 +509,15 @@ public class WaterPayRechargeActivity extends BaseActivity {
     }
     private void initFindViewId() {
         etRecommend=(EditText)findViewById(R.id.id_et_recommend);
-        TextView tvAmount=(TextView)findViewById(R.id.id_tv_amount) ;
+        tvOriginAmount=(TextView)findViewById(R.id.id_origin_Amount);
+        tvAmount=(TextView)findViewById(R.id.id_tv_amount);
+        tvDescribeText=(TextView)findViewById(R.id.id_coupon_describe) ;
         TextView tvMealTip=(TextView)findViewById(R.id.id_meal_tip) ;
         btnSend =(Button)findViewById(R.id.id_btn_send);
         btnSend.setEnabled(false);
         String amountText="¥"+amount;
+        tvOriginAmount.setText(amountText);
+        tvOriginAmount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         String mealTipText="充值"+amount+"元赠送"+giveFee+"元";
         tvMealTip.setText(mealTipText);
         tvAmount.setText(amountText);
@@ -520,6 +538,36 @@ public class WaterPayRechargeActivity extends BaseActivity {
                 onSendServiceShowTip();
             }
         });
+        findViewById(R.id.id_coupon_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCouponDialog();
+            }
+        });
+    }
+
+    private void onCouponDialog() {
+        new WaterRedPacketDialog(context,amount).builder()
+                .setCanceledOnTouchOutside(true)
+                .setOnSheetButtonOneClickListener(new WaterRedPacketDialog.OnSheetButtonOneClickListener() {
+                    @Override
+                    public void onSelectClick(String code, String discountAmount) {
+                        couponCode=code;
+                        realAmount=String.valueOf(TypeConvertUtil.convertToDouble(amount,0)-TypeConvertUtil.convertToDouble(discountAmount,0));
+                        String amountText="¥"+realAmount;
+                        tvAmount.setText(amountText);
+                        if (TypeConvertUtil.convertToDouble(discountAmount,0)==0){
+                            tvOriginAmount.setVisibility(View.GONE);
+                            String describe="未使用红包优惠券";
+                            tvDescribeText.setText(describe);
+                        }else {
+                            String describe="充值红包满"+amount+"减"+discountAmount;
+                            tvOriginAmount.setVisibility(View.VISIBLE);
+                            tvDescribeText.setText(describe);
+                        }
+                    }
+                })
+                .show();;
     }
     private void onSendServiceShowTip() {
         customDialog.show();
@@ -555,6 +603,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
             object.put("orderFrom",orderFrom);
             object.put("recommendCode",recommendCode);
             object.put("packId",packId);
+            object.put("couponCode",couponCode);
             jsonResult=object.toString();
         }catch (JSONException e){
             e.printStackTrace();
@@ -579,6 +628,13 @@ public class WaterPayRechargeActivity extends BaseActivity {
         treeMap.put("payAccount",userPhone);
         treeMap.put("recommendCode",recommendCode);
         treeMap.put("packId",packId);
+        treeMap.put("couponCode",couponCode);
         return SecretKeyUtil.getKeySign(treeMap);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

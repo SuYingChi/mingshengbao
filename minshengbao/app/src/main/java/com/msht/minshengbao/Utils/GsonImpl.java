@@ -8,9 +8,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
@@ -70,4 +74,27 @@ public class GsonImpl extends AbstractJson{
         }
         return additionalList;
     }
+
+    /**
+     * 获取日期列表
+     * @param length 设置日期天数
+     * @return
+     */
+    public static ArrayList<HashMap<String ,String>> getDateList(int length){
+        ArrayList<HashMap<String ,String>> list=new ArrayList<HashMap<String ,String>>();
+        SimpleDateFormat formats=new SimpleDateFormat("yyyy-MM", Locale.CHINA);
+        SimpleDateFormat format1=new SimpleDateFormat("yyyy年MM月", Locale.CHINA);
+        for (int i=0;i<length;i++){
+            Calendar dateDay=Calendar.getInstance();
+            dateDay.add(Calendar.MONTH,-(length-i-1));
+            HashMap<String, String> map = new HashMap<String, String>();
+            String mDateString=formats.format(dateDay.getTime());
+            String mMonthString=format1.format(dateDay.getTime());
+            map.put("dateMonth",mMonthString);
+            map.put("date",mDateString);
+            list.add(map);
+        }
+        return list;
+    }
+
 }

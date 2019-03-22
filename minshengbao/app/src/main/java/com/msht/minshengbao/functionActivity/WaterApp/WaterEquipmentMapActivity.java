@@ -348,20 +348,24 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
 
     private void onRequestLimit() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
-                MPermissionUtils.requestPermissionsResult(this, ConstantUtil.MY_CAMERA_REQUEST, new String[]{Manifest.permission.CAMERA}, new MPermissionUtils.OnPermissionListener() {
-                    @Override
-                    public void onPermissionGranted(int code) {
-                        if (code==ConstantUtil.MY_CAMERA_REQUEST){
-                            onStartScanActivity();
-                        }
-                    }
-                    @Override
-                    public void onPermissionDenied(int code) {
-                        ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
-                    }
-                });
-
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.CAMERA,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                onStartScanActivity();
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                ToastUtil.ToastText(context,"没有权限您将无法进行扫描操作！");
+                            }
+                        }).start();
             }else {
                 onStartScanActivity();
             }

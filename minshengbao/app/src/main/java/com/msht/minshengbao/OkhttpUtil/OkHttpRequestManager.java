@@ -46,7 +46,7 @@ public class OkHttpRequestManager {
                 .readTimeout(12, TimeUnit.SECONDS)
                 //设置写入超时时间
                 .writeTimeout(12, TimeUnit.SECONDS)
-                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+                .sslSocketFactory(SSLSocketClient.getSSLSocketFactory(),SSLSocketClient.getX509TrustManager())
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 .build();
 

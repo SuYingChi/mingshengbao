@@ -214,7 +214,6 @@ public class OrderListFragment extends BaseFragment  {
             }
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
-                    Log.d("msg.obj=",msg.obj.toString());
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");

@@ -386,7 +386,7 @@ public class HtmlPageActivity extends BaseActivity {
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
+            if (mUrl.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
                 tvRightText.setVisibility(View.VISIBLE);
             }else {
                 if ((!TextUtils.isEmpty(share))&&share.equals(ConstantUtil.VALUE_ONE)){
@@ -431,7 +431,7 @@ public class HtmlPageActivity extends BaseActivity {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
-            if (url.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
+            if (mUrl.contains(UrlUtil.HOUSE_HOLD_CLEAN_WEB)){
                 tvRightText.setVisibility(View.VISIBLE);
             }else {
                 if ((!TextUtils.isEmpty(share))&&share.equals(ConstantUtil.VALUE_ONE)){
