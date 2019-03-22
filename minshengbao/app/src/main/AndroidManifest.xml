@@ -426,7 +426,8 @@
         <activity android:name=".functionActivity.HtmlWeb.HouseHoldCleanWeb" />
         <activity android:name=".functionActivity.GasService.GasPayDetailActivity" />
         <activity android:name=".functionActivity.GasService.GetGasCustomerNoActivity" />
-        <activity android:name=".functionActivity.WaterApp.RedPacketCardActivity"></activity>
+        <activity android:name=".functionActivity.WaterApp.RedPacketCardActivity"/>
+        <activity android:name=".androidShop.activity.NewShopCarActivity" />
     </application>
 
 </manifest>

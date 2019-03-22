@@ -23,8 +23,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarListView, ShopCarFragment.CarParentListener {
-    private ShopCarFragment f1;
+public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarListView, NewShopCarFragment.CarParentListener {
+   // private ShopCarFragment f1;
+    private NewShopCarFragment f1;
     private ShopCarEmptyFragment f0;
     private List<ShopBaseLazyFragment> list = new ArrayList<ShopBaseLazyFragment>();
     @BindView(R.id.vp)
@@ -51,7 +52,8 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
     protected void initView() {
         super.initView();
         f0 = new ShopCarEmptyFragment();
-        f1 = new ShopCarFragment();
+       // f1 = new ShopCarFragment();
+        f1 = new NewShopCarFragment();
         f2 = new ShopCarNoLoginFragment();
         list.add(f0);
         list.add(f1);
@@ -111,7 +113,7 @@ public class ShopCarParentFragment extends ShopBaseLazyFragment implements ICarL
 
 
     @Override
-    public void changeCarEmpty() {
+    public void changeEmpty() {
             vp.setCurrentItem(0);
     }
 

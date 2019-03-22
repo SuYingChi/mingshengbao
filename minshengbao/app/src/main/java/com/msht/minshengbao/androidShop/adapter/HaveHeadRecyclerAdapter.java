@@ -100,7 +100,7 @@ public abstract class HaveHeadRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             convert(holder, headData, position);
             //有头布局
         } else if(head_layoutId !=Integer.MIN_VALUE){
-            convert(holder, datas.get(position-1),position);
+            convert(holder, datas.get(position-1),position-1);
         }//子类没有头布局，当一般recycleview使用
         else {
             convert(holder, datas.get(position),position);

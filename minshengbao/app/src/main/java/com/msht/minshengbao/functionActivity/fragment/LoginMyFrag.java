@@ -192,20 +192,20 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     private void onGetNumSuccess(ShopNumBean bean) {
         int footprintNum = bean.getDatas().getMember_info().getBrowses_goods();
-        if (footprintNum == 0) {
+      /*  if (footprintNum == 0) {
             tvFootprint.setVisibility(View.GONE);
-        } else {
+        } else {*/
             tvFootprint.setVisibility(View.VISIBLE);
             tvFootprint.setText(String.format("%d", footprintNum));
-        }
+       /* }*/
         llFootprint.setClickable(true);
         int collectNum = bean.getDatas().getMember_info().getFavorites_goods();
-        if (collectNum == 0) {
+       /* if (collectNum == 0) {
             tvCollect.setVisibility(View.GONE);
-        } else {
+        } else {*/
             tvCollect.setVisibility(View.VISIBLE);
             tvCollect.setText(String.format("%d", collectNum));
-        }
+        /*}*/
         llCollect.setClickable(true);
 
         String refundOrderNum = bean.getDatas().getMember_info().getReturnX();

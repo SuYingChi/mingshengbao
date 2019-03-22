@@ -211,7 +211,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 } else if (carNum == 0) {
                     startActivity(new Intent(ShopClassDetailActivity.this, NoCarActivity.class));
                 } else if (carNum > 0) {
-                    startActivity(new Intent(ShopClassDetailActivity.this, ShopCarActivity.class));
+                    startActivity(new Intent(ShopClassDetailActivity.this, NewShopCarActivity.class));
                 }
             }
         });
