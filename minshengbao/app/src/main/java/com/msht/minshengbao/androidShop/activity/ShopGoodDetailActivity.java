@@ -1,10 +1,7 @@
 package com.msht.minshengbao.androidShop.activity;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,15 +27,12 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.AddCarOrBuyGoodDialog;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
-import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.GoodDetailActivityListener;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.functionActivity.MainActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-
-import org.greenrobot.eventbus.EventBus;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,13 +1,9 @@
 package com.msht.minshengbao.androidShop.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.androidShop.adapter.EvaluateShopOrderAdapter;
 import com.msht.minshengbao.androidShop.adapter.EvaluateStartsAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadAndFootRecyclerAdapter;
@@ -38,7 +32,7 @@ import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopInitEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.Permission;
 

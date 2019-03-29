@@ -1,12 +1,11 @@
 package com.msht.minshengbao.functionActivity.repairService;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.umeng.analytics.MobclickAgent;
 

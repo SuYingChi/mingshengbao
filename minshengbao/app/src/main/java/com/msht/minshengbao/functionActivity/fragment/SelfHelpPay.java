@@ -24,7 +24,7 @@ import android.widget.RelativeLayout;
 
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GetHouseAdapter;
-import com.msht.minshengbao.functionActivity.GasService.GasExpenseQueryActivity;
+import com.msht.minshengbao.functionActivity.gasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.NetWorkUtil;

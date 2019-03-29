@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_gray"
-    tools:context=".functionActivity.WaterApp.WaterMainActivity">
+    tools:context=".functionActivity.waterApp.WaterMainActivity">
     <include layout="@layout/layout_white_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                         android:contentDescription="@string/picture_text"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_width14"
-                        android:text="@string/replace_account"/>
+                        android:text="@string/replace_text"/>
                 </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"

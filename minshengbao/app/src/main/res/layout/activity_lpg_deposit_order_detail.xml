@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.LPGActivity.LpgDepositOrderDetailActivity">
+    tools:context=".functionActivity.lpgActivity.LpgDepositOrderDetailActivity">
 
     <include layout="@layout/layout_header" />
     <ScrollView

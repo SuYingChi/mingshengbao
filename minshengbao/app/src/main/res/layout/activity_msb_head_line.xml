@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".functionActivity.Public.MsbHeadLineActivity">
+    tools:context=".functionActivity.publicModule.MsbHeadLineActivity">
     <include layout="@layout/layout_header"/>
     <FrameLayout
         android:layout_width="match_parent"

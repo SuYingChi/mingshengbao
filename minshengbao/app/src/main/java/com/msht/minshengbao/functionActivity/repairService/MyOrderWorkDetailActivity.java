@@ -14,21 +14,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
-import com.msht.minshengbao.adapter.RepairOrderListAdapter;
-import com.msht.minshengbao.functionActivity.Public.SelectVoucherActivity;
+import com.msht.minshengbao.functionActivity.publicModule.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -39,7 +35,6 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;

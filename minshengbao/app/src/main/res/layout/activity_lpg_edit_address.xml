@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".functionActivity.LPGActivity.LpgEditAddressActivity">
+    tools:context=".functionActivity.lpgActivity.LpgEditAddressActivity">
 
     <include  layout="@layout/layout_header"/>
     <ScrollView

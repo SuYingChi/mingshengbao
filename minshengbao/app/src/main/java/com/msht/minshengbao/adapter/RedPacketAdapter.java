@@ -70,14 +70,48 @@ public class RedPacketAdapter extends RecyclerView.Adapter<RedPacketAdapter.MyVi
         String conditionAmount="满"+mList.get(i).get("conditionAmount")+"可用";
         String discountAmount=mList.get(i).get("discountAmount");
         String days=mList.get(i).get("days")+"天后过期";
+        String endTime=mList.get(i).get("endTime");
+        String usageTime=mList.get(i).get("usageTime");
         String isVisible=mList.get(i).get("isVisible");
         String type=mList.get(i).get("type");
         myViewHolder.tvName.setText(name);
         myViewHolder.tvDiscountAmount.setText(discountAmount);
         myViewHolder.tvCondition.setText(conditionAmount);
-        myViewHolder.tvDays.setText(days);
         myViewHolder.tvUseDescribe.setText(mList.get(i).get("description"));
-        if (status.equals(ConstantUtil.VALUE_ZERO)){
+        if (!TextUtils.isEmpty(status)){
+            switch (status){
+                case ConstantUtil.VALUE_ZERO:
+                    if (type.equals(ConstantUtil.VALUE_ONE)){
+                        myViewHolder.tvRmbMark.setTextColor(Color.parseColor("#ff656565"));
+                        myViewHolder.tvName.setTextColor(Color.parseColor("#ff656565"));
+                        myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#ff656565"));
+                    }else {
+                        myViewHolder.tvRmbMark.setTextColor(Color.parseColor("#FFE43F3E"));
+                        myViewHolder.tvName.setTextColor(Color.parseColor("#FFE43F3E"));
+                        myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#FFE43F3E"));
+                    }
+                    myViewHolder.tvDays.setText(days);
+                    break;
+                case ConstantUtil.VALUE_ONE:
+                    myViewHolder.tvRmbMark.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvName.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvDays.setText(usageTime);
+                    break;
+                case ConstantUtil.VALUE_TWO:
+                    myViewHolder.tvRmbMark.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvName.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#ff656565"));
+                    myViewHolder.tvDays.setText(endTime);
+                    break;
+                    default:
+                        myViewHolder.tvDays.setText(days);
+                        break;
+            }
+        }else {
+            myViewHolder.tvDays.setText(days);
+        }
+        /*if (status.equals(ConstantUtil.VALUE_ZERO)){
             if (type.equals(ConstantUtil.VALUE_ONE)){
                 myViewHolder.tvName.setTextColor(Color.parseColor("#ff656565"));
                 myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#ff656565"));
@@ -88,7 +122,7 @@ public class RedPacketAdapter extends RecyclerView.Adapter<RedPacketAdapter.MyVi
         }else {
             myViewHolder.tvName.setTextColor(Color.parseColor("#ff656565"));
             myViewHolder.tvDiscountAmount.setTextColor(Color.parseColor("#ff656565"));
-        }
+        }*/
         if (isVisible.equals(ConstantUtil.VALUE_ONE)){
             if (status.equals(ConstantUtil.VALUE_ZERO)){
                 myViewHolder.btnUse.setVisibility(View.VISIBLE);
@@ -142,6 +176,7 @@ public class RedPacketAdapter extends RecyclerView.Adapter<RedPacketAdapter.MyVi
         private TextView  tvCondition;
         private TextView  tvDays;
         private TextView  tvUseDescribe;
+        private TextView  tvRmbMark;
         private ButtonM   btnUse;
         View itemView;
         private MyViewHolder(View view){
@@ -152,6 +187,7 @@ public class RedPacketAdapter extends RecyclerView.Adapter<RedPacketAdapter.MyVi
             tvDays=(TextView)view.findViewById(R.id.id_effective_text);
             tvUseDescribe=(TextView)view.findViewById(R.id.id_use_describe);
             btnUse=(ButtonM)view.findViewById(R.id.id_use_btn) ;
+            tvRmbMark=(TextView)view.findViewById(R.id.id_Rmb_mark);
             itemView=view.findViewById(R.id.item_layout);
         }
     }

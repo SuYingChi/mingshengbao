@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/black"
-    tools:context="com.msht.minshengbao.functionActivity.Electricvehicle.ElectricPictureActivity">
+    tools:context="com.msht.minshengbao.functionActivity.electricVehicle.ElectricPictureActivity">
     <include layout="@layout/layout_header" />
     <com.msht.minshengbao.ViewUI.widget.BannerLayout
         android:id="@+id/id_banner"

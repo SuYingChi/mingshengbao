@@ -1,14 +1,9 @@
 package com.msht.minshengbao.androidShop.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormGoodListAdapter;
 import com.msht.minshengbao.androidShop.adapter.RefundAllFormPhotoPickerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -36,7 +29,6 @@ import com.msht.minshengbao.androidShop.shopBean.RefundAllFormBean;
 import com.msht.minshengbao.androidShop.shopBean.RefundReasonItemBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
@@ -45,7 +37,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundAllFormView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.repairService.EnlargePicActivity;
 import com.yanzhenjie.permission.Permission;
 

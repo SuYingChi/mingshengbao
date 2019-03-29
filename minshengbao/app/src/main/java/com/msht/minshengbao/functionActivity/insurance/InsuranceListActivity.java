@@ -1,17 +1,14 @@
 package com.msht.minshengbao.functionActivity.insurance;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.Model.AllServiceModel;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.Model.InsuranceBusinessModel;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
@@ -20,13 +17,9 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.adapter.InsuranceBusinessAdapter;
-import com.msht.minshengbao.adapter.InvoiceHistoryAdapter;
-import com.msht.minshengbao.androidShop.shopBean.ShopHomeAdvBean;
-import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
-import com.msht.minshengbao.functionActivity.HtmlWeb.InsuranceHtmlActivity;
+import com.msht.minshengbao.functionActivity.htmlWeb.InsuranceHtmlActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**

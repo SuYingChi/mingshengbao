@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".functionActivity.LPGActivity.LpgDepositOrderActvity">
+    tools:context=".functionActivity.lpgActivity.LpgDepositOrderActvity">
 
     <include layout="@layout/layout_header"/>
     <com.msht.minshengbao.ViewUI.ViewPagerIndicator

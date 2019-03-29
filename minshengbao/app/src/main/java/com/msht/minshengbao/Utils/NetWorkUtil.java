@@ -64,8 +64,7 @@ public class NetWorkUtil {
     private static String getWifiMacAddress(Context context) {
         String localMac = null;
         try {
-            WifiManager wifi = (WifiManager) context
-                    .getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
             if (wifi.isWifiEnabled()) {
                 localMac = info.getMacAddress();
@@ -131,19 +130,21 @@ public class NetWorkUtil {
      */
     public static boolean isNetWorkEnable(Context context) {
         boolean netState=false;
-        try {
-            ConnectivityManager connectivity = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (connectivity!=null){
-                NetworkInfo networkInfo=connectivity.getActiveNetworkInfo();
-                if (networkInfo != null) {
-                    if (networkInfo.isAvailable()&&networkInfo.isConnected()){
-                        netState=true;
+        if (context!=null){
+            try {
+                ConnectivityManager connectivity = (ConnectivityManager) context
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivity!=null){
+                    NetworkInfo networkInfo=connectivity.getActiveNetworkInfo();
+                    if (networkInfo != null) {
+                        if(networkInfo.isConnected()){
+                            netState=true;
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return netState;
     }

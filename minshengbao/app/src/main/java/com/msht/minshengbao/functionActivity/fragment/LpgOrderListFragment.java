@@ -12,9 +12,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.adapter.LpgOrderListAdapter;
-import com.msht.minshengbao.Base.BaseFragment;
-import com.msht.minshengbao.functionActivity.LPGActivity.LpgPayOrderActivity;
-import com.msht.minshengbao.functionActivity.LPGActivity.LpgOrderDetailActivity;
+import com.msht.minshengbao.base.BaseFragment;
+import com.msht.minshengbao.functionActivity.lpgActivity.LpgPayOrderActivity;
+import com.msht.minshengbao.functionActivity.lpgActivity.LpgOrderDetailActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;

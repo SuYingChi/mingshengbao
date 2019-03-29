@@ -1,6 +1,5 @@
 package com.msht.minshengbao.adapter;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.functionActivity.MyActivity.ModifyAddressActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

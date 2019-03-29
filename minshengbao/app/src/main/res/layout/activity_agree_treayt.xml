@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.HtmlWeb.AgreeTreatyActivity">
+    tools:context="com.msht.minshengbao.functionActivity.htmlWeb.AgreeTreatyActivity">
     <include layout="@layout/layout_header"/>
     <WebView
         android:layout_width="match_parent"

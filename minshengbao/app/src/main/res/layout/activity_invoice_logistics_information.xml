@@ -7,7 +7,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:background="@color/background_gray"
-    tools:context=".functionActivity.Invoice.InvoiceLogisticsInformationActivity">
+    tools:context=".functionActivity.invoiceModule.InvoiceLogisticsInformationActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

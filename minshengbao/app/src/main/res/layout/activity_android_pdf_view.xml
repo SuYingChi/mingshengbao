@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ffc8c8c8"
     android:orientation="vertical"
-    tools:context=".functionActivity.Invoice.AndroidPdfViewActivity">
+    tools:context=".functionActivity.invoiceModule.AndroidPdfViewActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_width="match_parent"

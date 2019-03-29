@@ -46,7 +46,7 @@
                 android:layout_marginStart="@dimen/margin_width20"
                 android:textColor="@color/color_383838"
                 android:text="@string/effective_date"
-                android:textSize="@dimen/text_width16"/>
+                android:textSize="@dimen/text_width14"/>
             <RelativeLayout
                 android:id="@+id/id_layout_amount"
                 android:layout_width="wrap_content"
@@ -57,6 +57,7 @@
                 android:layout_marginEnd="@dimen/margin_width20"
                 android:layout_marginRight="@dimen/margin_width20">
                 <TextView
+                    android:id="@+id/id_Rmb_mark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/monetary_unit"

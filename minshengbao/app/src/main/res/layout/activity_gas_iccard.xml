@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.GasService.GasIcCardActivity">
+    tools:context="com.msht.minshengbao.functionActivity.gasService.GasIcCardActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_weight="1"

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@drawable/shape_change_background"
-    tools:context=".functionActivity.Invoice.InvoiceGasApplyActivity">
+    tools:context=".functionActivity.invoiceModule.InvoiceGasApplyActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

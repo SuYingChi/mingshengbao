@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background_gray"
-    tools:context="com.msht.minshengbao.functionActivity.WaterApp.WaterBalanceDetailActivity">
+    tools:context="com.msht.minshengbao.functionActivity.waterApp.WaterBalanceDetailActivity">
     <include layout="@layout/layout_white_header" />
     <include layout="@layout/layout_water_balance_detail_type"/>
     <View

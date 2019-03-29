@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.GasService.GasInternetRecodeListActivity">
+    tools:context=".functionActivity.gasService.GasInternetRecodeListActivity">
     <include layout="@layout/layout_header"/>
     <FrameLayout
         android:layout_width="match_parent"

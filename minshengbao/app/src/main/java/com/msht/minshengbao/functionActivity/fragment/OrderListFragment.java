@@ -6,17 +6,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.Interface.UpdateCallBack;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
-import com.msht.minshengbao.Base.BaseFragment;
+import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.adapter.RepairOrderListAdapter;
 import com.msht.minshengbao.functionActivity.repairService.MyOrderWorkDetailActivity;
 import com.msht.minshengbao.functionActivity.repairService.RepairEvaluateActivity;
@@ -27,7 +23,6 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -6,7 +6,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.msht.minshengbao.functionActivity.Public.MoveSelectAddress;
+import com.msht.minshengbao.functionActivity.publicModule.MoveSelectAddress;
 
 import java.util.ArrayList;
 

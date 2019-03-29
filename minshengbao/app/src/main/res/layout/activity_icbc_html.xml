@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.HtmlWeb.IcbcHtml">
+    tools:context="com.msht.minshengbao.functionActivity.htmlWeb.IcbcHtml">
     <include layout="@layout/layout_header" />
     <WebView
         android:id="@+id/id_web_html"

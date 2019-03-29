@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.functionActivity.GasService.ServerSuccessActivity;
+import com.msht.minshengbao.functionActivity.gasService.ServerSuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

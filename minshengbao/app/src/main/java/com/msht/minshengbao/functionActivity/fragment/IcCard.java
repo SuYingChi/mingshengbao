@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.functionActivity.Public.QrCodeScanActivity;
+import com.msht.minshengbao.functionActivity.publicModule.QrCodeScanActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.MPermissionUtils;
 

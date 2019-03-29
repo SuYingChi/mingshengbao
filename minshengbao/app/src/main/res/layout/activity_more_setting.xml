@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context="com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity">
+    tools:context="com.msht.minshengbao.functionActivity.myActivity.MoreSettingActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_width="match_parent"

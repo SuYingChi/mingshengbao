@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -21,7 +20,7 @@ import android.widget.EditText;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseFragment;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

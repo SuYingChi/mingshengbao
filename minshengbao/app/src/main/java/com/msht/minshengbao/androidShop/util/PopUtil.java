@@ -3,7 +3,6 @@ package com.msht.minshengbao.androidShop.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,7 +14,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebResourceError;
@@ -32,9 +30,7 @@ import android.widget.Toast;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
-import com.msht.minshengbao.androidShop.customerview.DrawHookByAnimatorView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
 
 
 public class PopUtil {

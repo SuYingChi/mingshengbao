@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".functionActivity.Invoice.InvoiceSendSuccessActivity">
+    tools:context=".functionActivity.invoiceModule.InvoiceSendSuccessActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

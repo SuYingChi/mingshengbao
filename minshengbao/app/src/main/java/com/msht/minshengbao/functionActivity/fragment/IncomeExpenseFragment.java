@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.IncomeAllAdapter;
-import com.msht.minshengbao.Base.BaseFragment;
+import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

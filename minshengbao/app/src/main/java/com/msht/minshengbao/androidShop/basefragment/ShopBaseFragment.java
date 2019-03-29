@@ -1,6 +1,5 @@
 package com.msht.minshengbao.androidShop.basefragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,18 +23,14 @@ import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
-import com.msht.minshengbao.androidShop.activity.ShopUrlActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
-import com.msht.minshengbao.androidShop.shopBean.BaseData;
-import com.msht.minshengbao.androidShop.shopBean.ErrorBaseData;
 import com.msht.minshengbao.androidShop.util.AppUtil;
-import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.htmlWeb.HtmlPageActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;

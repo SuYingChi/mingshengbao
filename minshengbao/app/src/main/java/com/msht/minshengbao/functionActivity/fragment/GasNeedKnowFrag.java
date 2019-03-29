@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.msht.minshengbao.functionActivity.GasService.GasServerGuideActivity;
-import com.msht.minshengbao.functionActivity.HtmlWeb.HtmlPageActivity;
+import com.msht.minshengbao.functionActivity.gasService.GasServerGuideActivity;
+import com.msht.minshengbao.functionActivity.htmlWeb.HtmlPageActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.NetWorkUtil;
 import com.msht.minshengbao.Utils.UrlUtil;

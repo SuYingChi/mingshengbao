@@ -18,7 +18,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
 import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

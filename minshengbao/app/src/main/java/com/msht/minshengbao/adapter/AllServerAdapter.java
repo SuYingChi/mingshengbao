@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.msht.minshengbao.Base.ListBaseAdapter;
+import com.msht.minshengbao.base.ListBaseAdapter;
 import com.msht.minshengbao.Control.FullyGridLayoutManager;
 import com.msht.minshengbao.Model.AllServiceModel;
 import com.msht.minshengbao.R;

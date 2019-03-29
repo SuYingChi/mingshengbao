@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".functionActivity.WaterApp.WaterScanCodeActivity">
+    tools:context=".functionActivity.waterApp.WaterScanCodeActivity">
     <RelativeLayout
         android:id="@+id/id_layout_erwei"
         android:layout_width="match_parent"

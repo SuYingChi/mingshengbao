@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.WaterApp.WaterSwitchAccountActivity">
+    tools:context=".functionActivity.waterApp.WaterSwitchAccountActivity">
     <include layout="@layout/layout_white_header"/>
     <RelativeLayout
         android:layout_weight="1"

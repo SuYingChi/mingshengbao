@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".functionActivity.Invoice.InvoiceRepairOrderActivity">
+    tools:context=".functionActivity.invoiceModule.InvoiceRepairOrderActivity">
     <include layout="@layout/layout_header"/>
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/id_order_view"

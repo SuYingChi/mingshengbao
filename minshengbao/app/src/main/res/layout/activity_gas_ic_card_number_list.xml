@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".functionActivity.GasService.GasIcCardNumberList">
+    tools:context=".functionActivity.gasService.GasIcCardNumberList">
     <include layout="@layout/layout_header"/>
     <FrameLayout
         android:layout_width="match_parent"

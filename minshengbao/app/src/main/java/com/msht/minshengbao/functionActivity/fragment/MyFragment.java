@@ -20,13 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.msht.minshengbao.Base.BaseHomeFragment;
+import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
-import com.msht.minshengbao.androidShop.activity.ShopCollectionActivity;
-import com.msht.minshengbao.androidShop.activity.ShopFootprintActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.LoginActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.MoreSettingActivity;
-import com.msht.minshengbao.functionActivity.MyActivity.ShareMenuActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
+import com.msht.minshengbao.functionActivity.myActivity.MoreSettingActivity;
+import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;

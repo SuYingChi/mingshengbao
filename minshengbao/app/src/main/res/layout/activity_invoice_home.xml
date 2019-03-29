@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.Invoice.InvoiceHomeActivity">
+    tools:context=".functionActivity.invoiceModule.InvoiceHomeActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:id="@+id/gas_invoice_layout"

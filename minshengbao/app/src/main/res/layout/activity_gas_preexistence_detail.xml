@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.GasService.PreexistenceDetailActivity">
+    tools:context="com.msht.minshengbao.functionActivity.gasService.PreexistenceDetailActivity">
     <include layout="@layout/layout_header"/>
     <include layout="@layout/layout_gas_customer_no"/>
     <include layout="@layout/layout_line_gray"/>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.Invoice.InvoiceOpenActivity">
+    tools:context="com.msht.minshengbao.functionActivity.invoiceModule.InvoiceOpenActivity">
     <include layout="@layout/layout_header"/>
     <FrameLayout
         android:layout_weight="1"

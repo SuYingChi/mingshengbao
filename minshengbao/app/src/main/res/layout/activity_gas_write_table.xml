@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.GasService.GasWriteTableActivity">
+    tools:context="com.msht.minshengbao.functionActivity.gasService.GasWriteTableActivity">
     <include layout="@layout/layout_header"/>
     <com.msht.minshengbao.ViewUI.ViewPagerIndicator
         android:id="@+id/indicator"

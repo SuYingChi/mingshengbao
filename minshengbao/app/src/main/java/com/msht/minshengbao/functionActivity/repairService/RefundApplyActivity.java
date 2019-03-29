@@ -28,7 +28,7 @@ import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
-import com.msht.minshengbao.Base.BaseActivity;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;

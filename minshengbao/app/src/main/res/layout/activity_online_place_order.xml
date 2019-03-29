@@ -8,7 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.WaterApp.OnlinePlaceOrderActivity">
+    tools:context="com.msht.minshengbao.functionActivity.waterApp.OnlinePlaceOrderActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

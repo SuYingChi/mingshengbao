@@ -1,41 +1,16 @@
 package com.msht.minshengbao.functionActivity.repairService;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.Base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
 import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
-import com.msht.minshengbao.adapter.InvoiceHistoryAdapter;
-import com.msht.minshengbao.adapter.MyWorkOrderAdapter;
 import com.msht.minshengbao.adapter.OrderListViewpagerAdapter;
 import com.msht.minshengbao.adapter.RepairOrderListAdapter;
-import com.msht.minshengbao.functionActivity.fragment.OrderListFragment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Demo class

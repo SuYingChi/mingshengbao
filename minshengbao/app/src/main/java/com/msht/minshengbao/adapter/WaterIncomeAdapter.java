@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,7 @@ import java.util.HashMap;
  */
 
 public class WaterIncomeAdapter extends RecyclerView.Adapter<WaterIncomeAdapter.MyViewHolder> {
-
     private ArrayList<HashMap<String, String>> incomeList = new ArrayList<HashMap<String, String>>();
-
     public WaterIncomeAdapter( ArrayList<HashMap<String, String>> List) {
         super();
         this.incomeList=List;
@@ -45,15 +44,17 @@ public class WaterIncomeAdapter extends RecyclerView.Adapter<WaterIncomeAdapter.
         String childType=incomeList.get(position).get("childType");
         String amountText=incomeList.get(position).get("amount");
         myViewHolder.tvTime.setText(createTime);
-        myViewHolder.tvPayType.setText(payTypeName);
+        if (!payTypeName.equals(ConstantUtil.NULL_VALUE)){
+            myViewHolder.tvPayType.setText(payTypeName);
+        }
         switch (type){
             case ConstantUtil.VALUE_ONE:
-                myViewHolder.tvContent.setText("余额充值");
+                myViewHolder.tvContent.setText("充值");
                 amountText="+"+amountText+"元";
                 myViewHolder.tvAmount.setTextColor(Color.parseColor("#FF30A949"));
                 break;
             case ConstantUtil.VALUE_TWO:
-                myViewHolder.tvContent.setText("扫码购水");
+                myViewHolder.tvContent.setText("消费");
                 amountText="-"+amountText+"元";
                 myViewHolder.tvAmount.setTextColor(Color.parseColor("#FFF96331"));
                 break;
@@ -101,14 +102,11 @@ public class WaterIncomeAdapter extends RecyclerView.Adapter<WaterIncomeAdapter.
                 break;
         }
         myViewHolder.tvAmount.setText(amountText);
-
     }
-
     @Override
     public long getItemId(int position) {
         return position;
     }
-
     @Override
     public int getItemCount() {
         if (incomeList == null) {

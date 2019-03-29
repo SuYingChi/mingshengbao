@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.GasService.GasRepairActivity">
+    tools:context="com.msht.minshengbao.functionActivity.gasService.GasRepairActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -195,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/gas_write_table_tip"
+                    android:text="@string/gas_emergency_tip"
                     android:layout_below="@+id/id_btn_comfirm"
                     android:layout_marginTop="@dimen/margin_width25"
                     android:textColor="@color/colorAccent"

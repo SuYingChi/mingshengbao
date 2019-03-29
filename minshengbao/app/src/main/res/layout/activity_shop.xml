@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.HtmlWeb.ShopActivity">
+    tools:context="com.msht.minshengbao.functionActivity.htmlWeb.ShopActivity">
     <include layout="@layout/layout_header" android:id="@+id/id_header"/>
     <FrameLayout
         android:layout_width="match_parent"

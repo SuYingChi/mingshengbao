@@ -20,12 +20,11 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.GetAddressAdapter;
-import com.msht.minshengbao.functionActivity.GasService.GasPayRecordActivity;
+import com.msht.minshengbao.functionActivity.gasService.GasPayRecordActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;

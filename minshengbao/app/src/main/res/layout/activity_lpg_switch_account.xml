@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".functionActivity.LPGActivity.LpgSwitchAccountActivity">
+    tools:context=".functionActivity.lpgActivity.LpgSwitchAccountActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
         android:layout_weight="1"

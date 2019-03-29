@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.GasService.GetGasCustomerNoActivity">
+    tools:context=".functionActivity.gasService.GetGasCustomerNoActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"

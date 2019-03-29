@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context=".functionActivity.HtmlWeb.InsuranceHtmlActivity">
+    tools:context=".functionActivity.htmlWeb.InsuranceHtmlActivity">
     <include layout="@layout/layout_header" android:id="@+id/id_webHeader"/>
     <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_vertical_refresh"

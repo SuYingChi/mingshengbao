@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.msht.minshengbao.functionActivity.GasService.GasInstallActivity">
+    tools:context="com.msht.minshengbao.functionActivity.gasService.GasInstallActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_width="match_parent"
@@ -227,7 +227,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/gas_emergency_tip"
+                    android:text="@string/gas_write_table_tip"
                     android:layout_below="@+id/id_btn_verify"
                     android:layout_marginTop="@dimen/margin_width25"
                     android:layout_marginBottom="@dimen/margin_width10"
