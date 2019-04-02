@@ -1267,6 +1267,7 @@ public class ShopPresenter {
 
     public static void getShareUrl(final IGetShareUrlView iGetShareUrlView, final String type) {
         OkHttpUtils.get().url(ShopConstants.GET_SHARE_URL)
+                .addParams("key",iGetShareUrlView.getKey())
                 .addParams("goods_id", iGetShareUrlView.getGoodId()).tag(iGetShareUrlView)
                 .addParams("type", type)
                 .build().execute(new DataStringCallback(iGetShareUrlView) {

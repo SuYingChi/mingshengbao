@@ -100,7 +100,6 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
-            onNetError();
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
             LogUtils.e(Log.getStackTraceString(new Throwable()));
@@ -126,16 +125,9 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
         return ShopSharePreferenceUtil.getInstance().getPassword();
     }
 
-    @Override
-    public void onLogout() {
-        AppUtil.logout();
-        EventBus.getDefault().post(new LogoutEventBusEvent());
-    }
 
-    @Override
-    public void onNetError() {
 
-    }
+
 
 
     @Override
