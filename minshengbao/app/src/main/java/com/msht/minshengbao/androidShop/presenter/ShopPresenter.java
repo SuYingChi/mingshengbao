@@ -3,6 +3,7 @@ package com.msht.minshengbao.androidShop.presenter;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
@@ -69,6 +70,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
+import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
@@ -92,6 +94,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
+import com.msht.minshengbao.functionActivity.fragment.LoginMyFrag;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
@@ -1560,5 +1563,12 @@ public class ShopPresenter {
                 }
             }
         });
+    }
+
+    public static void getRepairOrderNum(IRepairOrderNumView iRepairOrderNumView,String userId, String password,DataStringCallback dataStringCallback) {
+        OkHttpUtils.post().url(ShopConstants.MY_REPAIR_NUM).addParams("userId", userId)
+                .addParams("password", password)
+                .tag(iRepairOrderNumView)
+                .build().execute(dataStringCallback);
     }
 }

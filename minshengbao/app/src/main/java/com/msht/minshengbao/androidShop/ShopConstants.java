@@ -82,6 +82,8 @@ public class ShopConstants {
     public static final String CHAIN_RECEVICE = BASE_URL+"index.php?act=member_order&op=chain_recevice";
     public static final String VOUCHER_LIST=BASE_URL+"index.php?act=member_voucher&op=voucher_list";
     public static final String GET_VOUCHER = BASE_URL+"index.php?act=member_voucher&op=voucher_freeex";
+    public static final String MY_REPAIR_NUM = BuildConfig.DEBUG ? DEBUG_BASE_MSB_URL+"/Gas/repairOrder/undoneCount":RELEASE_BASE_MSB_URL+"/Gas/repairOrder/undoneCount";
+
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;
     }

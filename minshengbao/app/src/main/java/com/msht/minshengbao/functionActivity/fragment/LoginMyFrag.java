@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.msht.minshengbao.Bean.RepairNumBean;
+import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
@@ -64,6 +66,9 @@ import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,7 +84,7 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/7/2  
  */
-public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListener, MyScrollview.ScrollViewListener, IOrderNumView {
+public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListener, MyScrollview.ScrollViewListener, IOrderNumView, IRepairOrderNumView {
     private MyScrollview myScrollview;
     private LinearLayout layoutNavigation;
     private RelativeLayout layoutMySetting;
@@ -115,6 +120,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private LinearLayout llFootprint;
     private TextView tvCollect;
     private TextView tvFootprint;
+    private TextView tvRepair;
+    private TextView tvRepairUnfinish;
+    private TextView tvRepairfinished;
+    private TextView tvWaitEveluateRepair;
+    private TextView tvRefundRepair;
 
     public LoginMyFrag() {
     }
@@ -184,6 +194,37 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 }
             }
         });
+        ShopPresenter.getRepairOrderNum(this,SharedPreferencesUtil.getUserId(getContext(),SharedPreferencesUtil.UserId,""),SharedPreferencesUtil.getPassword(getContext(),SharedPreferencesUtil.Password,""), new DataStringCallback(this) {
+            @Override
+            public void onResponse(String s, int i) {
+                    try {
+                        JSONObject object = new JSONObject(s);
+                        if(TextUtils.equals(object.optString("result"),"error")){
+                          PopUtil.toastInCenter(object.optString("error"));
+                        }else if(TextUtils.equals(object.optString("result"),"success")){
+                            onGetRepairNumSuccess(s);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+            }
+        });
+    }
+
+    private void onGetRepairNumSuccess(String s) {
+        RepairNumBean bean = JsonUtil.toBean(s, RepairNumBean.class);
+        if("0".equals(bean.getData().getUndoneCount())){
+            tvRepairUnfinish.setVisibility(View.GONE);
+        }else {
+            tvRepairUnfinish.setVisibility(View.VISIBLE);
+        }
+        tvRepairUnfinish.setText(bean.getData().getUndoneCount());
+        if("0".equals(bean.getData().getUnevalCount())){
+            tvWaitEveluateRepair.setVisibility(View.GONE);
+        }else {
+            tvWaitEveluateRepair.setVisibility(View.VISIBLE);
+        }
+        tvWaitEveluateRepair.setText(bean.getData().getUnevalCount());
     }
 
     private void onGetNumSuccess(ShopNumBean bean) {
@@ -371,6 +412,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
         tvAllOrder = (TextView) view.findViewById(R.id.shop_order_num);
         tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
+        tvRepair = (TextView)view.findViewById(R.id.repair_order_num);
+        tvRepairUnfinish = (TextView)view.findViewById(R.id.repair_unfinished_order_num);
+        tvRepairfinished = (TextView)view.findViewById(R.id.repair_finished_order_num);
+        tvWaitEveluateRepair = (TextView)view.findViewById(R.id.my_wait_eveluate_repair_order_num);
+        tvRefundRepair =(TextView)view.findViewById(R.id.my_refund_repair_order_num);
 
     }
 
