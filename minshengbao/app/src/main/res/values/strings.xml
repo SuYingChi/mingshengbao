@@ -115,4 +115,5 @@
     <string name="monetary_unit">¥</string>
     <string name="click_button_reload">点击按钮重新加载</string>
     <string name="reload">重新加载</string>
+    <string name="fling_behavior">com.msht.minshengbao.androidShop.FlingBehavior</string>
 </resources>

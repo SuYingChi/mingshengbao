@@ -6,6 +6,7 @@ import android.util.Log;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
@@ -87,6 +88,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
@@ -1570,5 +1572,20 @@ public class ShopPresenter {
                 .addParams("password", password)
                 .tag(iRepairOrderNumView)
                 .build().execute(dataStringCallback);
+    }
+
+    public static void getStoreInfo(final IStoreView iStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_INFO).addParams("store_id", iStoreView.getStoreId())
+                .addParams("key", iStoreView.getKey())
+                .tag(iStoreView)
+                .build().execute(new DataStringCallback(iStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreView.onGetStoreInfoSuccess(s);
+                }
+            }
+        });
     }
 }

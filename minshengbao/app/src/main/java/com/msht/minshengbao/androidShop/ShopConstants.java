@@ -4,7 +4,7 @@ import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 
 public class ShopConstants {
-    public static final String BASE_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/mobile/"/*"http://shop.msbapp.cn:8090/mobile/"*/:"http://shop.msbapp.cn:8090/mobile/";
+    public static final String BASE_URL = BuildConfig.DEBUG ? /*"http://dev.msbapp.cn/mobile/"*/"http://shop.msbapp.cn:8090/mobile/":"http://shop.msbapp.cn:8090/mobile/";
     public static final String BASE_WAP_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/wap/"/*"http://shop.msbapp.cn:8090/wap/"*/: "http://shop.msbapp.cn:8090/wap/";
     public static final String RELEASE_BASE_MSB_URL = "https://msbapp.cn";
     public static final String DEBUG_BASE_MSB_URL = "http://test.msbapp.cn:8080";
@@ -83,6 +83,7 @@ public class ShopConstants {
     public static final String VOUCHER_LIST=BASE_URL+"index.php?act=member_voucher&op=voucher_list";
     public static final String GET_VOUCHER = BASE_URL+"index.php?act=member_voucher&op=voucher_freeex";
     public static final String MY_REPAIR_NUM = BuildConfig.DEBUG ? DEBUG_BASE_MSB_URL+"/Gas/repairOrder/undoneCount":RELEASE_BASE_MSB_URL+"/Gas/repairOrder/undoneCount";
+    public static final String STORE_INFO = BASE_URL+"index.php?act=store&op=store_info";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

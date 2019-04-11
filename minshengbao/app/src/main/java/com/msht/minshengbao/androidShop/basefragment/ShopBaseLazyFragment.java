@@ -151,9 +151,7 @@ public abstract class ShopBaseLazyFragment extends ShopBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
 
-        }
     }
 
     /**

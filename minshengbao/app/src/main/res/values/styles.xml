@@ -383,4 +383,7 @@
         <!-- 加载网络数据时覆盖在BGABanner最上层的占位图 -->
         <item name="banner_placeholderDrawable">@drawable/icon_stub</item>
     </style>
+
+
+
 </resources>

@@ -428,6 +428,7 @@
         <activity android:name=".functionActivity.gasService.GetGasCustomerNoActivity" />
         <activity android:name=".functionActivity.waterApp.RedPacketCardActivity"/>
         <activity android:name=".androidShop.activity.NewShopCarActivity" />
+        <activity android:name=".androidShop.activity.ShopStoreMainActivity" />
     </application>
 
 </manifest>
