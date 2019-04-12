@@ -22,7 +22,6 @@
         android:paddingTop="@dimen/margin_Modules"
         android:paddingBottom="@dimen/margin_Modules"
         android:background="@color/white"
-        android:layout_marginTop="1dp"
         android:layout_marginBottom="@dimen/margin_Modules"
         >
         <android.support.v7.widget.RecyclerView
@@ -30,6 +29,77 @@
             style="@style/rcl"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_collect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_Modules"
+        android:paddingBottom="@dimen/margin_Modules"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_Modules"
+        >
+        <TextView
+            style="@style/shopBlackTitleText"
+            android:text="收藏排行"
+            android:drawableLeft="@drawable/store_collect_rank"
+            android:drawablePadding="@dimen/margin_Modules"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcl_collect"
+            style="@style/rcl"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_Modules"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_sole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_Modules"
+        android:paddingBottom="@dimen/margin_Modules"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_Modules"
+        >
+        <TextView
+            style="@style/shopBlackTitleText"
+            android:text="销量排行"
+            android:drawableLeft="@drawable/store_collect_rank"
+            android:drawablePadding="@dimen/margin_Modules"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcl_sole"
+            style="@style/rcl"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_Modules"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_rec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_Modules"
+        android:paddingBottom="@dimen/margin_Modules"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_Modules"
+        >
+        <TextView
+            style="@style/shopBlackTitleText"
+            android:text="店家推荐"
+            android:layout_gravity="left"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcl_rec"
+            style="@style/rcl"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/margin_Modules"
             />
     </LinearLayout>
 </LinearLayout>

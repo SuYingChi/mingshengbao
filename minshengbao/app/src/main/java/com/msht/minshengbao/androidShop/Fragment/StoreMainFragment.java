@@ -3,21 +3,23 @@ package com.msht.minshengbao.androidShop.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GoodFmVoucherAdpter;
-import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
+import com.msht.minshengbao.androidShop.adapter.StoreGoodAdapter;
+import com.msht.minshengbao.androidShop.adapter.StoreRecGoodAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
+import com.msht.minshengbao.androidShop.customerview.RecyclerItemDecoration;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -43,9 +45,26 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     RecyclerView rcl;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
+    @BindView(R.id.ll_collect)
+    LinearLayout llCollect;
+    @BindView(R.id.rcl_collect)
+    RecyclerView rclCollect;
+    @BindView(R.id.ll_sole)
+    LinearLayout llSole;
+    @BindView(R.id.rcl_sole)
+    RecyclerView rclSole;
+    @BindView(R.id.ll_rec)
+    LinearLayout llrec;
+    @BindView(R.id.rcl_rec)
+    RecyclerView rclRec;
+    List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodFmVoucherAdpter adapter;
-
+    private List<StoreGoodBean> collectList = new ArrayList<StoreGoodBean>();
+    private StoreGoodAdapter collectAdapter;
+    private List<StoreGoodBean> soleList = new ArrayList<StoreGoodBean>();
+    private StoreGoodAdapter soleAdapter;
+    private List<StoreGoodBean> recList = new ArrayList<StoreGoodBean>();
+    private StoreRecGoodAdapter recAdapter;
     @Override
     protected int setLayoutId() {
         return R.layout.store_main_fragment;
@@ -60,6 +79,27 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     @Override
     protected void initView() {
         refreshLayout.setOnRefreshListener(this);
+        adapter = new GoodFmVoucherAdpter(getContext(), R.layout.item_store_voucher, voucherList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        rcl.setLayoutManager(linearLayoutManager);
+        rcl.setAdapter(adapter);
+        rcl.setNestedScrollingEnabled(false);
+        collectAdapter = new StoreGoodAdapter(getContext(), R.layout.item_store_collect_good, collectList);
+        LinearLayoutManager collectedllm = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        rclCollect.setLayoutManager(collectedllm);
+        rclCollect.setAdapter(collectAdapter);
+        rclCollect.setNestedScrollingEnabled(false);
+        soleAdapter = new StoreGoodAdapter(getContext(), R.layout.item_store_collect_good, soleList);
+        LinearLayoutManager solelm = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        rclSole.setLayoutManager(solelm);
+        rclSole.setAdapter(soleAdapter);
+        rclSole.setNestedScrollingEnabled(false);
+        recAdapter = new StoreRecGoodAdapter(getContext(), R.layout.item_store_rec_good, recList);
+        GridLayoutManager recglm = new GridLayoutManager(getContext(), 2);
+        recglm.setAutoMeasureEnabled(true);
+        rclRec.setLayoutManager(recglm);
+        rclRec.setAdapter(recAdapter);
+        rclRec.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -82,31 +122,60 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
             JSONObject obj = new JSONObject(s);
             JSONObject datas = obj.optJSONObject("datas");
             JSONArray voucherArray = datas.optJSONArray("store_voucher_list");
-            if(voucherArray.length()>1){
+            if (voucherArray.length() > 1) {
                 llvoucher.setVisibility(View.VISIBLE);
                 voucherList.clear();
                 for (int i = 0; i < voucherArray.length(); i++) {
                     voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(), VoucherBean.class));
                 }
-                adapter = new GoodFmVoucherAdpter(getContext(), R.layout.item_store_voucher, voucherList);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-                rcl.setLayoutManager(linearLayoutManager);
-                rcl.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-            }else {
+            } else {
                 llvoucher.setVisibility(View.GONE);
             }
-
+            JSONArray store_collect_rank = datas.optJSONArray("store_collect_rank");
+            if (store_collect_rank.length() > 1) {
+                llCollect.setVisibility(View.VISIBLE);
+                collectList.clear();
+                for (int i = 0; i < store_collect_rank.length(); i++) {
+                    collectList.add(JsonUtil.toBean(store_collect_rank.optJSONObject(i).toString(), StoreGoodBean.class));
+                }
+                collectAdapter.notifyDataSetChanged();
+            } else {
+                llCollect.setVisibility(View.GONE);
+            }
+            JSONArray store_sole_rank = datas.optJSONArray("store_sole_rank");
+            if (store_sole_rank.length() > 1) {
+                llSole.setVisibility(View.VISIBLE);
+                soleList.clear();
+                for (int i = 0; i < store_sole_rank.length(); i++) {
+                    soleList.add(JsonUtil.toBean(store_sole_rank.optJSONObject(i).toString(), StoreGoodBean.class));
+                }
+                soleAdapter.notifyDataSetChanged();
+            } else {
+                llSole.setVisibility(View.GONE);
+            }
+            JSONArray rec_goods_list = datas.optJSONArray("rec_goods_list");
+            if (rec_goods_list.length() > 1) {
+                llrec.setVisibility(View.VISIBLE);
+                recList.clear();
+                for (int i = 0; i < rec_goods_list.length(); i++) {
+                    recList.add(JsonUtil.toBean(rec_goods_list.optJSONObject(i).toString(), StoreGoodBean.class));
+                }
+                recAdapter.notifyDataSetChanged();
+            } else {
+                llrec.setVisibility(View.GONE);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(VerticalOffset messageEvent) {
-        if(messageEvent.verticalOffset==0){
+        if (messageEvent.verticalOffset == 0) {
             refreshLayout.setEnableRefresh(true);
-        }else{
+        } else {
             refreshLayout.setEnableRefresh(false);
         }
     }
