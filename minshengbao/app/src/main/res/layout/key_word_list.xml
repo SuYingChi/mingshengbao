@@ -75,6 +75,7 @@
             android:id="@+id/def"
             style="@style/black_title_text"
             android:gravity="center"
+            android:textColor="@color/msb_color"
             android:text="默认" />
 
         <TextView

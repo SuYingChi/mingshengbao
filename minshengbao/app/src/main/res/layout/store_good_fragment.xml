@@ -1,8 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin_Modules"
+        android:paddingRight="@dimen/margin_Modules"
+        >
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/def"
+            style="@style/black_title_text"
+            android:gravity="center"
+            android:textColor="@color/msb_color"
+            android:text="默认" />
+
+        <TextView
+            android:id="@+id/sell"
+            style="@style/black_title_text"
+            android:gravity="center"
+            android:drawableRight="@drawable/shop_down_triangle"
+            android:text="销量" />
+
+        <TextView
+            android:id="@+id/ren"
+            style="@style/black_title_text"
+            android:gravity="center"
+            android:drawableRight="@drawable/shop_down_triangle"
+            android:text="人气" />
+
+        <TextView
+            android:id="@+id/price"
+            style="@style/black_title_text"
+            android:gravity="center"
+            android:drawableRight="@drawable/shop_down_triangle"
+            android:text="价格" />
+        <ImageView
+            android:id="@+id/grid"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp20"
+            android:src="@drawable/shop_grid"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableHeaderTranslationContent="true"
+        app:srlEnableOverScrollBounce="false"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/iv_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:src="@drawable/shop_no_class_detail_image"
+                android:layout_centerInParent="true"
+                android:visibility="invisible"
+                />
+            <TextView
+                android:id="@+id/tv_no_data"
+                style="@style/shopBlackTitleText"
+                android:text="没有搜索到该类商品"
+                android:layout_below="@id/iv_no_data"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_Modules"
+                android:visibility="invisible"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdge="none"
+                android:overScrollMode="always"
+                android:requiresFadingEdge="none"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" />
+        </RelativeLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

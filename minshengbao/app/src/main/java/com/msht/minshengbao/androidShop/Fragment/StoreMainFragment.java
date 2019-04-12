@@ -186,4 +186,10 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
         refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getStoreInfo(this);
     }
+    @Override
+    public void onError(String s) {
+        super.onError(s);
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+    }
 }
