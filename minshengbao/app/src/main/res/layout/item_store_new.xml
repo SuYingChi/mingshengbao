@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlt"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_width18"
+        android:background="@color/white"
+        android:padding="@dimen/margin_Modules"
+        >
+    </TextView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none"
+        android:overScrollMode="always"
+        android:requiresFadingEdge="none"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        android:background="@color/white"
+        />
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_Modules"
+        android:layout_below="@id/rcl"
+        />
+</LinearLayout>

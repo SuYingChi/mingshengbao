@@ -15,6 +15,7 @@ import com.msht.minshengbao.androidShop.adapter.StoreGoodAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreRecGoodAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.RecyclerItemDecoration;
+import com.msht.minshengbao.androidShop.event.RefreshFinish;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
@@ -134,7 +135,6 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
             }
             JSONArray store_collect_rank = datas.optJSONArray("store_collect_rank");
             if (store_collect_rank.length() > 1) {
-                llCollect.setVisibility(View.VISIBLE);
                 collectList.clear();
                 for (int i = 0; i < store_collect_rank.length(); i++) {
                     collectList.add(JsonUtil.toBean(store_collect_rank.optJSONObject(i).toString(), StoreGoodBean.class));
@@ -145,7 +145,6 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
             }
             JSONArray store_sole_rank = datas.optJSONArray("store_sole_rank");
             if (store_sole_rank.length() > 1) {
-                llSole.setVisibility(View.VISIBLE);
                 soleList.clear();
                 for (int i = 0; i < store_sole_rank.length(); i++) {
                     soleList.add(JsonUtil.toBean(store_sole_rank.optJSONObject(i).toString(), StoreGoodBean.class));
@@ -179,7 +178,15 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
             refreshLayout.setEnableRefresh(false);
         }
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshFinish refreshFinish) {
+        if(refreshFinish.index==3){
+            llrec.setVisibility(View.VISIBLE);
+        }else {
+            llCollect.setVisibility(View.VISIBLE);
+            llSole.setVisibility(View.VISIBLE);
+        }
+    }
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         refreshLayout.setNoMoreData(false);

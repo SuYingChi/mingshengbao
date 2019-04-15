@@ -89,6 +89,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
@@ -1604,6 +1605,21 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iStoreGoodView.onGetStoreGoodSuccess(s);
+                }
+            }
+        });
+    }
+    public static void getStoreNewGood(final IStoreGoodNewView iStoreGoodNewView) {
+        OkHttpUtils.get().url(ShopConstants.STORE_GOOD).addParams("store_id", iStoreGoodNewView.getStoreId())
+                .addParams("curpage", iStoreGoodNewView.getCurpage())
+                .addParams("page", "10")
+                .tag(iStoreGoodNewView)
+                .build().execute(new DataStringCallback(iStoreGoodNewView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreGoodNewView.onGetStoreNewGoodSuccess(s);
                 }
             }
         });
