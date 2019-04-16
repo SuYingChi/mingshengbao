@@ -3,11 +3,8 @@ package com.msht.minshengbao.androidShop.presenter;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.androidShop.Fragment.StoreGoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
-import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
@@ -89,6 +86,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
@@ -99,7 +97,6 @@ import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
-import com.msht.minshengbao.functionActivity.fragment.LoginMyFrag;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
@@ -1610,7 +1607,7 @@ public class ShopPresenter {
         });
     }
     public static void getStoreNewGood(final IStoreGoodNewView iStoreGoodNewView) {
-        OkHttpUtils.get().url(ShopConstants.STORE_GOOD).addParams("store_id", iStoreGoodNewView.getStoreId())
+        OkHttpUtils.get().url(ShopConstants.NEW_STORE_GOOD).addParams("store_id", iStoreGoodNewView.getStoreId())
                 .addParams("curpage", iStoreGoodNewView.getCurpage())
                 .addParams("page", "10")
                 .tag(iStoreGoodNewView)
@@ -1620,6 +1617,20 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iStoreGoodNewView.onGetStoreNewGoodSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStorePromotion(final IStorePromotionView iStorePromotionView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_ACTIVITY).addParams("store_id", iStorePromotionView.getStoreId())
+                .tag(iStorePromotionView)
+                .build().execute(new DataStringCallback(iStorePromotionView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStorePromotionView.onGetStoreActivitySuccess(s);
                 }
             }
         });

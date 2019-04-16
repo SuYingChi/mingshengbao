@@ -45,17 +45,31 @@ public class DateUtils {
         SimpleDateFormat format = new SimpleDateFormat(pattern,Locale.CHINA);
         return format.format(date);
     }
-    public static String myFormatDate(String milSecond) {
+    public static String secondFormatToDate(String milSecond) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(Long.parseLong(milSecond) * 1000);//转换为毫秒
         Date date = calendar.getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy年-MM月-dd日",Locale.CHINA);
         String dateString = format.format(date);
-       /* String year = dateString.substring(0, 4);
-        String month = dateString.substring(5, 7);
-        String day = dateString.substring(8, 10);
-        return year+"年"+month+"月"+day+"日";*/
        return dateString;
+    }
+    public static String secondFormatToLeftDay(Long  milSecond) {
+        Long remainSecond = milSecond;
+        int hour;
+        int day = (int)(remainSecond /86400);
+        if(remainSecond-86400*day>=0){
+            remainSecond= remainSecond-86400*day;
+        }
+         hour =  (int)(remainSecond/3600);
+        if(remainSecond-hour*3600>=0){
+            remainSecond= remainSecond-hour*3600;
+        }
+        int fen = (int) (remainSecond / 60);
+        if(remainSecond-fen*60>=0){
+            remainSecond= remainSecond-fen*60;
+        }
+
+        return day+"天"+hour+"小时"+fen+"分钟"+remainSecond+"秒";
     }
     /**
      * 将字符串转为时间戳
@@ -100,14 +114,6 @@ public class DateUtils {
             isBigger = true;
         }
         return isBigger;
-    }
-    private String secondToDate(long second,String patten) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(second * 1000);//转换为毫秒
-        Date date = calendar.getTime();
-        SimpleDateFormat format = new SimpleDateFormat(patten);
-        String dateString = format.format(date);
-        return dateString;
     }
 
 }

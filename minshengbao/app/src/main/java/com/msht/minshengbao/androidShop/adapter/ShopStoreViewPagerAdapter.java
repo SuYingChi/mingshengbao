@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.msht.minshengbao.adapter.ViewPagerAdapter;
-import com.msht.minshengbao.androidShop.Fragment.StoreActivityFragment;
+import com.msht.minshengbao.androidShop.Fragment.StorePromotionFragment;
 import com.msht.minshengbao.androidShop.Fragment.StoreGoodFragment;
 import com.msht.minshengbao.androidShop.Fragment.StoreMainFragment;
 import com.msht.minshengbao.androidShop.Fragment.StoreNewGoodFragment;
-import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 
 public class ShopStoreViewPagerAdapter extends FragmentPagerAdapter {
@@ -40,9 +38,9 @@ public class ShopStoreViewPagerAdapter extends FragmentPagerAdapter {
                 storeNewGoodFragment.setArguments(bundle);
                 return storeNewGoodFragment;
             case 3:
-                StoreActivityFragment storeActivityFragment = new StoreActivityFragment();
-                storeActivityFragment.setArguments(bundle);
-                return storeActivityFragment;
+                StorePromotionFragment storePromotionFragment = new StorePromotionFragment();
+                storePromotionFragment.setArguments(bundle);
+                return storePromotionFragment;
             default:
                 return null;
         }

@@ -1,12 +1,14 @@
 package com.msht.minshengbao.androidShop.baseActivity;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,11 +33,9 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
-import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
-import com.msht.minshengbao.androidShop.util.NetworkChangeReceiver;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IBaseView;
@@ -48,8 +46,6 @@ import com.umeng.message.PushAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -57,6 +53,9 @@ import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.Utils;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
+
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
 
 /**
  * @author mshtyfb
@@ -96,11 +95,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
          */
         PushAgent.getInstance(context).onAppStart();
         setSnackBar();
-        if (!VariableUtil.networkStatus) {
-            snackBar.show();
-        } else {
-            snackBar.dismiss();
-        }
         monetary_unit = context.getResources().getString(R.string.monetary_unit);
         setLanguage(Locale.getDefault());
         setLayout();
@@ -191,9 +185,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        if (OSUtils.isEMUI3_0()||OSUtils.isEMUI3_1()) {
-
-        }
     }
 
     //是否拒绝网络请求的响应；true表示拒绝；false表示接收，默认false，在onDestroy中设置为true。
@@ -233,7 +224,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
     protected void setSoftInPutMode() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
-
     @Override
     public void showLoading() {
         showCenterLodaingDialog();
@@ -377,9 +367,9 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         layoutEmpty.setVisibility(View.GONE);
     }
 
-    /**
+/*    *//**
      * 设置空标记的显示 子activity，自己调一下该方法，自己布局文件要include actvity_base_empty
-     */
+     *//*
     protected void initLayoutEmpty(int resId, String emptyTitle, String emptyBody, String btnText, View.OnClickListener listener) {
         layoutEmpty = (RelativeLayout) findViewById(R.id.layoutEmpty);
         ImageView imgEmptyLogo = (ImageView) findViewById(R.id.imgEmptyLogo);
@@ -392,59 +382,9 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
         imgEmptyLogo.setImageResource(resId);
         tvEmptyTitle.setText(emptyTitle);
         tvEmptyBody.setText(emptyBody);
-    }
+    }*/
 
-    protected void doNotAdClick(Map<String, String> map) {
-        if (map.containsKey("type")) {
-            switch (map.get("type")) {
-                case "keyword":
-                    Intent intent = new Intent(this,ShopKeywordListActivity.class);
-                    if(map.containsKey("data")){
-                        intent.putExtra("keyword",map.get("data"));
-                    }
-                    startActivity(intent);
-                    break;
-                case "goods":
-                    Intent intent2 = new Intent(this,ShopGoodDetailActivity.class);
-                    if(map.containsKey("data")){
-                        intent2.putExtra("goodsid",map.get("data"));
-                    }
-                    if(map.containsKey("price")){
-                        intent2.putExtra("price",map.get("price"));
-                    }
-                    intent2.putExtra("type", "2");
-                    startActivity(intent2);
-                    break;
-                case "special":
-                    Intent intent3 = new Intent(this,ShopSpecialActivity.class);
-                    if(map.containsKey("data")){
-                        intent3.putExtra("special",map.get("data"));
-                    }
-                    startActivity(intent3);
-                    break;
-                case "url":
-                    String url;
-                    if(map.containsKey("data")){
-                        url = map.get("data");
-                        if (url.contains("gc_id=")) {
-                            Intent intent4 = new Intent(this, ShopClassDetailActivity.class);
-                            int index = url.indexOf("gc_id=");
-                            url = url.substring(index + 6).trim();
-                            intent4.putExtra("data", url);
-                            intent4.putExtra("title", "民生商城");
-                            startActivity(intent4);
-                        } else if (NetUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                            Intent intent4 = new Intent(this, HtmlPageActivity.class);
-                            intent4.putExtra("url", url);
-                            startActivity(intent4);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+
     protected void onShopItemViewClick(String type, String data) {
         LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
         if(TextUtils.equals(type,"goods")) {
@@ -470,32 +410,27 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             }
         }
     }
-    protected void doShopItemViewClickByUrl(String url) {
-        Set<String> keys = Uri.parse(url).getQueryParameterNames();
-        String data;
-        if (keys.contains("goods")) {
-            data = Uri.parse(url).getQueryParameter("goods");
-            Intent intent = new Intent(this, ShopGoodDetailActivity.class);
-            intent.putExtra("type", "2");
-            intent.putExtra("goodsid", data);
-            startActivity(intent);
-        } else if (keys.contains("keyword")) {
-            data = Uri.parse(url).getQueryParameter("keyword");
-            Intent intent = new Intent(this, ShopKeywordListActivity.class);
-            intent.putExtra("keyword", data);
-            startActivity(intent);
-        } else if (keys.contains("gc_id")) {
-            data = Uri.parse(url).getQueryParameter("gc_id");
-            Intent intent = new Intent(this, ShopClassDetailActivity.class);
-            int index = data.indexOf("gc_id=");
-            data = data.substring(index + 6).trim();
-            intent.putExtra("data", data);
-            startActivity(intent);
-        } else {
-            data = url;
-            Intent intent = new Intent(this, HtmlPageActivity.class);
-            intent.putExtra("url", data);
-            startActivity(intent);
+    public class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectionManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isAvailable()) {
+                switch (networkInfo.getType()) {
+                    case TYPE_MOBILE:
+//                    Toast.makeText(context, "正在使用2G/3G/4G网络", Toast.LENGTH_SHORT).show();
+                        break;
+                    case TYPE_WIFI:
+//                    Toast.makeText(context, "正在使用wifi上网", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+              snackBar.dismiss();
+            } else {
+              snackBar.show();
+            }
         }
     }
 }

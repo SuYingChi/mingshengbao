@@ -104,11 +104,11 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
             refreshLayout.setNoMoreData(false);
             JSONArray goodArray = obj.optJSONObject("datas").optJSONArray("goods_list");
             for(int i=0;i<goodArray.length();i++){
-                if(DateUtils.myFormatDate(goodArray.optJSONObject(i).optString("goods_addtime")).equals(goods_addtime_text)){
+                if(DateUtils.secondFormatToDate(goodArray.optJSONObject(i).optString("goods_addtime")).equals(goods_addtime_text)){
                     StoreNewGoodBean storeNewBean = goodlist.get(goodlist.size()-1);
                     storeNewBean.getGoodList().add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),StoreNewGoodBean.GoodBean.class));
                 }else {
-                    goods_addtime_text =  DateUtils.myFormatDate(goodArray.optJSONObject(i).optString("goods_addtime"));
+                    goods_addtime_text =  DateUtils.secondFormatToDate(goodArray.optJSONObject(i).optString("goods_addtime"));
                     List<StoreNewGoodBean.GoodBean> childGoodList = new ArrayList<StoreNewGoodBean.GoodBean>();
                     childGoodList.add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),StoreNewGoodBean.GoodBean.class));
                     StoreNewGoodBean storeNewBean = new StoreNewGoodBean(goods_addtime_text, childGoodList);
