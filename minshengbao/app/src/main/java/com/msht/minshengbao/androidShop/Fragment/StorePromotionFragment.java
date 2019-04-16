@@ -98,6 +98,10 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     //1 mansong满送 2 xianshi 限时3 groupbuy团购 4 spike闪购 5 pintuan拼团
     @Override
     public void onGetStoreActivitySuccess(String s) {
+        refreshLayout.finishRefresh();
+        refreshLayout.setEnableAutoLoadMore(false);
+        refreshLayout.finishLoadMoreWithNoMoreData();
+        refreshLayout.setNoMoreData(true);
         try {
             promotionList.clear();
             JSONObject obj = new JSONObject(s);
