@@ -26,6 +26,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
@@ -75,6 +76,7 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storeId = getArguments().getString("id");
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -198,5 +200,11 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
         super.onError(s);
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -2,8 +2,10 @@ package com.msht.minshengbao.androidShop.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -53,8 +55,9 @@ public class DateUtils {
         String dateString = format.format(date);
        return dateString;
     }
-    public static String secondFormatToLeftDay(Long  milSecond) {
+    public static List<String> secondFormatToLeftDay(Long  milSecond) {
         Long remainSecond = milSecond;
+        List<String> list = new ArrayList<String>();
         int hour;
         int day = (int)(remainSecond /86400);
         if(remainSecond-86400*day>=0){
@@ -68,8 +71,11 @@ public class DateUtils {
         if(remainSecond-fen*60>=0){
             remainSecond= remainSecond-fen*60;
         }
-
-        return day+"天"+hour+"小时"+fen+"分钟"+remainSecond+"秒";
+        list.add(day+"");
+        list.add(hour+"");
+        list.add(fen+"");
+        list.add(remainSecond+"");
+        return list;
     }
     /**
      * 将字符串转为时间戳

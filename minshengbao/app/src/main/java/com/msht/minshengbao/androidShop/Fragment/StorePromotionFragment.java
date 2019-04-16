@@ -1,31 +1,59 @@
 package com.msht.minshengbao.androidShop.Fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.adapter.StoreNewGoodAdapter;
+import com.msht.minshengbao.androidShop.adapter.StorePromotionAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
+import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.PromotionBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView {
+import butterknife.BindView;
+
+public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView,  OnRefreshListener {
     private String storeId;
-    private Timer timer;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
+    @BindView(R.id.rcl)
+    RecyclerView rcl;
+    @BindView(R.id.iv_no_data)
+    ImageView imageView;
+    @BindView(R.id.tv_no_data)
+    TextView textView;
+    private List<PromotionBean> promotionList=new ArrayList<PromotionBean>();
+    private StorePromotionAdapter adapter;
 
     @Override
     protected int setLayoutId() {
-        return R.layout.shop_activity_fragment;
+        return R.layout.store_promotion_fragment;
     }
 
     @Override
@@ -36,8 +64,10 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
 
     @Override
     protected void initView() {
-        super.initView();
-
+        refreshLayout.setOnRefreshListener(this);
+        adapter = new StorePromotionAdapter(getContext(),promotionList);
+        rcl.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false));
+        rcl.setAdapter(adapter);
     }
 
     @Override
@@ -45,23 +75,69 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
         super.initData();
         ShopPresenter.getStorePromotion(this);
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(VerticalOffset messageEvent) {
+        if (messageEvent.verticalOffset == 0) {
+            refreshLayout.setEnableRefresh(true);
+        } else {
+            refreshLayout.setEnableRefresh(false);
+        }
+    }
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.setNoMoreData(false);
+        refreshLayout.setEnableAutoLoadMore(true);
+        ShopPresenter.getStorePromotion(this);
+    }
+    @Override
+    public void onError(String s) {
+        super.onError(s);
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+    }
+    //1 mansong满送 2 xianshi 限时3 groupbuy团购 4 spike闪购 5 pintuan拼团
     @Override
     public void onGetStoreActivitySuccess(String s) {
         try {
+            promotionList.clear();
             JSONObject obj = new JSONObject(s);
-            JSONArray promotionList = obj.optJSONObject("datas").optJSONObject("promotion").optJSONArray("list");
-            if(promotionList.length()>=1){
-                for(int i=0;i<promotionList.length();i++){
-                    JSONObject jsonobj = promotionList.optJSONObject(i);
+            JSONObject promotion = obj.optJSONObject("datas").optJSONObject("promotion");
+            JSONArray pList = promotion.optJSONArray("list");
+            if(pList.length()>=1){
+                textView.setVisibility(View.INVISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
+                for(int i=0;i<pList.length();i++){
+                    JSONObject jsonobj = pList.optJSONObject(i);
                      PromotionBean promotionBean = JsonUtil.toBean(jsonobj.toString(), PromotionBean.class);
-                     Long lefttime = promotionBean.getPromotion_left_time();
-                     timer= new Timer();
-                     timer.schedule(new CountDownTimeTask(lefttime),0,1000);
-
+                     switch (promotionBean.getPromotion_type()){
+                         case 1:
+                             JSONObject mansong = promotion.optJSONObject("mansong");
+                             promotionBean.setPromotion_title(mansong.optString("mansong_name"));
+                             break;
+                         case 2:
+                             JSONObject xianshi = promotion.optJSONObject("xianshi");
+                             promotionBean.setPromotion_title(xianshi.optString("xianshi_name"));
+                         break;
+                         case 3:
+                             JSONObject groupbuy = promotion.optJSONObject("groupbuy");
+                             promotionBean.setPromotion_title(groupbuy.optString("groupbuy_name"));
+                             break;
+                         case 4:
+                             JSONObject spike = promotion.optJSONObject("spike");
+                             promotionBean.setPromotion_title(spike.optString("spike_name"));
+                             break;
+                         case 5:
+                             JSONObject pintuan = promotion.optJSONObject("pintuan");
+                             promotionBean.setPromotion_title(pintuan.optString("pintuan_name"));
+                             break;
+                         default:break;
+                     }
+                     promotionList.add(promotionBean);
                 }
+                adapter.notifyChange();
             }else {
-
+                textView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
             }
         } catch (JSONException e) {
 
@@ -72,22 +148,12 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     public String getStoreId() {
         return storeId;
     }
-    private class CountDownTimeTask extends  TimerTask{
-        private  long cursecond;
 
-        CountDownTimeTask(long cursecond){
-            this.cursecond = cursecond;
-        }
-        @Override
-        public void run() {
-            LogUtils.e(DateUtils.secondFormatToLeftDay(cursecond));
-            cursecond = cursecond-1;
-        }
-    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        timer.cancel();
+        adapter.cancelAllTimers();
     }
 }
