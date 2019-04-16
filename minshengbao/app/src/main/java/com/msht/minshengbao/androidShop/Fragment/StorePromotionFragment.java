@@ -38,7 +38,7 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 
-public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView,  OnRefreshListener {
+public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView, OnRefreshListener {
     private String storeId;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -48,7 +48,7 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     ImageView imageView;
     @BindView(R.id.tv_no_data)
     TextView textView;
-    private List<PromotionBean> promotionList=new ArrayList<PromotionBean>();
+    private List<PromotionBean> promotionList = new ArrayList<PromotionBean>();
     private StorePromotionAdapter adapter;
 
     @Override
@@ -59,14 +59,17 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storeId=getArguments().getString("id");
+        storeId = getArguments().getString("id");
     }
 
     @Override
     protected void initView() {
         refreshLayout.setOnRefreshListener(this);
-        adapter = new StorePromotionAdapter(getContext(),promotionList);
-        rcl.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false));
+        adapter = new StorePromotionAdapter(getContext(), promotionList);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        rcl.setLayoutManager(lm);
+        rcl.setNestedScrollingEnabled(false);
         rcl.setAdapter(adapter);
     }
 
@@ -75,6 +78,7 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
         super.initData();
         ShopPresenter.getStorePromotion(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(VerticalOffset messageEvent) {
         if (messageEvent.verticalOffset == 0) {
@@ -83,18 +87,21 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
             refreshLayout.setEnableRefresh(false);
         }
     }
+
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         refreshLayout.setNoMoreData(false);
         refreshLayout.setEnableAutoLoadMore(true);
         ShopPresenter.getStorePromotion(this);
     }
+
     @Override
     public void onError(String s) {
         super.onError(s);
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
+
     //1 mansong满送 2 xianshi 限时3 groupbuy团购 4 spike闪购 5 pintuan拼团
     @Override
     public void onGetStoreActivitySuccess(String s) {
@@ -106,40 +113,46 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
             promotionList.clear();
             JSONObject obj = new JSONObject(s);
             JSONObject promotion = obj.optJSONObject("datas").optJSONObject("promotion");
-            JSONArray pList = promotion.optJSONArray("list");
-            if(pList.length()>=1){
-                textView.setVisibility(View.INVISIBLE);
-                imageView.setVisibility(View.INVISIBLE);
-                for(int i=0;i<pList.length();i++){
-                    JSONObject jsonobj = pList.optJSONObject(i);
-                     PromotionBean promotionBean = JsonUtil.toBean(jsonobj.toString(), PromotionBean.class);
-                     switch (promotionBean.getPromotion_type()){
-                         case 1:
-                             JSONObject mansong = promotion.optJSONObject("mansong");
-                             promotionBean.setPromotion_title(mansong.optString("mansong_name"));
-                             break;
-                         case 2:
-                             JSONObject xianshi = promotion.optJSONObject("xianshi");
-                             promotionBean.setPromotion_title(xianshi.optString("xianshi_name"));
-                         break;
-                         case 3:
-                             JSONObject groupbuy = promotion.optJSONObject("groupbuy");
-                             promotionBean.setPromotion_title(groupbuy.optString("groupbuy_name"));
-                             break;
-                         case 4:
-                             JSONObject spike = promotion.optJSONObject("spike");
-                             promotionBean.setPromotion_title(spike.optString("spike_name"));
-                             break;
-                         case 5:
-                             JSONObject pintuan = promotion.optJSONObject("pintuan");
-                             promotionBean.setPromotion_title(pintuan.optString("pintuan_name"));
-                             break;
-                         default:break;
-                     }
-                     promotionList.add(promotionBean);
+            if (promotion != null) {
+                JSONArray pList = promotion.optJSONArray("list");
+                if(pList!=null&&pList.length()>0) {
+                    textView.setVisibility(View.INVISIBLE);
+                    imageView.setVisibility(View.INVISIBLE);
+                    for (int i = 0; i < pList.length(); i++) {
+                        JSONObject jsonobj = pList.optJSONObject(i);
+                        PromotionBean promotionBean = JsonUtil.toBean(jsonobj.toString(), PromotionBean.class);
+                        switch (promotionBean.getPromotion_type()) {
+                            case 1:
+                                JSONObject mansong = promotion.optJSONObject("mansong");
+                                promotionBean.setPromotion_title(mansong.optString("mansong_name"));
+                                break;
+                            case 2:
+                                JSONObject xianshi = promotion.optJSONObject("xianshi");
+                                promotionBean.setPromotion_title(xianshi.optString("xianshi_name"));
+                                break;
+                            case 3:
+                                JSONObject groupbuy = promotion.optJSONObject("groupbuy");
+                                promotionBean.setPromotion_title(groupbuy.optString("groupbuy_name"));
+                                break;
+                            case 4:
+                                JSONObject spike = promotion.optJSONObject("spike");
+                                promotionBean.setPromotion_title(spike.optString("spike_name"));
+                                break;
+                            case 5:
+                                JSONObject pintuan = promotion.optJSONObject("pintuan");
+                                promotionBean.setPromotion_title(pintuan.optString("pintuan_name"));
+                                break;
+                            default:
+                                break;
+                        }
+                        promotionList.add(promotionBean);
+                    }
+                    adapter.notifyChange();
+                }else {
+                    textView.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
                 }
-                adapter.notifyChange();
-            }else {
+            } else {
                 textView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
             }
@@ -152,7 +165,6 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     public String getStoreId() {
         return storeId;
     }
-
 
 
     @Override
