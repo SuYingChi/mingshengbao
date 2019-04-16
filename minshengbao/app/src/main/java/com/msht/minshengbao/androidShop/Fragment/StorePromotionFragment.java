@@ -147,7 +147,6 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
                         }
                         promotionList.add(promotionBean);
                     }
-                    adapter.notifyChange();
                 }else {
                     textView.setVisibility(View.VISIBLE);
                     imageView.setVisibility(View.VISIBLE);
@@ -156,8 +155,9 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
                 textView.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
             }
+            adapter.notifyChange();
         } catch (JSONException e) {
-
+            e.printStackTrace();
         }
     }
 
