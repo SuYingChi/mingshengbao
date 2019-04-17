@@ -69,7 +69,7 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               spaInterface.onClick(data.getPromotion_type(),data.getPromotion_id());
+               spaInterface.onClick(data.getPromotion_type(),data.getPromotion_id(),data.getPromotion_title());
             }
         });
         if (time > 0) {
@@ -154,7 +154,7 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
         }
     }
     public interface SpaInterface {
-       void onClick(int promotion_type, String promotion_id);
+       void onClick(int promotion_type, String promotion_id, String promotion_title);
     }
     public  void setSpaInterface(SpaInterface spaInterface){
         this.spaInterface = spaInterface;

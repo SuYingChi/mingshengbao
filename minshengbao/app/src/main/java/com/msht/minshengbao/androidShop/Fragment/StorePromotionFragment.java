@@ -171,11 +171,32 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     }
 
     @Override
-    public void onClick(int promotion_type, String promotion_id) {
+    public void onClick(int promotion_type, String promotion_id, String promotion_title) {
         Intent intent = new Intent( getActivity(), StorePromotionActivity.class);
         intent.putExtra("type",promotion_type+"");
         intent.putExtra("id",promotion_id);
         intent.putExtra("storeId",storeId);
+        switch (promotion_type) {
+            case 1:
+                intent.putExtra("key","mansong");
+                break;
+            case 2:
+                intent.putExtra("key","xianshi");
+                break;
+            case 3:
+                intent.putExtra("key","groupbuy");
+
+                break;
+            case 4:
+                intent.putExtra("key","spike");
+
+                break;
+            case 5:
+                intent.putExtra("key","pintuan");
+                break;
+            default:
+                break;
+        }
         getActivity().startActivity(intent);
     }
 }

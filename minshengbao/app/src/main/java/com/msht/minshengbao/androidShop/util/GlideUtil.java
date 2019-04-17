@@ -375,7 +375,6 @@ public class GlideUtil {/*
                 .placeholder(R.drawable.icon_stub)
                 .error(R.drawable.icon_stub)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .fitCenter()
                 .priority(Priority.HIGH);
 
         Glide.with(context)

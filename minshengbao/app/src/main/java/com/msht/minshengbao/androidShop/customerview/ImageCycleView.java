@@ -434,7 +434,7 @@ public class ImageCycleView extends LinearLayout {
             ClickableImageView imageView;
             if (mImageViewCacheList.isEmpty()) {
                 imageView = new ClickableImageView(mContext);
-                imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setAdjustViewBounds(true);
 
@@ -449,11 +449,8 @@ public class ImageCycleView extends LinearLayout {
                 }
             });
             mImageCycleViewListener.displayImage(imageUrl, imageView);
-            LogUtils.e("instantiateItem", "imageView.getWidth()==" + imageView.getWidth() + "   imageView.height==" + imageView.getLayoutParams().height);
-            LogUtils.e("instantiateItem", "add之前 container.getWidth()==" + container.getWidth() + "   container.height==" + container.getHeight());
-            container.addView(imageView);
-            LogUtils.e("instantiateItem", "add之后 container.getWidth()==" + container.getWidth() + "   container.height==" + container.getHeight());
-            return imageView;
+           container.addView(imageView);
+           return imageView;
         }
 
         @Override

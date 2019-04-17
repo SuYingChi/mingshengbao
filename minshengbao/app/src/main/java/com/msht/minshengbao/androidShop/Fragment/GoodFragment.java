@@ -416,44 +416,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         });
     }
 
-    private void umengShare(final String shareUrl, final String shareTitle, final String desc, final Bitmap bitmap) {
-        ShareAction mShareAction = new ShareAction(getActivity()).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE)
-                .setShareboardclickCallback(new ShareBoardlistener() {
-                    @Override
-                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
-                        UMWeb web = new UMWeb(shareUrl);
-                        web.setTitle(shareTitle);
-                        web.setDescription(desc);
-                        web.setThumb(new UMImage(getActivity(), bitmap));
-                        new ShareAction(getActivity()).withMedia(web)
-                                .setPlatform(shareMedia)
-                                .setCallback(new UMShareListener() {
-                                    @Override
-                                    public void onStart(SHARE_MEDIA share_media) {
-
-                                    }
-
-                                    @Override
-                                    public void onResult(SHARE_MEDIA share_media) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
-                                    }
-
-                                    @Override
-                                    public void onCancel(SHARE_MEDIA share_media) {
-
-                                    }
-                                })
-                                .share();
-                    }
-                });
-        mShareAction.open();
-    }
-
     private String buildTransaction(final String type) {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
@@ -870,7 +832,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         final ImageCycleView.ImageCycleViewListener mAdCycleViewListener = new ImageCycleView.ImageCycleViewListener() {
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                GlideUtil.loadByWidthFitHeight(getContext(), imageView, imageURL);
+                GlideUtil.loadByImageView(getContext(), imageView, imageURL);
 
             }
 
