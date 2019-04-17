@@ -2,8 +2,6 @@ package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -17,14 +15,9 @@ import com.msht.minshengbao.androidShop.shopBean.PromotionBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
-import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.util.PopUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 
 public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotionAdapter.ViewHolder> {
@@ -33,6 +26,7 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
     private List<PromotionBean> mDatas;
     //用于退出activity,避免countdown，造成资源浪费。
     private SparseArray<CountDownTimer> countDownMap;
+    private SpaInterface spaInterface;
 
     public StorePromotionAdapter(Context context, List<PromotionBean> datas) {
         this.context = context;
@@ -63,19 +57,26 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PromotionBean data = mDatas.get(position);
         holder.name.setText(data.getPromotion_title());
        GlideUtil.loadRemoteImg(context,holder.iv,data.getPromotion_banner());
-        final long time = data.getPromotion_left_time()*1000;
+       long time = data.getPromotion_left_time()*1000;
         //将前一个缓存清除
         if (holder.countDownTimer != null) {
             holder.countDownTimer.cancel();
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               spaInterface.onClick(data.getPromotion_type(),data.getPromotion_id());
+            }
+        });
         if (time > 0) {
             holder.countDownTimer = new CountDownTimer(time, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
+                    mDatas.get(position).setPromotion_left_time(millisUntilFinished/1000);
                     List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished/1000);
                     holder.day.setText(list.get(0));
                     holder.hour.setText(list.get(1));
@@ -84,7 +85,12 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
                 }
                 @Override
                 public void onFinish() {
-
+                 holder.itemView.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         PopUtil.toastInCenter("活动已经结束");
+                     }
+                 });
                 }
             }.start();
             countDownMap.put(holder.iv.hashCode(), holder.countDownTimer);
@@ -93,6 +99,12 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
             holder.hour.setText("00");
             holder.minute.setText("00");
             holder.second.setText("00");
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopUtil.toastInCenter("活动已经结束");
+                }
+            });
         }
 
     }
@@ -140,5 +152,11 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
             second = (TextView) itemView.findViewById(R.id.second);
 
         }
+    }
+    public interface SpaInterface {
+       void onClick(int promotion_type, String promotion_id);
+    }
+    public  void setSpaInterface(SpaInterface spaInterface){
+        this.spaInterface = spaInterface;
     }
 }

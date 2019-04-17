@@ -273,7 +273,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             ivNoData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
             return;
-        } else if (curPage >= pageTotal) {
+        } else if (curPage > pageTotal) {
             refreshLayout.setEnableAutoLoadMore(false);
             refreshLayout.finishLoadMoreWithNoMoreData();
             refreshLayout.setNoMoreData(true);

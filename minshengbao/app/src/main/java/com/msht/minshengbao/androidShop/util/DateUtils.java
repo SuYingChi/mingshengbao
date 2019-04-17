@@ -44,39 +44,36 @@ public class DateUtils {
      */
     public static String getDateToString(String milSecond, String pattern) {
         Date date = new Date(Long.parseLong(milSecond));
-        SimpleDateFormat format = new SimpleDateFormat(pattern,Locale.CHINA);
+        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.CHINA);
         return format.format(date);
     }
+
     public static String secondFormatToDate(String milSecond) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(Long.parseLong(milSecond) * 1000);//转换为毫秒
         Date date = calendar.getTime();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年-MM月-dd日",Locale.CHINA);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年-MM月-dd日", Locale.CHINA);
         String dateString = format.format(date);
-       return dateString;
+        return dateString;
     }
-    public static List<String> secondFormatToLeftDay(Long  milSecond) {
+
+    public static List<String> secondFormatToLeftDay(Long milSecond) {
         Long remainSecond = milSecond;
         List<String> list = new ArrayList<String>();
         int hour;
-        int day = (int)(remainSecond /86400);
-        if(remainSecond-86400*day>=0){
-            remainSecond= remainSecond-86400*day;
-        }
-         hour =  (int)(remainSecond/3600);
-        if(remainSecond-hour*3600>=0){
-            remainSecond= remainSecond-hour*3600;
-        }
+        int day = (int) (remainSecond / 86400);
+        remainSecond = remainSecond - 86400 * day;
+        hour = (int) (remainSecond / 3600);
+        remainSecond = remainSecond - hour * 3600;
         int fen = (int) (remainSecond / 60);
-        if(remainSecond-fen*60>=0){
-            remainSecond= remainSecond-fen*60;
-        }
-        list.add(day+"");
-        list.add(hour+"");
-        list.add(fen+"");
-        list.add(remainSecond+"");
+        remainSecond = remainSecond - fen * 60;
+        list.add(day + "");
+        list.add(hour + "");
+        list.add(fen + "");
+        list.add(remainSecond + "");
         return list;
     }
+
     /**
      * 将字符串转为时间戳
      *

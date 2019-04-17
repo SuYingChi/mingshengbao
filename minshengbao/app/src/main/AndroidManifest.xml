@@ -429,6 +429,7 @@
         <activity android:name=".functionActivity.waterApp.RedPacketCardActivity"/>
         <activity android:name=".androidShop.activity.NewShopCarActivity" />
         <activity android:name=".androidShop.activity.ShopStoreMainActivity" />
+        <activity android:name=".androidShop.activity.StorePromotionActivity" />
     </application>
 
 </manifest>

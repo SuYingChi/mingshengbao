@@ -4,7 +4,7 @@ import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 
 public class ShopConstants {
-    public static final String BASE_URL = BuildConfig.DEBUG ? /*"http://dev.msbapp.cn/mobile/"*/"http://shop.msbapp.cn:8090/mobile/":"http://shop.msbapp.cn:8090/mobile/";
+    public static final String BASE_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/mobile/"/*"http://shop.msbapp.cn:8090/mobile/"*/:"http://shop.msbapp.cn:8090/mobile/";
     public static final String BASE_WAP_URL = BuildConfig.DEBUG ? "http://dev.msbapp.cn/wap/"/*"http://shop.msbapp.cn:8090/wap/"*/: "http://shop.msbapp.cn:8090/wap/";
     public static final String RELEASE_BASE_MSB_URL = "https://msbapp.cn";
     public static final String DEBUG_BASE_MSB_URL = "http://test.msbapp.cn:8080";
@@ -87,6 +87,7 @@ public class ShopConstants {
     public static final String STORE_GOOD = BASE_URL + "index.php?act=store&op=store_goods";
     public static final String NEW_STORE_GOOD = BASE_URL+"index.php?act=store&op=store_new_goods";
     public static final String STORE_ACTIVITY = BASE_URL+"index.php?act=store&op=store_promotion";
+    public static final String STORE_PROMOTION_DETAIL = BASE_URL+"index.php?act=store&op=store_promotion_info";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

@@ -92,7 +92,7 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
                 refreshLayout.setNoMoreData(false);
                 adapter.notifyDataSetChanged();
                 return;
-            } else if (curpage >= pageTotal) {
+            } else if (curpage > pageTotal) {
                 refreshLayout.setEnableAutoLoadMore(false);
                 refreshLayout.finishLoadMoreWithNoMoreData();
                 refreshLayout.setNoMoreData(true);

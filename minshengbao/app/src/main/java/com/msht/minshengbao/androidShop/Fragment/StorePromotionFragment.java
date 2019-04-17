@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,19 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.androidShop.adapter.StoreNewGoodAdapter;
+import com.msht.minshengbao.androidShop.activity.StorePromotionActivity;
 import com.msht.minshengbao.androidShop.adapter.StorePromotionAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.PromotionBean;
-import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,12 +31,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 
-public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView, OnRefreshListener {
+public class StorePromotionFragment extends ShopBaseLazyFragment implements IStorePromotionView, OnRefreshListener, StorePromotionAdapter.SpaInterface {
     private String storeId;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -66,6 +62,7 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     protected void initView() {
         refreshLayout.setOnRefreshListener(this);
         adapter = new StorePromotionAdapter(getContext(), promotionList);
+        adapter.setSpaInterface(this);
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         lm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(lm);
@@ -171,5 +168,14 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
     public void onDestroy() {
         super.onDestroy();
         adapter.cancelAllTimers();
+    }
+
+    @Override
+    public void onClick(int promotion_type, String promotion_id) {
+        Intent intent = new Intent( getActivity(), StorePromotionActivity.class);
+        intent.putExtra("type",promotion_type+"");
+        intent.putExtra("id",promotion_id);
+        intent.putExtra("storeId",storeId);
+        getActivity().startActivity(intent);
     }
 }

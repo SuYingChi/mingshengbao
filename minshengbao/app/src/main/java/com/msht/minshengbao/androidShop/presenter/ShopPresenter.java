@@ -89,6 +89,7 @@ import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
+import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
@@ -1631,6 +1632,22 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iStorePromotionView.onGetStoreActivitySuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStorePromotionDetail(final IStorePromotiondDetailView iStorePromotiondDetailView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_PROMOTION_DETAIL).addParams("store_id", iStorePromotiondDetailView.getStoreId())
+                .addParams("type", iStorePromotiondDetailView.getPromotionType())
+                .addParams("id", iStorePromotiondDetailView.getPromotionId())
+                .tag(iStorePromotiondDetailView)
+                .build().execute(new DataStringCallback(iStorePromotiondDetailView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStorePromotiondDetailView.onGetStorePromotionDetailSuccess(s);
                 }
             }
         });
