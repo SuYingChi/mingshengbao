@@ -630,11 +630,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          /*      Map<String, String> map = new HashMap<String, String>();
-                map.put("type", "goods");
-                map.put("data", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
-                map.put("price", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);*/
                 doShopItemViewClick("goods", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
             }
         });

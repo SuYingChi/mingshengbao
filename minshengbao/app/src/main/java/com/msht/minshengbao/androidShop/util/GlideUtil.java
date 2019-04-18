@@ -499,7 +499,7 @@ public class GlideUtil {/*
                                 removeOnGlobalLayoutListener(imageView, this);
                                 ViewGroup.LayoutParams params = imageView.getLayoutParams();
                                 imageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-                                float scale = (float) imageView.getWidth() / (float) resource.getIntrinsicWidth();
+                                float scale = (float) imageView.getMeasuredWidth() / (float) resource.getIntrinsicWidth();
                                 int vh = (int) (resource.getIntrinsicHeight() * scale);
                                 params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
                                 imageView.setLayoutParams(params);
@@ -556,6 +556,8 @@ public class GlideUtil {/*
                             @SuppressWarnings("deprecation")
                             @Override
                             public void onGlobalLayout() {
+                                removeOnGlobalLayoutListener(imageView, this);
+                                imageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                                 int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                                 int vh = imageView.getMeasuredHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
                                 int withHeighScale;
@@ -615,8 +617,10 @@ public class GlideUtil {/*
                             @SuppressWarnings("deprecation")
                             @Override
                             public void onGlobalLayout() {
+                                removeOnGlobalLayoutListener(imageView, this);
+                                imageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                                 ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                                int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                                int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                                 params.height = vw + imageView.getPaddingTop() + imageView.getPaddingBottom();
                                 imageView.setLayoutParams(params);
                                 imageView.setImageDrawable(resource);
