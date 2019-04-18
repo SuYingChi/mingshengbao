@@ -229,7 +229,44 @@
                     android:layout_marginTop="@dimen/margin_Modules"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_14" />
+                <LinearLayout
+                    android:id="@+id/pingtuanhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/white"
+                    android:layout_marginTop="@dimen/margin_Modules"
+                    android:layout_marginBottom="@dimen/dp1"
+                    android:visibility="gone"
+                    >
 
+                    <TextView
+                        android:id="@+id/tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16"
+                        android:text="X人在开团" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/dp5"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_16"
+                        android:drawableRight="@drawable/right_grey_angle"
+                        android:text="查看更多" />
+                </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/pingtaunRcl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
                 <LinearLayout
                     android:id="@+id/ll_2"
                     android:layout_width="match_parent"

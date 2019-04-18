@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.androidShop.adapter.PingtuanAdapter;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
 import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
@@ -41,6 +43,7 @@ import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
+import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
@@ -73,13 +76,6 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
-import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.ShareBoardlistener;
 import com.yanzhenjie.permission.Permission;
 
 
@@ -150,6 +146,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView storeall;
     @BindView(R.id.storekan)
     TextView storeKan;
+    @BindView(R.id.pingtaunRcl)
+    RecyclerView pingtuanRcl;
+    @BindView(R.id.pingtuanhead)
+    LinearLayout llpingtuan;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
@@ -182,10 +182,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
     private ArrayList<String> imagelist = new ArrayList<String>();
+    private List<PingTuanBean> pingTuanlist = new ArrayList<PingTuanBean>();
     private String selectedGuigeName = "";
     private String pintuan_promotion;
     private GoodFmVoucherDialog voucherDialog;
-    ;
+    private PingtuanAdapter pingtuanAdapter;
+
 
 
     @Override
@@ -414,6 +416,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
 
         });
+        pingtuanAdapter= new PingtuanAdapter(getContext(),pingTuanlist);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        pingtuanRcl.setLayoutManager(lm);
+        pingtuanRcl.setNestedScrollingEnabled(false);
+        pingtuanRcl.setAdapter(pingtuanAdapter);
     }
 
     private String buildTransaction(final String type) {
@@ -662,13 +671,25 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             storetv.setText(storeinfo.optString("store_name"));
+            JSONArray pintuan_list = goods_info.optJSONArray("pintuan_list");
+            pingTuanlist.clear();
+            if(pintuan_list!=null&&pintuan_list.length()>0){
+                for(int i=0;i<pintuan_list.length();i++){
+                    JSONObject obj = pintuan_list.optJSONObject(i);
+                    PingTuanBean b = JsonUtil.toBean(obj.toString(), PingTuanBean.class);
+                    pingTuanlist.add(b);
+                }
+                llpingtuan.setVisibility(View.VISIBLE);
+            }else {
+                llpingtuan.setVisibility(View.GONE);
+            }
+            pingtuanAdapter.notifyChange();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
     }
-
     public String getTid() {
         return tid;
     }
@@ -863,6 +884,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onDestroy() {
         super.onDestroy();
         actionbarSizeTypedArray.recycle();
+        pingtuanAdapter.cancelAllTimers();
     }
 
     @Override
