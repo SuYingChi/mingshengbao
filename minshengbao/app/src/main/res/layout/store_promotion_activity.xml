@@ -123,7 +123,6 @@
                     android:id="@+id/rcl"
                     style="@style/rcl"
                     android:layout_below="@id/ll"
-                    android:background="@color/white"
                     />
             </RelativeLayout>
         </com.msht.minshengbao.androidShop.customerview.XScrollView>

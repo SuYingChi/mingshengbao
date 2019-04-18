@@ -60,7 +60,7 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PromotionBean data = mDatas.get(position);
         holder.name.setText(data.getPromotion_title());
-       GlideUtil.loadRemoteImg(context,holder.iv,data.getPromotion_banner());
+       GlideUtil.loadByWidthFitHeight(context,holder.iv,data.getPromotion_banner());
        long time = data.getPromotion_left_time()*1000;
         //将前一个缓存清除
         if (holder.countDownTimer != null) {

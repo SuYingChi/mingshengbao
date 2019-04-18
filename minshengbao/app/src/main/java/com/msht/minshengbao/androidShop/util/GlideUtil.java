@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -355,7 +358,6 @@ public class GlideUtil {/*
         return resizeBmp;
     }
 */
-//针对glide4.X 配合recycleview使用 在adpater里根据屏幕宽度,不要直接获取宽高，当不布局里不指定具体宽高时获取宽高是0 ，决定imageview的宽高后，传进来再根据需要裁剪bitmap
     public static void loadRemoteImg(Context context, ImageView imageView, String imgUrl) {
         RequestOptions options = new RequestOptions()
                 .placeholder(R.drawable.icon_stub)
@@ -478,31 +480,43 @@ public class GlideUtil {/*
                 .load(imageUrl)
                 .thumbnail(0.5f)
                 .apply(options)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+                .into(new SimpleTarget<Drawable>() {
 
                     @Override
-                    public boolean onResourceReady(final Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public void onResourceReady(@NonNull final Drawable resource, @Nullable Transition<? super Drawable> transition) {
                         if (imageView == null) {
-                            return false;
+                            return;
                         }
                         if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         }
-                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                        int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
-                        float scale = (float) vw / (float) resource.getIntrinsicWidth();
-                        int vh = (int) (resource.getIntrinsicHeight() * scale);
-                        params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
-                        imageView.setLayoutParams(params);
+                        //在绘制时再获取宽高
+                        ViewTreeObserver vto = imageView.getViewTreeObserver();
+                        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @SuppressWarnings("deprecation")
+                            @Override
+                            public void onGlobalLayout() {
+                                removeOnGlobalLayoutListener(imageView, this);
+                                ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                                imageView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                                float scale = (float) imageView.getWidth() / (float) resource.getIntrinsicWidth();
+                                int vh = (int) (resource.getIntrinsicHeight() * scale);
+                                params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
+                                imageView.setLayoutParams(params);
+                                imageView.setImageDrawable(resource);
+                            }
+                        });
 
-
-                        return false;
                     }
-                }).into(imageView);
+                });
+    }
+
+    public static void removeOnGlobalLayoutListener(View view, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
+        } else {
+            view.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+        }
     }
 
     /**
@@ -537,29 +551,36 @@ public class GlideUtil {/*
                         final float width = bitmap.getWidth();
                         final float heightOrigin = bitmap.getHeight();
                         final Matrix matrix = new Matrix();
-                        int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
-                        int vh = imageView.getMeasuredHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
-                        int withHeighScale;
-                        if(vh!=0) {
-                             withHeighScale = vw / vh;
-                        }else {
-                            withHeighScale = 1;
-                        }
-                        //注意相除转为int时为0 导致 异常崩溃
-                        float height = width / withHeighScale;
-                        if(height==0){
-                            height = heightOrigin;
-                        }
-                        //y+hetght 必须小于bitmap。height
-                        if (height < heightOrigin) {
-                            float h = height / heightOrigin;
-                            matrix.postScale(1, h);  //宽高变化系数
-                        } else {
-                            matrix.postScale(1, 1);
-                            height = heightOrigin;
-                        }
-                        Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, (int) width, (int) height, matrix, true);
-                        imageView.setImageBitmap(resizeBmp);
+                        ViewTreeObserver vto = imageView.getViewTreeObserver();
+                        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @SuppressWarnings("deprecation")
+                            @Override
+                            public void onGlobalLayout() {
+                                int vw = imageView.getMeasuredWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+                                int vh = imageView.getMeasuredHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
+                                int withHeighScale;
+                                if (vh != 0) {
+                                    withHeighScale = vw / vh;
+                                } else {
+                                    withHeighScale = 1;
+                                }
+                                //注意相除转为int时为0 导致 异常崩溃
+                                float height = width / withHeighScale;
+                                if (height == 0) {
+                                    height = heightOrigin;
+                                }
+                                //y+hetght 必须小于bitmap。height
+                                if (height < heightOrigin) {
+                                    float h = height / heightOrigin;
+                                    matrix.postScale(1, h);  //宽高变化系数
+                                } else {
+                                    matrix.postScale(1, 1);
+                                    height = heightOrigin;
+                                }
+                                Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, (int) width, (int) height, matrix, true);
+                                imageView.setImageBitmap(resizeBmp);
+                            }
+                        });
                     }
                 });
 
@@ -580,32 +601,30 @@ public class GlideUtil {/*
                 .load(imageUrl)
                 .thumbnail(0.5f)
                 .apply(options)
-                .listener(new RequestListener<Drawable>() {
+                .into(new SimpleTarget<Drawable>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(final Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public void onResourceReady(final Drawable resource, Transition<? super Drawable> transition) {
                         if (imageView == null) {
-                            return false;
+                            return ;
                         }
-                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_CENTER) {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         }
-                        imageView.post(new Runnable() {
+                        ViewTreeObserver vto = imageView.getViewTreeObserver();
+                        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @SuppressWarnings("deprecation")
                             @Override
-                            public void run() {
+                            public void onGlobalLayout() {
                                 ViewGroup.LayoutParams params = imageView.getLayoutParams();
                                 int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                                 params.height = vw + imageView.getPaddingTop() + imageView.getPaddingBottom();
                                 imageView.setLayoutParams(params);
+                                imageView.setImageDrawable(resource);
                             }
                         });
-                        return false;
                     }
-                }).into(imageView);
+                });
+
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.activity;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.PromotionActivityAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreRecGoodAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -130,6 +132,14 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
         });
         refreshLayout.setOnRefreshListener(this);
         adapter = new PromotionActivityAdapter(this, R.layout.item_store_rec_good, datalist);
+        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(StorePromotionActivity.this, ShopGoodDetailActivity.class);
+                intent.putExtra("goodsid",datalist.get(position).getGoodId());
+                startActivity(intent);
+            }
+        });
         GridLayoutManager recglm = new GridLayoutManager(this, 2);
         recglm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(recglm);

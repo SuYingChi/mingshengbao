@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.view.View;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.event.RefreshFinish;
@@ -19,9 +20,15 @@ public class PromotionActivityAdapter extends HaveHeadRecyclerAdapter<PromotionA
     }
 
     @Override
-    public void convert(RecyclerHolder holder, PromotionActivityGoodBean storeGoodBean, int position) {
+    public void convert(RecyclerHolder holder, PromotionActivityGoodBean storeGoodBean, final int position) {
         holder.setImage(R.id.iv, storeGoodBean.getGoodImage());
         holder.setText(R.id.name, storeGoodBean.getGoodName());
         holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context, storeGoodBean.getGoodPromotionPrice(),R.style.small_money,R.style.small_money));
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
     }
 }
