@@ -125,6 +125,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String avatar = objectInfo.optString("avatar");
         String shopCookie=objectInfo.optString("shopCookie");
         String shop=objectInfo.optString("shop");
+        try {
+            JSONObject shopobj = new JSONObject(shop);
+            ShopSharePreferenceUtil.setShopSpStringValue("username",shopobj.optString("username"));
+            ShopSharePreferenceUtil.setShopSpStringValue("userId",shopobj.optString("userId"));
+            ShopSharePreferenceUtil.setShopSpStringValue("key",shopobj.optString("key"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         SharedPreferencesUtil.putUserId(this,SharedPreferencesUtil.UserId,id);
         SharedPreferencesUtil.putAvatarUrl(this,SharedPreferencesUtil.AvatarUrl,avatar);
         SharedPreferencesUtil.putPassword(this,SharedPreferencesUtil.Password,password);
@@ -133,7 +141,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,mPassword);
         SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
         SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
-        ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
+        String searchhis = ShopSharePreferenceUtil.getShopSpStringValue(ShopSharePreferenceUtil.getInstance().getUserId());
+        ArrayList<String> list;
+        if (TextUtils.isEmpty(searchhis) || searchhis.equals("null")) {
+            list = new ArrayList<String>();
+        } else {
+            list = JsonUtil.stringsToList(searchhis);
+        }
+        MyApplication.getInstance().setList(list);
+        Intent broadcast=new Intent();
+        broadcast.setAction(MY_ACTION);
+        broadcast.putExtra("broadcast", "1");
+        sendBroadcast(broadcast);
+        Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra("index",0);
+        intent.putExtra("pushUrl",pushUrl);
+        startActivity(intent);
+        finish();
+     /*   ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
 
             @Override
             public String getKey() {
@@ -168,7 +193,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     finish();
                 }
             }
-        });
+        });*/
 
     }
     @Override
@@ -328,6 +353,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     String nickname=objectInfo.optString("nickname");
                     String avatar=objectInfo.optString("avatar");
                     String shop=objectInfo.optString("shop");
+                    try {
+                        JSONObject shopobj = new JSONObject(shop);
+                        ShopSharePreferenceUtil.setShopSpStringValue("username",shopobj.optString("username"));
+                        ShopSharePreferenceUtil.setShopSpStringValue("userId",shopobj.optString("userId"));
+                        ShopSharePreferenceUtil.setShopSpStringValue("key",shopobj.optString("key"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     String shopCookie=objectInfo.optString("shopCookie");
                     String isWeChatBind=objectInfo.optString("isWeChatBind");
                     SharedPreferencesUtil.putUserId(this,SharedPreferencesUtil.UserId,userId);
@@ -340,6 +373,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
                     SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
                     SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,isWeChatBind);
+                    String searchhis = ShopSharePreferenceUtil.getShopSpStringValue(ShopSharePreferenceUtil.getInstance().getUserId());
+                    ArrayList<String> list;
+                    if (TextUtils.isEmpty(searchhis) || searchhis.equals("null")) {
+                        list = new ArrayList<String>();
+                    } else {
+                        list = JsonUtil.stringsToList(searchhis);
+                    }
+                    MyApplication.getInstance().setList(list);
                     Intent broadcast=new Intent();
                     broadcast.setAction(MY_ACTION);
                     broadcast.putExtra("broadcast", "1");

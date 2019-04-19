@@ -59,7 +59,9 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PingTuanBean data = mDatas.get(position);
-        GlideUtil.loadRemoteImg(context,holder.iv,data.getAvatar());
+        GlideUtil.loadRemoteCircleImg(context,holder.iv,data.getAvatar());
+        holder.leftnum.setText(data.getNum()+"");
+        holder.tvname.setText(data.getBuyer_name());
         long time = data.getEnd_time_left()*1000;
         //将前一个缓存清除
         if (holder.countDownTimer != null) {
@@ -77,6 +79,9 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
                 public void onTick(long millisUntilFinished) {
                     mDatas.get(position).setEnd_time_left(millisUntilFinished/1000);
                     List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished/1000);
+                    holder.hour.setText(list.get(1));
+                    holder.minute.setText(list.get(2));
+                    holder.second.setText(list.get(3));
                 }
                 @Override
                 public void onFinish() {
@@ -102,8 +107,10 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
 
     @Override
     public int getItemCount() {
-        if (mDatas != null && !mDatas.isEmpty()) {
+        if (mDatas != null && !mDatas.isEmpty()&&mDatas.size()<=2) {
             return mDatas.size();
+        }else if(mDatas != null && !mDatas.isEmpty()&&mDatas.size()>2){
+            return 2;
         }
         return 0;
     }
@@ -124,13 +131,24 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        public TextView cantuan;
+        public TextView hour;
+        public TextView minute;
+        public TextView second;
+        public TextView leftnum;
+        public TextView tvname;
         public CountDownTimer countDownTimer;
         public ImageView iv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-
+            tvname = (TextView)itemView.findViewById(R.id.name);
+            leftnum = (TextView)itemView.findViewById(R.id.leftnum);
+            hour = (TextView)itemView.findViewById(R.id.hour);
+            minute = (TextView)itemView.findViewById(R.id.minute);
+            second = (TextView) itemView.findViewById(R.id.second);
+            cantuan = (TextView) itemView.findViewById(R.id.cantuan);
+            iv = (ImageView) itemView.findViewById(R.id.iv);
         }
     }
     public interface SpaInterface {

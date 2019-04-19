@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -50,6 +51,7 @@ import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
+import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -90,7 +92,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, IGoodPingTuanView {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -150,6 +152,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     RecyclerView pingtuanRcl;
     @BindView(R.id.pingtuanhead)
     LinearLayout llpingtuan;
+    @BindView(R.id.tv1)
+    TextView pingtuanNum;
+    @BindView(R.id.tv2)
+    TextView tvMorePingtuan;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
@@ -187,7 +193,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private String pintuan_promotion;
     private GoodFmVoucherDialog voucherDialog;
     private PingtuanAdapter pingtuanAdapter;
-
 
 
     @Override
@@ -416,10 +421,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
 
         });
-        pingtuanAdapter= new PingtuanAdapter(getContext(),pingTuanlist);
+        pingtuanAdapter = new PingtuanAdapter(getContext(), pingTuanlist);
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         lm.setAutoMeasureEnabled(true);
-        pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         pingtuanRcl.setLayoutManager(lm);
         pingtuanRcl.setNestedScrollingEnabled(false);
         pingtuanRcl.setAdapter(pingtuanAdapter);
@@ -561,7 +566,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
-            tvgoods_jingle.setText(goods_jingle);
+            if(TextUtils.isEmpty(goods_jingle)){
+                tvgoods_jingle.setVisibility(View.GONE);
+            }else {
+                tvgoods_jingle.setVisibility(View.VISIBLE);
+                tvgoods_jingle.setText(goods_jingle);
+            }
             if (TextUtils.equals(pintuan_promotion, "1") || TextUtils.equals(pintuan_promotion, "2")) {
                 goods_price = goods_info.optString("pintuan_goods_price");
             } else {
@@ -659,28 +669,35 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 llvouvher.setVisibility(View.GONE);
             }
             JSONObject storeinfo = datas.optJSONObject("store_info");
-            GlideUtil.loadRemoteImg(getContext(),storeiv,storeinfo.optString("store_avatar"));
+            GlideUtil.loadRemoteImg(getContext(), storeiv, storeinfo.optString("store_avatar"));
             final String storeid = storeinfo.optString("store_id");
             storeKan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
-                    intent.putExtra("id",storeid);
-                    intent.putExtra("tabindex",0);
+                    intent.putExtra("id", storeid);
+                    intent.putExtra("tabindex", 0);
                     startActivity(intent);
                 }
             });
             storetv.setText(storeinfo.optString("store_name"));
             JSONArray pintuan_list = goods_info.optJSONArray("pintuan_list");
             pingTuanlist.clear();
-            if(pintuan_list!=null&&pintuan_list.length()>0){
-                for(int i=0;i<pintuan_list.length();i++){
+            if (pintuan_list != null && pintuan_list.length() > 0) {
+                for (int i = 0; i < pintuan_list.length(); i++) {
                     JSONObject obj = pintuan_list.optJSONObject(i);
                     PingTuanBean b = JsonUtil.toBean(obj.toString(), PingTuanBean.class);
                     pingTuanlist.add(b);
                 }
                 llpingtuan.setVisibility(View.VISIBLE);
-            }else {
+                pingtuanNum.setText(pingTuanlist.size()+"");
+                tvMorePingtuan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ShopPresenter.GetGoodPingtuanInfo(GoodFragment.this);
+                    }
+                });
+            } else {
                 llpingtuan.setVisibility(View.GONE);
             }
             pingtuanAdapter.notifyChange();
@@ -690,6 +707,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
 
     }
+
     public String getTid() {
         return tid;
     }
@@ -945,6 +963,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     @Override
     public String getGoodId() {
         return goodsid;
+    }
+
+    @Override
+    public void onGetGoodPingtuanInfoSuccess(String s) {
+
     }
 
     @Override

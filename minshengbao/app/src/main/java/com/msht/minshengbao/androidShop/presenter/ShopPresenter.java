@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.msht.minshengbao.Utils.UrlUtil;
+import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
@@ -48,6 +49,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
+import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
@@ -1648,6 +1650,20 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iStorePromotiondDetailView.onGetStorePromotionDetailSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void GetGoodPingtuanInfo(final IGoodPingTuanView iGoodPingTuanView) {
+        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("goods_id", iGoodPingTuanView.getGoodId())
+                .tag(iGoodPingTuanView)
+                .build().execute(new DataStringCallback(iGoodPingTuanView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGoodPingTuanView.onGetGoodPingtuanInfoSuccess(s);
                 }
             }
         });
