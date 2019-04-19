@@ -975,8 +975,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onDestroy() {
         super.onDestroy();
         actionbarSizeTypedArray.recycle();
+        if(pingtuanAdapter!=null){
         pingtuanAdapter.cancelAllTimers();
-        countDownTimer.cancel();
+        }
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+        }
     }
 
     @Override
