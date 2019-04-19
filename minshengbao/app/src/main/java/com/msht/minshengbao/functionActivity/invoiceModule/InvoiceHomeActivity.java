@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 
+import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.adapter.uiadapter.InvoiceAllViewAdapter;
+import com.msht.minshengbao.adapter.uiadapter.RedPacketViewAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
@@ -24,101 +30,31 @@ import java.lang.ref.WeakReference;
  * @author hong
  * @date 2018/9/4 
  */
-public class InvoiceHomeActivity extends BaseActivity implements View.OnClickListener {
-    private static final String PAGE_NAME="发票申请";
-    private View   layoutGasInvoice;
-    private CustomDialog customDialog;
-    private final RequestHandler requestHandler=new RequestHandler(this);
-    private static class RequestHandler extends Handler {
-        private WeakReference<InvoiceHomeActivity> mWeakReference;
-        private RequestHandler(InvoiceHomeActivity reference) {
-            mWeakReference = new WeakReference<InvoiceHomeActivity>(reference);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final InvoiceHomeActivity reference =mWeakReference.get();
-            if (reference == null||reference.isFinishing()) {
-                return;
-            }
-            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                reference.customDialog.dismiss();
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
-                        String error = object.optString("error");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            JSONObject jsonObject=object.optJSONObject("data");
-                            reference.onReceiveData(jsonObject);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                   // ToastUtil.ToastText(reference.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
-    private void onReceiveData(JSONObject jsonObject) {
-        int type=jsonObject.optInt("type");
-        if (type==1){
-            layoutGasInvoice.setVisibility(View.VISIBLE);
-        }else {
-           layoutGasInvoice.setVisibility(View.VISIBLE);
-        }
-    }
+public class InvoiceHomeActivity extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_home);
         context=this;
-        mPageName=PAGE_NAME;
-        setCommonHeader(PAGE_NAME);
-        customDialog=new CustomDialog(this, "正在加载");
-        findViewById(R.id.repair_invoice_layout).setOnClickListener(this);
-        layoutGasInvoice=findViewById(R.id.gas_invoice_layout);
-        layoutGasInvoice.setOnClickListener(this);
-        onGetControlTypeData();
+        setCommonHeader("发票申请");
+        String[] fragment=new String[]{"燃气缴费发票","维修清洗发票"};
+        ViewPagerIndicator indicator = (ViewPagerIndicator) findViewById(R.id.indicator);
+        ViewPager viewPager=(ViewPager)findViewById(R.id.id_viewPager_fees);
+        viewPager.setAdapter(new InvoiceAllViewAdapter(getSupportFragmentManager(), getApplicationContext(),fragment));
+        indicator.setViewPager(viewPager,0);
+        initHeader();
     }
-    private void onGetControlTypeData() {
-        customDialog.show();
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(UrlUtil.INVOICE_CONTROL_URL,OkHttpRequestUtil.TYPE_GET,null,requestHandler);
-    }
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.gas_invoice_layout:
-                onStartGasInvoice();
-                break;
-            case R.id.repair_invoice_layout:
-                onStartRepairInvoice();
-                break;
-                default:
-                    break;
-        }
-    }
-    private void onStartGasInvoice() {
-        Intent intent=new Intent(context,InvoiceCustomerNoActivity.class);
-        startActivity(intent);
-    }
-    private void onStartRepairInvoice() {
-        Intent intent=new Intent(context,InvoiceOpenActivity.class);
-        startActivity(intent);
-    }
+    private void initHeader() {
+        TextView tvRightText=(TextView)findViewById(R.id.id_tv_rightText);
+        tvRightText.setText("发票历史");
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context,InvoiceAllHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (customDialog!=null&&customDialog.isShowing()){
-            customDialog.dismiss();
-        }
     }
 }

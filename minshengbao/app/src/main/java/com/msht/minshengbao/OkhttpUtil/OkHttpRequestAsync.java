@@ -204,8 +204,8 @@ public class OkHttpRequestAsync {
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
                     if (response.isSuccessful()) {
-                        // String string="";
                         if (response.body()!=null){
                             String string = response.body().string();
                             onResponseRequestSuccess(reqCallBack,string);
@@ -294,7 +294,10 @@ public class OkHttpRequestAsync {
         mHandler.post(new Runnable(){
             @Override
             public void run() {
-                reqCallBack.onResponseFail(s);
+                if (reqCallBack!=null){
+                    reqCallBack.onResponseFail(s);
+                }
+
             }
         });
     }
@@ -302,11 +305,12 @@ public class OkHttpRequestAsync {
         mHandler.post(new Runnable(){
                             @Override
                             public void run() {
-                                reqCallBack.onResponseSuccess(s);
+                                if (reqCallBack!=null){
+                                    reqCallBack.onResponseSuccess(s);
+                                }
                             }
                         });
     }
-
     public void onRequestCancel(Object tag){
         Dispatcher dispatcher = mOkHttpClient.dispatcher();
         for (Call call : dispatcher.queuedCalls()) {

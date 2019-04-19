@@ -132,7 +132,6 @@ public class AppActivityUtil {
             }
         }else {
             if (url.startsWith(ConstantUtil.HTTP)) {
-                url = LinkUrlUtil.containMark(context, url);
                 onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
             }
         }
@@ -430,7 +429,7 @@ public class AppActivityUtil {
                     break;
             }
         }else if (url.startsWith(ConstantUtil.HTTP)){
-            url = LinkUrlUtil.containMark(context, url);
+           // url = LinkUrlUtil.containMark(context, url);
             onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
         }
     }
@@ -518,14 +517,14 @@ public class AppActivityUtil {
                         break;
                     default:
                         if (url.startsWith(ConstantUtil.HTTP)) {
-                            url = LinkUrlUtil.containMark(context, url);
+                           // url = LinkUrlUtil.containMark(context, url);
                             onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
                         }
                         break;
                 }
             }else {
                 if (url.startsWith(ConstantUtil.HTTP)) {
-                    url = LinkUrlUtil.containMark(context, url);
+                   // url = LinkUrlUtil.containMark(context, url);
                     onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
                 }
             }
@@ -798,7 +797,7 @@ public class AppActivityUtil {
                 }
         }else {
             if (!rightUrl.equals(VariableUtil.NULL_VALUE)) {
-                rightUrl = LinkUrlUtil.containMark(context, rightUrl);
+               // rightUrl = LinkUrlUtil.containMark(context, rightUrl);
                 onStartHtmlActivity(context, rightUrl, "民生宝", "", "", code, "");
             }
         }

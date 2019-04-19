@@ -53,7 +53,7 @@ public class InvoiceHistoryAdapter extends RecyclerView.Adapter<InvoiceHistoryAd
         holder.tvStatus.setText(mList.get(position).get("statusDesc"));
         holder.tvTime.setText(mList.get(position).get("time"));
         holder.tvAmount.setText(mList.get(position).get("amount"));
-        holder.tvTitle.setText(mList.get(position).get("invoiceTypeName"));
+        holder.tvTitle.setText(mList.get(position).get("title"));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,9 +62,7 @@ public class InvoiceHistoryAdapter extends RecyclerView.Adapter<InvoiceHistoryAd
                 }
             }
         });
-
     }
-
     @Override
     public int getItemCount() {
         if (mList!=null){

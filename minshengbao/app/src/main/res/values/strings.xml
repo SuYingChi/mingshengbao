@@ -12,14 +12,22 @@
     <string name="special_topic_activity">专题活动</string>
     <string name="hot_recommend">热门推荐</string>
     <!-- 我的模块  -->
+    <string name="bind_weiChat">绑定微信</string>
+    <string name="bind_phone">绑定手机号</string>
+    <string name="bind_phone_tip">为了您的个人数据安全，请绑定手机号</string>
+    <string name="capture_code">获取验证码</string>
     <string name="my_nick_name">昵称</string>
     <string name="my_sex">性别</string>
     <string name="my_phonenumber">手机</string>
     <string name="my_phone">手机号</string>
     <string name="my_login">登录</string>
     <string name="my_register">注册</string>
+    <string name="find_password">找回密码</string>
     <string name="my_dialog_title">民生宝</string>
+    <string name="other_login">其他登录方式</string>
+    <string name="password_text">密码</string>
     <string name="please_input_password">请输入至少6位数的密码</string>
+    <string name="portrait_text">头像</string>
     <string name="please_input_register_phone">请填写注册时的手机号</string>
     <string name="reset_password">重置密码</string>
     <string name="gas_payfee">燃气缴费</string>

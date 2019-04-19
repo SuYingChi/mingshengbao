@@ -75,6 +75,7 @@
     <string name="certificate_type">证件类型</string>
     <string name="please_input_customerNo">请输入或选择燃气用户号</string>
     <!--发票 -->
+    <string name="all_select">全选</string>
     <string name="connection_phone_text">联系电话:</string>
     <string name="connection_address_text">联系地址:</string>
     <string name="recipient_text">收   件   人:</string>
@@ -124,6 +125,7 @@
     <!--符号 -->
     <string name="subtract_symbol">-</string>
     <string name="add_symbol">+</string>
+    <string name="fund_symbol">¥</string>
     <!--单位 -->
     <string name="RMB_YUAN">元</string>
 

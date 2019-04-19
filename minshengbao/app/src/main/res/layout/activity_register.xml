@@ -117,10 +117,12 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/margin_width35"
-                    android:text="获取验证码"
+                    android:text="@string/capture_code"
                     android:id="@+id/id_btn_getcode"
                     android:layout_marginRight="@dimen/margin_width5"
+                    android:layout_marginEnd="@dimen/margin_width5"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:background="@drawable/shape_white_border_rectangle"
                     android:layout_centerVertical="true"
                     />

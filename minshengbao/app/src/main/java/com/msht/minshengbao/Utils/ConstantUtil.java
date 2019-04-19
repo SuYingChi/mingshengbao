@@ -45,6 +45,7 @@ public class ConstantUtil {
     public static final int VALUE9=9;
     public static final int VALUE10=10;
     public static final int VALUE11=11;
+    public static final int VALUE16=16;
     public static final int SPLASH_DISPLAY_LENGTH=3000;
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
@@ -187,6 +188,8 @@ public class ConstantUtil {
      */
     /**朋友圈*/
     public static final String  WEI_XIN_PLATFORM="WEIXIN_FAVORITE";
+    public static final String  WC_USER_EXIST="wcUserExist";
+    public static final String  BIND_WEI_CHAT_SUCCESS="bindSuccess";
 
 
     /**参数名*/

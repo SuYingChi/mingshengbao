@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -22,6 +23,13 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
+import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.FileUtil;
@@ -32,6 +40,12 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.SelectPicPopupWindow;
+import com.msht.minshengbao.functionActivity.MainActivity;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
@@ -58,6 +72,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     private RelativeLayout settingNickname;
     private RelativeLayout layoutSettingSex;
     private TextView tvNickname, tvSex, tvPhone;
+    private TextView tvBindStatus;
     private SimpleDraweeView simpleDraweeView;
     private String avatarUrl;
     private String userId,password;
@@ -68,7 +83,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
      * urlPath 图片本地路径
      */
     private String urlPath;
-    private static  final int MY_PERMISSIONS_REQUEST=2;
+
     /**
      * // 相册选图标记
      */
@@ -148,9 +163,18 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         tvNickname =(TextView)findViewById(R.id.id_tv_nickname);
         tvSex =(TextView)findViewById(R.id.id_tv_sex);
         tvPhone =(TextView)findViewById(R.id.id_phone);
+        tvBindStatus=(TextView)findViewById(R.id.id_weiChat_status);
+        String isWeChatBind=SharedPreferencesUtil.getStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,"0");
+        if (isWeChatBind.equals(ConstantUtil.VALUE_ONE)){
+            tvBindStatus.setText("已绑定");
+        }else {
+            tvBindStatus.setText("未绑定");
+        }
+
     }
     private void initEvent() {
         findViewById(R.id.id_layout_setpwd).setOnClickListener(this);
+        findViewById(R.id.id_layout_weiChat).setOnClickListener(this);
         simpleDraweeView.setOnClickListener(this);
         tvNickname.setOnClickListener(this);
         tvSex.setOnClickListener(this);
@@ -186,9 +210,19 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
             case R.id.id_layout_setpwd:
                 setPassword();
                 break;
+            case R.id.id_layout_weiChat:
+               onBindWeiChat();
+                break;
             default:
                 break;
         }
+    }
+
+    private void onBindWeiChat() {
+        UMShareConfig config = new UMShareConfig();
+        config.isNeedAuthOnGetUserInfo(true);
+        UMShareAPI.get(this).setShareConfig(config);
+        UMShareAPI.get(this).getPlatformInfo(MySettingActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
     }
 
     private void onSettingPermission() {
@@ -207,7 +241,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                         .onDenied(new Action<List<String>>() {
                             @Override
                             public void onAction(List<String> data) {
-                                ToastUtil.ToastText(context,"授权失败");
+                                CustomToast.showErrorDialog("授权失败");
                             }
                         }).start();
             }else {
@@ -277,7 +311,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
             }
             startActivityForResult(intentC, REQUEST_CODE_TAKE);
         } else {
-            ToastUtil.ToastText(context,"没有SD卡");
+            CustomToast.showWarningDialog("没有SD卡");
         }
     }
     @Override
@@ -299,7 +333,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                 if (temp.exists()) {
                     startCrop(Uri.fromFile(temp));
                 }else {
-                    ToastUtil.ToastText(context,"文件不存在");
+                    CustomToast.showWarningDialog("文件不存在");
                 }
                 break;
             // 取得裁剪后的图片
@@ -336,7 +370,6 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void getImagePicture() {
-      //  bitmap =BitmapUtil.decodeSampledBitmapFromFile(urlPath, 500, 500);
         if (!TextUtils.isEmpty(urlPath)){
             customDialog.show();
             requestService();
@@ -415,9 +448,8 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                             SharedPreferencesUtil.putAvatarUrl(activity.context,SharedPreferencesUtil.AvatarUrl,avatarUrl);
                             activity.onSetPortraitImage(avatarUrl);
                             activity.onResetAvatar();//给Mynewfragment返回数据
-
                         }else {
-                            activity.onFailure(error);
+                            CustomToast.showWarningLong(error);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -434,29 +466,188 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
             super.handleMessage(msg);
         }
     }
-    private void onFailure(String error) {
-        new PromptDialog.Builder(this)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(error)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-
-                    }
-                }).show();
-    }
     private void onResetAvatar() {
         setResult(4);
     }
+    UMAuthListener umAuthListener = new UMAuthListener() {
+        /**
+         * @desc 授权开始的回调
+         * @param platform 平台名称
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {}
+        /**
+         * @desc 授权成功的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param data 用户资料返回
+         */
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            onGetWeiChatData(data);
+        }
+        /**
+         * @desc 授权失败的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            CustomToast.showSuccessLong("失败：" + t.getMessage());
+        }
+        /**
+         * @desc 授权取消的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            CustomToast.showSuccessLong("取消了");
+        }
+    };
 
+    private void onGetWeiChatData(final Map<String, String> weiChatData) {
+        String unionId=weiChatData.get("unionid");
+        String requestUrl=UrlUtil.BING_WEI_MY_PAGE_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("unionid",unionId);
+        textParams.put("userId",userId);
+        customDialog.show();
+        if (customDialog!=null){
+            customDialog.setDialogContent("正在加载...");
+            customDialog.show();
+        }
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onAnalysisData(weiChatData,data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                CustomToast.showErrorLong(data.toString());
+            }
+        });
+    }
+    private void onAnalysisData(Map<String, String> weiChatData, String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String result=object.optString("result");
+            String error = object.optString("error");
+            if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
+                JSONObject objectInfo = object.optJSONObject("data");
+                String code=objectInfo.optString("code");
+                if (!TextUtils.isEmpty(code)){
+                    switch (code){
+                        case ConstantUtil.WC_USER_EXIST:
+                            tvBindStatus.setText("已绑定");
+                            String unionId=weiChatData.get("unionid");
+                            onShowResultDialog(unionId);
+                            break;
+                        case ConstantUtil.BIND_WEI_CHAT_SUCCESS:
+                            CustomToast.showSuccessDialog("绑定成功");
+                            tvBindStatus.setText("已绑定");
+                            break;
+                            default:
+                                CustomToast.showErrorDialog("绑定异常");
+                                break;
+                    }
+                }else {
+                    CustomToast.showErrorDialog("绑定异常");
+                }
+            }else {
+                CustomToast.showErrorLong(error);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onShowResultDialog(final String unionId) {
+        String message="该微信已经绑定民生宝账户，若继/n续绑定的话，会与原账户解绑";
+        new PromptDialog.Builder(context)
+                .setTitle("民生宝")
+                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
+                .setMessage(message)
+                .setButton1("取消", new PromptDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setButton2("确定", new PromptDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog, int which) {
+                        onChangeBindWeiChat( unionId);
+                    }
+                })
+                .show();
+    }
+
+    private void onChangeBindWeiChat(String unionId) {
+        String requestUrl=UrlUtil.CHANGE_BIND_WEI_CHAT_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("unionid",unionId);
+        textParams.put("userId",userId);
+        customDialog.show();
+        if (customDialog!=null){
+            customDialog.setDialogContent("正在加载...");
+            customDialog.show();
+        }
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onChangeBindData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                CustomToast.showErrorLong(data.toString());
+            }
+        });
+    }
+    private void onChangeBindData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String result=object.optString("result");
+            String error = object.optString("error");
+            if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
+                JSONObject objectInfo = object.optJSONObject("data");
+                int isWeChatBind=objectInfo.optInt("isWeChatBind");
+                if (isWeChatBind==1){
+                    CustomToast.showSuccessDialog("绑定成功");
+                    tvBindStatus.setText("已绑定");
+                    SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,String.valueOf(isWeChatBind));
+                }else {
+                    tvBindStatus.setText("未绑定");
+                    CustomToast.showSuccessDialog("绑定失败");
+                }
+            }else {
+                CustomToast.showErrorLong(error);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
+        UMShareAPI.get(this).release();
+
     }
 }

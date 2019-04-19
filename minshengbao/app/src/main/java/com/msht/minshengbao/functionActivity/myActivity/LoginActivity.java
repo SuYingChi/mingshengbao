@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,13 +19,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.MyApplication;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.AppPackageUtil;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
 import com.msht.minshengbao.androidShop.event.LoginShopEvent;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.LoginShopBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.ILoginShopView;
+import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -34,6 +41,10 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -43,8 +54,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+/**
+ * Demo class
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
+ * @author hong
+ * @date 2019/4/11  
+ */
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btnRegister, btnFindPassword, btnLogin;
     private EditText etUserName, etPassword;
@@ -55,7 +72,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String pushUrl;
     private CustomDialog customDialog;
     private Context context;
-    private static final String mPageName="登录页面";
     public static final String MY_ACTION = "ui";
     private final LogonHandler logonHandler=new LogonHandler(this);
     private static class LogonHandler extends Handler{
@@ -140,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     MyApplication.getInstance().setList(list);
                     EventBus.getDefault().postSticky(new LoginShopEvent(bean));
-                   Intent broadcast=new Intent();
+                    Intent broadcast=new Intent();
                     broadcast.setAction(MY_ACTION);
                     broadcast.putExtra("broadcast", "1");
                     sendBroadcast(broadcast);
@@ -158,12 +174,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_view);
-        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
+        /*if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
-        StatusBarCompat.setStatusBar(this);
+        StatusBarCompat.setStatusBar(this);*/
         context=this;
+        mPageName="登录页面";
         PushAgent.getInstance(context).onAppStart();
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
@@ -180,7 +197,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etUserName =(EditText)findViewById(R.id.id_et_usename);
         etPassword =(EditText)findViewById(R.id.id_et_password);
         tvResult =(TextView)findViewById(R.id.id_result);
-        backImage =(ImageView)findViewById(R.id.id_gobackimg);
+        backImage =(ImageView)findViewById(R.id.id_back);
+        findViewById(R.id.id_weiChat_login).setOnClickListener(this);
         btnLogin.setEnabled(false);
     }
     private void initEvent() {
@@ -216,9 +234,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void afterTextChanged(Editable s) {}
         });
         btnLogin.setOnClickListener(this);
-
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -233,14 +249,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.id_button_login:
                 loginSystem();
                 break;
-            case R.id.id_gobackimg:
+            case R.id.id_back:
                 finish();
+                break;
+            case R.id.id_weiChat_login:
+                onWeiChatLogin();
                 break;
             default:
                 break;
         }
     }
-
+    private void onWeiChatLogin() {
+        UMShareConfig config = new UMShareConfig();
+        config.isNeedAuthOnGetUserInfo(true);
+        UMShareAPI.get(this).setShareConfig(config);
+        UMShareAPI.get(this).getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+    }
     private void loginSystem() {
         username = etUserName.getText().toString().trim();
         mPassword = etPassword.getText().toString().trim();
@@ -249,28 +273,158 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             requestService();
         }
     }
-
     private void requestService() {
         String validateURL= UrlUtil.Login_Url;
+        String versionCode=AppPackageUtil.getPackageVersionName(getApplicationContext());
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("username",username);
         textParams.put("password", mPassword);
+        textParams.put("client","android");
+        textParams.put("version",versionCode);
         SendRequestUtil.postDataFromService(validateURL,textParams,logonHandler);
     }
 
+    private void onGetWeiChatData(final  Map<String, String> weiChatData) {
+        String unionId=weiChatData.get("unionid");
+        String versionCode=AppPackageUtil.getPackageVersionName(getApplicationContext());
+        String requestUrl=UrlUtil.VERIFICATION_WEI_CHAT_LOGIN;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("unionid",unionId);
+        textParams.put("client","android");
+        textParams.put("version", versionCode);
+        customDialog.show();
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_POST_FORM, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onAnalysisData(weiChatData,data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                CustomToast.showErrorLong(data.toString());
+            }
+        });
+    }
+    private void onAnalysisData(Map<String, String> data, String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String result=object.optString("result");
+            String error = object.optString("error");
+            JSONObject objectInfo = object.optJSONObject("data");
+            if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
+                String isExist=objectInfo.optString("isExist");
+                if (isExist.equals(ConstantUtil.VALUE_ONE)){
+
+                    String userId=objectInfo.optString("id");
+                    String password=objectInfo.optString("password");
+                    String phone=objectInfo.optString("phone");
+                    String nickname=objectInfo.optString("nickname");
+                    String avatar=objectInfo.optString("avatar");
+                    String shop=objectInfo.optString("shop");
+                    String shopCookie=objectInfo.optString("shopCookie");
+                    String isWeChatBind=objectInfo.optString("isWeChatBind");
+                    SharedPreferencesUtil.putUserId(this,SharedPreferencesUtil.UserId,userId);
+                    SharedPreferencesUtil.putAvatarUrl(this,SharedPreferencesUtil.AvatarUrl,avatar);
+                    SharedPreferencesUtil.putPassword(this,SharedPreferencesUtil.Password,password);
+                    SharedPreferencesUtil.putNickName(this,SharedPreferencesUtil.NickName,nickname);
+                    SharedPreferencesUtil.putUserName(this,SharedPreferencesUtil.UserName,phone);
+                    SharedPreferencesUtil.putpassw(this,SharedPreferencesUtil.passw,password);
+                    SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
+                    SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
+                    SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
+                    SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,isWeChatBind);
+                    Intent broadcast=new Intent();
+                    broadcast.setAction(MY_ACTION);
+                    broadcast.putExtra("broadcast", "1");
+                    sendBroadcast(broadcast);
+                    Intent intent=new Intent(context,MainActivity.class);
+                    intent.putExtra("index",0);
+                    intent.putExtra("pushUrl",pushUrl);
+                    startActivity(intent);
+                    MyApplication.removeAllActivity();
+                    finish();
+                }else{
+                    onStartBindPhone(data);
+                }
+            }else {
+               CustomToast.showErrorLong(error);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void onStartBindPhone(Map<String, String> data) {
+        String unionId=data.get("unionid");
+        String name= data.get("name");
+        String gender=data.get("gender");
+        String iconUrl=data.get("iconurl");
+        Intent intent=new Intent(context,BindWeiChatActivity.class);
+        intent.putExtra("unionId",unionId);
+        intent.putExtra("name",name);
+        intent.putExtra("gender",gender);
+        intent.putExtra("iconUrl",iconUrl);
+        intent.putExtra("pushUrl",pushUrl);
+        startActivity(intent);
+        MyApplication.addActivity(this);
+    }
     private boolean matchLoginMsg(String name, String word) {
         if(TextUtils.isEmpty(name))
         {
-            ToastUtil.ToastText(context,"账号不能为空");
+            CustomToast.showWarningLong("手机号不能为空");
             return false;
         }
-        if(TextUtils.isEmpty(word))
-        {
-            ToastUtil.ToastText(context,"密码不能为空");
+        if(TextUtils.isEmpty(word)) {
+            CustomToast.showWarningLong("密码不能为空");
             return false;
         }
         return true;
     }
+    UMAuthListener umAuthListener = new UMAuthListener() {
+        /**
+         * @desc 授权开始的回调
+         * @param platform 平台名称
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @desc 授权成功的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param data 用户资料返回
+         */
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            onGetWeiChatData(data);
+        }
+        /**
+         * @desc 授权失败的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            CustomToast.showSuccessLong("失败：" + t.getMessage());
+        }
+        /**
+         * @desc 授权取消的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            CustomToast.showSuccessLong("取消了");
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -291,5 +445,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+        UMShareAPI.get(this).release();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

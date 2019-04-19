@@ -208,6 +208,10 @@ public class UrlUtil {
      *myView
      */
     public static final String ADD_ADDRESS_URL = BuildConfig.URL_HEADS +"/Gas/usedHouse/add";
+    public static final String VERIFICATION_WEI_CHAT_LOGIN=BuildConfig.URL_HEADS+"/api/weChat/weChatUserLoginAPP";
+    public static final String BIND_WEI_CHAT_PHONE_URL=BuildConfig.URL_HEADS+"/api/weChat/weChatBindApp";
+    public static final String BING_WEI_MY_PAGE_URL=BuildConfig.URL_HEADS+"/api/weChat/appBindWeChat";
+    public static final String CHANGE_BIND_WEI_CHAT_URL=BuildConfig.URL_HEADS+"/api/weChat/changeWeChat";
     public static final String HouseSearch_Url= BuildConfig.URL_HEADS +"/Gas/usedHouse/search";
     public static final String Address_delectUrl= BuildConfig.URL_HEADS +"/Gas/usedHouse/delete";
     public static final String Evalute_workUrl= BuildConfig.URL_HEADS +"/Gas/workOrder/eval";
@@ -247,6 +251,7 @@ public class UrlUtil {
     public static final String INVOICE_DATA_TYPE=BuildConfig.URL_HEADS+"/Gas/invoice/gas_invoice_detail";
     public static final String GAS_INVOICE_QUESTION_URL =BuildConfig.URL_HEADS+"/gas_h5/Interrogative_answer.html";
     public static final String SELF_DELIVERY_ADDRESS=BuildConfig.URL_HEADS+"/Gas/invoice/self_delivery_address";
+   public static  final String INVOICE_ALL_HISTORY=BuildConfig.URL_HEADS+"/Gas/invoice/all_invoice_history";
     /**
      * 维修服务
     */

@@ -36,6 +36,7 @@ public class SharedPreferencesUtil {
     public static final String LPG_MOBILE="MOBILE";
     public static final String LPG_SEX="lpgSex";
     public static final String SAVE_DATE="date";
+    public static final String IS_WEI_CHAT_BIND="isWeChatBind";
 
     public static Boolean getBoolean(Context context, String strKey,
                                        Boolean strDefault) {//strDefault  boolean: Value to return if this preference does not exist.

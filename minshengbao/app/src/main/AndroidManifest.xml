@@ -426,8 +426,11 @@
         <activity android:name=".functionActivity.htmlWeb.HouseHoldCleanWeb" />
         <activity android:name=".functionActivity.gasService.GasPayDetailActivity" />
         <activity android:name=".functionActivity.gasService.GetGasCustomerNoActivity" />
-        <activity android:name=".functionActivity.waterApp.RedPacketCardActivity"/>
+        <activity android:name=".functionActivity.waterApp.RedPacketCardActivity" />
         <activity android:name=".androidShop.activity.NewShopCarActivity" />
+        <activity android:name=".functionActivity.invoiceModule.InvoiceAllHistoryActivity" />
+        <activity android:name=".functionActivity.myActivity.BindWeiChatActivity" />
+        <activity android:name=".functionActivity.myActivity.RebindWeiChatActivity"></activity>
     </application>
 
 </manifest>

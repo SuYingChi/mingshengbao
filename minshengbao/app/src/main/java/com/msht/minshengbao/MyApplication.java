@@ -1,5 +1,6 @@
 package com.msht.minshengbao;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
@@ -58,7 +59,7 @@ import okhttp3.OkHttpClient;
  */
 public class MyApplication extends Application {
     private static MyApplication instance;
-
+    private static List<Activity> mActivityList=new ArrayList<Activity>();
     static {
 
         SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
@@ -101,6 +102,21 @@ public class MyApplication extends Application {
         return instance.getApplicationContext();
 
     }
+     public static void addActivity(Activity activity){
+        if (!mActivityList.contains(activity)){
+            mActivityList.add(activity);
+        }
+    }
+    public static void removeAllActivity(){
+        for (Activity activity:mActivityList){
+            if (activity!=null){
+                activity.finish();
+            }
+        }
+        if (mActivityList!=null){
+            mActivityList.clear();
+        }
+    }
    /* @Override
     public void onConfigurationChanged(Configuration newConfig) {
         if (newConfig.fontScale != 1)//非默认值
@@ -136,7 +152,6 @@ public class MyApplication extends Application {
         Fresco.initialize(this);
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "7dc4d7937bab57666f9188e5667e5930");
         UMShareAPI.get(this);
-
         CrashReport.initCrashReport(getApplicationContext(), "118eae5408", false);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.icon_stub)// 设置图片下载期间显示的图片
@@ -161,7 +176,6 @@ public class MyApplication extends Application {
         OkHttpUtils.initClient(okHttpClient);
         initUPush();
     }
-
     public static MyApplication getInstance() {
         return instance;
     }
