@@ -29,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -592,13 +591,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 tvgoods_jingle.setText(goods_jingle);
             }
             if (TextUtils.equals(pintuan_promotion, "1") || TextUtils.equals(pintuan_promotion, "2")) {
+                goodDetailActivityListener.isPingTuan(true);
                 goods_price = goods_info.optString("pintuan_goods_price");
                 ll_PingTuan.setVisibility(View.VISIBLE);
                 tvprice.setVisibility(View.GONE);
                 tvgoods_marketprice.setVisibility(View.GONE);
-                tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_price"), R.style.big_money, R.style.big_money));
+                tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_price"), R.style.big_money, R.style.big_money));
                 tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
+                tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
                 tvPingTuanNum.setText(goods_info.optString("pintuan_sole_num")+"件");
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
@@ -616,6 +616,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
                     @Override
                     public void onFinish() {
+                        goodDetailActivityListener.isPingTuan(false);
                         ll_PingTuan.setVisibility(View.GONE);
                         tvprice.setVisibility(View.VISIBLE);
                         tvgoods_marketprice.setVisibility(View.VISIBLE);
@@ -643,6 +644,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     }
                 }.start();
             } else {
+                goodDetailActivityListener.isPingTuan(false);
                 ll_PingTuan.setVisibility(View.GONE);
                 tvprice.setVisibility(View.VISIBLE);
                 tvgoods_marketprice.setVisibility(View.VISIBLE);

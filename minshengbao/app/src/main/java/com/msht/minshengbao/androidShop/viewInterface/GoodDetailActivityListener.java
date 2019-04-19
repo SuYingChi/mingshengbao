@@ -23,4 +23,7 @@ public interface GoodDetailActivityListener {
     void goEveluateFragment();
 
     void showBottomDialog();
+
+    void isPingTuan(boolean isPingTuan);
+
 }

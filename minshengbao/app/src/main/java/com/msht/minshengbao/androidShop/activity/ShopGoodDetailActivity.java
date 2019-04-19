@@ -63,6 +63,10 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     RelativeLayout pay;
     @BindView(R.id.car_num)
     TextView tvCarNum;
+    @BindView(R.id.ll_buy)
+    LinearLayout llbuy;
+    @BindView(R.id.pingtuanbuy)
+    TextView tvPingTuanBuy;
     private List<ShopBaseLazyFragment> list = new ArrayList<ShopBaseLazyFragment>();
     private final String[] titles = {"商品", "详情", "评价"};
     private GoodFragment f0;
@@ -393,6 +397,17 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     @Override
     public void showBottomDialog() {
         showAddCarDialog();
+    }
+
+    @Override
+    public void isPingTuan(boolean isPingTuan) {
+        if(isPingTuan){
+            llbuy.setVisibility(View.INVISIBLE);
+            tvPingTuanBuy.setVisibility(View.VISIBLE);
+        }else {
+            llbuy.setVisibility(View.VISIBLE);
+            tvPingTuanBuy.setVisibility(View.INVISIBLE);
+        }
     }
 
 
