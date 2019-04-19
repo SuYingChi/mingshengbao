@@ -124,6 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String sex  =objectInfo.optString("sex");
         String avatar = objectInfo.optString("avatar");
         String shopCookie=objectInfo.optString("shopCookie");
+        String shop=objectInfo.optString("shop");
         SharedPreferencesUtil.putUserId(this,SharedPreferencesUtil.UserId,id);
         SharedPreferencesUtil.putAvatarUrl(this,SharedPreferencesUtil.AvatarUrl,avatar);
         SharedPreferencesUtil.putPassword(this,SharedPreferencesUtil.Password,password);
@@ -275,12 +276,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
     private void requestService() {
         String validateURL= UrlUtil.Login_Url;
-        String versionCode=AppPackageUtil.getPackageVersionName(getApplicationContext());
+        String versionName=AppPackageUtil.getPackageVersionName(getApplicationContext());
+        versionName =versionName.replace("v","");
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("username",username);
         textParams.put("password", mPassword);
         textParams.put("client","android");
-        textParams.put("version",versionCode);
+        textParams.put("version",versionName);
         SendRequestUtil.postDataFromService(validateURL,textParams,logonHandler);
     }
 

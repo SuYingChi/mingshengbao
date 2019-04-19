@@ -118,6 +118,7 @@ public class BindWeiChatActivity extends BaseActivity {
         String phoneNo=etPhone.getText().toString().trim();
         String code=etVerifyCode.getText().toString().trim();
         String versionName=AppPackageUtil.getPackageVersionName(getApplicationContext());
+        versionName =versionName.replace("v","");
         String requestUrl=UrlUtil.BIND_WEI_CHAT_PHONE_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("phone", phoneNo);
