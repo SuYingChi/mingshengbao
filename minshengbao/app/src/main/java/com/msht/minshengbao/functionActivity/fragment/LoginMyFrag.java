@@ -156,8 +156,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey()) || "未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
             LogUtils.e(Log.getStackTraceString(new Throwable()));
-            Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
-            startActivity(goLogin);
         } else {
             PopUtil.toastInCenter(s);
         }

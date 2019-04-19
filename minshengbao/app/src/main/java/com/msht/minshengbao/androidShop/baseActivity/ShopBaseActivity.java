@@ -257,8 +257,6 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
 
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
-            Intent goLogin = new Intent(this, LoginActivity.class);
-            startActivity(goLogin);
         } else if(!TextUtils.isEmpty(s)){
           PopUtil.toastInCenter(s);
         }
