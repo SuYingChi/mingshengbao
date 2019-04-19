@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * EXIT_CODE 退出登录返回
      */
     private static final int EXIT_CODE = 0x005;
-    private NetBroadcastReceiver receiver;
+ //   private NetBroadcastReceiver receiver;
     private final RequestHandler requestHandler = new RequestHandler(this);
     private final PushHandler pushHandler = new PushHandler(this);
     private final VersionHandler versionHandler = new VersionHandler(this);
@@ -900,7 +900,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (requestCode == MY_CAMERA_REQUEST) {
             MPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
+    }/*
     public void initNetBroadcast() {
         if (receiver==null){
             IntentFilter filter = new IntentFilter();
@@ -910,24 +910,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 registerReceiver(receiver, filter);
             }
         }
-    }
+    }*/
 
     @Override
     protected void onStart() {
         super.onStart();
-        initNetBroadcast();
         SharedPreferencesUtil.putAppAliveState(this, SharedPreferencesUtil.IS_App_ALIVE, true);
     }
 
-    @Override
-    public void onNetWorkEventBus(NetWorkEvent netMobile) {
-        super.onNetWorkEventBus(netMobile);
-        if (netMobile.getMessage()) {
-            networkLayout.setVisibility(View.GONE);
-        } else {
-            networkLayout.setVisibility(View.VISIBLE);
-        }
-    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -994,9 +985,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
         }
-        if (receiver != null) {
+        /*if (receiver != null) {
             unregisterReceiver(receiver);
-        }
+        }*/
         if (context!=null){
             SharedPreferencesUtil.putAppAliveState(context, SharedPreferencesUtil.IS_App_ALIVE, false);
         }
@@ -1087,4 +1078,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onNetWorkChange(boolean isAvailable) {
+        if(isAvailable) {
+            networkLayout.setVisibility(View.GONE);
+        }else {
+            networkLayout.setVisibility(View.VISIBLE);
+        }
+    }
 }

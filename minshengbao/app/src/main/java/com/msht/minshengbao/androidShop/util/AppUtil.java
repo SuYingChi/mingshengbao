@@ -87,24 +87,9 @@ public class AppUtil {
         return mWifiInfo.isConnected();
     }
 
-    public static void logout() {
-        ShopSharePreferenceUtil.getInstance().setKey("");
-        ShopSharePreferenceUtil.setShopSpStringValue("employeeName", "");
-        ShopSharePreferenceUtil.setShopSpStringValue("siteName", "");
-    }
 
 
-    public static void goLogin(Context mContext) {
-        Intent go = new Intent(mContext, LoginActivity.class);
-        mContext.startActivity(go);
-    }
 
-    public static void hideInput(Context context, EditText et) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(et.getWindowToken(), 0);
-
-    }
 
     /**
      * 2 * 获取版本号 3 * @return 当前应用的版本号 4

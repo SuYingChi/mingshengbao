@@ -69,6 +69,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
+import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
@@ -85,6 +86,11 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
+import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
@@ -1267,6 +1273,7 @@ public class ShopPresenter {
 
     public static void getShareUrl(final IGetShareUrlView iGetShareUrlView, final String type) {
         OkHttpUtils.get().url(ShopConstants.GET_SHARE_URL)
+                .addParams("key",iGetShareUrlView.getKey())
                 .addParams("goods_id", iGetShareUrlView.getGoodId()).tag(iGetShareUrlView)
                 .addParams("type", type)
                 .build().execute(new DataStringCallback(iGetShareUrlView) {
@@ -1556,6 +1563,91 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iSiteListView.onGetSiteListSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getRepairOrderNum(IRepairOrderNumView iRepairOrderNumView,String userId, String password,DataStringCallback dataStringCallback) {
+        OkHttpUtils.post().url(ShopConstants.MY_REPAIR_NUM).addParams("userId", userId)
+                .addParams("password", password)
+                .tag(iRepairOrderNumView)
+                .build().execute(dataStringCallback);
+    }
+
+    public static void getStoreInfo(final IStoreView iStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_INFO).addParams("store_id", iStoreView.getStoreId())
+                .addParams("key", iStoreView.getKey())
+                .tag(iStoreView)
+                .build().execute(new DataStringCallback(iStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreView.onGetStoreInfoSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreGood(final IStoreGoodView iStoreGoodView) {
+        OkHttpUtils.get().url(ShopConstants.STORE_GOOD).addParams("store_id", iStoreGoodView.getStoreId())
+                .addParams("key", iStoreGoodView.getTab())
+                .addParams("order", iStoreGoodView.getRankType())
+                .addParams("curpage", iStoreGoodView.getCurpage())
+                .addParams("page", "10")
+                .tag(iStoreGoodView)
+                .build().execute(new DataStringCallback(iStoreGoodView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreGoodView.onGetStoreGoodSuccess(s);
+                }
+            }
+        });
+    }
+    public static void getStoreNewGood(final IStoreGoodNewView iStoreGoodNewView) {
+        OkHttpUtils.get().url(ShopConstants.NEW_STORE_GOOD).addParams("store_id", iStoreGoodNewView.getStoreId())
+                .addParams("curpage", iStoreGoodNewView.getCurpage())
+                .addParams("page", "10")
+                .tag(iStoreGoodNewView)
+                .build().execute(new DataStringCallback(iStoreGoodNewView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreGoodNewView.onGetStoreNewGoodSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStorePromotion(final IStorePromotionView iStorePromotionView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_ACTIVITY).addParams("store_id", iStorePromotionView.getStoreId())
+                .tag(iStorePromotionView)
+                .build().execute(new DataStringCallback(iStorePromotionView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStorePromotionView.onGetStoreActivitySuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStorePromotionDetail(final IStorePromotiondDetailView iStorePromotiondDetailView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_PROMOTION_DETAIL).addParams("store_id", iStorePromotiondDetailView.getStoreId())
+                .addParams("type", iStorePromotiondDetailView.getPromotionType())
+                .addParams("id", iStorePromotiondDetailView.getPromotionId())
+                .tag(iStorePromotiondDetailView)
+                .build().execute(new DataStringCallback(iStorePromotiondDetailView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStorePromotiondDetailView.onGetStorePromotionDetailSuccess(s);
                 }
             }
         });

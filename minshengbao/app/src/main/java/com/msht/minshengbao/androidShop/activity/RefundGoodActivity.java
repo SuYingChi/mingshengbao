@@ -527,7 +527,6 @@ public class RefundGoodActivity extends ShopBaseActivity implements IPostRefundV
         }*/
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(this, "", getResources().getString(R.string.network_error), "", "", null, null, true);
-            onNetError();
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey()) || "未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
             Intent goLogin = new Intent(this, LoginActivity.class);

@@ -431,6 +431,8 @@
         <activity android:name=".functionActivity.invoiceModule.InvoiceAllHistoryActivity" />
         <activity android:name=".functionActivity.myActivity.BindWeiChatActivity" />
         <activity android:name=".functionActivity.myActivity.RebindWeiChatActivity"></activity>
+        <activity android:name=".androidShop.activity.ShopStoreMainActivity" />
+        <activity android:name=".androidShop.activity.StorePromotionActivity" />
     </application>
 
 </manifest>

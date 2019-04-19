@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -34,12 +35,15 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.androidShop.adapter.PingtuanAdapter;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
+import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
@@ -72,13 +76,6 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
-import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.ShareBoardlistener;
 import com.yanzhenjie.permission.Permission;
 
 
@@ -141,7 +138,19 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     LinearLayout llvouvher;
     @BindView(R.id.rcl_voucher)
     RecyclerView rclVoucher;
-    List<VoucherBean> voucherList=new ArrayList<VoucherBean>();
+    @BindView(R.id.storeiv)
+    ImageView storeiv;
+    @BindView(R.id.storetv)
+    TextView storetv;
+    @BindView(R.id.storeall)
+    TextView storeall;
+    @BindView(R.id.storekan)
+    TextView storeKan;
+    @BindView(R.id.pingtaunRcl)
+    RecyclerView pingtuanRcl;
+    @BindView(R.id.pingtuanhead)
+    LinearLayout llpingtuan;
+    List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
     private String goods_name;
@@ -173,10 +182,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private String carid;
     private ArrayList<String> imagelist = new ArrayList<String>();
-    private String selectedGuigeName="";
+    private List<PingTuanBean> pingTuanlist = new ArrayList<PingTuanBean>();
+    private String selectedGuigeName = "";
     private String pintuan_promotion;
     private GoodFmVoucherDialog voucherDialog;
-    ;
+    private PingtuanAdapter pingtuanAdapter;
+
 
 
     @Override
@@ -405,44 +416,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
 
         });
-    }
-
-    private void umengShare(final String shareUrl, final String shareTitle, final String desc, final Bitmap bitmap) {
-        ShareAction mShareAction = new ShareAction(getActivity()).setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE)
-                .setShareboardclickCallback(new ShareBoardlistener() {
-                    @Override
-                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA shareMedia) {
-                        UMWeb web = new UMWeb(shareUrl);
-                        web.setTitle(shareTitle);
-                        web.setDescription(desc);
-                        web.setThumb(new UMImage(getActivity(), bitmap));
-                        new ShareAction(getActivity()).withMedia(web)
-                                .setPlatform(shareMedia)
-                                .setCallback(new UMShareListener() {
-                                    @Override
-                                    public void onStart(SHARE_MEDIA share_media) {
-
-                                    }
-
-                                    @Override
-                                    public void onResult(SHARE_MEDIA share_media) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
-                                    }
-
-                                    @Override
-                                    public void onCancel(SHARE_MEDIA share_media) {
-
-                                    }
-                                })
-                                .share();
-                    }
-                });
-        mShareAction.open();
+        pingtuanAdapter= new PingtuanAdapter(getContext(),pingTuanlist);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        pingtuanRcl.setLayoutManager(lm);
+        pingtuanRcl.setNestedScrollingEnabled(false);
+        pingtuanRcl.setAdapter(pingtuanAdapter);
     }
 
     private String buildTransaction(final String type) {
@@ -542,8 +522,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     if (i == selectedGuigePosition) {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, true));
                         selectedGuigeName = guigeName;
-                        if(selectedGuigeName==null||guigeName.equals("null")){
-                            selectedGuigeName="";
+                        if (selectedGuigeName == null || guigeName.equals("null")) {
+                            selectedGuigeName = "";
                         }
                     } else {
                         guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, false));
@@ -551,23 +531,23 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             } else {
                 guigename = "";
-                selectedGuigeName="";
+                selectedGuigeName = "";
                 guigeList.clear();
             }
             isPickup_self = goods_info.optString("pickup_self");
             if (TextUtils.equals(isPickup_self, "1")) {
-               tvPickupself.setText("限自提");
-               tvPickupself.setVisibility(View.VISIBLE);
-               tvZiti.setVisibility(View.VISIBLE);
-               tvZiti.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       Intent intent = new Intent(getActivity(), ShopSelectSiteActivity.class);
-                       intent.putExtra("onClick",false);
-                       startActivity(intent);
-                   }
-               });
-            }else {
+                tvPickupself.setText("限自提");
+                tvPickupself.setVisibility(View.VISIBLE);
+                tvZiti.setVisibility(View.VISIBLE);
+                tvZiti.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ShopSelectSiteActivity.class);
+                        intent.putExtra("onClick", false);
+                        startActivity(intent);
+                    }
+                });
+            } else {
                 tvPickupself.setVisibility(View.INVISIBLE);
                 tvZiti.setVisibility(View.INVISIBLE);
             }
@@ -582,9 +562,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
             tvgoods_jingle.setText(goods_jingle);
-            if(TextUtils.equals(pintuan_promotion,"1")||TextUtils.equals(pintuan_promotion,"2")){
+            if (TextUtils.equals(pintuan_promotion, "1") || TextUtils.equals(pintuan_promotion, "2")) {
                 goods_price = goods_info.optString("pintuan_goods_price");
-            }else {
+            } else {
                 if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
                     if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
                         if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
@@ -644,9 +624,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             if (selectedGoodNum == 1) {
-                tvYixuan.setText(selectedGuigeName+"默认x1");
+                tvYixuan.setText(selectedGuigeName + "默认x1");
             } else {
-                tvYixuan.setText(selectedGuigeName+"  "+selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName + "  " + selectedGoodNum + "件");
             }
             ll_3.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -655,36 +635,61 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             });
             goodDetailActivityListener.onGetGoodDetailSuccess();
-          if(datas.has("voucher")){
-              JSONArray voucherArray = datas.optJSONArray("voucher");
-              if(voucherArray.length()>0){
-                  llvouvher.setVisibility(View.VISIBLE);
-                  for(int i=0;i<voucherArray.length();i++){
-                     voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(),VoucherBean.class));
-                  }
-                  HorizontalVoucherAdpter adapter = new HorizontalVoucherAdpter(getContext(), R.layout.voucher_text, voucherList);
-                  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-                  rclVoucher.setLayoutManager(linearLayoutManager);
-                  rclVoucher.setAdapter(adapter);
-                  llvouvher.setOnClickListener(new View.OnClickListener() {
-                      @Override
-                      public void onClick(View v) {
-                          showVoucherCarDialog();
-                      }
-                  });
-              }else {
-                  llvouvher.setVisibility(View.GONE);
-              }
-          }else{
-              llvouvher.setVisibility(View.GONE);
-          }
+            if (datas.has("voucher")) {
+                JSONArray voucherArray = datas.optJSONArray("voucher");
+                if (voucherArray.length() > 0) {
+                    llvouvher.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < voucherArray.length(); i++) {
+                        voucherList.add(JsonUtil.toBean(voucherArray.optJSONObject(i).toString(), VoucherBean.class));
+                    }
+                    HorizontalVoucherAdpter adapter = new HorizontalVoucherAdpter(getContext(), R.layout.voucher_text, voucherList);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+                    rclVoucher.setLayoutManager(linearLayoutManager);
+                    rclVoucher.setAdapter(adapter);
+                    llvouvher.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showVoucherCarDialog();
+                        }
+                    });
+                } else {
+                    llvouvher.setVisibility(View.GONE);
+                }
+            } else {
+                llvouvher.setVisibility(View.GONE);
+            }
+            JSONObject storeinfo = datas.optJSONObject("store_info");
+            GlideUtil.loadRemoteImg(getContext(),storeiv,storeinfo.optString("store_avatar"));
+            final String storeid = storeinfo.optString("store_id");
+            storeKan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+                    intent.putExtra("id",storeid);
+                    intent.putExtra("tabindex",0);
+                    startActivity(intent);
+                }
+            });
+            storetv.setText(storeinfo.optString("store_name"));
+            JSONArray pintuan_list = goods_info.optJSONArray("pintuan_list");
+            pingTuanlist.clear();
+            if(pintuan_list!=null&&pintuan_list.length()>0){
+                for(int i=0;i<pintuan_list.length();i++){
+                    JSONObject obj = pintuan_list.optJSONObject(i);
+                    PingTuanBean b = JsonUtil.toBean(obj.toString(), PingTuanBean.class);
+                    pingTuanlist.add(b);
+                }
+                llpingtuan.setVisibility(View.VISIBLE);
+            }else {
+                llpingtuan.setVisibility(View.GONE);
+            }
+            pingtuanAdapter.notifyChange();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
     }
-
     public String getTid() {
         return tid;
     }
@@ -695,13 +700,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     }
 
     private void showVoucherCarDialog() {
-        if (getActivity()!=null&&!getActivity().isFinishing() && voucherDialog == null) {
-            voucherDialog = new GoodFmVoucherDialog(getContext(),this, voucherList);
+        if (getActivity() != null && !getActivity().isFinishing() && voucherDialog == null) {
+            voucherDialog = new GoodFmVoucherDialog(getContext(), this, voucherList);
             voucherDialog.show();
-        } else if (getActivity()!=null&&!getActivity().isFinishing() && !voucherDialog.isShowing()) {
+        } else if (getActivity() != null && !getActivity().isFinishing() && !voucherDialog.isShowing()) {
             voucherDialog.show();
         }
     }
+
     @Override
     public void addCar() {
         if (TextUtils.isEmpty(getKey())) {
@@ -730,13 +736,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             comfirmShopGoodBean.setGoods(list2);
             list.add(comfirmShopGoodBean);
             if (!TextUtils.isEmpty(isPickup_self)) {
-                    Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ifCar", "0");
-                    bundle.putString("isPickup_self", isPickup_self);
-                    bundle.putSerializable("data", (Serializable) list);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ifCar", "0");
+                bundle.putString("isPickup_self", isPickup_self);
+                bundle.putSerializable("data", (Serializable) list);
+                intent.putExtras(bundle);
+                startActivity(intent);
             } else {
                 PopUtil.toastInBottom("商品已下架或不支持购买");
             }
@@ -804,9 +810,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             goodsid = guigeList.get(childposition).getGuigeGoodId();
             guigename = guigeList.get(childposition).getGuigeName();
             if (selectedGoodNum == 1) {
-                tvYixuan.setText(selectedGuigeName+"默认x1");
+                tvYixuan.setText(selectedGuigeName + "默认x1");
             } else {
-                tvYixuan.setText(selectedGuigeName+"  "+selectedGoodNum + "件");
+                tvYixuan.setText(selectedGuigeName + "  " + selectedGoodNum + "件");
             }
             ShopPresenter.getGoodDetail(this);
         }
@@ -817,9 +823,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void setSelectedGoodNum(int num) {
         this.selectedGoodNum = num;
         if (selectedGoodNum == 1) {
-            tvYixuan.setText(selectedGuigeName+"默认x1");
+            tvYixuan.setText(selectedGuigeName + "默认x1");
         } else {
-            tvYixuan.setText(selectedGuigeName+"   "+selectedGoodNum + "件");
+            tvYixuan.setText(selectedGuigeName + "   " + selectedGoodNum + "件");
         }
     }
 
@@ -847,7 +853,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         final ImageCycleView.ImageCycleViewListener mAdCycleViewListener = new ImageCycleView.ImageCycleViewListener() {
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                GlideUtil.loadByWidthFitHeight(getContext(), imageView, imageURL);
+                GlideUtil.loadByImageView(getContext(), imageView, imageURL);
 
             }
 
@@ -878,6 +884,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onDestroy() {
         super.onDestroy();
         actionbarSizeTypedArray.recycle();
+        pingtuanAdapter.cancelAllTimers();
     }
 
     @Override
@@ -898,11 +905,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
             }
             if (carnum > 0) {
-                if(goodDetailActivityListener!=null) {
+                if (goodDetailActivityListener != null) {
                     goodDetailActivityListener.hasAddedCar(carnum + "");
                 }
             } else {
-                if(goodDetailActivityListener!=null) {
+                if (goodDetailActivityListener != null) {
                     goodDetailActivityListener.noAddedCar();
                 }
             }
@@ -982,11 +989,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     @Override
     public void onGetVoucher(String voucherid) {
-       ShopPresenter.getVoucher(this,voucherid);
+        ShopPresenter.getVoucher(this, voucherid);
     }
 
     @Override
     public void onGetVoucherSuccess(String s) {
-         PopUtil.showAutoDissHookDialog(getContext(),"成功领取代金券",0);
+        PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
 }

@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.msht.minshengbao.Bean.RepairNumBean;
+import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.Utils.RegularExpressionUtil;
@@ -64,6 +66,9 @@ import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,23 +84,25 @@ import java.util.HashMap;
  * @author hong
  * @date 2016/7/2  
  */
-public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListener, MyScrollview.ScrollViewListener,IOrderNumView {
-    private MyScrollview    myScrollview;
-    private LinearLayout    layoutNavigation;
-    private RelativeLayout  layoutMySetting;
+public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListener, MyScrollview.ScrollViewListener, IOrderNumView, IRepairOrderNumView {
+    private MyScrollview myScrollview;
+    private LinearLayout layoutNavigation;
+    private RelativeLayout layoutMySetting;
     private TextView tvNavigation;
     private SimpleDraweeView mPortrait;
     private MenuItemM btnMessage;
     private String nickname;
-    private int   bgHeight;
+    private int bgHeight;
     private Activity mActivity;
-    /**最大显示消息数 **/
-    private static final int MAX_MASSAGE=99;
+    /**
+     * 最大显示消息数
+     **/
+    private static final int MAX_MASSAGE = 99;
     private MyNoScrollGridView mGridView;
     private MyFunctionAdapter mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
-    private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private LoadingDialog centerLoadingDialog;
 
     private TextView tvWaitEvaluate;
@@ -113,6 +120,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private LinearLayout llFootprint;
     private TextView tvCollect;
     private TextView tvFootprint;
+    private TextView tvRepair;
+    private TextView tvRepairUnfinish;
+    private TextView tvRepairfinished;
+    private TextView tvWaitEveluateRepair;
+    private TextView tvRefundRepair;
 
     public LoginMyFrag() {
     }
@@ -128,18 +140,20 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }
 
     }
+
     @Override
     public void dismissLoading() {
-        if (centerLoadingDialog != null && centerLoadingDialog.isShowing()&&getActivity()!=null&&!getActivity().isFinishing()) {
+        if (centerLoadingDialog != null && centerLoadingDialog.isShowing() && getActivity() != null && !getActivity().isFinishing()) {
             centerLoadingDialog.dismiss();
         }
     }
+
     @Override
     public void onError(String s) {
         if (!AppUtil.isNetworkAvailable()) {
-            PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
-            onNetError();
-        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())|| "未登录".equals(s)) {
+            PopUtil.showComfirmDialog(getContext(), "", getResources().getString(R.string.network_error), "", "", null, null, true);
+
+        } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey()) || "未登录".equals(s)) {
             PopUtil.toastInBottom("请登录商城");
             LogUtils.e(Log.getStackTraceString(new Throwable()));
             Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
@@ -148,6 +162,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             PopUtil.toastInCenter(s);
         }
     }
+
     @Override
     public String getKey() {
         return ShopSharePreferenceUtil.getInstance().getKey();
@@ -163,59 +178,73 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         return ShopSharePreferenceUtil.getInstance().getPassword();
     }
 
-    @Override
-    public void onLogout() {
-        AppUtil.logout();
-    }
-
-    @Override
-    public void onNetError() {
-
-    }
 
     public void getOrdersNum() {
-        ShopPresenter.getOrderNum(this,new DataStringCallback(this){
+        ShopPresenter.getOrderNum(this, new DataStringCallback(this) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ShopNumBean bean = JsonUtil.toBean(s, ShopNumBean.class);
-                    if(bean!=null) {
+                    if (bean != null) {
                         onGetNumSuccess(bean);
-                    }else {
-                      LoginMyFrag.this.onError(s);
+                    } else {
+                        LoginMyFrag.this.onError(s);
                     }
                 }
             }
         });
+        ShopPresenter.getRepairOrderNum(this,SharedPreferencesUtil.getUserId(getContext(),SharedPreferencesUtil.UserId,""),SharedPreferencesUtil.getPassword(getContext(),SharedPreferencesUtil.Password,""), new DataStringCallback(this) {
+            @Override
+            public void onResponse(String s, int i) {
+                    try {
+                        JSONObject object = new JSONObject(s);
+                        if(TextUtils.equals(object.optString("result"),"error")){
+                          PopUtil.toastInCenter(object.optString("error"));
+                        }else if(TextUtils.equals(object.optString("result"),"success")){
+                            onGetRepairNumSuccess(s);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+            }
+        });
+    }
+
+    private void onGetRepairNumSuccess(String s) {
+        RepairNumBean bean = JsonUtil.toBean(s, RepairNumBean.class);
+        if("0".equals(bean.getData().getUndoneCount())){
+            tvRepairUnfinish.setVisibility(View.GONE);
+        }else {
+            tvRepairUnfinish.setVisibility(View.VISIBLE);
+        }
+        tvRepairUnfinish.setText(bean.getData().getUndoneCount());
+        if("0".equals(bean.getData().getUnevalCount())){
+            tvWaitEveluateRepair.setVisibility(View.GONE);
+        }else {
+            tvWaitEveluateRepair.setVisibility(View.VISIBLE);
+        }
+        tvWaitEveluateRepair.setText(bean.getData().getUnevalCount());
     }
 
     private void onGetNumSuccess(ShopNumBean bean) {
         int footprintNum = bean.getDatas().getMember_info().getBrowses_goods();
-      /*  if (footprintNum == 0) {
-            tvFootprint.setVisibility(View.GONE);
-        } else {*/
-            tvFootprint.setVisibility(View.VISIBLE);
-            tvFootprint.setText(String.format("%d", footprintNum));
-       /* }*/
+        tvFootprint.setVisibility(View.VISIBLE);
+        tvFootprint.setText(String.format("%d", footprintNum));
         llFootprint.setClickable(true);
         int collectNum = bean.getDatas().getMember_info().getFavorites_goods();
-       /* if (collectNum == 0) {
-            tvCollect.setVisibility(View.GONE);
-        } else {*/
-            tvCollect.setVisibility(View.VISIBLE);
-            tvCollect.setText(String.format("%d", collectNum));
-        /*}*/
+        tvCollect.setVisibility(View.VISIBLE);
+        tvCollect.setText(String.format("%d", collectNum));
         llCollect.setClickable(true);
 
         String refundOrderNum = bean.getDatas().getMember_info().getReturnX();
         if ("0".equals(refundOrderNum)) {
-                tvRefundOrder.setVisibility(View.GONE);
-            } else {
-                tvRefundOrder.setVisibility(View.VISIBLE);
-                tvRefundOrder.setText(refundOrderNum);
-            }
-            llrefund.setClickable(true);
+            tvRefundOrder.setVisibility(View.GONE);
+        } else {
+            tvRefundOrder.setVisibility(View.VISIBLE);
+            tvRefundOrder.setText(refundOrderNum);
+        }
+        llrefund.setClickable(true);
         String waitEveluateOrdersNum = bean.getDatas().getMember_info().getOrder_noeval_count();
         if ("0".equals(waitEveluateOrdersNum)) {
             tvWaitEvaluate.setVisibility(View.GONE);
@@ -225,7 +254,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }
         llwaitEveluate.setClickable(true);
         String waitPayOrdersNum = bean.getDatas().getMember_info().getOrder_nopay_count();
-        if (waitPayOrdersNum .equals("0")) {
+        if (waitPayOrdersNum.equals("0")) {
             tvWaitPay.setVisibility(View.GONE);
         } else {
             tvWaitPay.setVisibility(View.VISIBLE);
@@ -233,7 +262,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }
         llwaitPay.setClickable(true);
         String waitGetOrdersNum = bean.getDatas().getMember_info().getOrder_noreceipt_count();
-        if (waitGetOrdersNum .equals("0")) {
+        if (waitGetOrdersNum.equals("0")) {
             tvWaitGet.setVisibility(View.GONE);
         } else {
             tvWaitGet.setVisibility(View.VISIBLE);
@@ -242,15 +271,16 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         llwaitget.setClickable(true);
         llShopOrder.setClickable(true);
     }
+
     @Override
     public View initFindView() {
-        mActivity=getActivity();
-        if(mRootView==null){
-            mRootView= LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my,null,false);
+        mActivity = getActivity();
+        if (mRootView == null) {
+            mRootView = LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my, null, false);
         }
-        String avatarUrl =SharedPreferencesUtil.getAvatarUrl(mContext,SharedPreferencesUtil.AvatarUrl,"");
-        nickname=SharedPreferencesUtil.getNickName(mContext,SharedPreferencesUtil.NickName,"");
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.KITKAT){
+        String avatarUrl = SharedPreferencesUtil.getAvatarUrl(mContext, SharedPreferencesUtil.AvatarUrl, "");
+        nickname = SharedPreferencesUtil.getNickName(mContext, SharedPreferencesUtil.NickName, "");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mRootView.findViewById(R.id.id_view).setVisibility(View.GONE);
         }
         initView(mRootView);
@@ -291,15 +321,15 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
         view.findViewById(R.id.id_re_setting).setOnClickListener(this);
         view.findViewById(R.id.id_right_massage).setOnClickListener(this);
-        mPortrait=(SimpleDraweeView)view.findViewById(R.id.id_portrait);
-        tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
-        TextView tvNickname =(TextView)view.findViewById(R.id.id_nickname);
-        if (!TextUtils.isEmpty(nickname)){
+        mPortrait = (SimpleDraweeView) view.findViewById(R.id.id_portrait);
+        tvNavigation = (TextView) view.findViewById(R.id.id_tv_naviga);
+        TextView tvNickname = (TextView) view.findViewById(R.id.id_nickname);
+        if (!TextUtils.isEmpty(nickname)) {
             tvNickname.setText(nickname);
-        }else {
-            String userName=SharedPreferencesUtil.getNickName(mActivity,SharedPreferencesUtil.UserName,"");
-            if (RegularExpressionUtil.isPhone(userName)){
-                userName=userName.substring(0,3)+"****"+userName.substring(7,userName.length());
+        } else {
+            String userName = SharedPreferencesUtil.getNickName(mActivity, SharedPreferencesUtil.UserName, "");
+            if (RegularExpressionUtil.isPhone(userName)) {
+                userName = userName.substring(0, 3) + "****" + userName.substring(7, userName.length());
             }
             tvNickname.setText(userName);
 
@@ -382,6 +412,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
         tvAllOrder = (TextView) view.findViewById(R.id.shop_order_num);
         tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
+        tvRepair = (TextView)view.findViewById(R.id.repair_order_num);
+        tvRepairUnfinish = (TextView)view.findViewById(R.id.repair_unfinished_order_num);
+        tvRepairfinished = (TextView)view.findViewById(R.id.repair_finished_order_num);
+        tvWaitEveluateRepair = (TextView)view.findViewById(R.id.my_wait_eveluate_repair_order_num);
+        tvRefundRepair =(TextView)view.findViewById(R.id.my_refund_repair_order_num);
 
     }
 
@@ -417,38 +452,38 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 int code = mList.get(position).get("code");
                 switch (code) {
                     case 0:
-                        if (isLoginState(mContext)){
+                        if (isLoginState(mContext)) {
                             goMyWallet();
-                        }else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext, "");
                         }
                         break;
                     case 1:
-                        if (isLoginState(mContext)){
+                        if (isLoginState(mContext)) {
                             goGasServer();
-                        }else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext, "");
                         }
                         break;
                     case 2:
-                        if (isLoginState(mContext)){
+                        if (isLoginState(mContext)) {
                             goCustomerNo();
-                        }else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext, "");
                         }
                         break;
                     case 3:
-                        if (isLoginState(mContext)){
+                        if (isLoginState(mContext)) {
                             goInvoice();
-                        }else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext, "");
                         }
                         break;
                     case 4:
-                        if (isLoginState(mContext)){
+                        if (isLoginState(mContext)) {
                             goManage();
-                        }else {
-                            AppActivityUtil.onStartLoginActivity(mContext,"");
+                        } else {
+                            AppActivityUtil.onStartLoginActivity(mContext, "");
                         }
                         break;
                     case 5:
@@ -500,21 +535,22 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(this);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_re_gosetting:
-                if (isLoginState(mContext)){
+                if (isLoginState(mContext)) {
                     goSetting();
-                }else {
-                    AppActivityUtil.onStartLoginActivity(mContext,"");
+                } else {
+                    AppActivityUtil.onStartLoginActivity(mContext, "");
                 }
                 break;
             case R.id.id_re_consult:
-                if (isLoginState(mContext)){
+                if (isLoginState(mContext)) {
                     goConsult();
-                }else {
-                    AppActivityUtil.onStartLoginActivity(mContext,"");
+                } else {
+                    AppActivityUtil.onStartLoginActivity(mContext, "");
                 }
                 break;
             case R.id.id_re_hotline:
@@ -545,13 +581,15 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 break;
         }
     }
+
     private void onRepairOrder(int i) {
-        Intent intent=new Intent(mContext,RepairOrderListActivity.class);
-        intent.putExtra("status",i);
+        Intent intent = new Intent(mContext, RepairOrderListActivity.class);
+        intent.putExtra("status", i);
         startActivity(intent);
     }
+
     private void goMessageCenter() {
-       // Intent intent = new Intent(mContext, MessageCenterActivity.class);
+        // Intent intent = new Intent(mContext, MessageCenterActivity.class);
         Intent intent = new Intent(mContext, TotalMessageListActivity.class);
         startActivity(intent);
         btnMessage.setUnReadCount(0);
@@ -580,7 +618,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     }
 
     private void goConsult() {
-        Intent intent=new Intent(mContext, ConsultRecommendActivity.class);
+        Intent intent = new Intent(mContext, ConsultRecommendActivity.class);
         startActivity(intent);
     }
 
@@ -600,7 +638,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     }
 
     private void goInvoice() {
-        Intent intent=new Intent(mContext, InvoiceHomeActivity.class);
+        Intent intent = new Intent(mContext, InvoiceHomeActivity.class);
         startActivity(intent);
     }
 
@@ -610,17 +648,18 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     }
 
     private void goSetting() {
-        Intent intent=new Intent(mContext, MySettingActivity.class);
-        startActivityForResult(intent,1);
+        Intent intent = new Intent(mContext, MySettingActivity.class);
+        startActivityForResult(intent, 1);
     }
+
     private void goCustomerNo() {
-        Intent intent=new Intent(mContext, CustomerNoManageActivity.class);
+        Intent intent = new Intent(mContext, CustomerNoManageActivity.class);
         startActivity(intent);
     }
 
     private void goMoreSetting() {
-        Intent intent=new Intent(mContext, MoreSettingActivity.class);
-        startActivityForResult(intent,0x005);
+        Intent intent = new Intent(mContext, MoreSettingActivity.class);
+        startActivityForResult(intent, 0x005);
     }
 
     private void requestLimit(final String phone) {
@@ -635,6 +674,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                             CallPhoneUtil.callPhone(mContext, phone);
                         }
                     }
+
                     @Override
                     public void onPermissionDenied(int code) {
                         ToastUtil.ToastText(mContext, "没有权限您将无法进行相关操作！");
@@ -652,6 +692,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         MobclickAgent.onPageStart(mPageName);
 
     }
+
     @Override
     public void onPause() {
         super.onPause();

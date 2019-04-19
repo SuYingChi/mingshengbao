@@ -211,7 +211,9 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     public void onGetShopHomeSuccess(String json) {
         refreshLayout.finishRefresh();
         refreshLayout.setEnableAutoLoadMore(false);
+        //完成加载并标记没有更多数据
         refreshLayout.finishLoadMoreWithNoMoreData();
+        // 这个方法最重要，当在最后一页调用完上一个完成加载并标记没有更多数据的方法时，需要将refreshLayout的状态更改为还有更多数据的状态，此时就需要调用此方法，参数为false代表还有更多数据，true代表没有更多数据
         refreshLayout.setNoMoreData(true);
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -265,10 +267,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                         if (shopHomeGoodsBean != null) {
                             showGoods(shopHomeGoodsBean);
                         }
-                        // 这个方法是在最后一页，没有更多数据时调用的，会在页面底部标记没有更多数据
-                        refreshLayout.finishLoadMoreWithNoMoreData();//完成加载并标记没有更多数据 1.0.4
-                        // 这个方法最重要，当在最后一页调用完上一个完成加载并标记没有更多数据的方法时，需要将refreshLayout的状态更改为还有更多数据的状态，此时就需要调用此方法，参数为false代表还有更多数据，true代表没有更多数据
-                        refreshLayout.setNoMoreData(true);//恢复没有更多数据的原始状态 1.0.5
                     }
                 }
             }
@@ -632,11 +630,6 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          /*      Map<String, String> map = new HashMap<String, String>();
-                map.put("type", "goods");
-                map.put("data", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
-                map.put("price", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_promotion_price());
-                doNotAdClick(map);*/
                 doShopItemViewClick("goods", shopHomeGoodsBean.getGoods().getItem().get(position).getGoods_id());
             }
         });

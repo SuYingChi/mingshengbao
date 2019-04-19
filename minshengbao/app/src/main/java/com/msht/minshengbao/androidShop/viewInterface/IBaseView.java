@@ -13,8 +13,6 @@ public  interface IBaseView {
 
     String getLoginPassword();
 
-   void onLogout();
 
-    void onNetError();
 
 }

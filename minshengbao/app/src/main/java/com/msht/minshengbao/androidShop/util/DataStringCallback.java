@@ -74,7 +74,7 @@ public class DataStringCallback extends StringCallback {
                      } catch (JSONException e) {
                          e.printStackTrace();
                      }
-             }else if("failed".equals(baseData.getResult())){
+             }else if("failed".equals(baseData.getResult())||"error".equals(baseData.getResult())){
                  try {
                      JSONObject object = new JSONObject(s);
                      if(TextUtils.equals(object.optString("error"),"用户名或密码错误")){
