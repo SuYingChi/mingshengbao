@@ -43,6 +43,8 @@ import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
 import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
+import com.msht.minshengbao.androidShop.customerview.GoodPintuanDialog;
+import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GiftBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
@@ -56,7 +58,6 @@ import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
-import com.msht.minshengbao.androidShop.viewInterface.IUserPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
 import com.msht.minshengbao.androidShop.adapter.GoodsDetailRecommendAdapter;
@@ -96,7 +97,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, IGoodPingTuanView, IUserPingTuanView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -236,6 +237,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private CountDownTimer miaoshaCountDownTimer;
     private List<GiftBean> giftArraylist=new ArrayList<GiftBean>();
     private GiftArrayAdapter giftArrayAdapter;
+    private GoodPintuanDialog userPinTunDialog;
+    private GoodPintuanDialog goodPingTunDialog;
 
 
     @Override
@@ -470,7 +473,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         pingtuanAdapter.setAdapterInterface(new PingtuanAdapter.AdapterInterface() {
             @Override
             public void onClickCanTuan(String pingTuanId) {
-                ShopPresenter.getUserPingtuanInfo(GoodFragment.this, pingTuanId);
+             userPinTunDialog = new GoodPintuanDialog(getContext(),pingTuanId);
+             userPinTunDialog.show();
             }
         });
         pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -863,7 +867,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 tvMorePingtuan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ShopPresenter.GetGoodPingtuanInfo(GoodFragment.this);
+                       showGoodAllPingtunDialog();
                     }
                 });
             } else {
@@ -1093,6 +1097,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (miaoshaCountDownTimer != null) {
             miaoshaCountDownTimer.cancel();
         }
+        if(goodPingTunDialog!=null){
+            goodPingTunDialog.cancelAllTimers();
+        }
     }
 
     @Override
@@ -1155,10 +1162,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         return goodsid;
     }
 
-    @Override
-    public void onGetGoodPingtuanInfoSuccess(String s) {
-
-    }
 
     @Override
     public void onGetShareUrlSuccess(String s, String type) {
@@ -1209,10 +1212,13 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onGetVoucherSuccess(String s) {
         PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
-
-    @Override
-    public void onUserPingtuanInfoSuccess(String s) {
-
+    private void showGoodAllPingtunDialog() {
+        if (this.getActivity() != null && !this.getActivity().isFinishing() && goodPingTunDialog == null) {
+            goodPingTunDialog = new GoodPintuanDialog(getContext(),goodsid);
+            goodPingTunDialog.show();
+        } else if (this.getActivity() != null && !this.getActivity().isFinishing() && !goodPingTunDialog.isShowing()) {
+            goodPingTunDialog.show();
+        }
     }
 
 }

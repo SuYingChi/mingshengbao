@@ -1656,8 +1656,8 @@ public class ShopPresenter {
         });
     }
 
-    public static void GetGoodPingtuanInfo(final IGoodPingTuanView iGoodPingTuanView) {
-        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("goods_id", iGoodPingTuanView.getGoodId())
+    public static void getGoodPingtuanInfo(final IGoodPingTuanView iGoodPingTuanView,String goodId) {
+        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("goods_id", goodId)
                 .tag(iGoodPingTuanView)
                 .build().execute(new DataStringCallback(iGoodPingTuanView) {
             @Override
@@ -1670,7 +1670,7 @@ public class ShopPresenter {
         });
     }
     public static void getUserPingtuanInfo(final IUserPingTuanView iUserPingTuanView,String pingTuanId) {
-        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("pintuan_id", pingTuanId)
+        OkHttpUtils.get().url(ShopConstants.USER_ALL_PING_TUAN).addParams("pintuan_id", pingTuanId)
                 .tag(iUserPingTuanView)
                 .build().execute(new DataStringCallback(iUserPingTuanView) {
             @Override
