@@ -89,6 +89,7 @@ public class ShopConstants {
     public static final String STORE_ACTIVITY = BASE_URL+"index.php?act=store&op=store_promotion";
     public static final String STORE_PROMOTION_DETAIL = BASE_URL+"index.php?act=store&op=store_promotion_info";
     public static final String GOOD_PING_TUAN = BASE_URL+"index.php?act=pintuan&op=pintuan_group";
+    public static final String USER_ALL_PING_TUAN = BASE_URL+"index.php?act=pintuan&op=grouper_info";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

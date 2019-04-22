@@ -96,6 +96,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
+import com.msht.minshengbao.androidShop.viewInterface.IUserPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
@@ -1664,6 +1665,19 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iGoodPingTuanView.onGetGoodPingtuanInfoSuccess(s);
+                }
+            }
+        });
+    }
+    public static void getUserPingtuanInfo(final IUserPingTuanView iUserPingTuanView,String pingTuanId) {
+        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("pintuan_id", pingTuanId)
+                .tag(iUserPingTuanView)
+                .build().execute(new DataStringCallback(iUserPingTuanView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iUserPingTuanView.onUserPingtuanInfoSuccess(s);
                 }
             }
         });

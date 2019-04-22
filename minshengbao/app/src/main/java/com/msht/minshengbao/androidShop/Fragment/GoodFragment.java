@@ -36,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.androidShop.adapter.GiftArrayAdapter;
 import com.msht.minshengbao.androidShop.adapter.PingtuanAdapter;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
@@ -43,6 +44,7 @@ import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
+import com.msht.minshengbao.androidShop.shopBean.GiftBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
@@ -54,6 +56,7 @@ import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
+import com.msht.minshengbao.androidShop.viewInterface.IUserPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
 import com.msht.minshengbao.androidShop.adapter.GoodsDetailRecommendAdapter;
@@ -93,7 +96,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, IGoodPingTuanView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, IGoodPingTuanView, IUserPingTuanView {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -173,6 +176,24 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView tvSecond;
     @BindView(R.id.ll_pingtuan)
     LinearLayout ll_PingTuan;
+    @BindView(R.id.ll_miaosha)
+    LinearLayout ll_miaosha;
+    @BindView(R.id.miaosha_market_price)
+    TextView tvMsmarketprice;
+    @BindView(R.id.miaosha_price)
+    TextView tvMiaoshaPrice;
+    @BindView(R.id.ms_day)
+    TextView tvMsDay;
+    @BindView(R.id.ms_hour)
+    TextView tvMsHour;
+    @BindView(R.id.ms_minute)
+    TextView tvMsMinute;
+    @BindView(R.id.ms_second)
+    TextView tvMsSecond;
+    @BindView(R.id.ll_gift)
+    LinearLayout llgift;
+    @BindView(R.id.gift_rcl)
+    RecyclerView giftRcl;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
@@ -211,6 +232,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private GoodFmVoucherDialog voucherDialog;
     private PingtuanAdapter pingtuanAdapter;
     private CountDownTimer countDownTimer;
+    private String goods_promotion_type;
+    private CountDownTimer miaoshaCountDownTimer;
+    private List<GiftBean> giftArraylist=new ArrayList<GiftBean>();
+    private GiftArrayAdapter giftArrayAdapter;
 
 
     @Override
@@ -442,10 +467,23 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         pingtuanAdapter = new PingtuanAdapter(getContext(), pingTuanlist);
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         lm.setAutoMeasureEnabled(true);
+        pingtuanAdapter.setAdapterInterface(new PingtuanAdapter.AdapterInterface() {
+            @Override
+            public void onClickCanTuan(String pingTuanId) {
+                ShopPresenter.getUserPingtuanInfo(GoodFragment.this, pingTuanId);
+            }
+        });
         pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         pingtuanRcl.setLayoutManager(lm);
         pingtuanRcl.setNestedScrollingEnabled(false);
         pingtuanRcl.setAdapter(pingtuanAdapter);
+
+        giftArrayAdapter = new GiftArrayAdapter(getContext(), giftArraylist);
+        LinearLayoutManager lm2 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        giftRcl.setLayoutManager(lm2);
+        giftRcl.setNestedScrollingEnabled(false);
+        giftRcl.setAdapter(giftArrayAdapter);
     }
 
     private String buildTransaction(final String type) {
@@ -528,6 +566,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             showAdv(imagelist);
             final JSONObject goods_info = datas.getJSONObject("goods_info");
             pintuan_promotion = goods_info.optString("pintuan_promotion");
+            goods_promotion_type = goods_info.optString("goods_promotion_type");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
             JSONObject spec_listObj = datas.optJSONObject("spec_list");
@@ -590,16 +629,17 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 tvgoods_jingle.setVisibility(View.VISIBLE);
                 tvgoods_jingle.setText(goods_jingle);
             }
-            if (TextUtils.equals(pintuan_promotion, "1") || TextUtils.equals(pintuan_promotion, "2")) {
+            if (TextUtils.equals(pintuan_promotion, "1")) {
                 goodDetailActivityListener.isPingTuan(true);
                 goods_price = goods_info.optString("pintuan_goods_price");
                 ll_PingTuan.setVisibility(View.VISIBLE);
+                ll_miaosha.setVisibility(View.GONE);
                 tvprice.setVisibility(View.GONE);
                 tvgoods_marketprice.setVisibility(View.GONE);
                 tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_price"), R.style.big_money, R.style.big_money));
                 tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                 tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
-                tvPingTuanNum.setText(goods_info.optString("pintuan_sole_num")+"件");
+                tvPingTuanNum.setText(goods_info.optString("pintuan_sole_num") + "件");
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                 }
@@ -646,8 +686,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             } else {
                 goodDetailActivityListener.isPingTuan(false);
                 ll_PingTuan.setVisibility(View.GONE);
-                tvprice.setVisibility(View.VISIBLE);
-                tvgoods_marketprice.setVisibility(View.VISIBLE);
                 if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
                     if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
                         if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
@@ -660,6 +698,64 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     }
                 } else {
                     goods_price = goods_info.optString("promotion_price");
+                }
+                //1团购 2限时 3秒杀
+                switch (goods_promotion_type) {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        ll_miaosha.setVisibility(View.VISIBLE);
+                        tvprice.setVisibility(View.GONE);
+                        tvgoods_marketprice.setVisibility(View.GONE);
+                        tvMiaoshaPrice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                        tvMsmarketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                        tvMsmarketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("goods_marketprice"), R.style.small_money, R.style.small_money));
+                        miaoshaCountDownTimer = new CountDownTimer(goods_info.optLong("left_end_time") * 1000, 1000) {
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                                tvMsDay.setText(list.get(0));
+                                tvMsHour.setText(list.get(1));
+                                tvMsMinute.setText(list.get(2));
+                                tvMsSecond.setText(list.get(3));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                ll_miaosha.setVisibility(View.GONE);
+                                tvprice.setVisibility(View.VISIBLE);
+                                tvgoods_marketprice.setVisibility(View.VISIBLE);
+                                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                                            PopUtil.toastInCenter("没有商品价格");
+                                        } else {
+                                            goods_price = goods_info.optString("goods_price");
+                                        }
+                                    } else {
+                                        goods_price = goods_info.optString("goods_promotion_price");
+                                    }
+                                } else {
+                                    goods_price = goods_info.optString("promotion_price");
+                                }
+                                tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                                    goods_marketprice = goods_info.optString("goods_price");
+                                } else {
+                                    goods_marketprice = goods_info.optString("goods_marketprice");
+                                }
+                                tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                                tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                            }
+                        }.start();
+                        break;
+                    default:
+                        tvprice.setVisibility(View.VISIBLE);
+                        tvgoods_marketprice.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
@@ -774,6 +870,19 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 llpingtuan.setVisibility(View.GONE);
             }
             pingtuanAdapter.notifyChange();
+            JSONArray gift_array = datas.optJSONArray("gift_array");
+            giftArraylist.clear();
+            if (gift_array != null && gift_array.length() > 0) {
+                for (int i = 0; i < gift_array.length(); i++) {
+                    JSONObject obj = gift_array.optJSONObject(i);
+                    GiftBean b = JsonUtil.toBean(obj.toString(), GiftBean.class);
+                    giftArraylist.add(b);
+                }
+                llgift.setVisibility(View.VISIBLE);
+            } else {
+                llgift.setVisibility(View.GONE);
+            }
+            giftArrayAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -975,11 +1084,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onDestroy() {
         super.onDestroy();
         actionbarSizeTypedArray.recycle();
-        if(pingtuanAdapter!=null){
-        pingtuanAdapter.cancelAllTimers();
+        if (pingtuanAdapter != null) {
+            pingtuanAdapter.cancelAllTimers();
         }
-        if(countDownTimer!=null) {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
+        }
+        if (miaoshaCountDownTimer != null) {
+            miaoshaCountDownTimer.cancel();
         }
     }
 
@@ -1097,4 +1209,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onGetVoucherSuccess(String s) {
         PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
+
+    @Override
+    public void onUserPingtuanInfoSuccess(String s) {
+
+    }
+
 }

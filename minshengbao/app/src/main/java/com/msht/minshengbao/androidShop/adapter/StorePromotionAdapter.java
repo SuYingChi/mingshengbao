@@ -3,6 +3,7 @@ package com.msht.minshengbao.androidShop.adapter;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,11 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               spaInterface.onClick(data.getPromotion_type(),data.getPromotion_id(),data.getPromotion_title());
+                if(TextUtils.isEmpty(data.getGoodId())){
+                    spaInterface.onClick(data.getPromotion_type(), data.getPromotion_id(), data.getPromotion_title());
+                } else {
+                    spaInterface.onClick(data.getGoodId());
+                }
             }
         });
         if (time > 0) {
@@ -155,6 +160,8 @@ public  class  StorePromotionAdapter extends RecyclerView.Adapter<StorePromotion
     }
     public interface SpaInterface {
        void onClick(int promotion_type, String promotion_id, String promotion_title);
+
+        void onClick(String goodId);
     }
     public  void setSpaInterface(SpaInterface spaInterface){
         this.spaInterface = spaInterface;

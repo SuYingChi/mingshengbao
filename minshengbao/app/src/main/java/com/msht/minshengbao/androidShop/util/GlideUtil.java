@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -24,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 
 import java.io.File;
@@ -469,45 +471,69 @@ public class GlideUtil {/*
      * 自适应imageview宽度加载图片。保持图片的长宽比例不变，通过修改imageView的高度来完全显示图片。
      */
     public static void loadByWidthFitHeight(Context context, final ImageView imageView, final String imageUrl) {
-        RequestOptions options = new RequestOptions()
-                .fitCenter()
-                .dontAnimate()
-                .placeholder(R.drawable.icon_stub)
-                .error(R.drawable.icon_stub)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .priority(Priority.HIGH);
-        Glide.with(context)
-                .load(imageUrl)
-                .thumbnail(0.5f)
-                .apply(options)
-                .into(new SimpleTarget<Drawable>() {
+        if(TextUtils.isEmpty(imageUrl)){
+            if (imageView == null) {
+                return;
+            }
+            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            }
+            //在绘制时再获取宽高
+            ViewTreeObserver vto = imageView.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public void onGlobalLayout() {
+                    removeOnGlobalLayoutListener(imageView, this);
+                    ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                        params.height = DimenUtil.getScreenWidth();
+                        imageView.setLayoutParams(params);
+                        imageView.setImageDrawable(MyApplication.getInstance().getDrawable(R.drawable.icon_stub));
+                }
+            });
+        }else {
+            RequestOptions options = new RequestOptions()
+                    .fitCenter()
+                    .dontAnimate()
+                    .placeholder(R.drawable.icon_stub)
+                    .error(R.drawable.icon_stub)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .priority(Priority.HIGH);
+            Glide.with(context)
+                    .load(imageUrl)
+                    .thumbnail(0.5f)
+                    .apply(options)
+                    .into(new SimpleTarget<Drawable>() {
 
-                    @Override
-                    public void onResourceReady(@NonNull final Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        if (imageView == null) {
-                            return;
-                        }
-                        if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        }
-                        //在绘制时再获取宽高
-                        ViewTreeObserver vto = imageView.getViewTreeObserver();
-                        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @SuppressWarnings("deprecation")
-                            @Override
-                            public void onGlobalLayout() {
-                                removeOnGlobalLayoutListener(imageView, this);
-                                ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                                float scale = (float) imageView.getWidth() / (float) resource.getIntrinsicWidth();
-                                int vh = (int) (resource.getIntrinsicHeight() * scale);
-                                params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
-                                imageView.setLayoutParams(params);
-                                imageView.setImageDrawable(resource);
+                        @Override
+                        public void onResourceReady(@NonNull final Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            if (imageView == null) {
+                                return;
                             }
-                        });
+                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            }
+                            //在绘制时再获取宽高
+                            ViewTreeObserver vto = imageView.getViewTreeObserver();
+                            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                @SuppressWarnings("deprecation")
+                                @Override
+                                public void onGlobalLayout() {
+                                    removeOnGlobalLayoutListener(imageView, this);
+                                    ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                                    if (resource != null && resource.getIntrinsicWidth() > 0) {
+                                        float scale = (float) imageView.getWidth() / (float) resource.getIntrinsicWidth();
+                                        int vh = (int) (resource.getIntrinsicHeight() * scale);
+                                        params.height = vh + imageView.getPaddingTop() + imageView.getPaddingBottom();
+                                        imageView.setLayoutParams(params);
+                                        imageView.setImageDrawable(resource);
+                                    }
+                                }
+                            });
 
-                    }
-                });
+                        }
+                    });
+        }
     }
 
     public static void removeOnGlobalLayoutListener(View view, ViewTreeObserver.OnGlobalLayoutListener victim) {

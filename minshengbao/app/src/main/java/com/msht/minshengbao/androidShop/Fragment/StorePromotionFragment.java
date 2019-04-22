@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.StorePromotionActivity;
 import com.msht.minshengbao.androidShop.adapter.StorePromotionAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -118,6 +119,9 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
                     for (int i = 0; i < pList.length(); i++) {
                         JSONObject jsonobj = pList.optJSONObject(i);
                         PromotionBean promotionBean = JsonUtil.toBean(jsonobj.toString(), PromotionBean.class);
+                        if(jsonobj.has("promotion_goods_id")){
+                            promotionBean.setGoodId(jsonobj.optString("promotion_goods_id"));
+                        }
                         switch (promotionBean.getPromotion_type()) {
                             case 1:
                                 JSONObject mansong = promotion.optJSONObject("mansong");
@@ -172,31 +176,38 @@ public class StorePromotionFragment extends ShopBaseLazyFragment implements ISto
 
     @Override
     public void onClick(int promotion_type, String promotion_id, String promotion_title) {
-        Intent intent = new Intent( getActivity(), StorePromotionActivity.class);
-        intent.putExtra("type",promotion_type+"");
-        intent.putExtra("id",promotion_id);
-        intent.putExtra("storeId",storeId);
-        switch (promotion_type) {
-            case 1:
-                intent.putExtra("key","mansong");
-                break;
-            case 2:
-                intent.putExtra("key","xianshi");
-                break;
-            case 3:
-                intent.putExtra("key","groupbuy");
+            Intent intent = new Intent(getActivity(), StorePromotionActivity.class);
+            intent.putExtra("type", promotion_type + "");
+            intent.putExtra("id", promotion_id);
+            intent.putExtra("storeId", storeId);
+            switch (promotion_type) {
+                case 1:
+                    intent.putExtra("key", "mansong");
+                    break;
+                case 2:
+                    intent.putExtra("key", "xianshi");
+                    break;
+                case 3:
+                    intent.putExtra("key", "groupbuy");
 
-                break;
-            case 4:
-                intent.putExtra("key","spike");
+                    break;
+                case 4:
+                    intent.putExtra("key", "spike");
 
-                break;
-            case 5:
-                intent.putExtra("key","pintuan");
-                break;
-            default:
-                break;
-        }
+                    break;
+                case 5:
+                    intent.putExtra("key", "pintuan");
+                    break;
+                default:
+                    break;
+            }
+            getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onClick(String goodId) {
+        Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
+        intent.putExtra("goodsid", goodId);
         getActivity().startActivity(intent);
     }
 }

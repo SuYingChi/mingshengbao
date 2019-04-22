@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
-import com.msht.minshengbao.androidShop.shopBean.PromotionBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
@@ -26,7 +25,7 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
     private List<PingTuanBean> mDatas;
     //用于退出activity,避免countdown，造成资源浪费。
     private SparseArray<CountDownTimer> countDownMap;
-    private SpaInterface spaInterface;
+    private AdapterInterface aDapterinterface;
 
     public PingtuanAdapter(Context context, List<PingTuanBean> datas) {
         this.context = context;
@@ -82,10 +81,16 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
                     holder.hour.setText(list.get(1));
                     holder.minute.setText(list.get(2));
                     holder.second.setText(list.get(3));
+                    holder.cantuan.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                          aDapterinterface.onClickCanTuan(data.getPintuan_id());
+                        }
+                    });
                 }
                 @Override
                 public void onFinish() {
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    holder.cantuan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             PopUtil.toastInCenter("活动已经结束");
@@ -151,10 +156,10 @@ public  class  PingtuanAdapter extends RecyclerView.Adapter<PingtuanAdapter.View
             iv = (ImageView) itemView.findViewById(R.id.iv);
         }
     }
-    public interface SpaInterface {
-        void onClick(int promotion_type, String promotion_id, String promotion_title);
+    public interface AdapterInterface {
+        void onClickCanTuan(String pingTuanId);
     }
-    public  void setSpaInterface(SpaInterface spaInterface){
-        this.spaInterface = spaInterface;
+    public  void setAdapterInterface(AdapterInterface aDapterinterface){
+        this.aDapterinterface = aDapterinterface;
     }
 }
