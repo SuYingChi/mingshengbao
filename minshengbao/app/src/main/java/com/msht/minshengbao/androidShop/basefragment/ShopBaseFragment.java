@@ -101,7 +101,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
-            PopUtil.toastInBottom("请登录民生宝");
+            PopUtil.toastInBottom("请登录");
         } else if(!TextUtils.isEmpty(s)){
             PopUtil.toastInCenter(s);
         }

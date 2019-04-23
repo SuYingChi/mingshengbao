@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,18 +13,23 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GoodPingTunAdpter;
+import com.msht.minshengbao.androidShop.adapter.UserPingTunAdpter;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.GoodPingTunBean;
+import com.msht.minshengbao.androidShop.shopBean.UserPinTunBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.DialogInterface;
 import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
+import com.msht.minshengbao.androidShop.viewInterface.IUserPingTuanView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,24 +41,41 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, GoodPingTunAdpter.AdapterInterface {
+public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
 
     private  DialogInterface dialogInterface;
-    private  String goodId;
+    private  String pingtuanid;
     @BindView(R.id.rcl)
     RecyclerView rcl;
     @BindView(R.id.dismiss)
     ImageView dismiss;
+    @BindView(R.id.name)
+    TextView tvName;
+    @BindView(R.id.leftnum)
+    TextView tvLeftNum;
     private Context context;
-    private GoodPingTunAdpter adapter;
-    private List<GoodPingTunBean> list=new ArrayList<GoodPingTunBean>();
+    private UserPingTunAdpter adapter;
+    private List<UserPinTunBean> list=new ArrayList<UserPinTunBean>();
     private LoadingDialog centerLoadingDialog;
+    private CountDownTimer countDownTimer;
+    @BindView(R.id.hour)
+    TextView hour;
+    @BindView(R.id.minute)
+     TextView minute;
+    @BindView(R.id.second)
+     TextView second;
+    @BindView(R.id.cantuan)
+    TextView cantuan;
+    private String buyer_id;
 
+    public String getPingtuanid() {
+        return pingtuanid;
+    }
 
-    public GoodPintuanDialog(@NonNull Context context, String goodId, DialogInterface  dialogInterface) {
+    public UserPintuanDialog(@NonNull Context context, String pingtuanid, DialogInterface dialogInterface) {
         super(context,R.style.nomalDialog);
         this.context = context;
-        this.goodId = goodId;
+        this.pingtuanid = pingtuanid;
         this.dialogInterface = dialogInterface;
 
     }
@@ -61,8 +84,8 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (GoodPintuanDialog.this.isShowing()) {
-                    GoodPintuanDialog.this.dismiss();
+                if (UserPintuanDialog.this.isShowing()) {
+                    UserPintuanDialog.this.dismiss();
                 }
                 break;
             default:
@@ -74,18 +97,17 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.good_all_pintuan_dialog);
+        setContentView(R.layout.user_pintuan_dialog);
         ButterKnife.bind(this);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         WindowManager.LayoutParams attributes = this.getWindow().getAttributes();
         attributes.width=(int)(DimenUtil.getScreenWidth()*0.8);
-        attributes.height = DimenUtil.dip2px(300);
         this.getWindow().setAttributes(attributes);
-        LinearLayoutManager llm = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+        LinearLayoutManager llm = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+        llm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(llm);
-        adapter = new GoodPingTunAdpter(context, list);
-        adapter.setAdapterInterface(this);
+        adapter = new UserPingTunAdpter(context, list);;
         rcl.setAdapter(adapter);
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,27 +119,15 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
                 }
             }
         });
-        ShopPresenter.getGoodPingtuanInfo(this,goodId);
+        ShopPresenter.getUserPingtuanInfo(this,pingtuanid);
     }
     public void cancelAllTimers() {
-        adapter.cancelAllTimers();
+       if(countDownTimer!=null) {
+           countDownTimer.cancel();
+       }
     }
 
-    @Override
-    public void onGetGoodPingtuanInfoSuccess(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            JSONObject datas = obj.optJSONObject("datas");
-            JSONArray pintuan_list = datas.optJSONArray("pintuan_list");
-            for(int i=0;i<pintuan_list.length();i++){
-               list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),GoodPingTunBean.class));
-            }
-            adapter.notifyChange();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-    }
     private void showCenterLodaingDialog() {
         if (isShowing() && centerLoadingDialog == null) {
             centerLoadingDialog = new LoadingDialog(context);
@@ -167,8 +177,61 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
         return null;
     }
 
+
     @Override
-    public void onClickPingTuan(String pingTuanid, String buyer_id) {
-        dialogInterface.onClickPingTuan(pingTuanid, buyer_id);
+    public void onUserPingtuanInfoSuccess(String s) {
+        try {
+            JSONObject obj = new JSONObject(s);
+            JSONObject datas = obj.optJSONObject("datas");
+            JSONObject pintuan_info = datas.optJSONObject("pintuan_info");
+            long end_time_left = pintuan_info.optLong("end_time_left")*1000;
+            JSONArray pintuan_list = pintuan_info.optJSONArray("pintuan_list");
+            tvName.setText(pintuan_info.optString("buyer_name"));
+            buyer_id = pintuan_info.optString("buyer_id");
+            tvLeftNum.setText("还差"+pintuan_info.optString("num")+"人拼成");
+            for(int i=0;i<pintuan_list.length();i++){
+                list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),UserPinTunBean.class));
+            }
+            adapter.notifyDataSetChanged();
+            if(end_time_left>0) {
+                countDownTimer = new CountDownTimer(end_time_left, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                        hour.setText(list.get(1));
+                        minute.setText(list.get(2));
+                        second.setText(list.get(3));
+                        cantuan.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                             dialogInterface.onClickPingTuan(pingtuanid,buyer_id);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFinish() {
+                      cantuan.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                              PopUtil.toastInCenter("拼团已经结束");
+                          }
+                      });
+                    }
+                }.start();
+            }else {
+                hour.setText("00");
+                minute.setText("00");
+                second.setText("00");
+                cantuan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PopUtil.toastInCenter("拼团已经结束");
+                    }
+                });
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -44,7 +44,7 @@ import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
 import com.msht.minshengbao.androidShop.customerview.GoodPintuanDialog;
-import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
+import com.msht.minshengbao.androidShop.customerview.UserPintuanDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.GiftBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
@@ -55,8 +55,8 @@ import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.viewInterface.DialogInterface;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
-import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -97,7 +97,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView {
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, DialogInterface {
     private static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
@@ -237,9 +237,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private CountDownTimer miaoshaCountDownTimer;
     private List<GiftBean> giftArraylist=new ArrayList<GiftBean>();
     private GiftArrayAdapter giftArrayAdapter;
-    private GoodPintuanDialog userPinTunDialog;
+    private UserPintuanDialog userPinTunDialog;
     private GoodPintuanDialog goodPingTunDialog;
-
+    public long millisUntilFinished;
 
     @Override
     protected int setLayoutId() {
@@ -473,8 +473,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         pingtuanAdapter.setAdapterInterface(new PingtuanAdapter.AdapterInterface() {
             @Override
             public void onClickCanTuan(String pingTuanId) {
-             userPinTunDialog = new GoodPintuanDialog(getContext(),pingTuanId);
-             userPinTunDialog.show();
+              showUserPingtunDialog(pingTuanId);
             }
         });
         pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -635,12 +634,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             if (TextUtils.equals(pintuan_promotion, "1")) {
                 goodDetailActivityListener.isPingTuan(true);
-                goods_price = goods_info.optString("pintuan_goods_price");
+                goods_price = goods_info.optString("pintuan_price");
                 ll_PingTuan.setVisibility(View.VISIBLE);
                 ll_miaosha.setVisibility(View.GONE);
                 tvprice.setVisibility(View.GONE);
                 tvgoods_marketprice.setVisibility(View.GONE);
-                tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_price"), R.style.big_money, R.style.big_money));
+                tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
                 tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                 tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
                 tvPingTuanNum.setText(goods_info.optString("pintuan_sole_num") + "件");
@@ -649,8 +648,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 }
                 countDownTimer = new CountDownTimer(goods_info.optLong("pintuan_end_time") * 1000, 1000) {
 
+
                     @Override
                     public void onTick(long millisUntilFinished) {
+                        GoodFragment.this.millisUntilFinished = millisUntilFinished;
                         List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
                         tvDay.setText(list.get(0));
                         tvHour.setText(list.get(1));
@@ -817,7 +818,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     goodDetailActivityListener.goEveluateFragment();
                 }
             });
-            goodDetailActivityListener.onGetGoodDetailSuccess();
             if (datas.has("voucher")) {
                 JSONArray voucherArray = datas.optJSONArray("voucher");
                 if (voucherArray.length() > 0) {
@@ -887,11 +887,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 llgift.setVisibility(View.GONE);
             }
             giftArrayAdapter.notifyDataSetChanged();
+            if(goods_info.optInt("pintuan_allow_new")==0){
+              goodDetailActivityListener.isAllowNewPingTuan(false);
+            }else {
+                goodDetailActivityListener.isAllowNewPingTuan(true);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
+        goodDetailActivityListener.onGetGoodDetailSuccess();
     }
 
     public String getTid() {
@@ -929,7 +933,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     }
 
     @Override
-    public void buyGood() {
+    public void buyGood(boolean ispingTuan) {
         if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
@@ -944,6 +948,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 Bundle bundle = new Bundle();
                 bundle.putString("ifCar", "0");
                 bundle.putString("isPickup_self", isPickup_self);
+                if(ispingTuan){
+                    bundle.putString("isPingtuan","1");
+                }
                 bundle.putSerializable("data", (Serializable) list);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -1020,6 +1027,16 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             ShopPresenter.getGoodDetail(this);
         }
+    }
+
+    @Override
+    public long getleftTime() {
+        return   millisUntilFinished;
+    }
+
+    @Override
+    public void showAddCarDialog() {
+        goodDetailActivityListener.showBottomDialog();
     }
 
 
@@ -1099,6 +1116,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         }
         if(goodPingTunDialog!=null){
             goodPingTunDialog.cancelAllTimers();
+        }
+        if(userPinTunDialog!=null){
+            userPinTunDialog.cancelAllTimers();
         }
     }
 
@@ -1214,11 +1234,57 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     }
     private void showGoodAllPingtunDialog() {
         if (this.getActivity() != null && !this.getActivity().isFinishing() && goodPingTunDialog == null) {
-            goodPingTunDialog = new GoodPintuanDialog(getContext(),goodsid);
+            goodPingTunDialog = new GoodPintuanDialog(getContext(),goodsid,this);
             goodPingTunDialog.show();
         } else if (this.getActivity() != null && !this.getActivity().isFinishing() && !goodPingTunDialog.isShowing()) {
             goodPingTunDialog.show();
         }
     }
+    private void showUserPingtunDialog(String pingtuanid) {
+        if (this.getActivity() != null && !this.getActivity().isFinishing()) {
+            if( userPinTunDialog==null) {
+                userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
+                userPinTunDialog.show();
+            }else if(userPinTunDialog.getPingtuanid().equals(pingtuanid)&&!userPinTunDialog.isShowing()){
+                userPinTunDialog.show();
+            }else if(!userPinTunDialog.getPingtuanid().equals(pingtuanid)){
+                userPinTunDialog.cancelAllTimers();
+                userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
+                userPinTunDialog.show();
+            }
+        }
+    }
+    @Override
+    public void onClickPingTuan(String pingTuanid, String buyerId) {
+        if (!TextUtils.isEmpty(getKey())) {
+            List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
+            List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
+            list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, imagelist.get(0), goods_name, selectedGoodNum + "", goods_price, goodsid));
+            ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
+            comfirmShopGoodBean.setStore_id(storeId);
+            comfirmShopGoodBean.setStore_name(storeName);
+            comfirmShopGoodBean.setGoods(list2);
+            list.add(comfirmShopGoodBean);
+            if (!TextUtils.isEmpty(isPickup_self)) {
+                Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ifCar", "0");
+                bundle.putString("isPickup_self", isPickup_self);
+                bundle.putString("isPingtuan", "1");
+                bundle.putString("pingTuanid", pingTuanid);
+                bundle.putString("buyerId", buyerId);
+                bundle.putSerializable("data", (Serializable) list);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } else {
+                PopUtil.toastInBottom("商品已下架或不支持购买");
+            }
+        } else {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
+    }
 
+    public void showGoodPingTuanDialog() {
+        showGoodAllPingtunDialog();
+    }
 }

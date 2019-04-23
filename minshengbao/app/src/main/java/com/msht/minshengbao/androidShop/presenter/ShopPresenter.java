@@ -389,7 +389,9 @@ public class ShopPresenter {
     }
 
     public static void buyStep1(final IBuyStep1View iBuyStep1View) {
-        OkHttpUtils.post().url(ShopConstants.BUY_STEP_1).tag(iBuyStep1View).addParams("key", iBuyStep1View.getKey()).addParams("cart_id", iBuyStep1View.getCarId()).addParams("ifcart", iBuyStep1View.ifCarted()).addParams("ifpickup_self", iBuyStep1View.ifPickupSelf()).addParams("address_id", iBuyStep1View.getAddressid()).build().execute(new DataStringCallback(iBuyStep1View) {
+        OkHttpUtils.post().url(ShopConstants.BUY_STEP_1).tag(iBuyStep1View).addParams("key", iBuyStep1View.getKey()).addParams("cart_id", iBuyStep1View.getCarId()).addParams("ifcart", iBuyStep1View.ifCarted()).addParams("ifpickup_self", iBuyStep1View.ifPickupSelf())
+                .addParams("pintuan",iBuyStep1View.getIsPinTuan())
+                .addParams("address_id", iBuyStep1View.getAddressid()).build().execute(new DataStringCallback(iBuyStep1View) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -669,6 +671,9 @@ public class ShopPresenter {
                 .addParams("rpt", iBuyStep2View.getRpt())
                 .addParams("pay_message", iBuyStep2View.getPay_message())
                 .addParams("dlyp_id",iBuyStep2View.getDlypId())
+                .addParams("log_id",iBuyStep2View.getPingTuanId())
+                .addParams("buyer_id",iBuyStep2View.getBuyerId())
+                .addParams("pintuan",iBuyStep2View.getIsPinTuan())
                 .build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {

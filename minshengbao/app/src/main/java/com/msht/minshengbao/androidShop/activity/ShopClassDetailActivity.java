@@ -413,7 +413,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     }
 
     @Override
-    public void buyGood() {
+    public void buyGood(boolean ispingTuan) {
         if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
@@ -525,6 +525,16 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             goodId = guigeList.get(childposition).getGuigeGoodId();
             ShopPresenter.getGoodDetail(this);
         }
+    }
+
+    @Override
+    public long getleftTime() {
+        return 0;
+    }
+
+    @Override
+    public void showAddCarDialog() {
+
     }
 
 

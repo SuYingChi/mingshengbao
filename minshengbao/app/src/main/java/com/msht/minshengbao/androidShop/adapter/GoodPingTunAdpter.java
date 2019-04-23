@@ -3,7 +3,6 @@ package com.msht.minshengbao.androidShop.adapter;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.GoodPingTunBean;
-import com.msht.minshengbao.androidShop.shopBean.UserPinTunBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
@@ -69,7 +67,7 @@ public  class GoodPingTunAdpter extends RecyclerView.Adapter<GoodPingTunAdpter.V
         holder.pintun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 spaInterface.onClickPingTuan(data.getPintuan_id());
+                 spaInterface.onClickPingTuan(data.getPintuan_id(),data.getBuyer_id());
             }
         });
         holder.leftnum.setText(data.getNum()+"人");
@@ -154,7 +152,7 @@ public  class GoodPingTunAdpter extends RecyclerView.Adapter<GoodPingTunAdpter.V
         }
     }
     public interface AdapterInterface {
-        void onClickPingTuan(String pingTuan);
+        void onClickPingTuan(String pingTuan, String buyer_id);
     }
     public  void setAdapterInterface(AdapterInterface spaInterface){
         this.spaInterface = spaInterface;

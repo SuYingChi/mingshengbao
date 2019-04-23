@@ -3,6 +3,7 @@ package com.msht.minshengbao.androidShop.customerview;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,16 +19,19 @@ import android.widget.TextView;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GoodGuigeAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
+import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.StringUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IShopGoodDetailView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddCarOrBuyGoodDialog extends Dialog {
+public class PingTuanBuyGoodDialog extends Dialog {
     private  Context context;
     @BindView(R.id.iv)
     ImageView iv;
@@ -47,13 +51,24 @@ public class AddCarOrBuyGoodDialog extends Dialog {
     LinearLayout llguige;
     @BindView(R.id.close)
     ImageView ivClose;
+    @BindView(R.id.day)
+    TextView tvDay;
+    @BindView(R.id.hour)
+    TextView tvHour;
+    @BindView(R.id.minute)
+    TextView tvMinute;
+    @BindView(R.id.second)
+    TextView tvSecond;
+    @BindView(R.id.buy_dialog)
+    TextView tvBuy;
     private IShopGoodDetailView iShopGoodDetailView;
     private int num = 1;
 
 
     private GoodGuigeAdapter ad;
+    private CountDownTimer countDownTimer;
 
-    public AddCarOrBuyGoodDialog(@NonNull Context context, IShopGoodDetailView iShopGoodDetailView) {
+    public PingTuanBuyGoodDialog(@NonNull Context context, IShopGoodDetailView iShopGoodDetailView) {
         super(context, R.style.ActionSheetDialogStyle);
         this.iShopGoodDetailView = iShopGoodDetailView;
         num = iShopGoodDetailView.getSelectedGoodNum();
@@ -64,8 +79,8 @@ public class AddCarOrBuyGoodDialog extends Dialog {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (AddCarOrBuyGoodDialog.this.isShowing()) {
-                    AddCarOrBuyGoodDialog.this.dismiss();
+                if (PingTuanBuyGoodDialog.this.isShowing()) {
+                    PingTuanBuyGoodDialog.this.dismiss();
                 }
                 break;
             default:
@@ -77,12 +92,40 @@ public class AddCarOrBuyGoodDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_car_dialog);
+        setContentView(R.layout.pingtuanbuy_dialog);
         ButterKnife.bind(this);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         tvName.setText(iShopGoodDetailView.getNameDialog());
         tvPrice.setText(StringUtil.getPriceSpannable12String(getContext(), iShopGoodDetailView.getPrice(), R.style.big_money, R.style.big_money));
+        countDownTimer = new CountDownTimer(iShopGoodDetailView.getleftTime(), 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                tvDay.setText(list.get(0));
+                tvHour.setText(list.get(1));
+                tvMinute.setText(list.get(2));
+                tvSecond.setText(list.get(3));
+                tvBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (PingTuanBuyGoodDialog.this.isShowing()) {
+                            PingTuanBuyGoodDialog.this.dismiss();
+                        }
+                        iShopGoodDetailView.buyGood(true);
+                    }
+                });
+            }
+
+            @Override
+            public void onFinish() {
+                countDownTimer.cancel();
+                if (PingTuanBuyGoodDialog.this.isShowing()) {
+                    PingTuanBuyGoodDialog.this.dismiss();
+                }
+                iShopGoodDetailView.showAddCarDialog();
+            }
+        }.start();
         tvRemainNum.setText(String.format("库存量:%s件", iShopGoodDetailView.getRemainNum()));
         tvNum.setText(String.format("%d", num));
         GlideUtil.loadRemoteImg(context,iv,iShopGoodDetailView.getImageUrl());
@@ -113,19 +156,19 @@ public class AddCarOrBuyGoodDialog extends Dialog {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AddCarOrBuyGoodDialog.this.isShowing()) {
-                    AddCarOrBuyGoodDialog.this.dismiss();
+                if (PingTuanBuyGoodDialog.this.isShowing()) {
+                    PingTuanBuyGoodDialog.this.dismiss();
                 }
             }
         });
     }
 
-    @OnClick({R.id.close, R.id.ll_plus, R.id.ll_reduce, R.id.add_car_dialog, R.id.buy_dialog})
+    @OnClick({R.id.close, R.id.ll_plus, R.id.ll_reduce})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.close:
-                if (AddCarOrBuyGoodDialog.this.isShowing()) {
-                    AddCarOrBuyGoodDialog.this.dismiss();
+                if (PingTuanBuyGoodDialog.this.isShowing()) {
+                    PingTuanBuyGoodDialog.this.dismiss();
                 }
                 break;
             case R.id.ll_reduce:
@@ -146,18 +189,6 @@ public class AddCarOrBuyGoodDialog extends Dialog {
                     PopUtil.toastInBottom("库存不够");
                 }
                 break;
-            case R.id.add_car_dialog:
-                if (AddCarOrBuyGoodDialog.this.isShowing()) {
-                    AddCarOrBuyGoodDialog.this.dismiss();
-                }
-                iShopGoodDetailView.addCar();
-                break;
-            case R.id.buy_dialog:
-                if (AddCarOrBuyGoodDialog.this.isShowing()) {
-                    AddCarOrBuyGoodDialog.this.dismiss();
-                }
-                iShopGoodDetailView.buyGood(false);
-                break;
             default:
                 break;
         }
@@ -176,5 +207,9 @@ public class AddCarOrBuyGoodDialog extends Dialog {
             tvGuigeName.setText(iShopGoodDetailView.getGuigeName());
             ad.notifyDataSetChanged();
         }
+    }
+
+    public void cancelCounmDown() {
+        countDownTimer.cancel();
     }
 }

@@ -147,6 +147,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private SiteBean.DatasBean.AddrListBean siteBean;
     private OrderVoucherDialog voucherDialog;
     private int storeVoucherPosition=0;
+    private String isPingTuan;
+    private String pingtuanid;
+    private String buyerid;
 
     @Override
     protected void setLayout() {
@@ -229,6 +232,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             rcl.setAdapter(adapter);
             ifCarted = bundle.getString("ifCar");
             isPickup_self = bundle.getString("isPickup_self");
+            isPingTuan = bundle.getString("isPingtuan");
+            if("1".equals(isPingTuan)){
+                pingtuanid = bundle.getString("pingTuanid" );
+                buyerid = bundle.getString("buyerId");
+            }
             ShopPresenter.getAddressList(this, false);
             if (TextUtils.equals(isPickup_self, "0")) {
                 llsite.setVisibility(View.GONE);
@@ -715,6 +723,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         }
     }
 
+    @Override
+    public String getIsPinTuan() {
+        return isPingTuan;
+    }
+
     private double refreshTotalVoucherPrice() {
         voucher = 0;
         for(int i=0;i<comfirmShopGoodBeans.size();i++){
@@ -898,6 +911,16 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         } else {
             return "";
         }
+    }
+
+    @Override
+    public String getPingTuanId() {
+        return pingtuanid;
+    }
+
+    @Override
+    public String getBuyerId() {
+        return buyerid;
     }
 
 

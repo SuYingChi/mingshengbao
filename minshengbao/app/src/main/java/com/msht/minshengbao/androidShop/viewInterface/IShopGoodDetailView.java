@@ -13,7 +13,7 @@ public interface IShopGoodDetailView extends IBaseView {
 
     void addCar();
 
-    void buyGood();
+    void buyGood(boolean ispingTuan);
 
     int getSelectedGoodNum();
 
@@ -38,4 +38,8 @@ public interface IShopGoodDetailView extends IBaseView {
 
 
     void onSelectGoodId(int childposition);
+
+    long getleftTime();
+
+    void showAddCarDialog();
 }

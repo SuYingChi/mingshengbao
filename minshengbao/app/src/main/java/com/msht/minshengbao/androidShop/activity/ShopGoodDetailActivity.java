@@ -27,6 +27,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.AddCarOrBuyGoodDialog;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
+import com.msht.minshengbao.androidShop.customerview.PingTuanBuyGoodDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.GoodDetailActivityListener;
@@ -77,6 +78,8 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     private float toolbarAlpha;
     private Drawable currentLeftDrawblw;
     private Drawable currentRightDrawblw;
+    private boolean isPingTuan;
+    private PingTuanBuyGoodDialog pingTuanBuyDialog;
 
     @Override
     protected void setLayout() {
@@ -213,7 +216,14 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
             addCarOrBuyGoodDialog.show();
         }
     }
-
+    private void showPingTuanDialog() {
+        if (!isFinishing() && pingTuanBuyDialog == null) {
+            pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+            pingTuanBuyDialog.show();
+        } else if (!isFinishing() && !pingTuanBuyDialog.isShowing()) {
+            pingTuanBuyDialog.show();
+        }
+    }
     private void goCarListActivity() {
         if (TextUtils.isEmpty(getKey())) {
             startActivity(new Intent(this,NoLoginCarActivity.class));
@@ -382,11 +392,31 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     public void onGetGoodDetailSuccess() {
-        if (!isFinishing() && addCarOrBuyGoodDialog != null&& addCarOrBuyGoodDialog.isShowing()) {
-            addCarOrBuyGoodDialog.refreshData();
+        if(isPingTuan) {
+            if (!isFinishing() && pingTuanBuyDialog != null && pingTuanBuyDialog.isShowing()) {
+                pingTuanBuyDialog.refreshData();
+            }else if(!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()){
+                addCarOrBuyGoodDialog.dismiss();
+                addCarOrBuyGoodDialog=null;
+                pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+                pingTuanBuyDialog.show();
+            }else {
+                pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+            }
         }else {
-            addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+            if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
+                addCarOrBuyGoodDialog.refreshData();
+            }else if(!isFinishing() && pingTuanBuyDialog != null && pingTuanBuyDialog.isShowing()){
+                pingTuanBuyDialog.dismiss();
+                pingTuanBuyDialog.cancelCounmDown();
+                pingTuanBuyDialog=null;
+                addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+                addCarOrBuyGoodDialog.show();
+            }else {
+                addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+            }
         }
+
     }
 
     @Override
@@ -401,6 +431,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     public void isPingTuan(boolean isPingTuan) {
+        this.isPingTuan= isPingTuan;
         if(isPingTuan){
             llbuy.setVisibility(View.INVISIBLE);
             tvPingTuanBuy.setVisibility(View.VISIBLE);
@@ -408,6 +439,16 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
             llbuy.setVisibility(View.VISIBLE);
             tvPingTuanBuy.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void isAllowNewPingTuan(boolean b) {
+      tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            showPingTuanDialog();
+          }
+      });
     }
 
 
@@ -421,5 +462,13 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     @Override
     public void onGetDetailSuccess(String s) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(pingTuanBuyDialog!=null){
+            pingTuanBuyDialog.cancelCounmDown();
+        }
     }
 }

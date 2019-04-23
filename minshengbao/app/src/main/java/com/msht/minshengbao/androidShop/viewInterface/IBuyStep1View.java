@@ -10,4 +10,6 @@ public interface IBuyStep1View extends IBaseView{
     String getAddressid();
 
     void onBuyStep1Success(String s);
+
+    String getIsPinTuan();
 }
