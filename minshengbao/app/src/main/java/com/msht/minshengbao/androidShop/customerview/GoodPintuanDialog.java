@@ -117,7 +117,9 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
             }
             adapter.notifyChange();
             if(list.size()==0){
-                tvTitle.setText("没有正在进行的拼团并且不允许开新团");
+                tvTitle.setText("无拼团");
+            }else {
+                tvTitle.setText("正在进行的拼团");
             }
         } catch (JSONException e) {
             e.printStackTrace();

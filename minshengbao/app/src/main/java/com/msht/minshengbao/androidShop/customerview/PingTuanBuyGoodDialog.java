@@ -100,15 +100,6 @@ public class PingTuanBuyGoodDialog extends Dialog {
         setCanceledOnTouchOutside(true);
         tvName.setText(iShopGoodDetailView.getNameDialog());
         tvPrice.setText(StringUtil.getPriceSpannable12String(getContext(), iShopGoodDetailView.getPrice(), R.style.big_money, R.style.big_money));
-     /*   tvAddCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (PingTuanBuyGoodDialog.this.isShowing()) {
-                    PingTuanBuyGoodDialog.this.dismiss();
-                }
-                iShopGoodDetailView.addCar();
-            }
-        });*/
         countDownTimer = new CountDownTimer(iShopGoodDetailView.getleftTime(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
