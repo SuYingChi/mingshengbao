@@ -855,8 +855,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public String getRpt() {
-
-        return rpacket_t_id+"|"+rpacket_price;
+          if ("0".equals(rpacket_price)){
+              return "";
+          }else {
+              return rpacket_t_id+"|"+rpacket_price;
+          }
     }
 
     @Override
