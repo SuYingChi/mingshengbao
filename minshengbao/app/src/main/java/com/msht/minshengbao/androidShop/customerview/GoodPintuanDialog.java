@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GoodPingTunAdpter;
@@ -43,6 +44,8 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
     RecyclerView rcl;
     @BindView(R.id.dismiss)
     ImageView dismiss;
+    @BindView(R.id.title)
+    TextView tvTitle;
     private Context context;
     private GoodPingTunAdpter adapter;
     private List<GoodPingTunBean> list=new ArrayList<GoodPingTunBean>();
@@ -113,6 +116,9 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
                list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),GoodPingTunBean.class));
             }
             adapter.notifyChange();
+            if(list.size()==0){
+                tvTitle.setText("没有正在进行的拼团并且不允许开新团");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

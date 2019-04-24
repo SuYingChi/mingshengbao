@@ -15,7 +15,9 @@
        android:layout_gravity="right"
 
        />
-    <TextView style="@style/shopBlackTitleText"
+    <TextView
+        android:id="@+id/title"
+        style="@style/shopBlackTitleText"
         android:text="正在进行的拼团"
         />
     <android.support.v7.widget.RecyclerView

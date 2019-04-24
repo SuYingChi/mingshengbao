@@ -464,9 +464,6 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     public void isAllowAddCar(boolean isAllowAddCar) {
-            /*if(pingTuanBuyDialog!=null){
-                pingTuanBuyDialog.setIsAllowAddCarVisible(isAllowAddCar);
-            }*/
             if(addCarOrBuyGoodDialog!=null){
                 addCarOrBuyGoodDialog.setIsAllowAddCarVisible(isAllowAddCar);
             }
