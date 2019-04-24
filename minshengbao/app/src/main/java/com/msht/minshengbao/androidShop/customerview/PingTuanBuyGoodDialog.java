@@ -210,6 +210,8 @@ public class PingTuanBuyGoodDialog extends Dialog {
     }
 
     public void cancelCounmDown() {
-        countDownTimer.cancel();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+        }
     }
 }

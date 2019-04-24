@@ -100,6 +100,7 @@
                 android:background="@color/msb_color"
                 android:gravity="center"
                 android:text="发起团购"
+                android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_18" />
 
@@ -108,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:visibility="invisible">
+                >
 
                 <RelativeLayout
                     android:id="@+id/add_car"

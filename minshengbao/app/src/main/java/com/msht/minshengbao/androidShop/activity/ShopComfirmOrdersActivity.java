@@ -146,10 +146,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     Handler handler = new Handler();
     private SiteBean.DatasBean.AddrListBean siteBean;
     private OrderVoucherDialog voucherDialog;
-    private int storeVoucherPosition=0;
-    private String isPingTuan;
-    private String pingtuanid;
-    private String buyerid;
+    private int storeVoucherPosition = 0;
+    private String isPingTuan = "";
+    private String pingtuanid = "";
+    private String buyerid = "";
 
     @Override
     protected void setLayout() {
@@ -223,9 +223,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 }
 
                 @Override
-                public void onShowVoucherList(List<OrderVoucherBean> voucherList,int position) {
-                   // storeVoucherPosition=position;
-                    showVoucherListDialog(voucherList,position);
+                public void onShowVoucherList(List<OrderVoucherBean> voucherList, int position) {
+                    // storeVoucherPosition=position;
+                    showVoucherListDialog(voucherList, position);
                 }
             });
             adapter.setDatas(comfirmShopGoodBeans);
@@ -233,10 +233,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             ifCarted = bundle.getString("ifCar");
             isPickup_self = bundle.getString("isPickup_self");
             isPingTuan = bundle.getString("isPingtuan");
-            if("1".equals(isPingTuan)){
-                pingtuanid = bundle.getString("pingTuanid" );
-                buyerid = bundle.getString("buyerId");
-            }
+            pingtuanid = bundle.getString("pingTuanid");
+            buyerid = bundle.getString("buyerId");
             ShopPresenter.getAddressList(this, false);
             if (TextUtils.equals(isPickup_self, "0")) {
                 llsite.setVisibility(View.GONE);
@@ -305,17 +303,17 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         });
     }
 
-    private void showVoucherListDialog(List<OrderVoucherBean> voucherList,int storeVoucherPosition) {
+    private void showVoucherListDialog(List<OrderVoucherBean> voucherList, int storeVoucherPosition) {
         if (!isFinishing() && voucherDialog == null) {
-            this.storeVoucherPosition=storeVoucherPosition;
+            this.storeVoucherPosition = storeVoucherPosition;
             voucherDialog = new OrderVoucherDialog(this, this, voucherList);
             voucherDialog.show();
         } else if (!isFinishing() && !voucherDialog.isShowing()) {
-            if (storeVoucherPosition==this.storeVoucherPosition) {
+            if (storeVoucherPosition == this.storeVoucherPosition) {
                 voucherDialog.show();
             } else {
-                this.storeVoucherPosition=storeVoucherPosition;
-                voucherDialog .refreshData(voucherList, !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice()));
+                this.storeVoucherPosition = storeVoucherPosition;
+                voucherDialog.refreshData(voucherList, !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice()));
                 voucherDialog.show();
             }
         }
@@ -564,7 +562,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 if (voucherInfo instanceof JSONObject) {
                     String voucherTid = ((JSONObject) voucherInfo).optString("voucher_t_id");
                     String voucherPrice = ((JSONObject) voucherInfo).optString("voucher_price");
-                    String voucherDesc = ((JSONObject) voucherInfo).optString("voucher_title")+":"+((JSONObject) voucherInfo).optString("voucher_price");
+                    String voucherDesc = ((JSONObject) voucherInfo).optString("voucher_title") + ":" + ((JSONObject) voucherInfo).optString("voucher_price");
                     JSONObject store_voucher_list = storeobj.optJSONObject("store_voucher_list");
                     List<String> vidList = JsonUtil.getJsonObjectKeyList(store_voucher_list);
                     List<OrderVoucherBean> list = new ArrayList<OrderVoucherBean>();
@@ -575,8 +573,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         String voucher_start_date = voucherobj.optString("voucher_start_date");
                         String limitTime = voucherobj.optString("voucher_end_date");
                         String vlimitAmount = voucherobj.optString("voucher_limit");
-                        String desc = vtitle+":"+voucherobj.optString("voucher_price");
-                        list.add(new OrderVoucherBean(vtid, vtitle, limitTime, vlimitAmount, voucherTid.equals(vtid), voucher_start_date, voucherobj.optString("voucher_price"),desc));
+                        String desc = vtitle + ":" + voucherobj.optString("voucher_price");
+                        list.add(new OrderVoucherBean(vtid, vtitle, limitTime, vlimitAmount, voucherTid.equals(vtid), voucher_start_date, voucherobj.optString("voucher_price"), desc));
                     }
                     comfirmShopGoodBean.setVoucherInfo(voucherTid, voucherPrice, voucherDesc);
                     comfirmShopGoodBean.setHasVoucher(true);
@@ -604,9 +602,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     recommandList.add(new RecommendBean(obj.optString("recommend_phone"), obj.optString("default")));
                 }
             }
-            if(recommandList.size()==0){
+            if (recommandList.size() == 0) {
                 im.setVisibility(View.INVISIBLE);
-            }else {
+            } else {
                 im.setVisibility(View.VISIBLE);
             }
             for (RecommendBean re : recommandList) {
@@ -730,10 +728,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     private double refreshTotalVoucherPrice() {
         voucher = 0;
-        for(int i=0;i<comfirmShopGoodBeans.size();i++){
+        for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
             ComfirmShopGoodBean bean = comfirmShopGoodBeans.get(i);
-            if(bean.isHasVoucher()) {
-               voucher+=Double.valueOf(bean.getVoucherPrice());
+            if (bean.isHasVoucher()) {
+                voucher += Double.valueOf(bean.getVoucherPrice());
             }
         }
         return voucher;
@@ -817,17 +815,17 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         // voucher_t_id|store_id|voucher_price
         StringBuilder sb = new StringBuilder();
         int index = 0;
-       for(int i=0;i<comfirmShopGoodBeans.size();i++){
-           ComfirmShopGoodBean bean = comfirmShopGoodBeans.get(i);
-           if(bean.isHasVoucher()&& !"0".equals(bean.getVoucherPrice())) {
-               if (index == 0) {
-                   sb.append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
-               } else {
-                   sb.append(",").append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
-               }
-               index++;
-           }
-       }
+        for (int i = 0; i < comfirmShopGoodBeans.size(); i++) {
+            ComfirmShopGoodBean bean = comfirmShopGoodBeans.get(i);
+            if (bean.isHasVoucher() && !"0".equals(bean.getVoucherPrice())) {
+                if (index == 0) {
+                    sb.append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
+                } else {
+                    sb.append(",").append(bean.getVoucherTid()).append("|").append(bean.getStore_id()).append("|").append(bean.getVoucherPrice());
+                }
+                index++;
+            }
+        }
         return sb.toString();
     }
 
@@ -959,10 +957,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     public void onUserIdError(String error) {
         PopUtil.showComfirmDialog(this, "", "该燃气用户号不存在", "", "", null, null, true);
     }
-   //用户更改check的状态与当前check状态绑定数据不一致时执行绑定数据更刷新列表操作,防止从这里触发notify 在adpter里oncheckchange又回调这里再次notify，造成死循环
+
+    //用户更改check的状态与当前check状态绑定数据不一致时执行绑定数据更刷新列表操作,防止从这里触发notify 在adpter里oncheckchange又回调这里再次notify，造成死循环
     @Override
     public void onItemCheckedChange(List<OrderVoucherBean> datas, int position, Boolean isCheck) {
-        if(!datas.get(position).isSelected()&&isCheck) {
+        if (!datas.get(position).isSelected() && isCheck) {
             datas.get(position).setSelected(true);
             for (int i = 0; i < datas.size(); i++) {
                 OrderVoucherBean bean2 = datas.get(i);
@@ -975,19 +974,19 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             voucherDialog.refreshData(datas, true);
             comfirmShopGoodBeans.get(storeVoucherPosition).setVoucherInfo(datas.get(position).getVtid(), datas.get(position).getVoucherPrice(), datas.get(position).getDesc());
             adapter.notifyDataSetChanged();
-            goodsTotal-=goodsTotalSelf;
+            goodsTotal -= goodsTotalSelf;
             goodsTotalSelf += voucher;
             refreshTotalVoucherPrice();
             goodsTotalSelf -= voucher;
-            goodsTotal+=goodsTotalSelf;
+            goodsTotal += goodsTotalSelf;
             tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
             tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
         }
     }
 
     @Override
-    public void noSelectedVoucher(List<OrderVoucherBean> datas,boolean isChecked) {
-        if(isChecked&& !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice())) {
+    public void noSelectedVoucher(List<OrderVoucherBean> datas, boolean isChecked) {
+        if (isChecked && !"0".equals(comfirmShopGoodBeans.get(storeVoucherPosition).getVoucherPrice())) {
             for (int i = 0; i < datas.size(); i++) {
                 OrderVoucherBean bean2 = datas.get(i);
                 if (bean2.isSelected()) {
@@ -999,11 +998,11 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             voucherDialog.refreshData(datas, false);
             comfirmShopGoodBeans.get(storeVoucherPosition).setVoucherInfo("", "0", "不使用代金券");
             adapter.notifyDataSetChanged();
-            goodsTotal-=goodsTotalSelf;
+            goodsTotal -= goodsTotalSelf;
             goodsTotalSelf += voucher;
             refreshTotalVoucherPrice();
             goodsTotalSelf -= voucher;
-            goodsTotal+=goodsTotalSelf;
+            goodsTotal += goodsTotalSelf;
             tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
             tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
         }
