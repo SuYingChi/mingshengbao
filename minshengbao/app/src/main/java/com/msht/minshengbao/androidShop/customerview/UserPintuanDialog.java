@@ -193,6 +193,9 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
                 list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),UserPinTunBean.class));
             }
             adapter.notifyDataSetChanged();
+            if(countDownTimer!=null){
+               countDownTimer.cancel();
+            }
             if(end_time_left>0) {
                 countDownTimer = new CountDownTimer(end_time_left, 1000) {
                     @Override
@@ -233,5 +236,9 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refresh() {
+        ShopPresenter.getUserPingtuanInfo(this,pingtuanid);
     }
 }

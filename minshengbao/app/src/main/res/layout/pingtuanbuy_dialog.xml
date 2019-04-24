@@ -257,9 +257,25 @@
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@id/rlt_bottom"
+        android:layout_height="wrap_content">
+       <!-- <TextView
+            android:id="@+id/addcar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/yellow_text"
+            android:gravity="center"
+            android:padding="@dimen/margin_Modules"
+            android:text="加入购物车"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width18"--> />
         <TextView
             android:id="@+id/buy_dialog"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
@@ -267,7 +283,7 @@
             android:padding="@dimen/margin_Modules"
             android:text="立即购买"
             android:textColor="@color/white"
-            android:layout_below="@id/rlt_bottom"
             android:textSize="@dimen/text_width18" />
+    </LinearLayout>
     <!-- </android.support.v4.widget.NestedScrollView>-->
 </RelativeLayout>

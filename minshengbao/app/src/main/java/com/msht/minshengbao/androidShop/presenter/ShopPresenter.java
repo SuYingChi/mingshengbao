@@ -694,8 +694,8 @@ public class ShopPresenter {
         });
     }
 
-    public static void buyStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch, String userIds) {
-        OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
+    public static void buyDoorServiceStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch, String userIds) {
+        PostFormBuilder request = OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
                 .addParams("ifcart", ifCarted)
                 .addParams("cart_id", carid)
                 .addParams("address_id", addressId)
@@ -714,8 +714,14 @@ public class ShopPresenter {
                 .addParams("rcb_pay", iBuyStep2View.getRcb_pay())
                 .addParams("rpt", iBuyStep2View.getRpt())
                 .addParams("pay_message", iBuyStep2View.getPay_message())
-                .addParams("door_service", userIds)
-                .build().execute(new DataStringCallback(iBuyStep2View, false) {
+                .addParams("door_service", userIds);
+        if (!TextUtils.isEmpty(iBuyStep2View.getIsPinTuan())) {
+            request.addParams("pintuan", iBuyStep2View.getIsPinTuan());
+        }
+        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId())&&!TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
+            request.addParams("log_id", iBuyStep2View.getPingTuanId()).addParams("buyer_id", iBuyStep2View.getBuyerId());
+        }
+               request .build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);

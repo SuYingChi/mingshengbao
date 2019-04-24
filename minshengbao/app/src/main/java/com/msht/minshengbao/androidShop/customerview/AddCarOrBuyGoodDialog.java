@@ -47,6 +47,8 @@ public class AddCarOrBuyGoodDialog extends Dialog {
     LinearLayout llguige;
     @BindView(R.id.close)
     ImageView ivClose;
+    @BindView(R.id.add_car_dialog)
+    TextView tvAddCar;
     private IShopGoodDetailView iShopGoodDetailView;
     private int num = 1;
 
@@ -175,6 +177,14 @@ public class AddCarOrBuyGoodDialog extends Dialog {
             llguige.setVisibility(View.VISIBLE);
             tvGuigeName.setText(iShopGoodDetailView.getGuigeName());
             ad.notifyDataSetChanged();
+        }
+    }
+
+    public void setIsAllowAddCarVisible(boolean isAllowAddCar) {
+        if(isAllowAddCar&&tvAddCar!=null&&tvAddCar.getVisibility()==View.GONE) {
+            tvAddCar.setVisibility(View.VISIBLE);
+        }else if(!isAllowAddCar&&tvAddCar!=null&&tvAddCar.getVisibility()==View.VISIBLE){
+            tvAddCar.setVisibility(View.GONE);
         }
     }
 }

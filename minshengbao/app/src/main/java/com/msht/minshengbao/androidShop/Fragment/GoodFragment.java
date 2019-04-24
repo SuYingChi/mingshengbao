@@ -874,6 +874,12 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 llpingtuan.setVisibility(View.GONE);
             }
             pingtuanAdapter.notifyChange();
+            if(goodPingTunDialog!=null){
+                goodPingTunDialog.refresh();
+            }
+            if(userPinTunDialog!=null){
+                userPinTunDialog.refresh();
+            }
             JSONArray gift_array = datas.optJSONArray("gift_array");
             giftArraylist.clear();
             if (gift_array != null && gift_array.length() > 0) {
@@ -891,6 +897,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
               goodDetailActivityListener.isAllowNewPingTuan(false);
             }else {
                 goodDetailActivityListener.isAllowNewPingTuan(true);
+            }
+            if(goods_info.optInt("cart")==1){
+                goodDetailActivityListener.isAllowAddCar(true);
+            }else {
+                goodDetailActivityListener.isAllowAddCar(false);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1232,7 +1243,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onGetVoucherSuccess(String s) {
         PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
-    private void showGoodAllPingtunDialog() {
+    public void showGoodAllPingtunDialog() {
         if (this.getActivity() != null && !this.getActivity().isFinishing() && goodPingTunDialog == null) {
             goodPingTunDialog = new GoodPintuanDialog(getContext(),goodsid,this);
             goodPingTunDialog.show();
@@ -1284,7 +1295,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         }
     }
 
-    public void showGoodPingTuanDialog() {
-        showGoodAllPingtunDialog();
+
+
+    public void refreshGoodDetail() {
+        ShopPresenter.getGoodDetail(this);
     }
 }

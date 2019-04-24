@@ -327,7 +327,35 @@
                     android:scrollbarStyle="insideOverlay"
                     android:layout_marginTop="@dimen/margin_8"
                     />
+            <LinearLayout
+                android:id="@+id/ll_rpt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_Modules"
+                android:layout_marginBottom="@dimen/margin_Modules"
+                android:background="@color/white"
+                android:orientation="horizontal">
 
+                <TextView
+                    style="@style/shopMsbcolorTitleText"
+                    android:text="平台红包"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/rptdesc"
+                    style="@style/shopMsbcolorTitleText"
+                    android:textSize="@dimen/text_14"
+                    android:text="XXXXXX"
+                    android:drawableRight="@drawable/right_angle"
+                    android:drawableEnd="@drawable/right_angle"
+                    android:drawablePadding="@dimen/margin_Modules"
+                    />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

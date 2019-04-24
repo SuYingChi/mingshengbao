@@ -23,6 +23,7 @@ import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.OrdersGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.OrderVoucherDialog;
+import com.msht.minshengbao.androidShop.customerview.RptDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep2SuccessBean;
 import com.msht.minshengbao.androidShop.shopBean.BuyStep3PayListBean;
@@ -30,6 +31,7 @@ import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.InvItemBean;
 import com.msht.minshengbao.androidShop.shopBean.OrderVoucherBean;
 import com.msht.minshengbao.androidShop.shopBean.RecommendBean;
+import com.msht.minshengbao.androidShop.shopBean.RptBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopAddressListBean;
 import com.msht.minshengbao.androidShop.shopBean.SiteBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
@@ -42,6 +44,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IBuyStep3GetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAddressListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
+import com.msht.minshengbao.androidShop.viewInterface.ISelectedRptView;
 import com.msht.minshengbao.androidShop.viewInterface.ISelectedVoucherView;
 
 import org.json.JSONArray;
@@ -57,7 +60,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView, ISearchUserIdView, ISelectedVoucherView {
+public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetAddressListView, IBuyStep1View, IChangeAddressView, IBuyStep2View, IBuyStep3GetPayListView, ISearchUserIdView, ISelectedVoucherView, ISelectedRptView {
 
     private static final int REQUEST_CODE_RECOMMEND = 200;
     private static final int REQUEST_CODE_INV_INFO = 300;
@@ -118,9 +121,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private double voucher = 0;
     private Map<String, Voucher> voucherInfoMap = new HashMap<String, Voucher>();
     private Map<String, List<JSONObject>> storeMansongMap = new HashMap<String, List<JSONObject>>();
-    private String rpacketTId;
-    private JSONObject rpackeObj;
-    private List<JSONObject> rptList = new ArrayList<JSONObject>();
     private Map<String, JSONObject> manSongMap = new HashMap<String, JSONObject>();
     private RecommendBean recommendBean;
     private String vat_hash;
@@ -140,6 +140,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     ImageView ivback;
     @BindView(R.id.im)
     ImageView im;
+    @BindView(R.id.rptdesc)
+    TextView tvRptdesc;
+    @BindView(R.id.ll_rpt)
+    LinearLayout llrpt;
     private boolean isInv = true;
     private OrdersGoodListAdapter adapter;
     private Bundle bundle;
@@ -150,6 +154,10 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private String isPingTuan = "";
     private String pingtuanid = "";
     private String buyerid = "";
+    private String rpacket_price;
+    private String rpacket_t_id;
+    private List<RptBean> rptList=new ArrayList<RptBean>();
+    private RptDialog rptDialog;
 
     @Override
     protected void setLayout() {
@@ -373,7 +381,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                         PopUtil.showComfirmDialog(this, "", "已确认订单信息无误并提交订单？", "取消", "确认", null, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ShopPresenter.buyStep2(ShopComfirmOrdersActivity.this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch, getUserIds());
+                                ShopPresenter.buyDoorServiceStep2(ShopComfirmOrdersActivity.this, carIds, recommendBean.getRecommend_phone(), ifCarted, isPickup_self, addressId, vat_hash, offpay_hash, offpay_hash_batch, getUserIds());
                             }
                         }, true);
                     }
@@ -522,7 +530,6 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         voucherInfoMap.clear();
         goods_freight = 0;
         goodsTotalSelf = 0;
-        rptList.clear();
         int totalNum = 0;
         messageMap.clear();
         try {
@@ -668,56 +675,44 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                     goodsTotalSelf += Double.valueOf(objj.optString("goods_price")) * Integer.valueOf(objj.optString("goods_num"));
                 }
             }
-            List<String> rpacket_t_idList = new ArrayList<String>();
-            if (datas.opt("rpt_info") instanceof JSONObject) {
-                JSONObject rpt_info = datas.optJSONObject("rpt_info");
-                rpacketTId = rpt_info.optString("rpacket_t_id");
-            } else if (datas.opt("rpt_info") instanceof JSONArray && ((JSONArray) datas.opt("rpt_info")).length() == 0 || datas.opt("rpt_info") == null) {
-                LogUtils.e("无优惠红包");
-            } else if (datas.opt("rpt_info") instanceof JSONArray && ((JSONArray) datas.opt("rpt_info")).length() > 0) {
-                JSONArray rpt_info = datas.optJSONArray("rpt_info");
-                for (int i = 0; i < rpt_info.length(); i++) {
-                    JSONObject rpt_info_obj = rpt_info.optJSONObject(i);
-                    String rpacket_t_id = rpt_info_obj.optString("rpacket_t_id");
-                    rpacket_t_idList.add(rpacket_t_id);
-                }
-            }
-
-            if (datas.opt("rpt_list") instanceof JSONObject) {
-                JSONObject rptObj = datas.optJSONObject("rpt_list");
-                if (TextUtils.isEmpty(rpacketTId) && rptObj.has(rpacketTId)) {
-                    rpackeObj = rptObj.optJSONObject(rpacketTId);
-                } else if (rpacket_t_idList.size() > 0) {
-                    for (int i = 0; i < rpacket_t_idList.size(); i++) {
-                        String rpId = rpacket_t_idList.get(i);
-                        rptList.add(rptObj.optJSONObject(rpId));
-                    }
-                }
-            } else if (datas.opt("rpt_list") instanceof JSONArray && ((JSONArray) datas.opt("rpt_list")).length() == 0 || datas.opt("rpt_list") == null) {
-                LogUtils.e("无优惠红包");
-            } else if (datas.opt("rpt_list") instanceof JSONArray && ((JSONArray) datas.opt("rpt_list")).length() > 0) {
+            rptList.clear();
+            JSONObject rpt_info = datas.optJSONObject("rpt_info");
+            if(rpt_info!=null) {
+                llrpt.setVisibility(View.VISIBLE);
+                 rpacket_price = rpt_info.optString("rpacket_price");
+                 String rpacket_limit = rpt_info.optString("rpacket_limit");
+                 rpacket_t_id = rpt_info.optString("rpacket_t_id");
+                 tvRptdesc.setText(String.format("满%s可用,%s红包", rpacket_limit, rpacket_price));
                 JSONArray rpt_list = datas.optJSONArray("rpt_list");
-                for (int i = 0; i < rpt_list.length(); i++) {
-                    JSONObject rpt_obj = rpt_list.optJSONObject(i);
-                    rptList.add(rpt_obj);
+                for(int i=0;i<rpt_list.length();i++){
+                    RptBean rptbean = JsonUtil.toBean(rpt_list.optJSONObject(i).toString(), RptBean.class);
+                    rptbean.setCheck(rpacket_t_id.equals(rptbean.getRpacket_t_id()));
+                    rptList.add(rptbean);
                 }
+                llrpt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showRptListDialog();
+                    }
+                });
+            }else {
+                llrpt.setVisibility(View.GONE);
             }
-
             //自身价格减去满减，优惠，红包加上运费
-            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice();
-            if (rpackeObj != null) {
-                goodsTotalSelf -= Double.valueOf(rpackeObj.optString("rpacket_price"));
-            } else if (rptList.size() > 0) {
-                double rpacket = 0;
-                for (JSONObject objj : rptList) {
-                    rpacket += Double.valueOf(objj.optString("rpacket_price"));
-                }
-                goodsTotalSelf -= rpacket;
-            }
+            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-Double.valueOf(rpacket_price);
             goodsTotal = goodsTotalSelf + goods_freight;
             ShopPresenter.buyStep2ChangeAddress(this);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showRptListDialog() {
+        if (!isFinishing() && rptDialog == null) {
+            rptDialog  = new RptDialog(this, this,rptList);
+            rptDialog.show();
+        } else if (!isFinishing() && !rptDialog.isShowing()) {
+            rptDialog.show();
         }
     }
 
@@ -860,19 +855,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
 
     @Override
     public String getRpt() {
-        if (rptList.size() > 0) {
-            StringBuilder sf = new StringBuilder();
-            for (int i = 0; i < rptList.size(); i++) {
-                JSONObject rpt = rptList.get(i);
-                if (i == 0) {
-                    sf.append(rpt.optString("rpacket_t_id")).append("|").append(rpt.optString("rpacket_price"));
-                } else {
-                    sf.append(",").append(rpt.optString("rpacket_t_id")).append("|").append(rpt.optString("rpacket_price"));
-                }
-            }
-            return sf.toString();
-        }
-        return "";
+
+        return rpacket_t_id+"|"+rpacket_price;
     }
 
     @Override
@@ -1003,6 +987,53 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             refreshTotalVoucherPrice();
             goodsTotalSelf -= voucher;
             goodsTotal += goodsTotalSelf;
+            tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
+            tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
+        }
+    }
+
+    @Override
+    public void onRptItemCheckedChange(int position, String rpt_id, Boolean isCheck) {
+        if (!rptList.get(position).getCheck() && isCheck) {
+            rptList.get(position).setCheck(true);
+            for (int i = 0; i < rptList.size(); i++) {
+                RptBean bean2 = rptList.get(i);
+                if (bean2.getCheck() && i != position) {
+                    bean2.setCheck(false);
+                    rptList.set(i, bean2);
+                    break;
+                }
+            }
+            rptDialog.refreshData(rptList, true);
+            goodsTotal+=Double.valueOf(rpacket_price);
+            goodsTotalSelf+=Double.valueOf(rpacket_price);
+            rpacket_price =  rptList.get(position).getRpacket_price();
+            goodsTotalSelf-=Double.valueOf(rpacket_price);
+            goodsTotal -= Double.valueOf(rpacket_price);
+            tvRptdesc.setText(String.format("满%s可用,%s红包", rptList.get(position).getRpacket_limit(), rpacket_price));
+            rpacket_t_id = rptList.get(position).getRpacket_t_id();
+            tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
+            tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
+        }
+    }
+
+    @Override
+    public void noSelectedRpt(boolean isChecked) {
+        if (isChecked && !"0".equals(rpacket_price)) {
+            for (int i = 0; i < rptList.size(); i++) {
+                RptBean bean2 = rptList.get(i);
+                if (bean2.getCheck()) {
+                    bean2.setCheck(false);
+                    rptList.set(i, bean2);
+                    break;
+                }
+            }
+            rptDialog.refreshData(rptList, false);
+            goodsTotal +=Double.valueOf(rpacket_price);
+            goodsTotalSelf+=Double.valueOf(rpacket_price);
+            tvRptdesc.setText("不使用红包");
+            rpacket_price="0";
+            rpacket_t_id="";
             tvTotal.setText(StringUtil.getPriceSpannable12String(this, goodsTotal + "", R.style.big_money, R.style.big_money));
             tvTotalGoodsSelf.setText(String.format("合计：%s", StringUtil.getPriceSpannable12String(this, goodsTotalSelf + "", R.style.big_money, R.style.big_money)));
         }

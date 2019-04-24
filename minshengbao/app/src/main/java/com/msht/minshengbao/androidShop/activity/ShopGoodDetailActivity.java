@@ -203,6 +203,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
                 break;
             case R.id.add_car:
                 showAddCarDialog();
+                break;
             default:
                 break;
         }
@@ -442,13 +443,33 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     }
 
     @Override
-    public void isAllowNewPingTuan(boolean b) {
-      tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            showPingTuanDialog();
-          }
-      });
+    public void isAllowNewPingTuan(boolean isAllowNew) {
+        if(isAllowNew){
+            tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPingTuanDialog();
+                }
+            });
+        }else {
+            tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    f0.showGoodAllPingtunDialog();
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void isAllowAddCar(boolean isAllowAddCar) {
+            /*if(pingTuanBuyDialog!=null){
+                pingTuanBuyDialog.setIsAllowAddCarVisible(isAllowAddCar);
+            }*/
+            if(addCarOrBuyGoodDialog!=null){
+                addCarOrBuyGoodDialog.setIsAllowAddCarVisible(isAllowAddCar);
+            }
     }
 
 
@@ -457,6 +478,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     protected void onRestart() {
         super.onRestart();
         f0.refreshCarList();
+        f0.refreshGoodDetail();
     }
 
     @Override

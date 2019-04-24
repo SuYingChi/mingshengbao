@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/nc_bg"
+    >
+    <TextView
+        android:text="可用红包"
+        android:layout_gravity="left"
+        style="@style/shopBlackTitleText" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shop_grey"
+        android:layout_marginLeft="@dimen/margin_Modules"
+        android:layout_marginRight="@dimen/margin_Modules"
+        android:layout_marginTop="@dimen/margin_Modules"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcl"
+            style="@style/rcl"
+            android:layout_width="match_parent"
+            android:layout_marginRight="@dimen/margin_Modules"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_Modules"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/dismiss"
+        style="@style/shopBlackTitleText"
+        android:text="完成"
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/margin_width20"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/btn_red"
+
+        />
+</LinearLayout>

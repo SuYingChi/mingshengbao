@@ -26,5 +26,7 @@ public interface GoodDetailActivityListener {
 
     void isPingTuan(boolean isPingTuan);
 
-    void isAllowNewPingTuan(boolean b);
+    void isAllowNewPingTuan(boolean isAllowNew);
+
+    void isAllowAddCar(boolean isAllowAddCar);
 }

@@ -171,4 +171,8 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
     public void onClickPingTuan(String pingTuanid, String buyer_id) {
         dialogInterface.onClickPingTuan(pingTuanid, buyer_id);
     }
+
+    public void refresh() {
+        ShopPresenter.getGoodPingtuanInfo(this,goodId);
+    }
 }
