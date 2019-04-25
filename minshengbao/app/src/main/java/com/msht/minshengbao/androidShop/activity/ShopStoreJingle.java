@@ -1,9 +1,11 @@
 package com.msht.minshengbao.androidShop.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,15 +13,21 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IAddCollectStoreView;
+import com.msht.minshengbao.androidShop.viewInterface.IDelCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopStoreJingle;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.BindView;
 
-public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingle {
+public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingle, IDelCollectStoreView, IAddCollectStoreView {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.iv)
@@ -41,6 +49,7 @@ public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingl
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     private String storeid;
+    private boolean is_favorate;
 
     @Override
     protected void setLayout() {
@@ -53,6 +62,20 @@ public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingl
         storeid = getIntent().getStringExtra("id");
         mToolbar.setPadding(0, ImmersionBar.getStatusBarHeight(this),0,0);
         ShopPresenter.getStoreJingle(this);
+    }
+
+    @Override
+    public void onDeleteStoreCollect(String s) {
+        collect.setImageDrawable(getResources().getDrawable(R.drawable.store_uncollect));
+        is_favorate=false;
+        PopUtil.showAutoDissHookDialog(this, "取消收藏店铺成功", 0);
+    }
+
+    @Override
+    public void onAddStoreCollect(String s) {
+        collect.setImageDrawable(getResources().getDrawable(R.drawable.store_collect));
+        is_favorate=true;
+        PopUtil.showAutoDissHookDialog(this, "取消收藏店铺成功", 0);
     }
 
     @Override
@@ -88,9 +111,25 @@ public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingl
             }
             if(store_info.optBoolean("is_favorate")){
                 collect.setImageDrawable(getResources().getDrawable(R.drawable.store_collect));
+                is_favorate= true;
             }else {
                 collect.setImageDrawable(getResources().getDrawable(R.drawable.store_uncollect));
+                is_favorate= false;
             }
+            collect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(getKey())){
+                    if(is_favorate){
+                        ShopPresenter.delCollectStore(ShopStoreJingle.this);
+                    }else {
+                        ShopPresenter.addCollectStore(ShopStoreJingle.this);
+                    }
+                } else {
+                      startActivity(new Intent(ShopStoreJingle.this, LoginActivity.class));
+                    }
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -92,6 +92,8 @@ public class ShopConstants {
     public static final String USER_ALL_PING_TUAN = BASE_URL+"index.php?act=pintuan&op=grouper_info";
     public static final String STORE_CLASS = BASE_URL+"index.php?act=store&op=store_goods_class";
     public static final String STORE_JINGLE = BASE_URL+"index.php?act=store&op=store_intro";
+    public static final String STORE_DELETE_COLLECT = BASE_URL+"index.php?act=member_favorites_store&op=favorites_del";
+    public static final String STORE_ADD_COLLECT = BASE_URL+"index.php?act=member_favorites_store&op=favorites_add";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

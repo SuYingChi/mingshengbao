@@ -11,7 +11,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     >
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
@@ -30,9 +30,10 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_18"
             android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:text="店铺简介"
             />
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/head_layout"

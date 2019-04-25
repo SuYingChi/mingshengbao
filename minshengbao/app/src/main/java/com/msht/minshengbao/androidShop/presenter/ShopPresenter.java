@@ -2,6 +2,7 @@ package com.msht.minshengbao.androidShop.presenter;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
@@ -24,6 +25,7 @@ import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.SimpleDataStringCallback;
 import com.msht.minshengbao.androidShop.viewInterface.IAddAddressView;
+import com.msht.minshengbao.androidShop.viewInterface.IAddCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCollectionView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCompanyNormalInvView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddInvView;
@@ -37,6 +39,7 @@ import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IChainReceiveView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IClearShopFootprintView;
+import com.msht.minshengbao.androidShop.viewInterface.IDelCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteCarItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
@@ -1763,6 +1766,7 @@ public class ShopPresenter {
 
     public static void getStoreJingle(final IShopStoreJingle ishopStoreJingle) {
         OkHttpUtils.post().url(ShopConstants.STORE_JINGLE).addParams("store_id", ishopStoreJingle.getStoreId())
+                .addParams("key",ishopStoreJingle.getKey())
                 .tag(ishopStoreJingle)
                 .build().execute(new DataStringCallback(ishopStoreJingle) {
             @Override
@@ -1770,6 +1774,36 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ishopStoreJingle.onGetStoreJingleClass(s);
+                }
+            }
+        });
+    }
+
+    public static void delCollectStore(final IDelCollectStoreView iDelCollectStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_DELETE_COLLECT).addParams("store_id", iDelCollectStoreView.getStoreId())
+                .addParams("key",iDelCollectStoreView.getKey())
+                .tag(iDelCollectStoreView)
+                .build().execute(new DataStringCallback(iDelCollectStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iDelCollectStoreView.onDeleteStoreCollect(s);
+                }
+            }
+        });
+    }
+
+    public static void addCollectStore(final IAddCollectStoreView iAddCollectStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_ADD_COLLECT).addParams("store_id", iAddCollectStoreView.getStoreId())
+                .addParams("key",iAddCollectStoreView.getKey())
+                .tag(iAddCollectStoreView)
+                .build().execute(new DataStringCallback(iAddCollectStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iAddCollectStoreView.onAddStoreCollect(s);
                 }
             }
         });
