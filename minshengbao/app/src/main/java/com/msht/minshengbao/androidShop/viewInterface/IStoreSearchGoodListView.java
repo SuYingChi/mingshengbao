@@ -12,4 +12,6 @@ public interface IStoreSearchGoodListView extends IBaseView{
     void onGetStoreGoodSuccess(String s);
 
     String getStcId();
+
+    String getKeyWord();
 }

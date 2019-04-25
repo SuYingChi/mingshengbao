@@ -6,7 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.StoreClassAdapter;
@@ -31,6 +38,8 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
     Toolbar mToolbar;
     @BindView(R.id.rcl)
     RecyclerView rcl;
+    @BindView(R.id.tvSearchD)
+    EditText et;
     List<StoreClassBean> list = new ArrayList<StoreClassBean>();
     private StoreClassAdapter adapter;
 
@@ -49,6 +58,21 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
         adapter = new StoreClassAdapter(this, R.layout.item_store_class, list);
         adapter.setStoreClassAdapterInterface(this);
         rcl.setAdapter(adapter);
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String searchKeyWord = et.getText().toString();
+                    MyApplication.getInstance().addSearchHis(searchKeyWord);
+                    Intent intent = new Intent(StoreClassActivity.this,StoreSearchGoodListActivity.class);
+                    intent.putExtra("storeid",storeId);
+                    intent.putExtra("keyword",searchKeyWord);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
         ShopPresenter.getStoreClass(this);
     }
 

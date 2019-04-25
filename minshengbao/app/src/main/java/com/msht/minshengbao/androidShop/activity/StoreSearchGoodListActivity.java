@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodListAdapter;
@@ -82,6 +86,7 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
     private DividerItemDecoration dividerItemDecoration;
     private StoreGoodListAdapter adapter;
     private List<StoreGoodBean> goodlist=new ArrayList<>();
+    private String keyword;
 
     @Override
     protected void setLayout() {
@@ -101,6 +106,23 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
         et.setHint("搜索店铺内商品");
         stc_id = getIntent().getStringExtra("stc_id");
         storeid = getIntent().getStringExtra("storeid");
+        keyword = getIntent().getStringExtra("keyword");
+        if(!TextUtils.isEmpty(keyword)){
+            et.setText(keyword);
+        }
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String searchKeyWord = et.getText().toString();
+                    keyword = searchKeyWord;
+                    MyApplication.getInstance().addSearchHis(searchKeyWord);
+                    ShopPresenter.getStoreSearchList(StoreSearchGoodListActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
         linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -177,6 +199,12 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
     public String getStcId() {
         return stc_id;
     }
+
+    @Override
+    public String getKeyWord() {
+        return keyword;
+    }
+
     private void initTab(String selectTab) {
 
         switch (selectTab) {

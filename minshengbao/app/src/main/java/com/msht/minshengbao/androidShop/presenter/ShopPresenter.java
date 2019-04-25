@@ -106,6 +106,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
 import org.json.JSONArray;
@@ -684,7 +685,7 @@ public class ShopPresenter {
         if (!TextUtils.isEmpty(iBuyStep2View.getIsPinTuan())) {
             request.addParams("pintuan", iBuyStep2View.getIsPinTuan());
         }
-        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId())&&!TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
+        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId()) && !TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
             request.addParams("log_id", iBuyStep2View.getPingTuanId()).addParams("buyer_id", iBuyStep2View.getBuyerId());
         }
         request.build().execute(new DataStringCallback(iBuyStep2View, false) {
@@ -722,10 +723,10 @@ public class ShopPresenter {
         if (!TextUtils.isEmpty(iBuyStep2View.getIsPinTuan())) {
             request.addParams("pintuan", iBuyStep2View.getIsPinTuan());
         }
-        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId())&&!TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
+        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId()) && !TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
             request.addParams("log_id", iBuyStep2View.getPingTuanId()).addParams("buyer_id", iBuyStep2View.getBuyerId());
         }
-               request .build().execute(new DataStringCallback(iBuyStep2View, false) {
+        request.build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -1734,14 +1735,19 @@ public class ShopPresenter {
     }
 
     public static void getStoreSearchList(final IStoreSearchGoodListView iStoreSearchGoodListView) {
-        OkHttpUtils.get().url(ShopConstants.STORE_GOOD).addParams("store_id", iStoreSearchGoodListView.getStoreId())
+        GetBuilder request = OkHttpUtils.get().url(ShopConstants.STORE_GOOD)
+                .addParams("store_id", iStoreSearchGoodListView.getStoreId())
                 .addParams("key", iStoreSearchGoodListView.getTab())
-                .addParams("stc_id",iStoreSearchGoodListView.getStcId())
                 .addParams("order", iStoreSearchGoodListView.getRankType())
                 .addParams("curpage", iStoreSearchGoodListView.getCurpage())
-                .addParams("curpage", iStoreSearchGoodListView.getStcId())
-                .addParams("page", "10")
-                .tag(iStoreSearchGoodListView)
+                .addParams("page", "10");
+        if (!TextUtils.isEmpty(iStoreSearchGoodListView.getStcId())) {
+            request.addParams("stc_id", iStoreSearchGoodListView.getStcId());
+        }
+        if (!TextUtils.isEmpty(iStoreSearchGoodListView.getKeyWord())) {
+            request.addParams("keyword", iStoreSearchGoodListView.getKeyWord());
+        }
+        request.tag(iStoreSearchGoodListView)
                 .build().execute(new DataStringCallback(iStoreSearchGoodListView) {
             @Override
             public void onResponse(String s, int i) {
