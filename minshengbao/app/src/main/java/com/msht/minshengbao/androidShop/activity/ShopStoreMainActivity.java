@@ -85,7 +85,14 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener
                 (main_vp_container));
         ShopPresenter.getStoreInfo(this);
-
+        tvStoreName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent inten =new Intent(ShopStoreMainActivity.this,ShopStoreJingle.class);
+               inten.putExtra("id",storeId);
+               startActivity(inten);
+            }
+        });
     }
 
     @Override
@@ -104,7 +111,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
                 if(storeInfo.optBoolean("is_own_shop")){
                     tvStoreLeixing.setText("平台自营");
                 }else{
-                    tvStoreLeixing.setText("普通商店");
+                    tvStoreLeixing.setText("普通店铺");
                 }
             }else {
                 tvStoreLeixing.setText(storeInfo.optString("grade_name"));

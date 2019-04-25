@@ -6,6 +6,7 @@ import android.util.Log;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.ShopStoreJingle;
 import com.msht.minshengbao.androidShop.activity.StoreClassActivity;
 import com.msht.minshengbao.androidShop.activity.StoreSearchGoodListActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
@@ -88,6 +89,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopInitEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopStoreJingle;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreClassView;
@@ -1754,6 +1756,20 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iStoreSearchGoodListView.onGetStoreGoodSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreJingle(final IShopStoreJingle ishopStoreJingle) {
+        OkHttpUtils.post().url(ShopConstants.STORE_JINGLE).addParams("store_id", ishopStoreJingle.getStoreId())
+                .tag(ishopStoreJingle)
+                .build().execute(new DataStringCallback(ishopStoreJingle) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ishopStoreJingle.onGetStoreJingleClass(s);
                 }
             }
         });

@@ -435,6 +435,7 @@
         <activity android:name=".androidShop.activity.StorePromotionActivity" />
         <activity android:name=".androidShop.activity.StoreClassActivity" />
         <activity android:name=".androidShop.activity.StoreSearchGoodListActivity" />
+        <activity android:name=".androidShop.activity.ShopStoreJingle" />
     </application>
 
 </manifest>
