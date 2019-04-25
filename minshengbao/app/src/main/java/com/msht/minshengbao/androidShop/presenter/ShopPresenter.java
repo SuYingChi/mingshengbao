@@ -6,6 +6,8 @@ import android.util.Log;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.StoreClassActivity;
+import com.msht.minshengbao.androidShop.activity.StoreSearchGoodListActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
@@ -88,10 +90,12 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreSearchGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
@@ -1710,6 +1714,40 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iUserPingTuanView.onUserPingtuanInfoSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreClass(final IStoreClassView iStoreClassView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_CLASS).addParams("store_id", iStoreClassView.getStoreId())
+                .tag(iStoreClassView)
+                .build().execute(new DataStringCallback(iStoreClassView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreClassView.onGetStoreClass(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreSearchList(final IStoreSearchGoodListView iStoreSearchGoodListView) {
+        OkHttpUtils.get().url(ShopConstants.STORE_GOOD).addParams("store_id", iStoreSearchGoodListView.getStoreId())
+                .addParams("key", iStoreSearchGoodListView.getTab())
+                .addParams("stc_id",iStoreSearchGoodListView.getStcId())
+                .addParams("order", iStoreSearchGoodListView.getRankType())
+                .addParams("curpage", iStoreSearchGoodListView.getCurpage())
+                .addParams("curpage", iStoreSearchGoodListView.getStcId())
+                .addParams("page", "10")
+                .tag(iStoreSearchGoodListView)
+                .build().execute(new DataStringCallback(iStoreSearchGoodListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreSearchGoodListView.onGetStoreGoodSuccess(s);
                 }
             }
         });

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/margin_Modules"
+    >
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_18"
+        android:textColor="@color/black"
+        android:text="XXXXX"
+        />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/title_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_18"
+        android:textColor="@color/black"
+        android:text="查看全部"
+        />
+</LinearLayout>
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/rcl"
+       style="@style/rcl" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_Modules"/>
+</LinearLayout>

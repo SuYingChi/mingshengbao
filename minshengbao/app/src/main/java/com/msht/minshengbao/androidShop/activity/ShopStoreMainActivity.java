@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,8 +42,7 @@ import butterknife.BindView;
 
 public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreView {
     private String storeId;
-    private int tabIndex;
-   @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
    @BindView(R.id.head_layout)
     RelativeLayout headlayout;
@@ -57,6 +58,8 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     ViewPager main_vp_container;
     @BindView(R.id.toolbar_tab)
     TabLayout tabLayout;
+    @BindView(R.id.storefenlei)
+    TextView tvStorefenlei;
     @Override
     protected void setLayout() {
      setContentView(R.layout.shop_store_main);
@@ -66,7 +69,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storeId = getIntent().getStringExtra("id");
-        tabIndex = getIntent().getIntExtra("tabindex",0);
+        int tabIndex = getIntent().getIntExtra("tabindex", 0);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -82,6 +85,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener
                 (main_vp_container));
         ShopPresenter.getStoreInfo(this);
+
     }
 
     @Override
@@ -132,6 +136,15 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
             }else {
                 ivCollect.setImageDrawable(getResources().getDrawable(R.drawable.store_uncollect));
             }
+            tvStorefenlei.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShopStoreMainActivity.this, StoreClassActivity.class);
+                    intent.putExtra("id",storeId);
+                    startActivity(intent);
+
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
