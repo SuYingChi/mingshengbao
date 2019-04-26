@@ -167,8 +167,8 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
             int pageTotal = obj.optInt("page_total");
             if (pageTotal == 0) {
                 goodlist.clear();
-                refreshLayout.setEnableAutoLoadMore(true);
-                refreshLayout.setNoMoreData(false);
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.setNoMoreData(true);
                 adapter.notifyDataSetChanged();
                 ivNoData.setVisibility(View.VISIBLE);
                 tvNoData.setVisibility(View.VISIBLE);

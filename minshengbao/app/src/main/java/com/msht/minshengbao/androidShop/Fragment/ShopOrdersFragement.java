@@ -239,8 +239,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
             JSONArray order_group_list = datas.optJSONArray("order_group_list");
             if (pageTotal == 0) {
                 ordersList.clear();
-                refreshLayout.setEnableAutoLoadMore(true);
-                refreshLayout.setNoMoreData(false);
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.setNoMoreData(true);
                 adapter.notifyDataSetChanged();
                 ivNoOrder.setVisibility(View.VISIBLE);
                 tvNoData.setVisibility(View.VISIBLE);

@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.StoreNewGoodAdapter;
@@ -38,6 +41,10 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.rcl)
     RecyclerView rcl;
+    @BindView(R.id.iv_no_data)
+    ImageView ivNoData;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
     private List<StoreNewGoodBean> goodlist=new ArrayList<StoreNewGoodBean>();
     private StoreNewGoodAdapter adapter;
     String goods_addtime_text="";
@@ -65,7 +72,10 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
         refreshLayout.setOnLoadMoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         adapter = new StoreNewGoodAdapter(getContext(),goodlist);
-        rcl.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        rcl.setLayoutManager(lm);
+        rcl.setNestedScrollingEnabled(false);
         rcl.setAdapter(adapter);
     }
 
@@ -88,8 +98,10 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
             int pageTotal = obj.optInt("page_total");
             if (pageTotal == 0) {
                 goodlist.clear();
-                refreshLayout.setEnableAutoLoadMore(true);
-                refreshLayout.setNoMoreData(false);
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.setNoMoreData(true);
+                ivNoData.setVisibility(View.VISIBLE);
+                tvNoData.setVisibility(View.VISIBLE);
                 adapter.notifyDataSetChanged();
                 return;
             } else if (curpage > pageTotal) {
@@ -100,6 +112,8 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
             } else if (curpage == 1) {
                 goodlist.clear();
             }
+            ivNoData.setVisibility(View.INVISIBLE);
+            tvNoData.setVisibility(View.INVISIBLE);
             refreshLayout.setEnableAutoLoadMore(true);
             refreshLayout.setNoMoreData(false);
             JSONArray goodArray = obj.optJSONObject("datas").optJSONArray("goods_list");

@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:srlEnableHeaderTranslationContent="true"
     app:srlEnableOverScrollBounce="false"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     >
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcl"
-        style="@style/rcl" />
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    <ImageView
+        android:id="@+id/iv_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/shop_no_class_detail_image"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+    <TextView
+        android:id="@+id/tv_no_data"
+        style="@style/shopBlackTitleText"
+        android:text="暂无活动，敬请期待"
+        android:layout_below="@id/iv_no_data"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_Modules"
+        android:visibility="invisible"
+        />
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcl"
+                    android:background="@color/white"
+                    style="@style/rcl" />
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

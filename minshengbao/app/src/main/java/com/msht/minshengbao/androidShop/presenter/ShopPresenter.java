@@ -70,6 +70,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
+import com.msht.minshengbao.androidShop.viewInterface.IPromotionRuleView;
 import com.msht.minshengbao.androidShop.viewInterface.IPromotionShareInfoView;
 import com.msht.minshengbao.androidShop.viewInterface.IQueryOrderRouteView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
@@ -1825,5 +1826,20 @@ public class ShopPresenter {
                 }
             }
         });
+    }
+
+    public static void getPromotionRule(final IPromotionRuleView iPromotionRuleView) {
+        OkHttpUtils.post().url(ShopConstants.PROMOTION_RULE).addParams("promotion_id", iPromotionRuleView.getPromotionId())
+                .tag(iPromotionRuleView)
+                .build().execute(new DataStringCallback(iPromotionRuleView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPromotionRuleView.onGetPromotionRule(s);
+                }
+            }
+        });
+
     }
 }

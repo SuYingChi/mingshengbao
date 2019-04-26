@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.viewInterface.IPromotionRuleView;
 import com.msht.minshengbao.androidShop.viewInterface.IPromotionShareInfoView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -72,7 +74,7 @@ import static com.msht.minshengbao.androidShop.Fragment.GoodFragment.THUMB_SIZE;
 import static com.msht.minshengbao.androidShop.Fragment.GoodFragment.bmpToByteArray;
 import static com.msht.minshengbao.androidShop.Fragment.GoodFragment.buildTransaction;
 
-public class StorePromotionActivity extends ShopBaseActivity implements IStorePromotiondDetailView, OnRefreshListener, IPromotionShareInfoView {
+public class StorePromotionActivity extends ShopBaseActivity implements IStorePromotiondDetailView, OnRefreshListener, IPromotionShareInfoView, IPromotionRuleView {
     private String type;
     private String id;
     private String storeId;
@@ -108,6 +110,7 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
     private String shareUrl;
     private String jingle;
     private String shareTitle;
+    private String pintuan_rules;
 
     @Override
     protected void setLayout() {
@@ -281,6 +284,15 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
             }
         });
         ShopPresenter.getStorePromotionDetail(this);
+        ShopPresenter.getPromotionRule(this);
+        rule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(pintuan_rules)){
+                    PopUtil.showComfirmDialog(StorePromotionActivity.this,"拼团规则",pintuan_rules,"","",null,null,true);
+                }
+            }
+        });
     }
 
     @Override
@@ -291,6 +303,15 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
     @Override
     public String getPromotionId() {
         return id;
+    }
+
+    @Override
+    public void onGetPromotionRule(String s) {
+        try {
+            pintuan_rules = new JSONObject(s).optJSONObject("datas").optString("pintuan_rules");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

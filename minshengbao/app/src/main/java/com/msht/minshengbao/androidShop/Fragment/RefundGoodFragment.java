@@ -101,8 +101,8 @@ public class RefundGoodFragment extends ShopBaseLazyFragment implements OnRefres
         int pageTotal = bean.getPage_total();
         if (pageTotal == 0) {
             ordersList.clear();
-            refreshLayout.setEnableAutoLoadMore(true);
-            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(false);
+            refreshLayout.setNoMoreData(true);
             adapter.notifyDataSetChanged();
             ivNoOrder.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
