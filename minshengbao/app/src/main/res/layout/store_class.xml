@@ -73,6 +73,17 @@
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+    <TextView
+        android:id="@+id/all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_18"
+        android:textColor="@color/black"
+        android:text="全部商品"
+        android:padding="@dimen/margin_Modules"
+        android:background="@color/white"
+        />
+
     <android.support.v7.widget.RecyclerView
        android:id="@+id/rcl"
         style="@style/rcl"

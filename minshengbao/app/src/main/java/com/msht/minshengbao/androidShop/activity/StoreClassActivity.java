@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
     RecyclerView rcl;
     @BindView(R.id.tvSearchD)
     EditText et;
+    @BindView(R.id.all)
+    TextView all;
     List<StoreClassBean> list = new ArrayList<StoreClassBean>();
     private StoreClassAdapter adapter;
 
@@ -71,6 +74,14 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
                     return true;
                 }
                 return false;
+            }
+        });
+        all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoreClassActivity.this, StoreSearchGoodListActivity.class);
+                intent.putExtra("storeid",storeId);
+                startActivity(intent);
             }
         });
         ShopPresenter.getStoreClass(this);
