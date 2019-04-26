@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.msht.minshengbao.R;
@@ -14,12 +15,16 @@ import com.msht.minshengbao.androidShop.adapter.GoodFmVoucherAdpter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreRecGoodAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
+import com.msht.minshengbao.androidShop.customerview.ImageCycleView;
 import com.msht.minshengbao.androidShop.customerview.RecyclerItemDecoration;
 import com.msht.minshengbao.androidShop.event.RefreshFinish;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.Imagebean;
+import com.msht.minshengbao.androidShop.shopBean.ShopHomeAdvBean;
 import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
+import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -59,6 +64,8 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     LinearLayout llrec;
     @BindView(R.id.rcl_rec)
     RecyclerView rclRec;
+    @BindView(R.id.cycleView)
+    ImageCycleView imageCycleView;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodFmVoucherAdpter adapter;
     private List<StoreGoodBean> collectList = new ArrayList<StoreGoodBean>();
@@ -67,6 +74,9 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     private StoreGoodAdapter soleAdapter;
     private List<StoreGoodBean> recList = new ArrayList<StoreGoodBean>();
     private StoreRecGoodAdapter recAdapter;
+    private List<Imagebean> imageCycleList=new ArrayList<>();
+    private ImageCycleView.ImageCycleViewListener mAdCycleViewListener;
+
     @Override
     protected int setLayoutId() {
         return R.layout.store_main_fragment;
@@ -103,7 +113,27 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
         rclRec.setLayoutManager(recglm);
         rclRec.setAdapter(recAdapter);
         rclRec.setNestedScrollingEnabled(false);
+        mAdCycleViewListener = new ImageCycleView.ImageCycleViewListener() {
+            @Override
+            public void displayImage(String imageURL, ImageView imageView) {
+                GlideUtil.loadByWidthFitHeight(getContext(), imageView, imageURL);
+            }
+
+            @Override
+            public void onImageClick(int position, View imageView) {
+                if (imageCycleList != null&&position<imageCycleList.size()) {
+                    Imagebean itemData = imageCycleList.get(position);
+                    doShopItemViewClickByUrl(itemData.getLink());
+                }
+            }
+        };
+        imageCycleView.setFocusable(true);
+        imageCycleView.setFocusableInTouchMode(true);
+        imageCycleView.requestFocus();
+        imageCycleView.requestFocusFromTouch();
     }
+
+
 
     @Override
     protected void initData() {
@@ -134,6 +164,23 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
                 adapter.notifyDataSetChanged();
             } else {
                 llvoucher.setVisibility(View.GONE);
+            }
+            JSONArray mb_sliders = datas.optJSONObject("store_info").optJSONArray("mb_sliders");
+            imageCycleList.clear();
+            for(int i=0;i<mb_sliders.length();i++){
+               Imagebean imagebean = new Imagebean();
+               imagebean.setImgUrl(mb_sliders.optJSONObject(i).optString("imgUrl"));
+               imagebean.setLink(mb_sliders.optJSONObject(i).optString("link"));
+                imageCycleList.add(imagebean);
+            }
+            if (imageCycleList.size() > 0) {
+                ArrayList<String> list = new ArrayList<String>();
+                for(Imagebean b :imageCycleList){
+                    list.add(b.getImgUrl());
+                }
+                imageCycleView.setImageResources(list, mAdCycleViewListener, true, true);
+            }else {
+                imageCycleView.setVisibility(View.GONE);
             }
             JSONArray store_collect_rank = datas.optJSONArray("store_collect_rank");
             if (store_collect_rank.length() > 1) {
