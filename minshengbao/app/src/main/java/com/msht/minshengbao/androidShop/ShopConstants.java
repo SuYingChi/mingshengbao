@@ -94,6 +94,7 @@ public class ShopConstants {
     public static final String STORE_JINGLE = BASE_URL+"index.php?act=store&op=store_intro";
     public static final String STORE_DELETE_COLLECT = BASE_URL+"index.php?act=member_favorites_store&op=favorites_del";
     public static final String STORE_ADD_COLLECT = BASE_URL+"index.php?act=member_favorites_store&op=favorites_add";
+    public static final String STORE_PROMOTION_SHARE = BASE_URL+"index.php?act=store&op=store_promotion_share";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

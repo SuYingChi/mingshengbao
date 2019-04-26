@@ -98,7 +98,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, DialogInterface {
-    private static final int THUMB_SIZE = 150;
+    public static final int THUMB_SIZE = 150;
     private String goodsid;
     @BindView(R.id.cycleView)
     ImageCycleView imageCycleView;
@@ -489,7 +489,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         giftRcl.setAdapter(giftArrayAdapter);
     }
 
-    private String buildTransaction(final String type) {
+    public static String buildTransaction(final String type) {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 

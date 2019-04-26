@@ -9,6 +9,7 @@ import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.ShopStoreJingle;
 import com.msht.minshengbao.androidShop.activity.StoreClassActivity;
+import com.msht.minshengbao.androidShop.activity.StorePromotionActivity;
 import com.msht.minshengbao.androidShop.activity.StoreSearchGoodListActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
@@ -69,6 +70,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
+import com.msht.minshengbao.androidShop.viewInterface.IPromotionShareInfoView;
 import com.msht.minshengbao.androidShop.viewInterface.IQueryOrderRouteView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundAllFormView;
@@ -1804,6 +1806,22 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iAddCollectStoreView.onAddStoreCollect(s);
+                }
+            }
+        });
+    }
+
+    public static void getPromotionShareInfo(final IPromotionShareInfoView iPromotionShareInfoView) {
+        OkHttpUtils.get().url(ShopConstants.STORE_PROMOTION_SHARE).addParams("store_id", iPromotionShareInfoView.getStoreId())
+                .addParams("promotion_id",iPromotionShareInfoView.getPromotionId())
+                .addParams("promotion_type",iPromotionShareInfoView.getPromotionType())
+                .tag(iPromotionShareInfoView)
+                .build().execute(new DataStringCallback(iPromotionShareInfoView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPromotionShareInfoView.onGetPromotionShareInfo(s);
                 }
             }
         });
