@@ -168,13 +168,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
             <ImageView
-                android:id="@+id/searchiv"
+                android:id="@+id/shareiv"
                 android:layout_width="?actionBarSize"
                 android:layout_height="?actionBarSize"
                 android:paddingLeft="@dimen/dp14"
                 android:paddingRight="@dimen/dp14"
                 android:paddingTop="24dp"
-                android:src="@drawable/nc_icon_search_w"
+                android:src="@drawable/shop_good_share"
                 android:layout_marginRight="10dp"
                 />
 

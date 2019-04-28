@@ -26,6 +26,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.htmlWeb.AgreeTreatyActivity;
@@ -178,6 +179,15 @@ public class BindWeiChatActivity extends BaseActivity {
                     String nickname=objectInfo.optString("nickname");
                     String avatar=objectInfo.optString("avatar");
                     String shop=objectInfo.optString("shop");
+                    try {
+                        JSONObject shopobj = new JSONObject(shop);
+                        ShopSharePreferenceUtil.setShopSpStringValue("username",shopobj.optString("username"));
+                        ShopSharePreferenceUtil.setShopSpStringValue("userId",shopobj.optString("userid"));
+                        ShopSharePreferenceUtil.setShopSpStringValue("password",password);
+                        ShopSharePreferenceUtil.setShopSpStringValue("key",shopobj.optString("key"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     String shopCookie=objectInfo.optString("shopCookie");
                     SharedPreferencesUtil.putUserId(this,SharedPreferencesUtil.UserId,userId);
                     SharedPreferencesUtil.putAvatarUrl(this,SharedPreferencesUtil.AvatarUrl,avatar);

@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
+
+        <LinearLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="?actionBarSize"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp14"
+                android:src="@drawable/back2x" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_search"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/margin_width20"
+                android:layout_weight="1"
+                android:background="@drawable/bg_round_white"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                >
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp10"
+                    android:layout_marginRight="@dimen/dp10"
+                    android:src="@drawable/shop_search" />
+
+                <EditText
+                    android:id="@+id/tvSearchD"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:imeOptions="actionSearch"
+                    android:hint="搜索店铺内商品"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textColorHint="@color/nc_text"
+                    />
+                <ImageView
+                    android:id="@+id/clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:padding="@dimen/dp10"
+                    android:src="@drawable/search_delete" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:id="@+id/all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_18"
+        android:textColor="@color/black"
+        android:text="全部商品"
+        android:padding="@dimen/margin_Modules"
+        android:background="@color/white"
+        />
+
+    <android.support.v7.widget.RecyclerView
+       android:id="@+id/rcl"
+        style="@style/rcl"
+        />
+</LinearLayout>

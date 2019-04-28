@@ -14,6 +14,7 @@
         android:textColor="#030303"
         android:textSize="@dimen/text_16"
         android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
         tools:text="提示" />
 
     <TextView
@@ -25,7 +26,7 @@
         android:gravity="center|left"
         android:textColor="#030303"
         android:textSize="@dimen/text_16"
-        tools:text="该功能需开启定位权限才可以使用哦点击去开启" />
+        tools:text="" />
 
 
     <LinearLayout

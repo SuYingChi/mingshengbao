@@ -27,6 +27,7 @@ import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.customerview.AddCarOrBuyGoodDialog;
 import com.msht.minshengbao.androidShop.customerview.NoScrollViewPager;
+import com.msht.minshengbao.androidShop.customerview.PingTuanBuyGoodDialog;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.viewInterface.GoodDetailActivityListener;
@@ -63,6 +64,10 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     RelativeLayout pay;
     @BindView(R.id.car_num)
     TextView tvCarNum;
+    @BindView(R.id.ll_buy)
+    LinearLayout llbuy;
+    @BindView(R.id.pingtuanbuy)
+    TextView tvPingTuanBuy;
     private List<ShopBaseLazyFragment> list = new ArrayList<ShopBaseLazyFragment>();
     private final String[] titles = {"商品", "详情", "评价"};
     private GoodFragment f0;
@@ -73,6 +78,8 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     private float toolbarAlpha;
     private Drawable currentLeftDrawblw;
     private Drawable currentRightDrawblw;
+    private boolean isPingTuan;
+    private PingTuanBuyGoodDialog pingTuanBuyDialog;
 
     @Override
     protected void setLayout() {
@@ -80,11 +87,10 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     }
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this), 0, 0);
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
         data = intent.getStringExtra("goodsid");
@@ -99,16 +105,16 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
                 switch (position) {
                     case 0:
                         vp.setCurrentItem(0);
-                          mToolbar.setAlpha(toolbarAlpha);
+                        mToolbar.setAlpha(toolbarAlpha);
                         break;
                     case 1:
                         vp.setCurrentItem(1);
-                          mToolbar.setAlpha(1);
+                        mToolbar.setAlpha(1);
 
                         break;
                     case 2:
                         vp.setCurrentItem(2);
-                          mToolbar.setAlpha(1);
+                        mToolbar.setAlpha(1);
                         break;
                     default:
                         break;
@@ -162,15 +168,15 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         carListIntent = new Intent(this, NewShopCarActivity.class);
         mToolbar.setAlpha(1);
         RelativeLayout.LayoutParams blp = (RelativeLayout.LayoutParams) back.getLayoutParams();
-        blp.setMargins(0,ImmersionBar.getStatusBarHeight(this),0,0);
+        blp.setMargins(0, ImmersionBar.getStatusBarHeight(this), 0, 0);
         back.setLayoutParams(blp);
         RelativeLayout.LayoutParams mlp = (RelativeLayout.LayoutParams) menu.getLayoutParams();
-        mlp.setMargins(0,ImmersionBar.getStatusBarHeight(this),0,0);
+        mlp.setMargins(0, ImmersionBar.getStatusBarHeight(this), 0, 0);
         menu.setLayoutParams(mlp);
         currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         String msgid = getIntent().getIntExtra("msgid", 0) + "";
-        if(!msgid.equals("0")) {
+        if (!msgid.equals("0")) {
             ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), msgid);
         }
     }
@@ -196,6 +202,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
                 break;
             case R.id.add_car:
                 showAddCarDialog();
+                break;
             default:
                 break;
         }
@@ -210,25 +217,33 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         }
     }
 
+    private void showPingTuanDialog() {
+        if (!isFinishing() && pingTuanBuyDialog == null) {
+            pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+            pingTuanBuyDialog.show();
+        } else if (!isFinishing() && !pingTuanBuyDialog.isShowing()) {
+            pingTuanBuyDialog.show();
+        }
+    }
+
     private void goCarListActivity() {
         if (TextUtils.isEmpty(getKey())) {
-            startActivity(new Intent(this,NoLoginCarActivity.class));
-        }else if(Integer.valueOf(tvCarNum.getText().toString())<=0){
-            startActivity(new Intent(this,NoCarActivity.class));
-        }
-        else {
+            startActivity(new Intent(this, NoLoginCarActivity.class));
+        } else if (Integer.valueOf(tvCarNum.getText().toString()) <= 0) {
+            startActivity(new Intent(this, NoCarActivity.class));
+        } else {
             startActivity(carListIntent);
         }
     }
 
 
     private void askKefu() {
-        if(!TextUtils.isEmpty(getKey())) {
+        if (!TextUtils.isEmpty(getKey())) {
             Intent intent = new Intent(this, ShopkefuActivity.class);
             intent.putExtra("t_id", f0.getTid());
             startActivity(intent);
-        }else {
-            startActivity(new Intent(this,LoginActivity.class));
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
@@ -252,15 +267,15 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     private void goShopHome() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("index",1);
+        intent.putExtra("index", 1);
         //EventBus.getDefault().postSticky(new GoShopMainEvent());
         startActivity(intent);
     }
 
     private void goMessage() {
-        if(TextUtils.isEmpty(getKey())){
+        if (TextUtils.isEmpty(getKey())) {
             startActivity(new Intent(this, LoginActivity.class));
-        }else {
+        } else {
             startActivity(new Intent(this, TotalMessageListActivity.class));
         }
     }
@@ -268,17 +283,17 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     @Override
     public void onScrollChange1() {
         mToolbar.setVisibility(View.VISIBLE);
-         mToolbar.setAlpha(1);
+        mToolbar.setAlpha(1);
         toolbarAlpha = 1;
         back.setVisibility(View.VISIBLE);
         menu.setVisibility(View.VISIBLE);
-        if(currentLeftDrawblw!=getResources().getDrawable(R.drawable.back2x)) {
+        if (currentLeftDrawblw != getResources().getDrawable(R.drawable.back2x)) {
             back.setImageDrawable(getResources().getDrawable(R.drawable.back2x));
-            currentLeftDrawblw=getResources().getDrawable(R.drawable.back2x);
+            currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         }
-        if(currentRightDrawblw!=getResources().getDrawable(R.drawable.menu)) {
+        if (currentRightDrawblw != getResources().getDrawable(R.drawable.menu)) {
             menu.setImageDrawable(getResources().getDrawable(R.drawable.menu));
-            currentRightDrawblw=getResources().getDrawable(R.drawable.menu);
+            currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         }
     }
 
@@ -290,13 +305,13 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         toolbarAlpha = alpha;
         back.setVisibility(View.VISIBLE);
         menu.setVisibility(View.VISIBLE);
-        if(currentLeftDrawblw!=getResources().getDrawable(R.drawable.back2x)) {
+        if (currentLeftDrawblw != getResources().getDrawable(R.drawable.back2x)) {
             back.setImageDrawable(getResources().getDrawable(R.drawable.back2x));
-            currentLeftDrawblw=getResources().getDrawable(R.drawable.back2x);
+            currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         }
-        if(currentRightDrawblw!=getResources().getDrawable(R.drawable.menu)) {
+        if (currentRightDrawblw != getResources().getDrawable(R.drawable.menu)) {
             menu.setImageDrawable(getResources().getDrawable(R.drawable.menu));
-            currentRightDrawblw=getResources().getDrawable(R.drawable.menu);
+            currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         }
     }
 
@@ -306,13 +321,13 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         toolbarAlpha = 1;
         back.setVisibility(View.VISIBLE);
         menu.setVisibility(View.VISIBLE);
-        if(currentLeftDrawblw!=getResources().getDrawable(R.drawable.back2x)) {
+        if (currentLeftDrawblw != getResources().getDrawable(R.drawable.back2x)) {
             back.setImageDrawable(getResources().getDrawable(R.drawable.back2x));
-            currentLeftDrawblw=getResources().getDrawable(R.drawable.back2x);
+            currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         }
-        if(currentRightDrawblw!=getResources().getDrawable(R.drawable.menu)) {
+        if (currentRightDrawblw != getResources().getDrawable(R.drawable.menu)) {
             menu.setImageDrawable(getResources().getDrawable(R.drawable.menu));
-            currentRightDrawblw=getResources().getDrawable(R.drawable.menu);
+            currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         }
     }
 
@@ -321,13 +336,13 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         mToolbar.setVisibility(View.INVISIBLE);
         back.setVisibility(View.VISIBLE);
         menu.setVisibility(View.VISIBLE);
-        if(currentLeftDrawblw!=getResources().getDrawable(R.drawable.shop_good_detail_left_img)) {
+        if (currentLeftDrawblw != getResources().getDrawable(R.drawable.shop_good_detail_left_img)) {
             back.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_detail_left_img));
-            currentLeftDrawblw=getResources().getDrawable(R.drawable.shop_good_detail_left_img);
+            currentLeftDrawblw = getResources().getDrawable(R.drawable.shop_good_detail_left_img);
         }
-        if(currentRightDrawblw!=getResources().getDrawable(R.drawable.shop_good_detail_right_img)) {
+        if (currentRightDrawblw != getResources().getDrawable(R.drawable.shop_good_detail_right_img)) {
             menu.setImageDrawable(getResources().getDrawable(R.drawable.shop_good_detail_right_img));
-            currentRightDrawblw=getResources().getDrawable(R.drawable.shop_good_detail_right_img);
+            currentRightDrawblw = getResources().getDrawable(R.drawable.shop_good_detail_right_img);
         }
     }
 
@@ -336,13 +351,13 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         mToolbar.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         menu.setVisibility(View.VISIBLE);
-        if(currentLeftDrawblw!=getResources().getDrawable(R.drawable.back2x)) {
+        if (currentLeftDrawblw != getResources().getDrawable(R.drawable.back2x)) {
             back.setImageDrawable(getResources().getDrawable(R.drawable.back2x));
-            currentLeftDrawblw=getResources().getDrawable(R.drawable.back2x);
+            currentLeftDrawblw = getResources().getDrawable(R.drawable.back2x);
         }
-        if(currentRightDrawblw!=getResources().getDrawable(R.drawable.menu)) {
+        if (currentRightDrawblw != getResources().getDrawable(R.drawable.menu)) {
             menu.setImageDrawable(getResources().getDrawable(R.drawable.menu));
-            currentRightDrawblw=getResources().getDrawable(R.drawable.menu);
+            currentRightDrawblw = getResources().getDrawable(R.drawable.menu);
         }
     }
 
@@ -378,11 +393,31 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
 
     @Override
     public void onGetGoodDetailSuccess() {
-        if (!isFinishing() && addCarOrBuyGoodDialog != null&& addCarOrBuyGoodDialog.isShowing()) {
-            addCarOrBuyGoodDialog.refreshData();
-        }else {
-            addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+        if (isPingTuan) {
+            if (!isFinishing() && pingTuanBuyDialog != null && pingTuanBuyDialog.isShowing()) {
+                pingTuanBuyDialog.refreshData();
+            } else if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
+                addCarOrBuyGoodDialog.dismiss();
+                addCarOrBuyGoodDialog = null;
+                pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+                pingTuanBuyDialog.show();
+            } else {
+                pingTuanBuyDialog = new PingTuanBuyGoodDialog(this, f0);
+            }
+        } else {
+            if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
+                addCarOrBuyGoodDialog.refreshData();
+            } else if (!isFinishing() && pingTuanBuyDialog != null && pingTuanBuyDialog.isShowing()) {
+                pingTuanBuyDialog.dismiss();
+                pingTuanBuyDialog.cancelCounmDown();
+                pingTuanBuyDialog = null;
+                addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+                addCarOrBuyGoodDialog.show();
+            } else {
+                addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, f0);
+            }
         }
+
     }
 
     @Override
@@ -391,8 +426,74 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     }
 
     @Override
-    public void showBottomDialog() {
+    public void showBottomDialog(boolean isPingTuan) {
+        if(isPingTuan){
+            showPingTuanDialog();
+        }else {
         showAddCarDialog();
+        }
+    }
+
+    @Override
+    public void isPingTuan(boolean isPingTuan) {
+        this.isPingTuan = isPingTuan;
+        if (isPingTuan) {
+            llbuy.setVisibility(View.INVISIBLE);
+            tvPingTuanBuy.setVisibility(View.VISIBLE);
+        } else {
+            llbuy.setVisibility(View.VISIBLE);
+            tvPingTuanBuy.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void pingTuan(int isAllowNew) {
+        switch (isAllowNew) {
+            case GoodFragment.CREAT_NEW_TUAN:
+                tvPingTuanBuy.setBackgroundColor(getResources().getColor(R.color.msb_color));
+                tvPingTuanBuy.setClickable(true);
+                tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPingTuanDialog();
+                    }
+                });
+                break;
+            case GoodFragment.NOT_ALLOW:
+                tvPingTuanBuy.setClickable(false);
+                tvPingTuanBuy.setBackgroundColor(getResources().getColor(R.color.shop_grey));
+                break;
+            case GoodFragment.JOIN_DEFAULT_TUAN:
+                tvPingTuanBuy.setBackgroundColor(getResources().getColor(R.color.msb_color));
+                tvPingTuanBuy.setClickable(true);
+                tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPingTuanDialog();
+                    }
+                });
+                break;
+            case GoodFragment.SELECT_TUAN:
+                tvPingTuanBuy.setBackgroundColor(getResources().getColor(R.color.msb_color));
+                tvPingTuanBuy.setClickable(true);
+                tvPingTuanBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        f0.showGoodAllPingtunDialog();
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void isAllowAddCar(boolean isAllowAddCar) {
+        if (addCarOrBuyGoodDialog != null) {
+            addCarOrBuyGoodDialog.setIsAllowAddCarVisible(isAllowAddCar);
+        }
     }
 
 
@@ -401,10 +502,19 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
     protected void onRestart() {
         super.onRestart();
         f0.refreshCarList();
+        f0.refreshGoodDetail();
     }
 
     @Override
     public void onGetDetailSuccess(String s) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (pingTuanBuyDialog != null) {
+            pingTuanBuyDialog.cancelCounmDown();
+        }
     }
 }

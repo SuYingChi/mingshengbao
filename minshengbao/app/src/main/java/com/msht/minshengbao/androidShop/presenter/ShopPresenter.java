@@ -2,10 +2,15 @@ package com.msht.minshengbao.androidShop.presenter;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.ShopStoreJingle;
+import com.msht.minshengbao.androidShop.activity.StoreClassActivity;
+import com.msht.minshengbao.androidShop.activity.StorePromotionActivity;
+import com.msht.minshengbao.androidShop.activity.StoreSearchGoodListActivity;
 import com.msht.minshengbao.androidShop.shopBean.BaseData;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailLeftBean;
 import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
@@ -21,6 +26,7 @@ import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.SimpleDataStringCallback;
 import com.msht.minshengbao.androidShop.viewInterface.IAddAddressView;
+import com.msht.minshengbao.androidShop.viewInterface.IAddCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCollectionView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddCompanyNormalInvView;
 import com.msht.minshengbao.androidShop.viewInterface.IAddInvView;
@@ -34,6 +40,7 @@ import com.msht.minshengbao.androidShop.viewInterface.ICarListView;
 import com.msht.minshengbao.androidShop.viewInterface.IChainReceiveView;
 import com.msht.minshengbao.androidShop.viewInterface.IChangeAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IClearShopFootprintView;
+import com.msht.minshengbao.androidShop.viewInterface.IDelCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteAddressView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteCarItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IDeleteMessageItemView;
@@ -58,11 +65,14 @@ import com.msht.minshengbao.androidShop.viewInterface.INativGetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
+import com.msht.minshengbao.androidShop.viewInterface.IPingTuanDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostAddEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundPicView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundView;
+import com.msht.minshengbao.androidShop.viewInterface.IPromotionRuleView;
+import com.msht.minshengbao.androidShop.viewInterface.IPromotionShareInfoView;
 import com.msht.minshengbao.androidShop.viewInterface.IQueryOrderRouteView;
 import com.msht.minshengbao.androidShop.viewInterface.IReceivedOrderView;
 import com.msht.minshengbao.androidShop.viewInterface.IRefundAllFormView;
@@ -86,21 +96,26 @@ import com.msht.minshengbao.androidShop.viewInterface.IShopInitEveluateView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopMainView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrderDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersNumView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopStoreJingle;
 import com.msht.minshengbao.androidShop.viewInterface.ISimpleCarListView;
 import com.msht.minshengbao.androidShop.viewInterface.ISiteListView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotionView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodNewView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.IStoreSearchGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IUploadEveluatePicView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopOrdersView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopSearchView;
+import com.msht.minshengbao.androidShop.viewInterface.IUserPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnListView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IdeleteInvItemView;
 import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 
 import org.json.JSONArray;
@@ -164,17 +179,18 @@ public class ShopPresenter {
     public static void getAllClass(final IShopAllClassView iShopAllClassView) {
         OkHttpUtils.get().url(ShopConstants.CLASS_DETAIL_LEFT).tag(iShopAllClassView).build()
                 .execute(new DataStringCallback(iShopAllClassView) {
-            @Override
-            public void onResponse(String s, int i) {
-                super.onResponse(s, i);
-                if (isResponseSuccess) {
-                    ClassFirstBean bean = JsonUtil.toBean(s, ClassFirstBean.class);
-                    List<ClassFirstBean.DatasBean.ClassListBean> list = bean.getDatas().getClass_list();
-                    iShopAllClassView.onGetAllClassSuccess(list);
-                }
-            }
-        });
+                    @Override
+                    public void onResponse(String s, int i) {
+                        super.onResponse(s, i);
+                        if (isResponseSuccess) {
+                            ClassFirstBean bean = JsonUtil.toBean(s, ClassFirstBean.class);
+                            List<ClassFirstBean.DatasBean.ClassListBean> list = bean.getDatas().getClass_list();
+                            iShopAllClassView.onGetAllClassSuccess(list);
+                        }
+                    }
+                });
     }
+
     //第二级分类
     public static void getClassDetailLeft(final IShopClassDetailView iShopClassDetailView) {
         OkHttpUtils.get().url(ShopConstants.CLASS_DETAIL_LEFT).addParams("gc_id", iShopClassDetailView.getGcId()).tag(iShopClassDetailView).build().execute(new DataStringCallback(iShopClassDetailView) {
@@ -210,15 +226,15 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ClassDetailRightBean bean = JsonUtil.toBean(s, ClassDetailRightBean.class);
-                    if(bean!=null) {
+                    if (bean != null) {
                         List<ClassDetailRightBean.DatasBean.GoodsListBean> list = bean.getDatas().getGoods_list();
                         iShopClassDetailView.onRightRclSuccess(list, bean.getPage_total());
-                    }else {
+                    } else {
                         try {
                             JSONObject obj = new JSONObject(s).optJSONObject("datas");
                             int page_total = new JSONObject(s).optInt("page_total");
                             JSONArray jsonarry = obj.optJSONArray("goods_list");
-                            if(jsonarry!=null) {
+                            if (jsonarry != null) {
                                 List<ClassDetailRightBean.DatasBean.GoodsListBean> list = new ArrayList<ClassDetailRightBean.DatasBean.GoodsListBean>();
                                 for (int ii = 0; ii < jsonarry.length(); ii++) {
                                     JSONObject objj = jsonarry.optJSONObject(ii);
@@ -228,7 +244,7 @@ public class ShopPresenter {
                                     beanb.setGoods_name(objj.optString("goods_name"));
                                     beanb.setGoods_id(objj.optString("goods_id"));
                                     list.add(beanb);
-                                    iShopClassDetailView.onRightRclSuccess(list,page_total);
+                                    iShopClassDetailView.onRightRclSuccess(list, page_total);
                                 }
                             }
                         } catch (JSONException e) {
@@ -247,27 +263,27 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     ShopkeywordBean bean = JsonUtil.toBean(s, ShopkeywordBean.class);
-                    List<ShopkeywordBean.DatasBean.GoodsListBean> list=new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
+                    List<ShopkeywordBean.DatasBean.GoodsListBean> list = new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
                     int pageTotal = 0;
-                    if(bean!=null) {
-                         list = bean.getDatas().getGoods_list();
-                         pageTotal = bean.getPage_total();
-                    }else {
+                    if (bean != null) {
+                        list = bean.getDatas().getGoods_list();
+                        pageTotal = bean.getPage_total();
+                    } else {
                         try {
                             JSONObject obj = new JSONObject(s);
                             pageTotal = obj.optInt("page_total");
                             JSONArray goodarray = obj.optJSONObject("datas").optJSONArray("goods_list");
-                            for(int ii=0;ii<goodarray.length();ii++){
+                            for (int ii = 0; ii < goodarray.length(); ii++) {
                                 JSONObject good = goodarray.optJSONObject(ii);
                                 String goods_image_url = good.optString("goods_image_url");
                                 String goodName = good.optString("goods_name");
                                 String goods_jingle = good.optString("goods_jingle");
-                                if(goods_jingle==null||goods_jingle.equals("null")){
-                                    goods_jingle="";
+                                if (goods_jingle == null || goods_jingle.equals("null")) {
+                                    goods_jingle = "";
                                 }
-                                String goods_salenum  = good.optString("goods_salenum");
+                                String goods_salenum = good.optString("goods_salenum");
                                 String goods_price = good.optString("goods_price");
-                                String goods_id= good.optString("goods_id");
+                                String goods_id = good.optString("goods_id");
                                 ShopkeywordBean.DatasBean.GoodsListBean goodbean = new ShopkeywordBean.DatasBean.GoodsListBean();
                                 goodbean.setGoods_image_url(goods_image_url);
                                 goodbean.setGoods_name(goodName);
@@ -338,6 +354,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void getCarList(final ISimpleCarListView iCarListView) {
         OkHttpUtils.post().url(ShopConstants.CAR_LIST).tag(iCarListView).addParams("key", iCarListView.getKey()).build().execute(new SimpleDataStringCallback(iCarListView) {
             @Override
@@ -349,6 +366,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void getShopHome(final IShopMainView iShopMainView) {
         OkHttpUtils.get().url(ShopConstants.SHOP_HOME).tag(iShopMainView).build().execute(new DataStringCallback(iShopMainView) {
             @Override
@@ -388,7 +406,12 @@ public class ShopPresenter {
     }
 
     public static void buyStep1(final IBuyStep1View iBuyStep1View) {
-        OkHttpUtils.post().url(ShopConstants.BUY_STEP_1).tag(iBuyStep1View).addParams("key", iBuyStep1View.getKey()).addParams("cart_id", iBuyStep1View.getCarId()).addParams("ifcart", iBuyStep1View.ifCarted()).addParams("ifpickup_self", iBuyStep1View.ifPickupSelf()).addParams("address_id", iBuyStep1View.getAddressid()).build().execute(new DataStringCallback(iBuyStep1View) {
+        PostFormBuilder request = OkHttpUtils.post().url(ShopConstants.BUY_STEP_1).tag(iBuyStep1View).addParams("key", iBuyStep1View.getKey()).addParams("cart_id", iBuyStep1View.getCarId()).addParams("ifcart", iBuyStep1View.ifCarted()).addParams("ifpickup_self", iBuyStep1View.ifPickupSelf())
+                .addParams("address_id", iBuyStep1View.getAddressid());
+        if (!TextUtils.isEmpty(iBuyStep1View.getIsPinTuan())) {
+            request.addParams("pintuan", iBuyStep1View.getIsPinTuan());
+        }
+        request.build().execute(new DataStringCallback(iBuyStep1View) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -648,7 +671,7 @@ public class ShopPresenter {
     }
 
     public static void buyStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch) {
-        OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
+        PostFormBuilder request = OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
                 .addParams("ifcart", ifCarted)
                 .addParams("cart_id", carid)
                 .addParams("address_id", addressId)
@@ -667,8 +690,14 @@ public class ShopPresenter {
                 .addParams("rcb_pay", iBuyStep2View.getRcb_pay())
                 .addParams("rpt", iBuyStep2View.getRpt())
                 .addParams("pay_message", iBuyStep2View.getPay_message())
-                .addParams("dlyp_id",iBuyStep2View.getDlypId())
-                .build().execute(new DataStringCallback(iBuyStep2View, false) {
+                .addParams("dlyp_id", iBuyStep2View.getDlypId());
+        if (!TextUtils.isEmpty(iBuyStep2View.getIsPinTuan())) {
+            request.addParams("pintuan", iBuyStep2View.getIsPinTuan());
+        }
+        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId()) && !TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
+            request.addParams("log_id", iBuyStep2View.getPingTuanId()).addParams("buyer_id", iBuyStep2View.getBuyerId());
+        }
+        request.build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -678,8 +707,9 @@ public class ShopPresenter {
             }
         });
     }
-    public static void buyStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch,String userIds) {
-        OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
+
+    public static void buyDoorServiceStep2(final IBuyStep2View iBuyStep2View, String carid, String recommend_phone, String ifCarted, String ifpickup_self, String addressId, String vat_hash, String offpay_hash, String offpay_hash_batch, String userIds) {
+        PostFormBuilder request = OkHttpUtils.post().url(ShopConstants.BUY_STEP2).tag(iBuyStep2View).addParams("key", iBuyStep2View.getKey())
                 .addParams("ifcart", ifCarted)
                 .addParams("cart_id", carid)
                 .addParams("address_id", addressId)
@@ -698,8 +728,14 @@ public class ShopPresenter {
                 .addParams("rcb_pay", iBuyStep2View.getRcb_pay())
                 .addParams("rpt", iBuyStep2View.getRpt())
                 .addParams("pay_message", iBuyStep2View.getPay_message())
-                .addParams("door_service", userIds)
-                .build().execute(new DataStringCallback(iBuyStep2View, false) {
+                .addParams("door_service", userIds);
+        if (!TextUtils.isEmpty(iBuyStep2View.getIsPinTuan())) {
+            request.addParams("pintuan", iBuyStep2View.getIsPinTuan());
+        }
+        if (!TextUtils.isEmpty(iBuyStep2View.getPingTuanId()) && !TextUtils.isEmpty(iBuyStep2View.getBuyerId())) {
+            request.addParams("log_id", iBuyStep2View.getPingTuanId()).addParams("buyer_id", iBuyStep2View.getBuyerId());
+        }
+        request.build().execute(new DataStringCallback(iBuyStep2View, false) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
@@ -709,7 +745,8 @@ public class ShopPresenter {
             }
         });
     }
-    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn,final String orderId) {
+
+    public static void buyStep3(final IBuyStep3GetPayListView iBuyStep3GetPayListView, String paySn, final String orderId) {
         OkHttpUtils.post().url(ShopConstants.BUY_STEP3).tag(iBuyStep3GetPayListView).addParams("key", iBuyStep3GetPayListView.getKey())
                 .addParams("pay_sn", paySn)
                 .build().execute(new DataStringCallback(iBuyStep3GetPayListView) {
@@ -717,25 +754,27 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    iBuyStep3GetPayListView.onBuyStep3(s,orderId);
+                    iBuyStep3GetPayListView.onBuyStep3(s, orderId);
                 }
             }
         });
     }
+
     public static void listPay(final IlistPayView ilistPayView, String paySn, final String orderId) {
         OkHttpUtils.post().url(ShopConstants.LIST_PAY).tag(ilistPayView).addParams("key", ilistPayView.getKey())
                 .addParams("pay_sn", paySn)
-                .addParams("order_id",orderId)
+                .addParams("order_id", orderId)
                 .build().execute(new DataStringCallback(ilistPayView) {
             @Override
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    ilistPayView.onGetListPayInfoSuccess(s,orderId);
+                    ilistPayView.onGetListPayInfoSuccess(s, orderId);
                 }
             }
         });
     }
+
     public static void creatCharge(final IBuyStep4CreatChargeView iBuyStep4CreatChargeView) {
         OkHttpUtils.get().url(ShopConstants.BUY_STEP4).tag(iBuyStep4CreatChargeView).addParams("key", iBuyStep4CreatChargeView.getKey())
                 .addParams("pay_sn", iBuyStep4CreatChargeView.getPay_sn())
@@ -1275,7 +1314,7 @@ public class ShopPresenter {
 
     public static void getShareUrl(final IGetShareUrlView iGetShareUrlView, final String type) {
         OkHttpUtils.get().url(ShopConstants.GET_SHARE_URL)
-                .addParams("key",iGetShareUrlView.getKey())
+                .addParams("key", iGetShareUrlView.getKey())
                 .addParams("goods_id", iGetShareUrlView.getGoodId()).tag(iGetShareUrlView)
                 .addParams("type", type)
                 .build().execute(new DataStringCallback(iGetShareUrlView) {
@@ -1302,6 +1341,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void chainReceive(final IChainReceiveView iChainReceiveView, final String orderId) {
         OkHttpUtils.post().url(ShopConstants.CHAIN_RECEVICE).addParams("key", iChainReceiveView.getKey()).tag(iChainReceiveView)
                 .addParams("order_id", orderId)
@@ -1315,6 +1355,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void getMsgCount(final IGetMsgCountView iGetMsgCountView) {
         OkHttpUtils.get().url(ShopConstants.MSH_COUNT).addParams("key", iGetMsgCountView.getKey()).tag(iGetMsgCountView)
                 .build().execute(new DataStringCallback(iGetMsgCountView) {
@@ -1387,7 +1428,7 @@ public class ShopPresenter {
                         iView.onError("格式转换异常");
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
-                        iView.onError(bean.getError()!=null?bean.getError().toString():"");
+                        iView.onError(bean.getError() != null ? bean.getError().toString() : "");
                     } else {
                         isResponseSuccess = true;
                     }
@@ -1421,7 +1462,7 @@ public class ShopPresenter {
                     } else if (bean.getData().size() == 0) {
                         isResponseSuccess = false;
                         if (bean.getError() != null) {
-                            iView.onError(bean.getError()!=null?bean.getError().toString():"");
+                            iView.onError(bean.getError() != null ? bean.getError().toString() : "");
                         }
                     } else {
                         isResponseSuccess = true;
@@ -1491,10 +1532,12 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getOrderNum(final IOrderNumView iOrderNumView,DataStringCallback dataStringCallback) {
+
+    public static void getOrderNum(final IOrderNumView iOrderNumView, DataStringCallback dataStringCallback) {
         OkHttpUtils.get().url(ShopConstants.MY_SHOP_NUM).addParams("key", iOrderNumView.getKey()).tag(iOrderNumView)
                 .build().execute(dataStringCallback);
     }
+
     public static void retrunGoodSendPost(final IGetWuliuView iGetWuliuView) {
         OkHttpUtils.post().url(ShopConstants.RETURN_GOOD_SENT_POST).addParams("key", iGetWuliuView.getKey()).tag(iGetWuliuView)
                 .addParams("return_id", iGetWuliuView.getReturnId())
@@ -1510,7 +1553,8 @@ public class ShopPresenter {
             }
         });
     }
-    public static void getVoucher(final IGetVoucherView iGetVoucherView,String tid) {
+
+    public static void getVoucher(final IGetVoucherView iGetVoucherView, String tid) {
         OkHttpUtils.post().url(ShopConstants.GET_VOUCHER).addParams("key", iGetVoucherView.getKey()).tag(iGetVoucherView)
                 .addParams("tid", tid)
                 .build().execute(new DataStringCallback(iGetVoucherView) {
@@ -1523,33 +1567,34 @@ public class ShopPresenter {
             }
         });
     }
-    public static void searchUserId(final ISearchUserIdView iSearchUserIdView,String userId){
-        OkHttpUtils.get().url(ShopConstants.SRARCH_USERID).addParams("customerNo",userId).tag(iSearchUserIdView)
+
+    public static void searchUserId(final ISearchUserIdView iSearchUserIdView, String userId) {
+        OkHttpUtils.get().url(ShopConstants.SRARCH_USERID).addParams("customerNo", userId).tag(iSearchUserIdView)
                 .build().execute(new DataStringCallback(iSearchUserIdView) {
             @Override
             public void onResponse(String s, int i) {
-                if(isShowLoadingDialog) {
+                if (isShowLoadingDialog) {
                     iSearchUserIdView.dismissLoading();
                 }
                 if (TextUtils.isEmpty(s) || TextUtils.equals("\"\"", s)) {
                     isResponseSuccess = false;
                     iSearchUserIdView.onError("接口返回空字符串");
-                }else {
+                } else {
                     BaseData baseData = JsonUtil.getBaseData(s);
-                    if(baseData ==null){
+                    if (baseData == null) {
                         iSearchUserIdView.onError("GSON转换异常");
-                    }else if("fail".equals(baseData.getResult())){
+                    } else if ("fail".equals(baseData.getResult())) {
                         try {
                             JSONObject object = new JSONObject(s);
-                            if(TextUtils.equals(object.optString("error"),"用户名或密码错误")){
+                            if (TextUtils.equals(object.optString("error"), "用户名或密码错误")) {
                                 iSearchUserIdView.onError("未登录");
-                            }else {
+                            } else {
                                 iSearchUserIdView.onUserIdError(object.optString("error"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    }else if("success".equals(baseData.getResult())){
+                    } else if ("success".equals(baseData.getResult())) {
                         iSearchUserIdView.onSearchUserIdSuccess(s);
                     }
                 }
@@ -1557,7 +1602,7 @@ public class ShopPresenter {
         });
     }
 
-    public static void  getSiteList(final ISiteListView iSiteListView) {
+    public static void getSiteList(final ISiteListView iSiteListView) {
         OkHttpUtils.get().url(ShopConstants.SITE_LIST).tag(iSiteListView)
                 .build().execute(new DataStringCallback(iSiteListView) {
             @Override
@@ -1570,7 +1615,7 @@ public class ShopPresenter {
         });
     }
 
-    public static void getRepairOrderNum(IRepairOrderNumView iRepairOrderNumView,String userId, String password,DataStringCallback dataStringCallback) {
+    public static void getRepairOrderNum(IRepairOrderNumView iRepairOrderNumView, String userId, String password, DataStringCallback dataStringCallback) {
         OkHttpUtils.post().url(ShopConstants.MY_REPAIR_NUM).addParams("userId", userId)
                 .addParams("password", password)
                 .tag(iRepairOrderNumView)
@@ -1609,6 +1654,7 @@ public class ShopPresenter {
             }
         });
     }
+
     public static void getStoreNewGood(final IStoreGoodNewView iStoreGoodNewView) {
         OkHttpUtils.get().url(ShopConstants.NEW_STORE_GOOD).addParams("store_id", iStoreGoodNewView.getStoreId())
                 .addParams("curpage", iStoreGoodNewView.getCurpage())
@@ -1655,8 +1701,8 @@ public class ShopPresenter {
         });
     }
 
-    public static void GetGoodPingtuanInfo(final IGoodPingTuanView iGoodPingTuanView) {
-        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("goods_id", iGoodPingTuanView.getGoodId())
+    public static void getGoodPingtuanInfo(final IGoodPingTuanView iGoodPingTuanView, String goodId) {
+        OkHttpUtils.get().url(ShopConstants.GOOD_PING_TUAN).addParams("goods_id", goodId)
                 .tag(iGoodPingTuanView)
                 .build().execute(new DataStringCallback(iGoodPingTuanView) {
             @Override
@@ -1667,5 +1713,150 @@ public class ShopPresenter {
                 }
             }
         });
+    }
+
+    public static void getUserPingtuanInfo(final IUserPingTuanView iUserPingTuanView, String pingTuanId) {
+        OkHttpUtils.get().url(ShopConstants.USER_ALL_PING_TUAN).addParams("pintuan_id", pingTuanId)
+                .tag(iUserPingTuanView)
+                .build().execute(new DataStringCallback(iUserPingTuanView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iUserPingTuanView.onUserPingtuanInfoSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreClass(final IStoreClassView iStoreClassView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_CLASS).addParams("store_id", iStoreClassView.getStoreId())
+                .tag(iStoreClassView)
+                .build().execute(new DataStringCallback(iStoreClassView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreClassView.onGetStoreClass(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreSearchList(final IStoreSearchGoodListView iStoreSearchGoodListView) {
+        GetBuilder request = OkHttpUtils.get().url(ShopConstants.STORE_GOOD)
+                .addParams("store_id", iStoreSearchGoodListView.getStoreId())
+                .addParams("key", iStoreSearchGoodListView.getTab())
+                .addParams("order", iStoreSearchGoodListView.getRankType())
+                .addParams("curpage", iStoreSearchGoodListView.getCurpage())
+                .addParams("page", "10");
+        if (!TextUtils.isEmpty(iStoreSearchGoodListView.getStcId())) {
+            request.addParams("stc_id", iStoreSearchGoodListView.getStcId());
+        }
+        if (!TextUtils.isEmpty(iStoreSearchGoodListView.getKeyWord())) {
+            request.addParams("keyword", iStoreSearchGoodListView.getKeyWord());
+        }
+        request.tag(iStoreSearchGoodListView)
+                .build().execute(new DataStringCallback(iStoreSearchGoodListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iStoreSearchGoodListView.onGetStoreGoodSuccess(s);
+                }
+            }
+        });
+    }
+
+    public static void getStoreJingle(final IShopStoreJingle ishopStoreJingle) {
+        OkHttpUtils.post().url(ShopConstants.STORE_JINGLE).addParams("store_id", ishopStoreJingle.getStoreId())
+                .addParams("key",ishopStoreJingle.getKey())
+                .tag(ishopStoreJingle)
+                .build().execute(new DataStringCallback(ishopStoreJingle) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    ishopStoreJingle.onGetStoreJingleClass(s);
+                }
+            }
+        });
+    }
+
+    public static void delCollectStore(final IDelCollectStoreView iDelCollectStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_DELETE_COLLECT).addParams("store_id", iDelCollectStoreView.getStoreId())
+                .addParams("key",iDelCollectStoreView.getKey())
+                .tag(iDelCollectStoreView)
+                .build().execute(new DataStringCallback(iDelCollectStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iDelCollectStoreView.onDeleteStoreCollect(s);
+                }
+            }
+        });
+    }
+
+    public static void addCollectStore(final IAddCollectStoreView iAddCollectStoreView) {
+        OkHttpUtils.post().url(ShopConstants.STORE_ADD_COLLECT).addParams("store_id", iAddCollectStoreView.getStoreId())
+                .addParams("key",iAddCollectStoreView.getKey())
+                .tag(iAddCollectStoreView)
+                .build().execute(new DataStringCallback(iAddCollectStoreView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iAddCollectStoreView.onAddStoreCollect(s);
+                }
+            }
+        });
+    }
+
+    public static void getPromotionShareInfo(final IPromotionShareInfoView iPromotionShareInfoView) {
+        OkHttpUtils.get().url(ShopConstants.STORE_PROMOTION_SHARE).addParams("store_id", iPromotionShareInfoView.getStoreId())
+                .addParams("promotion_id",iPromotionShareInfoView.getPromotionId())
+                .addParams("promotion_type",iPromotionShareInfoView.getPromotionType())
+                .tag(iPromotionShareInfoView)
+                .build().execute(new DataStringCallback(iPromotionShareInfoView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPromotionShareInfoView.onGetPromotionShareInfo(s);
+                }
+            }
+        });
+    }
+
+    public static void getPromotionRule(final IPromotionRuleView iPromotionRuleView) {
+        OkHttpUtils.post().url(ShopConstants.PROMOTION_RULE).addParams("promotion_id", iPromotionRuleView.getPromotionId())
+                .tag(iPromotionRuleView)
+                .build().execute(new DataStringCallback(iPromotionRuleView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPromotionRuleView.onGetPromotionRule(s);
+                }
+            }
+        });
+
+    }
+    public static void getPingTuanDetail(final IPingTuanDetailView iPingTuanDetailView) {
+        OkHttpUtils.get().url(ShopConstants.PINGTUAN_DETAIL).addParams("pintuan_id", iPingTuanDetailView.getPingTuanId())
+                .addParams("key", iPingTuanDetailView.getKey())
+                .addParams("buyer_id", iPingTuanDetailView.getBuyerId())
+                .tag(iPingTuanDetailView)
+                .build().execute(new DataStringCallback(iPingTuanDetailView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPingTuanDetailView.onGetPingTuanDetail(s);
+                }
+            }
+        });
+
     }
 }

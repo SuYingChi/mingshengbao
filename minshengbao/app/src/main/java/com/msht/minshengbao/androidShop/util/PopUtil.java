@@ -167,13 +167,14 @@ public class PopUtil {
                                          final View.OnClickListener onOK, boolean canceledOnTouchOutside) {
         LayoutInflater inflaterDl = LayoutInflater.from(mContext);
         LinearLayout layout = (LinearLayout) inflaterDl.inflate(
-                R.layout.dialog_tips, null);
+                R.layout.title_tips_dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(mContext).create();
 
         TextView tvTitle = (TextView) layout.findViewById(R.id.tv_title);
+        LinearLayout ll_title = (LinearLayout) layout.findViewById(R.id.ll_title);
         tvTitle.setText(title);
         if (TextUtils.isEmpty(title)) {
-            tvTitle.setVisibility(View.GONE);
+            ll_title.setVisibility(View.GONE);
         }
 
         TextView tvtips = (TextView) layout.findViewById(R.id.tv_delete_tips);
@@ -182,6 +183,11 @@ public class PopUtil {
         dialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
         dialog.show();
         dialog.getWindow().setContentView(layout);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.shape_white_layout);
+        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
+        attributes.width = DimenUtil.getScreenWidth() - DimenUtil.dip2px(mContext.getResources().getDimension(R.dimen.margin_30));
+        attributes.gravity = Gravity.CENTER;
+        dialog.getWindow().setAttributes(attributes);
         TextView btnCancel = (TextView) layout.findViewById(R.id.dialog_btn_cancel);
         if (!TextUtils.isEmpty(left)) {
             btnCancel.setText(left);
@@ -209,6 +215,7 @@ public class PopUtil {
             }
         });
     }
+
     public static void showTipsDialog(Context mContext ) {
         LayoutInflater inflaterDl = LayoutInflater.from(mContext);
         LinearLayout layout = (LinearLayout) inflaterDl.inflate(

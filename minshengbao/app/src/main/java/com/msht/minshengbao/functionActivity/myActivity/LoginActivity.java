@@ -128,7 +128,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         try {
             JSONObject shopobj = new JSONObject(shop);
             ShopSharePreferenceUtil.setShopSpStringValue("username",shopobj.optString("username"));
-            ShopSharePreferenceUtil.setShopSpStringValue("userId",shopobj.optString("userId"));
+            ShopSharePreferenceUtil.setShopSpStringValue("userId",shopobj.optString("userid"));
+            ShopSharePreferenceUtil.setShopSpStringValue("password",etPassword.getText().toString());
             ShopSharePreferenceUtil.setShopSpStringValue("key",shopobj.optString("key"));
         } catch (JSONException e) {
             e.printStackTrace();

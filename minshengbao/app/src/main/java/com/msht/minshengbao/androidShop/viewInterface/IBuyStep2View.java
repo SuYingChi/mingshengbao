@@ -25,4 +25,10 @@ public interface IBuyStep2View extends IBaseView{
     void onBuyStep2Success(String s);
 
     String getDlypId();
+
+    String getPingTuanId();
+
+    String getBuyerId();
+
+    String getIsPinTuan();
 }

@@ -23,6 +23,7 @@ import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSpecialActivity;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
@@ -101,10 +102,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(getContext(),"",getResources().getString(R.string.network_error),"","",null,null,true);
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
-            PopUtil.toastInBottom("请登录商城");
-            LogUtils.e(Log.getStackTraceString(new Throwable()));
-            Intent goLogin = new Intent(this.getActivity(), LoginActivity.class);
-            getActivity().startActivity(goLogin);
+            PopUtil.toastInBottom("请登录");
         } else if(!TextUtils.isEmpty(s)){
             PopUtil.toastInCenter(s);
         }
@@ -190,6 +188,9 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
     }
 
     protected void doShopItemViewClickByUrl(String url) {
+        if(TextUtils.isEmpty(url)){
+            return;
+        }
         Set<String> keys = Uri.parse(url).getQueryParameterNames();
         String data;
         if (keys.contains("goods")) {
@@ -206,14 +207,12 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
         } else if (keys.contains("gc_id")) {
             data = Uri.parse(url).getQueryParameter("gc_id");
             Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-            int index = data.indexOf("gc_id=");
-            data = data.substring(index + 6).trim();
             intent.putExtra("data", data);
             startActivity(intent);
-        } else {
-            data = url;
-            Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
-            intent.putExtra("url", data);
+        }else if(keys.contains("store_id")){
+            data = Uri.parse(url).getQueryParameter("store_id");
+            Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+            intent.putExtra("id", data);
             startActivity(intent);
         }
     }

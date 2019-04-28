@@ -418,9 +418,7 @@ public class ShopOrderEveluateActivity extends ShopBaseActivity implements IShop
         if (!AppUtil.isNetworkAvailable()) {
             PopUtil.showComfirmDialog(this,"",getResources().getString(R.string.network_error),"","",null,null,true);
         } else if (TextUtils.isEmpty(ShopSharePreferenceUtil.getInstance().getKey())||"未登录".equals(s)) {
-            PopUtil.toastInBottom("请登录商城");
-            Intent goLogin = new Intent(this, LoginActivity.class);
-            startActivity(goLogin);
+            PopUtil.toastInBottom("请登录");
         } else if(!isCompress){
             //原图上传失败才显示
             PopUtil.toastInCenter(s);

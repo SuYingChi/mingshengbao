@@ -24,6 +24,16 @@ public class PromotionBean {
     private String promotion_store_id;
     private Long promotion_left_time;
 
+    public String getGoodId() {
+        return goodId;
+    }
+
+    public void setGoodId(String goodId) {
+        this.goodId = goodId;
+    }
+
+    private String goodId;
+
     public String getPromotion_id() {
         return promotion_id;
     }

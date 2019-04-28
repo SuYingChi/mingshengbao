@@ -335,9 +335,14 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             JSONObject jsonObject = new JSONObject(s);
             JSONObject datas = jsonObject.getJSONObject("datas");
             JSONObject goods_info = datas.getJSONObject("goods_info");
+            if(goods_info.optInt("cart")==1){
+                addCarOrBuyGoodDialog.setIsAllowAddCarVisible(true);
+            }else {
+                addCarOrBuyGoodDialog.setIsAllowAddCarVisible(false);
+            }
             String pintuan_promotion = goods_info.optString("pintuan_promotion");
-            if(TextUtils.equals(pintuan_promotion,"1")||TextUtils.equals(pintuan_promotion,"2")){
-                goodPrice = goods_info.optString("pintuan_goods_price");
+            if(TextUtils.equals(pintuan_promotion,"1")){
+              onShopItemViewClick("goods",goods_info.optString("goods_id"));
             }else {
                 if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
                     if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
@@ -352,38 +357,38 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 } else {
                     goodPrice = goods_info.optString("promotion_price");
                 }
-            }
-            remianNum = goods_info.optString("goods_storage");
-            JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
-            JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
-            JSONObject spec_listObj = datas.optJSONObject("spec_list");
-            isPickup_self = goods_info.optString("pickup_self");
-            List<String> guigekey = JsonUtil.getJsonObjectKeyList(guigenameobj);
-            if (guigekey.size() > 0) {
-                String guigenamekey = guigekey.get(0);
-                JSONObject guigevalueobj = spec_valueobj.optJSONObject(guigenamekey);
-                guigename = guigenameobj.optString(guigenamekey);
-                List<String> guigeidlist = JsonUtil.getJsonObjectKeyList(guigevalueobj);
-                guigeList.clear();
-                for (int i = 0; i < guigeidlist.size(); i++) {
-                    String id = guigeidlist.get(i);
-                    String guigegoodid = spec_listObj.optString(id);
-                    String guigeName = guigevalueobj.optString(guigeidlist.get(i));
-                    if (i == selectedGuigePosition) {
-                        guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, true));
-                    } else {
-                        guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, false));
+                remianNum = goods_info.optString("goods_storage");
+                JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
+                JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
+                JSONObject spec_listObj = datas.optJSONObject("spec_list");
+                isPickup_self = goods_info.optString("pickup_self");
+                List<String> guigekey = JsonUtil.getJsonObjectKeyList(guigenameobj);
+                if (guigekey.size() > 0) {
+                    String guigenamekey = guigekey.get(0);
+                    JSONObject guigevalueobj = spec_valueobj.optJSONObject(guigenamekey);
+                    guigename = guigenameobj.optString(guigenamekey);
+                    List<String> guigeidlist = JsonUtil.getJsonObjectKeyList(guigevalueobj);
+                    guigeList.clear();
+                    for (int i = 0; i < guigeidlist.size(); i++) {
+                        String id = guigeidlist.get(i);
+                        String guigegoodid = spec_listObj.optString(id);
+                        String guigeName = guigevalueobj.optString(guigeidlist.get(i));
+                        if (i == selectedGuigePosition) {
+                            guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, true));
+                        } else {
+                            guigeList.add(new GuiGeBean(id, guigeName, guigegoodid, false));
+                        }
                     }
+                } else {
+                    guigename = "";
+                    guigeList.clear();
                 }
-            } else {
-                guigename = "";
-                guigeList.clear();
-            }
-            if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
-                addCarOrBuyGoodDialog.refreshData();
-            } else {
-                addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, this);
-                addCarOrBuyGoodDialog.show();
+                if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
+                    addCarOrBuyGoodDialog.refreshData();
+                } else {
+                    addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, this);
+                    addCarOrBuyGoodDialog.show();
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -413,7 +418,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     }
 
     @Override
-    public void buyGood() {
+    public void buyGood(boolean ispingTuan) {
         if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
@@ -525,6 +530,21 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             goodId = guigeList.get(childposition).getGuigeGoodId();
             ShopPresenter.getGoodDetail(this);
         }
+    }
+
+    @Override
+    public long getleftTime() {
+        return 0;
+    }
+
+    @Override
+    public void showAddCarDialog() {
+
+    }
+
+    @Override
+    public int getPingTuanMaxNum() {
+        return 0;
     }
 
 

@@ -95,8 +95,8 @@ public class ShopFootprintActivity extends ShopBaseActivity implements IGetShopF
         int pageTotal = bean.getPage_total();
         if (pageTotal == 0) {
             datalist.clear();
-            refreshLayout.setEnableAutoLoadMore(true);
-            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(false);
+            refreshLayout.setNoMoreData(true);
             adapter.notifyDataSetChanged();
             ivNoData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);

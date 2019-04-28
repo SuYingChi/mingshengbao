@@ -17,11 +17,13 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.MyAPI.MyWebChromeClient;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
+import com.msht.minshengbao.androidShop.util.AndroidBug5497Workaround;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
 
 import butterknife.BindView;
@@ -40,13 +42,11 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChromeCli
         setContentView(R.layout.shop_kefu_layout);
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         String t_id = getIntent().getStringExtra("t_id");
-      //  ShopPresenter.getMessageDetail(this, SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password, ""), t_id);
         imChatUrl = ShopConstants.getImChatUrl(t_id, getKey());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +95,7 @@ public class ShopkefuActivity extends ShopBaseActivity implements MyWebChromeCli
             }
         });
         webView.setWebChromeClient(new MyWebChromeClient(this));
+        AndroidBug5497Workaround.assistActivity(this);
     }
 
     @Override

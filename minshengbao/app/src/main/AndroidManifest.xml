@@ -433,7 +433,11 @@
         <activity android:name=".functionActivity.myActivity.RebindWeiChatActivity" />
         <activity android:name=".androidShop.activity.ShopStoreMainActivity" />
         <activity android:name=".androidShop.activity.StorePromotionActivity" />
-        <activity android:name=".functionActivity.gasService.GasAllPayRecordListActivity"></activity>
+        <activity android:name=".functionActivity.gasService.GasAllPayRecordListActivity"/>
+        <activity android:name=".androidShop.activity.StoreClassActivity" />
+        <activity android:name=".androidShop.activity.StoreSearchGoodListActivity" />
+        <activity android:name=".androidShop.activity.ShopStoreJingle" />
+        <activity android:name=".androidShop.activity.PingtuanDetail" />
     </application>
 
 </manifest>

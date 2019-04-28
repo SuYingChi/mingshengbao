@@ -96,6 +96,8 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
         linearLayoutManager =  new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        linearLayoutManager.setAutoMeasureEnabled(true);
+        rcl.setNestedScrollingEnabled(false);
         rcl.setLayoutManager(linearLayoutManager);
         dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rcl.addItemDecoration(dividerItemDecoration);
@@ -105,13 +107,14 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
         downTriangle = getResources().getDrawable(R.drawable.shop_down_triangle);
         grid2 = getResources().getDrawable(R.drawable.grid_2);
         grid = getResources().getDrawable(R.drawable.shop_grid);
-        initTab("");
+        //initTab("");
     }
 
     @Override
     protected void initData() {
         super.initData();
-        ShopPresenter.getStoreGood(this);
+        initTab("");
+       // ShopPresenter.getStoreGood(this);
     }
 
     @Override
@@ -143,13 +146,13 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
             int pageTotal = obj.optInt("page_total");
         if (pageTotal == 0) {
             goodlist.clear();
-            refreshLayout.setEnableAutoLoadMore(true);
-            refreshLayout.setNoMoreData(false);
+            refreshLayout.setEnableAutoLoadMore(false);
+            refreshLayout.setNoMoreData(true);
             adapter.notifyDataSetChanged();
             ivNoData.setVisibility(View.VISIBLE);
             tvNoData.setVisibility(View.VISIBLE);
             return;
-        } else if (curpage >= pageTotal) {
+        } else if (curpage > pageTotal) {
             refreshLayout.setEnableAutoLoadMore(false);
             refreshLayout.finishLoadMoreWithNoMoreData();
             refreshLayout.setNoMoreData(true);

@@ -239,8 +239,8 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
             JSONArray order_group_list = datas.optJSONArray("order_group_list");
             if (pageTotal == 0) {
                 ordersList.clear();
-                refreshLayout.setEnableAutoLoadMore(true);
-                refreshLayout.setNoMoreData(false);
+                refreshLayout.setEnableAutoLoadMore(false);
+                refreshLayout.setNoMoreData(true);
                 adapter.notifyDataSetChanged();
                 ivNoOrder.setVisibility(View.VISIBLE);
                 tvNoData.setVisibility(View.VISIBLE);
@@ -652,7 +652,7 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         tvLock.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                         btnList.add(tvLock);
                     }
-                    if ((order_state.equals("20") || if_receive) && !if_lock) {
+                    if ((order_state.equals("20") && if_receive) && !if_lock) {
                         TextView tvQrReceive = new TextView(getContext());
                         LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         paramas.gravity = Gravity.CENTER_VERTICAL;

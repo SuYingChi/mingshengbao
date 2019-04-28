@@ -22,5 +22,11 @@ public interface GoodDetailActivityListener {
 
     void goEveluateFragment();
 
-    void showBottomDialog();
+    void showBottomDialog(boolean ispingtuan);
+
+    void isPingTuan(boolean isPingTuan);
+
+    void pingTuan(int  pingtuanType);
+
+    void isAllowAddCar(boolean isAllowAddCar);
 }

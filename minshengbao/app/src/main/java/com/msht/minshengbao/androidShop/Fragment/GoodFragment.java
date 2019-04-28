@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -36,22 +36,27 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.androidShop.adapter.GiftArrayAdapter;
 import com.msht.minshengbao.androidShop.adapter.PingtuanAdapter;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSelectSiteActivity;
 import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.adapter.HorizontalVoucherAdpter;
 import com.msht.minshengbao.androidShop.customerview.GoodFmVoucherDialog;
+import com.msht.minshengbao.androidShop.customerview.GoodPintuanDialog;
+import com.msht.minshengbao.androidShop.customerview.UserPintuanDialog;
 import com.msht.minshengbao.androidShop.shopBean.ComfirmShopGoodBean;
+import com.msht.minshengbao.androidShop.shopBean.GiftBean;
 import com.msht.minshengbao.androidShop.shopBean.GuiGeBean;
 import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
+import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
+import com.msht.minshengbao.androidShop.viewInterface.DialogInterface;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
-import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IModifyCarGoodNumView;
 import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
@@ -92,8 +97,12 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, IGoodPingTuanView {
-    private static final int THUMB_SIZE = 150;
+public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, DialogInterface {
+    public static final int THUMB_SIZE = 150;
+    public static final int NOT_ALLOW = 0;
+    public static final int JOIN_DEFAULT_TUAN = 1;
+    public static final int SELECT_TUAN = 2;
+    public static final int CREAT_NEW_TUAN = 3;
     private String goodsid;
     @BindView(R.id.cycleView)
     ImageCycleView imageCycleView;
@@ -156,6 +165,40 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     TextView pingtuanNum;
     @BindView(R.id.tv2)
     TextView tvMorePingtuan;
+    @BindView(R.id.pingtuan_price)
+    TextView tvPingtuan_price;
+    @BindView(R.id.pingtuan_market_price)
+    TextView tvPingtuan_market_price;
+    @BindView(R.id.pingednum)
+    TextView tvPingTuanNum;
+    @BindView(R.id.day)
+    TextView tvDay;
+    @BindView(R.id.hour)
+    TextView tvHour;
+    @BindView(R.id.minute)
+    TextView tvMinute;
+    @BindView(R.id.second)
+    TextView tvSecond;
+    @BindView(R.id.ll_pingtuan)
+    LinearLayout ll_PingTuan;
+    @BindView(R.id.ll_miaosha)
+    LinearLayout ll_miaosha;
+    @BindView(R.id.miaosha_market_price)
+    TextView tvMsmarketprice;
+    @BindView(R.id.miaosha_price)
+    TextView tvMiaoshaPrice;
+    @BindView(R.id.ms_day)
+    TextView tvMsDay;
+    @BindView(R.id.ms_hour)
+    TextView tvMsHour;
+    @BindView(R.id.ms_minute)
+    TextView tvMsMinute;
+    @BindView(R.id.ms_second)
+    TextView tvMsSecond;
+    @BindView(R.id.ll_gift)
+    LinearLayout llgift;
+    @BindView(R.id.gift_rcl)
+    RecyclerView giftRcl;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
@@ -193,7 +236,26 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private String pintuan_promotion;
     private GoodFmVoucherDialog voucherDialog;
     private PingtuanAdapter pingtuanAdapter;
+    private CountDownTimer countDownTimer;
+    private String goods_promotion_type;
+    private CountDownTimer miaoshaCountDownTimer;
+    private List<GiftBean> giftArraylist = new ArrayList<GiftBean>();
+    private GiftArrayAdapter giftArrayAdapter;
+    private UserPintuanDialog userPinTunDialog;
+    private GoodPintuanDialog goodPingTunDialog;
+    public long millisUntilFinished;
+    private int pintuan_max_num = 1;
 
+    public String getPintuan_default_log_id() {
+        return pintuan_default_log_id;
+    }
+
+    public String getPintuan_default_buyer_id() {
+        return pintuan_default_buyer_id;
+    }
+
+    private String pintuan_default_log_id;
+    private String pintuan_default_buyer_id;
 
     @Override
     protected int setLayoutId() {
@@ -424,13 +486,26 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         pingtuanAdapter = new PingtuanAdapter(getContext(), pingTuanlist);
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         lm.setAutoMeasureEnabled(true);
+        pingtuanAdapter.setAdapterInterface(new PingtuanAdapter.AdapterInterface() {
+            @Override
+            public void onClickCanTuan(String pingTuanId) {
+                showUserPingtunDialog(pingTuanId);
+            }
+        });
         pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         pingtuanRcl.setLayoutManager(lm);
         pingtuanRcl.setNestedScrollingEnabled(false);
         pingtuanRcl.setAdapter(pingtuanAdapter);
+
+        giftArrayAdapter = new GiftArrayAdapter(getContext(), giftArraylist);
+        LinearLayoutManager lm2 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        lm.setAutoMeasureEnabled(true);
+        giftRcl.setLayoutManager(lm2);
+        giftRcl.setNestedScrollingEnabled(false);
+        giftRcl.setAdapter(giftArrayAdapter);
     }
 
-    private String buildTransaction(final String type) {
+    public static String buildTransaction(final String type) {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
@@ -508,8 +583,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 imagelist.add(mid);
             }
             showAdv(imagelist);
-            JSONObject goods_info = datas.getJSONObject("goods_info");
+            final JSONObject goods_info = datas.getJSONObject("goods_info");
             pintuan_promotion = goods_info.optString("pintuan_promotion");
+            goods_promotion_type = goods_info.optString("goods_promotion_type");
             JSONObject guigenameobj = goods_info.optJSONObject("spec_name");
             JSONObject spec_valueobj = goods_info.optJSONObject("spec_value");
             JSONObject spec_listObj = datas.optJSONObject("spec_list");
@@ -566,15 +642,71 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             goodDetailActivityListener.onStorageChange(goodStorage);
             goods_jingle = goods_info.optString("goods_jingle");
-            if(TextUtils.isEmpty(goods_jingle)){
+            if (TextUtils.isEmpty(goods_jingle)) {
                 tvgoods_jingle.setVisibility(View.GONE);
-            }else {
+            } else {
                 tvgoods_jingle.setVisibility(View.VISIBLE);
                 tvgoods_jingle.setText(goods_jingle);
             }
-            if (TextUtils.equals(pintuan_promotion, "1") || TextUtils.equals(pintuan_promotion, "2")) {
-                goods_price = goods_info.optString("pintuan_goods_price");
+            if (TextUtils.equals(pintuan_promotion, "1")) {
+                goodDetailActivityListener.isPingTuan(true);
+                goods_price = goods_info.optString("pintuan_price");
+                ll_PingTuan.setVisibility(View.VISIBLE);
+                ll_miaosha.setVisibility(View.GONE);
+                tvprice.setVisibility(View.GONE);
+                tvgoods_marketprice.setVisibility(View.GONE);
+                tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
+                tvPingTuanNum.setText(goods_info.optString("pintuan_sole_num") + "件");
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                }
+                countDownTimer = new CountDownTimer(goods_info.optLong("pintuan_end_time") * 1000, 1000) {
+
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        GoodFragment.this.millisUntilFinished = millisUntilFinished;
+                        List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                        tvDay.setText(list.get(0));
+                        tvHour.setText(list.get(1));
+                        tvMinute.setText(list.get(2));
+                        tvSecond.setText(list.get(3));
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        goodDetailActivityListener.isPingTuan(false);
+                        ll_PingTuan.setVisibility(View.GONE);
+                        tvprice.setVisibility(View.VISIBLE);
+                        tvgoods_marketprice.setVisibility(View.VISIBLE);
+                        if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                            if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                                if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                                    PopUtil.toastInCenter("没有商品价格");
+                                } else {
+                                    goods_price = goods_info.optString("goods_price");
+                                }
+                            } else {
+                                goods_price = goods_info.optString("goods_promotion_price");
+                            }
+                        } else {
+                            goods_price = goods_info.optString("promotion_price");
+                        }
+                        tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                        if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                            goods_marketprice = goods_info.optString("goods_price");
+                        } else {
+                            goods_marketprice = goods_info.optString("goods_marketprice");
+                        }
+                        tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                        tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                    }
+                }.start();
             } else {
+                goodDetailActivityListener.isPingTuan(false);
+                ll_PingTuan.setVisibility(View.GONE);
                 if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
                     if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
                         if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
@@ -587,6 +719,64 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     }
                 } else {
                     goods_price = goods_info.optString("promotion_price");
+                }
+                //1团购 2限时 3秒杀
+                switch (goods_promotion_type) {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        ll_miaosha.setVisibility(View.VISIBLE);
+                        tvprice.setVisibility(View.GONE);
+                        tvgoods_marketprice.setVisibility(View.GONE);
+                        tvMiaoshaPrice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                        tvMsmarketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                        tvMsmarketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("goods_marketprice"), R.style.small_money, R.style.small_money));
+                        miaoshaCountDownTimer = new CountDownTimer(goods_info.optLong("left_end_time") * 1000, 1000) {
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                                tvMsDay.setText(list.get(0));
+                                tvMsHour.setText(list.get(1));
+                                tvMsMinute.setText(list.get(2));
+                                tvMsSecond.setText(list.get(3));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                ll_miaosha.setVisibility(View.GONE);
+                                tvprice.setVisibility(View.VISIBLE);
+                                tvgoods_marketprice.setVisibility(View.VISIBLE);
+                                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                                            PopUtil.toastInCenter("没有商品价格");
+                                        } else {
+                                            goods_price = goods_info.optString("goods_price");
+                                        }
+                                    } else {
+                                        goods_price = goods_info.optString("goods_promotion_price");
+                                    }
+                                } else {
+                                    goods_price = goods_info.optString("promotion_price");
+                                }
+                                tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                                    goods_marketprice = goods_info.optString("goods_price");
+                                } else {
+                                    goods_marketprice = goods_info.optString("goods_marketprice");
+                                }
+                                tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                                tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                            }
+                        }.start();
+                        break;
+                    default:
+                        tvprice.setVisibility(View.VISIBLE);
+                        tvgoods_marketprice.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
@@ -630,7 +820,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             ll_2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goodDetailActivityListener.showBottomDialog();
+                    goodDetailActivityListener.showBottomDialog(false);
                 }
             });
             if (selectedGoodNum == 1) {
@@ -644,7 +834,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     goodDetailActivityListener.goEveluateFragment();
                 }
             });
-            goodDetailActivityListener.onGetGoodDetailSuccess();
             if (datas.has("voucher")) {
                 JSONArray voucherArray = datas.optJSONArray("voucher");
                 if (voucherArray.length() > 0) {
@@ -690,22 +879,59 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     pingTuanlist.add(b);
                 }
                 llpingtuan.setVisibility(View.VISIBLE);
-                pingtuanNum.setText(pingTuanlist.size()+"");
+                pingtuanNum.setText(pingTuanlist.size() + "");
                 tvMorePingtuan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ShopPresenter.GetGoodPingtuanInfo(GoodFragment.this);
+                        showGoodAllPingtunDialog();
                     }
                 });
             } else {
                 llpingtuan.setVisibility(View.GONE);
             }
             pingtuanAdapter.notifyChange();
+            if (goodPingTunDialog != null) {
+                goodPingTunDialog.refresh();
+            }
+            if (userPinTunDialog != null) {
+                userPinTunDialog.refresh();
+            }
+            JSONArray gift_array = datas.optJSONArray("gift_array");
+            giftArraylist.clear();
+            if (gift_array != null && gift_array.length() > 0) {
+                for (int i = 0; i < gift_array.length(); i++) {
+                    JSONObject obj = gift_array.optJSONObject(i);
+                    GiftBean b = JsonUtil.toBean(obj.toString(), GiftBean.class);
+                    giftArraylist.add(b);
+                }
+                llgift.setVisibility(View.VISIBLE);
+            } else {
+                llgift.setVisibility(View.GONE);
+            }
+            giftArrayAdapter.notifyDataSetChanged();
+            if (goods_info.optInt("pintuan_allow_new") == 0 && (TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) || TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id")))) {
+                goodDetailActivityListener.pingTuan(NOT_ALLOW);
+            } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() == 0 && !TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) && !TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id"))) {
+                pintuan_default_log_id = goods_info.optString("pintuan_default_log_id");
+                pintuan_default_buyer_id = goods_info.optString("pintuan_default_buyer_id");
+                goodDetailActivityListener.pingTuan(JOIN_DEFAULT_TUAN);
+            } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() > 0) {
+                goodDetailActivityListener.pingTuan(SELECT_TUAN);
+            } else if (goods_info.optInt("pintuan_allow_new") != 0) {
+                goodDetailActivityListener.pingTuan(CREAT_NEW_TUAN);
+            }
+            if (goods_info.optInt("cart") == 1) {
+                goodDetailActivityListener.isAllowAddCar(true);
+            } else {
+                goodDetailActivityListener.isAllowAddCar(false);
+            }
+            if (goods_info.has("pintuan_max_num")) {
+                pintuan_max_num = Integer.valueOf(goods_info.optString("pintuan_max_num"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
+        goodDetailActivityListener.onGetGoodDetailSuccess();
     }
 
     public String getTid() {
@@ -743,7 +969,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     }
 
     @Override
-    public void buyGood() {
+    public void buyGood(boolean ispingTuan) {
         if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
@@ -758,6 +984,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 Bundle bundle = new Bundle();
                 bundle.putString("ifCar", "0");
                 bundle.putString("isPickup_self", isPickup_self);
+                if (ispingTuan) {
+                    bundle.putString("isPingtuan", "1");
+                    if (!TextUtils.isEmpty(pintuan_default_log_id)) {
+                        bundle.putString("pingTuanid", pintuan_default_log_id);
+                    }
+                    if (!TextUtils.isEmpty(pintuan_default_buyer_id)) {
+                        bundle.putString("buyerId", pintuan_default_buyer_id);
+                    }
+                }
                 bundle.putSerializable("data", (Serializable) list);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -836,6 +1071,21 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         }
     }
 
+    @Override
+    public long getleftTime() {
+        return millisUntilFinished;
+    }
+
+    @Override
+    public void showAddCarDialog() {
+        goodDetailActivityListener.showBottomDialog(false);
+    }
+
+    @Override
+    public int getPingTuanMaxNum() {
+        return pintuan_max_num;
+    }
+
 
     @Override
     public void setSelectedGoodNum(int num) {
@@ -902,7 +1152,21 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onDestroy() {
         super.onDestroy();
         actionbarSizeTypedArray.recycle();
-        pingtuanAdapter.cancelAllTimers();
+        if (pingtuanAdapter != null) {
+            pingtuanAdapter.cancelAllTimers();
+        }
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        if (miaoshaCountDownTimer != null) {
+            miaoshaCountDownTimer.cancel();
+        }
+        if (goodPingTunDialog != null) {
+            goodPingTunDialog.cancelAllTimers();
+        }
+        if (userPinTunDialog != null) {
+            userPinTunDialog.cancelAllTimers();
+        }
     }
 
     @Override
@@ -965,10 +1229,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         return goodsid;
     }
 
-    @Override
-    public void onGetGoodPingtuanInfoSuccess(String s) {
-
-    }
 
     @Override
     public void onGetShareUrlSuccess(String s, String type) {
@@ -1018,5 +1278,67 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     @Override
     public void onGetVoucherSuccess(String s) {
         PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
+    }
+
+    public void showGoodAllPingtunDialog() {
+        if (this.getActivity() != null && !this.getActivity().isFinishing() && goodPingTunDialog == null) {
+            goodPingTunDialog = new GoodPintuanDialog(getContext(), goodsid, this);
+            goodPingTunDialog.show();
+        } else if (this.getActivity() != null && !this.getActivity().isFinishing() && !goodPingTunDialog.isShowing()) {
+            goodPingTunDialog.show();
+        }
+    }
+
+    private void showUserPingtunDialog(String pingtuanid) {
+        if (this.getActivity() != null && !this.getActivity().isFinishing()) {
+            if (userPinTunDialog == null) {
+                userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
+                userPinTunDialog.show();
+            } else if (userPinTunDialog.getPingtuanid().equals(pingtuanid) && !userPinTunDialog.isShowing()) {
+                userPinTunDialog.show();
+            } else if (!userPinTunDialog.getPingtuanid().equals(pingtuanid)) {
+                userPinTunDialog.cancelAllTimers();
+                userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
+                userPinTunDialog.show();
+            }
+        }
+    }
+
+    @Override
+    public void onClickPingTuan(String pingTuanid, String buyerId) {
+        pintuan_default_log_id = pingTuanid;
+        pintuan_default_buyer_id = buyerId;
+        goodDetailActivityListener.showBottomDialog(true);
+       /* if (!TextUtils.isEmpty(getKey())) {
+            List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
+            List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
+            list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, imagelist.get(0), goods_name, selectedGoodNum + "", goods_price, goodsid));
+            ComfirmShopGoodBean comfirmShopGoodBean = new ComfirmShopGoodBean();
+            comfirmShopGoodBean.setStore_id(storeId);
+            comfirmShopGoodBean.setStore_name(storeName);
+            comfirmShopGoodBean.setGoods(list2);
+            list.add(comfirmShopGoodBean);
+            if (!TextUtils.isEmpty(isPickup_self)) {
+                Intent intent = new Intent(getActivity(), ShopComfirmOrdersActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ifCar", "0");
+                bundle.putString("isPickup_self", isPickup_self);
+                bundle.putString("isPingtuan", "1");
+                bundle.putString("pingTuanid", pingTuanid);
+                bundle.putString("buyerId", buyerId);
+                bundle.putSerializable("data", (Serializable) list);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } else {
+                PopUtil.toastInBottom("商品已下架或不支持购买");
+            }
+        } else {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }*/
+    }
+
+
+    public void refreshGoodDetail() {
+        ShopPresenter.getGoodDetail(this);
     }
 }
