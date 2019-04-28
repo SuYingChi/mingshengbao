@@ -42,4 +42,6 @@ public interface IShopGoodDetailView extends IBaseView {
     long getleftTime();
 
     void showAddCarDialog();
+
+    int getPingTuanMaxNum();
 }

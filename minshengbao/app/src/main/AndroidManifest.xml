@@ -436,6 +436,7 @@
         <activity android:name=".androidShop.activity.StoreClassActivity" />
         <activity android:name=".androidShop.activity.StoreSearchGoodListActivity" />
         <activity android:name=".androidShop.activity.ShopStoreJingle" />
+        <activity android:name=".androidShop.activity.PingtuanDetail" />
     </application>
 
 </manifest>

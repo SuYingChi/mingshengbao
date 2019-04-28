@@ -65,6 +65,7 @@ import com.msht.minshengbao.androidShop.viewInterface.INativGetPayListView;
 import com.msht.minshengbao.androidShop.viewInterface.IMessagePreView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderQrCodeView;
+import com.msht.minshengbao.androidShop.viewInterface.IPingTuanDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostAddEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostEvelateAllView;
 import com.msht.minshengbao.androidShop.viewInterface.IPostRefundAllView;
@@ -1837,6 +1838,22 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iPromotionRuleView.onGetPromotionRule(s);
+                }
+            }
+        });
+
+    }
+    public static void getPingTuanDetail(final IPingTuanDetailView iPingTuanDetailView) {
+        OkHttpUtils.get().url(ShopConstants.PINGTUAN_DETAIL).addParams("pintuan_id", iPingTuanDetailView.getPingTuanId())
+                .addParams("key", iPingTuanDetailView.getKey())
+                .addParams("buyer_id", iPingTuanDetailView.getBuyerId())
+                .tag(iPingTuanDetailView)
+                .build().execute(new DataStringCallback(iPingTuanDetailView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iPingTuanDetailView.onGetPingTuanDetail(s);
                 }
             }
         });

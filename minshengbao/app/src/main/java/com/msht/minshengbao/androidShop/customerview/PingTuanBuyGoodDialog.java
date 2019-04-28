@@ -183,12 +183,12 @@ public class PingTuanBuyGoodDialog extends Dialog {
                 }
                 break;
             case R.id.ll_plus:
-                if(num<Integer.valueOf(iShopGoodDetailView.getRemainNum())) {
+                if(num<iShopGoodDetailView.getPingTuanMaxNum()) {
                     num++;
                     iShopGoodDetailView.setSelectedGoodNum(num);
                     tvNum.setText(String.format("%d", num));
                 }else {
-                    PopUtil.toastInBottom("库存不够");
+                    PopUtil.toastInBottom("超出拼团购买数量限制");
                 }
                 break;
             default:

@@ -96,7 +96,7 @@ public class ShopConstants {
     public static final String STORE_ADD_COLLECT = BASE_URL+"index.php?act=member_favorites_store&op=favorites_add";
     public static final String STORE_PROMOTION_SHARE = BASE_URL+"index.php?act=store&op=store_promotion_share";
     public static final String PROMOTION_RULE = BASE_URL+"index.php?act=pintuan&op=pintuan_rules";
-
+    public static final String PINGTUAN_DETAIL = BASE_URL+"index.php?act=pintuan&op=info";
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;
     }

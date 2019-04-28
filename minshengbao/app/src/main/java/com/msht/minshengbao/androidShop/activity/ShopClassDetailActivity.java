@@ -542,6 +542,11 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
 
     }
 
+    @Override
+    public int getPingTuanMaxNum() {
+        return 0;
+    }
+
 
     private void rotateImageView(int retate) {
         triangle.setPivotX(triangle.getWidth() / 2);

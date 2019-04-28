@@ -99,6 +99,10 @@ import butterknife.BindView;
 
 public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetailView, ICarListView, IAddCollectionView, IGetShareUrlView, IShopDeleteCollectionView, IModifyCarGoodNumView, IGetVoucherView, DialogInterface {
     public static final int THUMB_SIZE = 150;
+    public static final int NOT_ALLOW = 0;
+    public static final int JOIN_DEFAULT_TUAN = 1;
+    public static final int SELECT_TUAN = 2;
+    public static final int CREAT_NEW_TUAN = 3;
     private String goodsid;
     @BindView(R.id.cycleView)
     ImageCycleView imageCycleView;
@@ -235,11 +239,23 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private CountDownTimer countDownTimer;
     private String goods_promotion_type;
     private CountDownTimer miaoshaCountDownTimer;
-    private List<GiftBean> giftArraylist=new ArrayList<GiftBean>();
+    private List<GiftBean> giftArraylist = new ArrayList<GiftBean>();
     private GiftArrayAdapter giftArrayAdapter;
     private UserPintuanDialog userPinTunDialog;
     private GoodPintuanDialog goodPingTunDialog;
     public long millisUntilFinished;
+    private int pintuan_max_num = 1;
+
+    public String getPintuan_default_log_id() {
+        return pintuan_default_log_id;
+    }
+
+    public String getPintuan_default_buyer_id() {
+        return pintuan_default_buyer_id;
+    }
+
+    private String pintuan_default_log_id;
+    private String pintuan_default_buyer_id;
 
     @Override
     protected int setLayoutId() {
@@ -473,7 +489,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         pingtuanAdapter.setAdapterInterface(new PingtuanAdapter.AdapterInterface() {
             @Override
             public void onClickCanTuan(String pingTuanId) {
-              showUserPingtunDialog(pingTuanId);
+                showUserPingtunDialog(pingTuanId);
             }
         });
         pingtuanRcl.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -804,7 +820,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             ll_2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    goodDetailActivityListener.showBottomDialog();
+                    goodDetailActivityListener.showBottomDialog(false);
                 }
             });
             if (selectedGoodNum == 1) {
@@ -867,17 +883,17 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 tvMorePingtuan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       showGoodAllPingtunDialog();
+                        showGoodAllPingtunDialog();
                     }
                 });
             } else {
                 llpingtuan.setVisibility(View.GONE);
             }
             pingtuanAdapter.notifyChange();
-            if(goodPingTunDialog!=null){
+            if (goodPingTunDialog != null) {
                 goodPingTunDialog.refresh();
             }
-            if(userPinTunDialog!=null){
+            if (userPinTunDialog != null) {
                 userPinTunDialog.refresh();
             }
             JSONArray gift_array = datas.optJSONArray("gift_array");
@@ -893,15 +909,24 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 llgift.setVisibility(View.GONE);
             }
             giftArrayAdapter.notifyDataSetChanged();
-            if(goods_info.optInt("pintuan_allow_new")==0){
-              goodDetailActivityListener.isAllowNewPingTuan(false);
-            }else {
-                goodDetailActivityListener.isAllowNewPingTuan(true);
+            if (goods_info.optInt("pintuan_allow_new") == 0 && (TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) || TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id")))) {
+                goodDetailActivityListener.pingTuan(NOT_ALLOW);
+            } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() == 0 && !TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) && !TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id"))) {
+                pintuan_default_log_id = goods_info.optString("pintuan_default_log_id");
+                pintuan_default_buyer_id = goods_info.optString("pintuan_default_buyer_id");
+                goodDetailActivityListener.pingTuan(JOIN_DEFAULT_TUAN);
+            } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() > 0) {
+                goodDetailActivityListener.pingTuan(SELECT_TUAN);
+            } else if (goods_info.optInt("pintuan_allow_new") != 0) {
+                goodDetailActivityListener.pingTuan(CREAT_NEW_TUAN);
             }
-            if(goods_info.optInt("cart")==1){
+            if (goods_info.optInt("cart") == 1) {
                 goodDetailActivityListener.isAllowAddCar(true);
-            }else {
+            } else {
                 goodDetailActivityListener.isAllowAddCar(false);
+            }
+            if (goods_info.has("pintuan_max_num")) {
+                pintuan_max_num = Integer.valueOf(goods_info.optString("pintuan_max_num"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -959,8 +984,14 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 Bundle bundle = new Bundle();
                 bundle.putString("ifCar", "0");
                 bundle.putString("isPickup_self", isPickup_self);
-                if(ispingTuan){
-                    bundle.putString("isPingtuan","1");
+                if (ispingTuan) {
+                    bundle.putString("isPingtuan", "1");
+                    if (!TextUtils.isEmpty(pintuan_default_log_id)) {
+                        bundle.putString("pingTuanid", pintuan_default_log_id);
+                    }
+                    if (!TextUtils.isEmpty(pintuan_default_buyer_id)) {
+                        bundle.putString("buyerId", pintuan_default_buyer_id);
+                    }
                 }
                 bundle.putSerializable("data", (Serializable) list);
                 intent.putExtras(bundle);
@@ -1042,12 +1073,17 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     @Override
     public long getleftTime() {
-        return   millisUntilFinished;
+        return millisUntilFinished;
     }
 
     @Override
     public void showAddCarDialog() {
-        goodDetailActivityListener.showBottomDialog();
+        goodDetailActivityListener.showBottomDialog(false);
+    }
+
+    @Override
+    public int getPingTuanMaxNum() {
+        return pintuan_max_num;
     }
 
 
@@ -1125,10 +1161,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         if (miaoshaCountDownTimer != null) {
             miaoshaCountDownTimer.cancel();
         }
-        if(goodPingTunDialog!=null){
+        if (goodPingTunDialog != null) {
             goodPingTunDialog.cancelAllTimers();
         }
-        if(userPinTunDialog!=null){
+        if (userPinTunDialog != null) {
             userPinTunDialog.cancelAllTimers();
         }
     }
@@ -1243,31 +1279,37 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public void onGetVoucherSuccess(String s) {
         PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
+
     public void showGoodAllPingtunDialog() {
         if (this.getActivity() != null && !this.getActivity().isFinishing() && goodPingTunDialog == null) {
-            goodPingTunDialog = new GoodPintuanDialog(getContext(),goodsid,this);
+            goodPingTunDialog = new GoodPintuanDialog(getContext(), goodsid, this);
             goodPingTunDialog.show();
         } else if (this.getActivity() != null && !this.getActivity().isFinishing() && !goodPingTunDialog.isShowing()) {
             goodPingTunDialog.show();
         }
     }
+
     private void showUserPingtunDialog(String pingtuanid) {
         if (this.getActivity() != null && !this.getActivity().isFinishing()) {
-            if( userPinTunDialog==null) {
+            if (userPinTunDialog == null) {
                 userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
                 userPinTunDialog.show();
-            }else if(userPinTunDialog.getPingtuanid().equals(pingtuanid)&&!userPinTunDialog.isShowing()){
+            } else if (userPinTunDialog.getPingtuanid().equals(pingtuanid) && !userPinTunDialog.isShowing()) {
                 userPinTunDialog.show();
-            }else if(!userPinTunDialog.getPingtuanid().equals(pingtuanid)){
+            } else if (!userPinTunDialog.getPingtuanid().equals(pingtuanid)) {
                 userPinTunDialog.cancelAllTimers();
                 userPinTunDialog = new UserPintuanDialog(getContext(), pingtuanid, this);
                 userPinTunDialog.show();
             }
         }
     }
+
     @Override
     public void onClickPingTuan(String pingTuanid, String buyerId) {
-        if (!TextUtils.isEmpty(getKey())) {
+        pintuan_default_log_id = pingTuanid;
+        pintuan_default_buyer_id = buyerId;
+        goodDetailActivityListener.showBottomDialog(true);
+       /* if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
             list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, imagelist.get(0), goods_name, selectedGoodNum + "", goods_price, goodsid));
@@ -1292,9 +1334,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
         } else {
             startActivity(new Intent(getActivity(), LoginActivity.class));
-        }
+        }*/
     }
-
 
 
     public void refreshGoodDetail() {

@@ -187,6 +187,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
 
     @Override
     public void onGetDetailSuccess(String s) {
+
         ShopOrderDetailBean bean = JsonUtil.toBean(s, ShopOrderDetailBean.class);
         if (bean != null) {
             llbtns.removeAllViews();
@@ -473,7 +474,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 });
                 llbtns.addView(tvAddEvaluation);
             }
-            if ((orderInfo.getOrder_state().equals("20") || orderInfo.isIf_receive()) && !orderInfo.isIf_lock()) {
+            if ((orderInfo.getOrder_state().equals("20") && orderInfo.isIf_receive()) && !orderInfo.isIf_lock()) {
                 TextView tvQrReceive = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;
@@ -490,6 +491,32 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                     }
                 });
                 llbtns.addView(tvQrReceive);
+            }
+            try {
+                final JSONObject pintuan_info = new JSONObject(s).optJSONObject("datas").optJSONObject("order_info").optJSONObject("pintuan_info");
+                if(pintuan_info!=null){
+                    TextView tvQrReceive = new TextView(this);
+                    LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    paramas.gravity = Gravity.CENTER_VERTICAL;
+                    paramas.rightMargin = (int) this.getResources().getDimension(R.dimen.margin_6);
+                    tvQrReceive.setLayoutParams(paramas);
+                    tvQrReceive.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.btn_refund));
+                    tvQrReceive.setText("拼团详情");
+                    tvQrReceive.setTextColor(getResources().getColor(R.color.msb_color));
+                    tvQrReceive.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                    tvQrReceive.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ShopOrdersDetailActivity.this, PingtuanDetail.class);
+                            intent.putExtra("pingtuanid",pintuan_info.optString("log_id") );
+                            intent.putExtra("buyer_id",pintuan_info.optString("buyer_id") );
+                            startActivity(intent);
+                        }
+                    });
+                    llbtns.addView(tvQrReceive);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             if (llbtns.getChildCount() == 1) {
                 llbtns.setVisibility(View.GONE);
