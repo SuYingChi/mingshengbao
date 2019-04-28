@@ -183,7 +183,7 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
         try {
             JSONObject obj = new JSONObject(s);
             JSONObject datas = obj.optJSONObject("datas");
-            JSONObject pintuan_info = datas.optJSONObject("pintuan_info");
+            final JSONObject pintuan_info = datas.optJSONObject("pintuan_info");
             long end_time_left = pintuan_info.optLong("end_time_left")*1000;
             JSONArray pintuan_list = pintuan_info.optJSONArray("pintuan_list");
             tvName.setText(pintuan_info.optString("buyer_name"));
@@ -207,7 +207,11 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
                         cantuan.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                             dialogInterface.onClickPingTuan(pingtuanid,buyer_id);
+                                if(pintuan_info.optString("num").equals("0")){
+                                    PopUtil.toastInCenter("拼团人数已满");
+                                }else {
+                                    dialogInterface.onClickPingTuan(pingtuanid, buyer_id);
+                                }
                             }
                         });
                     }
