@@ -4,8 +4,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <com.msht.minshengbao.androidShop.customerview.XScrollView
+    android:id="@+id/xsl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">    <!--第一模块-->
+    android:layout_height="match_parent"
+    >    <!--第一模块-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,10 +20,12 @@
             android:id="@+id/rlt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_width70"
+            android:layout_marginTop="@dimen/margin_width100"
             android:layout_marginLeft="@dimen/margin_width30"
             android:layout_marginRight="@dimen/margin_width30"
+            android:layout_marginBottom="@dimen/margin_Modules"
             android:padding="@dimen/margin_Modules"
+            android:background="@drawable/shape_white_layout"
             >
             <ImageView
                 android:id="@+id/iv"
@@ -34,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_16"
                 android:textColor="@color/black"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:layout_marginLeft="@dimen/margin_Modules"
                 android:layout_toRightOf="@id/iv"
                 />
             <LinearLayout
@@ -42,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_toRightOf="@id/iv"
+                android:layout_marginLeft="@dimen/margin_Modules"
                 android:layout_alignBottom="@id/iv"
                 >
             <TextView
@@ -50,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_18"
                 android:textColor="@color/msb_color"
+                android:layout_marginRight="@dimen/margin_Modules"
                 />
                 <TextView
                     android:id="@+id/marketprice"
@@ -61,16 +68,19 @@
             </LinearLayout>
     </RelativeLayout>
     <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/rlt"
+        android:background="@color/white"
         >
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_Modules"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -85,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/red"
                 android:textColor="@color/white"
+                android:padding="@dimen/margin_width2"
                 android:textSize="@dimen/text_18"
                 />
             <TextView
@@ -101,6 +112,7 @@
                 android:background="@color/red"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_18"
+                android:padding="@dimen/margin_width2"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -115,6 +127,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/red"
                 android:textColor="@color/white"
+                android:padding="@dimen/margin_width2"
                 android:textSize="@dimen/text_18"
                 />
             <TextView
@@ -137,26 +150,89 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_Modules"
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="还差"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                />
+            <TextView
+                android:id="@+id/leftnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X人"
                 android:textColor="@color/red"
                 android:textSize="@dimen/text_14"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="成团，赶紧邀请好友前来拼团吧！"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_14"
+                />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_width50"
+            android:gravity="center_vertical"
+            >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <include layout="@layout/item_userpingtuan_foot" />
     </LinearLayout>
+        <TextView
+            android:id="@+id/share"
+            android:layout_width="@dimen/margin_width200"
+            android:layout_marginTop="@dimen/margin_width20"
+            android:layout_gravity="center_horizontal"
+            android:text="邀请好友来拼团"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_16"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_pay"
+            />
+        <TextView
+            android:id="@+id/backmain"
+            android:layout_width="@dimen/margin_width200"
+            android:layout_marginTop="@dimen/margin_width20"
+            android:layout_gravity="center_horizontal"
+            android:text="回到首页"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_16"
+            android:textColor="@color/red"
+            android:background="@drawable/btn_oringe_stoke"
+            />
+    </LinearLayout>
+        <TextView
+            android:id="@+id/pingtuanrule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_14"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:layout_below="@id/ll"
+            android:paddingLeft="@dimen/margin_Modules"
+            android:paddingRight="@dimen/margin_Modules"
+            android:paddingBottom="@dimen/margin_width100"
+            />
     </RelativeLayout>
 </com.msht.minshengbao.androidShop.customerview.XScrollView>
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_collapseMode="pin"
-        app:layout_collapseParallaxMultiplier="0.7"
         app:contentInsetStart="0dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="@color/white"
         >
 
         <RelativeLayout
@@ -168,10 +244,8 @@
                 android:id="@+id/back"
                 android:layout_width="?actionBarSize"
                 android:layout_height="?actionBarSize"
-                android:src="@drawable/back2x"
-                android:paddingLeft="@dimen/dp14"
-                android:paddingRight="@dimen/dp14"
-                android:paddingTop="24dp"
+                android:src="@drawable/gray_back_xh"
+                android:padding="@dimen/dp14"
                 />
 
             <TextView
@@ -179,7 +253,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:paddingTop="24dp"
+                android:text="拼团详情"
+                android:textSize="@dimen/text_18"
+                android:textColor="@color/black"
                 />
 
         </RelativeLayout>

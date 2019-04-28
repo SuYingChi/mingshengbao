@@ -916,6 +916,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
         intent.putExtra("buyStep3", buyStep3bean);
         intent.putExtra("pdPassword", pdPassword);
         intent.putExtra("orderId", orderId + "");
+        intent.putExtra("pingtuanid",pingtuanid);
+        intent.putExtra("buyer_id",buyerid);
         startActivity(intent);
         finish();
     }
