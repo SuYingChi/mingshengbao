@@ -24,6 +24,8 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
+import com.msht.minshengbao.events.NetWorkEvent;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.publicModule.SelectVoucherActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.DateUtils;
@@ -34,6 +36,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -53,18 +56,18 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private ImageView typeImg, forwardImg;
     private ImageView evaluateImg;
     private ImageView downwardImg;
-    private TextView tvTitle, tvType, tvOrderNo, tvPhone;
-    private TextView tvCreateTime, tvAppointTime;
-    private TextView tvAddress, tvRemarkInfo, tvCancelInfo;
-    private TextView tvMasterName, tvPayAmount,tvOrderUserName;
-    private TextView tvDetectFee, tvMaterialFee, tvServeFee;
-    private TextView tvTotalAmount, tvMustPay, tvTotalCoupon;
-    private TextView tvUseCoupon, tvPayWay, reasonTitle;
-    private TextView tvStatus, tvGuaranteeDay;
-    private TextView tvEstimateAmount;
-    private TextView tvRefundAmount;
-    private Button btnCancel, btnEvaluate;
-    private Button btnReFix,btnRefund;
+    private TextView  tvTitle, tvType, tvOrderNo, tvPhone;
+    private TextView  tvCreateTime, tvAppointTime;
+    private TextView  tvAddress, tvRemarkInfo, tvCancelInfo;
+    private TextView  tvMasterName, tvPayAmount,tvOrderUserName;
+    private TextView  tvDetectFee, tvMaterialFee, tvServeFee;
+    private TextView  tvTotalAmount, tvMustPay, tvTotalCoupon;
+    private TextView  tvUseCoupon, tvPayWay, reasonTitle;
+    private TextView  tvStatus, tvGuaranteeDay;
+    private TextView  tvEstimateAmount;
+    private TextView  tvRefundAmount;
+    private Button    btnCancel, btnEvaluate;
+    private Button    btnReFix,btnRefund;
     private View layoutExpense, layoutVoucher, layoutPayFee;
     private View layoutRepairCancel, layoutForward, layoutPhone;
     private View layoutPayWay, layoutCoupon, viewExpense;
@@ -139,6 +142,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     }
     private void success() {
         setResult(0x001);
+        EventBus.getDefault().post(new UpdateDataEvent(true));
         finish();
     }
     private void onReceiveData(JSONObject jsonObject) {
@@ -172,6 +176,11 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         }else {
             tvRemarkInfo.setText(info);
         }
+        if (!TextUtils.isEmpty(additionalInfo)){
+            layoutCategoryButton.setVisibility(View.VISIBLE);
+        }else {
+            layoutCategoryButton.setVisibility(View.GONE);
+        }
         onSetStatusView(jsonObject,status);
         onSetGuaranteeStopDayView(jsonObject);
         onEstimateView(estimateAmount);
@@ -204,6 +213,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 layoutRefund.setVisibility(View.GONE);
                 String repairManCancelInfo=jsonObject.optString("repair_man_cancel_info");
                 layoutRepairCancel.setVisibility(View.VISIBLE);
+                reasonTitle.setText("转单提示:");
                 tvCancelInfo.setText(repairManCancelInfo);
                 btnCancel.setVisibility(View.VISIBLE);
                 layoutButton.setVisibility(View.GONE);
@@ -244,7 +254,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 viewPayAmount.setVisibility(View.GONE);
                 layoutRefund.setVisibility(View.GONE);
                 tvCancelInfo.setText(refuseReason);
-                reasonTitle.setText("拒单提示：");
+                reasonTitle.setText("拒单提示:");
                 break;
             case ConstantUtil.VALUE_TEN:
                 if (jsonObject.has("evaluate_score")){
@@ -271,7 +281,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 break;
                 default:
                     break;
-
         }
     }
     private void onEstimateView(String estimateAmount){
@@ -476,9 +485,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         mRecyclerView.setAdapter(mAdditionalAdapter);
         initData();
         initEvent();
-
     }
-
     private void initSetCodeImage(String parentCode) {
         tvTitle.setText(categoryDesc);
         switch (parentCode) {

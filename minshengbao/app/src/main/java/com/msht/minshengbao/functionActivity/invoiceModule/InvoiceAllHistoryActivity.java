@@ -50,7 +50,7 @@ public class InvoiceAllHistoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_all_history);
         context=this;
-        setCommonHeader("发票历史");
+        setCommonHeader("历史记录");
         customDialog=new CustomDialog(this, "正在加载");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -127,7 +127,6 @@ public class InvoiceAllHistoryActivity extends BaseActivity {
                 }else if (refreshType==1){
                     mRecyclerView.loadMoreComplete();
                 }
-                Log.d("RequestSuccess=",data.toString());
                 onAnalysisData(data.toString());
             }
             @Override

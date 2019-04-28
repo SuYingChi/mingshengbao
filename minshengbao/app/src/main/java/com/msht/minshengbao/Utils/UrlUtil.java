@@ -52,6 +52,7 @@ public class UrlUtil {
     public static final String WATER_CREATE_URL =BuildConfig.URL_MSSB+"/order/create";
     public static final String WATER_CANCEL_URL =BuildConfig.URL_MSSB+"/order/oper";
     public static final String WATER_EQUIPMENT_SEARCH=BuildConfig.URL_MSSB+"/equip/search";
+    public static final String WATER_EQUIPMENT_SEARCH_BY_LOCATE=BuildConfig.URL_MSSB+"/equip/searchByLocate";
     public static final String WATER_BIND_ACCOUNT_LIST =BuildConfig.URL_MSSB+"/member/bindList";
     public static final String WATER_VERIFY_CODE=BuildConfig.URL_MSSB+"/sendVerifyCode";
     public static final String WATER_BIND_ACCOUNT_URL=BuildConfig.URL_MSSB+"/member/bindAccount";
@@ -173,6 +174,7 @@ public class UrlUtil {
     public static final String PayfeeWay_Url= BuildConfig.URL_HEADS +"/Gas/payment/createOrder";
     public static final String PayRecors_HistoryUrl= BuildConfig.URL_HEADS +"/Gas/payment/customerno_history";
     public static final String PayCustomerNo_Url= BuildConfig.URL_HEADS +"/Gas/payment/app_pay_customerno";
+    public static final String ALL_PAY_RECORD_URL=BuildConfig.URL_HEADS+"/Gas/gasMeter/list";
     public static final String Voucher_CanuseUrl= BuildConfig.URL_HEADS +"/Gas/coupon/can_use_list";
     public static final String RECHARGE_CREATE_ORDER_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_create_order";
     public static final String RECHARGE_PAY_URL=BuildConfig.URL_HEADS+"/Gas/wallet/recharge_pay";

@@ -46,7 +46,7 @@ public class InvoiceHomeActivity extends BaseActivity  {
     }
     private void initHeader() {
         TextView tvRightText=(TextView)findViewById(R.id.id_tv_rightText);
-        tvRightText.setText("发票历史");
+        tvRightText.setText("历史记录");
         tvRightText.setVisibility(View.VISIBLE);
         tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override

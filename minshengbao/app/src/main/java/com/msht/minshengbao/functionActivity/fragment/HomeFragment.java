@@ -624,6 +624,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     intent.putExtra("id",mId);
                     intent.putExtra("name",name);
                     intent.putExtra("mMainType","家电维修");
+                    intent.putExtra("parentCode",ConstantUtil.HOUSEHOLD_REPAIR);
                     intent.putExtra("code",code);
                     startActivity(intent);
                 } else {

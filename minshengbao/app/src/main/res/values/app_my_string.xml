@@ -36,6 +36,7 @@
     <string name="input_originPwd">请输入原始密码</string>
     <string name="ensure_text">确认</string>
     <string name="send_server">提交</string>
+    <string name="send_server_text">提交服务</string>
     <string name="save_text">保存</string>
     <string name="immediately_pay">立即支付</string>
     <string name="recommend_code">推荐码</string>
@@ -58,10 +59,10 @@
     <string name="gas_please_input_address">请输入或选择地址</string>
     <string name="please_select">请选择</string>
     <string name="gas_install_type">报装类型</string>
-    <string name="gas_install_topic">报装主题</string>
+    <string name="gas_install_topic">维修主题</string>
     <string name="gas_detail_describe">详细描述</string>
     <string name="gas_please_select_install_type">请选择报装类型</string>
-    <string name="gas_please_input_topic">请输入报装主题</string>
+    <string name="gas_please_input_topic">请输入维修主题</string>
     <string name="gas_please_input_tel_phone">请输入电话号码</string>
     <string name="gas_please_input_detail_describe">请写下详细需求描述</string>
     <string name="gas_emergency_tip">漏气等紧急情况请使用“燃气抢险”功能</string>

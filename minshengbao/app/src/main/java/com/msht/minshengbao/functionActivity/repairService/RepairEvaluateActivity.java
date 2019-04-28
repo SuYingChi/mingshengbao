@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.ViewUI.Dialog.PublicNoticeDialog;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
@@ -23,8 +24,10 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.RatingBar;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.umeng.analytics.MobclickAgent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -58,7 +61,6 @@ public class RepairEvaluateActivity extends BaseActivity {
         }
         @Override
         public void handleMessage(Message msg) {
-
             final RepairEvaluateActivity activity =mWeakReference.get();
             if (activity == null||activity.isFinishing()) {
                 return;
@@ -66,6 +68,7 @@ public class RepairEvaluateActivity extends BaseActivity {
             if (activity.customDialog!=null&&activity.customDialog.isShowing()){
                 activity.customDialog.dismiss();
             }
+            activity.btnSendEva.setEnabled(true);
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
@@ -73,8 +76,9 @@ public class RepairEvaluateActivity extends BaseActivity {
                         String result=object.optString("result");
                         String error = object.optString("error");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.setResult(2);
-                            activity.initShow();    //提示评价成功
+                            activity.setResult(0x002);
+                            EventBus.getDefault().post(new UpdateDataEvent(true));
+                            activity.onEvaluateSuccess();    //提示评价成功
                         }else {
                             activity.onFailure(error);
                         }
@@ -91,15 +95,18 @@ public class RepairEvaluateActivity extends BaseActivity {
             super.handleMessage(msg);
         }
     }
-    private void initShow() {
-        new PromptDialog.Builder(context)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage("评价成功")
-                .setButton1("确定", new PromptDialog.OnClickListener() {
+    private void onEvaluateSuccess() {
+        new PublicNoticeDialog(context).builder()
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setLineViewVisibility(false)
+                .setCloseImageVisibility(false)
+                .setTitleText("民生宝")
+                .setMessageContentText("您的评价已提交")
+                .setButtonText("我知道了")
+                .setOnPositiveClickListener(new PublicNoticeDialog.OnPositiveClickListener() {
                     @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
+                    public void onClick(View v) {
                         finish();
                     }
                 }).show();
@@ -205,6 +212,7 @@ public class RepairEvaluateActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 customDialog.dismiss();
+                btnSendEva.setEnabled(false);
                 requestService();
             }
         });
@@ -220,17 +228,6 @@ public class RepairEvaluateActivity extends BaseActivity {
         textParams.put("evalScore",evalScore);
         textParams.put("evalInfo",evalInfo);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(mPageName);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(mPageName);
     }
     @Override
     protected void onDestroy() {

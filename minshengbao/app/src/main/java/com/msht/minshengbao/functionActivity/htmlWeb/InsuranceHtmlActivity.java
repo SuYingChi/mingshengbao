@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -31,6 +32,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.BitmapUtil;
+import com.msht.minshengbao.ViewUI.Dialog.BitmapQrCodeDialog;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
@@ -77,6 +81,7 @@ public class InsuranceHtmlActivity extends BaseActivity {
     private static final  String shareTitle="居民燃气险";
     private String  phone;
     private Bitmap mBitmap;
+    private Bitmap qrBitmap;
     private String shareDesc;
 
 
@@ -252,40 +257,59 @@ public class InsuranceHtmlActivity extends BaseActivity {
         if (mBitmap!=null&&!mBitmap.isRecycled()){
             onShowQrCodeDialog(mBitmap);
         }else {
-            mBitmap=QrCodeUtil.createQRCodeBitmap(insuranceDetailUrl,300);
+            mBitmap=QrCodeUtil.createQRCodeBitmap(insuranceDetailUrl,300,Color.BLACK,ContextCompat.getColor(context,R.color.transparent));
             onShowQrCodeDialog(mBitmap);
         }
     }
     private void onShowQrCodeDialog(final Bitmap mBitmap) {
-        new QrCodeDialog(context,mBitmap).builder()
-                .setOnSaveButtonClickListener(new QrCodeDialog.OnSaveButtonClickListener() {
+        new BitmapQrCodeDialog(context,mBitmap).builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .setOnSaveButtonClickListener(new BitmapQrCodeDialog.OnSaveButtonClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        if (FileUtil.saveImageToGallery(context,mBitmap)){
-                            ToastUtil.ToastText(context,"图片已保存");
+                    public void onClick(View v,View layout) {
+                        if (qrBitmap==null||qrBitmap.isRecycled()){
+                            qrBitmap=BitmapUtil.getViewBitmap(layout);
                         }
-
+                        if (FileUtil.saveImageToGallery(context,qrBitmap)){
+                            CustomToast.showSuccessDialog("图片已保存");
+                        }
                     }
                 })
-                .setOnShareButtonClickListener(new QrCodeDialog.OnShareButtonClickListener() {
+                .setOnShareButtonClickListener(new BitmapQrCodeDialog.OnShareButtonClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        UMImage image = new UMImage(InsuranceHtmlActivity.this, mBitmap);
+                    public void onClick(View v,View layout) {
+                        if (qrBitmap==null||qrBitmap.isRecycled()){
+                            qrBitmap=BitmapUtil.getViewBitmap(layout);
+                        }
+                        UMImage image = new UMImage(InsuranceHtmlActivity.this, qrBitmap);
                         new ShareAction(InsuranceHtmlActivity.this).withMedia(image)
                                 .setPlatform(SHARE_MEDIA.WEIXIN)
                                 .setCallback(umShareListener)
                                 .share();
                     }
+                })
+                .setOnShareButtonTwoClickListener(new BitmapQrCodeDialog.OnShareButtonTwoClickListener() {
+                    @Override
+                    public void onClick(View v, View layout) {
+                        if (qrBitmap==null||qrBitmap.isRecycled()){
+                            qrBitmap=BitmapUtil.getViewBitmap(layout);
+                        }
+                        UMImage image = new UMImage(InsuranceHtmlActivity.this, qrBitmap);
+                        new ShareAction(InsuranceHtmlActivity.this).withMedia(image)
+                                .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                                .setCallback(umShareListener)
+                                .share();
+                    }
                 }).show();
     }
-
     private void onLinkShare() {
         String insuranceDetailUrl=UrlUtil.INSURANCE_DETAIL_URL+"?id="+id+"&code="+phone+"&isShow=1";
         ClipboardManager cm=(ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData mClipData=ClipData.newPlainText("Label",insuranceDetailUrl);
         if (cm != null) {
             cm.setPrimaryClip(mClipData);
-            ToastUtil.ToastText(context,"已复制到剪切板");
+            CustomToast.showSuccessDialog("已复制到剪切板");
         }
     }
 
@@ -439,11 +463,22 @@ public class InsuranceHtmlActivity extends BaseActivity {
         }
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtil.ToastText(context, " 分享失败啦");
+            CustomToast.showErrorDialog("分享失败啦");
         }
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            ToastUtil.ToastText(context," 分享取消了");
+            CustomToast.showWarningDialog("分享取消了");
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mBitmap!=null){
+            mBitmap.recycle();
+        }
+        if (qrBitmap!=null){
+            qrBitmap.recycle();
+        }
+    }
 }

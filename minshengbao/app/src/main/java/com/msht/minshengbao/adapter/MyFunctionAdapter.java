@@ -79,7 +79,7 @@ public class MyFunctionAdapter extends BaseAdapter {
             holder.tv_name.setText("地址管理");
         }else if (integer==5){
             holder.img_function.setImageResource(R.drawable.share_xh);
-            holder.tv_name.setText("分享应用");
+            holder.tv_name.setText("分享更赚");
         }else if (integer==6){
             holder.img_function.setImageResource(R.drawable.share_xh);
         }

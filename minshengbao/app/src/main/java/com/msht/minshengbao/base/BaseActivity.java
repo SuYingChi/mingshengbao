@@ -67,7 +67,7 @@ public class BaseActivity extends AppCompatActivity {
          */
         PushAgent.getInstance(this).onAppStart();
         EventBus.getDefault().register(this);
-        setSnackBar();
+      //  setSnackBar();
         setNoNetworkBroadcast();
     }
 
@@ -189,7 +189,7 @@ public class BaseActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager connectionManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectionManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isAvailable()) {
+            if (networkInfo != null && networkInfo.isConnected()) {
                 switch (networkInfo.getType()) {
                     case TYPE_MOBILE:
 //                    Toast.makeText(context, "正在使用2G/3G/4G网络", Toast.LENGTH_SHORT).show();
@@ -200,10 +200,10 @@ public class BaseActivity extends AppCompatActivity {
                     default:
                         break;
                 }
-                snackBar.dismiss();
+               // snackBar.dismiss();
                 onNetWorkChange(true);
             } else {
-                snackBar.show();
+               // snackBar.show();
                 onNetWorkChange(false);
             }
         }

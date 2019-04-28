@@ -123,7 +123,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * EXIT_CODE 退出登录返回
      */
     private static final int EXIT_CODE = 0x005;
- //   private NetBroadcastReceiver receiver;
     private final RequestHandler requestHandler = new RequestHandler(this);
     private final PushHandler pushHandler = new PushHandler(this);
     private final VersionHandler versionHandler = new VersionHandler(this);
@@ -319,8 +318,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void onPersonalInformation() {
         String sex = objectJson.optString("sex");
         String phoneNo = objectJson.optString("phone");
+        String isWeChatBind=objectJson.optString("isWeChatBind");
+        SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,isWeChatBind);
         SharedPreferencesUtil.putSex(this, SharedPreferencesUtil.Sex, sex);
         SharedPreferencesUtil.putPhoneNumber(this, SharedPreferencesUtil.PhoneNumber, phoneNo);
+
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {

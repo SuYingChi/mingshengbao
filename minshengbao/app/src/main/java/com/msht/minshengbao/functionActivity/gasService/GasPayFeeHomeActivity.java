@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -304,7 +305,6 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initFindViewId() {
-
         mCubeBanner = findViewById(R.id.banner);
         findViewById(R.id.id_ordinary_layout).setOnClickListener(this);
         findViewById(R.id.id_ic_layout).setOnClickListener(this);
@@ -313,6 +313,10 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
         findViewById(R.id.id_automate_pay).setOnClickListener(this);
         findViewById(R.id.id_customerNo_manager).setOnClickListener(this);
         findViewById(R.id.id_near_machine).setOnClickListener(this);
+        TextView tvRightText=(TextView)findViewById(R.id.id_tv_rightText);
+        tvRightText.setVisibility(View.VISIBLE);
+        tvRightText.setText("缴费记录");
+        tvRightText.setOnClickListener(this);
         btnQuery=(Button)findViewById(R.id.id_btn_query);
         btnQuery.setEnabled(false);
         btnQuery.setOnClickListener(this);
@@ -400,9 +404,17 @@ public class GasPayFeeHomeActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.id_btn_query:
                 onQueryTableType();
+                break;
+            case R.id.id_tv_rightText:
+                onCustomerNoList();
+                break;
             default:
                 break;
         }
+    }
+    private void onCustomerNoList() {
+        Intent intent=new Intent(context,GasAllPayRecordListActivity.class);
+        startActivity(intent);
     }
     private void onOrdinaryTable() {
         Intent intent=new Intent(context,GasPayFeeActivity.class);

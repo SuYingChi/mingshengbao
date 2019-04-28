@@ -49,6 +49,7 @@ public class HouseApplianceFixActivity extends BaseActivity {
     private MyNoScrollGridView mGridView;
     private HouseApplianceFixAdapter homeAdapter;
     private String pid;
+    private String parentCode;
     private String cityId;
     private String typeName;
     private boolean loginState =false;
@@ -125,8 +126,11 @@ public class HouseApplianceFixActivity extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         loginState = SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         Intent data=getIntent();
-        pid=data.getStringExtra("pid");
-        typeName=data.getStringExtra("typeName");
+        if (data!=null){
+            pid=data.getStringExtra("pid");
+            typeName=data.getStringExtra("typeName");
+            parentCode=data.getStringExtra("parentCode");
+        }
         setCommonHeader(typeName);
         cityId=VariableUtil.cityId;
         initView();
@@ -145,6 +149,7 @@ public class HouseApplianceFixActivity extends BaseActivity {
                     intent.putExtra("id",mId);
                     intent.putExtra("name",mName);
                     intent.putExtra("mMainType",typeName);
+                    intent.putExtra("parentCode",parentCode);
                     intent.putExtra("code",code);
                     startActivity(intent);
                 }else {

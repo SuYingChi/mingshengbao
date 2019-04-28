@@ -168,7 +168,7 @@ public class GasOrdinaryRecordActivity extends BaseActivity {
                 Intent name=new Intent(context, GasPayRecordActivity.class);
                 name.putExtra("customerNo",customerNo);
                 name.putExtra("address",address);
-                name.putExtra("urlType","0");
+                name.putExtra("meterType","11");
                 startActivity(name);
             }
         });

@@ -1,9 +1,11 @@
 package com.msht.minshengbao.functionActivity.repairService;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +15,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.base.BaseActivity;
 
 import java.util.ArrayList;
 
@@ -25,7 +29,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * @author hong
  * @date 2017/9/2  
  */
-public class EnlargePicActivity extends AppCompatActivity {
+public class EnlargePicActivity extends BaseActivity {
     private PhotoViewAttacher mAttacher;
     private ImageView ivPic, deleteImg,backimg;
     private ArrayList<String> imgPaths;
@@ -35,16 +39,29 @@ public class EnlargePicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enlarge_pic);
+        context=this;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             imgPaths = bundle.getStringArrayList("imgPaths");
             position=bundle.getInt("position");
         }
+        initHeader();
         initView();
         intEvent();
     }
+
+    private void initHeader() {
+        View mViewStatusBarPlace = findViewById(R.id.id_status_view);
+        ViewGroup.LayoutParams params = mViewStatusBarPlace.getLayoutParams();
+        params.height = StatusBarCompat.getStatusBarHeight(this);
+        mViewStatusBarPlace.setLayoutParams(params);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            mViewStatusBarPlace.setVisibility(View.GONE);
+        }
+    }
+
     private void initView() {
-        backimg=(ImageView)findViewById(R.id.id_gobackimg);
+        backimg=(ImageView)findViewById(R.id.id_back);
         tvNum =(TextView)findViewById(R.id.id_text);
         deleteImg =(ImageView)findViewById(R.id.id_delete_img);
         ivPic=(ImageView)findViewById(R.id.iv_pic);

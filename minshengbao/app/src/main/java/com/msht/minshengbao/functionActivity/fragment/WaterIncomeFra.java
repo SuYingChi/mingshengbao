@@ -23,7 +23,7 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.events.DateEvent;
+import com.msht.minshengbao.events.UpdateDataEvent;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -242,12 +242,6 @@ public class WaterIncomeFra extends BaseFragment {
     public void initData() {
         customDialog.show();
         loadData(1);
-    }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetDateEvent(DateEvent event) {
-        mDateString=event.getMessage();
-        loadData(1);
-
     }
     @Override
     public void onDestroy() {

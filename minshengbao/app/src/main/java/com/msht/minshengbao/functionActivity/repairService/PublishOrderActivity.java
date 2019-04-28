@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PublicEnsureInfoDialog;
+import com.msht.minshengbao.ViewUI.Dialog.QuestionDescribeDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
@@ -67,16 +68,15 @@ import top.zibin.luban.OnCompressListener;
  */
 public class PublishOrderActivity extends BaseActivity implements View.OnClickListener {
     private EditText etRecommend;
-    private EditText etNeed;
     private Button   btnSendOrder;
     private TextView ttvName;
     private EditText etPhone;
     private TextView tvAddress;
+    private TextView tvDescribe;
     private TextView appointmentData, appointmentTime;
-    private MultiLineChooseLayout multiChoose;
-    private String   textString="",recommend;
-    private String   reid,userId,password,phone,id, userPhone;
-    private String   mMainType,type,address,info, appointDate;
+    private String   recommend;
+    private String   reid,userId,password,phone,id;
+    private String   mMainType,type,address,info="", appointDate;
     private String   username, rawOrderId="",cityId="";
     private String   longitude="",latitude="";
     private String   code;
@@ -87,10 +87,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private int thisPosition =-1;
     private int requestType =0;
     private JSONObject jsonObject;
-    private JSONArray jsonArray;
     private static final String CITY_NAME="海口";
     private ArrayList<String> mDataList=new ArrayList<>();
-    private ArrayList<String>multiResult=new ArrayList<>();
     private ArrayList<String> imgPaths = new ArrayList<>();
     private ArrayList<HashMap<String,String>> mList = new ArrayList<HashMap<String, String>>();
     private String[] appointTime={"08:30-11:30","11:30-14:30","14:30-17:30","17:30-20:30","20:30-23:30"};
@@ -120,8 +118,8 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (activity.requestType ==0){
                                 activity.customDialog.dismiss();
-                                activity.jsonArray=object.optJSONArray("data");
-                                activity.questionData();
+                                JSONArray jsonArray=object.optJSONArray("data");
+                                activity.questionData(jsonArray);
                             }else if (activity.requestType ==1){
                                 activity.jsonObject =object.optJSONObject("data");
                                 activity.initShow();
@@ -208,18 +206,16 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                     }
                 }).show();
     }
-    private void questionData() {
+    private void questionData(JSONArray jsonArray) {
         try{
-            for (int i=0;i<jsonArray.length();i++){
-                JSONObject json = jsonArray.getJSONObject(i);
+            for (int i = 0; i< jsonArray.length(); i++){
+                JSONObject json =jsonArray.getJSONObject(i);
                 String content = json.getString("content");
                 mDataList.add(content);
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
-        //显示数据
-        multiChoose.setList(mDataList);
     }
     private void initShow() {
         id= jsonObject.optString("id");
@@ -289,7 +285,6 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         code=data.getStringExtra("code");
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
-        userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         initJudge();
         initView();
         initTimeData();
@@ -371,11 +366,10 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         etRecommend =(EditText)findViewById(R.id.id_et_recommand);
         ttvName =(TextView)findViewById(R.id.id_tv_name);
         etPhone =(EditText) findViewById(R.id.id_et_phone);
-        etNeed =(EditText)findViewById(R.id.id_et_info);
         tvAddress =(TextView) findViewById(R.id.id_tv_address);
+        tvDescribe=(TextView)findViewById(R.id.id_tv_describe);
         ((TextView)findViewById(R.id.id_tv_project_type)).setText(mMainType);
         ((TextView)findViewById(R.id.id_tv_type)).setText(type);
-        multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
         mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         appointmentData =(TextView)findViewById(R.id.id_data);
         appointmentTime =(TextView)findViewById(R.id.id_time);
@@ -477,28 +471,13 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private void initEvent() {
         findViewById(R.id.id_re_price).setOnClickListener(this);
         findViewById(R.id.id_re_selectaddre).setOnClickListener(this);
+        findViewById(R.id.id_question_layout).setOnClickListener(this);
         btnSendOrder.setOnClickListener(this);
         appointmentData.setOnClickListener(this);
         appointmentTime.setOnClickListener(this);
         MyTextWatcher myTextWatcher = new MyTextWatcher();
         etPhone.addTextChangedListener(myTextWatcher);
         tvAddress.addTextChangedListener(myTextWatcher);
-        multiChoose.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
-            @Override
-            public void onItemClick(int position, String text) {
-                StringBuilder sb=new StringBuilder();
-                multiResult=multiChoose.getAllItemSelectedTextWithListArray();
-                if (multiResult!=null&&multiResult.size()>0){
-                    for (int i=0;i<multiResult.size();i++){
-                        sb.append(multiResult.get(i));
-                        sb.append(",");
-                    }
-                    textString=sb.toString();
-                }else {
-                    textString="";
-                }
-            }
-        });
     }
     private class MyTextWatcher implements TextWatcher{
         @Override
@@ -538,9 +517,24 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                     onOrderSend();
                 }
                 break;
+            case R.id.id_question_layout:
+                onQuestionDescribe();
+                break;
             default:
                 break;
         }
+    }
+    private void onQuestionDescribe() {
+        new QuestionDescribeDialog(context,mDataList).builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .setOnPositiveClickListener(new QuestionDescribeDialog.OnPositiveClickListener() {
+                    @Override
+                    public void onClick(View v, String text) {
+                        tvDescribe.setText(text);
+                        info=text;
+                    }
+                }).show();
     }
     private void onSelectDateDay() {
         new SelectDateDialog.Builder(this)
@@ -587,13 +581,11 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
     private void onOrderSend() {
         String date= appointmentData.getText().toString().trim();
         String time= appointmentTime.getText().toString().trim();
-        String otherInfo= etNeed.getText().toString().trim();
         username= ttvName.getText().toString().trim();
         recommend= etRecommend.getText().toString().trim();
         phone= etPhone.getText().toString().trim();
         address= tvAddress.getText().toString().trim();
         appointDate =date+"  "+time;
-        info=textString+otherInfo;
         new PublicEnsureInfoDialog(context).builder()
                 .setCanceledOnTouchOutside(true)
                 .setCancelable(true)

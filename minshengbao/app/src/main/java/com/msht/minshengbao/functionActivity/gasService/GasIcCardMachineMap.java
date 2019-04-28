@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +44,12 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.adapter.WaterEquipmentListAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
@@ -77,25 +84,29 @@ import java.util.List;
  */
 public class GasIcCardMachineMap extends BaseActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener, AMap.OnMyLocationChangeListener, AMap.InfoWindowAdapter, View.OnClickListener {
     private String userId;
-    private View layoutMap;
-    private View layoutSearch;
+    private View   layoutMap;
+    private View   layoutSearch;
+    private View   layoutNearEquipment;
+    private View   layoutEquipmentList;
+    private LoadMoreListView moreListView;
     private ImageView locationImg;
-    private boolean mFirst =true;
-    private EditText autoText;
-    private MapView mMapView = null;
-    private AMap aMap;
-    private double lat,lon;
+    private boolean   mFirst =true;
+    private EditText  autoText;
+    private MapView   mMapView = null;
+    private AMap      aMap;
+    private double    lat,lon;
     private AMapLocationClient locationClient;
-    private MyLocationStyle myLocationStyle;
+    private MyLocationStyle    myLocationStyle;
+    private WaterEquipmentListAdapter equipmentListAdapter;
     private PoiSearchAdapter searchAdapter;
-    private Context context;
+    private Context  context;
     private TextView tvCancel;
     private CustomDialog customDialog;
     private String mCity;
     private String defaultAddress,defaultName;
     private ArrayList<MarkerOptions> markerOptionsArrayList=new ArrayList<MarkerOptions>();
     private ArrayList<HashMap<String, String>>  addressList = new ArrayList<HashMap<String, String>>();
-
+    private ArrayList<HashMap<String, String>>  mList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler {
         private WeakReference<GasIcCardMachineMap> mWeakReference;
@@ -156,6 +167,7 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
                 String address=obj.optString("address");
                 String latitude=obj.optString("latitude");
                 String longitude=obj.optString("longitude");
+                String distance=obj.optString("distance");
                 double lat =obj.optDouble("latitude");
                 double lon = obj.optDouble("longitude");
                 //保证经纬度没有问题的时候可以填false
@@ -168,6 +180,14 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
                 markerOptions.title(name);
                 markerOptions.snippet(address);
                 markerOptionsArrayList.add(markerOptions);
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("equipmentNo","1");
+                map.put("address", address);
+                map.put("communityName",name);
+                map.put("latitude",latitude);
+                map.put("longitude", longitude);
+                map.put("distance",distance);
+                mList.add(map);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -175,8 +195,8 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
         if (markerOptionsArrayList!=null&&markerOptionsArrayList.size()!=0){
             aMap.addMarkers(markerOptionsArrayList,false);
         }
+        equipmentListAdapter.notifyDataSetChanged();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,10 +205,51 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
         mPageName="售水机设备地图";
         userId = SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId, "");
         customDialog=new CustomDialog(this, "正在加载");
+        layoutEquipmentList=findViewById(R.id.id_equipment_list_layout);
+        layoutNearEquipment=findViewById(R.id.id_layout_near);
         setLocationLimit();
         initView(savedInstanceState);
+        initEvent();
+        VariableUtil.mPos=-1;
+        equipmentListAdapter=new WaterEquipmentListAdapter(context,mList);
+        moreListView.setAdapter(equipmentListAdapter);
+        moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String lat=mList.get(i).get("latitude");
+                String lon=mList.get(i).get("longitude");
+                if ((!TextUtils.isEmpty(lat))&&(!TextUtils.isEmpty(lon))&&!lat.equals(ConstantUtil.NULL_VALUE)){
+                    VariableUtil.mPos=i;
+                    equipmentListAdapter.notifyDataSetChanged();
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(TypeConvertUtil.convertToDouble(lat,20), TypeConvertUtil.convertToDouble(lon,110)), 80));
+                    locationImg.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
-
+    private void initEvent() {
+        layoutNearEquipment.setTag(0);
+        layoutNearEquipment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag=(Integer)view.getTag();
+                switch (tag){
+                    case 0:
+                        layoutEquipmentList.setVisibility(View.VISIBLE);
+                        view.setTag(1);
+                        break;
+                    case 1:
+                        layoutEquipmentList.setVisibility(View.GONE);
+                        view.setTag(0);
+                        break;
+                    default:
+                        layoutEquipmentList.setVisibility(View.VISIBLE);
+                        view.setTag(1);
+                        break;
+                }
+            }
+        });
+    }
     private void setLocationLimit() {
         locationClient = ALocationClientFactory.createLocationClient(this, ALocationClientFactory.createDefaultOption(),this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -245,6 +306,7 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
         tvCancel.setEnabled(false);
         tvCancel.setOnClickListener(this);
         ivBack.setOnClickListener(this);
+        moreListView=(LoadMoreListView)findViewById(R.id.id_more_info) ;
         findViewById(R.id.id_scan_view).setOnClickListener(this);
         findViewById(R.id.id_card_view).setOnClickListener(this);
         findViewById(R.id.id_edit_layout).setOnClickListener(this);
@@ -338,15 +400,17 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
                 customDialog.show();
                 mFirst =false;
             }
-            initEquipmentData();
+            initEquipmentData(String.valueOf(lat),String.valueOf(lon));
         } else {
             ToastUtil.ToastText(context,"定位失败");
         }
     }
-    private void initEquipmentData() {
+    private void initEquipmentData(String latitude, String longitude) {
         String dataUrl = UrlUtil.IC_RECHARGE_BRANCH_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
+        textParams.put("latitude",latitude);
+        textParams.put("longitude",longitude);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     View infoWindow=null;

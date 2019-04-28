@@ -41,19 +41,11 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_gas_need_know, container, false);
         mContext=getActivity();
-        Rprofile=(RelativeLayout)view.findViewById(R.id.id_layout_profile);
-        Rusersafety=(RelativeLayout)view.findViewById(R.id.id_layout_usersafety);
-        Rtooluse=(RelativeLayout)view.findViewById(R.id.id_layout_tooluse);
-        Rgassafety=(RelativeLayout)view.findViewById(R.id.id_layout_safety);
-        initEvent();
+        view.findViewById(R.id.id_layout_profile).setOnClickListener(this);
+        view.findViewById(R.id.id_layout_usersafety).setOnClickListener(this);
+        view.findViewById(R.id.id_layout_tooluse).setOnClickListener(this);
+        view.findViewById(R.id.id_layout_safety).setOnClickListener(this);
         return view;
-    }
-
-    private void initEvent() {
-        Rprofile.setOnClickListener(this);
-        Rusersafety.setOnClickListener(this);
-        Rtooluse.setOnClickListener(this);
-        Rgassafety.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -138,6 +130,4 @@ public class GasNeedKnowFrag extends Fragment implements View.OnClickListener {
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
     }
-
-
 }

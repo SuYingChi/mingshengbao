@@ -67,43 +67,42 @@ public class VehicleAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        final int thisposition=position;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_electriom_bile, null);
             holder.storeIMG=(ImageView) convertView.findViewById(R.id.id_store_img);
-            holder.cn_name=(TextView) convertView.findViewById(R.id.id_store_name);
-            holder.cn_address=(TextView)convertView.findViewById(R.id.id_tv_ddress);
-            holder.cn_distance=(TextView)convertView.findViewById(R.id.id_tv_distance) ;
+            holder.cnName =(TextView) convertView.findViewById(R.id.id_store_name);
+            holder.cnAddress =(TextView)convertView.findViewById(R.id.id_tv_address);
+            holder.cnDistance =(TextView)convertView.findViewById(R.id.id_tv_distance) ;
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String address=mList.get(position).get("address");
+        String address="地址："+mList.get(position).get("address");
         String imgUrl=mList.get(position).get("imgUrl");
-        holder.cn_name.setText(mList.get(position).get("name"));
-        holder.cn_address.setText("地址："+address);
-        holder.cn_distance.setText(mList.get(position).get("distance"));
+        holder.cnName.setText(mList.get(position).get("name"));
+        holder.cnAddress.setText(address);
+        holder.cnDistance.setText(mList.get(position).get("distance"));
         ImageLoader.getInstance().displayImage(imgUrl, holder.storeIMG, options, animateFirstListener);
         return convertView;
     }
     class ViewHolder {
-        public ImageView storeIMG;
-        public TextView  cn_name;
-        public TextView  cn_address;
-        public TextView  cn_distance;
+         ImageView storeIMG;
+         TextView cnName;
+         TextView cnAddress;
+         TextView cnDistance;
 
     }
     private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
-        static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+        static final List<String> DISPLAYED_IMAGES = Collections.synchronizedList(new LinkedList<String>());
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             if (loadedImage != null) {
                 ImageView imageView = (ImageView) view;
-                boolean firstDisplay = !displayedImages.contains(imageUri);
+                boolean firstDisplay = !DISPLAYED_IMAGES.contains(imageUri);
                 if (firstDisplay) {
                     FadeInBitmapDisplayer.animate(imageView, 500);
-                    displayedImages.add(imageUri);
+                    DISPLAYED_IMAGES.add(imageUri);
                 }
             }
         }

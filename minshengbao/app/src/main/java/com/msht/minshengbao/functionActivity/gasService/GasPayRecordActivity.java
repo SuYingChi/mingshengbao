@@ -44,7 +44,7 @@ public class GasPayRecordActivity extends BaseActivity {
     private String    password;
     private String    customerNo;
     private String    address;
-    private String    urlType;
+    private String    meterType;
     private String    validateURL = UrlUtil.PayRecors_HistoryUrl;
     private View      layoutNoData;
     private XRecyclerView mRecyclerView;
@@ -86,7 +86,7 @@ public class GasPayRecordActivity extends BaseActivity {
                                 if (activity.pageIndex<=1){
                                     activity.recordList.clear();
                                 }
-                                if (activity.urlType.equals(ConstantUtil.VALUE_TWO)){
+                                if (activity.meterType.equals(ConstantUtil.VALUE_SEVENTEEN)){
                                     activity.onNBRecordData(jsonArray);
                                 }else{
                                     activity.onRecordData(jsonArray);
@@ -168,14 +168,14 @@ public class GasPayRecordActivity extends BaseActivity {
                 String totalDiscountAmt=jsonObject.optString("totalDiscountAmt");*/
                 String writeCardState="0";
                 String tableType;
-                switch (urlType){
-                    case ConstantUtil.VALUE_ZERO:
+                switch (meterType){
+                    case ConstantUtil.VALUE_ELEVEN:
                         tableType="0";
                         break;
-                    case ConstantUtil.VALUE_ONE:
+                    case ConstantUtil.VALUE_TWELVE:
                         tableType="1";
                         break;
-                    case ConstantUtil.VALUE_TWO:
+                    case ConstantUtil.VALUE_SEVENTEEN:
                         tableType="2";
                         break;
                     default:
@@ -218,8 +218,8 @@ public class GasPayRecordActivity extends BaseActivity {
         mPageName="充值缴费记录";
         customerNo=getIntent().getStringExtra("customerNo");
         address=getIntent().getStringExtra("address");
-        urlType=getIntent().getStringExtra("urlType");
-        if (urlType.equals(VariableUtil.VALUE_ZERO)){
+        meterType=getIntent().getStringExtra("meterType");
+        if (meterType.equals(VariableUtil.VALUE_ELEVEN)){
             mPageName="缴费记录";
         }else {
             mPageName="充值记录";
@@ -263,12 +263,12 @@ public class GasPayRecordActivity extends BaseActivity {
     }
     private void loadData(int i) {
         pageIndex =i;
-        if (urlType.equals(VariableUtil.VALUE_ZERO)){
+        if (meterType.equals(ConstantUtil.VALUE_ELEVEN)){
             validateURL = UrlUtil.PayRecors_HistoryUrl;
            // validateURL="http://192.168.3.162:8080/Gas/payment/customerno_history_new";
-        }else if (urlType.equals(VariableUtil.VALUE_ONE)){
+        }else if (meterType.equals(ConstantUtil.VALUE_TWELVE)){
             validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
-        }else if (urlType.equals(VariableUtil.VALUE_TWO)){
+        }else if (meterType.equals(ConstantUtil.VALUE_TWO)){
             validateURL = UrlUtil.INTERNET_TABLE_RECORD;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();

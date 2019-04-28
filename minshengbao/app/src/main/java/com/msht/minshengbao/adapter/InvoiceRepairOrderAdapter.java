@@ -1,5 +1,6 @@
 package com.msht.minshengbao.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,7 @@ import java.util.HashMap;
  * @date 2018/7/2  
  */
 public class InvoiceRepairOrderAdapter extends RecyclerView.Adapter<InvoiceRepairOrderAdapter.MyViewHolder>{
-
-
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
-
     public void setClickCallBack(ItemClickCallBack clickCallBack) {
         this.clickCallBack = clickCallBack;
     }
@@ -38,16 +36,17 @@ public class InvoiceRepairOrderAdapter extends RecyclerView.Adapter<InvoiceRepai
         this.mList=list;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invoice_repair_order,parent,false);
         return new MyViewHolder(view);
     }
-
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final  int thisPosition=position;
-        String timeText="支付时间："+mList.get(position).get("time");
+        String timeText=mList.get(position).get("time");
+        holder.tvParentCategory.setText(mList.get(position).get("mainCategory"));
         holder.tvCategory.setText(mList.get(position).get("category"));
         holder.tvOrderId.setText(mList.get(position).get("orderId"));
         holder.tvTime.setText(timeText);
@@ -74,6 +73,7 @@ public class InvoiceRepairOrderAdapter extends RecyclerView.Adapter<InvoiceRepai
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvTime;
         TextView tvCategory;
+        TextView tvParentCategory;
         TextView tvOrderId;
         TextView tvAmount;
         View itemView;
@@ -81,6 +81,7 @@ public class InvoiceRepairOrderAdapter extends RecyclerView.Adapter<InvoiceRepai
             super(view);
             tvTime =(TextView) view.findViewById(R.id.id_time);
             tvCategory =(TextView) view.findViewById(R.id.id_category);
+            tvParentCategory=(TextView)view.findViewById(R.id.id_parent_category) ;
             tvAmount =(TextView)view.findViewById(R.id.id_tv_money);
             tvOrderId=(TextView)view.findViewById(R.id.id_orderId);
             itemView=view.findViewById(R.id.item_layout);

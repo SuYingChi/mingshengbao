@@ -56,11 +56,13 @@ import java.util.List;
  * @author hong
  * @date 2017/10/17  
  */
-public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener {
+public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener {
     private View layoutNear;
     private ImageView rightImage;
     private String lat;
     private String lon;
+    private double latitude;
+    private double longitude;
     private String cityCode="",cityName="";
     private String areaCode="",areaName="";
     private String address="";
@@ -71,11 +73,13 @@ public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocati
     private MyLocationStyle myLocationStyle;
     private MultiPointOverlayOptions overlayOptions;
     private MultiPointOverlay multiPointOverlay;
-    private static  final int MY_LOCATION_REQUEST=0;
     private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private CustomDialog customDialog;
     private final RequestHandler requestHandler =new RequestHandler(this);
+
+
+
     private static class RequestHandler extends Handler{
         private WeakReference<ElectricMapActivity> mWeakReference;
         public RequestHandler(ElectricMapActivity activity) {
@@ -280,6 +284,7 @@ public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocati
         layoutNear =findViewById(R.id.id_layout_near);
         rightImage =(ImageView)findViewById(R.id.id_right_img);
         mMapView = (MapView) findViewById(R.id.id_mapView);
+        findViewById(R.id.id_card_view).setOnClickListener(this);
         // 此方法必须重写
         mMapView.onCreate(savedInstanceState);
         aMap = mMapView.getMap();
@@ -329,16 +334,27 @@ public class ElectricMapActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-            double latitude = aMapLocation.getLatitude();
-            double longitude = aMapLocation.getLongitude();
+            latitude = aMapLocation.getLatitude();
+            longitude = aMapLocation.getLongitude();
             cityCode=aMapLocation.getCityCode();
             cityName=aMapLocation.getCity();
             areaCode=aMapLocation.getAdCode();
             areaName=aMapLocation.getDistrict();
             address=aMapLocation.getAddress();
-            lat=String.valueOf(latitude);
-            lon=String.valueOf(longitude);
+            lat=String.valueOf(aMapLocation.getLatitude());
+            lon=String.valueOf(aMapLocation.getLongitude());
             locationClient.stopLocation();
+        }
+    }
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.id_card_view:
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
+                break;
+            default:
+                break;
         }
     }
     @Override

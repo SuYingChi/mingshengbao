@@ -16,11 +16,10 @@
             android:layout_height="wrap_content"
             android:text="@string/gas_company_profile"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/margin_12"
-            android:layout_marginBottom="@dimen/margin_12"
-            android:textSize="@dimen/text_18"
-            />
-
+            android:layout_marginTop="@dimen/margin_width12"
+            android:layout_marginBottom="@dimen/margin_width12"
+            android:textSize="@dimen/text_width18"
+            android:textColor="@color/color_383838"/>
     </RelativeLayout>
     <include layout="@layout/layout_line_gray"/>
     <RelativeLayout
@@ -34,10 +33,10 @@
             android:layout_height="wrap_content"
             android:text="@string/gas_service_guide"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:textSize="@dimen/text_18"
-            />
+            android:layout_marginTop="@dimen/margin_width12"
+            android:layout_marginBottom="@dimen/margin_width12"
+            android:textSize="@dimen/text_width18"
+            android:textColor="@color/color_383838"/>
     </RelativeLayout>
     <include layout="@layout/layout_line_gray"/>
     <RelativeLayout
@@ -51,10 +50,10 @@
             android:layout_height="wrap_content"
             android:text="@string/gas_Tool_Use"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/margin_12"
-            android:layout_marginBottom="@dimen/margin_12"
-            android:textSize="@dimen/text_18"
-            />
+            android:layout_marginTop="@dimen/margin_width12"
+            android:layout_marginBottom="@dimen/margin_width12"
+            android:textSize="@dimen/text_width18"
+            android:textColor="@color/color_383838"/>
     </RelativeLayout>
     <include layout="@layout/layout_line_gray"/>
     <RelativeLayout
@@ -68,11 +67,10 @@
             android:layout_height="wrap_content"
             android:text="@string/gas_safety"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/margin_12"
-            android:layout_marginBottom="@dimen/margin_12"
-            android:textSize="@dimen/text_18"
-            />
+            android:layout_marginTop="@dimen/margin_width12"
+            android:layout_marginBottom="@dimen/margin_width12"
+            android:textSize="@dimen/text_width18"
+            android:textColor="@color/color_383838"/>
     </RelativeLayout>
     <include layout="@layout/layout_line_gray"/>
-
 </LinearLayout>

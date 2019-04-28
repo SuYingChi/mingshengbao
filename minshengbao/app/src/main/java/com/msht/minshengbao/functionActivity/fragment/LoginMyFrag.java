@@ -71,6 +71,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -230,11 +231,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private void onGetNumSuccess(ShopNumBean bean) {
         int footprintNum = bean.getDatas().getMember_info().getBrowses_goods();
         tvFootprint.setVisibility(View.VISIBLE);
-        tvFootprint.setText(String.format("%d", footprintNum));
+        tvFootprint.setText(String.format(Locale.CHINA,"%d",footprintNum));
         llFootprint.setClickable(true);
         int collectNum = bean.getDatas().getMember_info().getFavorites_goods();
         tvCollect.setVisibility(View.VISIBLE);
-        tvCollect.setText(String.format("%d", collectNum));
+        tvCollect.setText(String.format(Locale.CHINA,"%d", collectNum));
         llCollect.setClickable(true);
 
         String refundOrderNum = bean.getDatas().getMember_info().getReturnX();

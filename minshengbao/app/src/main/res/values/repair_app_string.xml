@@ -8,6 +8,7 @@
     <string name="repair_type">维修类型:</string>
     <string name="price_table">价格表</string>
     <string name="please_input_refund_amount">请输入退款金额</string>
+    <string name="please_select_question_describe">请选择问题描述</string>
     <string name="overflow_price">超值价位</string>
     <string name="appointment_time">预约时间</string>
     <string name="select_appointment_date">选择预约日期</string>

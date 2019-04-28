@@ -125,7 +125,7 @@ public class AppActivityUtil {
                     break;
                 case ConstantUtil.HOME_MAINTENANCE:
                     id = Uri.parse(url).getQueryParameter("id");
-                    onHomeMaintenance(context, id, "家居维修");
+                    onHomeMaintenance(context, id, "家居维修",code);
                     break;
                 default:
                     break;
@@ -143,35 +143,35 @@ public class AppActivityUtil {
             switch (code) {
                 case ConstantUtil.HOUSEHOLD_CLEAN:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
                         onHouseHoldClean(context, id, name,code,"");
                     }
                     break;
                 case ConstantUtil.HOUSEHOLD_REPAIR:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
-                        onHouseHoldRepair(context, id, name, hasNext);
+                        onHouseHoldRepair(context, id, name, hasNext,code);
                     }
                     break;
                 case ConstantUtil.SANITARY_WARE:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
                         onSanitaryWare(context, id, name, hasNext);
                     }
                     break;
                 case ConstantUtil.LAMP_CIRCUIT:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
                         onLampCircuit(context, id, name, hasNext);
                     }
                     break;
                 case ConstantUtil.OTHER_REPAIR:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
                         onOtherRepair(context, id, name, hasNext);
                     }
@@ -199,13 +199,13 @@ public class AppActivityUtil {
                     break;
                 case ConstantUtil.HOUSEKEEPING_CLEAN:
                     if (hasNext.equals(ConstantUtil.VALUE_ONE)) {
-                        onHomeMaintenance(context, id, name);
+                        onHomeMaintenance(context, id, name,code);
                     } else {
                         onHouseKeepingClean(context, id, name);
                     }
                     break;
                 case ConstantUtil.HOME_MAINTENANCE:
-                    onHomeMaintenance(context, id, name);
+                    onHomeMaintenance(context, id, name,code);
                     break;
                 case ConstantUtil.SHOP:
                     onShopMall(context);
@@ -283,7 +283,7 @@ public class AppActivityUtil {
                     onHouseKeepingClean(context, id, name);
                     break;
                 case ConstantUtil.HOUSEHOLD_REPAIR:
-                    onHouseHoldRepair(context, id, name, "0");
+                    onHouseHoldRepair(context, id, name, "0",code);
                     break;
                 case ConstantUtil.INSURANCE:
                     onInsurance(context, "");
@@ -292,7 +292,7 @@ public class AppActivityUtil {
                     onSanitaryWare(context, id, name, "0");
                     break;
                 case ConstantUtil.HOME_MAINTENANCE:
-                    onHomeMaintenance(context, id, name);
+                    onHomeMaintenance(context, id, name,code);
                     break;
                 default:
                     showNotify(context, "民生宝", "已推出新版本，如果您想使用该服务，请点击更新！");
@@ -496,7 +496,7 @@ public class AppActivityUtil {
                         break;
                     case ConstantUtil.HOME_MAINTENANCE:
                         id = Uri.parse(url).getQueryParameter("id");
-                        onHomeMaintenance(context, id, "家居维修");
+                        onHomeMaintenance(context, id, "家居维修",code);
                         break;
                     case ConstantUtil.MESSAGE:
                         onStartMessage(context,url);
@@ -960,10 +960,11 @@ public class AppActivityUtil {
             onStartLoginActivity(context,url);
         }
     }
-    private static void onHouseHoldRepair(Context context, String id, String name, String hasNext) {
+    private static void onHouseHoldRepair(Context context, String id, String name, String hasNext,String code) {
         Intent intent = new Intent(context, HouseApplianceFixActivity.class);
         intent.putExtra("pid", id);
         intent.putExtra("typeName", name);
+        intent.putExtra("parentCode",code);
         context.startActivity(intent);
     }
     private static void onSanitaryWare(Context context, String id, String name, String hasNext) {
@@ -1053,10 +1054,11 @@ public class AppActivityUtil {
         context.startActivity(intent);
     }
 
-    private static void onHomeMaintenance(Context context, String id, String name) {
+    private static void onHomeMaintenance(Context context, String id, String name,String parentCode) {
         Intent intent = new Intent(context, HomeMaintenanceActivity.class);
         intent.putExtra("pid", id);
         intent.putExtra("typeName", name);
+        intent.putExtra("parentCode",parentCode);
         context.startActivity(intent);
     }
 
