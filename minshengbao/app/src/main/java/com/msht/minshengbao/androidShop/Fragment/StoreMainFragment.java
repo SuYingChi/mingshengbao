@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.GoodFmVoucherAdpter;
+import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreRecGoodAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -26,6 +27,8 @@ import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -43,7 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreView, OnRefreshListener {
+public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreView, OnRefreshListener, IGetVoucherView {
 
     private String storeId;
     @BindView(R.id.ll_voucher)
@@ -95,6 +98,13 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
         adapter = new GoodFmVoucherAdpter(getContext(), R.layout.item_store_voucher, voucherList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         rcl.setLayoutManager(linearLayoutManager);
+        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String voucherId = voucherList.get(position).getVoucher_t_id();
+                ShopPresenter.getVoucher(StoreMainFragment.this,voucherId);
+            }
+        });
         rcl.setAdapter(adapter);
         rcl.setNestedScrollingEnabled(false);
         collectAdapter = new StoreGoodAdapter(getContext(), R.layout.item_store_collect_good, collectList);
@@ -253,5 +263,15 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onGetVoucher(String voucherid) {
+
+    }
+
+    @Override
+    public void onGetVoucherSuccess(String s) {
+        PopUtil.showAutoDissHookDialog(getContext(), "成功领取代金券", 0);
     }
 }

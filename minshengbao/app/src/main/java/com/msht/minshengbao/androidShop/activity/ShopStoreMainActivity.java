@@ -26,13 +26,17 @@ import com.google.gson.JsonObject;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.ViewUI.widget.PopupMenu;
 import com.msht.minshengbao.adapter.ViewPagerAdapter;
 import com.msht.minshengbao.androidShop.adapter.ShopStoreViewPagerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.Imagebean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
+import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -60,6 +64,12 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     TabLayout tabLayout;
     @BindView(R.id.storefenlei)
     TextView tvStorefenlei;
+    @BindView(R.id.menu)
+    ImageView menu;
+    @BindView(R.id.kefu)
+    TextView tvKefu;
+    private String memberId;
+
     @Override
     protected void setLayout() {
      setContentView(R.layout.shop_store_main);
@@ -93,6 +103,53 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
                startActivity(inten);
             }
         });
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] abs = new String[]{"消息","购物车", "首页"};
+                PopupMenu mPopupMenu = new PopupMenu(ShopStoreMainActivity.this, abs, R.layout.store_main_menu);
+                // 设置弹出菜单弹出的位置
+                mPopupMenu.showLocation(R.id.menu, getResources().getDimensionPixelSize(R.dimen.margin_width_70), -getResources().getDimensionPixelSize(R.dimen.margin_15));
+                // 设置回调监听，获取点击事件
+                mPopupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
+                    @Override
+                    public void onClick(PopupMenu.MENUITEM item, int position) {
+                        if (position == 0) {
+                            if(TextUtils.isEmpty(getKey())){
+                                startActivity(new Intent(ShopStoreMainActivity.this, LoginActivity.class));
+                            }else {
+                                startActivity(new Intent(ShopStoreMainActivity.this, TotalMessageListActivity.class));
+                            }
+                        } else if (position == 1) {
+                            if(TextUtils.isEmpty(getKey())){
+                                startActivity(new Intent(ShopStoreMainActivity.this, LoginActivity.class));
+                            }else {
+                                Intent intent = new Intent(ShopStoreMainActivity.this, ShopCarActivity.class);
+                                //EventBus.getDefault().postSticky(new GoShopMainEvent());
+                                startActivity(intent);
+                            }
+                        }else if(position==2){
+                            Intent intent = new Intent(ShopStoreMainActivity.this, MainActivity.class);
+                            intent.putExtra("index",1);
+                            //EventBus.getDefault().postSticky(new GoShopMainEvent());
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
+        });
+        tvKefu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(getKey())) {
+                    Intent intent = new Intent(ShopStoreMainActivity.this, ShopkefuActivity.class);
+                    intent.putExtra("t_id", memberId);
+                    startActivity(intent);
+                }else {
+                    startActivity(new Intent(ShopStoreMainActivity.this,LoginActivity.class));
+                }
+            }
+        });
     }
 
     @Override
@@ -105,7 +162,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
             JSONObject obj = new JSONObject(s);
             JSONObject datas = obj.optJSONObject("datas");
             JSONObject storeInfo = datas.optJSONObject("store_info");
-            String memberId = storeInfo.optString("member_id");
+            memberId = storeInfo.optString("member_id");
             storeInfo.optString("store_avatar");
             if(TextUtils.isEmpty(storeInfo.optString("grade_name"))||TextUtils.equals(storeInfo.optString("grade_name"),"null")){
                 if(storeInfo.optBoolean("is_own_shop")){

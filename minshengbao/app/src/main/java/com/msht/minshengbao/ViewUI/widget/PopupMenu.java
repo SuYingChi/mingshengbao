@@ -25,6 +25,7 @@ import com.msht.minshengbao.Utils.ConvertUtil;
  */
 public class PopupMenu extends PopupWindow implements OnClickListener {
 
+	private  View v_item3;
 	private Activity activity;
 	private View popView;
 	private float alpha = 0.75f;
@@ -38,7 +39,7 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 	 * @author ywl5320 枚举，用于区分选择了哪个选项
 	 */
 	public enum MENUITEM {
-		ITEM1, ITEM2
+		ITEM1, ITEM3, ITEM2
 	}
 
 	private String[]  tabs;
@@ -72,13 +73,23 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 				setBackgroundAlpha(alpha, 1f, 300);
 			}
 		});
-
-		// 获取选项卡
-		v_item1 = popView.findViewById(R.id.ly_item1);
-		v_item2 = popView.findViewById(R.id.ly_item2);
-		// 添加监听
-		v_item1.setOnClickListener(this);
-		v_item2.setOnClickListener(this);
+        if(tabs.length==2) {
+			// 获取选项卡
+			v_item1 = popView.findViewById(R.id.ly_item1);
+			v_item2 = popView.findViewById(R.id.ly_item2);
+			// 添加监听
+			v_item1.setOnClickListener(this);
+			v_item2.setOnClickListener(this);
+		}else if(tabs.length==3){
+			// 获取选项卡
+			v_item1 = popView.findViewById(R.id.ly_item1);
+			v_item2 = popView.findViewById(R.id.ly_item2);
+			v_item3 = popView.findViewById(R.id.ly_item3);
+			// 添加监听
+			v_item1.setOnClickListener(this);
+			v_item2.setOnClickListener(this);
+			v_item3.setOnClickListener(this);
+		}
 
 	}
 
@@ -120,8 +131,15 @@ public class PopupMenu extends PopupWindow implements OnClickListener {
 			menuitem = MENUITEM.ITEM2;
 			str = tabs[1];
 			position=1;
-			TextView tvAboutUs = (TextView)v_item2.findViewById(R.id.tv_feedback);
+			TextView tvAboutUs = (TextView)v_item2.findViewById(R.id.tv_car);
 			tvAboutUs.setText(str);
+		}
+		else if (v == v_item3) {
+			menuitem = MENUITEM.ITEM3;
+			str = tabs[2];
+			position=2;
+			TextView tvCar = (TextView)v_item2.findViewById(R.id.tv_feedback);
+			tvCar.setText(str);
 		}
 		if (onItemClickListener != null) {
 			onItemClickListener.onClick(menuitem, position);
