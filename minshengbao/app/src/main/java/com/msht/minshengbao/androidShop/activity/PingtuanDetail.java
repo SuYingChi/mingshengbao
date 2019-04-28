@@ -124,6 +124,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     private Drawable qrCodeImage;
     private String goodsid;
     private String shareUrl;
+    private String goods_jingle;
 
     @Override
     protected void setLayout() {
@@ -193,6 +194,9 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     public void onGetPingTuanDetail(String s) {
         try {
             JSONObject pintuan_info = new JSONObject(s).optJSONObject("datas").optJSONObject("pintuan_info");
+            if(pintuan_info.has("goods_jingle")){
+                goods_jingle = pintuan_info.optString("goods_jingle");
+            }
             goodsid = pintuan_info.optString("goods_id");
             JSONArray log_list = pintuan_info.optJSONArray("log_list");
             list.clear();
@@ -241,8 +245,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                         webpage.webpageUrl = shareUrl;
                                                         WXMediaMessage msg = new WXMediaMessage(webpage);
                                                         msg.title = goods_name;
-                                                        String s = goods_name.replace("\r", "");
-                                                        s = s.replace("\t", "");
+                                                        String s;
+                                                        if(goods_jingle.equals("")){
+                                                             s = goods_name.replace("\r", "");
+                                                        }else {
+                                                             s = goods_jingle.replace("\r", "");
+                                                        }
                                                         msg.description = s;
                                                         Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
                                                         Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
@@ -277,6 +285,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                             }
                                         });
                                         holder.setText(R.id.good_name, goods_name);
+                                        holder.setText(R.id.good_jingle, goods_jingle);
                                         holder.setText(R.id.good_price, StringUtil.getPriceSpannable12String(PingtuanDetail.this, goods_price, R.style.big_money, R.style.big_money));
                                         TextView tvorigprice = holder.getView(R.id.good_orginal_price);
                                         tvorigprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
@@ -332,7 +341,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                         webpage.webpageUrl = shareUrl;
                                                         WXMediaMessage msg = new WXMediaMessage(webpage);
                                                         msg.title = goods_name;
-                                                        String s = goods_name.replace("\r", "");
+                                                        String s;
+                                                        if(goods_jingle.equals("")){
+                                                            s = goods_name.replace("\r", "");
+                                                        }else {
+                                                            s = goods_jingle.replace("\r", "");
+                                                        }
                                                         s = s.replace("\t", "");
                                                         msg.description = s;
                                                         Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
