@@ -36,11 +36,13 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.extra.CashierInputFilter;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -156,6 +158,8 @@ public class RefundApplyActivity extends BaseActivity {
                                     reference.customDialog.dismiss();
                                 }
                                 reference.btnSend.setEnabled(true);
+                                reference.setResult(0x004);
+                                EventBus.getDefault().post(new UpdateDataEvent(true));
                                 reference.showDialog("您的退款申请已经提交");
                             }
                         }else {
@@ -198,7 +202,6 @@ public class RefundApplyActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
-                        setResult(0x004);
                         finish();
                     }
                 }).show();
@@ -240,12 +243,12 @@ public class RefundApplyActivity extends BaseActivity {
     private void uploadImage(File files) {
         String validateURL = UrlUtil.RefundImg_Url;
         Map<String, String> textParams = new HashMap<String, String>();
-        Map<String, File> fileparams = new HashMap<String, File>();
+        Map<String, File> fileParams = new HashMap<String, File>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id", refundId);
-        fileparams.put("img",files);
-        SendRequestUtil.postFileToServer(textParams,fileparams,validateURL,bitmapHandler);
+        fileParams.put("img",files);
+        SendRequestUtil.postFileToServer(textParams,fileParams,validateURL,bitmapHandler);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,6 +282,11 @@ public class RefundApplyActivity extends BaseActivity {
             etRefundAmount.setFilters(filters);
             etRefundAmount.setHint(realAmount);
         }
+        if (!TextUtils.isEmpty(additionalInfo)){
+            layoutCategoryButton.setVisibility(View.VISIBLE);
+        }else {
+            layoutCategoryButton.setVisibility(View.GONE);
+        }
         mAdapter = new PhotoPickerAdapter(imgPaths);
         mPhotoGridView.setAdapter(mAdapter);
         mPhotoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -307,9 +315,7 @@ public class RefundApplyActivity extends BaseActivity {
                 }
             }
         });
-
     }
-
     private void initEvent() {
         layoutCategoryButton.setTag(0);
         layoutCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -367,7 +373,6 @@ public class RefundApplyActivity extends BaseActivity {
                 break;
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

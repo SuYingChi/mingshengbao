@@ -3,6 +3,7 @@ package com.msht.minshengbao.ViewUI.Dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,9 +30,9 @@ public class PublicNoticeDialog {
     private TextView tvTitle;
     private View   viewLine;
     private ImageView viewImg;
+    private ImageView closeImg;
     private Context context;
     private Dialog dialog;
-    private Display display;
     private OnPositiveClickListener callClickListener;
     public interface OnPositiveClickListener {
         /**
@@ -47,22 +48,23 @@ public class PublicNoticeDialog {
 
     public PublicNoticeDialog(Context context) {
         this.context = context;
-        WindowManager windowManager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager!=null){
-            display = windowManager.getDefaultDisplay();
-        }
     }
 
     public PublicNoticeDialog builder() {
         // 获取Dialog布局
         View view= LayoutInflater.from(context).inflate(R.layout.dialog_public_notice,null);
-        view.setMinimumWidth(display.getWidth());
         tvTitle=(TextView)view.findViewById(R.id.id_tv_title);
         viewLine=view.findViewById(R.id.id_line);
         tvMessageContentText=(TextView)view.findViewById(R.id.id_tv_message_content);
         btnKnow=(Button)view.findViewById(R.id.id_btn_ensure) ;
         viewImg=(ImageView)view.findViewById(R.id.id_view_img);
+        closeImg=(ImageView)view.findViewById(R.id.id_close_roundel);
+        closeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         btnKnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,12 +77,20 @@ public class PublicNoticeDialog {
         dialog = new Dialog(context, R.style.PromptDialogStyle);
         dialog.setContentView(view);
         Window dialogWindow = dialog.getWindow();
-        if (dialogWindow!=null){
-            dialogWindow.setGravity(Gravity.CENTER);
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.x = 0;
-            lp.y = 0;
-            dialogWindow.setAttributes(lp);
+        WindowManager windowManager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager!=null){
+            DisplayMetrics displayMetrics=new DisplayMetrics();
+            if (windowManager.getDefaultDisplay()!=null){
+                windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+            }
+            if (dialogWindow!=null){
+                dialogWindow.setGravity(Gravity.CENTER);
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.x = 0;
+                lp.y = 0;
+                dialogWindow.setAttributes(lp);
+            }
         }
         return this;
     }
@@ -120,6 +130,14 @@ public class PublicNoticeDialog {
             viewLine.setVisibility(View.VISIBLE);
         }else {
             viewLine.setVisibility(View.GONE);
+        }
+        return this;
+    }
+    public PublicNoticeDialog setCloseImageVisibility(boolean visibility){
+        if (visibility){
+            closeImg.setVisibility(View.VISIBLE);
+        }else {
+            closeImg.setVisibility(View.GONE);
         }
         return this;
     }

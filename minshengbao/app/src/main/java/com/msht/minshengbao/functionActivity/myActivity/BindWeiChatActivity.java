@@ -29,6 +29,7 @@ import com.msht.minshengbao.ViewUI.widget.CustomToast;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.htmlWeb.AgreeTreatyActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +66,7 @@ public class BindWeiChatActivity extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         if (data!=null){
-             unionId=data.getStringExtra("");
+             unionId=data.getStringExtra("unionId");
              name=data.getStringExtra("name");
              gender=data.getStringExtra("gender");
              iconUrl=data.getStringExtra("iconUrl");
@@ -113,8 +114,21 @@ public class BindWeiChatActivity extends BaseActivity {
 
             }
         });
+        findViewById(R.id.id_treaty).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onTreaty();
+            }
+        });
     }
 
+    private void onTreaty() {
+        String url=UrlUtil.AgreeTreayt_Url;
+        Intent treaty=new Intent(context,AgreeTreatyActivity.class);
+        treaty.putExtra("navigation","注册协议书");
+        treaty.putExtra("url",url);
+        startActivity(treaty);
+    }
     private void onRequestBind() {
         String phoneNo=etPhone.getText().toString().trim();
         String code=etVerifyCode.getText().toString().trim();
@@ -139,7 +153,6 @@ public class BindWeiChatActivity extends BaseActivity {
                 if (customDialog!=null&&customDialog.isShowing()){
                     customDialog.dismiss();
                 }
-                Log.d("RequestSuccess=",data.toString());
                 onAnalysisData(data.toString());
             }
             @Override
@@ -151,7 +164,6 @@ public class BindWeiChatActivity extends BaseActivity {
             }
         });
     }
-
     private void onAnalysisData(String data) {
         try {
             JSONObject object = new JSONObject(data);
@@ -159,7 +171,7 @@ public class BindWeiChatActivity extends BaseActivity {
             String error = object.optString("error");
             JSONObject objectInfo = object.optJSONObject("data");
             if (result.equals(SendRequestUtil.SUCCESS_VALUE)){
-                String isWeChatBind=objectInfo.optString("isWeChatBind ");
+                String isWeChatBind=objectInfo.optString("isWeChatBind");
                 if (isWeChatBind.equals(ConstantUtil.VALUE_ONE)){
                     String userId=objectInfo.optString("id");
                     String password=objectInfo.optString("password");
@@ -187,7 +199,6 @@ public class BindWeiChatActivity extends BaseActivity {
                     SharedPreferencesUtil.putLstate(this,SharedPreferencesUtil.Lstate,true);
                     SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.shopCookie,shopCookie);
                     SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,isWeChatBind);
-
                     Intent broadcast=new Intent();
                     broadcast.setAction(MY_ACTION);
                     broadcast.putExtra("broadcast", "1");

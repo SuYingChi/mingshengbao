@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,10 +24,13 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
 import com.msht.minshengbao.adapter.VehicleAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
@@ -59,7 +63,7 @@ import java.util.List;
  * @author hong
  * @date 2017/10/16  
  */
-public class ElectricHomeActivity extends BaseActivity implements MySwipeRefreshLayout.OnRefreshListener, AMapLocationListener {
+public class ElectricHomeActivity extends BaseActivity implements MySwipeRefreshLayout.OnRefreshListener, AMapLocationListener, AMap.OnMyLocationChangeListener {
     private MySwipeRefreshLayout refreshView;
     private LoadMoreListView moreListView;
     private VehicleAdapter mAdapter;
@@ -70,16 +74,21 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
     private MapView mMapView = null;
     private AMap aMap;
     private AMapLocationClient locationClient;
+    private MyLocationStyle myLocationStyle;
+    private double latitude;
+    private double longitude;
     private String lat;
     private String lon;
     private String cityCode="",cityName="";
     private String areaCode="",areaName="";
     private String address="";
     private int pageNo=1;
-    private static  final int MY_LOCATION_REQUEST=0;
     private JSONArray jsonArray;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
+
+
+
     private static class  RequestHandler extends Handler{
         private WeakReference<ElectricHomeActivity> mWeakReference;
         public RequestHandler(ElectricHomeActivity activity) {
@@ -285,6 +294,12 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
                 overridePendingTransition(R.anim.in_from_top, 0);
             }
         });
+        findViewById(R.id.id_card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
+            }
+        });
     }
     private void initView(Bundle savedInstanceState) {
         MyOnCameraChange myOncameraChange=new MyOnCameraChange();
@@ -302,6 +317,12 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
         aMap.setOnCameraChangeListener(myOncameraChange);
         UiSettings uiSettings = aMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(false);
+        setLocationStyle();
+        aMap.setMyLocationStyle(myLocationStyle);
+        // 设置为true表示启动显示定位蓝点。
+        aMap.setMyLocationEnabled(true);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(100));
+        aMap.setOnMyLocationChangeListener(this);
         //滑动冲突
         moreListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -317,6 +338,18 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
                 refreshView.setEnabled(enable);
             }
         });
+    }
+    private void setLocationStyle() {
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle = new MyLocationStyle();
+        //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.interval(2000);
+        //定位一次，且将视角移动到地图中心点。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;
+        myLocationStyle.showMyLocation(true);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker_xh));
+        myLocationStyle.strokeColor(0xfff96331);
+        myLocationStyle.radiusFillColor(0x40f96331);
     }
     @Override
     public void onNormal() {
@@ -337,9 +370,9 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
             //移动地图中心到当前的定位位置
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), 40));
-            double latitude = aMapLocation.getLatitude();
-            double longitude = aMapLocation.getLongitude();
+          //  aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), 40));
+           // latitude = aMapLocation.getLatitude();
+           // longitude = aMapLocation.getLongitude();
             cityCode=aMapLocation.getCityCode();
             cityName=aMapLocation.getCity();
             areaCode=aMapLocation.getAdCode();
@@ -347,13 +380,26 @@ public class ElectricHomeActivity extends BaseActivity implements MySwipeRefresh
             address=aMapLocation.getAddress();
             String mPoiName=aMapLocation.getPoiName();
             tvAddress.setText(mPoiName);
-            lat=String.valueOf(latitude);
-            lon=String.valueOf(longitude);
+            lat=String.valueOf(aMapLocation.getLatitude());
+            lon=String.valueOf(aMapLocation.getLongitude());
             mList.clear();
             locationClient.stopLocation();
             initData();
 
         }
+    }
+    @Override
+    public void onMyLocationChange(Location location) {
+        if ( location != null ) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            lat=String.valueOf(location.getLatitude());
+            lon=String.valueOf(location.getLongitude());
+            initData();
+        } else {
+            CustomToast.showErrorDialog("定位失败");
+        }
+
     }
     private class MyOnCameraChange implements AMap.OnCameraChangeListener{
         @Override

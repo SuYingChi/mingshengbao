@@ -61,6 +61,7 @@ public class ConstantUtil {
     public static final  String VALUE_TEN=  "10";
     public static final  String VALUE_ELEVEN="11";
     public static final  String VALUE_TWELVE="12";
+    public static final  String VALUE_SEVENTEEN="17";
     public static final  String VALUE_FOURTEEN="14";
     public static final  String VALUE_THIRTY_SIX="36";
     public static final  String VALUE_FORTY_EIGHT="48";

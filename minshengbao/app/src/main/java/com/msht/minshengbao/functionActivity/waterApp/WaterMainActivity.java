@@ -218,21 +218,24 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
 
     }
     private void onShowRedPacketDialog() {
-        new WaterShareRedPacketDialog(context).builder()
-                .setCancelable(false)
-                .setCanceledOnTouchOutside(false)
-                .setOnAdvertisingClickListener(new WaterShareRedPacketDialog.OnAdvertisingClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onRequestShareSuccess();
-                    }
-                })
-                .setOnCancelClickListener(new WaterShareRedPacketDialog.OnCancelClickListener() {
-                    @Override
-                    public void onCancelClick(View view) {
+        WaterMainActivity activity=new WeakReference<WaterMainActivity>(this).get();
+        if (activity!=null&&!activity.isFinishing()&&context!=null){
+            new WaterShareRedPacketDialog(context).builder()
+                    .setCancelable(false)
+                    .setCanceledOnTouchOutside(false)
+                    .setOnAdvertisingClickListener(new WaterShareRedPacketDialog.OnAdvertisingClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onRequestShareSuccess();
+                        }
+                    })
+                    .setOnCancelClickListener(new WaterShareRedPacketDialog.OnCancelClickListener() {
+                        @Override
+                        public void onCancelClick(View view) {
                             onCancelShare();
-                    }
-                }).show();
+                        }
+                    }).show();
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -469,6 +472,7 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

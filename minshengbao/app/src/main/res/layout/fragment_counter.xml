@@ -2,15 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.fragment.CounterFrag">
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background_gray">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/transparent"
             android:orientation="vertical">
             <WebView
                 android:background="@color/white"
@@ -18,37 +20,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </WebView>
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_30">
+                android:layout_marginTop="@dimen/margin_width20"
+                android:orientation="horizontal">
                 <View
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorOrange"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/id_tv_counter"
-                    android:layout_marginLeft="@dimen/margin_20"
-                    android:layout_marginRight="@dimen/margin_width10"/>
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_width20"
+                    android:layout_marginStart="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"/>
                 <TextView
                     android:id="@+id/id_tv_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
                     android:text="柜台业务网点提示"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_16"/>
+                    android:textColor="@color/color_383838"
+                    android:textSize="@dimen/text_width16"/>
                 <View
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="@color/colorOrange"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/id_tv_counter"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_20"/>
-            </RelativeLayout>
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width20"
+                    android:layout_marginEnd="@dimen/margin_width20"/>
+            </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -60,16 +65,20 @@
                     android:layout_centerHorizontal="true">
                     <ImageView
                         android:id="@+id/id_tv1"
-                        android:layout_width="20dp"
-                        android:layout_height="21dp"
+                        android:layout_width="@dimen/margin_width20"
+                        android:layout_height="@dimen/margin_width20"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/address_xh"/>
                     <TextView
                         android:id="@+id/id_tv2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_tv1"
-                        android:layout_marginLeft="@dimen/margin_20"
-                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_tv1"
+                        android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="海口市海甸岛四东路民生大厦营业点"
                         android:textSize="@dimen/text_16"
                         android:textColor="#353535"/>
@@ -83,16 +92,20 @@
                     android:layout_centerHorizontal="true">
                     <ImageView
                         android:id="@+id/id_tv3"
-                        android:layout_width="20dp"
-                        android:layout_height="21dp"
+                        android:layout_width="@dimen/margin_width20"
+                        android:layout_height="@dimen/margin_width20"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/address_xh"/>
                     <TextView
                         android:id="@+id/id_tv4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_tv3"
-                        android:layout_marginLeft="@dimen/margin_20"
-                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_tv3"
+                        android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="万宁市石梅湾兴梅大道石梅湾营业点"
                         android:textSize="@dimen/text_16"
                         android:textColor="#353535"/>
@@ -105,22 +118,25 @@
                     android:layout_centerHorizontal="true">
                     <ImageView
                         android:id="@+id/id_tv5"
-                        android:layout_width="20dp"
-                        android:layout_height="21dp"
+                        android:layout_width="@dimen/margin_width20"
+                        android:layout_height="@dimen/margin_width20"
+                        android:contentDescription="@string/picture_text"
                         android:src="@drawable/address_xh"/>
                     <TextView
                         android:id="@+id/id_tv6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/id_tv5"
-                        android:layout_marginLeft="@dimen/margin_20"
-                        android:layout_marginRight="@dimen/margin_10"
+                        android:layout_toEndOf="@+id/id_tv5"
+                        android:layout_marginLeft="@dimen/margin_width20"
+                        android:layout_marginStart="@dimen/margin_width20"
+                        android:layout_marginRight="@dimen/margin_width10"
+                        android:layout_marginEnd="@dimen/margin_width10"
                         android:text="陵水县清水湾AO3区商福气廊营业点"
                         android:textSize="@dimen/text_16"
-                        android:textColor="#353535"/>
+                        android:textColor="@color/color_383838"/>
                 </RelativeLayout>
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

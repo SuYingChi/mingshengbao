@@ -233,10 +233,10 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
         mLstView = (ListView) findViewById(R.id.id_address_dataList);
         tvNoDataTip = (TextView) findViewById(R.id.id_tv_tip);
         findViewById(R.id.id_newAdd_btn).setOnClickListener(this);
-        TextView tvRecord = (TextView) findViewById(R.id.id_tv_rightText);
+        /*TextView tvRecord = (TextView) findViewById(R.id.id_tv_rightText);
         tvRecord.setVisibility(View.VISIBLE);
         tvRecord.setText("缴费记录");
-        tvRecord.setOnClickListener(this);
+        tvRecord.setOnClickListener(this);*/
     }
 
     @Override
@@ -257,9 +257,6 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_tv_rightText:
-                onGasPayRecord();
-                break;
             case R.id.id_newAdd_btn:
                 onNewAddCustomerNo();
                 break;

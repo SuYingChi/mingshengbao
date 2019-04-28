@@ -128,8 +128,66 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         avatarUrl =SharedPreferencesUtil.getAvatarUrl(context,SharedPreferencesUtil.AvatarUrl,"");
         customDialog=new CustomDialog(this, "正在上传图片");
         initShowInfo();
+        initPersonalInfo();
         initEvent();
     }
+
+    private void initPersonalInfo() {
+        String validateURL = UrlUtil.USER_INFO_GAS_URL;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,""));
+        textParams.put("password", SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,""));
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+    }
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results = object.optString("result");
+            String error = object.optString("error");
+            JSONObject objectJson = object.getJSONObject("data");
+            if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+               onPersonalInformation(objectJson);
+            } else {
+                CustomToast.showWarningLong(error);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void onPersonalInformation(JSONObject objectJson) {
+        String sex = objectJson.optString("sex");
+        String phoneNo = objectJson.optString("phone");
+        String isWeChatBind=objectJson.optString("isWeChatBind");
+        String mNickname=objectJson.optString("nickname");
+        String avatar=objectJson.optString("avatar");
+        SharedPreferencesUtil.putAvatarUrl(this,SharedPreferencesUtil.AvatarUrl,avatar);
+        SharedPreferencesUtil.putStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,isWeChatBind);
+        SharedPreferencesUtil.putSex(this, SharedPreferencesUtil.Sex, sex);
+        SharedPreferencesUtil.putPhoneNumber(this, SharedPreferencesUtil.PhoneNumber, phoneNo);
+        if (TextUtils.isEmpty(mNickname)){
+            tvNickname.setText("");
+        }else {
+            tvNickname.setText(mNickname);
+        }
+        if (isWeChatBind.equals(ConstantUtil.VALUE_ONE)){
+            tvBindStatus.setText("已绑定");
+        }else {
+            tvBindStatus.setText("未绑定");
+        }
+        tvPhone.setText(phoneNo);
+        tvSex.setText(sex);
+        onSetPortraitImage(avatar);
+    }
+
     private void initShowInfo() {
         String mNickname = SharedPreferencesUtil.getNickName(this,SharedPreferencesUtil.NickName,"");
         String mSexText =SharedPreferencesUtil.getSex(this,SharedPreferencesUtil.Sex,"");
@@ -219,10 +277,15 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     }
 
     private void onBindWeiChat() {
-        UMShareConfig config = new UMShareConfig();
-        config.isNeedAuthOnGetUserInfo(true);
-        UMShareAPI.get(this).setShareConfig(config);
-        UMShareAPI.get(this).getPlatformInfo(MySettingActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+        String isWeChatBind=SharedPreferencesUtil.getStringData(this,SharedPreferencesUtil.IS_WEI_CHAT_BIND,"0");
+        if (!isWeChatBind.equals(ConstantUtil.VALUE_ONE)){
+            UMShareConfig config = new UMShareConfig();
+            config.isNeedAuthOnGetUserInfo(true);
+            UMShareAPI.get(this).setShareConfig(config);
+            UMShareAPI.get(this).getPlatformInfo(MySettingActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+        }else {
+            CustomToast.showWarningDialog("您的账户已绑定");
+        }
     }
 
     private void onSettingPermission() {
@@ -648,6 +711,5 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         }
         OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
         UMShareAPI.get(this).release();
-
     }
 }

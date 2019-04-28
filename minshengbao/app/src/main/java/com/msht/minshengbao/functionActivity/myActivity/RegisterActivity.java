@@ -49,8 +49,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private TextView tvTreaty;
     private TimeCount time;
     private String    phoneNo;
-    private String    verifyCode;
-    private String    password;
     private int       requestCode=0;
     private static Pattern NUMBER_PATTERN = Pattern.compile("1[0-9]{10}");
     private CustomDialog customDialog;
@@ -99,7 +97,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     break;
                 default:
                     break;
-
             }
             super.handleMessage(msg);
         }
@@ -110,7 +107,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(error)
                 .setButton1("确定", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
@@ -130,7 +126,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         time=new TimeCount(120000,1000);
     }
     class TimeCount extends CountDownTimer {
-
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
@@ -240,8 +235,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (requestCode==0){
             validateURL= UrlUtil.Captcha_CodeUrl;
         }else if (requestCode==1){
-            verifyCode = etCode.getText().toString().trim();
-            password= etPassword.getText().toString().trim();
+            String verifyCode = etCode.getText().toString().trim();
+            String password= etPassword.getText().toString().trim();
             validateURL=UrlUtil.Register_Url;
             textParams.put("password",password);
             textParams.put("code", verifyCode);

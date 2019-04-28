@@ -43,8 +43,15 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
+import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
 import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.adapter.WaterEquipmentListAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
@@ -79,15 +86,22 @@ import java.util.List;
 public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener, PoiSearch.OnPoiSearchListener, AMap.InfoWindowAdapter {
     private View layoutMap;
     private View layoutSearch;
+    private View layoutNearEquipment;
+    private View layoutEquipmentList;
     private ImageView locationImg;
     private boolean mFirst =true;
+    private LoadMoreListView moreListView;
     private EditText autoText;
     private MapView mMapView = null;
     private AMap aMap;
     private double lat,lon;
+    private int indexPage=0;
+    private String latitude="";
+    private String longitude="";
     private AMapLocationClient locationClient;
     private MyLocationStyle myLocationStyle;
     private PoiSearchAdapter searchAdapter;
+    private WaterEquipmentListAdapter equipmentListAdapter;
     private Context context;
     private TextView tvCancel;
     private CustomDialog customDialog;
@@ -95,6 +109,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     private String defaultAddress,defaultName;
     private ArrayList<MarkerOptions> markerOptionsArrayList=new ArrayList<MarkerOptions>();
     private ArrayList<HashMap<String, String>>  addressList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>>  equipmentList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
     private static class RequestHandler extends Handler{
         private WeakReference<WaterEquipmentMapActivity> mWeakReference;
@@ -170,10 +185,58 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         context=this;
         mPageName="售水机设备地图";
         customDialog=new CustomDialog(this, "正在加载");
+        layoutEquipmentList=findViewById(R.id.id_equipment_list_layout);
+        layoutNearEquipment=findViewById(R.id.id_layout_near);
         setLocationLimit();
         initView(savedInstanceState);
+        initEvent();
+        VariableUtil.mPos=-1;
+        equipmentListAdapter=new WaterEquipmentListAdapter(context,equipmentList);
+        moreListView.setAdapter(equipmentListAdapter);
+        moreListView.setLoadMoreListener(new ILoadMoreCallback() {
+            @Override
+            public void loadMore() {
+                initEquipmentNearData(indexPage+1,latitude,longitude);
+            }
+        });
+        moreListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String lat=equipmentList.get(i).get("latitude");
+                String lon=equipmentList.get(i).get("longitude");
+                if ((!TextUtils.isEmpty(lat))&&(!TextUtils.isEmpty(lon))&&!lat.equals(ConstantUtil.NULL_VALUE)){
+                    VariableUtil.mPos=i;
+                    equipmentListAdapter.notifyDataSetChanged();
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(TypeConvertUtil.convertToDouble(lat,20), TypeConvertUtil.convertToDouble(lon,110)), 80));
+                    locationImg.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
+    private void initEvent() {
+        layoutNearEquipment.setTag(0);
+        layoutNearEquipment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag=(Integer)view.getTag();
+                switch (tag){
+                    case 0:
+                        layoutEquipmentList.setVisibility(View.VISIBLE);
+                        view.setTag(1);
+                        break;
+                    case 1:
+                        layoutEquipmentList.setVisibility(View.GONE);
+                        view.setTag(0);
+                        break;
+                    default:
+                        layoutEquipmentList.setVisibility(View.VISIBLE);
+                        view.setTag(1);
+                        break;
+                }
+            }
+        });
+    }
     private void setLocationLimit() {
         locationClient = ALocationClientFactory.createLocationClient(this, ALocationClientFactory.createDefaultOption(),this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -208,6 +271,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         layoutHeader.setBackgroundResource(R.drawable.shape_change_blue_bg);
         mMapView = (MapView) findViewById(R.id.id_mapView);
         ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
+        moreListView=(LoadMoreListView)findViewById(R.id.id_more_info) ;
         autoText =(EditText) findViewById(R.id.et_search);
         tvCancel =(TextView)findViewById(R.id.id_cancel);
         layoutMap =findViewById(R.id.id_map_location);
@@ -261,7 +325,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 autoText.setText("");
                 autoText.setCursorVisible(false);
                 setSoftInputManager();
-                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 40));
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 80));
                 locationImg.setVisibility(View.VISIBLE);
             }
         });
@@ -287,11 +351,80 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 customDialog.show();
                 mFirst =false;
             }
+            latitude=String.valueOf(lat);
+            longitude=String.valueOf(lon);
             initEquipmentData();
+            initEquipmentNearData(1,latitude,latitude);
         } else {
             ToastUtil.ToastText(context,"定位失败");
         }
     }
+
+    private void initEquipmentNearData(int i, String latitude, String longitude) {
+        String requestUrl=UrlUtil.WATER_EQUIPMENT_SEARCH_BY_LOCATE;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        indexPage=i;
+        textParams.put("type","2");
+        textParams.put("latitude",latitude);
+        textParams.put("longitude",longitude);
+        textParams.put("pageNo",String.valueOf(indexPage));
+        textParams.put("pageSize","16");
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+    }
+
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("message");
+            JSONObject jsonObject =object.optJSONObject("data");
+            boolean firstPage=jsonObject.optBoolean("firstPage");
+            boolean lastPage=jsonObject.optBoolean("lastPage");
+            JSONArray jsonArray=jsonObject.optJSONArray("list");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                if (lastPage){
+                    moreListView.loadComplete(false);
+                }else {
+                    moreListView.loadComplete(true);
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject json = jsonArray.getJSONObject(i);
+                    String equipmentNo = json.getString("equipmentNo");
+                    String address=json.optString("address");
+                    String communityName= json.getString("communityName");
+                    String latitude = json.getString("latitude");
+                    String longitude =json.optString("longitude");
+                    String distance=json.optString("distance");
+                    String createTime=json.optString("createTime");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("equipmentNo",equipmentNo);
+                    map.put("address", address);
+                    map.put("communityName",communityName);
+                    map.put("latitude",latitude);
+                    map.put("longitude", longitude);
+                    map.put("distance",distance);
+                    equipmentList.add(map);
+                }
+
+            }else {
+                CustomToast.showWarningLong(error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        equipmentListAdapter.notifyDataSetChanged();
+
+    }
+
     private void initEquipmentData() {
         String dataUrl = UrlUtil.WATER_EQUIPMENT_SEARCH;
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(dataUrl, OkHttpRequestUtil.TYPE_GET,null,requestHandler);
@@ -487,5 +620,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             locationClient.stopLocation();
             locationClient.onDestroy();
         }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

@@ -23,8 +23,10 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.ViewUI.Dialog.QuestionDescribeDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
 import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
 import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 import com.msht.minshengbao.base.BaseActivity;
@@ -36,11 +38,13 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,10 +69,9 @@ import top.zibin.luban.OnCompressListener;
  */
 public class RepeatFixActivity extends BaseActivity implements View.OnClickListener {
     private String reid,orderId;
-    private String address,info, parentCategory;
+    private String address,info="", parentCategory;
     private String phone,title,orderNo, finishTime;
     private String appointDate;
-    private String textString="";
     private String repeatId;
     private String userId,password;
     private String categoryDesc;
@@ -80,16 +83,11 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private int mPosition=-1;
     private Button btnSend;
     private TextView appointmentData, appointmentTime;
-    private TextView etProblem;
+    private TextView tvDescribe;
     private MyNoScrollGridView mPhotoGridView;
     private PhotoPickerAdapter mAdapter;
-    private MultiLineChooseLayout multiChoose;
     private int k=0;
-    private JSONObject jsonObject;
-    private JSONArray jsonArray;
     private int requestType =0;
-    private static  final int MY_PERMISSIONS_REQUEST=1;
-    private ArrayList<String>multiResult=new ArrayList<>();
     private ArrayList<String> imgPaths = new ArrayList<>();
     private ArrayList<String> mDataList=new ArrayList<>();
     private ArrayList<HashMap<String,String>> mList = new ArrayList<HashMap<String, String>>();
@@ -117,16 +115,16 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
-                        reference.jsonObject =object.optJSONObject("data");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestType ==0){
-                                reference.jsonArray=object.optJSONArray("data");
-                                reference.questionData();
+                                JSONArray jsonArray=object.optJSONArray("data");
+                                reference.questionData(jsonArray);
                             }else if (reference.requestType ==1){
-                                reference.jsonObject =object.optJSONObject("data");
-                                reference.initShow();
+                                JSONObject jsonObject =object.optJSONObject("data");
+                                reference.initShow(jsonObject);
                             }
                         }else {
+                            reference.btnSend.setEnabled(true);
                             reference.onFailure(error);
                         }
                     }catch (Exception e){
@@ -170,7 +168,8 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                                     reference.customDialog.dismiss();
                                 }
                                 reference.btnSend.setEnabled(true);
-                                reference.setResult(0x004);;
+                                reference.setResult(0x004);
+                                EventBus.getDefault().post(new UpdateDataEvent(true));
                                 reference.onShowDialog("您的返修申请已经提交");
                             }
                         }else {
@@ -191,9 +190,9 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
             super.handleMessage(msg);
         }
     }
-    private void questionData() {
+    private void questionData(JSONArray jsonArray) {
         try{
-            for (int i=0;i<jsonArray.length();i++){
+            for (int i = 0; i< jsonArray.length(); i++){
                 JSONObject json = jsonArray.getJSONObject(i);
                 String content = json.getString("content");
                 mDataList.add(content);
@@ -201,9 +200,8 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         }catch (JSONException e){
             e.printStackTrace();
         }
-        multiChoose.setList(mDataList);
     }
-    private void initShow() {
+    private void initShow(JSONObject jsonObject) {
         repeatId= jsonObject.optString("id");
         if (imgPaths.size()!=0){
             for(int i=0;i<imgPaths.size();i++){
@@ -328,7 +326,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                 break;
             case ConstantUtil.HOUSEHOLD_REPAIR:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
-                // holder.serviceIMG.setImageResource(R.drawable.home_appliance_fix_xh);
                 break;
             case ConstantUtil.OTHER_REPAIR:
                 typeImg.setImageResource(R.drawable.home_otherfix_xh);
@@ -351,7 +348,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
             mList.add(map);
         }
     }
-
     private void initData() {
         customDialog.show();
         requestType =0;
@@ -366,18 +362,22 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         ((TextView)findViewById(R.id.id_create_time)).setText(finishTime);
         ((TextView)findViewById(R.id.id_phone)).setText(phone);
         ((TextView)findViewById(R.id.id_tv_address)).setText(address);
+        findViewById(R.id.id_question_layout).setOnClickListener(this);
         downwardImg=(ImageView)findViewById(R.id.id_downward_img) ;
         layoutCategory=findViewById(R.id.id_category_layout);
         layoutCategoryButton=findViewById(R.id.id_category_button);
-        etProblem =(EditText)findViewById(R.id.id_et_info);
-        multiChoose=(MultiLineChooseLayout)findViewById(R.id.id_multiChoose);
+        tvDescribe=(TextView)findViewById(R.id.id_tv_describe);
         mPhotoGridView =(MyNoScrollGridView)findViewById(R.id.noScrollgridview);
         appointmentData =(TextView)findViewById(R.id.id_data);
         appointmentTime =(TextView)findViewById(R.id.id_time);
         btnSend =(Button)findViewById(R.id.id_btn_send);
         appointmentData.setOnClickListener(this);
         appointmentTime.setOnClickListener(this);
-
+        if (TextUtils.isEmpty(additionalInfo)){
+            layoutCategoryButton.setVisibility(View.GONE);
+        }else {
+            layoutCategoryButton.setVisibility(View.VISIBLE);
+        }
     }
     private void initEvent() {
         btnSend.setOnClickListener(this);
@@ -409,23 +409,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         });
-        multiChoose.setOnItemClickListener(new MultiLineChooseLayout.onItemClickListener() {
-            @Override
-            public void onItemClick(int position, String text) {
-                StringBuilder sb=new StringBuilder();
-                multiResult=multiChoose.getAllItemSelectedTextWithListArray();
-                if (multiResult!=null&&multiResult.size()>0){
-                    for (int i=0;i<multiResult.size();i++){
-                        sb.append(multiResult.get(i));
-                        sb.append(",");
-                    }
-                    textString=sb.toString();
-                }else {
-                    textString="";
-                }
-            }
-        });
-
         layoutCategoryButton.setTag(0);
         layoutCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -480,7 +463,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                     .onDenied(new Action<List<String>>() {
                         @Override
                         public void onAction(List<String> data) {
-                            ToastUtil.ToastText(context,"授权失败");
+                            CustomToast.showErrorDialog("授权失败");
                         }
                     }).start();
         }else {
@@ -530,16 +513,29 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
                 onSelectTime();
                 break;
             case R.id.id_btn_send:
-                if (TextUtils.isEmpty(appointmentData.getText().toString())){
-                    onFailure("请选择预约时间");
-                }else {
-                    onOrderSend();
-                }
+                onOrderSend();
+                break;
+            case R.id.id_question_layout:
+                onQuestionDescribe();
                 break;
             default:
                 break;
         }
     }
+
+    private void onQuestionDescribe() {
+        new QuestionDescribeDialog(context,mDataList).builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .setOnPositiveClickListener(new QuestionDescribeDialog.OnPositiveClickListener() {
+                    @Override
+                    public void onClick(View v, String text) {
+                        tvDescribe.setText(text);
+                        info=text;
+                    }
+                }).show();
+    }
+
     private void onsSelectDate() {
         new SelectDateDialog.Builder(this)
                 .setTitle("选择预约日期")
@@ -576,9 +572,7 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
     private void onOrderSend() {
         String date= appointmentData.getText().toString().trim();
         String time= appointmentTime.getText().toString().trim();
-        String otherInfo= etProblem.getText().toString().trim();
         appointDate =date+"  "+time;
-        info=textString+otherInfo;
         customDialog.show();
         requestType =1;
         btnSend.setEnabled(false);
@@ -598,16 +592,6 @@ public class RepeatFixActivity extends BaseActivity implements View.OnClickListe
         textParams.put("source",source);
         textParams.put("raw_order_id",orderId);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(mPageName);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(mPageName);
     }
     @Override
     protected void onDestroy() {

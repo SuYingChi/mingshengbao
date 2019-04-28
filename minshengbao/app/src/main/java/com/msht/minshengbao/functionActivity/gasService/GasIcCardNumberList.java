@@ -166,7 +166,7 @@ public class GasIcCardNumberList extends BaseActivity {
                 Intent name=new Intent(context, GasPayRecordActivity.class);
                 name.putExtra("customerNo",customerNo);
                 name.putExtra("address",address);
-                name.putExtra("urlType","1");
+                name.putExtra("meterType","12");
                 startActivity(name);
             }
         });

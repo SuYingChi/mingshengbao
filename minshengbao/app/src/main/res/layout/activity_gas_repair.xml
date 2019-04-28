@@ -45,7 +45,8 @@
                     <Button
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
-                        android:minHeight="@dimen/margin_width30"
+                        android:minHeight="@dimen/margin_width25"
+                        android:minWidth="@dimen/margin_width60"
                         android:layout_height="wrap_content"
                         android:text="@string/please_select"
                         android:textColor="@color/white"

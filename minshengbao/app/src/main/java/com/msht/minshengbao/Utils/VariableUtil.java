@@ -36,6 +36,9 @@ public class VariableUtil {
     public static final  String VALUE_SIX=  "6";
     public static final  String VALUE_SEVER="7";
     public static final  String VALUE_EIGHT="8";
+    public static final  String VALUE_ELEVEN="11";
+    public static final  String VALUE_TWELVE="12";
+    public static final  String VALUE_SEVENTEEN="17";
     public static final  String VALUE_ZERO1="0.0";
     public static final  String VALUE_ZERO2="0.00";
     public static ArrayList<String> options1item=new ArrayList<String>();

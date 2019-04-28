@@ -8,12 +8,19 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RadioButton;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.ViewUI.Dialog.PublicNoticeDialog;
+import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.androidShop.event.GoShopMainEvent;
 import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.adapter.RepairOrderListAdapter;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.repairService.MyOrderWorkDetailActivity;
 import com.msht.minshengbao.functionActivity.repairService.RepairEvaluateActivity;
 import com.msht.minshengbao.R;
@@ -24,6 +31,9 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +58,15 @@ public class OrderListFragment extends BaseFragment  {
     private XRecyclerView mRecyclerView;
     private View layoutNoData;
     private int status =0;
-    private String  userId,password;
+    private String userId,password;
+    private String orderId ;
+    private String orderNo;
+    private String type;
+    private String title;
+    private String categoryDesc;
+    private String finishTime;
+    private String parentCategoryName;
+    private String amount;
     private int pageIndex=0;
     private int refreshType;
     private Activity mActivity;
@@ -87,6 +105,7 @@ public class OrderListFragment extends BaseFragment  {
         customDialog=new CustomDialog(getActivity(), "正在加载");
         userId= SharedPreferencesUtil.getUserId(mActivity, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(mActivity, SharedPreferencesUtil.Password,"");
+        EventBus.getDefault().register(this);
         initMyView(mRootView);
         return mRootView;
     }
@@ -131,29 +150,68 @@ public class OrderListFragment extends BaseFragment  {
         mAdapter.setClickCallBack(new RepairOrderListAdapter.ItemClickCallBack() {
             @Override
             public void onItemClick(int positions) {
-                String cid=orderList.get(positions).get("cid");
-                String ids = orderList.get(positions).get("id");
-                String categoryDesc=orderList.get(positions).get("categoryDesc");
-                String parentCode=orderList.get(positions).get("parent_category_code");
-                Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
-                intent.putExtra("cid",cid);
-                intent.putExtra("id", ids);
-                intent.putExtra("pos", positions);
-                intent.putExtra("categoryDesc",categoryDesc);
-                intent.putExtra("parentCode",parentCode);
-                startActivityForResult(intent, 4);
+                 orderId = orderList.get(positions).get("id");
+                 orderNo=orderList.get(positions).get("orderNo");
+                 type=orderList.get(positions).get("type");
+                 title=orderList.get(positions).get("title");
+                 finishTime=orderList.get(positions).get("time");
+                 parentCategoryName=orderList.get(positions).get("parent_category_name");
+                 amount=orderList.get(positions).get("amount");
+                 categoryDesc=orderList.get(positions).get("categoryDesc");
+                 String cid=orderList.get(positions).get("cid");
+                 String parentCode=orderList.get(positions).get("parent_category_code");
+                 Intent intent = new Intent(mActivity, MyOrderWorkDetailActivity.class);
+                 intent.putExtra("cid",cid);
+                 intent.putExtra("id", orderId);
+                 intent.putExtra("pos", positions);
+                 intent.putExtra("categoryDesc",categoryDesc);
+                 intent.putExtra("parentCode",parentCode);
+                 startActivityForResult(intent, 4);
             }
         });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==0x004||resultCode==0x005||resultCode==0x006) {
-            orderList.clear();
+        if (resultCode==0x002||resultCode==0x004||resultCode==0x005||resultCode==0x006) {
+           /* orderList.clear();
             mAdapter.notifyDataSetChanged();
-            initOrderList(1);
+            initOrderList(1);*/
+        }
+        if (resultCode==0x006){
+            onEvaluationDialog();
         }
     }
+    private void onEvaluationDialog() {
+        if (mActivity!=null&&!mActivity.isFinishing()){
+            new PublicNoticeDialog(mActivity).builder()
+                    .setCancelable(true)
+                    .setCanceledOnTouchOutside(true)
+                    .setLineViewVisibility(false)
+                    .setTitleText("提示")
+                    .setMessageContentText("您有新的订单待评价哦！")
+                    .setButtonText("去评价")
+                    .setOnPositiveClickListener(new PublicNoticeDialog.OnPositiveClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(mActivity, RepairEvaluateActivity.class);
+                            intent.putExtra("sendType","1");
+                            intent.putExtra("id",orderId);
+                            intent.putExtra("orderNo",orderNo);
+                            intent.putExtra("type",type);
+                            intent.putExtra("title",title);
+                            intent.putExtra("parentCategory",parentCategoryName);
+                            intent.putExtra("categoryDesc",categoryDesc);
+                            intent.putExtra("finishTime",finishTime);
+                            intent.putExtra("realAmount",amount);
+                            startActivityForResult(intent, 2);
+                        }
+                    }).show();
+
+        }
+    }
+
     @Override
     public void initData() {
         customDialog.show();
@@ -183,7 +241,55 @@ public class OrderListFragment extends BaseFragment  {
         textParams.put("status",statuses);
         textParams.put("page",pageNum);
         textParams.put("size","16");
-        OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(mActivity.getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                if (refreshType==0){
+                    mRecyclerView.refreshComplete();
+                }else if (refreshType==1){
+                    mRecyclerView.loadMoreComplete();
+                }
+                onAnalysisData(data.toString());
+            }
+
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                if (refreshType==0){
+                    mRecyclerView.refreshComplete();
+                }else if (refreshType==1){
+                    mRecyclerView.loadMoreComplete();
+                }
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+      //  OkHttpRequestUtil.getInstance(mActivity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+    }
+
+    private void onAnalysisData(String s ) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                JSONArray jsonArray=object.optJSONArray("data");
+                if (pageIndex<=1){
+                    orderList.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+                onReceiveOrderData(jsonArray);
+            }else {
+                onFailure(error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
     private static class RequestHandler extends Handler{
         private WeakReference<OrderListFragment> mWeakReference;
@@ -215,10 +321,8 @@ public class OrderListFragment extends BaseFragment  {
                         String error = object.optString("error");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             JSONArray jsonArray=object.optJSONArray("data");
-                            if(jsonArray.length()>0){
-                                if (reference.pageIndex<=1){
-                                    reference.orderList.clear();
-                                }
+                            if (reference.pageIndex<=1){
+                                reference.orderList.clear();
                             }
                             reference.onReceiveOrderData(jsonArray);
                         }else {
@@ -229,9 +333,6 @@ public class OrderListFragment extends BaseFragment  {
                     }
                     break;
                 case SendRequestUtil.FAILURE:
-                    if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                        reference.customDialog.dismiss();
-                    }
                     ToastUtil.ToastText(reference.mContext,msg.obj.toString());
                     break;
                 default:
@@ -303,11 +404,22 @@ public class OrderListFragment extends BaseFragment  {
                     }
                 }).show();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UpdateDataEvent messageEvent) {
+        if (messageEvent.getMessage()){
+            initOrderList(1);
+        }
+    }
     @Override
     public void onDestroy() {
+        super.onDestroy();
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
-        super.onDestroy();
+        OkHttpRequestManager.getInstance(mActivity.getApplicationContext()).requestCancel(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

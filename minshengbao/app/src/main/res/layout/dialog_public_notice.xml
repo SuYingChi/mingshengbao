@@ -3,63 +3,83 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_width50"
+    android:padding="@dimen/margin_width40"
     android:background="@color/transparent">
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/shape_white_layout">
-        <RelativeLayout
+        android:background="@color/transparent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/margin_width45"
-            android:background="@color/transparent">
+            android:layout_margin="@dimen/margin_width10"
+            android:orientation="vertical"
+            android:background="@drawable/shape_white_layout">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width45"
+                android:background="@color/transparent">
+                <TextView
+                    android:id="@+id/id_tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/margin_width10"
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:textSize="@dimen/text_width16"
+                    android:textColor="@color/title_tv"
+                    android:text="@string/default_text"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+            <include layout="@layout/layout_line_gray" android:id="@+id/id_line"/>
+            <ImageView
+                android:id="@+id/id_view_img"
+                android:layout_width="@dimen/margin_width80"
+                android:layout_height="@dimen/margin_width80"
+                android:layout_marginTop="@dimen/margin_width20"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/picture_text"
+                android:visibility="gone"
+                android:src="@drawable/pay_success_xh"/>
             <TextView
-                android:id="@+id/id_tv_title"
+                android:id="@+id/id_tv_message_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/margin_width10"
-                android:layout_marginTop="@dimen/margin_width10"
-                android:textSize="@dimen/text_width16"
+                android:minWidth="@dimen/margin_width180"
+                android:layout_marginRight="@dimen/margin_width20"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_width20"
                 android:textColor="@color/title_tv"
+                android:visibility="gone"
+                android:textSize="@dimen/text_width14"
                 android:text="@string/default_text"/>
-        </RelativeLayout>
-        <include layout="@layout/layout_line_gray" android:id="@+id/id_line"/>
+            <Button
+                android:id="@+id/id_btn_ensure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/margin_width100"
+                android:minHeight="@dimen/margin_width30"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_width20"
+                android:layout_marginBottom="@dimen/margin_width20"
+                android:background="@drawable/selector_orange_corner_button"
+                android:text="@string/i_know"
+                android:textSize="@dimen/text_width12"
+                android:textColor="@color/white"/>
+        </LinearLayout>
         <ImageView
-            android:id="@+id/id_view_img"
-            android:layout_width="@dimen/margin_width80"
-            android:layout_height="@dimen/margin_width80"
-            android:layout_marginTop="@dimen/margin_width20"
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/id_close_roundel"
+            android:layout_width="@dimen/margin_width20"
+            android:layout_height="@dimen/margin_width20"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="@dimen/margin_width6"
+            android:layout_marginRight="@dimen/margin_width6"
+            android:layout_marginTop="@dimen/margin_width6"
             android:contentDescription="@string/picture_text"
-            android:visibility="gone"
-            android:src="@drawable/pay_success_xh"/>
-        <TextView
-            android:id="@+id/id_tv_message_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_width20"
-            android:layout_marginLeft="@dimen/margin_width20"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_width20"
-            android:textColor="@color/title_tv"
-            android:visibility="gone"
-            android:textSize="@dimen/text_width14"
-            android:text="@string/default_text"/>
-        <Button
-            android:id="@+id/id_btn_ensure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="@dimen/margin_width100"
-            android:minHeight="@dimen/margin_width30"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_width15"
-            android:layout_marginBottom="@dimen/margin_width20"
-            android:background="@drawable/selector_orange_corner_button"
-            android:text="@string/i_know"
-            android:textSize="@dimen/text_width12"
-            android:textColor="@color/white"/>
-    </LinearLayout>
+            android:src="@drawable/close_roundel_xh"/>
+    </FrameLayout>
 </LinearLayout>

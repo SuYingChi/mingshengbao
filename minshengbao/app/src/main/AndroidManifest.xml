@@ -430,9 +430,10 @@
         <activity android:name=".androidShop.activity.NewShopCarActivity" />
         <activity android:name=".functionActivity.invoiceModule.InvoiceAllHistoryActivity" />
         <activity android:name=".functionActivity.myActivity.BindWeiChatActivity" />
-        <activity android:name=".functionActivity.myActivity.RebindWeiChatActivity"></activity>
+        <activity android:name=".functionActivity.myActivity.RebindWeiChatActivity" />
         <activity android:name=".androidShop.activity.ShopStoreMainActivity" />
         <activity android:name=".androidShop.activity.StorePromotionActivity" />
+        <activity android:name=".functionActivity.gasService.GasAllPayRecordListActivity"/>
         <activity android:name=".androidShop.activity.StoreClassActivity" />
         <activity android:name=".androidShop.activity.StoreSearchGoodListActivity" />
         <activity android:name=".androidShop.activity.ShopStoreJingle" />

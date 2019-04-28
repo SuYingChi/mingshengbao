@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -54,6 +55,7 @@ public class InvoiceRepairOrderActivity extends BaseActivity {
             activity.mRecyclerView.refreshComplete();
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
+                    Log.d("msg.obj=",msg.obj.toString());
                     try {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
@@ -125,7 +127,7 @@ public class InvoiceRepairOrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_repair_order);
         context=this;
-        mPageName="单据明细";
+        mPageName="票据明细";
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         invoiceId=getIntent().getStringExtra("invoiceId");

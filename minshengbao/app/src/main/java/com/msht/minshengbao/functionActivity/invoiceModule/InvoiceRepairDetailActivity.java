@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.Utils.ContentUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
@@ -118,14 +122,14 @@ public class InvoiceRepairDetailActivity extends BaseActivity implements View.On
         String companyTel=jsonObject.optString("companyTel");
         String recipient=jsonObject.optString("recipient");
         String bankcard=jsonObject.optString("bankcard");
-        String amount=jsonObject.optString("amount");
+        String amount=jsonObject.optString("amount")+"元";
         String time=jsonObject.optString("time");
         String title=jsonObject.optString("title");
         String taxpayerNum=jsonObject.optString("taxpayerNum");
         String address=jsonObject.optString("address");
         String name=jsonObject.optString("name");
         String bank=jsonObject.optString("bank");
-        onSetVisibleView(type);
+        onSetVisibleView(type,bank);
         onSetStatus(status);
         tvTime.setText(time);
         tvPhone.setText(phone);
@@ -173,7 +177,7 @@ public class InvoiceRepairDetailActivity extends BaseActivity implements View.On
                 break;
         }
     }
-    private void onSetVisibleView(int type) {
+    private void onSetVisibleView(int type, String bank) {
         switch (type){
             case 1:
                 layoutEnterprise.setVisibility(View.GONE);
@@ -187,10 +191,15 @@ public class InvoiceRepairDetailActivity extends BaseActivity implements View.On
                 enterpriseConnection.setVisibility(View.VISIBLE);
                 break;
             case 3:
-                layoutEnterprise.setVisibility(View.VISIBLE);
                 layoutLicense.setVisibility(View.GONE);
                 layoutTaxpayer.setVisibility(View.VISIBLE);
                 enterpriseConnection.setVisibility(View.GONE);
+                Log.d("VisibleView=",bank);
+                if (!TextUtils.isEmpty(bank)&&!bank.equals(ConstantUtil.NULL_VALUE)){
+                    layoutEnterprise.setVisibility(View.VISIBLE);
+                }else {
+                    layoutEnterprise.setVisibility(View.GONE);
+                }
                 break;
             default:
                 layoutEnterprise.setVisibility(View.GONE);

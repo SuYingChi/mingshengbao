@@ -6,15 +6,15 @@ package com.msht.minshengbao.events;
  * @author hong
  * @date 2018/7/2  
  */
-public class DateEvent {
-    private String message;
-    public DateEvent(String message){
+public class UpdateDataEvent {
+    private boolean message;
+    public UpdateDataEvent(boolean message){
         this.message=message;
     }
-    public String getMessage() {
+    public boolean getMessage() {
         return message;
     }
-    public void setMessage(String message) {
+    public void setMessage(boolean message) {
         this.message = message;
     }
 }

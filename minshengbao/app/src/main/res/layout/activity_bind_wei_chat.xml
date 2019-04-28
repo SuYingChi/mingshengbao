@@ -14,30 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_width120"
-                android:textSize="@dimen/text_width22"
-                android:text="@string/bind_phone"
-                android:textColor="@color/color_383838"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_width20"
-                android:textColor="@color/color_383838"
-                android:textSize="@dimen/text_width14"
-                android:text="@string/bind_phone_tip"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width50"
-                android:layout_marginTop="@dimen/margin_width45"
-                android:layout_marginEnd="@dimen/margin_width20"
-                android:layout_marginRight="@dimen/margin_width20"
-                android:layout_marginStart="@dimen/margin_width20"
-                android:layout_marginLeft="@dimen/margin_width20">
+                android:layout_height="@dimen/margin_width50">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,23 +49,19 @@
                     android:layout_height="@dimen/margin_width15"
                     android:contentDescription="@string/picture_text"
                     android:src="@drawable/signup_username_delete2x"
+                    android:layout_marginEnd="@dimen/margin_width20"
+                    android:layout_marginRight="@dimen/margin_width20"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="@dimen/margin_width20"
-                    android:layout_marginEnd="@dimen/margin_width20"/>
+                    android:layout_alignParentEnd="true"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width50"
-                android:layout_marginEnd="@dimen/margin_width20"
-                android:layout_marginRight="@dimen/margin_width20"
-                android:layout_marginStart="@dimen/margin_width20"
-                android:layout_marginLeft="@dimen/margin_width20">
+                android:layout_height="@dimen/margin_width50">
                 <TextView
-                    android:layout_marginTop="@dimen/margin_15"
-                    android:layout_marginBottom="@dimen/margin_15"
+                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/verification_code"
@@ -116,27 +91,27 @@
                     android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"/>
-
                 <Button
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/margin_width35"
+                    android:layout_height="@dimen/margin_width30"
                     android:text="@string/capture_code"
                     android:id="@+id/id_btn_code"
-                    android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
                     android:background="@drawable/shape_redorange_corners_button"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_width12"/>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <Button
                 android:id="@+id/id_ensure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_width40"
+                android:layout_marginTop="@dimen/margin_width100"
                 android:layout_marginStart="@dimen/margin_width50"
                 android:layout_marginLeft="@dimen/margin_width50"
                 android:layout_marginEnd="@dimen/margin_width50"
@@ -144,8 +119,27 @@
                 android:minHeight="@dimen/margin_width45"
                 android:textSize="@dimen/text_width16"
                 android:textColor="@color/white"
-                android:text="@string/ensure_send"
-                android:background="@drawable/shape_redorange_corners_button"/>
+                android:text="@string/ensure_text"
+                android:background="@drawable/selector_touch_button_change"/>
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_width20"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_width10"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="点击注册表示你已同意"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/id_treaty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="《民生宝用户协议》"
+                    android:textColor="@color/colorOrange"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

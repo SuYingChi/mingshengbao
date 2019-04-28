@@ -120,45 +120,52 @@
                 android:background="@color/background_gray">
             </View>
             <RelativeLayout
+                android:id="@+id/id_question_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/selector_touch_background"
+                android:minHeight="@dimen/margin_width45">
                 <TextView
                     android:id="@+id/id_text2"
-                    android:background="@color/white"
-                    android:layout_marginTop="@dimen/margin_width10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_width12"
-                    android:layout_marginStart="@dimen/margin_width12"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginTop="@dimen/margin_width10"
+                    android:background="@color/white"
                     android:text="@string/question_describe"
-                    android:textSize="@dimen/text_width16"
-                    android:textColor="@color/right_title"/>
-                <com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout
-                    android:id="@+id/id_multiChoose"
-                    style="@style/MultiLineChooseItemTags.FlowLayout"
+                    android:textColor="@color/right_title"
+                    android:textSize="@dimen/text_width16" />
+                <TextView
+                    android:id="@+id/id_tv_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_centerVertical="true"
+                    android:gravity="end"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_below="@+id/id_text2"
-                    android:layout_marginTop="@dimen/margin_width10">
-                </com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout>
-                <EditText
-                    android:id="@+id/id_et_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_width80"
-                    android:layout_below="@+id/id_multiChoose"
-                    android:hint="@string/can_input_140_character"
-                    android:padding="@dimen/margin_width5"
-                    android:layout_marginTop="@dimen/margin_width10"
+                    android:layout_toStartOf="@+id/id_forward"
+                    android:layout_toLeftOf="@+id/id_forward"
+                    android:layout_toEndOf="@+id/id_text2"
+                    android:layout_toRightOf="@+id/id_text2"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_marginBottom="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:textColor="@color/color_9e9e9e"
                     android:textSize="@dimen/text_width16"
-                    android:maxLength="150"
-                    android:background="@drawable/shape_white_border_rectangle"
-                    android:gravity="start|top"/>
+                    android:hint="@string/please_select_question_describe"/>
+                <ImageView
+                    android:id="@+id/id_forward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/picture_text"
+                    android:src="@drawable/forward_2x" />
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"

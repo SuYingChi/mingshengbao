@@ -22,6 +22,7 @@ import com.msht.minshengbao.Utils.ParamsUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.base.BaseActivity;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.publicModule.PaySuccessActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -34,6 +35,7 @@ import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.pingplusplus.android.Pingpp;
 import com.unionpay.UPPayAssistEx;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,12 +57,10 @@ public class RepairPaymentActivity extends BaseActivity  {
     private String realMoney,channel,orderNo,type,orderId;
     private String id ;
     private String charge;
-    private JSONArray jsonArray;
     private ListViewForScrollView forScrollView;
     private PayWayAdapter mAdapter;
     private ArrayList<HashMap<String, String>> mList = new ArrayList<HashMap<String, String>>();
     private int requestCode=0;
-    private JSONObject jsonObject;
     private CustomDialog customDialog;
     private final ChargeHandler chargeHandler=new ChargeHandler(this);
     private final RequestHandler requestHandler =new RequestHandler(this);
@@ -86,8 +86,8 @@ public class RepairPaymentActivity extends BaseActivity  {
                         String error = object.optString("error");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
                             if (reference.requestCode==0){
-                                reference.jsonArray =object.getJSONArray("data");
-                                reference.onPayWayShow();
+                                JSONArray jsonArray =object.getJSONArray("data");
+                                reference.onPayWayShow(jsonArray);
                             }else if (reference.requestCode==2){
                                 JSONObject json=object.getJSONObject("data");
                                 reference.onPayResult(json);
@@ -128,12 +128,12 @@ public class RepairPaymentActivity extends BaseActivity  {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String result=object.optString("result");
                         String error = object.optString("error");
-                        activity.jsonObject =object.optJSONObject("data");
                         if(result.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                            JSONObject jsonObject =object.optJSONObject("data");
                             if (activity.requestCode==0){
-                                activity.onShowBalance();
+                                activity.onShowBalance(jsonObject);
                             }else if (activity.requestCode==1){
-                                activity.onReceiveChargeData();
+                                activity.onReceiveChargeData(jsonObject);
                             }
                         }else {
                             activity.onShowFailure(error);
@@ -172,6 +172,7 @@ public class RepairPaymentActivity extends BaseActivity  {
         }
     }
     private void onStartSuccess(String successType, String lottery) {
+        EventBus.getDefault().post(new UpdateDataEvent(true));
         String pageUrl=UrlUtil.APP_PAY_SUCCESS_PAGE +"userId="+userId+"&event_code=repair_pay_success"+"&event_relate_id="+orderId;
         Intent success=new Intent(context,PaySuccessActivity.class);
         success.putExtra("type",successType);
@@ -181,7 +182,7 @@ public class RepairPaymentActivity extends BaseActivity  {
         startActivity(success);
         finish();
     }
-    private void onPayWayShow() {
+    private void onPayWayShow(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
@@ -203,8 +204,8 @@ public class RepairPaymentActivity extends BaseActivity  {
             mAdapter.notifyDataSetChanged();
         }
     }
-    private void onShowBalance() {
-        double doubleBalance=jsonObject.optDouble("balance");
+    private void onShowBalance(JSONObject jsonObject) {
+        double doubleBalance= jsonObject.optDouble("balance");
         double doubleAmount=Double.valueOf(realMoney);
         if (doubleAmount<=doubleBalance){
             VariableUtil.balance="余额充足";
@@ -225,7 +226,7 @@ public class RepairPaymentActivity extends BaseActivity  {
                     }
                 }).show();
     }
-    private void onReceiveChargeData() {
+    private void onReceiveChargeData(JSONObject jsonObject) {
         try {
             id = jsonObject.optString("id");
             charge = jsonObject.optString("charge");

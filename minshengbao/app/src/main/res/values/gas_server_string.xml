@@ -36,6 +36,7 @@
     <string name="last_recharge_time">上次充值时间</string>
     <string name="last_recharge_amount">上次充值金额</string>
 
+    <string name="near_icCard_equipment">附近IC卡充值机</string>
     <string name="new_add_customerNo">+ 新增</string>
     <string name="new_add_customerNo_text">+ 添加用户号</string>
 

@@ -50,7 +50,6 @@ public class HomeMaintenanceActivity extends BaseActivity {
     private HouseApplianceFixAdapter homeAdapter;
     private String pid;
     private String cityId;
-    private boolean loginState =false;
     private CustomDialog customDialog;
     private static final String SERVICE_URL= UrlUtil.Service_noteUrl;
     private ArrayList<HashMap<String, String>> functionList = new ArrayList<HashMap<String, String>>();
@@ -123,7 +122,6 @@ public class HomeMaintenanceActivity extends BaseActivity {
         setCommonHeader(mPageName);
         context=this;
         customDialog=new CustomDialog(this, "正在加载");
-        loginState= SharedPreferencesUtil.getLstate(this, SharedPreferencesUtil.Lstate, false);
         Intent data=getIntent();
         pid=data.getStringExtra("pid");
         String typeName=data.getStringExtra("typeName");
