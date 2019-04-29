@@ -75,6 +75,8 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     ImageView back;
     @BindView(R.id.storejieshao)
     TextView storejieshao;
+    @BindView(R.id.searchiv)
+    ImageView searchiv;
     private String memberId;
     private boolean is_favorate;
 
@@ -93,6 +95,14 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
             }
         });
         storeId = getIntent().getStringExtra("id");
+        searchiv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShopStoreMainActivity.this, StoreClassActivity.class);
+                intent.putExtra("id",storeId);
+                startActivity(intent);
+            }
+        });
         int tabIndex = getIntent().getIntExtra("tabindex", 0);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
