@@ -106,7 +106,7 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
     RecyclerView rcl;
     @BindView(R.id.shareiv)
     ImageView shareiv;
-    @BindView(R.id.imageView)
+    @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.menu)
     ImageView menu;

@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.MyApplication;
@@ -43,6 +44,10 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
     EditText et;
     @BindView(R.id.all)
     TextView all;
+    @BindView(R.id.back)
+    ImageView back;
+    @BindView(R.id.clear)
+    ImageView clear;
     List<StoreClassBean> list = new ArrayList<StoreClassBean>();
     private StoreClassAdapter adapter;
 
@@ -54,6 +59,18 @@ public class StoreClassActivity extends ShopBaseActivity implements IStoreClassV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et.setText("");
+            }
+        });
         storeId = getIntent().getStringExtra("id");
         mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
         LinearLayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);

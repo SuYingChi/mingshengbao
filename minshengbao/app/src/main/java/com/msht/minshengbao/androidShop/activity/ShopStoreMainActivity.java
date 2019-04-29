@@ -68,7 +68,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     ImageView menu;
     @BindView(R.id.kefu)
     TextView tvKefu;
-    @BindView(R.id.imageView)
+    @BindView(R.id.back)
     ImageView back;
     private String memberId;
 
