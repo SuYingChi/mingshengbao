@@ -59,6 +59,12 @@ public class ShopStoreJingle extends ShopBaseActivity implements IShopStoreJingl
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         storeid = getIntent().getStringExtra("id");
         mToolbar.setPadding(0, ImmersionBar.getStatusBarHeight(this),0,0);
         ShopPresenter.getStoreJingle(this);

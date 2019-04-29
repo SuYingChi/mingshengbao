@@ -108,16 +108,34 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
         rcl.setAdapter(adapter);
         rcl.setNestedScrollingEnabled(false);
         collectAdapter = new StoreGoodAdapter(getContext(), R.layout.item_store_collect_good, collectList);
+        collectAdapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+              doShopItemViewClick("goods",collectList.get(position).getGoods_id());
+            }
+        });
         LinearLayoutManager collectedllm = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         rclCollect.setLayoutManager(collectedllm);
         rclCollect.setAdapter(collectAdapter);
         rclCollect.setNestedScrollingEnabled(false);
         soleAdapter = new StoreGoodAdapter(getContext(), R.layout.item_store_collect_good, soleList);
+        soleAdapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                doShopItemViewClick("goods",soleList.get(position).getGoods_id());
+            }
+        });
         LinearLayoutManager solelm = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         rclSole.setLayoutManager(solelm);
         rclSole.setAdapter(soleAdapter);
         rclSole.setNestedScrollingEnabled(false);
         recAdapter = new StoreRecGoodAdapter(getContext(), R.layout.item_store_rec_good, recList);
+        recAdapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                doShopItemViewClick("goods",recList.get(position).getGoods_id());
+            }
+        });
         GridLayoutManager recglm = new GridLayoutManager(getContext(), 2);
         recglm.setAutoMeasureEnabled(true);
         rclRec.setLayoutManager(recglm);

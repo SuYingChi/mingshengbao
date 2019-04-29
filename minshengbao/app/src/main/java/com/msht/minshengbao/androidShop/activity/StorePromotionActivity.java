@@ -36,6 +36,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.ViewUI.widget.PopupMenu;
 import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.PromotionActivityAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
@@ -52,6 +53,8 @@ import com.msht.minshengbao.androidShop.viewInterface.IPromotionRuleView;
 import com.msht.minshengbao.androidShop.viewInterface.IPromotionShareInfoView;
 import com.msht.minshengbao.androidShop.viewInterface.IStorePromotiondDetailView;
 import com.msht.minshengbao.androidShop.wxapi.WXEntryActivity;
+import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -103,6 +106,10 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
     RecyclerView rcl;
     @BindView(R.id.shareiv)
     ImageView shareiv;
+    @BindView(R.id.imageView)
+    ImageView back;
+    @BindView(R.id.menu)
+    ImageView menu;
     List<PromotionActivityGoodBean> datalist = new ArrayList<PromotionActivityGoodBean>();
     private PromotionActivityAdapter adapter;
     private CountDownTimer timer;
@@ -120,6 +127,47 @@ public class StorePromotionActivity extends ShopBaseActivity implements IStorePr
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] abs = new String[]{"消息","购物车", "首页"};
+                PopupMenu mPopupMenu = new PopupMenu(StorePromotionActivity.this, abs, R.layout.store_main_menu);
+                // 设置弹出菜单弹出的位置
+                mPopupMenu.showLocation(R.id.menu, getResources().getDimensionPixelSize(R.dimen.margin_width_70), -getResources().getDimensionPixelSize(R.dimen.margin_15));
+                // 设置回调监听，获取点击事件
+                mPopupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
+                    @Override
+                    public void onClick(PopupMenu.MENUITEM item, int position) {
+                        if (position == 0) {
+                            if(TextUtils.isEmpty(getKey())){
+                                startActivity(new Intent(StorePromotionActivity.this, LoginActivity.class));
+                            }else {
+                                startActivity(new Intent(StorePromotionActivity.this, TotalMessageListActivity.class));
+                            }
+                        } else if (position == 1) {
+                            if(TextUtils.isEmpty(getKey())){
+                                startActivity(new Intent(StorePromotionActivity.this, LoginActivity.class));
+                            }else {
+                                Intent intent = new Intent(StorePromotionActivity.this, ShopCarActivity.class);
+                                //EventBus.getDefault().postSticky(new GoShopMainEvent());
+                                startActivity(intent);
+                            }
+                        }else if(position==2){
+                            Intent intent = new Intent(StorePromotionActivity.this, MainActivity.class);
+                            intent.putExtra("index",1);
+                            //EventBus.getDefault().postSticky(new GoShopMainEvent());
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
+        });
         type = getIntent().getStringExtra("type");
         id = getIntent().getStringExtra("id");
         storeId = getIntent().getStringExtra("storeId");

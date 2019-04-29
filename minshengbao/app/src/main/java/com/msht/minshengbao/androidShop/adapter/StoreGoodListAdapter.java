@@ -33,5 +33,11 @@ public class StoreGoodListAdapter extends HaveHeadRecyclerAdapter<StoreGoodBean>
         tv.setText(storeGoodBean.getGoods_name().trim());
         TextView tvPrice = holder.getView(R.id.price);
         tvPrice.setText(String.format("%s  %s", context.getResources().getString(R.string.monetary_unit), storeGoodBean.getGoods_price()));
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
     }
 }

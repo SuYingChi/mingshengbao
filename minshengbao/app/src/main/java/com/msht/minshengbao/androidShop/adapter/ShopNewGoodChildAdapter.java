@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.view.View;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.shopBean.StoreNewGoodBean;
@@ -21,5 +22,11 @@ class ShopNewGoodChildAdapter extends HaveHeadRecyclerAdapter<StoreNewGoodBean.G
             holder.setImage(R.id.iv,goodBean.getGoods_image_url());
             holder.setText(R.id.name,goodBean.getGoods_name());
             holder.setText(R.id.price, StringUtil.getPriceSpannable12String(context,goodBean.getGoods_marketprice(),R.style.big_money,R.style.big_money));
+           holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   onItemClickListener.onItemClick(position);
+               }
+           });
     }
 }

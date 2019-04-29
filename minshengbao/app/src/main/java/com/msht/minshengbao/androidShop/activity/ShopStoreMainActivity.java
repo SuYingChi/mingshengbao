@@ -68,6 +68,8 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     ImageView menu;
     @BindView(R.id.kefu)
     TextView tvKefu;
+    @BindView(R.id.imageView)
+    ImageView back;
     private String memberId;
 
     @Override
@@ -78,6 +80,12 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         storeId = getIntent().getStringExtra("id");
         int tabIndex = getIntent().getIntExtra("tabindex", 0);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

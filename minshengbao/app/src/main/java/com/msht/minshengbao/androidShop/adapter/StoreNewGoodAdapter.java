@@ -14,12 +14,14 @@ import java.util.List;
 public class StoreNewGoodAdapter extends HaveHeadRecyclerAdapter<StoreNewGoodBean>{
 
 
+    private GoGoodDetail goGoodDetail;
+
     public StoreNewGoodAdapter(Context context, List<StoreNewGoodBean> datas) {
         super(context, R.layout.item_store_new,datas);
     }
 
     @Override
-    public void convert(RecyclerHolder holder, StoreNewGoodBean goodBean, final int position) {
+    public void convert(RecyclerHolder holder, final StoreNewGoodBean goodBean, final int position) {
         RecyclerView rcl = holder.getView(R.id.rcl);
         holder.setText(R.id.tv,goodBean.getDate());
         if (rcl.getAdapter() == null) {
@@ -28,6 +30,12 @@ public class StoreNewGoodAdapter extends HaveHeadRecyclerAdapter<StoreNewGoodBea
             gridLayoutManager.setAutoMeasureEnabled(true);
             rcl.setLayoutManager(gridLayoutManager);
             ShopNewGoodChildAdapter childAdapter = new ShopNewGoodChildAdapter(context,goodBean.getGoodList());
+            childAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(int position2) {
+                    goGoodDetail.goGoodDetail(goodBean.getGoodList().get(position2).getGoods_id());
+                }
+            });
             rcl.setAdapter(childAdapter);
             rcl.setNestedScrollingEnabled(false);
         } else if (rcl.getAdapter() instanceof ShopNewGoodChildAdapter) {
@@ -35,5 +43,11 @@ public class StoreNewGoodAdapter extends HaveHeadRecyclerAdapter<StoreNewGoodBea
             childAdapter.setDatas(goodBean.getGoodList());
             childAdapter.notifyDataSetChanged();
         }
+    }
+   public  interface GoGoodDetail{
+       void goGoodDetail(String goodsid);
+    }
+  public  void  setInterface(GoGoodDetail goGoodDetail){
+        this.goGoodDetail=goGoodDetail;
     }
 }

@@ -113,6 +113,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     ImageView back;
     @BindView(R.id.ll_2)
     LinearLayout ll_2;
+
     private List<UserPinTunBean> list=new ArrayList<UserPinTunBean>();
     private UserPingTunAdpter adapter;
     private CountDownTimer countDownTimer;
@@ -135,6 +136,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         pingtuanid = getIntent().getStringExtra("pingtuanid");
         buyerid = getIntent().getStringExtra("buyer_id");
         LinearLayoutManager llm = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);

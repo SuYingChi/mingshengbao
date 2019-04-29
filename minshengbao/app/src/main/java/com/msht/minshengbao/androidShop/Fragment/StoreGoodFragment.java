@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.KeywordListAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodListAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
@@ -102,6 +103,12 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
         dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rcl.addItemDecoration(dividerItemDecoration);
         adapter = new StoreGoodListAdapter(getContext(),R.layout.item_keyword_search,goodlist);
+        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                doShopItemViewClick("goods",goodlist.get(position).getGoods_id());
+            }
+        });
         rcl.setAdapter(adapter);
         upTriangle = getResources().getDrawable(R.drawable.shop_up_triangle);
         downTriangle = getResources().getDrawable(R.drawable.shop_down_triangle);
