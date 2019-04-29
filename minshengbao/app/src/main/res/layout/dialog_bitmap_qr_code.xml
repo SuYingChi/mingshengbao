@@ -28,11 +28,11 @@
             android:background="@drawable/insurance_qr_code_bg">
             <ImageView
                 android:id="@+id/id_qr_code"
-                android:layout_width="@dimen/margin_width120"
-                android:layout_height="@dimen/margin_width120"
-                android:layout_marginEnd="@dimen/margin_width10"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:layout_marginBottom="@dimen/margin_width60"
+                android:layout_width="@dimen/margin_width100"
+                android:layout_height="@dimen/margin_width100"
+                android:layout_marginEnd="@dimen/margin_width15"
+                android:layout_marginRight="@dimen/margin_width15"
+                android:layout_marginBottom="@dimen/margin_width65"
                 android:layout_gravity="end|bottom"
                 android:contentDescription="@string/picture_text"
                 android:src="@drawable/erwei_code"/>
@@ -78,7 +78,7 @@
                 android:minHeight="@dimen/margin_width35"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="@string/wei_xin"
+                android:text="@string/wei_xin_friend"
                 android:textColor="#277be1"
                 android:textSize="@dimen/text_width16"/>
         </LinearLayout>

@@ -108,15 +108,14 @@ public class GeoCoderUtil implements GeocodeSearch.OnGeocodeSearchListener{
             return;
         }
         RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
-        String addressDesc = regeocodeAddress.getProvince()     //添加了省份
-                + regeocodeAddress.getCity()
+        String addressDesc =  regeocodeAddress.getCity()
                 + regeocodeAddress.getDistrict()
                 + regeocodeAddress.getTownship()
                 + regeocodeAddress.getStreetNumber().getStreet();
         if (regeocodeAddress.getAois().size() > 0) {
             addressDesc += regeocodeAddress.getAois().get(0).getAoiName();
         }
-        geoCoderAddressListener.onAddressResult(addressDesc);
+        geoCoderAddressListener.onAddressResult(regeocodeAddress.getFormatAddress());
     }
 
     @Override

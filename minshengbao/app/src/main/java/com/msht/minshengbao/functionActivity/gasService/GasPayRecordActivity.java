@@ -268,7 +268,7 @@ public class GasPayRecordActivity extends BaseActivity {
            // validateURL="http://192.168.3.162:8080/Gas/payment/customerno_history_new";
         }else if (meterType.equals(ConstantUtil.VALUE_TWELVE)){
             validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
-        }else if (meterType.equals(ConstantUtil.VALUE_TWO)){
+        }else if (meterType.equals(ConstantUtil.VALUE_SEVENTEEN)){
             validateURL = UrlUtil.INTERNET_TABLE_RECORD;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();

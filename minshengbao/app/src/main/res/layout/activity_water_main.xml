@@ -80,7 +80,7 @@
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal">
-                    <ImageView
+                    <!--<ImageView
                         android:id="@+id/id_leftImg1"
                         android:layout_width="@dimen/margin_width20"
                         android:layout_height="@dimen/margin_width20"
@@ -88,7 +88,7 @@
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:tint="@color/white"
-                        android:src="@drawable/water_scan_code_xh"/>
+                        android:src="@drawable/water_scan_code_xh"/>-->
                     <TextView
                         android:id="@+id/id_text1"
                         android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
                         android:layout_marginRight="@dimen/margin_width3"
                         android:layout_marginEnd="@dimen/margin_width3"
                         android:layout_gravity="center_vertical"
-                        android:textSize="@dimen/text_width12"
+                        android:textSize="@dimen/text_width14"
                         android:textColor="@color/white"
                         android:text="@string/scan_buy_water"/>
                 </LinearLayout>

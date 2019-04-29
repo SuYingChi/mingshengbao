@@ -88,7 +88,7 @@ public class GasInternetRecodeListActivity extends BaseActivity {
                 Intent name=new Intent(context, GasPayRecordActivity.class);
                 name.putExtra("customerNo",customerNo);
                 name.putExtra("address",address);
-                name.putExtra("urlType","2");
+                name.putExtra("meterType","17");
                 startActivity(name);
             }
         });

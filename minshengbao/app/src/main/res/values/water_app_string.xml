@@ -49,6 +49,7 @@
     <string name="pay_fee_agree_tip">点击确认支付,表示您已经同意</string>
     <string name="select_share_way">选择分享方式</string>
     <string name="wei_xin">微信</string>
+    <string name="wei_xin_friend">微信好友</string>
     <string name="wei_xin_circle">朋友圈</string>
     <string name="qr_code_text">二维码</string>
     <string name="copy_link">复制链接</string>

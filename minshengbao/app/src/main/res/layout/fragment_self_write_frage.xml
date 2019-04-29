@@ -20,7 +20,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_touch_background"
                 android:minHeight="@dimen/margin_50">
-
                 <TextView
                     android:id="@+id/id_select_address"
                     android:layout_width="match_parent"
@@ -32,14 +31,16 @@
                     android:layout_marginEnd="@dimen/margin_width5"
                     android:layout_toLeftOf="@+id/id_forward_img"
                     android:layout_toStartOf="@+id/id_forward_img"
-                    android:hint="选择燃气用户号"
-                    android:textColorHint="#ff363636"
+                    android:hint="@string/please_select_address"
+                    android:textColorHint="@color/color_9e9e9e"
+                    android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16" />
 
                 <ImageView
                     android:id="@+id/id_forward_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/picture_text"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
@@ -65,7 +66,7 @@
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
                     android:text="选择表具"
-                    android:textColor="#ff363636"
+                    android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16" />
 
                 <EditText
@@ -78,9 +79,7 @@
                     android:layout_toRightOf="@+id/textView"
                     android:layout_toEndOf="@+id/textView"
                     android:background="@null"
-                    android:clickable="true"
                     android:focusableInTouchMode="false"
-                    android:hint="请选择"
                     android:inputType="textMultiLine"
                     android:textSize="@dimen/text_width16" />
 
@@ -180,7 +179,6 @@
                     android:layout_toRightOf="@+id/text3"
                     android:background="@null"
                     android:ems="10"
-                    android:hint="请输入"
                     android:inputType="number"
                     android:textSize="@dimen/text_width16" />
 
@@ -215,7 +213,7 @@
                     android:layout_marginLeft="@dimen/margin_20"
                     android:layout_marginRight="@dimen/margin_20"
                     android:background="@drawable/selector_touch_button_change"
-                    android:text="确认"
+                    android:text="@string/ensure_text"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_width18" />
 

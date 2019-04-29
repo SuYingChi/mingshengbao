@@ -65,7 +65,7 @@ public class WaterEquipmentListAdapter extends BaseAdapter {
         String equipment=mList.get(position).get("equipmentNo");
         String distance=mList.get(position).get("distance");
         if (equipment.equals(ConstantUtil.VALUE_ONE)) {
-            distance=mList.get(position).get("distance")+"km";
+            distance=mList.get(position).get("distance");
             holder.tvDistance.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
         }else {
             holder.tvDistance.setTextColor(ContextCompat.getColor(context,R.color.blue_end));

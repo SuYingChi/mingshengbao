@@ -42,5 +42,4 @@
             android:layout_marginEnd="@dimen/margin_width12"
             android:src="@drawable/circle_search_h" />
     </RelativeLayout>
-
 </LinearLayout>
