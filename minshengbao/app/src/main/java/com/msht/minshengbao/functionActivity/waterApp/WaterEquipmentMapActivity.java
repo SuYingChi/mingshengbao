@@ -35,6 +35,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -43,6 +44,8 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.MoveSelectAddress.GeoCoderUtil;
+import com.msht.minshengbao.MoveSelectAddress.LatLngEntity;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.ConstantUtil;
@@ -63,6 +66,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.functionActivity.electricVehicle.ElectricHomeActivity;
 import com.msht.minshengbao.functionActivity.publicModule.QrCodeScanActivity;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -83,13 +87,16 @@ import java.util.List;
  * @author hong
  * @date 2018/8/16  
  */
-public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener, PoiSearch.OnPoiSearchListener, AMap.InfoWindowAdapter {
+public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener, View.OnClickListener, PoiSearch.OnPoiSearchListener, AMap.InfoWindowAdapter{
     private View layoutMap;
     private View layoutSearch;
     private View layoutNearEquipment;
     private View layoutEquipmentList;
+    private TextView tvAddress;
     private ImageView locationImg;
     private boolean mFirst =true;
+    private boolean requestFirst=false;
+    private boolean moveFirst=true;
     private LoadMoreListView moreListView;
     private EditText autoText;
     private MapView mMapView = null;
@@ -111,6 +118,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     private ArrayList<HashMap<String, String>>  addressList = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>>  equipmentList = new ArrayList<HashMap<String, String>>();
     private final RequestHandler requestHandler=new RequestHandler(this);
+
     private static class RequestHandler extends Handler{
         private WeakReference<WaterEquipmentMapActivity> mWeakReference;
         public RequestHandler(WaterEquipmentMapActivity activity) {
@@ -204,18 +212,23 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String lat=equipmentList.get(i).get("latitude");
                 String lon=equipmentList.get(i).get("longitude");
+                String communityName=equipmentList.get(i).get("communityName");
                 if ((!TextUtils.isEmpty(lat))&&(!TextUtils.isEmpty(lon))&&!lat.equals(ConstantUtil.NULL_VALUE)){
                     VariableUtil.mPos=i;
                     equipmentListAdapter.notifyDataSetChanged();
+                    requestFirst=false;
+                    moveFirst=false;
                     aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(TypeConvertUtil.convertToDouble(lat,20), TypeConvertUtil.convertToDouble(lon,110)), 80));
+                    tvAddress.setText(communityName);
                     locationImg.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
-
     private void initEvent() {
         layoutNearEquipment.setTag(0);
+        findViewById(R.id.id_right_img).setOnClickListener(this);
+        findViewById(R.id.layout_back).setOnClickListener(this);
         layoutNearEquipment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,7 +283,8 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         View layoutHeader=findViewById(R.id.id_map_layout);
         layoutHeader.setBackgroundResource(R.drawable.shape_change_blue_bg);
         mMapView = (MapView) findViewById(R.id.id_mapView);
-        ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
+        ImageView ivBack = (ImageView) findViewById(R.id.id_back);
+        tvAddress =(TextView)findViewById(R.id.id_tv_address);
         moreListView=(LoadMoreListView)findViewById(R.id.id_more_info) ;
         autoText =(EditText) findViewById(R.id.et_search);
         tvCancel =(TextView)findViewById(R.id.id_cancel);
@@ -291,6 +305,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         aMap.setMyLocationEnabled(true);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(100));
         aMap.setOnMyLocationChangeListener(this);
+        aMap.setOnCameraChangeListener(new MyOnCameraChange());
         aMap.setInfoWindowAdapter(this);
         tvCancel.setEnabled(false);
         tvCancel.setOnClickListener(this);
@@ -354,12 +369,11 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             latitude=String.valueOf(lat);
             longitude=String.valueOf(lon);
             initEquipmentData();
-            initEquipmentNearData(1,latitude,latitude);
+            initEquipmentNearData(1,latitude,longitude);
         } else {
             ToastUtil.ToastText(context,"定位失败");
         }
     }
-
     private void initEquipmentNearData(int i, String latitude, String longitude) {
         String requestUrl=UrlUtil.WATER_EQUIPMENT_SEARCH_BY_LOCATE;
         HashMap<String, String> textParams = new HashMap<String, String>();
@@ -369,6 +383,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
         textParams.put("longitude",longitude);
         textParams.put("pageNo",String.valueOf(indexPage));
         textParams.put("pageSize","16");
+        Log.d("EquipmentNearData=",textParams.toString());
         OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
@@ -380,7 +395,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             }
         });
     }
-
     private void onAnalysisData(String s) {
         try {
             JSONObject object = new JSONObject(s);
@@ -396,6 +410,10 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 }else {
                     moreListView.loadComplete(true);
                 }
+                if (indexPage==1){
+                    equipmentList.clear();
+                    VariableUtil.mPos=-1;
+                }
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.getJSONObject(i);
                     String equipmentNo = json.getString("equipmentNo");
@@ -404,7 +422,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                     String latitude = json.getString("latitude");
                     String longitude =json.optString("longitude");
                     String distance=json.optString("distance");
-                    String createTime=json.optString("createTime");
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("equipmentNo",equipmentNo);
                     map.put("address", address);
@@ -432,7 +449,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_back:
+            case R.id.id_back:
                 finish();
                 break;
             case R.id.id_cancel:
@@ -453,6 +470,17 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 break;
             case R.id.id_scan_view:
                 onRequestLimit();
+                break;
+            case R.id.id_right_img:
+                tvCancel.setEnabled(true);
+                tvCancel.setVisibility(View.VISIBLE);
+                layoutMap.setVisibility(View.GONE);
+                layoutSearch.setVisibility(View.VISIBLE);
+                break;
+            case R.id.layout_back:
+                layoutSearch.setVisibility(View.GONE);
+                layoutMap.setVisibility(View.VISIBLE);
+                setSoftInputManager();
                 break;
             default:
                 break;
@@ -570,6 +598,7 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
             defaultAddress=aMapLocation.getAddress();
             defaultName=aMapLocation.getPoiName();
             locationClient.stopLocation();
+
         }
     }
     View infoWindow=null;
@@ -601,6 +630,36 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
     @Override
     public View getInfoContents(Marker marker) {
         return null;
+    }
+
+
+    private class MyOnCameraChange implements AMap.OnCameraChangeListener{
+        @Override
+        public void onCameraChange(CameraPosition cameraPosition) {}
+        @Override
+        public void onCameraChangeFinish(final CameraPosition cameraPosition) {
+            LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            //地理反编码工具类，代码在后面
+            GeoCoderUtil.getInstance(getApplicationContext()).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
+                @Override
+                public void onAddressResult(String result) {
+                    if (moveFirst){
+                        if (result.contains("街道")&&result.length()>=3){
+                            int len=result.indexOf("道");
+                            String address=result.substring(len+1);
+                            tvAddress.setText(address);
+                        }else {
+                            tvAddress.setText(result);
+                        }
+                    }
+                    moveFirst=true;
+                }
+            });
+            if (requestFirst){
+                initEquipmentNearData(1,String.valueOf(cameraPosition.target.latitude),String.valueOf(cameraPosition.target.longitude));
+            }
+            requestFirst=true;
+        }
     }
     @Override
     protected void onPause() {

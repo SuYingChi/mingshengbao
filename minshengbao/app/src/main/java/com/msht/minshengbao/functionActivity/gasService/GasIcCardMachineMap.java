@@ -36,6 +36,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -44,6 +45,8 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.MoveSelectAddress.GeoCoderUtil;
+import com.msht.minshengbao.MoveSelectAddress.LatLngEntity;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
@@ -63,6 +66,7 @@ import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
 import com.msht.minshengbao.functionActivity.publicModule.QrCodeScanActivity;
+import com.msht.minshengbao.functionActivity.waterApp.WaterEquipmentMapActivity;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
@@ -90,6 +94,9 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
     private View   layoutEquipmentList;
     private LoadMoreListView moreListView;
     private ImageView locationImg;
+    private TextView tvAddress;
+    private boolean requestFirst=false;
+    private boolean moveFirst=true;
     private boolean   mFirst =true;
     private EditText  autoText;
     private MapView   mMapView = null;
@@ -160,6 +167,9 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
                 }).show();
     }
     private void onReceiveData(JSONArray dataArray) {
+        markerOptionsArrayList.clear();
+        mList.clear();
+        VariableUtil.mPos=-1;
         try {
             for (int i = 0; i < dataArray.length(); i++) {
                 JSONObject obj = dataArray.getJSONObject(i);
@@ -218,16 +228,22 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String lat=mList.get(i).get("latitude");
                 String lon=mList.get(i).get("longitude");
+                String communityName=mList.get(i).get("communityName");
                 if ((!TextUtils.isEmpty(lat))&&(!TextUtils.isEmpty(lon))&&!lat.equals(ConstantUtil.NULL_VALUE)){
                     VariableUtil.mPos=i;
                     equipmentListAdapter.notifyDataSetChanged();
+                    requestFirst=false;
+                    moveFirst=false;
                     aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(TypeConvertUtil.convertToDouble(lat,20), TypeConvertUtil.convertToDouble(lon,110)), 80));
+                    tvAddress.setText(communityName);
                     locationImg.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
     private void initEvent() {
+        findViewById(R.id.id_right_img).setOnClickListener(this);
+        findViewById(R.id.layout_back).setOnClickListener(this);
         layoutNearEquipment.setTag(0);
         layoutNearEquipment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,12 +298,13 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
     @SuppressLint("ClickableViewAccessibility")
     private void initView(Bundle savedInstanceState) {
         mMapView = (MapView) findViewById(R.id.id_mapView);
-        ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
+        ImageView ivBack = (ImageView) findViewById(R.id.id_back);
         autoText =(EditText) findViewById(R.id.et_search);
         tvCancel =(TextView)findViewById(R.id.id_cancel);
         layoutMap =findViewById(R.id.id_map_location);
         layoutSearch =findViewById(R.id.id_search_location);
         locationImg=(ImageView)findViewById(R.id.id_location_img);
+        tvAddress =(TextView)findViewById(R.id.id_tv_address);
         ListViewForScrollView searchData =(ListViewForScrollView)findViewById(R.id.id_search_data);
         // 此方法必须重写
         mMapView.onCreate(savedInstanceState);
@@ -302,6 +319,7 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
         aMap.setMyLocationEnabled(true);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(100));
         aMap.setOnMyLocationChangeListener(this);
+        aMap.setOnCameraChangeListener(new MyOnCameraChange());
         aMap.setInfoWindowAdapter(this);
         tvCancel.setEnabled(false);
         tvCancel.setOnClickListener(this);
@@ -441,7 +459,7 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_back:
+            case R.id.id_back:
                 finish();
                 break;
             case R.id.id_cancel:
@@ -462,6 +480,17 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
                 break;
             case R.id.id_scan_view:
                 onRequestLimit();
+                break;
+            case R.id.id_right_img:
+                tvCancel.setEnabled(true);
+                tvCancel.setVisibility(View.VISIBLE);
+                layoutMap.setVisibility(View.GONE);
+                layoutSearch.setVisibility(View.VISIBLE);
+                break;
+            case R.id.layout_back:
+                layoutSearch.setVisibility(View.GONE);
+                layoutMap.setVisibility(View.VISIBLE);
+                setSoftInputManager();
                 break;
             default:
                 break;
@@ -537,6 +566,35 @@ public class GasIcCardMachineMap extends BaseActivity implements AMapLocationLis
             defaultAddress=aMapLocation.getAddress();
             defaultName=aMapLocation.getPoiName();
             locationClient.stopLocation();
+        }
+    }
+
+    private class MyOnCameraChange implements AMap.OnCameraChangeListener{
+        @Override
+        public void onCameraChange(CameraPosition cameraPosition) {}
+        @Override
+        public void onCameraChangeFinish(final CameraPosition cameraPosition) {
+            LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            //地理反编码工具类，代码在后面
+            GeoCoderUtil.getInstance(getApplicationContext()).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
+                @Override
+                public void onAddressResult(String result) {
+                    if (moveFirst){
+                        if (result.contains("街道")&&result.length()>=3){
+                            int len=result.indexOf("道");
+                            String address=result.substring(len+1);
+                            tvAddress.setText(address);
+                        }else {
+                            tvAddress.setText(result);
+                        }
+                    }
+                    moveFirst=true;
+                }
+            });
+            if (requestFirst){
+                initEquipmentData(String.valueOf(cameraPosition.target.latitude),String.valueOf(cameraPosition.target.longitude));
+            }
+            requestFirst=true;
         }
     }
     @Override

@@ -43,7 +43,7 @@ public class GasIcCardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.id_price_explain).setOnClickListener(this);
         TextView tvPrice=(TextView)findViewById(R.id.id_tv_rightText);
         tvPrice.setOnClickListener(this);
-        tvPrice.setVisibility(View.VISIBLE);
+        tvPrice.setVisibility(View.GONE);
         tvPrice.setText("充值记录");
     }
 

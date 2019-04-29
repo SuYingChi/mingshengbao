@@ -121,8 +121,7 @@ public class GasAllPayRecordListActivity extends BaseActivity {
     }
     private void loadData(int i) {
         pageIndex=i;
-        //String validateURL = UrlUtil.ALL_PAY_RECORD_URL;
-        String validateURL = "http://192.168.3.161:8080/Gas/gasMeter/list";
+        String validateURL = UrlUtil.ALL_PAY_RECORD_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
