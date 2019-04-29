@@ -70,6 +70,8 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     TextView tvKefu;
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.storejieshao)
+    TextView storejieshao;
     private String memberId;
 
     @Override
@@ -215,6 +217,14 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
                     intent.putExtra("id",storeId);
                     startActivity(intent);
 
+                }
+            });
+            storejieshao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShopStoreMainActivity.this, ShopStoreJingle.class);
+                    intent.putExtra("id",storeId);
+                    startActivity(intent);
                 }
             });
         } catch (JSONException e) {
