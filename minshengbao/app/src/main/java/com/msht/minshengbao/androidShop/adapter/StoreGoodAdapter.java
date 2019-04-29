@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.msht.minshengbao.R;
@@ -19,7 +20,7 @@ public class StoreGoodAdapter extends HaveHeadRecyclerAdapter<StoreGoodBean>{
         super(context, layoutId, datas);
     }
     @Override
-    public void convert(RecyclerHolder holder, StoreGoodBean storeGoodBean, int position) {
+    public void convert(RecyclerHolder holder, StoreGoodBean storeGoodBean, final int position) {
         ViewGroup.LayoutParams lp = holder.getConvertView().getLayoutParams();
         lp.width= DimenUtil.getScreenWidth()/3;
         holder.getConvertView().setLayoutParams(lp);
@@ -29,5 +30,11 @@ public class StoreGoodAdapter extends HaveHeadRecyclerAdapter<StoreGoodBean>{
         if(position==datas.size()-1){
             EventBus.getDefault().post(new RefreshFinish(1));
         }
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
     }
 }

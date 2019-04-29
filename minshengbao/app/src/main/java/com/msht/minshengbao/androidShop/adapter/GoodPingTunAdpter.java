@@ -64,13 +64,17 @@ public  class GoodPingTunAdpter extends RecyclerView.Adapter<GoodPingTunAdpter.V
         if (holder.countDownTimer != null) {
             holder.countDownTimer.cancel();
         }
+        holder.leftnum.setText(data.getNum()+"人");
         holder.pintun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 spaInterface.onClickPingTuan(data.getPintuan_id(),data.getBuyer_id());
+                if(data.getNum()>0) {
+                    spaInterface.onClickPingTuan(data.getPintuan_id(), data.getBuyer_id());
+                }else {
+                    PopUtil.toastInCenter("拼团人数已满");
+                }
             }
         });
-        holder.leftnum.setText(data.getNum()+"人");
         long time = data.getEnd_time_left() * 1000;
         if (time > 0) {
             holder.countDownTimer = new CountDownTimer(time, 1000) {
@@ -130,7 +134,6 @@ public  class GoodPingTunAdpter extends RecyclerView.Adapter<GoodPingTunAdpter.V
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView day;
         private  TextView minute;
         private  TextView hour;
         private  TextView second;

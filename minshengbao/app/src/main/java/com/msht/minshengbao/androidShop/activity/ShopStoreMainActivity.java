@@ -34,6 +34,9 @@ import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.Imagebean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IAddCollectStoreView;
+import com.msht.minshengbao.androidShop.viewInterface.IDelCollectStoreView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreView;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
@@ -44,7 +47,7 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 
-public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreView {
+public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreView, IDelCollectStoreView, IAddCollectStoreView {
     private String storeId;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -68,7 +71,12 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     ImageView menu;
     @BindView(R.id.kefu)
     TextView tvKefu;
+    @BindView(R.id.back)
+    ImageView back;
+    @BindView(R.id.storejieshao)
+    TextView storejieshao;
     private String memberId;
+    private boolean is_favorate;
 
     @Override
     protected void setLayout() {
@@ -78,6 +86,12 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         storeId = getIntent().getStringExtra("id");
         int tabIndex = getIntent().getIntExtra("tabindex", 0);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -153,6 +167,20 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
     }
 
     @Override
+    public void onDeleteStoreCollect(String s) {
+        ivCollect.setImageDrawable(getResources().getDrawable(R.drawable.store_uncollect));
+        is_favorate=false;
+        PopUtil.showAutoDissHookDialog(this, "取消收藏店铺成功", 0);
+    }
+
+    @Override
+    public void onAddStoreCollect(String s) {
+        ivCollect.setImageDrawable(getResources().getDrawable(R.drawable.store_collect));
+        is_favorate=true;
+        PopUtil.showAutoDissHookDialog(this, "取消收藏店铺成功", 0);
+    }
+
+    @Override
     public String getStoreId() {
         return storeId;
     }
@@ -197,9 +225,25 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
             }
             if(storeInfo.optBoolean("is_favorate")){
                ivCollect.setImageDrawable(getResources().getDrawable(R.drawable.store_collect));
+                is_favorate= true;
             }else {
                 ivCollect.setImageDrawable(getResources().getDrawable(R.drawable.store_uncollect));
+                is_favorate= false;
             }
+            ivCollect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(getKey())){
+                        if(is_favorate){
+                            ShopPresenter.delCollectStore(ShopStoreMainActivity.this);
+                        }else {
+                            ShopPresenter.addCollectStore(ShopStoreMainActivity.this);
+                        }
+                    } else {
+                        startActivity(new Intent(ShopStoreMainActivity.this, LoginActivity.class));
+                    }
+                }
+            });
             tvStorefenlei.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -207,6 +251,14 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
                     intent.putExtra("id",storeId);
                     startActivity(intent);
 
+                }
+            });
+            storejieshao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ShopStoreMainActivity.this, ShopStoreJingle.class);
+                    intent.putExtra("id",storeId);
+                    startActivity(intent);
                 }
             });
         } catch (JSONException e) {

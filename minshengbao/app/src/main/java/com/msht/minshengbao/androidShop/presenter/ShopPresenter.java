@@ -1328,6 +1328,25 @@ public class ShopPresenter {
         });
     }
 
+    public static void getShareUrl(final IGetShareUrlView iGetShareUrlView, final String type, String pingtuan_id, String buyer_id) {
+        OkHttpUtils.get().url(ShopConstants.GET_SHARE_URL)
+                .addParams("key", iGetShareUrlView.getKey())
+                .addParams("goods_id", iGetShareUrlView.getGoodId()).tag(iGetShareUrlView)
+                .addParams("type", type)
+                .addParams("buyer_id", buyer_id)
+                .addParams("share_name", "pingtuan")
+                .addParams("pingtuan_id", pingtuan_id)
+                .build().execute(new DataStringCallback(iGetShareUrlView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetShareUrlView.onGetShareUrlSuccess(s, type);
+                }
+            }
+        });
+    }
+
     public static void deleteCollect(final IShopDeleteCollectionView iShopDeleteCollectionView, String favid) {
         OkHttpUtils.post().url(ShopConstants.DELETE_COLLECTION).addParams("key", iShopDeleteCollectionView.getKey()).tag(iShopDeleteCollectionView)
                 .addParams("fav_id", favid)
@@ -1770,7 +1789,7 @@ public class ShopPresenter {
 
     public static void getStoreJingle(final IShopStoreJingle ishopStoreJingle) {
         OkHttpUtils.post().url(ShopConstants.STORE_JINGLE).addParams("store_id", ishopStoreJingle.getStoreId())
-                .addParams("key",ishopStoreJingle.getKey())
+                .addParams("key", ishopStoreJingle.getKey())
                 .tag(ishopStoreJingle)
                 .build().execute(new DataStringCallback(ishopStoreJingle) {
             @Override
@@ -1785,7 +1804,7 @@ public class ShopPresenter {
 
     public static void delCollectStore(final IDelCollectStoreView iDelCollectStoreView) {
         OkHttpUtils.post().url(ShopConstants.STORE_DELETE_COLLECT).addParams("store_id", iDelCollectStoreView.getStoreId())
-                .addParams("key",iDelCollectStoreView.getKey())
+                .addParams("key", iDelCollectStoreView.getKey())
                 .tag(iDelCollectStoreView)
                 .build().execute(new DataStringCallback(iDelCollectStoreView) {
             @Override
@@ -1800,7 +1819,7 @@ public class ShopPresenter {
 
     public static void addCollectStore(final IAddCollectStoreView iAddCollectStoreView) {
         OkHttpUtils.post().url(ShopConstants.STORE_ADD_COLLECT).addParams("store_id", iAddCollectStoreView.getStoreId())
-                .addParams("key",iAddCollectStoreView.getKey())
+                .addParams("key", iAddCollectStoreView.getKey())
                 .tag(iAddCollectStoreView)
                 .build().execute(new DataStringCallback(iAddCollectStoreView) {
             @Override
@@ -1815,8 +1834,8 @@ public class ShopPresenter {
 
     public static void getPromotionShareInfo(final IPromotionShareInfoView iPromotionShareInfoView) {
         OkHttpUtils.get().url(ShopConstants.STORE_PROMOTION_SHARE).addParams("store_id", iPromotionShareInfoView.getStoreId())
-                .addParams("promotion_id",iPromotionShareInfoView.getPromotionId())
-                .addParams("promotion_type",iPromotionShareInfoView.getPromotionType())
+                .addParams("promotion_id", iPromotionShareInfoView.getPromotionId())
+                .addParams("promotion_type", iPromotionShareInfoView.getPromotionType())
                 .tag(iPromotionShareInfoView)
                 .build().execute(new DataStringCallback(iPromotionShareInfoView) {
             @Override
@@ -1843,6 +1862,7 @@ public class ShopPresenter {
         });
 
     }
+
     public static void getPingTuanDetail(final IPingTuanDetailView iPingTuanDetailView) {
         OkHttpUtils.get().url(ShopConstants.PINGTUAN_DETAIL).addParams("pintuan_id", iPingTuanDetailView.getPingTuanId())
                 .addParams("key", iPingTuanDetailView.getKey())

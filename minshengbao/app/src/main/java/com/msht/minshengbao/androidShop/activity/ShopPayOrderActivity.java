@@ -240,11 +240,19 @@ public class ShopPayOrderActivity extends ShopBaseActivity implements ShopPayMet
                     intent.putExtra("data", payinfo.getPay_sn());
                     startActivity(intent);
                     finish();*/
-                    Intent intent = new Intent(this, ShopSuccessActivity.class);
-                    intent.putExtra("id", orderId);
-                    intent.putExtra("state", "pay");
-                    startActivity(intent);
-                    finish();
+                   if(!TextUtils.isEmpty(getIntent().getStringExtra("pingtuanid"))&&(!TextUtils.isEmpty(getIntent().getStringExtra("buyer_id")))){
+                       Intent intent = new Intent(this, PingtuanDetail.class);
+                       intent.putExtra("pingtuanid",getIntent().getStringExtra("pingtuanid") );
+                       intent.putExtra("buyer_id",getIntent().getStringExtra("buyer_id"));
+                       startActivity(intent);
+                       finish();
+                   }else {
+                       Intent intent = new Intent(this, ShopSuccessActivity.class);
+                       intent.putExtra("id", orderId);
+                       intent.putExtra("state", "pay");
+                       startActivity(intent);
+                       finish();
+                   }
                 } else if (TextUtils.equals(result, "fail")) {
                     String errorMsg = data.getStringExtra("error_msg"); // 错误信息
                     String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息

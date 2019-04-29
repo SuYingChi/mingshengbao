@@ -30,6 +30,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.PingtuanDetail;
 import com.msht.minshengbao.androidShop.activity.RefundALLActivity;
 import com.msht.minshengbao.androidShop.activity.ShopOrderAddEveluateActivity;
 import com.msht.minshengbao.androidShop.activity.ShopOrderEveluateActivity;
@@ -726,6 +727,30 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                             @Override
                             public void onClick(View v) {
                                 ShopPresenter.listPay(ShopOrdersFragement.this, pay_sn,order_id);
+                            }
+                        });
+                        btnList.add(tvPay);
+                    }
+                    if(objjj.optJSONObject("pintuan_info")!=null){
+                        JSONObject pintuan_info = objjj.optJSONObject("pintuan_info");
+                        final String pingtuanid = pintuan_info.optString("log_id");
+                        final String buyerid = pintuan_info.optString("buyer_id");
+                        TextView tvPay = new TextView(getContext());
+                        LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        paramas.gravity = Gravity.CENTER_VERTICAL;
+                        paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_6);
+                        tvPay.setLayoutParams(paramas);
+                        tvPay.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_oringe_stoke));
+                        tvPay.setText("拼团详情");
+                        tvPay.setTextColor(getContext().getResources().getColor(R.color.black));
+                        tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                        tvPay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), PingtuanDetail.class);
+                                intent.putExtra("pingtuanid",pingtuanid);
+                                intent.putExtra("buyer_id",buyerid);
+                                startActivity(intent);
                             }
                         });
                         btnList.add(tvPay);

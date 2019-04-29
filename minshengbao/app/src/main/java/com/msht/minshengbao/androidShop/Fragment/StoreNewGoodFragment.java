@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreNewGoodAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
@@ -72,6 +73,12 @@ public class StoreNewGoodFragment extends ShopBaseLazyFragment implements IStore
         refreshLayout.setOnLoadMoreListener(this);
         refreshLayout.setOnRefreshListener(this);
         adapter = new StoreNewGoodAdapter(getContext(),goodlist);
+        adapter.setInterface(new StoreNewGoodAdapter.GoGoodDetail() {
+            @Override
+            public void goGoodDetail(String goodsid) {
+                doShopItemViewClick("goods",goodsid);
+            }
+        });
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         lm.setAutoMeasureEnabled(true);
         rcl.setLayoutManager(lm);
