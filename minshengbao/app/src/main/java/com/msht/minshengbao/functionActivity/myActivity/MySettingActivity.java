@@ -121,7 +121,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         setContentView(R.layout.activity_mysetting);
         mPageName ="我的设置";
         setCommonHeader(mPageName);
-        context=getApplicationContext();
+        context=this;
         initFindViewById();
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
@@ -572,9 +572,11 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
 
     private void onGetWeiChatData(final Map<String, String> weiChatData) {
         String unionId=weiChatData.get("unionid");
+        String openId=weiChatData.get("openid");
         String requestUrl=UrlUtil.BING_WEI_MY_PAGE_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("unionid",unionId);
+        textParams.put("openid",openId);
         textParams.put("userId",userId);
         customDialog.show();
         if (customDialog!=null){
@@ -611,7 +613,8 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                         case ConstantUtil.WC_USER_EXIST:
                             tvBindStatus.setText("已绑定");
                             String unionId=weiChatData.get("unionid");
-                            onShowResultDialog(unionId);
+                            String openId=weiChatData.get("openid");
+                            onShowResultDialog(unionId,openId);
                             break;
                         case ConstantUtil.BIND_WEI_CHAT_SUCCESS:
                             CustomToast.showSuccessDialog("绑定成功");
@@ -632,8 +635,8 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    private void onShowResultDialog(final String unionId) {
-        String message="该微信已经绑定民生宝账户，若继/n续绑定的话，会与原账户解绑";
+    private void onShowResultDialog(final String unionId,final String openId) {
+        String message="该微信已经绑定民生宝账户，若继续绑定的话，会与原账户解绑";
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
@@ -647,16 +650,18 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
                 .setButton2("确定", new PromptDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        onChangeBindWeiChat( unionId);
+                        onChangeBindWeiChat( unionId,openId);
+                        dialog.dismiss();
                     }
                 })
                 .show();
     }
 
-    private void onChangeBindWeiChat(String unionId) {
+    private void onChangeBindWeiChat(String unionId,String openId) {
         String requestUrl=UrlUtil.CHANGE_BIND_WEI_CHAT_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("unionid",unionId);
+        textParams.put("openid",openId);
         textParams.put("userId",userId);
         customDialog.show();
         if (customDialog!=null){

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.gyf.barlibrary.OSUtils;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.androidShop.adapter.OrdersGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.customerview.OrderVoucherDialog;
@@ -699,7 +700,8 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llrpt.setVisibility(View.GONE);
             }
             //自身价格减去满减，优惠，红包加上运费
-            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-Double.valueOf(rpacket_price);
+           // goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-Double.valueOf(rpacket_price);
+            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-TypeConvertUtil.convertToDouble(rpacket_price,0);
             goodsTotal = goodsTotalSelf + goods_freight;
             ShopPresenter.buyStep2ChangeAddress(this);
         } catch (JSONException e) {

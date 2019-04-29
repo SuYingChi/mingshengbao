@@ -407,8 +407,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String name= data.get("name");
         String gender=data.get("gender");
         String iconUrl=data.get("iconurl");
+        String openId=data.get("openid");
         Intent intent=new Intent(context,BindWeiChatActivity.class);
         intent.putExtra("unionId",unionId);
+        intent.putExtra("openId",openId);
         intent.putExtra("name",name);
         intent.putExtra("gender",gender);
         intent.putExtra("iconUrl",iconUrl);

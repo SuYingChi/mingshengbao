@@ -46,6 +46,7 @@ import java.util.Map;
  */
 public class BindWeiChatActivity extends BaseActivity {
    private String unionId;
+   private String openId;
    private String name;
    private String gender;
    private String iconUrl;
@@ -67,6 +68,7 @@ public class BindWeiChatActivity extends BaseActivity {
         Intent data=getIntent();
         if (data!=null){
              unionId=data.getStringExtra("unionId");
+             openId=data.getStringExtra("openId");
              name=data.getStringExtra("name");
              gender=data.getStringExtra("gender");
              iconUrl=data.getStringExtra("iconUrl");
@@ -139,6 +141,7 @@ public class BindWeiChatActivity extends BaseActivity {
         textParams.put("phone", phoneNo);
         textParams.put("captcha", code);
         textParams.put("unionid", unionId);
+        textParams.put("openid",openId);
         textParams.put("nickName", name);
         textParams.put("headImg", iconUrl);
         textParams.put("city_id", VariableUtil.cityId);
@@ -274,5 +277,6 @@ public class BindWeiChatActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         removeTimeout();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }
