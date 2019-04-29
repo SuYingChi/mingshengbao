@@ -245,6 +245,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private GoodPintuanDialog goodPingTunDialog;
     public long millisUntilFinished;
     private int pintuan_max_num = 1;
+    private int pingtuanType;
 
     public String getPintuan_default_log_id() {
         return pintuan_default_log_id;
@@ -910,14 +911,18 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
             giftArrayAdapter.notifyDataSetChanged();
             if (goods_info.optInt("pintuan_allow_new") == 0 && (TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) || TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id")))) {
+                pingtuanType = NOT_ALLOW;
                 goodDetailActivityListener.pingTuan(NOT_ALLOW);
             } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() == 0 && !TextUtils.isEmpty(goods_info.optString("pintuan_default_log_id")) && !TextUtils.isEmpty(goods_info.optString("pintuan_default_buyer_id"))) {
+               pingtuanType = JOIN_DEFAULT_TUAN;
                 pintuan_default_log_id = goods_info.optString("pintuan_default_log_id");
                 pintuan_default_buyer_id = goods_info.optString("pintuan_default_buyer_id");
                 goodDetailActivityListener.pingTuan(JOIN_DEFAULT_TUAN);
             } else if (goods_info.optInt("pintuan_allow_new") == 0 && pingTuanlist.size() > 0) {
+                pingtuanType = SELECT_TUAN;
                 goodDetailActivityListener.pingTuan(SELECT_TUAN);
             } else if (goods_info.optInt("pintuan_allow_new") != 0) {
+                pingtuanType = CREAT_NEW_TUAN;
                 goodDetailActivityListener.pingTuan(CREAT_NEW_TUAN);
             }
             if (goods_info.optInt("cart") == 1) {
@@ -986,10 +991,10 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 bundle.putString("isPickup_self", isPickup_self);
                 if (ispingTuan) {
                     bundle.putString("isPingtuan", "1");
-                    if (!TextUtils.isEmpty(pintuan_default_log_id)) {
+                    if (pingtuanType==JOIN_DEFAULT_TUAN&&!TextUtils.isEmpty(pintuan_default_log_id)) {
                         bundle.putString("pingTuanid", pintuan_default_log_id);
                     }
-                    if (!TextUtils.isEmpty(pintuan_default_buyer_id)) {
+                    if (pingtuanType==JOIN_DEFAULT_TUAN&&!TextUtils.isEmpty(pintuan_default_buyer_id)) {
                         bundle.putString("buyerId", pintuan_default_buyer_id);
                     }
                 }
@@ -1306,10 +1311,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     @Override
     public void onClickPingTuan(String pingTuanid, String buyerId) {
-        pintuan_default_log_id = pingTuanid;
-        pintuan_default_buyer_id = buyerId;
-        goodDetailActivityListener.showBottomDialog(true);
-       /* if (!TextUtils.isEmpty(getKey())) {
+        if (!TextUtils.isEmpty(getKey())) {
             List<ComfirmShopGoodBean> list = new ArrayList<ComfirmShopGoodBean>();
             List<ComfirmShopGoodBean.GoodsBean> list2 = new ArrayList<ComfirmShopGoodBean.GoodsBean>();
             list2.add(new ComfirmShopGoodBean.GoodsBean(storeName, storeId, imagelist.get(0), goods_name, selectedGoodNum + "", goods_price, goodsid));
@@ -1334,7 +1336,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             }
         } else {
             startActivity(new Intent(getActivity(), LoginActivity.class));
-        }*/
+        }
     }
 
 
