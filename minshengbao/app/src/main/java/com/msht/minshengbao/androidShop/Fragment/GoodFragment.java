@@ -263,6 +263,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     private String pintuan_default_buyer_id;
     @BindView(R.id.tvpt)
     TextView tvpt;
+    @BindView(R.id.tvtype)
+    TextView tvtype;
     @Override
     protected int setLayoutId() {
         return R.layout.good_fragment;
@@ -775,16 +777,72 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 //1团购 2限时 3秒杀
                 switch (goods_promotion_type) {
                     case "1":
-                        break;
-                    case "2":
-                        break;
-                    case "3":
+                        tvtype.setText("团购");
                         ll_miaosha.setVisibility(View.VISIBLE);
                         tvprice.setVisibility(View.GONE);
                         tvgoods_marketprice.setVisibility(View.GONE);
                         tvMiaoshaPrice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
                         tvMsmarketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                         tvMsmarketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("goods_marketprice"), R.style.small_money, R.style.small_money));
+                        if(miaoshaCountDownTimer!=null){
+                            miaoshaCountDownTimer.cancel();
+                        }
+                        miaoshaCountDownTimer = new CountDownTimer(goods_info.optLong("left_end_time") * 1000, 1000) {
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                                tvMsDay.setText(list.get(0));
+                                tvMsHour.setText(list.get(1));
+                                tvMsMinute.setText(list.get(2));
+                                tvMsSecond.setText(list.get(3));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                ShopPresenter.getGoodDetail(GoodFragment.this);
+                            }
+                        }.start();
+                        break;
+                    case "2":
+                        tvtype.setText("限时");
+                        ll_miaosha.setVisibility(View.VISIBLE);
+                        tvprice.setVisibility(View.GONE);
+                        tvgoods_marketprice.setVisibility(View.GONE);
+                        tvMiaoshaPrice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                        tvMsmarketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                        tvMsmarketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("goods_marketprice"), R.style.small_money, R.style.small_money));
+                        if(miaoshaCountDownTimer!=null){
+                            miaoshaCountDownTimer.cancel();
+                        }
+                        miaoshaCountDownTimer = new CountDownTimer(goods_info.optLong("left_end_time") * 1000, 1000) {
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                                tvMsDay.setText(list.get(0));
+                                tvMsHour.setText(list.get(1));
+                                tvMsMinute.setText(list.get(2));
+                                tvMsSecond.setText(list.get(3));
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                ShopPresenter.getGoodDetail(GoodFragment.this);
+                            }
+                        }.start();
+                        break;
+                    case "3":
+                        tvtype.setText("秒杀");
+                        ll_miaosha.setVisibility(View.VISIBLE);
+                        tvprice.setVisibility(View.GONE);
+                        tvgoods_marketprice.setVisibility(View.GONE);
+                        tvMiaoshaPrice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                        tvMsmarketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                        tvMsmarketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("goods_marketprice"), R.style.small_money, R.style.small_money));
+                        if(miaoshaCountDownTimer!=null){
+                            miaoshaCountDownTimer.cancel();
+                        }
                         miaoshaCountDownTimer = new CountDownTimer(goods_info.optLong("left_end_time") * 1000, 1000) {
 
                             @Override
@@ -803,6 +861,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                         }.start();
                         break;
                     default:
+                        ll_miaosha.setVisibility(View.GONE);
                         tvprice.setVisibility(View.VISIBLE);
                         tvgoods_marketprice.setVisibility(View.VISIBLE);
                         break;
