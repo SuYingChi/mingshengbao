@@ -381,9 +381,9 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
             rltAddCar.setClickable(false);
             pay.setEnabled(false);
             pay.setClickable(false);
-            llbuy.setEnabled(false);
-            llbuy.setClickable(false);
-            llbuy.setBackgroundColor(getResources().getColor(R.color.shop_grey));
+            tvPingTuanBuy.setEnabled(false);
+            tvPingTuanBuy.setClickable(false);
+            tvPingTuanBuy.setBackgroundColor(getResources().getColor(R.color.shop_grey));
         } else {
             rltAddCar.setBackgroundColor(getResources().getColor(R.color.yellow_text));
             pay.setBackgroundColor(getResources().getColor(R.color.msb_color));
