@@ -224,6 +224,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                 int minnum = Integer.valueOf(pintuan_info.optString("min_num"));
                 leftnum.setText(left + "人");
                 adapter.notifyDataSetChanged();
+                llcontainer.removeAllViews();
                 if (minnum > list.size()) {
                     for (int i = 0; i < minnum - list.size(); i++) {
                         AddViewHolder ad = new AddViewHolder(PingtuanDetail.this, R.layout.item_userpingtuan_foot);
@@ -303,7 +304,15 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                 RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
                                                 final AlertDialog dialog2 = new AlertDialog.Builder(PingtuanDetail.this, R.style.share_qrcode_dialog).create();
                                                 final ImageView ivQrcode = holder.getView(R.id.qrcode);
-                                                holder.setImage(R.id.image, goods_image_url);
+                                                ViewGroup.LayoutParams layoutParams = ivQrcode.getLayoutParams();
+                                                layoutParams.width= DimenUtil.getScreenWidth()/3;
+                                                layoutParams.height=DimenUtil.getScreenWidth()/3;
+                                                ivQrcode.setLayoutParams(layoutParams);
+                                                ImageView ivv  = holder.getView(R.id.image);
+                                                ViewGroup.LayoutParams layoutParams2 = ivv.getLayoutParams();
+                                                layoutParams2.height=DimenUtil.getScreenHeight()/3;
+                                                ivv.setLayoutParams(layoutParams2);
+                                                GlideUtil.loadRemoteImg(PingtuanDetail.this,ivv,goods_image_url);
                                                 Glide.with(PingtuanDetail.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
                                                     @Override
                                                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {

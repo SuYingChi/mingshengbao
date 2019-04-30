@@ -199,6 +199,7 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
             for(int i=0;i<pintuan_list.length();i++){
                 list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),UserPinTunBean.class));
             }
+            llcontainner.removeAllViews();
             adapter.notifyDataSetChanged();
             if(minnum>list.size()){
                 for(int i=0;i<minnum-list.size();i++){
@@ -206,7 +207,6 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(DimenUtil.dip2px(context.getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0, 0);
                     llcontainner.addView(ad.getCustomView(),params);
-                    llcontainner.addView(ad.getCustomView());
                 }
             }
             if(countDownTimer!=null){

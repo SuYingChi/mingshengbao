@@ -52,6 +52,7 @@ import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
+import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
@@ -404,7 +405,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                         RecyclerHolder holder = new RecyclerHolder(getContext(), layout);
                         final AlertDialog dialog2 = new AlertDialog.Builder(getContext(), R.style.share_qrcode_dialog).create();
                         final ImageView ivQrcode = holder.getView(R.id.qrcode);
-                        holder.setImage(R.id.image, imageUrlShare);
+                        ViewGroup.LayoutParams layoutParams = ivQrcode.getLayoutParams();
+                        layoutParams.width= DimenUtil.getScreenWidth()/3;
+                        layoutParams.height=DimenUtil.getScreenWidth()/3;
+                        ivQrcode.setLayoutParams(layoutParams);
+                        ImageView ivv  = holder.getView(R.id.image);
+                        ViewGroup.LayoutParams layoutParams2 = ivv.getLayoutParams();
+                        layoutParams2.height=DimenUtil.getScreenHeight()/3;
+                        ivv.setLayoutParams(layoutParams2);
+                        GlideUtil.loadByImageView(getContext(),ivv,shareImageUrl);
                         Glide.with(GoodFragment.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {

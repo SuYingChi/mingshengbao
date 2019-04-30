@@ -642,8 +642,9 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
     public void onGetMsgCountSuccess(String s) {
         try {
             msgCount = Integer.valueOf(new JSONObject(s).optString("datas"));
-            ShopPresenter.getMessagePreview(this, SharedPreferencesUtil.getUserId(getContext(), SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(getContext(), SharedPreferencesUtil.Password, ""));
-        } catch (JSONException e) {
+            if(!SharedPreferencesUtil.getUserId(getContext(), SharedPreferencesUtil.UserId, "").equals("")&&!SharedPreferencesUtil.getPassword(getContext(), SharedPreferencesUtil.Password, "").equals("")) {
+                ShopPresenter.getMessagePreview(this, SharedPreferencesUtil.getUserId(getContext(), SharedPreferencesUtil.UserId, ""), SharedPreferencesUtil.getPassword(getContext(), SharedPreferencesUtil.Password, ""));
+            } } catch (JSONException e) {
             e.printStackTrace();
         }
     }
