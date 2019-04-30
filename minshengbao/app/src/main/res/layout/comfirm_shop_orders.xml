@@ -279,7 +279,7 @@
 
                 <ImageView
                     style="@style/image"
-                    android:src="@drawable/shop_recommand" />
+                    android:src="@drawable/fapiao" />
 
                 <TextView
                     style="@style/shopMsbcolorTitleText"

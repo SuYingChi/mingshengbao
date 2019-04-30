@@ -203,6 +203,13 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ShopPresenter.getPingTuanDetail(this);
+        ShopPresenter.getPromotionRule(this);
+    }
+
+    @Override
     public void onGetPingTuanDetail(String s) {
         try {
             JSONObject pintuan_info = new JSONObject(s).optJSONObject("datas").optJSONObject("pintuan_info");
@@ -232,6 +239,9 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                         params.setMargins(DimenUtil.dip2px(getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0, 0);
                         llcontainer.addView(ad.getCustomView(), params);
                     }
+                }
+                if(countDownTimer!=null){
+                    countDownTimer.cancel();
                 }
                 if (left > 0) {
                     ll_2.setVisibility(View.VISIBLE);
