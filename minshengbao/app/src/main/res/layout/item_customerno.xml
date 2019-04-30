@@ -17,12 +17,13 @@
         android:contentDescription="@string/picture_text"
         android:layout_gravity="center_vertical"/>
     <RelativeLayout
+        android:layout_weight="1"
         android:id="@+id/item_left"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/id_customerText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginLeft="@dimen/margin_width10"
@@ -32,7 +33,7 @@
             android:text="@string/default_text"/>
         <TextView
             android:id="@+id/id_address_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textSize="@dimen/text_width16"
@@ -43,17 +44,15 @@
             android:layout_marginTop="@dimen/margin_width10"
             android:layout_marginBottom="@dimen/margin_width10"
             android:text="@string/default_text"/>
-        <ImageView
-            android:id="@+id/id_btn_contast"
-            android:layout_width="@dimen/margin_width25"
-            android:layout_height="@dimen/margin_width25"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:contentDescription="@string/picture_text"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:layout_marginEnd="@dimen/margin_width10"
-            android:background="@drawable/delect_addr_xh"
-            android:visibility="gone"/>
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/id_btn_contast"
+        android:layout_width="@dimen/margin_width25"
+        android:layout_height="@dimen/margin_width25"
+        android:contentDescription="@string/picture_text"
+        android:layout_marginRight="@dimen/margin_width10"
+        android:layout_marginEnd="@dimen/margin_width10"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/delect_addr_xh"
+        android:visibility="gone"/>
 </LinearLayout>

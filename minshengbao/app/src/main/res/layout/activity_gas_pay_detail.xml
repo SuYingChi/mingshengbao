@@ -51,7 +51,7 @@
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
                     android:layout_alignBaseline="@+id/id_payAmount"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16"
                     android:text="@string/RMB_YUAN"/>
             </RelativeLayout>
@@ -67,7 +67,7 @@
                 android:text="@string/default_text"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width1"
+                android:layout_height="0.6dp"
                 android:layout_marginLeft="@dimen/margin_width25"
                 android:layout_marginStart="@dimen/margin_width25"
                 android:layout_marginRight="@dimen/margin_width25"
@@ -87,7 +87,7 @@
                     android:layout_marginLeft="@dimen/margin_width25"
                     android:layout_marginBottom="@dimen/margin_width8"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:text="@string/customer_no_text"/>
                 <TextView
                     android:id="@+id/id_customerNo"
@@ -119,7 +119,7 @@
                     android:layout_marginTop="@dimen/margin_width8"
                     android:layout_marginBottom="@dimen/margin_width8"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:text="@string/pay_time"/>
                 <TextView
                     android:id="@+id/id_pay_time"
@@ -152,7 +152,7 @@
                     android:layout_marginTop="@dimen/margin_width8"
                     android:layout_marginBottom="@dimen/margin_width8"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:text="@string/this_time_gas_num"/>
                 <TextView
                     android:id="@+id/id_user_gasNum"
@@ -172,6 +172,7 @@
                     android:text="@string/default_text"/>
             </RelativeLayout>
             <RelativeLayout
+                android:id="@+id/id_overdue_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
@@ -185,7 +186,7 @@
                     android:layout_marginTop="@dimen/margin_width8"
                     android:layout_marginBottom="@dimen/margin_width8"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:text="@string/overdue_fine"/>
                 <TextView
                     android:id="@+id/id_overdue_fine"
@@ -205,6 +206,7 @@
                     android:text="@string/default_text"/>
             </RelativeLayout>
             <RelativeLayout
+                android:id="@+id/id_discount_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
@@ -218,7 +220,7 @@
                     android:layout_marginTop="@dimen/margin_width8"
                     android:layout_marginBottom="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/app_text"
+                    android:textColor="@color/color_383838"
                     android:text="@string/discount_text"/>
                 <TextView
                     android:id="@+id/id_discount_amount"

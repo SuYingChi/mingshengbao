@@ -31,7 +31,7 @@ public class InvoiceSendSuccessActivity extends BaseActivity {
         findViewById(R.id.id_btn_history).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context,InvoiceGasHistoryActivity.class);
+                Intent intent=new Intent(context,InvoiceAllHistoryActivity.class);
                 startActivity(intent);
                 finish();
             }

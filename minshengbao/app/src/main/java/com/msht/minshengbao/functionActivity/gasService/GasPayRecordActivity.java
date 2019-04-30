@@ -163,9 +163,9 @@ public class GasPayRecordActivity extends BaseActivity {
                 String state = jsonObject.getString("state");
                 String payMethod=jsonObject.getString("pay_method");
                 String payTime=jsonObject.getString("pay_time");
-                /*String usageAmount=jsonObject.optString("usageAmount");
+                String usageAmount=jsonObject.optString("usageAmount");
                 String overdueFine=jsonObject.optString("overdueFine");
-                String totalDiscountAmt=jsonObject.optString("totalDiscountAmt");*/
+                String totalDiscountAmt=jsonObject.optString("totalDiscountAmt");
                 String writeCardState="0";
                 String tableType;
                 switch (meterType){
@@ -194,9 +194,9 @@ public class GasPayRecordActivity extends BaseActivity {
                 map.put("payTime",payTime);
                 map.put("writeCardState",writeCardState);
                 map.put("tableType",tableType);
-                /*map.put("usageAmount",usageAmount);
+                map.put("usageAmount",usageAmount);
                 map.put("overdueFine",overdueFine);
-                map.put("totalDiscountAmt",totalDiscountAmt);*/
+                map.put("totalDiscountAmt",totalDiscountAmt);
                 recordList.add(map);
             }
         }catch (JSONException e){
@@ -231,10 +231,10 @@ public class GasPayRecordActivity extends BaseActivity {
         initHeader();
         initView();
         initData();
-     /*  adapter.setClickCallBack(new PayRecordAdapter.ItemClickCallBack() {
+       adapter.setClickCallBack(new PayRecordAdapter.ItemClickCallBack() {
             @Override
             public void onItemClick(int pos) {
-                if (urlType.equals(VariableUtil.VALUE_ZERO)){
+                if (meterType.equals(VariableUtil.VALUE_ELEVEN)){
                     String customerNo=recordList.get(pos).get("customerNo");
                     String payTime=recordList.get(pos).get("payTime");
                     String usageAmount=recordList.get(pos).get("usageAmount");
@@ -251,7 +251,7 @@ public class GasPayRecordActivity extends BaseActivity {
                     startActivity(intent);
                 }
             }
-        });*/
+        });
     }
     private void initHeader() {
         ((TextView)findViewById(R.id.id_customerText)).setText(customerNo);
@@ -264,8 +264,7 @@ public class GasPayRecordActivity extends BaseActivity {
     private void loadData(int i) {
         pageIndex =i;
         if (meterType.equals(ConstantUtil.VALUE_ELEVEN)){
-            validateURL = UrlUtil.PayRecors_HistoryUrl;
-           // validateURL="http://192.168.3.162:8080/Gas/payment/customerno_history_new";
+            validateURL = UrlUtil.GET_PAY_HISTORY;
         }else if (meterType.equals(ConstantUtil.VALUE_TWELVE)){
             validateURL = UrlUtil.IC_RECHARGE_HISTORY_URL;
         }else if (meterType.equals(ConstantUtil.VALUE_SEVENTEEN)){
