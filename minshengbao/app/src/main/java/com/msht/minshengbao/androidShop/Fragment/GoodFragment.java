@@ -661,6 +661,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             if (TextUtils.equals(pintuan_promotion, "1")) {
                 goodDetailActivityListener.isPingTuan(true);
                 goods_price = goods_info.optString("pintuan_price");
+                goods_marketprice = goods_info.optString("pintuan_goods_price");
                 ll_PingTuan.setVisibility(View.VISIBLE);
                 ll_miaosha.setVisibility(View.GONE);
                 tvprice.setVisibility(View.GONE);
@@ -876,6 +877,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
                     intent.putExtra("id", storeid);
                     intent.putExtra("tabindex", 0);
+                    startActivity(intent);
+                }
+            });
+            storeall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+                    intent.putExtra("id", storeid);
+                    intent.putExtra("tabindex", 1);
                     startActivity(intent);
                 }
             });
@@ -1119,6 +1129,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     @Override
     public String getPrice() {
         return goods_price;
+    }
+
+    @Override
+    public String getMarketPrice() {
+        return goods_marketprice;
     }
 
     @Override

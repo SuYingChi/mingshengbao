@@ -23,6 +23,8 @@ public interface IShopGoodDetailView extends IBaseView {
 
     String getPrice();
 
+    String getMarketPrice();
+
     String getRemainNum();
 
     String getImageUrl();

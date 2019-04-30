@@ -67,6 +67,7 @@
                     />
             </LinearLayout>
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
@@ -76,6 +77,7 @@
         android:background="@color/white"
         >
         <LinearLayout
+            android:id="@+id/ll_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -176,6 +178,16 @@
                 android:textSize="@dimen/text_14"
                 />
         </LinearLayout>
+        <TextView
+            android:id="@+id/success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/msb_color"
+            android:textSize="@dimen/text_16"
+            android:layout_marginTop="@dimen/margin_Modules"
+            android:text="拼团已经成功，请前往订单页面查询"
+            android:layout_gravity="center_horizontal"
+            />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -218,6 +230,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_16"
             android:textColor="@color/red"
+            android:layout_marginBottom="@dimen/margin_Modules"
             android:background="@drawable/btn_oringe_stoke"
             />
     </LinearLayout>

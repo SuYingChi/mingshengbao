@@ -617,9 +617,9 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
             }
             for (RecommendBean re : recommandList) {
                 if (re.getDefaultX().equals("1")) {
-                    if (!TextUtils.isEmpty(re.getRecommend_phone()) && !"null".equals(re.getRecommend_phone())) {
+                    /*if (!TextUtils.isEmpty(re.getRecommend_phone()) && !"null".equals(re.getRecommend_phone())) {
                         etRecommand.setText(re.getRecommend_phone());
-                    }
+                    }*/
                     recommendBean = re;
                     break;
                 }

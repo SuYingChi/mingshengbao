@@ -126,18 +126,23 @@
                 android:textColor="@color/msb_color"
                 android:textSize="@dimen/text_width18" />
                <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:background="@color/red"
+                   android:layout_marginLeft="@dimen/margin_Modules"
+                   >
+               <LinearLayout
                    android:layout_width="wrap_content"
                    android:orientation="horizontal"
                    android:layout_height="wrap_content"
-                   android:background="@color/red"
-                   android:layout_marginLeft="@dimen/margin_Modules"
                    >
 
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:id="@+id/day"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="XX"
                        android:padding="2dp"
@@ -145,7 +150,7 @@
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="天"
                        />
@@ -154,14 +159,14 @@
                        android:layout_height="wrap_content"
                        android:id="@+id/hour"
                        android:padding="2dp"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="XX"
                        />
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="小时"
                        />
@@ -170,14 +175,14 @@
                        android:layout_height="wrap_content"
                        android:id="@+id/minute"
                        android:padding="2dp"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:text="XX"
                        android:textColor="@color/white"
                        />
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="分钟"
                        />
@@ -186,16 +191,24 @@
                        android:layout_height="wrap_content"
                        android:id="@+id/second"
                        android:padding="2dp"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:text="XX"
                        android:textColor="@color/white"
                        />
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:textSize="@dimen/text_14"
+                       android:textSize="@dimen/text_12"
                        android:textColor="@color/white"
                        android:text="秒"
+                       />
+               </LinearLayout>
+                   <TextView
+                       android:id="@+id/huifu"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textSize="@dimen/text_12"
+                       android:textColor="@color/white"
                        />
                </LinearLayout>
            </LinearLayout>

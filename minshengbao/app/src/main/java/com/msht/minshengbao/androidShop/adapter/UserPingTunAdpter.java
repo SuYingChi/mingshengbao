@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.msht.minshengbao.R;
@@ -19,6 +20,11 @@ public class UserPingTunAdpter extends HaveHeadRecyclerAdapter<UserPinTunBean>{
 
     @Override
     public void convert(RecyclerHolder holder, UserPinTunBean userPinTunBean, int position) {
+        if(position==0){
+            holder.getView(R.id.tv).setVisibility(View.VISIBLE);
+        }else {
+            holder.getView(R.id.tv).setVisibility(View.INVISIBLE);
+        }
             GlideUtil.loadRemoteCircleImg(context,(ImageView) holder.getView(R.id.iv),userPinTunBean.getAvatar());
     }
 

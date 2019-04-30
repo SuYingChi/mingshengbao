@@ -116,6 +116,10 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     ImageView back;
     @BindView(R.id.ll_2)
     LinearLayout ll_2;
+    @BindView(R.id.ll_1)
+    LinearLayout ll_1;
+    @BindView(R.id.success)
+    TextView tvSuccess;
     @BindView(R.id.ll_container)
     LinearLayout llcontainer;
 
@@ -132,6 +136,8 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     private String goodsid;
     private String shareUrl;
     private String goods_jingle;
+    private String title;
+    private String jingle;
 
     @Override
     protected void setLayout() {
@@ -244,6 +250,9 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                 }
                 if (left > 0) {
                     ll_2.setVisibility(View.VISIBLE);
+                    ll_1.setVisibility(View.VISIBLE);
+                    tvSuccess.setVisibility(View.GONE);
+                    share.setVisibility(View.VISIBLE);
                     ShopPresenter.getShareUrl(this, "1", pingtuanid, buyerid);
                     ShopPresenter.getShareUrl(this, "3", pingtuanid, buyerid);
                     ShopPresenter.getShareUrl(this, "2", pingtuanid, buyerid);
@@ -281,12 +290,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                             WXWebpageObject webpage = new WXWebpageObject();
                                                             webpage.webpageUrl = shareUrl;
                                                             WXMediaMessage msg = new WXMediaMessage(webpage);
-                                                            msg.title = goods_name;
+                                                            msg.title = PingtuanDetail.this.title;
                                                             String s;
-                                                            if (TextUtils.isEmpty(goods_jingle)) {
+                                                            if (TextUtils.isEmpty(jingle)) {
                                                                 s = goods_name.replace("\r", "");
                                                             } else {
-                                                                s = goods_jingle.replace("\r", "");
+                                                                s = jingle.replace("\r", "");
                                                             }
                                                             msg.description = s;
                                                             Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
@@ -385,12 +394,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                             WXWebpageObject webpage = new WXWebpageObject();
                                                             webpage.webpageUrl = shareUrl;
                                                             WXMediaMessage msg = new WXMediaMessage(webpage);
-                                                            msg.title = goods_name;
+                                                            msg.title = PingtuanDetail.this.title;
                                                             String s;
-                                                            if (TextUtils.isEmpty(goods_jingle)) {
+                                                            if (TextUtils.isEmpty(jingle)) {
                                                                 s = goods_name.replace("\r", "");
                                                             } else {
-                                                                s = goods_jingle.replace("\r", "");
+                                                                s = jingle.replace("\r", "");
                                                             }
                                                             s = s.replace("\t", "");
                                                             msg.description = s;
@@ -460,11 +469,14 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                         });
                     }
                 } else {
-                    ll_2.setVisibility(View.INVISIBLE);
+                    ll_2.setVisibility(View.GONE);
+                    ll_1.setVisibility(View.GONE);
+                    tvSuccess.setVisibility(View.VISIBLE);
+                    share.setVisibility(View.GONE);
                     share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            PopUtil.toastInCenter("拼团已经成功");
+                            PopUtil.toastInCenter("拼团已经结束");
                         }
                     });
                 }
@@ -552,6 +564,8 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
         if (type.equals("1")) {
             try {
                 JSONObject obj = new JSONObject(s);
+                title = obj.optString("title");
+                jingle =  obj.optString("jingle");
                 JSONObject objj = obj.optJSONObject("datas");
                 shareUrl = objj.optString("urlStr");
             } catch (JSONException e) {

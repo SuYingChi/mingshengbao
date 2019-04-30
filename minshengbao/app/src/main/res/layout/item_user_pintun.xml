@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:orientation="horizontal">
+
     <View
-        android:layout_width="@dimen/margin_Modules"
-        android:layout_height="match_parent"/>
-<ImageView
-    android:id="@+id/iv"
-    android:layout_width="@dimen/margin_width50"
-    android:layout_height="@dimen/margin_width50"
-   >
-</ImageView>
+        android:layout_width="@dimen/margin_width20"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="@dimen/margin_width50"
+            android:layout_height="@dimen/margin_width50"/>
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:textColor="@color/white"
+            android:text="团长"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@id/iv"
+            />
+    </RelativeLayout>
 </LinearLayout>

@@ -61,6 +61,8 @@ public class PingTuanBuyGoodDialog extends Dialog {
     TextView tvSecond;
     @BindView(R.id.buy_dialog)
     TextView tvBuy;
+    @BindView(R.id.huifu)
+    TextView tvhuifu;
    /* @BindView(R.id.addcar)
     TextView tvAddCar;*/
     private IShopGoodDetailView iShopGoodDetailView;
@@ -108,6 +110,7 @@ public class PingTuanBuyGoodDialog extends Dialog {
                 tvHour.setText(list.get(1));
                 tvMinute.setText(list.get(2));
                 tvSecond.setText(list.get(3));
+                tvhuifu.setText("后恢复"+"￥"+iShopGoodDetailView.getMarketPrice());
                 tvBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
