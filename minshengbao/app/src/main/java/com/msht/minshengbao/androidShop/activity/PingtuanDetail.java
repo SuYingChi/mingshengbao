@@ -21,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -282,7 +283,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                             WXMediaMessage msg = new WXMediaMessage(webpage);
                                                             msg.title = goods_name;
                                                             String s;
-                                                            if ("".equals(goods_jingle)) {
+                                                            if (TextUtils.isEmpty(goods_jingle)) {
                                                                 s = goods_name.replace("\r", "");
                                                             } else {
                                                                 s = goods_jingle.replace("\r", "");
@@ -386,7 +387,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                             WXMediaMessage msg = new WXMediaMessage(webpage);
                                                             msg.title = goods_name;
                                                             String s;
-                                                            if (goods_jingle.equals("")) {
+                                                            if (TextUtils.isEmpty(goods_jingle)) {
                                                                 s = goods_name.replace("\r", "");
                                                             } else {
                                                                 s = goods_jingle.replace("\r", "");
