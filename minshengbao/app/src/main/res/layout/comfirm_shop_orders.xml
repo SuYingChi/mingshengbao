@@ -263,7 +263,8 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/im"
                     android:layout_marginRight="@dimen/margin_width20"
-                    android:hint=""
+                    android:hint="请输入推荐人手机号码"
+                    android:inputType="number"
                     android:padding="@dimen/margin_Modules" />
             </RelativeLayout>
             </LinearLayout>
@@ -279,7 +280,7 @@
 
                 <ImageView
                     style="@style/image"
-                    android:src="@drawable/shop_recommand" />
+                    android:src="@drawable/fapiao" />
 
                 <TextView
                     style="@style/shopMsbcolorTitleText"

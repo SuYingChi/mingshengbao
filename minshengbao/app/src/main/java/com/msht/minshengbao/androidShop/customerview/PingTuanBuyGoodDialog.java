@@ -61,6 +61,8 @@ public class PingTuanBuyGoodDialog extends Dialog {
     TextView tvSecond;
     @BindView(R.id.buy_dialog)
     TextView tvBuy;
+    @BindView(R.id.huifu)
+    TextView tvhuifu;
    /* @BindView(R.id.addcar)
     TextView tvAddCar;*/
     private IShopGoodDetailView iShopGoodDetailView;
@@ -108,6 +110,7 @@ public class PingTuanBuyGoodDialog extends Dialog {
                 tvHour.setText(list.get(1));
                 tvMinute.setText(list.get(2));
                 tvSecond.setText(list.get(3));
+                tvhuifu.setText("后恢复"+"￥"+iShopGoodDetailView.getMarketPrice());
                 tvBuy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -183,12 +186,12 @@ public class PingTuanBuyGoodDialog extends Dialog {
                 }
                 break;
             case R.id.ll_plus:
-                if(num<iShopGoodDetailView.getPingTuanMaxNum()) {
+                if(num<iShopGoodDetailView.getPingTuanMaxNum()&&num<Integer.valueOf(iShopGoodDetailView.getRemainNum())) {
                     num++;
                     iShopGoodDetailView.setSelectedGoodNum(num);
                     tvNum.setText(String.format("%d", num));
                 }else {
-                    PopUtil.toastInBottom("超出拼团购买数量限制");
+                    PopUtil.toastInBottom("超出拼团购买数量限制或没有足够库存");
                 }
                 break;
             default:

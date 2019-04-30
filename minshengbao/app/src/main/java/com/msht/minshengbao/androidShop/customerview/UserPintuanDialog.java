@@ -11,16 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.activity.PingtuanDetail;
 import com.msht.minshengbao.androidShop.adapter.GoodPingTunAdpter;
 import com.msht.minshengbao.androidShop.adapter.UserPingTunAdpter;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.GoodPingTunBean;
 import com.msht.minshengbao.androidShop.shopBean.UserPinTunBean;
+import com.msht.minshengbao.androidShop.util.AddViewHolder;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
@@ -53,6 +57,8 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
     TextView tvName;
     @BindView(R.id.leftnum)
     TextView tvLeftNum;
+    @BindView(R.id.ll_container)
+    LinearLayout llcontainner;
     private Context context;
     private UserPingTunAdpter adapter;
     private List<UserPinTunBean> list=new ArrayList<UserPinTunBean>();
@@ -188,11 +194,22 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
             JSONArray pintuan_list = pintuan_info.optJSONArray("pintuan_list");
             tvName.setText(pintuan_info.optString("buyer_name"));
             buyer_id = pintuan_info.optString("buyer_id");
+            int minnum = Integer.valueOf(pintuan_info.optString("min_num"));
             tvLeftNum.setText("还差"+pintuan_info.optString("num")+"人拼成");
+            list.clear();
             for(int i=0;i<pintuan_list.length();i++){
                 list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),UserPinTunBean.class));
             }
+            llcontainner.removeAllViews();
             adapter.notifyDataSetChanged();
+            if(minnum>list.size()){
+                for(int i=0;i<minnum-list.size();i++){
+                    AddViewHolder ad = new AddViewHolder(context, R.layout.item_userpingtuan_foot);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(DimenUtil.dip2px(context.getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0, 0);
+                    llcontainner.addView(ad.getCustomView(),params);
+                }
+            }
             if(countDownTimer!=null){
                countDownTimer.cancel();
             }

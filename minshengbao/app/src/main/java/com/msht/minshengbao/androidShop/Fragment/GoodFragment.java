@@ -52,6 +52,7 @@ import com.msht.minshengbao.androidShop.shopBean.PingTuanBean;
 import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.shopBean.VoucherBean;
 import com.msht.minshengbao.androidShop.util.DateUtils;
+import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
 import com.msht.minshengbao.androidShop.util.PermissionUtils;
 import com.msht.minshengbao.androidShop.util.RecyclerHolder;
@@ -404,7 +405,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                         RecyclerHolder holder = new RecyclerHolder(getContext(), layout);
                         final AlertDialog dialog2 = new AlertDialog.Builder(getContext(), R.style.share_qrcode_dialog).create();
                         final ImageView ivQrcode = holder.getView(R.id.qrcode);
-                        holder.setImage(R.id.image, imageUrlShare);
+                        ViewGroup.LayoutParams layoutParams = ivQrcode.getLayoutParams();
+                        layoutParams.width= DimenUtil.getScreenWidth()/3;
+                        layoutParams.height=DimenUtil.getScreenWidth()/3;
+                        ivQrcode.setLayoutParams(layoutParams);
+                        ImageView ivv  = holder.getView(R.id.image);
+                        ViewGroup.LayoutParams layoutParams2 = ivv.getLayoutParams();
+                        layoutParams2.height=DimenUtil.getScreenHeight()/3;
+                        ivv.setLayoutParams(layoutParams2);
+                        GlideUtil.loadByImageView(getContext(),ivv,imagelist.get(0));
                         Glide.with(GoodFragment.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -652,6 +661,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             if (TextUtils.equals(pintuan_promotion, "1")) {
                 goodDetailActivityListener.isPingTuan(true);
                 goods_price = goods_info.optString("pintuan_price");
+                goods_marketprice = goods_info.optString("pintuan_goods_price");
                 ll_PingTuan.setVisibility(View.VISIBLE);
                 ll_miaosha.setVisibility(View.GONE);
                 tvprice.setVisibility(View.GONE);
@@ -721,6 +731,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 } else {
                     goods_price = goods_info.optString("promotion_price");
                 }
+                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                goods_marketprice = goods_info.optString("goods_price");
+            } else {
+                goods_marketprice = goods_info.optString("goods_marketprice");
+            }
                 //1团购 2限时 3秒杀
                 switch (goods_promotion_type) {
                     case "1":
@@ -783,11 +798,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));
-            if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
-                goods_marketprice = goods_info.optString("goods_price");
-            } else {
-                goods_marketprice = goods_info.optString("goods_marketprice");
-            }
             tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
             tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
             JSONObject goods_hair_info = datas.getJSONObject("goods_hair_info");
@@ -867,6 +877,15 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                     Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
                     intent.putExtra("id", storeid);
                     intent.putExtra("tabindex", 0);
+                    startActivity(intent);
+                }
+            });
+            storeall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+                    intent.putExtra("id", storeid);
+                    intent.putExtra("tabindex", 1);
                     startActivity(intent);
                 }
             });
@@ -1110,6 +1129,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     @Override
     public String getPrice() {
         return goods_price;
+    }
+
+    @Override
+    public String getMarketPrice() {
+        return goods_marketprice;
     }
 
     @Override

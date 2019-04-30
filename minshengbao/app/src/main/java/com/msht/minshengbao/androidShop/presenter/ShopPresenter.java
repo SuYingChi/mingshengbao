@@ -1334,8 +1334,8 @@ public class ShopPresenter {
                 .addParams("goods_id", iGetShareUrlView.getGoodId()).tag(iGetShareUrlView)
                 .addParams("type", type)
                 .addParams("buyer_id", buyer_id)
-                .addParams("share_name", "pingtuan")
-                .addParams("pingtuan_id", pingtuan_id)
+                .addParams("share_name", "pintuan")
+                .addParams("pintuan_id", pingtuan_id)
                 .build().execute(new DataStringCallback(iGetShareUrlView) {
             @Override
             public void onResponse(String s, int i) {

@@ -118,7 +118,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
-    <include layout="@layout/item_userpingtuan_foot" />
+        <LinearLayout
+            android:id="@+id/ll_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            />
     </LinearLayout>
     <TextView
         android:id="@+id/cantuan"

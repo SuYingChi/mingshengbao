@@ -118,6 +118,7 @@ public class ShopStoreMainActivity extends ShopBaseActivity implements IStoreVie
                 (tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener
                 (main_vp_container));
+        main_vp_container.setCurrentItem(tabIndex);
         ShopPresenter.getStoreInfo(this);
         tvStoreName.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -21,10 +21,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ import com.msht.minshengbao.androidShop.customerview.XScrollView;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.Imagebean;
 import com.msht.minshengbao.androidShop.shopBean.UserPinTunBean;
+import com.msht.minshengbao.androidShop.util.AddViewHolder;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
@@ -113,6 +116,12 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     ImageView back;
     @BindView(R.id.ll_2)
     LinearLayout ll_2;
+    @BindView(R.id.ll_1)
+    LinearLayout ll_1;
+    @BindView(R.id.success)
+    TextView tvSuccess;
+    @BindView(R.id.ll_container)
+    LinearLayout llcontainer;
 
     private List<UserPinTunBean> list=new ArrayList<UserPinTunBean>();
     private UserPingTunAdpter adapter;
@@ -127,6 +136,8 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     private String goodsid;
     private String shareUrl;
     private String goods_jingle;
+    private String title;
+    private String jingle;
 
     @Override
     protected void setLayout() {
@@ -194,6 +205,11 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ShopPresenter.getPingTuanDetail(this);
         ShopPresenter.getPromotionRule(this);
     }
@@ -202,221 +218,261 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     public void onGetPingTuanDetail(String s) {
         try {
             JSONObject pintuan_info = new JSONObject(s).optJSONObject("datas").optJSONObject("pintuan_info");
-            if(pintuan_info.has("goods_jingle")){
-                goods_jingle = pintuan_info.optString("goods_jingle");
-            }
-            goodsid = pintuan_info.optString("goods_id");
-            JSONArray log_list = pintuan_info.optJSONArray("log_list");
-            list.clear();
-            for (int i = 0; i < log_list.length(); i++) {
-                list.add(JsonUtil.toBean(log_list.optJSONObject(i).toString(), UserPinTunBean.class));
-            }
-            adapter.notifyDataSetChanged();
-            Long pintuan_end_time = pintuan_info.optLong("pintuan_end_time");
-            int left = Integer.valueOf(pintuan_info.optString("min_num")) - pintuan_info.optInt("num");
-            leftnum.setText(left+"人");
-            if(left>0) {
-                ll_2.setVisibility(View.VISIBLE);
-                ShopPresenter.getShareUrl(this, "1", pingtuanid, buyerid);
-                ShopPresenter.getShareUrl(this, "3", pingtuanid, buyerid);
-                ShopPresenter.getShareUrl(this, "2", pingtuanid, buyerid);
-                if (pintuan_end_time > 0) {
-                    countDownTimer = new CountDownTimer(pintuan_end_time * 1000, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
-                            hour.setText(list.get(1));
-                            minute.setText(list.get(2));
-                            second.setText(list.get(3));
-                            share.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    LayoutInflater inflaterDl = LayoutInflater.from(PingtuanDetail.this);
-                                    LinearLayout layout = (LinearLayout) inflaterDl.inflate(
-                                            R.layout.item_share_bottom, null);
-                                    RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
-                                    final AlertDialog dialog = new AlertDialog.Builder(PingtuanDetail.this, R.style.ActionSheetDialogStyle).create();
-                                    layout.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    holder.getView(R.id.ll_share_wx).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (!isWeChatAppInstalled()) {
-                                                PopUtil.showComfirmDialog(PingtuanDetail.this, "", "未安装微信", "", "", null, null, true);
-                                            } else {
-                                                Glide.with(PingtuanDetail.this).load(goods_image_url).into(new SimpleTarget<Drawable>() {
-                                                    @Override
-                                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                                        WXWebpageObject webpage = new WXWebpageObject();
-                                                        webpage.webpageUrl = shareUrl;
-                                                        WXMediaMessage msg = new WXMediaMessage(webpage);
-                                                        msg.title = goods_name;
-                                                        String s;
-                                                        if (goods_jingle.equals("")) {
-                                                            s = goods_name.replace("\r", "");
-                                                        } else {
-                                                            s = goods_jingle.replace("\r", "");
-                                                        }
-                                                        msg.description = s;
-                                                        Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
-                                                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-                                                        msg.thumbData = bmpToByteArray(thumbBmp, true);
-                                                        SendMessageToWX.Req req = new SendMessageToWX.Req();
-                                                        req.transaction = buildTransaction("webpage");
-                                                        req.message = msg;
-                                                        req.scene = SendMessageToWX.Req.WXSceneSession;
-                                                        IWXAPI api = WXAPIFactory.createWXAPI(PingtuanDetail.this, WXEntryActivity.APP_ID);
-                                                        api.sendReq(req);
-                                                        dialog.dismiss();
-                                                    }
-                                                });
+            if(pintuan_info==null){
+                PopUtil.toastInCenter("无拼团信息");
+                finish();
+            }else {
+                if (pintuan_info.has("goods_jingle")) {
+                    goods_jingle = pintuan_info.optString("goods_jingle");
+                }
+                goodsid = pintuan_info.optString("goods_id");
+                JSONArray log_list = pintuan_info.optJSONArray("log_list");
+                list.clear();
+                for (int i = 0; i < log_list.length(); i++) {
+                    list.add(JsonUtil.toBean(log_list.optJSONObject(i).toString(), UserPinTunBean.class));
+                }
+                Long pintuan_end_time = pintuan_info.optLong("pintuan_end_time");
+                int left = pintuan_info.optInt("num");
+                int minnum = Integer.valueOf(pintuan_info.optString("min_num"));
+                leftnum.setText(left + "人");
+                adapter.notifyDataSetChanged();
+                llcontainer.removeAllViews();
+                if (minnum > list.size()) {
+                    for (int i = 0; i < minnum - list.size(); i++) {
+                        AddViewHolder ad = new AddViewHolder(PingtuanDetail.this, R.layout.item_userpingtuan_foot);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(DimenUtil.dip2px(getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0, 0);
+                        llcontainer.addView(ad.getCustomView(), params);
+                    }
+                }
+                if(countDownTimer!=null){
+                    countDownTimer.cancel();
+                }
+                if (left > 0) {
+                    ll_2.setVisibility(View.VISIBLE);
+                    ll_1.setVisibility(View.VISIBLE);
+                    tvSuccess.setVisibility(View.GONE);
+                    share.setVisibility(View.VISIBLE);
+                    ShopPresenter.getShareUrl(this, "1", pingtuanid, buyerid);
+                    ShopPresenter.getShareUrl(this, "3", pingtuanid, buyerid);
+                    ShopPresenter.getShareUrl(this, "2", pingtuanid, buyerid);
+                    if (pintuan_end_time > 0) {
+                        countDownTimer = new CountDownTimer(pintuan_end_time * 1000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                                hour.setText(list.get(1));
+                                minute.setText(list.get(2));
+                                second.setText(list.get(3));
+                                share.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        LayoutInflater inflaterDl = LayoutInflater.from(PingtuanDetail.this);
+                                        LinearLayout layout = (LinearLayout) inflaterDl.inflate(
+                                                R.layout.item_share_bottom, null);
+                                        RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
+                                        final AlertDialog dialog = new AlertDialog.Builder(PingtuanDetail.this, R.style.ActionSheetDialogStyle).create();
+                                        layout.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.dismiss();
                                             }
-                                        }
-                                    });
-                                    holder.getView(R.id.ll_share_qrcode).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            LayoutInflater inflaterDl = LayoutInflater.from(PingtuanDetail.this);
-                                            LinearLayout layout = (LinearLayout) inflaterDl.inflate(
-                                                    R.layout.dialog_share_qrcode, null);
-                                            RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
-                                            final AlertDialog dialog2 = new AlertDialog.Builder(PingtuanDetail.this, R.style.share_qrcode_dialog).create();
-                                            final ImageView ivQrcode = holder.getView(R.id.qrcode);
-                                            holder.setImage(R.id.image, goods_image_url);
-                                            Glide.with(PingtuanDetail.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
-                                                @Override
-                                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                                    qrCodeImage = resource;
-                                                    ivQrcode.setImageDrawable(resource);
-                                                }
-                                            });
-                                            holder.setText(R.id.good_name, goods_name);
-                                            holder.setText(R.id.good_jingle, goods_jingle);
-                                            holder.setText(R.id.good_price, StringUtil.getPriceSpannable12String(PingtuanDetail.this, goods_price, R.style.big_money, R.style.big_money));
-                                            TextView tvorigprice = holder.getView(R.id.good_orginal_price);
-                                            tvorigprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
-                                            tvorigprice.setText(StringUtil.getPriceSpannable12String(PingtuanDetail.this, goods_price, R.style.small_money, R.style.small_money));
-                                            holder.getView(R.id.save).setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    if (qrCodeImage != null) {
-                                                        if (Build.VERSION.SDK_INT >= 23) {
-                                                            PermissionUtils.requestPermissions(PingtuanDetail.this, new PermissionUtils.PermissionRequestFinishListener() {
-                                                                @Override
-                                                                public void onPermissionRequestSuccess(List<String> permissions) {
-                                                                    Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                                                                    if (DrawbleUtil.saveImageToGallery(PingtuanDetail.this, bitmap) != null) {
-                                                                        PopUtil.showAutoDissHookDialog(PingtuanDetail.this, "已保存到本地相册", 200);
-                                                                    }
-                                                                }
-                                                            }, Permission.WRITE_EXTERNAL_STORAGE);
-                                                        } else {
-                                                            Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
-                                                            if (DrawbleUtil.saveImageToGallery(PingtuanDetail.this, bitmap) != null) {
-                                                                PopUtil.showAutoDissHookDialog(PingtuanDetail.this, "已保存到本地相册", 200);
+                                        });
+                                        holder.getView(R.id.ll_share_wx).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (!isWeChatAppInstalled()) {
+                                                    PopUtil.showComfirmDialog(PingtuanDetail.this, "", "未安装微信", "", "", null, null, true);
+                                                } else {
+                                                    Glide.with(PingtuanDetail.this).load(goods_image_url).into(new SimpleTarget<Drawable>() {
+                                                        @Override
+                                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                                            WXWebpageObject webpage = new WXWebpageObject();
+                                                            webpage.webpageUrl = shareUrl;
+                                                            WXMediaMessage msg = new WXMediaMessage(webpage);
+                                                            msg.title = PingtuanDetail.this.title;
+                                                            String s;
+                                                            if (TextUtils.isEmpty(jingle)) {
+                                                                s = goods_name.replace("\r", "");
+                                                            } else {
+                                                                s = jingle.replace("\r", "");
                                                             }
+                                                            msg.description = s;
+                                                            Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
+                                                            Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+                                                            msg.thumbData = bmpToByteArray(thumbBmp, true);
+                                                            SendMessageToWX.Req req = new SendMessageToWX.Req();
+                                                            req.transaction = buildTransaction("webpage");
+                                                            req.message = msg;
+                                                            req.scene = SendMessageToWX.Req.WXSceneSession;
+                                                            IWXAPI api = WXAPIFactory.createWXAPI(PingtuanDetail.this, WXEntryActivity.APP_ID);
+                                                            api.sendReq(req);
+                                                            dialog.dismiss();
                                                         }
-
-                                                    }
+                                                    });
                                                 }
-                                            });
-                                            layout.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    dialog2.dismiss();
-                                                }
-                                            });
-                                            dialog2.setCancelable(true);
-                                            dialog2.setCanceledOnTouchOutside(true);
-                                            dialog2.show();
-                                            dialog2.getWindow().setContentView(layout);
-                                            dialog.dismiss();
-
-                                        }
-                                    });
-                                    holder.getView(R.id.ll_share_wxq).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (!isWeChatAppInstalled()) {
-                                                PopUtil.showComfirmDialog(PingtuanDetail.this, "", "未安装微信", "", "", null, null, true);
-                                            } else {
-                                                Glide.with(PingtuanDetail.this).load(goods_image_url).into(new SimpleTarget<Drawable>() {
+                                            }
+                                        });
+                                        holder.getView(R.id.ll_share_qrcode).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                LayoutInflater inflaterDl = LayoutInflater.from(PingtuanDetail.this);
+                                                LinearLayout layout = (LinearLayout) inflaterDl.inflate(
+                                                        R.layout.dialog_share_qrcode, null);
+                                                RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
+                                                final AlertDialog dialog2 = new AlertDialog.Builder(PingtuanDetail.this, R.style.share_qrcode_dialog).create();
+                                                final ImageView ivQrcode = holder.getView(R.id.qrcode);
+                                                ViewGroup.LayoutParams layoutParams = ivQrcode.getLayoutParams();
+                                                layoutParams.width= DimenUtil.getScreenWidth()/3;
+                                                layoutParams.height=DimenUtil.getScreenWidth()/3;
+                                                ivQrcode.setLayoutParams(layoutParams);
+                                                ImageView ivv  = holder.getView(R.id.image);
+                                                ViewGroup.LayoutParams layoutParams2 = ivv.getLayoutParams();
+                                                layoutParams2.height=DimenUtil.getScreenHeight()/3;
+                                                ivv.setLayoutParams(layoutParams2);
+                                                GlideUtil.loadRemoteImg(PingtuanDetail.this,ivv,goods_image_url);
+                                                Glide.with(PingtuanDetail.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
                                                     @Override
                                                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                                        WXWebpageObject webpage = new WXWebpageObject();
-                                                        webpage.webpageUrl = shareUrl;
-                                                        WXMediaMessage msg = new WXMediaMessage(webpage);
-                                                        msg.title = goods_name;
-                                                        String s;
-                                                        if (goods_jingle.equals("")) {
-                                                            s = goods_name.replace("\r", "");
-                                                        } else {
-                                                            s = goods_jingle.replace("\r", "");
-                                                        }
-                                                        s = s.replace("\t", "");
-                                                        msg.description = s;
-                                                        Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
-                                                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-                                                        msg.thumbData = bmpToByteArray(thumbBmp, true);
-                                                        SendMessageToWX.Req req = new SendMessageToWX.Req();
-                                                        req.transaction = buildTransaction("webpage");
-                                                        req.message = msg;
-                                                        req.scene = SendMessageToWX.Req.WXSceneTimeline;
-                                                        IWXAPI api = WXAPIFactory.createWXAPI(PingtuanDetail.this, WXEntryActivity.APP_ID);
-                                                        api.sendReq(req);
-                                                        dialog.dismiss();
+                                                        qrCodeImage = resource;
+                                                        ivQrcode.setImageDrawable(resource);
                                                     }
                                                 });
-                                            }
-                                        }
-                                    });
-                                    holder.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    holder.getView(R.id.ll_share_copy).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                            // 将文本内容放到系统剪贴板里。
-                                            cm.setText(copyLink);
-                                            PopUtil.toastInBottom("已复制");
-                                        }
-                                    });
-                                    dialog.setCancelable(true);
-                                    dialog.setCanceledOnTouchOutside(true);
-                                    dialog.show();
-                                    dialog.getWindow().setContentView(layout);
-                                    //dialog属性编辑放在show方法后边
-                                    WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-                                    attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
-                                    attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                                    attributes.gravity = Gravity.BOTTOM;
-                                    dialog.getWindow().setAttributes(attributes);
-                                }
-                            });
-                        }
+                                                holder.setText(R.id.good_name, goods_name);
+                                                holder.setText(R.id.good_jingle, goods_jingle);
+                                                holder.setText(R.id.good_price, StringUtil.getPriceSpannable12String(PingtuanDetail.this, goods_price, R.style.big_money, R.style.big_money));
+                                                TextView tvorigprice = holder.getView(R.id.good_orginal_price);
+                                                tvorigprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                                                tvorigprice.setText(StringUtil.getPriceSpannable12String(PingtuanDetail.this, goods_price, R.style.small_money, R.style.small_money));
+                                                holder.getView(R.id.save).setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        if (qrCodeImage != null) {
+                                                            if (Build.VERSION.SDK_INT >= 23) {
+                                                                PermissionUtils.requestPermissions(PingtuanDetail.this, new PermissionUtils.PermissionRequestFinishListener() {
+                                                                    @Override
+                                                                    public void onPermissionRequestSuccess(List<String> permissions) {
+                                                                        Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
+                                                                        if (DrawbleUtil.saveImageToGallery(PingtuanDetail.this, bitmap) != null) {
+                                                                            PopUtil.showAutoDissHookDialog(PingtuanDetail.this, "已保存到本地相册", 200);
+                                                                        }
+                                                                    }
+                                                                }, Permission.WRITE_EXTERNAL_STORAGE);
+                                                            } else {
+                                                                Bitmap bitmap = DrawbleUtil.drawableToBitmap(qrCodeImage);
+                                                                if (DrawbleUtil.saveImageToGallery(PingtuanDetail.this, bitmap) != null) {
+                                                                    PopUtil.showAutoDissHookDialog(PingtuanDetail.this, "已保存到本地相册", 200);
+                                                                }
+                                                            }
 
-                        @Override
-                        public void onFinish() {
-                            share.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PopUtil.toastInCenter("拼团已经结束");
-                                }
-                            });
-                        }
-                    }.start();
+                                                        }
+                                                    }
+                                                });
+                                                layout.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialog2.dismiss();
+                                                    }
+                                                });
+                                                dialog2.setCancelable(true);
+                                                dialog2.setCanceledOnTouchOutside(true);
+                                                dialog2.show();
+                                                dialog2.getWindow().setContentView(layout);
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+                                        holder.getView(R.id.ll_share_wxq).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (!isWeChatAppInstalled()) {
+                                                    PopUtil.showComfirmDialog(PingtuanDetail.this, "", "未安装微信", "", "", null, null, true);
+                                                } else {
+                                                    Glide.with(PingtuanDetail.this).load(goods_image_url).into(new SimpleTarget<Drawable>() {
+                                                        @Override
+                                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                                            WXWebpageObject webpage = new WXWebpageObject();
+                                                            webpage.webpageUrl = shareUrl;
+                                                            WXMediaMessage msg = new WXMediaMessage(webpage);
+                                                            msg.title = PingtuanDetail.this.title;
+                                                            String s;
+                                                            if (TextUtils.isEmpty(jingle)) {
+                                                                s = goods_name.replace("\r", "");
+                                                            } else {
+                                                                s = jingle.replace("\r", "");
+                                                            }
+                                                            s = s.replace("\t", "");
+                                                            msg.description = s;
+                                                            Bitmap bmp = DrawbleUtil.drawableToBitmap(resource);
+                                                            Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+                                                            msg.thumbData = bmpToByteArray(thumbBmp, true);
+                                                            SendMessageToWX.Req req = new SendMessageToWX.Req();
+                                                            req.transaction = buildTransaction("webpage");
+                                                            req.message = msg;
+                                                            req.scene = SendMessageToWX.Req.WXSceneTimeline;
+                                                            IWXAPI api = WXAPIFactory.createWXAPI(PingtuanDetail.this, WXEntryActivity.APP_ID);
+                                                            api.sendReq(req);
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                        holder.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        holder.getView(R.id.ll_share_copy).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                                // 将文本内容放到系统剪贴板里。
+                                                cm.setText(copyLink);
+                                                PopUtil.toastInBottom("已复制");
+                                            }
+                                        });
+                                        dialog.setCancelable(true);
+                                        dialog.setCanceledOnTouchOutside(true);
+                                        dialog.show();
+                                        dialog.getWindow().setContentView(layout);
+                                        //dialog属性编辑放在show方法后边
+                                        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
+                                        attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                        attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                                        attributes.gravity = Gravity.BOTTOM;
+                                        dialog.getWindow().setAttributes(attributes);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                share.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        PopUtil.toastInCenter("拼团已经结束");
+                                    }
+                                });
+                            }
+                        }.start();
+                    } else {
+                        hour.setText("00");
+                        minute.setText("00");
+                        second.setText("00");
+                        share.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                PopUtil.toastInCenter("拼团已经结束");
+                            }
+                        });
+                    }
                 } else {
-                    hour.setText("00");
-                    minute.setText("00");
-                    second.setText("00");
+                    ll_2.setVisibility(View.GONE);
+                    ll_1.setVisibility(View.GONE);
+                    tvSuccess.setVisibility(View.VISIBLE);
+                    share.setVisibility(View.GONE);
                     share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -424,32 +480,24 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                         }
                     });
                 }
-            }else {
-                ll_2.setVisibility(View.INVISIBLE);
-                share.setOnClickListener(new View.OnClickListener() {
+                goods_name = pintuan_info.optString("goods_name");
+                goodname.setText(goods_name);
+                goods_image_url = pintuan_info.optString("goods_image_url");
+                GlideUtil.loadRemoteImg(this, iv, goods_image_url);
+                pintuan_price = pintuan_info.optString("pintuan_price");
+                goods_price = pintuan_info.optString("goods_price");
+                price.setText(StringUtil.getPriceSpannable12String(this, pintuan_price, R.style.big_money, R.style.big_money));
+                marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                marketprice.setText(StringUtil.getPriceSpannable12String(this, goods_price, R.style.small_money, R.style.small_money));
+                backmain.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PopUtil.toastInCenter("拼团已经成功");
+                        Intent intent = new Intent(PingtuanDetail.this, MainActivity.class);
+                        intent.putExtra("index", 1);
+                        startActivity(intent);
                     }
                 });
             }
-            goods_name  = pintuan_info.optString("goods_name");
-            goodname.setText(goods_name);
-            goods_image_url = pintuan_info.optString("goods_image_url");
-            GlideUtil.loadRemoteImg(this, iv, goods_image_url);
-            pintuan_price =  pintuan_info.optString("pintuan_price");
-            goods_price =  pintuan_info.optString("goods_price");
-            price.setText(StringUtil.getPriceSpannable12String(this, pintuan_price, R.style.big_money, R.style.big_money));
-            marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
-            marketprice.setText(StringUtil.getPriceSpannable12String(this, goods_price, R.style.small_money, R.style.small_money));
-            backmain.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(PingtuanDetail.this, MainActivity.class);
-                    intent.putExtra("index", 1);
-                    startActivity(intent);
-                }
-            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -516,6 +564,8 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
         if (type.equals("1")) {
             try {
                 JSONObject obj = new JSONObject(s);
+                title = obj.optString("title");
+                jingle =  obj.optString("jingle");
                 JSONObject objj = obj.optJSONObject("datas");
                 shareUrl = objj.optString("urlStr");
             } catch (JSONException e) {

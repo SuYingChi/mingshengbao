@@ -67,10 +67,34 @@ public class DateUtils {
         remainSecond = remainSecond - hour * 3600;
         int fen = (int) (remainSecond / 60);
         remainSecond = remainSecond - fen * 60;
-        list.add(day + "");
-        list.add(hour + "");
-        list.add(fen + "");
-        list.add(remainSecond + "");
+        String days;
+        if(day<10){
+            days = "0" + day;
+        }else {
+            days = day+"";
+        }
+        String hours;
+        if(hour<10){
+            hours = "0" + hour;
+        }else {
+            hours = hour+"";
+        }
+        String fens;
+        if(fen<10){
+            fens = "0" + fen;
+        }else {
+            fens = fen+"";
+        }
+        String remainSeconds;
+        if(remainSecond<10){
+            remainSeconds = "0" + remainSecond;
+        }else {
+            remainSeconds = remainSecond+"";
+        }
+        list.add(days);
+        list.add(hours);
+        list.add(fens);
+        list.add(remainSeconds);
         return list;
     }
 

@@ -464,6 +464,11 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     }
 
     @Override
+    public String getMarketPrice() {
+        return null;
+    }
+
+    @Override
     public String getRemainNum() {
         return remianNum;
     }

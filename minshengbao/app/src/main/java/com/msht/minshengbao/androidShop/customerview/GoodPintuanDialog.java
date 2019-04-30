@@ -112,6 +112,7 @@ public class GoodPintuanDialog extends Dialog implements IGoodPingTuanView, Good
             JSONObject obj = new JSONObject(s);
             JSONObject datas = obj.optJSONObject("datas");
             JSONArray pintuan_list = datas.optJSONArray("pintuan_list");
+            list.clear();
             for(int i=0;i<pintuan_list.length();i++){
                list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),GoodPingTunBean.class));
             }
