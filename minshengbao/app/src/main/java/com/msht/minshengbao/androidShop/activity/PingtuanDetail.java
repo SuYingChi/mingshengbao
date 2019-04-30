@@ -282,7 +282,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                             WXMediaMessage msg = new WXMediaMessage(webpage);
                                                             msg.title = goods_name;
                                                             String s;
-                                                            if (goods_jingle.equals("")) {
+                                                            if ("".equals(goods_jingle)) {
                                                                 s = goods_name.replace("\r", "");
                                                             } else {
                                                                 s = goods_jingle.replace("\r", "");
