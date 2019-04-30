@@ -198,8 +198,6 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                 finish();
             }
         });
-        ShopPresenter.getPingTuanDetail(this);
-        ShopPresenter.getPromotionRule(this);
     }
 
     @Override
