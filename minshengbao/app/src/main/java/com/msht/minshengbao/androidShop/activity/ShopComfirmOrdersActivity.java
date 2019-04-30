@@ -554,7 +554,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 String store_name = storeobj.optString("store_name");
                 comfirmShopGoodBean.setStore_name(store_name);
                 comfirmShopGoodBean.setStoreDoorService(store_door_service);
-                comfirmShopGoodBean.setIsNeedEtVisible(true);
+                comfirmShopGoodBean.setIsNeedEtVisible(false);
                 JSONArray goodList = storeobj.optJSONArray("goods_list");
                 for (int i = 0; i < goodList.length(); i++) {
                     JSONObject goodobj = goodList.optJSONObject(i);
