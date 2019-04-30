@@ -731,6 +731,11 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 } else {
                     goods_price = goods_info.optString("promotion_price");
                 }
+                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                goods_marketprice = goods_info.optString("goods_price");
+            } else {
+                goods_marketprice = goods_info.optString("goods_marketprice");
+            }
                 //1团购 2限时 3秒杀
                 switch (goods_promotion_type) {
                     case "1":
@@ -793,11 +798,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
             goods_salenum = goods_info.optString("goods_salenum");
             tvgoods_salenum.setText(String.format("销售量：%s件", goods_salenum));
-            if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
-                goods_marketprice = goods_info.optString("goods_price");
-            } else {
-                goods_marketprice = goods_info.optString("goods_marketprice");
-            }
             tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
             tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
             JSONObject goods_hair_info = datas.getJSONObject("goods_hair_info");
