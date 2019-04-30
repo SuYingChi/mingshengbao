@@ -200,6 +200,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     LinearLayout llgift;
     @BindView(R.id.gift_rcl)
     RecyclerView giftRcl;
+    @BindView(R.id.llleiji)
+    LinearLayout llleiji;
     List<VoucherBean> voucherList = new ArrayList<VoucherBean>();
     private GoodDetailActivityListener goodDetailActivityListener;
     private TypedArray actionbarSizeTypedArray;
@@ -247,6 +249,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
     public long millisUntilFinished;
     private int pintuan_max_num = 1;
     private int pingtuanType;
+    private CountDownTimer countDownTimer2;
 
     public String getPintuan_default_log_id() {
         return pintuan_default_log_id;
@@ -258,7 +261,8 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
     private String pintuan_default_log_id;
     private String pintuan_default_buyer_id;
-
+    @BindView(R.id.tvpt)
+    TextView tvpt;
     @Override
     protected int setLayoutId() {
         return R.layout.good_fragment;
@@ -666,6 +670,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                 ll_miaosha.setVisibility(View.GONE);
                 tvprice.setVisibility(View.GONE);
                 tvgoods_marketprice.setVisibility(View.GONE);
+                llleiji.setVisibility(View.VISIBLE);
                 tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
                 tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                 tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
@@ -688,31 +693,62 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
                     @Override
                     public void onFinish() {
-                        goodDetailActivityListener.isPingTuan(false);
-                        ll_PingTuan.setVisibility(View.GONE);
-                        tvprice.setVisibility(View.VISIBLE);
-                        tvgoods_marketprice.setVisibility(View.VISIBLE);
-                        if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
-                            if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
-                                if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
-                                    PopUtil.toastInCenter("没有商品价格");
-                                } else {
-                                    goods_price = goods_info.optString("goods_price");
-                                }
-                            } else {
-                                goods_price = goods_info.optString("goods_promotion_price");
-                            }
+                        ShopPresenter.getGoodDetail(GoodFragment.this);
+                    }
+                }.start();
+            }else if(TextUtils.equals(pintuan_promotion,"2")){
+                goodDetailActivityListener.isPingTuan(false);
+                tvpt.setText("距离开始仅剩");
+                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
+                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
+                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
+                            PopUtil.toastInCenter("没有商品价格");
                         } else {
-                            goods_price = goods_info.optString("promotion_price");
+                            goods_price = goods_info.optString("goods_price");
                         }
-                        tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
-                        if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
-                            goods_marketprice = goods_info.optString("goods_price");
-                        } else {
-                            goods_marketprice = goods_info.optString("goods_marketprice");
-                        }
-                        tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
-                        tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                    } else {
+                        goods_price = goods_info.optString("goods_promotion_price");
+                    }
+                } else {
+                    goods_price = goods_info.optString("promotion_price");
+                }
+                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
+                    goods_marketprice = goods_info.optString("goods_price");
+                } else {
+                    goods_marketprice = goods_info.optString("goods_marketprice");
+                }
+                llleiji.setVisibility(View.INVISIBLE);
+                ll_PingTuan.setVisibility(View.VISIBLE);
+                ll_miaosha.setVisibility(View.GONE);
+                tvPingtuan_price.setVisibility(View.VISIBLE);
+                tvPingtuan_market_price.setVisibility(View.VISIBLE);
+                tvprice.setVisibility(View.VISIBLE);
+                tvgoods_marketprice.setVisibility(View.VISIBLE);
+                tvPingtuan_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_price"), R.style.big_money, R.style.big_money));
+                tvPingtuan_market_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                tvPingtuan_market_price.setText(StringUtil.getPriceSpannable12String(getContext(), goods_info.optString("pintuan_goods_price"), R.style.small_money, R.style.small_money));
+                tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
+                tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
+                tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                if (countDownTimer2 != null) {
+                    countDownTimer.cancel();
+                }
+                countDownTimer2 = new CountDownTimer(goods_info.optLong("pintuan_start_time") * 1000, 1000) {
+
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        GoodFragment.this.millisUntilFinished = millisUntilFinished;
+                        List<String> list = DateUtils.secondFormatToLeftDay(millisUntilFinished / 1000);
+                        tvDay.setText(list.get(0));
+                        tvHour.setText(list.get(1));
+                        tvMinute.setText(list.get(2));
+                        tvSecond.setText(list.get(3));
+                    }
+
+                    @Override
+                    public void onFinish() {
+                       ShopPresenter.getGoodDetail(GoodFragment.this);
                     }
                 }.start();
             } else {
@@ -762,30 +798,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
 
                             @Override
                             public void onFinish() {
-                                ll_miaosha.setVisibility(View.GONE);
-                                tvprice.setVisibility(View.VISIBLE);
-                                tvgoods_marketprice.setVisibility(View.VISIBLE);
-                                if (TextUtils.isEmpty(goods_info.optString("promotion_price"))) {
-                                    if (TextUtils.isEmpty(goods_info.optString("goods_promotion_price"))) {
-                                        if (TextUtils.isEmpty(goods_info.optString("goods_price"))) {
-                                            PopUtil.toastInCenter("没有商品价格");
-                                        } else {
-                                            goods_price = goods_info.optString("goods_price");
-                                        }
-                                    } else {
-                                        goods_price = goods_info.optString("goods_promotion_price");
-                                    }
-                                } else {
-                                    goods_price = goods_info.optString("promotion_price");
-                                }
-                                tvprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_price, R.style.big_money, R.style.big_money));
-                                if (TextUtils.equals(goods_info.optString("promotion_type"), "xianshi")) {
-                                    goods_marketprice = goods_info.optString("goods_price");
-                                } else {
-                                    goods_marketprice = goods_info.optString("goods_marketprice");
-                                }
-                                tvgoods_marketprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); //设置中划线并加清晰
-                                tvgoods_marketprice.setText(StringUtil.getPriceSpannable12String(getContext(), goods_marketprice, R.style.small_money, R.style.small_money));
+                               ShopPresenter.getGoodDetail(GoodFragment.this);
                             }
                         }.start();
                         break;
@@ -1195,6 +1208,9 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         }
         if (userPinTunDialog != null) {
             userPinTunDialog.cancelAllTimers();
+        }
+        if(countDownTimer2!=null){
+            countDownTimer2.cancel();
         }
     }
 
