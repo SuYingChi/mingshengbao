@@ -119,6 +119,8 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
     private List<SimpleCarBean> caridlist = new ArrayList<SimpleCarBean>();
     private int carNum = -1;
     private String carid;
+    private boolean canAddCar;
+
     @Override
     protected void setLayout() {
         setContentView(R.layout.class_detail);
@@ -336,9 +338,9 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
             JSONObject datas = jsonObject.getJSONObject("datas");
             JSONObject goods_info = datas.getJSONObject("goods_info");
             if(goods_info.optInt("cart")==1){
-                addCarOrBuyGoodDialog.setIsAllowAddCarVisible(true);
+                canAddCar = true;
             }else {
-                addCarOrBuyGoodDialog.setIsAllowAddCarVisible(false);
+                canAddCar = false;
             }
             String pintuan_promotion = goods_info.optString("pintuan_promotion");
             if(TextUtils.equals(pintuan_promotion,"1")){
@@ -385,8 +387,10 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
                 }
                 if (!isFinishing() && addCarOrBuyGoodDialog != null && addCarOrBuyGoodDialog.isShowing()) {
                     addCarOrBuyGoodDialog.refreshData();
+                    addCarOrBuyGoodDialog.setIsAllowAddCarVisible(canAddCar);
                 } else {
                     addCarOrBuyGoodDialog = new AddCarOrBuyGoodDialog(this, this);
+                    addCarOrBuyGoodDialog.setIsAllowAddCarVisible(canAddCar);
                     addCarOrBuyGoodDialog.show();
                 }
             }
