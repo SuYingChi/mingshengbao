@@ -449,36 +449,26 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
 
                             @Override
                             public void onFinish() {
-                                share.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        PopUtil.toastInCenter("拼团已经结束");
-                                    }
-                                });
+                                ll_2.setVisibility(View.GONE);
+                                ll_1.setVisibility(View.GONE);
+                                tvSuccess.setVisibility(View.VISIBLE);
+                                tvSuccess.setText("拼团已经结束");
+                                share.setVisibility(View.GONE);
                             }
                         }.start();
                     } else {
-                        hour.setText("00");
-                        minute.setText("00");
-                        second.setText("00");
-                        share.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                PopUtil.toastInCenter("拼团已经结束");
-                            }
-                        });
+                        ll_2.setVisibility(View.GONE);
+                        ll_1.setVisibility(View.GONE);
+                        tvSuccess.setVisibility(View.VISIBLE);
+                        tvSuccess.setText("拼团已经结束");
+                        share.setVisibility(View.GONE);
                     }
                 } else {
                     ll_2.setVisibility(View.GONE);
                     ll_1.setVisibility(View.GONE);
                     tvSuccess.setVisibility(View.VISIBLE);
+                    tvSuccess.setText("拼团已经成功，请前往订单页面查询");
                     share.setVisibility(View.GONE);
-                    share.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            PopUtil.toastInCenter("拼团已经结束");
-                        }
-                    });
                 }
                 goods_name = pintuan_info.optString("goods_name");
                 goodname.setText(goods_name);
