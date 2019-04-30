@@ -7,8 +7,8 @@
         android:color="@color/shop_grey" />
     <corners android:radius="20dp" />
     <padding
-        android:bottom="@dimen/margin_width2"
-        android:left="@dimen/margin_Modules"
-        android:right="@dimen/margin_Modules"
-        android:top="@dimen/margin_width2"></padding>
+        android:bottom="8dp"
+        android:left="14dp"
+        android:right="14dp"
+        android:top="8dp"></padding>
 </shape>
