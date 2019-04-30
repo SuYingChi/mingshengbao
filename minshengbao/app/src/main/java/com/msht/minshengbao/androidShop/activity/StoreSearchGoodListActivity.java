@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
@@ -130,6 +131,13 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
         dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rcl.addItemDecoration(dividerItemDecoration);
         adapter = new StoreGoodListAdapter(this,R.layout.item_keyword_search,goodlist);
+        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String id = goodlist.get(position).getGoods_id();
+                onShopItemViewClick("goods",id);
+            }
+        });
         rcl.setAdapter(adapter);
         upTriangle = getResources().getDrawable(R.drawable.shop_up_triangle);
         downTriangle = getResources().getDrawable(R.drawable.shop_down_triangle);
