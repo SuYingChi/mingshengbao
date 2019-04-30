@@ -413,7 +413,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
                         ViewGroup.LayoutParams layoutParams2 = ivv.getLayoutParams();
                         layoutParams2.height=DimenUtil.getScreenHeight()/3;
                         ivv.setLayoutParams(layoutParams2);
-                        GlideUtil.loadByImageView(getContext(),ivv,shareImageUrl);
+                        GlideUtil.loadByImageView(getContext(),ivv,imagelist.get(0));
                         Glide.with(GoodFragment.this).load(shareQrCodeImageUrl).into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
