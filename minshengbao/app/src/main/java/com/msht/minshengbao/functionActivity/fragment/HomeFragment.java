@@ -246,7 +246,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         private GetUrlHandler(HomeFragment homeFragment) {
             mWeakReference = new WeakReference<HomeFragment>(homeFragment);
         }
-
         @Override
         public void handleMessage(Message msg) {
             final HomeFragment reference = mWeakReference.get();
@@ -894,8 +893,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 } else {
                     mCity = city.replace("市", "");
                 }
-                VariableUtil.City = mCity;
-                tvCity.setText(mCity);
+                if (TextUtils.isEmpty(mCity)){
+                    VariableUtil.City = "海口";
+                }else {
+                    VariableUtil.City = mCity;
+                }
+                tvCity.setText(VariableUtil.City);
                 LocationUtils.mLocationClient.stopLocation();
             } else {
                 VariableUtil.City = mCity;

@@ -3,8 +3,11 @@ package com.msht.minshengbao.functionActivity.gasService;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
@@ -37,23 +40,35 @@ public class GasPayDetailActivity extends BaseActivity {
         customDialog=new CustomDialog(this, "正在加载");
         Intent data=getIntent();
         initView();
+        View layoutOverdueFine=findViewById(R.id.id_overdue_layout);
+        View layoutDiscount=findViewById(R.id.id_discount_layout);
         if (data!=null){
-
             String customerNo=data.getStringExtra("customerNo");
             String payTime=data.getStringExtra("payTime");
             String usageAmount=data.getStringExtra("usageAmount")+"立方米";
-            String overdueFine=data.getStringExtra("overdueFine")+"元";
+            String overdueFine=data.getStringExtra("overdueFine");
             String totalDiscountAmt=data.getStringExtra("totalDiscountAmt");
             String amount=data.getStringExtra("amount");
             tvCustomerNo.setText(customerNo);
             tvPayTime.setText(payTime);
             tvGasNum.setText(usageAmount);
-            tvOverdueFine.setText(overdueFine);
+            String overdueFineText=overdueFine+"元";
+            tvOverdueFine.setText(overdueFineText);
             String discountAmtText=totalDiscountAmt+"元";
             tvDiscountAmount.setText(discountAmtText);
             tvPayAmount.setText(amount);
             String originAmount="原价："+String.valueOf(TypeConvertUtil.convertToDouble(amount,0)+TypeConvertUtil.convertToDouble(totalDiscountAmt,0))+"元";
             tvOriginAmount.setText(originAmount);
+            if (!TextUtils.isEmpty(overdueFine)&&!overdueFine.equals(ConstantUtil.VALUE_ZERO)){
+                layoutOverdueFine.setVisibility(View.VISIBLE);
+            }else {
+                layoutOverdueFine.setVisibility(View.GONE);
+            }
+            if (!TextUtils.isEmpty(totalDiscountAmt)&&!totalDiscountAmt.equals(ConstantUtil.VALUE_ZERO)){
+                layoutDiscount.setVisibility(View.VISIBLE);
+            }else {
+                layoutDiscount.setVisibility(View.GONE);
+            }
 
         }
     }

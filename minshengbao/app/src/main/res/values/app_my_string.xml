@@ -103,6 +103,8 @@
     <string name="look_invoice">查看发票</string>
     <string name="send_success">提交成功</string>
     <string name="open_invoice">开具发票</string>
+    <string name="continue_open_invoice">继续开具发票</string>
+    <string name="look_invoice_history">查看开票历史</string>
     <string name="invoice_history">开票历史</string>
     <string name="enterprise_text">企业</string>
     <string name="Personal_text">个人</string>
