@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ import com.msht.minshengbao.androidShop.customerview.XScrollView;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
 import com.msht.minshengbao.androidShop.shopBean.Imagebean;
 import com.msht.minshengbao.androidShop.shopBean.UserPinTunBean;
+import com.msht.minshengbao.androidShop.util.AddViewHolder;
 import com.msht.minshengbao.androidShop.util.DateUtils;
 import com.msht.minshengbao.androidShop.util.DimenUtil;
 import com.msht.minshengbao.androidShop.util.DrawbleUtil;
@@ -113,6 +115,8 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
     ImageView back;
     @BindView(R.id.ll_2)
     LinearLayout ll_2;
+    @BindView(R.id.ll_container)
+    LinearLayout llcontainer;
 
     private List<UserPinTunBean> list=new ArrayList<UserPinTunBean>();
     private UserPingTunAdpter adapter;
@@ -211,10 +215,19 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
             for (int i = 0; i < log_list.length(); i++) {
                 list.add(JsonUtil.toBean(log_list.optJSONObject(i).toString(), UserPinTunBean.class));
             }
-            adapter.notifyDataSetChanged();
             Long pintuan_end_time = pintuan_info.optLong("pintuan_end_time");
-            int left = Integer.valueOf(pintuan_info.optString("min_num")) - pintuan_info.optInt("num");
+            int left = pintuan_info.optInt("num");
+            int minnum = Integer.valueOf(pintuan_info.optString("min_num"));
             leftnum.setText(left+"人");
+            adapter.notifyDataSetChanged();
+            if(minnum>list.size()){
+                for(int i=0;i<minnum-list.size();i++){
+                    AddViewHolder ad = new AddViewHolder(PingtuanDetail.this, R.layout.item_userpingtuan_foot);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(DimenUtil.dip2px(getResources().getDimension(R.dimen.shop_home_area_margin)), 0, 0, 0);
+                    llcontainer.addView(ad.getCustomView(),params);
+                }
+            }
             if(left>0) {
                 ll_2.setVisibility(View.VISIBLE);
                 ShopPresenter.getShareUrl(this, "1", pingtuanid, buyerid);

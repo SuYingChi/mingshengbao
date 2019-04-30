@@ -9,7 +9,4 @@
     android:layout_height="@dimen/margin_width50"
    >
 </ImageView>
-    <View
-        android:layout_width="@dimen/dp20"
-        android:layout_height="match_parent"/>
 </LinearLayout>

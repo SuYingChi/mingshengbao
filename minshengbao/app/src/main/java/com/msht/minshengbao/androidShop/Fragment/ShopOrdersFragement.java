@@ -740,7 +740,6 @@ public class ShopOrdersFragement extends ShopBaseLazyFragment implements IShopOr
                         paramas.gravity = Gravity.CENTER_VERTICAL;
                         paramas.rightMargin = (int) getContext().getResources().getDimension(R.dimen.margin_6);
                         tvPay.setLayoutParams(paramas);
-                        tvPay.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.btn_oringe_stoke));
                         tvPay.setText("拼团详情");
                         tvPay.setTextColor(getContext().getResources().getColor(R.color.black));
                         tvPay.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);

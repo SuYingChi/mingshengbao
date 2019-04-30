@@ -11,6 +11,8 @@ import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 import java.util.List;
 
 public class UserPingTunAdpter extends HaveHeadRecyclerAdapter<UserPinTunBean>{
+
+
     public UserPingTunAdpter(Context context, List<UserPinTunBean> datas) {
         super(context, R.layout.item_user_pintun, datas);
     }
@@ -24,4 +26,5 @@ public class UserPingTunAdpter extends HaveHeadRecyclerAdapter<UserPinTunBean>{
     public int getItemCount() {
         return datas.size()>3?3:datas.size();
     }
+
 }

@@ -155,7 +155,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
     private String isPingTuan = "";
     private String pingtuanid = "";
     private String buyerid = "";
-    private String rpacket_price;
+    private String rpacket_price="0";
     private String rpacket_t_id;
     private List<RptBean> rptList=new ArrayList<RptBean>();
     private RptDialog rptDialog;
@@ -700,8 +700,7 @@ public class ShopComfirmOrdersActivity extends ShopBaseActivity implements IGetA
                 llrpt.setVisibility(View.GONE);
             }
             //自身价格减去满减，优惠，红包加上运费
-           // goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-Double.valueOf(rpacket_price);
-            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-TypeConvertUtil.convertToDouble(rpacket_price,0);
+            goodsTotalSelf = goodsTotalSelf - discount - refreshTotalVoucherPrice()-Double.valueOf(rpacket_price);
             goodsTotal = goodsTotalSelf + goods_freight;
             ShopPresenter.buyStep2ChangeAddress(this);
         } catch (JSONException e) {
