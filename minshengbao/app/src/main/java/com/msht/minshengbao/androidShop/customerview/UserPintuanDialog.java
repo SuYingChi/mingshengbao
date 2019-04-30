@@ -196,6 +196,7 @@ public class UserPintuanDialog extends Dialog implements IUserPingTuanView {
             buyer_id = pintuan_info.optString("buyer_id");
             int minnum = Integer.valueOf(pintuan_info.optString("min_num"));
             tvLeftNum.setText("还差"+pintuan_info.optString("num")+"人拼成");
+            list.clear();
             for(int i=0;i<pintuan_list.length();i++){
                 list.add(JsonUtil.toBean(pintuan_list.optJSONObject(i).toString(),UserPinTunBean.class));
             }
