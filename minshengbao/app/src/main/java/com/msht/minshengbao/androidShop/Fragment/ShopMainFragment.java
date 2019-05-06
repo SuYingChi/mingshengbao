@@ -225,6 +225,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
                     if (parameterObject.has("adv_list")) {
                         ShopHomeAdvBean shopHomeAdvBean = JsonUtil.toBean(parameterObject.toString(), ShopHomeAdvBean.class);
                         if (shopHomeAdvBean != null) {
+                            advImagelist.clear();
                             for (ShopHomeAdvBean.AdvListBean.ItemBean itemBean : shopHomeAdvBean.getAdv_list().getItem()) {
                                 advImagelist.add(itemBean.getImage());
                             }
