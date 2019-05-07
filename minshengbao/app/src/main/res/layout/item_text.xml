@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/dp1"
+    android:background="#10000000"
     android:orientation="vertical"
+    android:layout_margin="@dimen/margin_Modules"
     >
 
     <TextView
