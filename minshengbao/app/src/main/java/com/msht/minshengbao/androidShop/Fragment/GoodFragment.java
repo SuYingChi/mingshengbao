@@ -593,6 +593,7 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             JSONArray imageList = datas.getJSONArray("image_list");
             imageUrlDialog = imageList.optJSONObject(0).optString("_mid");
             imageUrlShare = imageList.optJSONObject(0).optString("_big");
+            imagelist.clear();
             for (int k = 0; k < imageList.length(); k++) {
                 JSONObject parameterObject = imageList.optJSONObject(k);
                 String mid = parameterObject.optString("_mid");

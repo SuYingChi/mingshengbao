@@ -26,8 +26,8 @@ public class SiteListAdapter extends HaveHeadRecyclerAdapter<SiteBean.DatasBean.
         TextView tv = holder.getView(R.id.sitename);
         TextPaint tp = tv.getPaint();
         tp.setFakeBoldText(true);
-        holder.setText(R.id.sitePhone, addrListBean.getDlyp_mobile());
-        holder.setText(R.id.siteAddress, addrListBean.getDlyp_address());
+        holder.setText(R.id.sitePhone, "电话:"+addrListBean.getDlyp_mobile());
+        holder.setText(R.id.siteAddress, "门店地址:"+addrListBean.getDlyp_address());
         holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
