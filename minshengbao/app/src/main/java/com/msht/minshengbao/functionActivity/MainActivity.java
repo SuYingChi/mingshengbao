@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.downloadVersion.DownloadService;
@@ -68,6 +69,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
 import com.msht.minshengbao.permissionManager.RuntimeRationale;
 import com.msht.minshengbao.receiver.NetBroadcastReceiver;
+import com.pingplusplus.android.Pingpp;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.yanzhenjie.permission.Action;
@@ -335,6 +337,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LogUtils.e(Pingpp.VERSION);
         context = this;
         //推送统计
         mPageName="首页";

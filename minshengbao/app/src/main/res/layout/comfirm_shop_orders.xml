@@ -174,11 +174,11 @@
 
                 <ImageView
                     style="@style/image"
-                    android:src="@drawable/shop_location" />
+                    android:src="@drawable/ziti" />
 
                 <TextView
                     style="@style/shopMsbcolorTitleText"
-                    android:text="请选择服务站"
+                    android:text="配送服务站"
                     android:textColor="@color/black" />
             </LinearLayout>
 
