@@ -3,7 +3,7 @@
     android:shape="oval"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <solid android:color="@color/btn_bg_color"/>
+   <solid android:color="@color/red"/>
     <size
         android:width="@dimen/dp14"
         android:height="@dimen/dp14"/>

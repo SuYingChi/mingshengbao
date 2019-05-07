@@ -25,7 +25,7 @@
         style="@style/grey_small_text"
         android:layout_below="@id/name"
         android:layout_marginTop="@dimen/margin_Modules"
-        android:textColor="@color/shop_grey" />
+        android:textColor="@color/black" />
 
     <CheckBox
         android:id="@+id/select_default_address"
