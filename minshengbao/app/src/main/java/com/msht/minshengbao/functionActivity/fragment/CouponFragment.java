@@ -258,6 +258,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("end_date", endDate);
                     map.put("remainder_days", remainderDays);
                     map.put("type", status);
+                    map.put("show", "0");
                     couponList.add(map);
                 }
             } else if (position == 1) {
@@ -269,6 +270,7 @@ public class CouponFragment extends BaseFragment {
                     String rpacket_end_date_text = jsonObject.getString("rpacket_end_date_text");
                     String rpacket_title = jsonObject.getString("rpacket_title");
                     String rpacket_state = jsonObject.getString("rpacket_state");
+                    String left_days = jsonObject.getString("left_days");
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("rpacket_limit", rpacket_limit);
                     map.put("rpacket_price", rpacket_price);
@@ -276,6 +278,8 @@ public class CouponFragment extends BaseFragment {
                     map.put("rpacket_end_date_text", rpacket_end_date_text);
                     map.put("rpacket_title", rpacket_title);
                     map.put("rpacket_state", rpacket_state);
+                    map.put("left_days", left_days);
+                    map.put("show", "0");
                     couponList.add(map);
                 }
             } else if (position == 2) {
@@ -290,6 +294,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("voucher_state_text", jsonObject.optString("voucher_state_text"));
                     map.put("voucher_id", jsonObject.optString("voucher_id"));
                     map.put("store_id", jsonObject.optString("store_id"));
+                    map.put("show", "0");
                     couponList.add(map);
                 }
             }
@@ -374,6 +379,17 @@ public class CouponFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra("index", 1);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onClikshowDesc(int position) {
+                String show = couponList.get(position).get("show");
+                if("1".equals(show)){
+                    couponList.get(position).put("show","0");
+                }else if("0".equals(show)){
+                    couponList.get(position).put("show","1");
+                }
+                mAdapter.notifyDataSetChanged();
             }
         });
         xListView.setAdapter(mAdapter);
