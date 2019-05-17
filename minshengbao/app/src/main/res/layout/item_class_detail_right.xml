@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -9,14 +9,16 @@
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="@dimen/margin_width80"
-        android:layout_height="@dimen/margin_width80"
+        android:layout_width="@dimen/margin_width90"
+        android:layout_height="@dimen/margin_width90"
+        android:layout_centerVertical="true"
          />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/margin_width15"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp10"
+        android:layout_toRightOf="@id/iv"
         >
 
         <TextView
@@ -29,18 +31,62 @@
             android:gravity="left"
             android:textColor="@color/black" />
         <TextView
+            android:id="@+id/jingle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_10"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="少时诵诗书所所所所"
+            android:layout_below="@id/name"
+            android:textColor="@color/text_hint" />
+        <TextView
+            android:id="@+id/isziti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_10"
+            android:gravity="left"
+            android:layout_below="@id/jingle"
+            android:text="限自提"
+            android:background="@drawable/btn_oringe_stoke"
+            android:layout_marginTop="@dimen/margin_width3"
+            android:textColor="@color/msb_color" />
+        <TextView
+            android:id="@+id/sale_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_10"
+            android:gravity="left"
+            android:text="少时诵诗书所所"
+            android:layout_below="@id/isziti"
+            android:textColor="@color/text_hint" />
+        <TextView
             android:id="@+id/price"
-            style="@style/shopMsbcolorTitleText"
-            android:textSize="@dimen/text_18"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/msb_color"
+            android:textSize="@dimen/text_12"
+            android:layout_below="@id/sale_count"
+            android:layout_marginTop="@dimen/margin_3"
              />
+        <TextView
+            android:id="@+id/promotion_type"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_red"
+            android:textSize="@dimen/text_10"
+            android:layout_toRightOf="@id/price"
+            android:layout_alignBottom="@id/price"
+            android:text="限时折扣"
+            />
         <ImageView
            android:id="@+id/car"
-            style="@style/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/class_car"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/price"
             />
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

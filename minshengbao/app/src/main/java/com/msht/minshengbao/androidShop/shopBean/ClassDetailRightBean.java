@@ -129,6 +129,36 @@ public class ClassDetailRightBean {
             private boolean xianshi_flag;
             private String goods_price;
             private String goods_image_url;
+
+            public String getDelivery_desc() {
+                return delivery_desc;
+            }
+
+            public void setDelivery_desc(String delivery_desc) {
+                this.delivery_desc = delivery_desc;
+            }
+
+            private String delivery_desc;
+
+            public boolean isSpike_flag() {
+                return spike_flag;
+            }
+
+            public void setSpike_flag(boolean spike_flag) {
+                this.spike_flag = spike_flag;
+            }
+
+            private boolean spike_flag;
+
+            public boolean isIf_pintuan() {
+                return if_pintuan;
+            }
+
+            public void setIf_pintuan(boolean if_pintuan) {
+                this.if_pintuan = if_pintuan;
+            }
+
+            private boolean if_pintuan;
             private List<?> contractlist;
             private List<String> image;
 

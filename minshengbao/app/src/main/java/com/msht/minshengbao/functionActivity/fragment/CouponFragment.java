@@ -10,14 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
+import com.msht.minshengbao.androidShop.activity.GetRedPacketActivity;
+import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
 import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
+import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +65,12 @@ public class CouponFragment extends BaseFragment {
     private final RequestHandler requestHandler = new RequestHandler(this);
     private int position = 0;
     private int pageTotal;
+    private int voucherPageIndex = 1;
+    private int redPacketpageTotal;
+    private int redPacketpageIndex = 1;
+    private String rp_state;
+
+
     public CouponFragment() {
     }
 
@@ -68,6 +79,8 @@ public class CouponFragment extends BaseFragment {
         couponFragment.position = position;
         if (position == 0) {
             couponFragment.status = "1";
+        } else if (position == 2) {
+            couponFragment.status = "";
         } else if (position == 1) {
             couponFragment.status = "";
         }
@@ -139,7 +152,7 @@ public class CouponFragment extends BaseFragment {
                             } else {
                                 reference.onFailure(error);
                             }
-                        } else if (reference.position == 1) {
+                        } else if (reference.position == 2) {
                             JSONObject object = new JSONObject(msg.obj.toString());
                             int resultCode = object.optInt("code");
                             if (resultCode == 200) {
@@ -151,7 +164,7 @@ public class CouponFragment extends BaseFragment {
                                     reference.xListView.stopLoadMore();
                                 }
                                 if (reference.jsonArray.length() > 0) {
-                                    if (reference.pageIndex == 1 && "1".equals(reference.status)) {
+                                    if (reference.voucherPageIndex == 1) {
                                         reference.couponList.clear();
                                     }
                                 }
@@ -162,6 +175,45 @@ public class CouponFragment extends BaseFragment {
                                     reference.layoutNoData.setVisibility(View.GONE);
                                     reference.mAdapter.notifyDataSetChanged();
                                 }
+                            } else {
+                                reference.onFailure(object.optJSONObject("datas").optString("error"));
+                            }
+                        } else if (reference.position == 1) {
+                            JSONObject object = new JSONObject(msg.obj.toString());
+                            int resultCode = object.optInt("code");
+                            if (resultCode == 200) {
+                                reference.redPacketpageTotal = object.optInt("page_total");
+                                reference.jsonArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(unused);
+                                JSONArray usedArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(used);
+                                JSONArray expireArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(expire);
+                                if (usedArray != null) {
+                                    for (int i = 0; i < usedArray.length(); i++) {
+                                        reference.jsonArray.put(usedArray.optJSONObject(i));
+                                    }
+                                }
+                                if (expireArray != null) {
+                                    for (int i = 0; i < expireArray.length(); i++) {
+                                        reference.jsonArray.put(expireArray.optJSONObject(i));
+                                    }
+                                }
+                                if (reference.refreshType == 0) {
+                                    reference.xListView.stopRefresh(true);
+                                } else if (reference.refreshType == 1) {
+                                    reference.xListView.stopLoadMore();
+                                }
+                                if (reference.jsonArray.length() > 0) {
+                                    if (reference.redPacketpageIndex == 1) {
+                                        reference.couponList.clear();
+                                    }
+                                }
+                                reference.onGetCouponData();
+                                if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    reference.layoutNoData.setVisibility(View.GONE);
+                                    reference.mAdapter.notifyDataSetChanged();
+                                }
+
                             } else {
                                 reference.onFailure(object.optJSONObject("datas").optString("error"));
                             }
@@ -210,6 +262,24 @@ public class CouponFragment extends BaseFragment {
                 }
             } else if (position == 1) {
                 for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String rpacket_limit = jsonObject.optString("rpacket_limit");
+                    String rpacket_price = jsonObject.optString("rpacket_price");
+                    String rpacket_start_date_text = jsonObject.getString("rpacket_start_date_text");
+                    String rpacket_end_date_text = jsonObject.getString("rpacket_end_date_text");
+                    String rpacket_title = jsonObject.getString("rpacket_title");
+                    String rpacket_state = jsonObject.getString("rpacket_state");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("rpacket_limit", rpacket_limit);
+                    map.put("rpacket_price", rpacket_price);
+                    map.put("rpacket_start_date_text", rpacket_start_date_text);
+                    map.put("rpacket_end_date_text", rpacket_end_date_text);
+                    map.put("rpacket_title", rpacket_title);
+                    map.put("rpacket_state", rpacket_state);
+                    couponList.add(map);
+                }
+            } else if (position == 2) {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     HashMap<String, String> map = new HashMap<String, String>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     map.put("store_name", jsonObject.optString("store_name"));
@@ -219,7 +289,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("voucher_state", jsonObject.optString("voucher_state"));
                     map.put("voucher_state_text", jsonObject.optString("voucher_state_text"));
                     map.put("voucher_id", jsonObject.optString("voucher_id"));
-                    map.put("store_id",jsonObject.optString("store_id"));
+                    map.put("store_id", jsonObject.optString("store_id"));
                     couponList.add(map);
                 }
             }
@@ -277,13 +347,32 @@ public class CouponFragment extends BaseFragment {
         layoutNoData = (RelativeLayout) mRootView.findViewById(R.id.id_re_nodata);
         btnShare = (Button) mRootView.findViewById(R.id.id_btn_share);
         xListView = (XListView) mRootView.findViewById(R.id.id_dicount_mlistview);
+        TextView get_redpacket = (TextView) mRootView.findViewById(R.id.get_redpacket);
+        get_redpacket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), GetRedPacketActivity.class));
+            }
+        });
+        if (position == 1) {
+            get_redpacket.setVisibility(View.VISIBLE);
+        } else {
+            get_redpacket.setVisibility(View.GONE);
+        }
         xListView.setPullLoadEnable(true);
-        mAdapter = new CouponAdapter(getContext(), couponList,position);
+        mAdapter = new CouponAdapter(getContext(), couponList, position);
         mAdapter.setOnClickVoucherListener(new CouponAdapter.OnClickVoucherListener() {
             @Override
             public void onClickVoucher(String storeId) {
                 Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                intent.putExtra("gcid",storeId);
+                intent.putExtra("gcid", storeId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onGoShopHome() {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("index", 1);
                 startActivity(intent);
             }
         });
@@ -294,8 +383,10 @@ public class CouponFragment extends BaseFragment {
                 refreshType = 0;
                 if (position == 0) {
                     loadData(1, "1");
+                } else if (position == 2) {
+                    loadShopVoucherData(1);
                 } else if (position == 1) {
-                    loadShopVoucherData(1, "1");
+                    loadShopRedpacketData(1);
                 }
             }
 
@@ -304,10 +395,16 @@ public class CouponFragment extends BaseFragment {
                 refreshType = 1;
                 if (position == 0) {
                     loadData(pageIndex + 1, "1");
+                } else if (position == 2) {
+                    if (voucherPageIndex < pageTotal) {
+                        loadShopVoucherData(voucherPageIndex + 1);
+                    } else {
+                        xListView.stopLoadMore("无更多数据了哦");
+                    }
                 } else if (position == 1) {
-                    if(pageIndex<pageTotal){
-                      loadShopVoucherData(pageIndex + 1, "1");
-                    }else {
+                    if (redPacketpageIndex < redPacketpageTotal) {
+                        loadShopRedpacketData(redPacketpageIndex + 1);
+                    } else {
                         xListView.stopLoadMore("无更多数据了哦");
                     }
                 }
@@ -321,19 +418,35 @@ public class CouponFragment extends BaseFragment {
         if (position == 0) {
             customDialog.show();
             loadData(1, "1");
+        } else if (position == 2) {
+            customDialog.show();
+            loadShopVoucherData(1);
         } else if (position == 1) {
             customDialog.show();
-            loadShopVoucherData(1, "1");
+            loadShopRedpacketData(1);
         }
     }
 
-    private void loadShopVoucherData(int pageIndex, String status) {
-        this.pageIndex = pageIndex;
-        this.status = status;
+    private void loadShopVoucherData(int pageIndex) {
+        this.voucherPageIndex = pageIndex;
         String validateURL = ShopConstants.VOUCHER_LIST;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("key", ShopSharePreferenceUtil.getInstance().getKey());
         textParams.put("curpage", pageIndex + "");
+        textParams.put("page", "10");
+        OkHttpRequestUtil.getInstance(MyApplication.getMsbApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
+    }
+
+    private static final String unused = "unused";
+    private static final String used = "used";
+    private static final String expire = "expire";
+
+    private void loadShopRedpacketData(int redPacketpageIndex) {
+        this.redPacketpageIndex = redPacketpageIndex;
+        String validateURL = ShopConstants.GET_RED_PACKET_LIST;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("key", ShopSharePreferenceUtil.getInstance().getKey());
+        textParams.put("curpage", redPacketpageIndex + "");
         textParams.put("page", "10");
         OkHttpRequestUtil.getInstance(MyApplication.getMsbApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
     }

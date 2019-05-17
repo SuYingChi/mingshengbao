@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.presenter;
 
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.View;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
+import com.msht.minshengbao.androidShop.activity.GetRedPacketActivity;
 import com.msht.minshengbao.androidShop.activity.ShopStoreJingle;
 import com.msht.minshengbao.androidShop.activity.StoreClassActivity;
 import com.msht.minshengbao.androidShop.activity.StorePromotionActivity;
@@ -50,12 +52,16 @@ import com.msht.minshengbao.androidShop.viewInterface.IEvaluationView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAddressListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetAreaListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetChatUserListView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetCodekeyView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvContentView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetInvListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetRedPacketListView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetRedPacketView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetYanzhengCodeView;
 import com.msht.minshengbao.androidShop.viewInterface.IGoodPingTuanView;
 import com.msht.minshengbao.androidShop.viewInterface.IGuessLikeGoodListView;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
@@ -117,6 +123,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IlistPayView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.GetBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
+import com.zhy.http.okhttp.callback.BitmapCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -125,6 +132,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 public class ShopPresenter {
 
@@ -1878,5 +1887,50 @@ public class ShopPresenter {
             }
         });
 
+    }
+
+    public static void getCodekey(final IGetCodekeyView iGetCodekeyView) {
+        OkHttpUtils.get().url(ShopConstants.CODE_KEY)
+                .tag(iGetCodekeyView)
+                .build().execute(new DataStringCallback(iGetCodekeyView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetCodekeyView.onGetCodeKey(s);
+                }
+            }
+        });
+    }
+
+    public static void getRedPacket(final IGetRedPacketView iGetRedPacketView) {
+        OkHttpUtils.post().url(ShopConstants.GET_RED_PACKET).addParams("key", iGetRedPacketView.getKey())
+                .addParams("pwd_code", iGetRedPacketView.getPwdCode())
+                .addParams("codekey", iGetRedPacketView.getCodekey ())
+                .addParams("captcha", iGetRedPacketView.getCaptcha())
+                .tag(iGetRedPacketView)
+                .build().execute(new DataStringCallback(iGetRedPacketView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetRedPacketView.onGetRedPacket(s);
+                }
+            }
+        });
+    }
+    public static void getRedPacket(final IGetRedPacketListView iGetRedPacketListView,String rp_state) {
+        OkHttpUtils.post().url(ShopConstants.GET_RED_PACKET_LIST).addParams("key", iGetRedPacketListView.getKey())
+                .addParams("rp_state", rp_state)
+                .tag(iGetRedPacketListView)
+                .build().execute(new DataStringCallback(iGetRedPacketListView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetRedPacketListView.onGetRedPacketList(s);
+                }
+            }
+        });
     }
 }

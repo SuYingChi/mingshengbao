@@ -20,13 +20,8 @@ public class KeywordListAdapter extends MyHaveHeadViewRecyclerAdapter<Shopkeywor
 
     @Override
     public void convert(RecyclerHolder holder, final ShopkeywordBean.DatasBean.GoodsListBean goodsListBean, final int position) {
-        final ImageView iv = holder.getView(R.id.iv);
-        ViewGroup.LayoutParams params = iv.getLayoutParams();
-        params.width = (int) (DimenUtil.getScreenWidth() * 0.25);
-        int vw = params.width - iv.getPaddingLeft() - iv.getPaddingRight();
-        params.height = vw + iv.getPaddingTop() + iv.getPaddingBottom();
-        iv.setLayoutParams(params);
-        GlideUtil.loadByImageView(context, iv, goodsListBean.getGoods_image_url());
+        ImageView iv = holder.getView(R.id.iv);
+        GlideUtil.loadRemoteImg(context,iv,goodsListBean.getGoods_image_url());
         TextView tv = holder.getView(R.id.name);
         tv.setText(goodsListBean.getGoods_name().trim());
         TextView tv2 = holder.getView(R.id.name2);

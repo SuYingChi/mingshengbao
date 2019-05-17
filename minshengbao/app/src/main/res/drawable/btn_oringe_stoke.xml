@@ -7,8 +7,8 @@
         android:color="@color/msb_color" />
     <corners android:radius="20dp" />
     <padding
-        android:bottom="8dp"
-        android:left="14dp"
-        android:right="14dp"
-        android:top="8dp"></padding>
+        android:bottom="@dimen/dp1"
+        android:left="@dimen/dp5"
+        android:right="@dimen/dp5"
+        android:top="@dimen/dp1"></padding>
 </shape>

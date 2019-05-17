@@ -1,6 +1,7 @@
 package com.msht.minshengbao.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -16,6 +17,8 @@ import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
+import com.msht.minshengbao.functionActivity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +51,8 @@ public class CouponAdapter extends BaseAdapter {
          * @param storeId
          */
         void onClickVoucher(String storeId);
+
+        void onGoShopHome();
     }
     @Override
     public int getCount() {
@@ -109,6 +114,45 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnUseLimit.setText(limitUse);
             holder.cnEndDate.setText(haveuseList.get(position).get("end_date"));
         }else if(tab==1){
+            String rpacket_state = haveuseList.get(position).get("rpacket_state");
+            holder.cnUseLimit.setVisibility(View.GONE);
+            switch (rpacket_state){
+                case "1":
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.msb_color));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.msb_color));
+                    holder.layoutBack.setBackgroundResource(R.drawable.dicount_coupon_2xh);
+                    holder.cnTime.setVisibility(View.VISIBLE);
+                    holder.cnTime.setText("点击使用");
+                    holder.cnTime.setTextColor(Color.WHITE);
+                    holder.cnTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.cnTime.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_red));
+                    holder.cnTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                           listener.onGoShopHome();
+                        }
+                    });
+                    break;
+                case "2":
+                    holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
+                    holder.cnName.setTextColor(Color.parseColor("#FF383838"));
+                    holder.layoutBack.setBackgroundResource(R.mipmap.coupon_haveused_2xh);
+                    holder.cnTime.setVisibility(View.GONE);
+                    break;
+                case "3":
+                    holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
+                    holder.cnName.setTextColor(Color.parseColor("#FF383838"));
+                    holder.layoutBack.setBackgroundResource(R.mipmap.coupon_exceed_2xh);
+                    holder.cnTime.setVisibility(View.GONE);
+                    break;
+                default:break;
+            }
+            holder.cnName.setText(haveuseList.get(position).get("rpacket_title"));
+            holder.cnEndDate.setText(haveuseList.get(position).get("rpacket_end_date_text"));
+            String limitUse = "买满" + haveuseList.get(position).get("rpacket_limit") + "元可用";
+            holder.cnScope.setText(limitUse);
+            holder.cnAmount.setText("¥" + haveuseList.get(position).get("rpacket_price"));
+        } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
             holder.cnUseLimit.setVisibility(View.GONE);
             switch (voucher_state){
