@@ -4,22 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/white"
-    android:layout_marginTop="@dimen/dp5"
     android:padding="@dimen/dp5"
+    android:layout_marginLeft="@dimen/dp5"
+    android:layout_marginTop="@dimen/dp5"
     >
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="@dimen/margin_width90"
-        android:layout_height="@dimen/margin_width90"
-        android:layout_centerVertical="true"
-         />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_width120"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp10"
-        android:layout_toRightOf="@id/iv"
+        android:layout_below="@id/iv"
         >
 
         <TextView
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_12"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:gravity="left"
             android:textColor="@color/black" />
         <TextView
@@ -70,7 +69,7 @@
             android:textSize="@dimen/text_12"
             android:layout_below="@id/sale_count"
             android:layout_marginTop="@dimen/margin_3"
-             />
+            />
         <TextView
             android:id="@+id/promotion_type"
             android:textColor="@color/white"
@@ -83,7 +82,7 @@
             android:text="限时折扣"
             />
         <ImageView
-           android:id="@+id/car"
+            android:id="@+id/car"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/class_car"

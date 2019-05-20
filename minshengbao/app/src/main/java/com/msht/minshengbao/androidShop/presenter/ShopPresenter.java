@@ -91,6 +91,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IRefundMoneyView;
 import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchDeliverView;
 import com.msht.minshengbao.androidShop.viewInterface.ISearchUserIdView;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAddCarView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopAllClassView;
 import com.msht.minshengbao.androidShop.viewInterface.IShopClassDetailView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShopFootprintView;
@@ -272,8 +273,8 @@ public class ShopPresenter {
             public void onResponse(String s, int i) {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
-                    ShopkeywordBean bean = JsonUtil.toBean(s, ShopkeywordBean.class);
-                    List<ShopkeywordBean.DatasBean.GoodsListBean> list = new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
+                    ClassDetailRightBean bean = JsonUtil.toBean(s, ClassDetailRightBean.class);
+                    List<ClassDetailRightBean.DatasBean.GoodsListBean> list = new ArrayList<ClassDetailRightBean.DatasBean.GoodsListBean>();
                     int pageTotal = 0;
                     if (bean != null) {
                         list = bean.getDatas().getGoods_list();
@@ -294,7 +295,7 @@ public class ShopPresenter {
                                 String goods_salenum = good.optString("goods_salenum");
                                 String goods_price = good.optString("goods_price");
                                 String goods_id = good.optString("goods_id");
-                                ShopkeywordBean.DatasBean.GoodsListBean goodbean = new ShopkeywordBean.DatasBean.GoodsListBean();
+                                ClassDetailRightBean.DatasBean.GoodsListBean goodbean = new ClassDetailRightBean.DatasBean.GoodsListBean();
                                 goodbean.setGoods_image_url(goods_image_url);
                                 goodbean.setGoods_name(goodName);
                                 goodbean.setGoods_salenum(goods_salenum);
@@ -352,7 +353,17 @@ public class ShopPresenter {
             }
         });
     }
-
+    public static void addCar(final IShopAddCarView iShopAddCarView,String goodid) {
+        OkHttpUtils.post().url(ShopConstants.ADD_CAR).addParams("key", iShopAddCarView.getKey()).tag(iShopAddCarView).addParams("goods_id", goodid).addParams("quantity", "1").build().execute(new DataStringCallback(iShopAddCarView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iShopAddCarView.onAddCarSuccess(s);
+                }
+            }
+        });
+    }
     public static void getCarList(final ICarListView iCarListView, final boolean isShowLoadingDialog) {
         OkHttpUtils.post().url(ShopConstants.CAR_LIST).tag(iCarListView).addParams("key", iCarListView.getKey()).build().execute(new DataStringCallback(iCarListView, isShowLoadingDialog) {
             @Override

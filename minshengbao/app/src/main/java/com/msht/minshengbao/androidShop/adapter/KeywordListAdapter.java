@@ -1,6 +1,7 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,7 +26,12 @@ public class KeywordListAdapter extends MyHaveHeadViewRecyclerAdapter<Shopkeywor
         TextView tv = holder.getView(R.id.name);
         tv.setText(goodsListBean.getGoods_name().trim());
         TextView tv2 = holder.getView(R.id.name2);
-        tv2.setText(goodsListBean.getGoods_jingle());
+        if (TextUtils.isEmpty(goodsListBean.getGoods_jingle())) {
+            tv2.setVisibility(View.GONE);
+        } else {
+            tv2.setText(View.VISIBLE);
+            tv2.setText(goodsListBean.getGoods_jingle());
+        }
         TextView tv3 = holder.getView(R.id.sell);
         tv3.setText(String.format("%s人已买", goodsListBean.getGoods_salenum()));
         TextView tvPrice = holder.getView(R.id.price);

@@ -79,7 +79,6 @@ public abstract class MyHaveHeadViewRecyclerAdapter<T> extends RecyclerView.Adap
         }
 
     }
-
     @Override
     public int getItemViewType(int position) {
         if (position ==0&&head_layoutId !=Integer.MIN_VALUE) {

@@ -18,8 +18,8 @@ import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<ClassDetailRightBean.DatasBean.GoodsListBean> {
     private AddCarListener addCarListener;
 
-    public ClassDetailRightAdapter(Context context) {
-        super(context, R.layout.item_class_detail_right);
+    public ClassDetailRightAdapter(Context context,int layoutId) {
+        super(context, layoutId);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
         TextView tv = holder.getView(R.id.name);
         tv.setText(goodsListBean.getGoods_name().trim());
         if (TextUtils.isEmpty(goodsListBean.getGoods_jingle())) {
-            holder.getView(R.id.jingle).setVisibility(View.GONE);
+            holder.getView(R.id.jingle).setVisibility(View.INVISIBLE);
         } else {
             holder.getView(R.id.jingle).setVisibility(View.VISIBLE);
             holder.setText(R.id.jingle, goodsListBean.getGoods_jingle());

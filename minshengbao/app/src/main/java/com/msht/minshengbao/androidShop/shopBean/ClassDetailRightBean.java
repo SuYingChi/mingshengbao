@@ -130,6 +130,12 @@ public class ClassDetailRightBean {
             private String goods_price;
             private String goods_image_url;
 
+            public void setCart(int cart) {
+                this.cart = cart;
+            }
+
+            private int cart;
+
             public String getDelivery_desc() {
                 return delivery_desc;
             }
@@ -424,6 +430,10 @@ public class ClassDetailRightBean {
 
             public void setImage(List<String> image) {
                 this.image = image;
+            }
+
+            public int getCart() {
+                return cart;
             }
         }
     }
