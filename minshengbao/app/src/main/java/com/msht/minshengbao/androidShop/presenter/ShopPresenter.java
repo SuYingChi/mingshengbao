@@ -59,6 +59,7 @@ import com.msht.minshengbao.androidShop.viewInterface.IGetMsgCountView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetRedPacketListView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetRedPacketView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetShareUrlView;
+import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherCenterView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetVoucherView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetWuliuView;
 import com.msht.minshengbao.androidShop.viewInterface.IGetYanzhengCodeView;
@@ -1929,6 +1930,20 @@ public class ShopPresenter {
                 super.onResponse(s, i);
                 if (isResponseSuccess) {
                     iGetRedPacketListView.onGetRedPacketList(s);
+                }
+            }
+        });
+    }
+    public  static  void getVoucherCenter(final IGetVoucherCenterView iGetVoucherCenterView){
+        OkHttpUtils.post().url(ShopConstants.GET_VOUCHER_CENTER_LIST)
+                .addParams("gettype", "free")
+                .tag(iGetVoucherCenterView)
+                .build().execute(new DataStringCallback(iGetVoucherCenterView) {
+            @Override
+            public void onResponse(String s, int i) {
+                super.onResponse(s, i);
+                if (isResponseSuccess) {
+                    iGetVoucherCenterView.onGetVoucherCenter(s);
                 }
             }
         });

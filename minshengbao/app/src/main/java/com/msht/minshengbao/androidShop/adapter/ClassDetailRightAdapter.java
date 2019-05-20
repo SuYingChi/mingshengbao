@@ -47,16 +47,16 @@ public class ClassDetailRightAdapter extends MyHaveHeadViewRecyclerAdapter<Class
         }
         if (goodsListBean.isGroup_flag()) {
             holder.getView(R.id.promotion_type).setVisibility(View.VISIBLE);
-            holder.setText(R.id.promotion_type, "团购折扣");
+            holder.setText(R.id.promotion_type, "团购");
         } else if (goodsListBean.isXianshi_flag()) {
             holder.getView(R.id.promotion_type).setVisibility(View.VISIBLE);
             holder.setText(R.id.promotion_type, "限时折扣");
         } else if (goodsListBean.isIf_pintuan()) {
             holder.getView(R.id.promotion_type).setVisibility(View.VISIBLE);
-            holder.setText(R.id.promotion_type, "拼团折扣");
+            holder.setText(R.id.promotion_type, "拼团");
         } else if (goodsListBean.isSpike_flag()) {
             holder.getView(R.id.promotion_type).setVisibility(View.VISIBLE);
-            holder.setText(R.id.promotion_type, "秒杀折扣");
+            holder.setText(R.id.promotion_type, "秒杀");
         } else {
             holder.getView(R.id.promotion_type).setVisibility(View.INVISIBLE);
         }

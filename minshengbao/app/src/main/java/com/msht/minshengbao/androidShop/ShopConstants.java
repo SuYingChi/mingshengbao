@@ -101,6 +101,7 @@ public class ShopConstants {
     public static final String CODE_BITMAP = BASE_URL+"index.php?act=seccode&op=makecode";
     public static final String GET_RED_PACKET = BASE_URL+"index.php?act=member_redpacket&op=rp_pwex";
     public static final String GET_RED_PACKET_LIST = BASE_URL+"index.php?act=member_redpacket&op=redpacket_list";
+    public static final String GET_VOUCHER_CENTER_LIST = BASE_URL+"index.php?act=voucher&op=voucher_tpl_list";
 
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;

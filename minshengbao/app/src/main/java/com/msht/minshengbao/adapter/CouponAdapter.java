@@ -88,6 +88,7 @@ public class CouponAdapter extends BaseAdapter {
             holder.updown =(ImageView) convertView.findViewById(R.id.updown);
             holder.tvuse =(TextView)convertView.findViewById(R.id.use);
             holder.tvBelowAmount =(TextView)convertView.findViewById(R.id.below_amount);
+            holder.id_effective_text =(TextView)convertView.findViewById(R.id.id_effective_text);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -133,9 +134,9 @@ public class CouponAdapter extends BaseAdapter {
             }
             if("1".equals(haveuseList.get(position).get("show"))){
                 holder.use_desc.setVisibility(View.VISIBLE);
-                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
-            }else if("0".equals(haveuseList.get(position).get("show"))){
                 holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+            }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
                 holder.use_desc.setVisibility(View.GONE);
             }
             holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +155,8 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnScope.setText(haveuseList.get(position).get("scope"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("amount"));
             holder.cnEndDate.setText(haveuseList.get(position).get("end_date"));
+            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+" ~");
+            holder.use_desc.setText(haveuseList.get(position).get("desc"));
         }else if(tab==1){
             String rpacket_state = haveuseList.get(position).get("rpacket_state");
             holder.cnScope.setText("商城通用");
@@ -216,9 +219,9 @@ public class CouponAdapter extends BaseAdapter {
             holder.tvBelowAmount.setText("满"+ haveuseList.get(position).get("rpacket_limit")+"¥可用");
             if("1".equals(haveuseList.get(position).get("show"))){
                 holder.use_desc.setVisibility(View.VISIBLE);
-                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
-                  }else if("0".equals(haveuseList.get(position).get("show"))){
                 holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+                  }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
                 holder.use_desc.setVisibility(View.GONE);
             }
             holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +236,8 @@ public class CouponAdapter extends BaseAdapter {
                     listener.onClikshowDesc(position);
                 }
             });
+            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+" ~");
+            holder.use_desc.setText(haveuseList.get(position).get("rpacket_desc"));
         } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
             switch (voucher_state){
@@ -276,9 +281,9 @@ public class CouponAdapter extends BaseAdapter {
             }
             if("1".equals(haveuseList.get(position).get("show"))){
                 holder.use_desc.setVisibility(View.VISIBLE);
-                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
-            }else if("0".equals(haveuseList.get(position).get("show"))){
                 holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+            }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
                 holder.use_desc.setVisibility(View.GONE);
             }
             holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
@@ -298,6 +303,8 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnName.setText(haveuseList.get(position).get("store_name"));
             holder.cnEndDate.setText(haveuseList.get(position).get("voucher_end_date_text"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("voucher_price"));
+            holder.id_effective_text.setText("使用期限至");
+            holder.use_desc.setText(haveuseList.get(position).get("voucher_des"));
         }
             return convertView;
     }
@@ -313,6 +320,7 @@ public class CouponAdapter extends BaseAdapter {
         ImageView updown;
         TextView tvuse;
         TextView tvBelowAmount;
+        TextView id_effective_text;
 
     }
 

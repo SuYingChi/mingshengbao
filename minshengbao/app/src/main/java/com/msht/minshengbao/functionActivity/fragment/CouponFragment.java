@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,9 @@ import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
 import com.msht.minshengbao.androidShop.activity.GetRedPacketActivity;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
+import com.msht.minshengbao.androidShop.activity.ShopVouchActivity;
 import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
@@ -51,7 +54,7 @@ public class CouponFragment extends BaseFragment {
     private String userId;
     private String password;
     private String status = "1";
-    private RelativeLayout layoutNoData;
+    private ImageView layoutNoData;
     private Button btnShare;
     private XListView xListView;
     private CouponAdapter mAdapter;
@@ -68,7 +71,6 @@ public class CouponFragment extends BaseFragment {
     private int voucherPageIndex = 1;
     private int redPacketpageTotal;
     private int redPacketpageIndex = 1;
-    private String rp_state;
 
 
     public CouponFragment() {
@@ -136,6 +138,7 @@ public class CouponFragment extends BaseFragment {
                                         reference.status = "1";
                                         if (reference.couponList.size() == 0) {
                                             //  if (reference.status.equals(VariableUtil.VALUE_ONE)){
+                                            reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_get_voucher));
                                             reference.layoutNoData.setVisibility(View.VISIBLE);
                                        /* }else {
                                             reference.layoutNoData.setVisibility(View.GONE);
@@ -170,6 +173,7 @@ public class CouponFragment extends BaseFragment {
                                 }
                                 reference.onGetCouponData();
                                 if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_voucher));
                                     reference.layoutNoData.setVisibility(View.VISIBLE);
                                 } else {
                                     reference.layoutNoData.setVisibility(View.GONE);
@@ -208,6 +212,7 @@ public class CouponFragment extends BaseFragment {
                                 }
                                 reference.onGetCouponData();
                                 if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_voucher));
                                     reference.layoutNoData.setVisibility(View.VISIBLE);
                                 } else {
                                     reference.layoutNoData.setVisibility(View.GONE);
@@ -244,6 +249,7 @@ public class CouponFragment extends BaseFragment {
                     String useLimit = jsonObject.getString("use_limit");
                     String startDate = jsonObject.getString("start_date");
                     String endDate = jsonObject.getString("end_date");
+                    String desc = jsonObject.getString("desc");
                     String remainderDays = "";
                     if (jsonObject.has("remainder_days")) {
                         remainderDays = jsonObject.optString("remainder_days");
@@ -258,6 +264,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("end_date", endDate);
                     map.put("remainder_days", remainderDays);
                     map.put("type", status);
+                    map.put("desc",desc);
                     map.put("show", "0");
                     couponList.add(map);
                 }
@@ -270,6 +277,7 @@ public class CouponFragment extends BaseFragment {
                     String rpacket_end_date_text = jsonObject.getString("rpacket_end_date_text");
                     String rpacket_title = jsonObject.getString("rpacket_title");
                     String rpacket_state = jsonObject.getString("rpacket_state");
+                    String rpacket_desc = jsonObject.getString("rpacket_desc");
                     String left_days = jsonObject.getString("left_days");
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("rpacket_limit", rpacket_limit);
@@ -278,6 +286,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("rpacket_end_date_text", rpacket_end_date_text);
                     map.put("rpacket_title", rpacket_title);
                     map.put("rpacket_state", rpacket_state);
+                    map.put("rpacket_desc",rpacket_desc);
                     map.put("left_days", left_days);
                     map.put("show", "0");
                     couponList.add(map);
@@ -291,6 +300,7 @@ public class CouponFragment extends BaseFragment {
                     map.put("voucher_limit", jsonObject.optString("voucher_limit"));
                     map.put("voucher_price", jsonObject.optString("voucher_price"));
                     map.put("voucher_state", jsonObject.optString("voucher_state"));
+                    map.put("voucher_desc", jsonObject.optString("voucher_desc"));
                     map.put("voucher_state_text", jsonObject.optString("voucher_state_text"));
                     map.put("voucher_id", jsonObject.optString("voucher_id"));
                     map.put("store_id", jsonObject.optString("store_id"));
@@ -338,30 +348,33 @@ public class CouponFragment extends BaseFragment {
         userId = SharedPreferencesUtil.getUserId(getActivity(), SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(getActivity(), SharedPreferencesUtil.Password, "");
         initMyView(mRootView);
-        btnShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ShareMenuActivity.class);
-                startActivityForResult(intent, 1);
-            }
-        });
         return mRootView;
     }
 
     private void initMyView(View mRootView) {
-        layoutNoData = (RelativeLayout) mRootView.findViewById(R.id.id_re_nodata);
-        btnShare = (Button) mRootView.findViewById(R.id.id_btn_share);
+        layoutNoData = (ImageView) mRootView.findViewById(R.id.nodata);
         xListView = (XListView) mRootView.findViewById(R.id.id_dicount_mlistview);
         TextView get_redpacket = (TextView) mRootView.findViewById(R.id.get_redpacket);
-        get_redpacket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), GetRedPacketActivity.class));
-            }
-        });
         if (position == 1) {
+            get_redpacket.setText("领取购物红包");
+            get_redpacket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), GetRedPacketActivity.class));
+                }
+            });
             get_redpacket.setVisibility(View.VISIBLE);
-        } else {
+        }else if(position == 2){
+            get_redpacket.setText("领更多商家好券");
+            get_redpacket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), ShopVouchActivity.class));
+                }
+            });
+            get_redpacket.setVisibility(View.VISIBLE);
+        }
+        else {
             get_redpacket.setVisibility(View.GONE);
         }
         xListView.setPullLoadEnable(true);
@@ -369,8 +382,8 @@ public class CouponFragment extends BaseFragment {
         mAdapter.setOnClickVoucherListener(new CouponAdapter.OnClickVoucherListener() {
             @Override
             public void onClickVoucher(String storeId) {
-                Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                intent.putExtra("gcid", storeId);
+                Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+                intent.putExtra("id", storeId);
                 startActivity(intent);
             }
 

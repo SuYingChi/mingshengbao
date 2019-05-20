@@ -14,6 +14,36 @@ public class VoucherBean {
     private String voucher_t_limit;
     private String voucher_t_end_date;
 
+    public String getVoucher_t_state() {
+        return voucher_t_state;
+    }
+
+    public void setVoucher_t_state(String voucher_t_state) {
+        this.voucher_t_state = voucher_t_state;
+    }
+
+    private String voucher_t_state;
+
+    public void setVoucher_t_title(String voucher_t_title) {
+        this.voucher_t_title = voucher_t_title;
+    }
+
+    private String voucher_t_title;
+
+    public void setVoucher_t_desc(String voucher_t_desc) {
+        this.voucher_t_desc = voucher_t_desc;
+    }
+
+    private String voucher_t_desc;
+
+
+
+    public void setShowDesc(boolean showDesc) {
+        this.showDesc = showDesc;
+    }
+
+    private boolean showDesc;
+
     public String getVoucher_t_id() {
         return voucher_t_id;
     }
@@ -44,5 +74,20 @@ public class VoucherBean {
 
     public void setVoucher_t_end_date(String voucher_t_end_date) {
         this.voucher_t_end_date = voucher_t_end_date;
+    }
+
+
+
+
+    public boolean isShowDesc() {
+        return showDesc;
+    }
+
+    public String getVoucher_t_title () {
+        return voucher_t_title ;
+    }
+
+    public String getVoucher_t_desc() {
+        return voucher_t_desc;
     }
 }
