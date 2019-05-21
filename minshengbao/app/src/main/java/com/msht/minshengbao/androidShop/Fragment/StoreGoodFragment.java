@@ -386,7 +386,7 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
     @Override
     public void onAddCarSuccess(String s) {
         AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
-        if (TextUtils.equals(bean.getDatas(), "1")) {
+        if (bean != null && TextUtils.equals(bean.getDatas(), "1")) {
             PopUtil.showAutoDissHookDialog(getContext(), "添加购物车成功", 100);
         }
     }

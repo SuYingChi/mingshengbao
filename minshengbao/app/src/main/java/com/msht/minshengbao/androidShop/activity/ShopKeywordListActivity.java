@@ -389,9 +389,6 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                     isGrid = true;
                     rcl.setAdapter(gridAdapter);
                 }else {
-                    if (linearLayoutManager == null) {
-                        linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-                    }
                     rcl.setLayoutManager(linearLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -430,7 +427,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     @Override
     public void onAddCarSuccess(String s) {
         AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
-        if (TextUtils.equals(bean.getDatas(), "1")) {
+        if (bean != null && TextUtils.equals(bean.getDatas(), "1")) {
             PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100);
         }
     }
