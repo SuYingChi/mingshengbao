@@ -420,7 +420,8 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             if(1==goods.getCart()) {
                 ShopPresenter.addCar(this,goods.getGoods_id());
             }else {
-                PopUtil.toastInBottom("商品无法加入购物车");
+                String goodsId = goods.getGoods_id();
+                onShopItemViewClick("goods", goodsId);
             }
         }
     }

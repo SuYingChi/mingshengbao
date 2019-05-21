@@ -6,12 +6,14 @@
     android:orientation="vertical"
     android:paddingRight="@dimen/dp5"
     android:paddingLeft="@dimen/dp5"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:layout_marginRight="@dimen/dp5"
+    android:layout_marginBottom="@dimen/dp5">
 
     <ImageView
         android:id="@+id/iv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="@dimen/margin_width90" />
 
     <TextView
         android:id="@+id/name"

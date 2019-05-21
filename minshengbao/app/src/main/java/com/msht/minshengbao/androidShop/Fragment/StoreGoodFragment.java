@@ -1,5 +1,6 @@
 package com.msht.minshengbao.androidShop.Fragment;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,16 +15,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.msht.minshengbao.R;
+import com.msht.minshengbao.androidShop.adapter.ClassDetailRightAdapter;
 import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.KeywordListAdapter;
+import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodListAdapter;
 import com.msht.minshengbao.androidShop.basefragment.ShopBaseLazyFragment;
 import com.msht.minshengbao.androidShop.event.VerticalOffset;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.AddCarBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAddCarView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreGoodView;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -41,7 +49,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoodView, OnRefreshListener, OnLoadMoreListener {
+public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoodView, OnRefreshListener, OnLoadMoreListener, ClassDetailRightAdapter.AddCarListener, IShopAddCarView {
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.rcl)
@@ -71,14 +79,17 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
     private String orderKey="";
     private LinearLayoutManager linearLayoutManager;
 
-    private List<StoreGoodBean> goodlist=new ArrayList<StoreGoodBean>();
-    private StoreGoodListAdapter adapter;
+   /* private List<StoreGoodBean> goodlist=new ArrayList<StoreGoodBean>();*/
+   private  List<ClassDetailRightBean.DatasBean.GoodsListBean> goodlist = new ArrayList<ClassDetailRightBean.DatasBean.GoodsListBean>();
+   /* private StoreGoodListAdapter adapter;*/
+   private ClassDetailRightAdapter adapter;
     private Drawable grid2;
     private Drawable grid;
     private GridLayoutManager gridLayoutManager;
     private boolean isGrid=false;
     private DividerItemDecoration dividerItemDecoration2;
     private DividerItemDecoration dividerItemDecoration;
+    private ClassDetailRightAdapter gridAdapter;
 
     @Override
     protected int setLayoutId() {
@@ -100,7 +111,7 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
         linearLayoutManager.setAutoMeasureEnabled(true);
         rcl.setNestedScrollingEnabled(false);
         rcl.setLayoutManager(linearLayoutManager);
-        dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+       /* dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rcl.addItemDecoration(dividerItemDecoration);
         adapter = new StoreGoodListAdapter(getContext(),R.layout.item_keyword_search,goodlist);
         adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
@@ -109,6 +120,18 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
                 doShopItemViewClick("goods",goodlist.get(position).getGoods_id());
             }
         });
+        rcl.setAdapter(adapter);*/
+        adapter = new ClassDetailRightAdapter(getContext(),R.layout.item_class_detail_right);
+        adapter.setOnAddCarListener(this);
+        adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                ClassDetailRightBean.DatasBean.GoodsListBean item = goodlist.get(position);
+                String goodsId = item.getGoods_id();
+                doShopItemViewClick("goods", goodsId);
+            }
+        });
+        adapter.setDatas(goodlist);
         rcl.setAdapter(adapter);
         upTriangle = getResources().getDrawable(R.drawable.shop_up_triangle);
         downTriangle = getResources().getDrawable(R.drawable.shop_down_triangle);
@@ -173,7 +196,7 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
         refreshLayout.setNoMoreData(false);
         JSONArray goodArray = obj.optJSONObject("datas").optJSONArray("goods_list");
         for(int i=0;i<goodArray.length();i++){
-            goodlist.add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),StoreGoodBean.class));
+            goodlist.add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),ClassDetailRightBean.DatasBean.GoodsListBean.class));
         }
         adapter.notifyDataSetChanged();
         } catch (JSONException e) {
@@ -267,13 +290,6 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
             default:
                 break;
         }
-        if(isGrid){
-            rcl.setLayoutManager(linearLayoutManager);
-            isGrid = false;
-            iv.setImageDrawable(grid);
-            rcl.addItemDecoration(dividerItemDecoration);
-
-        }
         curpage = 1;
         ShopPresenter.getStoreGood(this);
     }
@@ -302,6 +318,20 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
                                 return false;
                             }
                         };
+                        gridLayoutManager.setAutoMeasureEnabled(true);
+                    }
+                    if(gridAdapter == null){
+                        gridAdapter = new ClassDetailRightAdapter(getContext(),R.layout.item_grid_keyword_list);
+                        gridAdapter.setOnAddCarListener(this);
+                        gridAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                ClassDetailRightBean.DatasBean.GoodsListBean item = goodlist.get(position);
+                                String goodsId = item.getGoods_id();
+                                doShopItemViewClick("goods", goodsId);
+                            }
+                        });
+                        gridAdapter.setDatas(goodlist);
                     }
                     rcl.setLayoutManager(gridLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
@@ -310,15 +340,8 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid2);
                     isGrid = true;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(gridAdapter);
                 }else {
-                    if (linearLayoutManager == null) {
-                        linearLayoutManager =  new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-                    }
                     rcl.setLayoutManager(linearLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -326,11 +349,7 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid);
                     isGrid = false;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(adapter);
                 }
                 break;
             default:
@@ -348,5 +367,27 @@ public class StoreGoodFragment extends ShopBaseLazyFragment implements IStoreGoo
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         curpage++;
         ShopPresenter.getStoreGood(this);
+    }
+
+    @Override
+    public void addCar(ClassDetailRightBean.DatasBean.GoodsListBean good) {
+        if (TextUtils.isEmpty(getKey())) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        } else {
+            if(1==good.getCart()) {
+                ShopPresenter.addCar(this,good.getGoods_id());
+            }else {
+                String goodsId = good.getGoods_id();
+                doShopItemViewClick("goods", goodsId);
+            }
+        }
+    }
+
+    @Override
+    public void onAddCarSuccess(String s) {
+        AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
+        if (TextUtils.equals(bean.getDatas(), "1")) {
+            PopUtil.showAutoDissHookDialog(getContext(), "添加购物车成功", 100);
+        }
     }
 }
