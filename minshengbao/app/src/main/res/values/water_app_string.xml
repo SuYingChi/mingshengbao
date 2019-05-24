@@ -35,6 +35,8 @@
     <string name="launch_equipment">启动设备购水</string>
     <string name="look_near_equipment">点击查看附近售水机</string>
     <string name="malfunction_text">设备故障？点此上报 ></string>
+    <string name="mass_flow_water_card">民生水宝大流量水卡</string>
+    <string name="mass_flow_purchase_tip">买卡用水更划算</string>
     <string name="water_balance_detail">明细</string>
     <string name="water_account_text">直饮水账户总余额  (元)</string>
     <string name="please_input_equipmentNo">扫描二维码或输入设备编号</string>
@@ -47,6 +49,7 @@
     <string name="recharge_award_tip">充值领取大礼包，100%有奖</string>
     <string name="recharge_meal_tip">充值800元赠送450元</string>
     <string name="pay_fee_agree_tip">点击确认支付,表示您已经同意</string>
+    <string name="purchase_text">购买</string>
     <string name="select_share_way">选择分享方式</string>
     <string name="wei_xin">微信</string>
     <string name="wei_xin_friend">微信好友</string>

@@ -6,7 +6,7 @@ import android.view.View;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.Callback.PictureImageLoader;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.BannerLayout;
+import com.msht.minshengbao.custom.widget.BannerLayout;
 
 import java.util.ArrayList;
 

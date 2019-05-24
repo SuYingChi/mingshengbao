@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"
             android:orientation="horizontal"
             android:visibility="invisible">
-            <com.msht.minshengbao.ViewUI.PullRefresh.LoadView
+            <com.msht.minshengbao.custom.PullRefresh.LoadView
                 android:id="@+id/xlistview_footer_loadview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -28,30 +28,37 @@
                 android:text="@string/please_select_question_describe"
                 android:textSize="@dimen/text_width16"
                 android:textColor="@color/right_title"/>
-            <com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout
-                android:id="@+id/id_multiChoose"
-                style="@style/MultiLineChooseItemTags.FlowLayout"
+        </RelativeLayout>
+        <com.msht.minshengbao.custom.widget.MyScrollview
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:layout_below="@+id/id_text2"
-                android:layout_marginTop="@dimen/margin_width20">
-            </com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout>
-            <EditText
-                android:id="@+id/id_et_info"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width80"
-                android:layout_below="@+id/id_multiChoose"
-                android:hint="@string/can_input_140_character"
-                android:inputType="textPersonName"
-                android:padding="@dimen/margin_width10"
-                android:layout_margin="@dimen/margin_width20"
-                android:textSize="@dimen/text_width16"
-                android:maxLength="150"
-                android:background="@drawable/shape_white_border_rectangle"
-                android:gravity="start|top"/>
-        </RelativeLayout>
+                android:orientation="vertical">
+                <com.msht.minshengbao.custom.widget.MultiLineChooseLayout
+                    android:id="@+id/id_multiChoose"
+                    style="@style/MultiLineChooseItemTags.FlowLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginTop="@dimen/margin_width20">
+                </com.msht.minshengbao.custom.widget.MultiLineChooseLayout>
+                <EditText
+                    android:id="@+id/id_et_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_width80"
+                    android:hint="@string/can_input_140_character"
+                    android:inputType="textPersonName"
+                    android:padding="@dimen/margin_width10"
+                    android:layout_margin="@dimen/margin_width20"
+                    android:textSize="@dimen/text_width16"
+                    android:maxLength="150"
+                    android:background="@drawable/shape_white_border_rectangle"
+                    android:gravity="start|top"/>
+            </LinearLayout>
+        </com.msht.minshengbao.custom.widget.MyScrollview>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +66,7 @@
             android:layout_marginBottom="@dimen/margin_width20"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal">
-            <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            <com.msht.minshengbao.custom.ButtonUI.ButtonM
                 android:id="@+id/id_cancel"
                 android:layout_width="@dimen/margin_width80"
                 android:layout_height="wrap_content"
@@ -77,7 +84,7 @@
                 app:shape="rectangle"
                 app:radius="10"
                 app:fillet="true"/>
-            <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            <com.msht.minshengbao.custom.ButtonUI.ButtonM
                 android:id="@+id/id_btn_send"
                 android:layout_width="@dimen/margin_width80"
                 android:layout_height="wrap_content"
@@ -99,5 +106,4 @@
                 app:fillet="true"/>
         </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

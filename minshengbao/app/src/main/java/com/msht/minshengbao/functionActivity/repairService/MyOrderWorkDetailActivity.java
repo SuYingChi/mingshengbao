@@ -24,7 +24,6 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
-import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.publicModule.SelectVoucherActivity;
 import com.msht.minshengbao.R;
@@ -33,8 +32,8 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;

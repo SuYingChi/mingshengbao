@@ -533,7 +533,7 @@
                 android:layout_height="@dimen/margin_width20"/>
         </LinearLayout>
     </ScrollView>
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonM
         android:id="@+id/id_btn_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -584,7 +584,7 @@
                 android:textColor="@color/color_383838"
                 android:text="@string/real_pay_amount"/>
         </RelativeLayout>
-        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        <com.msht.minshengbao.custom.ButtonUI.ButtonM
             android:id="@+id/id_btn_pay"
             android:layout_weight="0.3"
             android:layout_width="0dp"

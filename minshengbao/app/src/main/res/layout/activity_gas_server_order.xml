@@ -13,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        <com.msht.minshengbao.custom.PullRefresh.XListView
             android:id="@+id/id_gasserver_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        </com.msht.minshengbao.custom.PullRefresh.XListView>
         <include layout="@layout/layout_no_data_view"
             android:id="@+id/id_nodata_layout"
             android:visibility="gone"/>

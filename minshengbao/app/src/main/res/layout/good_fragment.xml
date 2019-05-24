@@ -749,7 +749,7 @@
                     android:textSize="@dimen/text_14" />
             </LinearLayout>
 
-            <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+            <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                 android:id="@+id/gv"
                 style="@style/grid_view" />
         </LinearLayout>

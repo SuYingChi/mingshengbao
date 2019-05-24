@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.androidShop.activity.MessageListActivity;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;

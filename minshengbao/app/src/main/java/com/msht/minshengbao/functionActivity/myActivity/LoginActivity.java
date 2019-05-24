@@ -2,17 +2,13 @@ package com.msht.minshengbao.functionActivity.myActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,14 +19,9 @@ import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.AppPackageUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
-import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
-import com.msht.minshengbao.androidShop.event.LoginShopEvent;
-import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
-import com.msht.minshengbao.androidShop.shopBean.LoginShopBean;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
-import com.msht.minshengbao.androidShop.viewInterface.ILoginShopView;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.R;
@@ -38,7 +29,7 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.UMAuthListener;
@@ -46,7 +37,6 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -459,7 +449,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
          */
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            CustomToast.showSuccessLong("失败：" + t.getMessage());
+            CustomToast.showWarningLong("微信版本过低，请升级微信版本");
         }
         /**
          * @desc 授权取消的回调
@@ -468,7 +458,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
          */
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            CustomToast.showSuccessLong("取消了");
+            CustomToast.showSuccessDialog("已取消授权");
         }
     };
 

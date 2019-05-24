@@ -6,11 +6,11 @@
     android:orientation="vertical"
     android:background="@color/white"
     tools:context="com.msht.minshengbao.functionActivity.fragment.HomeFragment">
-    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
+    <com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.msht.minshengbao.ViewUI.widget.MyScrollview
+    <com.msht.minshengbao.custom.widget.MyScrollview
         android:id="@+id/id_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,11 +27,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <com.msht.minshengbao.ViewUI.ImageCycleView
+                    <com.msht.minshengbao.custom.ImageCycleView
                         android:id="@+id/ad_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_width200">
-                    </com.msht.minshengbao.ViewUI.ImageCycleView>
+                    </com.msht.minshengbao.custom.ImageCycleView>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -39,13 +39,13 @@
                         android:layout_gravity="center_horizontal"
                         android:paddingBottom="@dimen/margin_20"
                         android:minHeight="@dimen/margin_20">
-                        <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                        <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                             android:id="@+id/id_function_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:numColumns="5"
                             android:verticalSpacing="@dimen/margin_width15">
-                        </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                        </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
                     </RelativeLayout>
                 </LinearLayout>
                 <android.support.v7.widget.CardView
@@ -61,7 +61,7 @@
                     app:cardBackgroundColor="@color/white"
                     app:cardElevation="@dimen/margin_width5"
                     android:visibility="gone">
-                    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                    <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                         android:id="@+id/id_topmodule_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                         android:layout_gravity="center_horizontal"
                         android:numColumns="4"
                         android:verticalSpacing="@dimen/margin_width15">
-                    </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                    </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
                 </android.support.v7.widget.CardView>
             </FrameLayout>
             <include layout="@layout/layout_marquee_view" android:id="@+id/id_marquee_layout"/>
@@ -118,7 +118,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView
+                    <com.msht.minshengbao.custom.CardVMZBanner.MZBannerView
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_width160"
@@ -131,7 +131,7 @@
                         app:indicatorPaddingTop="@dimen/margin_width10"
                         app:indicatorPaddingLeft="@dimen/margin_width10"
                         app:indicatorPaddingBottom="@dimen/margin_width10">
-                    </com.msht.minshengbao.ViewUI.CardVMZBanner.MZBannerView>
+                    </com.msht.minshengbao.custom.CardVMZBanner.MZBannerView>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <LinearLayout
@@ -213,14 +213,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_15"
                     android:paddingBottom="@dimen/margin_10">
-                    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                    <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                         android:id="@+id/id_hot_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:numColumns="3"
                         android:verticalSpacing="@dimen/margin_20">
-                    </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                    </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
                 </RelativeLayout>
                 <include layout="@layout/layout_line_gray"/>
                 <RelativeLayout
@@ -240,8 +240,8 @@
             <include android:id="@+id/id_not_open" layout="@layout/layout_notopen_city"
                 android:visibility="gone"/>
         </LinearLayout>
-    </com.msht.minshengbao.ViewUI.widget.MyScrollview>
-    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
+    </com.msht.minshengbao.custom.widget.MyScrollview>
+    </com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout>
     <!--    标题栏  -->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -303,7 +303,7 @@
         </RelativeLayout>
     </LinearLayout>
     </android.support.v7.widget.Toolbar>
-    <com.msht.minshengbao.ViewUI.widget.DragImageView
+    <com.msht.minshengbao.custom.widget.DragImageView
         android:id="@+id/id_floating_view"
         android:layout_width="@dimen/margin_width60"
         android:layout_height="@dimen/margin_width60"

@@ -1,14 +1,11 @@
 package com.msht.minshengbao.functionActivity.myActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +21,8 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.MainActivity;
@@ -35,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Demo class

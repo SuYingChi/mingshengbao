@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-                <com.msht.minshengbao.ViewUI.CircleImageView
+                <com.msht.minshengbao.custom.CircleImageView
                     android:id="@+id/id_portrait_view"
                     android:layout_width="@dimen/margin_width80"
                     android:layout_height="@dimen/margin_width80"
@@ -119,14 +119,14 @@
                 android:layout_marginBottom="@dimen/margin_width20"
                 android:orientation="vertical"
                 android:background="@color/transparent">
-                <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+                <com.msht.minshengbao.custom.widget.ListViewForScrollView
                     android:id="@+id/id_delivery_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:headerDividersEnabled="true"
                     android:stackFromBottom="true"
                     android:divider="@null">
-                </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+                </com.msht.minshengbao.custom.widget.ListViewForScrollView>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -8,7 +8,7 @@
     android:background="@color/black"
     tools:context="com.msht.minshengbao.functionActivity.electricVehicle.ElectricPictureActivity">
     <include layout="@layout/layout_header" />
-    <com.msht.minshengbao.ViewUI.widget.BannerLayout
+    <com.msht.minshengbao.custom.widget.BannerLayout
         android:id="@+id/id_banner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,5 +28,5 @@
         app:unSelectedIndicatorHeight="8dp"
         app:unSelectedIndicatorWidth="8dp">
 
-    </com.msht.minshengbao.ViewUI.widget.BannerLayout>
+    </com.msht.minshengbao.custom.widget.BannerLayout>
 </LinearLayout>

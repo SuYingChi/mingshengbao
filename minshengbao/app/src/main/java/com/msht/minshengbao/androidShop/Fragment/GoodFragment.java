@@ -35,7 +35,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
 import com.msht.minshengbao.androidShop.adapter.GiftArrayAdapter;
 import com.msht.minshengbao.androidShop.adapter.PingtuanAdapter;
 import com.msht.minshengbao.androidShop.activity.ShopComfirmOrdersActivity;

@@ -20,7 +20,7 @@
             android:layout_marginTop="@dimen/margin_width10">
         </com.jcodecraeer.xrecyclerview.XRecyclerView>
     </RelativeLayout>
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonM
         android:id="@+id/id_btn_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

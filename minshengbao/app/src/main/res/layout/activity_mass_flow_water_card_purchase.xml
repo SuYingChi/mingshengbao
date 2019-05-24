@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    android:orientation="vertical"
+    tools:context=".functionActivity.waterApp.MassFlowWaterCardPurchaseActivity">
+
+    <include layout="@layout/layout_white_header" />
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/background_gray">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_data_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width5"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10">
+        </android.support.v7.widget.RecyclerView>
+        <WebView
+            android:id="@+id/id_webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_width15">
+        </WebView>
+    </LinearLayout>
+    <include layout="@layout/layout_water_buy_discount_purchase_view"/>
+</LinearLayout>

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".functionActivity.htmlWeb.InsuranceHtmlActivity">
     <include layout="@layout/layout_header" android:id="@+id/id_webHeader"/>
-    <com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout
+    <com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout
         android:id="@+id/id_vertical_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -27,5 +27,5 @@
                 android:id="@+id/progressBar"
                 android:layout_gravity="center" />
         </FrameLayout>
-    </com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout>
+    </com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout>
 </LinearLayout>

@@ -14,6 +14,8 @@
     <string name="user_address">用户地址</string>
     <string name="elevator_house">电梯房</string>
     <string name="doorplate">门牌号</string>
+    <string name="doorplate_default_text">例：8号楼808室</string>
+    <string name="city_default_text">例：海口</string>
     <string name="recipient_man">收货人</string>
     <string name="default_text">XXXXXX</string>
     <string name="default_value0">0.0</string>
@@ -46,7 +48,9 @@
     <string name="updata_apk">你的版本过老，如若需使用，请点击更新</string>
     <!--地址 -->
     <string name="delect_text">删除</string>
+    <string name="customer_address">用户地址</string>
     <string name="edit_text">编辑</string>
+
     <string name="detail_address">详细地址</string>
     <string name="please_input_detail_address">请输入详细地址</string>
     <string name="please_input_connection_person">请输入联系人</string>
@@ -129,6 +133,7 @@
     <string name="subtract_symbol">-</string>
     <string name="add_symbol">+</string>
     <string name="fund_symbol">¥</string>
+    <string name="question_symbol">\?</string>
     <!--单位 -->
     <string name="RMB_YUAN">元</string>
 

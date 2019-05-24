@@ -19,10 +19,10 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
-import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
-import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.custom.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.custom.widget.MultiLineChooseLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;

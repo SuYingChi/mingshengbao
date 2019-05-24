@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
-                <com.msht.minshengbao.ViewUI.widget.BannerLayout
+                <com.msht.minshengbao.custom.widget.BannerLayout
                     android:id="@+id/id_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_width320"
@@ -38,7 +38,7 @@
                     app:unSelectedIndicatorColor="#99ffffff"
                     app:unSelectedIndicatorHeight="@dimen/margin_width8"
                     app:unSelectedIndicatorWidth="@dimen/margin_width8">
-                </com.msht.minshengbao.ViewUI.widget.BannerLayout>
+                </com.msht.minshengbao.custom.widget.BannerLayout>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"

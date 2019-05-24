@@ -1,8 +1,6 @@
 package com.msht.minshengbao.androidShop.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +9,8 @@ import android.widget.TextView;
 
 import com.lxy.dexlibs.ComplexRecyclerViewAdapter;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
-import com.msht.minshengbao.androidShop.activity.MessageListActivity;
-import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
-import com.msht.minshengbao.androidShop.activity.ShopOrderRouteActivity;
-import com.msht.minshengbao.androidShop.activity.WarnMessageDetailActivity;
 import com.msht.minshengbao.androidShop.shopBean.WarnBean;
 import com.msht.minshengbao.androidShop.util.GlideUtil;
-import com.msht.minshengbao.androidShop.util.RecyclerHolder;
 
 import org.json.JSONArray;
 import org.json.JSONException;

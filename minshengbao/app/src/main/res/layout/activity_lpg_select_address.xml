@@ -12,11 +12,11 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp">
-        <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+        <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
             android:id="@+id/id_address_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+        </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
         <RelativeLayout
             android:id="@+id/id_re_nodata"
             android:layout_width="match_parent"

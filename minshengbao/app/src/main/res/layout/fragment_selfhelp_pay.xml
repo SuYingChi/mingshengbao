@@ -31,11 +31,11 @@
                         android:text="选择用户号查询"
                         android:textSize="@dimen/text_16"/>
                     <include layout="@layout/layout_line_gray"/>
-                    <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+                    <com.msht.minshengbao.custom.widget.ListViewForScrollView
                         android:id="@+id/id_addre_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                    </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+                    </com.msht.minshengbao.custom.widget.ListViewForScrollView>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_10"

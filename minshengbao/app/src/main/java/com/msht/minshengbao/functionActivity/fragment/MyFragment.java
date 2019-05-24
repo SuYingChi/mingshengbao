@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.msht.minshengbao.Utils.AppActivityUtil;
 import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.adapter.MyFunctionAdapter;
 import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
@@ -27,9 +28,9 @@ import com.msht.minshengbao.functionActivity.myActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
-import com.msht.minshengbao.ViewUI.widget.MyScrollview;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.widget.MyScrollview;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -54,9 +55,6 @@ public class MyFragment extends BaseHomeFragment implements View.OnClickListener
     private Activity mActivity;
     private final String mPageName = "首页_我的（未登录）";
     private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
-    private MyNoScrollGridView mGridView;
-    private MyFunctionAdapter mAdapter;
-    private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     public  MyFragment() {}
     @Override
     public View initFindView() {
@@ -70,10 +68,6 @@ public class MyFragment extends BaseHomeFragment implements View.OnClickListener
         }
         initView(mRootView);
         initListeners();
-        mAdapter=new MyFunctionAdapter(mContext,mList);
-        mGridView.setAdapter(mAdapter);
-        initData();
-        onGoActivity();
         return mRootView;
     }
     private void initListeners() {
@@ -90,79 +84,60 @@ public class MyFragment extends BaseHomeFragment implements View.OnClickListener
     private void iniSetListener() {
         myScrollview.setScrollViewListener(this);
     }
-    private void onGoActivity() {
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int code=mList.get(position).get("code");
-                switch (code){
-                    case 0:
-                        onGoLogin();
-                        break;
-                    case 1:
-                        onGoLogin();
-                        break;
-                    case 2:
-                        onGoLogin();
-                        break;
-                    case 3:
-                        onGoLogin();
-                        break;
-                    case 4:
-                        onGoLogin();
-                        break;
-                    case 5:
-                        onGoShare();
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-        });
-    }
-    private void initData() {
-        for (int i = 0; i <6; i++) {
-            if (VariableUtil.BoolCode){
-                if (i!=1&&i!=2){
-                    HashMap<String, Integer> map = new HashMap<String, Integer>();
-                    map.put("code", i);
-                    mList.add(map);
-                }
-            }else {
-                HashMap<String, Integer> map = new HashMap<String, Integer>();
-                map.put("code", i);
-                mList.add(map);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-    }
     private void initView(View view) {
-        mGridView=(MyNoScrollGridView)view.findViewById(R.id.id_function_view);
         myScrollview=(MyScrollview)view.findViewById(R.id.id_scrollview);
         layoutNavigation =(LinearLayout) view.findViewById(R.id.id_li_navigation);
-        layoutMySetting =(RelativeLayout) view.findViewById(R.id.id_re_gologin);
+        layoutMySetting = (RelativeLayout) view.findViewById(R.id.id_my_setting);
         tvNavigation =(TextView)view.findViewById(R.id.id_tv_naviga);
         layoutMySetting.setOnClickListener(this);
-        view.findViewById(R.id.id_re_hotline).setOnClickListener(this);
+        view.findViewById(R.id.id_hot_line_img).setOnClickListener(this);
         view.findViewById(R.id.id_re_consult).setOnClickListener(this);
-        view.findViewById(R.id.id_re_moreset).setOnClickListener(this);
+        view.findViewById(R.id.id_setting_img).setOnClickListener(this);
+        view.findViewById(R.id.id_right_massage).setOnClickListener(this);
+        view.findViewById(R.id.id_repair_order_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_gas_order_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_invoice_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_address_manage).setOnClickListener(this);
+        view.findViewById(R.id.id_share_button).setOnClickListener(this);
+        view.findViewById(R.id.id_tv_nickname).setOnClickListener(this);
+        view.findViewById(R.id.id_portrait_view).setOnClickListener(this);
 
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.id_re_gologin:
-                onGoLogin();
+            case R.id.id_portrait_view:
+                AppActivityUtil.onLoginActivity(mActivity,"");
                 break;
-            case R.id.id_re_hotline:
+            case R.id.id_tv_nickname:
+                AppActivityUtil.onLoginActivity(mActivity,"");
+                break;
+            case R.id.id_hot_line_img:
                 onHotLine();
                 break;
             case R.id.id_re_consult:
                 onGoLogin();
                 break;
-            case R.id.id_re_moreset:
+            case R.id.id_setting_img:
                 onGoMoreSetting();
+                break;
+            case R.id.id_share_button:
+                onGoShare();
+                break;
+            case R.id.id_right_massage:
+                AppActivityUtil.onLoginActivity(mContext,"");
+                break;
+            case R.id.id_repair_order_layout:
+                AppActivityUtil.onLoginActivity(mContext,"");
+                break;
+            case R.id.id_gas_order_layout:
+                AppActivityUtil.onLoginActivity(mContext,"");
+                break;
+            case R.id.id_invoice_layout:
+                AppActivityUtil.onLoginActivity(mContext,"");
+                break;
+            case R.id.id_address_manage:
+                AppActivityUtil.onLoginActivity(mContext,"");
                 break;
             default:
                 break;

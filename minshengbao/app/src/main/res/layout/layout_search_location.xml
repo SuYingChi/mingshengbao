@@ -13,11 +13,11 @@
             android:layout_height="wrap_content"
             android:background="@color/background_gray"
             android:orientation="vertical">
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            <com.msht.minshengbao.custom.widget.ListViewForScrollView
                 android:id="@+id/id_search_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            </com.msht.minshengbao.custom.widget.ListViewForScrollView>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

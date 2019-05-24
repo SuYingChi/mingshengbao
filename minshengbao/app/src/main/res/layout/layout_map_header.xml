@@ -70,7 +70,7 @@
                     android:inputType="textPersonName"
                     android:background="@null"
                     android:hint="请输入地址信息"
-                    android:textColor="#ff444444"
+                    android:textColor="@color/black1"
                     android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
         </LinearLayout>

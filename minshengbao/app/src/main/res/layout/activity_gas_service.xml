@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingBottom="@dimen/margin_width20">
-                <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                     android:id="@+id/id_function_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                     android:numColumns="4"
                     android:horizontalSpacing="@dimen/margin_width8"
                     android:verticalSpacing="@dimen/margin_width20">
-                </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"

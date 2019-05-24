@@ -10,9 +10,9 @@
     <include layout="@layout/layout_header"/>
     <include layout="@layout/layout_lpg_replace_bottle_header"/>
     <include layout="@layout/layout_line_interval"/>
-    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+    <com.msht.minshengbao.custom.PullRefresh.XListView
         android:id="@+id/id_bottle_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    </com.msht.minshengbao.custom.PullRefresh.XListView>
 </LinearLayout>

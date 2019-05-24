@@ -23,12 +23,12 @@
             android:textSize="@dimen/text_width18"
             android:textColor="@color/colorPrimary"
             android:visibility="gone"/>
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        <com.msht.minshengbao.custom.PullRefresh.XListView
             android:id="@+id/id_preexistence_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:divider="@null">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        </com.msht.minshengbao.custom.PullRefresh.XListView>
     </FrameLayout>
 </LinearLayout>

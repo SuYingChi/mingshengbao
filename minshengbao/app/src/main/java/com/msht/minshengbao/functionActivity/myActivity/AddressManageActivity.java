@@ -15,9 +15,9 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.widget.ListViewForScrollView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -262,10 +262,10 @@ public class AddressManageActivity extends BaseActivity {
         if (requestCodes==0){
             validateURL = UrlUtil.AddressManage_Url;
         }else if (requestCodes==1){
-            validateURL = UrlUtil.DelectAddress_Url;
+            validateURL = UrlUtil.DELETE_ADDRESS_URL;
             textParams.put("id",addressId);
         }else if (requestCodes==2){
-            validateURL = UrlUtil.SetDefaultAddr_Url;
+            validateURL = UrlUtil.SET_DEFAULT_ADDRESS_URL;
             textParams.put("id",addressId);
         }
         SendRequestUtil.postDataFromService(validateURL,textParams, requestHandler);

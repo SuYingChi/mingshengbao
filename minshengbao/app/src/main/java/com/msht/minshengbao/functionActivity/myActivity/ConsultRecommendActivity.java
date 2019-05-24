@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.adapter.ViewPagerAdapter;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.custom.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
 public class ConsultRecommendActivity extends AppCompatActivity {

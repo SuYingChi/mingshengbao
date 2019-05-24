@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
@@ -18,8 +18,8 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.DateSheetDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.DateSheetDialog;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.adapter.WaterIncomeAdapter;
 

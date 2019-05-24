@@ -101,7 +101,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/delect_addr_xh"/>
-        <com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout
+        <com.msht.minshengbao.custom.widget.MultiLineChooseLayout
             android:id="@+id/id_multiChoose"
             style="@style/MultiLineChooseItemTags.SingleFlowLayout"
             android:layout_width="match_parent"
@@ -110,16 +110,16 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp">
-        </com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout>
+        </com.msht.minshengbao.custom.widget.MultiLineChooseLayout>
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_width10">
-        <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+        <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
             android:id="@+id/id_view_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+        </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
     </FrameLayout>
 </LinearLayout>

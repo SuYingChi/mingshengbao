@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.msht.minshengbao.adapter.LplOrderViewAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.custom.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
 /**

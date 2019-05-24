@@ -16,12 +16,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="#00ffffff">
-        <com.msht.minshengbao.ViewUI.widget.MyRecyclerView
+        <com.msht.minshengbao.custom.widget.MyRecyclerView
             android:id="@+id/id_serve_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_width6">
-        </com.msht.minshengbao.ViewUI.widget.MyRecyclerView>
+        </com.msht.minshengbao.custom.widget.MyRecyclerView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

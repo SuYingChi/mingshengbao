@@ -146,12 +146,12 @@
             android:background="@color/background_gray"
             android:visibility="gone">
 
-            <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+            <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
                 android:id="@+id/id_more_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_width10">
-            </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+            </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
         </RelativeLayout>
     </LinearLayout>
     <include layout="@layout/layout_water_search_location"

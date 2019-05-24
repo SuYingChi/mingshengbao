@@ -14,17 +14,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.msht.minshengbao.MyApplication;
-import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.umeng.analytics.MobclickAgent;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

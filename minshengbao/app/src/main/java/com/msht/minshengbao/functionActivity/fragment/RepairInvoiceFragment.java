@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-import com.msht.minshengbao.Bean.AdvertisingInfo;
 import com.msht.minshengbao.Bean.RepairInvoiceBean;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
@@ -28,12 +27,9 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.XListView;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
-import com.msht.minshengbao.adapter.CustomerNoAdapter;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.adapter.RepairInvoiceListAdapter;
-import com.msht.minshengbao.functionActivity.invoiceModule.InvoiceOpenActivity;
 import com.msht.minshengbao.functionActivity.invoiceModule.InvoiceRepairApplyActivity;
 
 import org.json.JSONArray;

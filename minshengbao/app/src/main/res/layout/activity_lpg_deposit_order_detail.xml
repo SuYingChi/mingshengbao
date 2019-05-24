@@ -73,11 +73,11 @@
                     android:paddingRight="@dimen/margin_width10"
                     android:background="@color/white"
                     android:orientation="vertical">
-                    <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+                    <com.msht.minshengbao.custom.widget.ListViewForScrollView
                         android:id="@+id/id_return_bottle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                    </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+                    </com.msht.minshengbao.custom.widget.ListViewForScrollView>
                 </LinearLayout>
                 <include layout="@layout/layout_line_interval"/>
                 <RelativeLayout
@@ -199,7 +199,7 @@
                 android:layout_height="@dimen/margin_width20"/>
         </LinearLayout>
     </ScrollView>
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonM
         android:id="@+id/id_btn_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

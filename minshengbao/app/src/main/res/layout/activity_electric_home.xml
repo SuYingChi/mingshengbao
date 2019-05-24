@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.electricVehicle.ElectricHomeActivity">
-    <com.msht.minshengbao.ViewUI.widget.MySwipeRefreshLayout
+    <com.msht.minshengbao.custom.widget.MySwipeRefreshLayout
         android:id="@+id/id_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -133,13 +133,13 @@
                     android:layout_weight="0.6"
                     android:layout_width="match_parent"
                     android:layout_height="0dp">
-                    <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+                    <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
                         android:id="@+id/id_more_info"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                    </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+                    </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
                 </RelativeLayout>
             </LinearLayout>
-    </com.msht.minshengbao.ViewUI.widget.MySwipeRefreshLayout>
+    </com.msht.minshengbao.custom.widget.MySwipeRefreshLayout>
     <include layout="@layout/layout_electric_home_header"/>
 </FrameLayout>

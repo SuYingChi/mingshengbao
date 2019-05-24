@@ -13,16 +13,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.adapter.EstateAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
-import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.custom.PullRefresh.LoadMoreListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;

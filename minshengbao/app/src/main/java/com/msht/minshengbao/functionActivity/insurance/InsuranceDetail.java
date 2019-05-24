@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 
 
 public class InsuranceDetail extends BaseActivity {

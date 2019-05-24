@@ -83,4 +83,14 @@ public class TypeConvertUtil {
         }
     }
 
+    /**
+     * string 转化数字相加
+     * @param num1
+     * @param num2
+     * @return
+     */
+    public static String getStringAddToDouble(String num1,String num2){
+        double value=convertToDouble(num1,0)+convertToDouble(num2,0);
+        return String.valueOf(value);
+    }
 }

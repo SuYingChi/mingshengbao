@@ -7,8 +7,8 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2000058
-        versionName "v4.8.2"
+        versionCode 2000059
+        versionName "v4.8.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "arm64-v8a", "armeabi", "armeabi-v7a", "x86", "x86_64", "mips"
@@ -42,6 +42,7 @@ android {
             buildConfigField 'String', 'URL_MSSB_APP', '"http://mssbtest.msbapp.cn:17080"'
             buildConfigField 'String', 'URL_MSSB', '"http://120.25.195.173:17080/rwapi"'
             buildConfigField 'String', 'URL_MSSB_GIFT', '"http://mssbtest.msbapp.cn:17080"'
+            buildConfigField 'String', 'URL_MSSB_HTML', '"http://dev.msbapp.cn:17080"'
             buildConfigField 'String', 'URL_MSSB_SHARE', '"http://sb-fx.msbapp.cn"'
             buildConfigField 'String', 'URL_SHOP', '"http://dev.msbapp.cn"'
             buildConfigField 'String', 'PAY_MODE', '"01"'
@@ -56,6 +57,7 @@ android {
             buildConfigField 'String', 'URL_MSSB', '"http://sb-api.msbapp.cn"'
             buildConfigField 'String', 'URL_MSSB_GIFT', '"http://sb-fx.msbapp.cn"'
             buildConfigField 'String', 'URL_MSSB_SHARE', '"http://sb-fx.msbapp.cn"'
+            buildConfigField 'String', 'URL_MSSB_HTML', '"http://sb-api.msbapp.cn"'
             buildConfigField 'String', 'URL_SHOP', '"http://shop.msbapp.cn:8090"'
             buildConfigField 'String', 'PAY_MODE', '"00"'
             buildConfigField 'String', 'MSB_HEADLINE', '"http://112.74.61.244:9990"'

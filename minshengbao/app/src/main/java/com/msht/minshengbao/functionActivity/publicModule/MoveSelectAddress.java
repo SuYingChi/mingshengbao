@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -30,12 +31,15 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
 import com.msht.minshengbao.MoveSelectAddress.GeoCoderUtil;
@@ -45,7 +49,8 @@ import com.msht.minshengbao.MoveSelectAddress.PoiSearchAdapter;
 import com.msht.minshengbao.MoveSelectAddress.PoiSearchTask;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.custom.widget.ListViewForScrollView;
+import com.msht.minshengbao.functionActivity.waterApp.WaterEquipmentMapActivity;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 
@@ -60,7 +65,7 @@ import java.util.List;
  * @author hong
  * @date 2017/3/8  
  */
-public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChangeListener, View.OnClickListener, TextWatcher, AdapterView.OnItemClickListener, AMapLocationListener, PoiSearch.OnPoiSearchListener {
+public class MoveSelectAddress extends BaseActivity implements  View.OnClickListener, TextWatcher, AdapterView.OnItemClickListener, AMapLocationListener, PoiSearch.OnPoiSearchListener {
     private MapView mMapView = null;
     private AMap aMap;
     private AMapLocationClient locationClient;
@@ -72,7 +77,9 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
     private String mCity;
     private PoiAdapter poiAdapter;
     private PoiSearchAdapter searchAdapter;
+    private double lat,lon;
     private LocationBean currentLoc;
+    private MyLocationStyle myLocationStyle;
     private static  final int MY_LOCATION_REQUEST=0;
     private static  final String EXTRA_DATA="addressInfo";
     private ArrayList<HashMap<String, String>>  mList = new ArrayList<HashMap<String, String>>();
@@ -122,17 +129,24 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         UiSettings uiSettings = aMap.getUiSettings();
         //隐藏缩放按钮
         uiSettings.setZoomControlsEnabled(false);
+        setLocationStyle();
+        //设置定位蓝点的Style
+        aMap.setMyLocationStyle(myLocationStyle);
+        // 设置为true表示启动显示定位蓝点。
+        aMap.setMyLocationEnabled(true);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(100));
+        aMap.setOnMyLocationChangeListener(new MyLocationChange());
+        aMap.setOnCameraChangeListener(new MyOnCameraChange());
         layoutPoi = (LinearLayout) findViewById(R.id.ll_poi);
         layoutMap =(View)findViewById(R.id.id_map_location);
         layoutSearch =(View)findViewById(R.id.id_search_location);
         ImageView ivBack = (ImageView) findViewById(R.id.iv_back);
         EditText autoText =(EditText) findViewById(R.id.et_search);
         tvAddressDesc = (TextView) findViewById(R.id.addressDesc);
+        findViewById(R.id.id_card_view).setOnClickListener(this);
         ListView lvData = (ListView) findViewById(R.id.lv_data);
         ListViewForScrollView searchData =(ListViewForScrollView)findViewById(R.id.id_search_data);
         tvCancel =(TextView)findViewById(R.id.id_cancel);
-        // 添加移动地图事件监听器
-        aMap.setOnCameraChangeListener(this);
         tvCancel.setEnabled(false);
         tvCancel.setOnClickListener(this);
         autoText.addTextChangedListener(this);
@@ -154,23 +168,19 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         lvData.setOnItemClickListener(this);
         lvData.setAdapter(poiAdapter);
     }
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {}
-    @Override
-    public void onCameraChangeFinish(final CameraPosition cameraPosition) {
 
+    private void setLocationStyle() {
 
-        LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
-        //地理反编码工具类，代码在后面
-        GeoCoderUtil.getInstance(MoveSelectAddress.this).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
-            @Override
-            public void onAddressResult(String result) {
-                tvAddressDesc.setText(result);
-                currentLoc = new LocationBean(cameraPosition.target.longitude,cameraPosition.target.latitude,result,"");
-                //地图的中心点位置改变后都开始poi的附近搜索
-                PoiSearchTask.getInstance(MoveSelectAddress.this).setAdapter(poiAdapter).onSearch("", "",cameraPosition.target.latitude,cameraPosition.target.longitude);
-            }
-        });
+        //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle = new MyLocationStyle();
+        //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.interval(2000);
+        //定位一次，且将视角移动到地图中心点。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;
+        myLocationStyle.showMyLocation(true);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker_xh));
+        myLocationStyle.strokeColor(0xfff96331);
+        myLocationStyle.radiusFillColor(0x40f96331);
     }
     @Override
     public void onClick(View v) {
@@ -182,6 +192,9 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
                 tvCancel.setVisibility(View.GONE);
                 layoutSearch.setVisibility(View.GONE);
                 layoutMap.setVisibility(View.VISIBLE);
+                break;
+            case R.id.id_card_view:
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 40));
                 break;
             default:
                 break;
@@ -202,7 +215,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
          *  Poi查询条件类
          *  第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
          */
-        PoiSearch.Query query = new PoiSearch.Query(keyWord, "", mCity);
+        PoiSearch.Query query = new PoiSearch.Query(keyWord, "",mCity);
         // 设置每页最多返回多少条poiitem
         query.setPageSize(16);
         // 设置查第一页
@@ -246,12 +259,40 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
         }
 
     }
+    private class MyLocationChange implements AMap.OnMyLocationChangeListener{
 
+        @Override
+        public void onMyLocationChange(Location location) {
+            if (location != null ) {
+                lat=location.getLatitude();
+                lon=location.getLongitude();
+            } else {
+                ToastUtil.ToastText(context,"定位失败");
+            }
+
+        }
+    }
+    private class MyOnCameraChange implements AMap.OnCameraChangeListener{
+        @Override
+        public void onCameraChange(CameraPosition cameraPosition) {}
+        @Override
+        public void onCameraChangeFinish(final CameraPosition cameraPosition) {
+            LatLngEntity latLngEntity = new LatLngEntity(cameraPosition.target.latitude, cameraPosition.target.longitude);
+            //地理反编码工具类，代码在后面
+            GeoCoderUtil.getInstance(MoveSelectAddress.this).geoAddress(latLngEntity, new GeoCoderUtil.GeoCoderAddressListener() {
+                @Override
+                public void onAddressResult(String result) {
+                    tvAddressDesc.setText(result);
+                    currentLoc = new LocationBean(cameraPosition.target.longitude,cameraPosition.target.latitude,result,"");
+                    //地图的中心点位置改变后都开始poi的附近搜索
+                    PoiSearchTask.getInstance(MoveSelectAddress.this).setAdapter(poiAdapter).onSearch("", "",cameraPosition.target.latitude,cameraPosition.target.longitude);
+                }
+            });
+        }
+    }
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-            //移动地图中心到当前的定位位置
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()), 40));
             //获取定位信息
             double latitude = aMapLocation.getLatitude();
             double longitude = aMapLocation.getLongitude();
@@ -266,6 +307,7 @@ public class MoveSelectAddress extends BaseActivity implements AMap.OnCameraChan
             tvAddressDesc.setText(addressStr);
             //这里是定位完成之后开始poi的附近搜索，代码在后面
             PoiSearchTask.getInstance(this).setAdapter(poiAdapter).onSearch("", "",latitude,longitude);
+            locationClient.stopLocation();
         }
     }
     @Override

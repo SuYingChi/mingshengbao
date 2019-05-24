@@ -3,7 +3,6 @@ package com.msht.minshengbao.adapter;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
+import com.msht.minshengbao.custom.ButtonUI.ButtonM;
 
 import java.util.ArrayList;
 import java.util.HashMap;

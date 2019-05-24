@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,15 +10,34 @@
         android:layout_weight="1">
         <com.amap.api.maps.MapView
             android:id="@+id/id_mapView"
-            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         <ImageView
             android:layout_width="@dimen/margin_20"
             android:layout_height="36dp"
             android:layout_gravity="center"
+            android:contentDescription="@string/picture_text"
             android:src="@drawable/search_addr_xh"
             android:translationY="-10dp" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/id_card_view"
+            android:layout_width="@dimen/margin_width40"
+            android:layout_height="@dimen/margin_width40"
+            android:layout_marginEnd="@dimen/margin_width15"
+            android:layout_marginRight="@dimen/margin_width15"
+            android:layout_marginBottom="@dimen/margin_width15"
+            android:layout_gravity="bottom|end"
+            app:cardCornerRadius="@dimen/margin_width8"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/margin_width3">
+            <ImageView
+                android:id="@+id/id_button_img"
+                android:layout_width="@dimen/margin_width25"
+                android:layout_height="@dimen/margin_width25"
+                android:layout_gravity="center"
+                android:contentDescription="@string/picture_text"
+                android:src="@drawable/setlocation_xh"/>
+        </android.support.v7.widget.CardView>
     </FrameLayout>
     <RelativeLayout
         android:id="@+id/id_re_address"
@@ -27,13 +47,25 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
         <TextView
+            android:id="@+id/id_current_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/blue_end"
+            android:textSize="@dimen/text_width14"
+            android:text="@string/current_location"/>
+        <TextView
             android:id="@+id/addressDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/id_current_text"
+            android:layout_toRightOf="@+id/id_current_text"
+            android:layout_marginLeft="@dimen/margin_width5"
+            android:layout_marginStart="@dimen/margin_width5"
             android:layout_centerVertical="true"
             android:maxLines="1"
             android:textColor="@color/colorAccent"
-            android:textSize="14dp" />
+            android:textSize="@dimen/text_width14" />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -52,7 +84,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </ListView>
-
     </LinearLayout>
-
 </LinearLayout>

@@ -2,9 +2,11 @@ package com.msht.minshengbao.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -20,6 +22,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
+import com.msht.minshengbao.custom.widget.CustomToast;
 
 public class FileUtil {
 
@@ -228,6 +232,50 @@ public class FileUtil {
         return false;
     }
 
+    public static void saveImageToGallery(Context context, ArrayList<Bitmap> bitmaps) {
+        // 首先保存图片
+        File appDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "dearxy");
+        for (int i = 0; i < bitmaps.size(); i++) {
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            String fileName = System.currentTimeMillis() + ".jpg";
+            File file = new File(appDir, fileName);
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                bitmaps.get(i).compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+                CustomToast.showErrorDialog("保存到相册失败！");
+                e.printStackTrace();
+            } catch (IOException e) {
+                CustomToast.showErrorDialog("保存到相册失败！");
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                        //回收
+                        bitmaps.get(i).recycle();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // 其次把文件插入到系统图库
+            try {
+                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                        file.getAbsolutePath(), fileName, null);
+            } catch (FileNotFoundException e) {
+                CustomToast.showErrorDialog("保存到相册失败！");
+                e.printStackTrace();
+            }
+        }
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(new File(appDir.getPath()))));
+    }
 
 
 }

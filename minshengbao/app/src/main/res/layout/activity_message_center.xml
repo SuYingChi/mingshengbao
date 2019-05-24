@@ -70,11 +70,11 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        <com.msht.minshengbao.custom.PullRefresh.XListView
             android:id="@+id/lv_swipe_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        </com.msht.minshengbao.custom.PullRefresh.XListView>
         <include layout="@layout/layout_no_data_view"
             android:id="@+id/id_nodata_view"
             android:visibility="gone"/>

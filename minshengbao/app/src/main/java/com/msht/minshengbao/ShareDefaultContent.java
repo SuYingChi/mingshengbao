@@ -26,7 +26,8 @@ public class ShareDefaultContent {
     public static String HeadLine="民生头条";
     public static String waterTitle="民生水宝";
     public static String waterText="好友邀请您加入民生水宝，从此告别水质污染！";
-    public static String waterShareUrl=BuildConfig.URL_MSSB_APP+"/rw_front/";
+   // public static String waterShareUrl=BuildConfig.URL_MSSB_APP+"/rw_front/";
+    public static String waterShareUrl=BuildConfig.URL_MSSB_SHARE+"/rw_front/";
     public static String WATER_RED_PACKET_SHARE_TITLE="【民生水宝】送你一个拼手气红包，开启健康饮水生活";
     public static String WATER_RED_PACKET_SHARE_TEXT="最高30元充值大包随机出没，等你来拿！";
 

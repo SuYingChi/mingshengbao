@@ -15,11 +15,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+            <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
                 android:id="@+id/id_evalute_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+            </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

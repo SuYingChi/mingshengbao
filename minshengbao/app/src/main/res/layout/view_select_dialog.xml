@@ -33,7 +33,7 @@
             android:layout_height="wrap_content">
         </com.jcodecraeer.xrecyclerview.XRecyclerView>
         <include layout="@layout/layout_line_gray"/>
-        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        <com.msht.minshengbao.custom.ButtonUI.ButtonM
             android:id="@+id/cancelBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -24,13 +24,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
-        <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+        <com.msht.minshengbao.custom.widget.ListViewForScrollView
             android:id="@+id/id_list_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+        </com.msht.minshengbao.custom.widget.ListViewForScrollView>
     </RelativeLayout>
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonM
         android:id="@+id/cancelBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

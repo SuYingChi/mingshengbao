@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.ViewUI.Dialog.PublicNoticeDialog;
+import com.msht.minshengbao.custom.Dialog.PublicNoticeDialog;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
@@ -21,11 +21,10 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.RatingBar;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.RatingBar;
 import com.msht.minshengbao.events.UpdateDataEvent;
-import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;

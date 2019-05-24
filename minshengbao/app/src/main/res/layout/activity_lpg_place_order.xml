@@ -85,7 +85,7 @@
                 android:textColor="@color/color_383838"
                 android:text="@string/total_text"/>
         </RelativeLayout>
-        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        <com.msht.minshengbao.custom.ButtonUI.ButtonM
             android:id="@+id/id_btn_next"
             android:layout_weight="0.4"
             android:layout_width="0dp"

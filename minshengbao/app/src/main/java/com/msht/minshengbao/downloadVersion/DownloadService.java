@@ -35,7 +35,7 @@ import java.net.URL;
 public class DownloadService extends Service {
     public static final String DOWNLOAD_PATH =
             Environment.getExternalStorageDirectory().getAbsolutePath()+
-                    "/Msbdownloads/";
+                    "/MsbApp/Msbdownloads/";
     public static final String TAG = "download";
     /**下载链接*/
     private String url;

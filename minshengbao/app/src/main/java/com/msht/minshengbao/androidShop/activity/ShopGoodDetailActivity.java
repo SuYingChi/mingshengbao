@@ -18,7 +18,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
-import com.msht.minshengbao.ViewUI.widget.PopupMenu;
+import com.msht.minshengbao.custom.widget.PopupMenu;
 import com.msht.minshengbao.androidShop.Fragment.DetailFragment;
 import com.msht.minshengbao.androidShop.Fragment.GoodEvaluationFragment;
 import com.msht.minshengbao.androidShop.Fragment.GoodFragment;

@@ -36,7 +36,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.PopupMenu;
+import com.msht.minshengbao.custom.widget.PopupMenu;
 import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.PromotionActivityAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;

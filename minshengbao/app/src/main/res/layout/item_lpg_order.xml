@@ -197,7 +197,7 @@
             android:textSize="@dimen/text_width16"
             android:textColor="@color/color_383838"
             android:text="@string/total_price"/>
-        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        <com.msht.minshengbao.custom.ButtonUI.ButtonM
             android:id="@+id/id_btn_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

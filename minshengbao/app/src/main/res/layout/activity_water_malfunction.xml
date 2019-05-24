@@ -126,7 +126,7 @@
                 android:paddingRight="@dimen/margin_width10"
                 android:paddingBottom="@dimen/margin_width10"
                 android:background="@color/white">
-                <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+                <com.msht.minshengbao.custom.widget.MyNoScrollGridView
                     android:id="@+id/id_noScrollGridView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:numColumns="3"
                     android:scrollbars="none"
                     android:verticalSpacing="@dimen/margin_width10" >
-                </com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
+                </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
             </RelativeLayout>
            <Button
                android:id="@+id/id_button_send"

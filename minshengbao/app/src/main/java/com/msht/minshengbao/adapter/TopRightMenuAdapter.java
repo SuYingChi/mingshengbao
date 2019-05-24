@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.TopRightMenu;
+import com.msht.minshengbao.custom.widget.TopRightMenu;
 
 import java.util.List;
 /**

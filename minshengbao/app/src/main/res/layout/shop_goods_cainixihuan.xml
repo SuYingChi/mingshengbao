@@ -34,7 +34,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
+    <com.msht.minshengbao.custom.widget.MyNoScrollGridView
         android:id="@+id/gv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.adapter.OrderListViewpagerAdapter;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.custom.ViewPagerIndicator;
 import com.umeng.analytics.MobclickAgent;
 
 /**

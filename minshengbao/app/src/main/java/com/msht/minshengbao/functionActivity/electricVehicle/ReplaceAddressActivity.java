@@ -33,7 +33,7 @@ import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.base.RecordSQLiteOpenHelper;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.custom.widget.ListViewForScrollView;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 

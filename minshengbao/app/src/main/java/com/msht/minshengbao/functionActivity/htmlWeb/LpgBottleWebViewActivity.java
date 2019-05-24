@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.umeng.analytics.MobclickAgent;
 
 /**

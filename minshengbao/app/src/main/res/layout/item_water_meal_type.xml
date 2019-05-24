@@ -2,36 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@color/white"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/id_layout_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="@dimen/margin_width90"
+        android:minWidth="@dimen/margin_width100"
         android:layout_gravity="center"
-        android:background="@drawable/shape_blue_button">
-        <TextView
-            android:id="@+id/id_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginTop="@dimen/margin_width10"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_width16"
-            android:textColor="@color/white" />
+        android:background="@drawable/shape_orange_border_layout">
         <TextView
             android:id="@+id/id_tv_giveFee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/id_amount"
+            android:gravity="center"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/shape_blue_right_top_corner"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_width12"
+            android:text="@string/default_text"/>
+        <LinearLayout
+            android:id="@+id/id_amount_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_tv_giveFee"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:layout_marginTop="@dimen/margin_width5"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/id_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/id_origin_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_width6"
+                android:layout_marginStart="@dimen/margin_width6"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/color_9e9e9e"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/id_water_volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_amount_layout"
             android:layout_marginRight="@dimen/margin_width10"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginTop="@dimen/margin_width5"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/margin_width10"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_width12" />
+            android:textColor="@color/app_text"
+            android:textSize="@dimen/text_width16"/>
     </RelativeLayout>
 </LinearLayout>

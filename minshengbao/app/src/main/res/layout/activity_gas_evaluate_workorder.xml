@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-                <com.msht.minshengbao.ViewUI.RatingBar
+                <com.msht.minshengbao.custom.RatingBar
                     android:id="@+id/id_ratingbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                     hedgehog:starImageHeight="50dp"
                     hedgehog:starImageWidth="60dp"
                     hedgehog:starImagePadding="15dp">
-                </com.msht.minshengbao.ViewUI.RatingBar>
+                </com.msht.minshengbao.custom.RatingBar>
             </RelativeLayout>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout

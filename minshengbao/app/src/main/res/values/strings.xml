@@ -16,6 +16,10 @@
     <string name="bind_phone">绑定手机号</string>
     <string name="bind_phone_tip">为了您的个人数据安全，请绑定手机号</string>
     <string name="capture_code">获取验证码</string>
+    <string name="current_location">[当前位置]</string>
+    <string name="correlation_text">去关联</string>
+    <string name="customerNo_add_address">用户号快速添加</string>
+    <string name="handwork_add_address">纯手工细心添加</string>
     <string name="my_nick_name">昵称</string>
     <string name="my_sex">性别</string>
     <string name="my_phonenumber">手机</string>
@@ -29,6 +33,7 @@
     <string name="please_input_password">请输入至少6位数的密码</string>
     <string name="portrait_text">头像</string>
     <string name="please_input_register_phone">请填写注册时的手机号</string>
+    <string name="please_select_your_address">请选择您的地址</string>
     <string name="reset_password">重置密码</string>
     <string name="gas_payfee">燃气缴费</string>
     <string name="gas_introduce">燃气介绍</string>
@@ -48,6 +53,17 @@
     <string name="not_know_operation_step">不清楚？查看充值操作流程图</string>
     <string name="near_ic_card_machine">附近IC卡充值机</string>
     <string name="gas_price_explain">气价说明</string>
+    <string name="share_have_gift">分享有礼</string>
+    <string name="look_all_order">查看全部订单</string>
+    <string name="my_wallet">我的钱包</string>
+    <string name="mall_order_text">商城订单</string>
+    <string name="favorite_text">收藏夹</string>
+    <string name="my_footprint">我的足迹</string>
+    <string name="gas_order_text">燃气工单</string>
+    <string name="consult_recommend">咨询建议</string>
+    <string name="address_manager">地址管理</string>
+    <string name="invoice_apply">发票申请</string>
+    <string name="supplement_text">去补充</string>
     <!--非模块 -->
     <string name="all_text">全部</string>
     <string name="consumption_text">消费</string>
@@ -76,6 +92,7 @@
 
 
     <string name="network_error">网络连接断开，请检查网络设置。</string>
+    <string name="loading_text">加载中…</string>
     <string name="load_more_text">正在加载...</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>

@@ -14,11 +14,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            <com.msht.minshengbao.custom.widget.ListViewForScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_address_listview">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            </com.msht.minshengbao.custom.widget.ListViewForScrollView>
             <View
                 android:id="@+id/id_view"
                 android:layout_width="match_parent"

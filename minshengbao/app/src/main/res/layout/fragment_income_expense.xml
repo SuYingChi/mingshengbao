@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.msht.minshengbao.functionActivity.fragment.AllIncomeFrag">
 
-    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+    <com.msht.minshengbao.custom.PullRefresh.XListView
         android:id="@+id/id_income_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    </com.msht.minshengbao.custom.PullRefresh.XListView>
     <include layout="@layout/layout_no_data_view"
         android:id="@+id/id_nodata_view"
         android:visibility="gone"/>

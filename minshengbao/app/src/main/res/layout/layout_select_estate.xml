@@ -7,11 +7,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+            <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
                 android:id="@+id/id_search_data"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+            </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

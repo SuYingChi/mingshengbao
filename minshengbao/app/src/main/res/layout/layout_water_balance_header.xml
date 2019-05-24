@@ -1,35 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/background_gray"
     android:layout_height="wrap_content">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shape_change_blue_bg">
-        <TextView
-            android:id="@+id/id_text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_width20"
-            android:layout_marginLeft="@dimen/margin_width10"
-            android:layout_marginStart="@dimen/margin_width10"
-            android:textColor="@color/white"
-            android:text="@string/water_account_text"/>
+        android:layout_height="@dimen/margin_width250"
+        android:minHeight="@dimen/margin_width150"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:background="@drawable/mass_flow_bg1_xh">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/id_text1"
-            android:layout_marginTop="@dimen/margin_width30"
-            android:layout_marginBottom="@dimen/margin_width35">
+            android:minHeight="@dimen/margin_width126"
+            android:layout_marginEnd="@dimen/margin_width35"
+            android:layout_marginStart="@dimen/margin_width35"
+            android:layout_marginBottom="@dimen/margin_width30"
+            android:background="@drawable/shape_white_layout">
+            <TextView
+                android:id="@+id/id_card_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_width20"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:layout_marginTop="@dimen/margin_width15"
+                android:textSize="@dimen/text_width20"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:text="@string/mass_flow_water_card"/>
+            <TextView
+                android:id="@+id/id_limit_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_width20"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:layout_below="@+id/id_card_type"
+                android:layout_marginTop="@dimen/margin_width25"
+                android:textSize="@dimen/text_width14"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:text="@string/mass_flow_purchase_tip"/>
+            <Button
+                android:id="@+id/id_btn_purchase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/margin_width25"
+                android:minWidth="@dimen/margin_width60"
+                android:layout_below="@+id/id_card_type"
+                android:layout_marginTop="@dimen/margin_width25"
+                android:layout_marginEnd="@dimen/margin_width15"
+                android:layout_marginRight="@dimen/margin_width15"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/selector_change_blue_corner_background"
+                android:text="@string/purchase_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_width12"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_width120"
+        android:background="@drawable/water_balance_bg"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:layout_marginTop="@dimen/margin_width180">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:layout_marginBottom="@dimen/margin_width20"
+            android:layout_gravity="bottom">
             <TextView
                 android:id="@+id/id_total_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_width10"
-                android:layout_marginStart="@dimen/margin_width10"
-                android:textColor="@color/white"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:layout_marginStart="@dimen/margin_width20"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_width40"
                 android:text="@string/default_value0"/>
             <TextView
@@ -45,7 +97,7 @@
                 android:layout_alignBaseline="@+id/id_total_amount"
                 android:text="@string/default_value0"
                 android:textSize="@dimen/text_width14"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"/>
             <ImageView
                 android:id="@+id/id_forward_img"
                 android:layout_width="@dimen/margin_width15"
@@ -57,7 +109,8 @@
                 android:layout_marginRight="@dimen/margin_width10"
                 android:layout_marginEnd="@dimen/margin_width10"
                 android:src="@drawable/back2x"
-                android:rotation="180"/>
+                android:rotation="180"
+                android:tint="@color/black"/>
             <TextView
                 android:id="@+id/id_tv_detail"
                 android:layout_width="wrap_content"
@@ -65,8 +118,8 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/id_forward_img"
                 android:layout_toStartOf="@+id/id_forward_img"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="@string/water_balance_detail" />
         </RelativeLayout>
-    </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -104,11 +104,11 @@
                     />
             </RelativeLayout>
             <include layout="@layout/layout_line_gray" />
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            <com.msht.minshengbao.custom.widget.ListViewForScrollView
                 android:id="@+id/id_payway_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            </com.msht.minshengbao.custom.widget.ListViewForScrollView>
             <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:layout_width="match_parent"

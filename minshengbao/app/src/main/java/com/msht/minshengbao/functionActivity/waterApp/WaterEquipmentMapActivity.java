@@ -2,7 +2,6 @@ package com.msht.minshengbao.functionActivity.waterApp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -51,9 +50,9 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
-import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.custom.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.adapter.WaterEquipmentListAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.MoveSelectAddress.ALocationClientFactory;
@@ -63,10 +62,8 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
-import com.msht.minshengbao.functionActivity.electricVehicle.ElectricHomeActivity;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.widget.ListViewForScrollView;
 import com.msht.minshengbao.functionActivity.publicModule.QrCodeScanActivity;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -465,7 +462,6 @@ public class WaterEquipmentMapActivity extends BaseActivity implements AMap.OnMy
                 layoutSearch.setVisibility(View.VISIBLE);
                 break;
             case R.id.id_card_view:
-                locationImg.setVisibility(View.GONE);
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 40));
                 break;
             case R.id.id_scan_view:

@@ -21,9 +21,11 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.EnsureAddress;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.EnsureAddress;
+import com.msht.minshengbao.custom.Dialog.EnsureDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,90 +47,46 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
     private EditText etCustomerNo;
     private String userId,password;
     private String customerNo;
-    private int   requestCode=0;
-    private int   enterType=0;
+    private int    requestCode=0;
+    private int    enterType=0;
     private CustomDialog customDialog;
-    private final  RequestHandler requestHandler=new RequestHandler(this);
-    private static class RequestHandler extends Handler{
-        private WeakReference<AddCustomerNoActivity>mWeakReference;
-        public RequestHandler(AddCustomerNoActivity activity) {
-            mWeakReference=new WeakReference<AddCustomerNoActivity>(activity);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final AddCustomerNoActivity activity=mWeakReference.get();
-            if (activity==null||activity.isFinishing()){
-                return;
-            }
-            if (activity.customDialog!=null&&activity.customDialog.isShowing()){
-                activity.customDialog.dismiss();
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
-                        String error = object.optString("error");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)){
-                            if (activity.requestCode==0){
-                                JSONObject jsonObject = object.optJSONObject("data");
-                                if (jsonObject!=null){
-                                    String address = jsonObject.optString("address");
-                                    activity.showDialogs(address);
-                                }
-                            }else if (activity.requestCode==1){
-                                activity.setResult(1);
-                                activity.onAddSuccess();
-                            }
-                        }else {
-                            activity.onErrorTipDialog(error);
+    private AddCustomerNoActivity mActivity;
+    private void showDialogs(String address) {
+        if (mActivity!=null&&!mActivity.isFinishing()){
+            new EnsureDialog(context).builder()
+                    .setCancelable(false)
+                    .setCanceledOnTouchOutside(false)
+                    .setTitleText("请确认燃气用户")
+                    .setContentOneText(customerNo)
+                    .setContentTwoText(address)
+                    .setOnPositiveClickListener(new EnsureDialog.OnPositiveClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestCode=1;
+                            addHouseAddress();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(activity.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
+                    }).show();
+            /*final EnsureAddress ensureAddress=new EnsureAddress(context);
+            ensureAddress.setAddressText(address);
+            ensureAddress.setCustomerText(customerNo);
+            ensureAddress.setOnNegativeListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ensureAddress.dismiss();
+                }
+            });
+            ensureAddress.setOnpositiveListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ensureAddress.dismiss();
+                    requestCode=1;
+                    addHouseAddress();
+                }
+            });
+            ensureAddress.show();*/
         }
     }
-    private void showDialogs(String addr) {
-        final EnsureAddress ensureAddress=new EnsureAddress(context);
-        ensureAddress.setAddressText(addr);
-        ensureAddress.setCustomerText(customerNo);
-        ensureAddress.setOnNegativeListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensureAddress.dismiss();
-            }
-        });
-        ensureAddress.setOnpositiveListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ensureAddress.dismiss();
-                requestCode=1;
-                addHouseAddress();
-            }
-        });
-        ensureAddress.show();
-    }
-    private void onAddSuccess() {
-        new PromptDialog.Builder(context)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage("添加地址成功")
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                }).show();
-    }
+
     private void onErrorTipDialog(String error) {
         new PromptDialog.Builder(context)
                 .setTitle("民生宝")
@@ -148,8 +106,8 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_customer_no);
         context=this;
-        mPageName="添加客户号";
-        setCommonHeader(mPageName);
+        mActivity=this;
+        setCommonHeader("用户号快速添加");
         Intent data=getIntent();
         if (data!=null){
             enterType=data.getIntExtra("enterType",0);
@@ -233,7 +191,6 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
             }
         });
     }
-
     private void onReceiveTableData(String s) {
         try {
             JSONObject object = new JSONObject(s);
@@ -324,16 +281,59 @@ public class AddCustomerNoActivity extends BaseActivity implements View.OnClickL
     private void addHouseAddress(){
         customDialog.show();
         if (requestCode==0){
-            validateURL = UrlUtil.HouseSearch_Url;
+            //validateURL = UrlUtil.HouseSearch_Url;
+            validateURL=UrlUtil.NEW_HOUSE_SEARCH_URL;
         }else if (requestCode==1){
-            validateURL =UrlUtil.ADD_ADDRESS_URL;
+            //validateURL =UrlUtil.ADD_ADDRESS_URL;
+            validateURL=UrlUtil.NEW_ADD_CUSTOMER_NO_URL;
         }
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("customerNo",customerNo);
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onAnalysisData(data.toString());
+            }
+
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
     }
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)){
+                if (requestCode==0){
+                    JSONObject jsonObject = object.optJSONObject("data");
+                    if (jsonObject!=null){
+                        String address = jsonObject.optString("address");
+                        showDialogs(address);
+                    }
+                }else if (requestCode==1){
+                    setResult(1);
+                    CustomToast.showSuccessDialog("添加地址成功");
+                    finish();
+                }
+            }else {
+                CustomToast.showWarningLong(error);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

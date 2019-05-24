@@ -21,11 +21,11 @@ import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.CircleImageView;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
-import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.custom.CircleImageView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.custom.PullRefresh.LoadMoreListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;

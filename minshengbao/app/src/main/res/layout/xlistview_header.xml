@@ -44,7 +44,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_width80"
             android:src="@drawable/iconfont_downgrey" />
-        <com.msht.minshengbao.ViewUI.PullRefresh.LoadView
+        <com.msht.minshengbao.custom.PullRefresh.LoadView
             android:id="@+id/xlistview_header_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

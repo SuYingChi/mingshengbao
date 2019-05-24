@@ -14,9 +14,9 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.ButtonUI.ButtonM;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.ButtonUI.ButtonM;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.functionActivity.htmlWeb.HtmlPageActivity;
 import com.umeng.analytics.MobclickAgent;
 

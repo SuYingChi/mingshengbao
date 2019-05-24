@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,6 +21,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.msht.minshengbao.Bean.RepairNumBean;
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.SendRequestUtil;
+import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
 import com.msht.minshengbao.base.BaseHomeFragment;
 import com.msht.minshengbao.Utils.AppActivityUtil;
@@ -37,19 +40,19 @@ import com.msht.minshengbao.androidShop.shopBean.ShopNumBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.DataStringCallback;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
-import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.functionActivity.gasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.invoiceModule.InvoiceHomeActivity;
 import com.msht.minshengbao.functionActivity.myActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ConsultRecommendActivity;
 import com.msht.minshengbao.functionActivity.myActivity.CustomerNoManageActivity;
-import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MySettingActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MyWalletActivity;
+import com.msht.minshengbao.functionActivity.myActivity.NewAddressManagerActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.CallPhoneUtil;
@@ -57,10 +60,10 @@ import com.msht.minshengbao.Utils.MPermissionUtils;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
-import com.msht.minshengbao.ViewUI.widget.MyScrollview;
+import com.msht.minshengbao.custom.ButtonUI.MenuItemM;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.widget.MyScrollview;
 import com.msht.minshengbao.functionActivity.repairService.RepairOrderListActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -72,6 +75,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,8 +103,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
      * 最大显示消息数
      **/
     private static final int MAX_MASSAGE = 99;
-    private MyNoScrollGridView mGridView;
-    private MyFunctionAdapter mAdapter;
     private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
     private final String mPageName = "首页_个人中心";
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
@@ -109,24 +111,18 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private TextView tvWaitEvaluate;
     private TextView tvWaitGet;
     private TextView tvWaitPay;
-    private TextView tvAllOrder;
+    private TextView tvBalance;
 
     private TextView tvRefundOrder;
-    private LinearLayout llShopOrder;
+    private View llShopOrder;
     private LinearLayout llrefund;
     private LinearLayout llwaitEveluate;
     private LinearLayout llwaitget;
     private LinearLayout llwaitPay;
-    private LinearLayout llCollect;
-    private LinearLayout llFootprint;
+    private View llCollect;
+    private View llFootprint;
     private TextView tvCollect;
     private TextView tvFootprint;
-    private TextView tvRepair;
-    private TextView tvRepairUnfinish;
-    private TextView tvRepairfinished;
-    private TextView tvWaitEveluateRepair;
-    private TextView tvRefundRepair;
-
     public LoginMyFrag() {
     }
 
@@ -211,7 +207,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     private void onGetRepairNumSuccess(String s) {
         RepairNumBean bean = JsonUtil.toBean(s, RepairNumBean.class);
-        if("0".equals(bean.getData().getUndoneCount())){
+        /*if("0".equals(bean.getData().getUndoneCount())){
             tvRepairUnfinish.setVisibility(View.GONE);
         }else {
             tvRepairUnfinish.setVisibility(View.VISIBLE);
@@ -222,7 +218,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }else {
             tvWaitEveluateRepair.setVisibility(View.VISIBLE);
         }
-        tvWaitEveluateRepair.setText(bean.getData().getUnevalCount());
+        tvWaitEveluateRepair.setText(bean.getData().getUnevalCount());*/
     }
 
     private void onGetNumSuccess(ShopNumBean bean) {
@@ -290,38 +286,72 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 .build();
         mPortrait.setController(controller);
         initListeners();
-        mAdapter = new MyFunctionAdapter(mContext, mList);
-        mGridView.setAdapter(mAdapter);
-        initData();
         initEvent(mRootView);
-        goActivity();
         getOrdersNum();
+        getBalance();
         return mRootView;
     }
 
+    private void getBalance() {
+        String userId= SharedPreferencesUtil.getUserId(mActivity, SharedPreferencesUtil.UserId,"");
+        String password=SharedPreferencesUtil.getPassword(mActivity, SharedPreferencesUtil.Password,"");
+        String validateURL = UrlUtil.Mywallet_balanceUrl;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("userId",userId);
+        textParams.put("password",password);
+        OkHttpRequestManager.getInstance(mActivity.getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onAnalysisData(data.toString());
+            }
+
+            @Override
+            public void responseReqFailed(Object data) {
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+    }
+
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                JSONObject data=object.getJSONObject("data");
+                String balance=data.optString("balance");
+                tvBalance.setText(balance);
+            }else {
+                CustomToast.showErrorLong(error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private void initEvent(View view) {
-        view.findViewById(R.id.repair_order).setOnClickListener(this);
-        view.findViewById(R.id.my_repair_wait_pay).setOnClickListener(this);
-        view.findViewById(R.id.repair_finished).setOnClickListener(this);
-        view.findViewById(R.id.my_wait_repair_eveluate).setOnClickListener(this);
-        view.findViewById(R.id.my_repair_refund).setOnClickListener(this);
+        view.findViewById(R.id.id_repair_order_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_gas_order_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_invoice_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_address_manage).setOnClickListener(this);
+        view.findViewById(R.id.id_share_button).setOnClickListener(this);
+        view.findViewById(R.id.id_hot_line_img).setOnClickListener(this);
+        view.findViewById(R.id.id_re_consult).setOnClickListener(this);
+        view.findViewById(R.id.id_setting_img).setOnClickListener(this);
+        view.findViewById(R.id.id_right_massage).setOnClickListener(this);
+        view.findViewById(R.id.id_wallet_layout).setOnClickListener(this);
+        mPortrait.setOnClickListener(this);
 
     }
 
     private void initView(View view) {
         myScrollview = (MyScrollview) view.findViewById(R.id.id_scrollview);
-        mGridView = (MyNoScrollGridView) view.findViewById(R.id.id_function_view);
-        layoutNavigation = (LinearLayout) view.findViewById(R.id.id_li_navigation);
-        layoutMySetting = (RelativeLayout) view.findViewById(R.id.id_re_gosetting);
-        layoutMySetting.setOnClickListener(this);
+        layoutMySetting = (RelativeLayout) view.findViewById(R.id.id_my_setting);
         btnMessage = (MenuItemM) view.findViewById(R.id.id_mim_message);
-        view.findViewById(R.id.id_re_hotline).setOnClickListener(this);
-        view.findViewById(R.id.id_re_consult).setOnClickListener(this);
-        view.findViewById(R.id.id_re_setting).setOnClickListener(this);
-        view.findViewById(R.id.id_right_massage).setOnClickListener(this);
-        mPortrait = (SimpleDraweeView) view.findViewById(R.id.id_portrait);
+        mPortrait = (SimpleDraweeView) view.findViewById(R.id.id_portrait_view);
         tvNavigation = (TextView) view.findViewById(R.id.id_tv_naviga);
-        TextView tvNickname = (TextView) view.findViewById(R.id.id_nickname);
+        TextView tvNickname = (TextView) view.findViewById(R.id.id_tv_nickname);
+        tvBalance=(TextView)view.findViewById(R.id.id_wallet_value) ;
+        tvNickname.setOnClickListener(this);
         if (!TextUtils.isEmpty(nickname)) {
             tvNickname.setText(nickname);
         } else {
@@ -339,82 +369,76 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 goMessageCenter();
             }
         });
-        llCollect = (LinearLayout) view.findViewById(R.id.ll_collect);
-        tvCollect = (TextView) view.findViewById(R.id.collected_num);
-        tvFootprint = (TextView) view.findViewById(R.id.footprint_num);
+        llCollect =view.findViewById(R.id.id_collect_layout);
+        tvCollect = (TextView) view.findViewById(R.id.id_collect_value);
+        tvFootprint = (TextView) view.findViewById(R.id.id_footprint_num);
         llCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), ShopCollectionActivity.class));
             }
         });
-        llFootprint = (LinearLayout) view.findViewById(R.id.ll_footprint);
+        llFootprint =view.findViewById(R.id.id_footprint_layout);
         llFootprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ShopFootprintActivity.class));
+                startActivity(new Intent(mActivity, ShopFootprintActivity.class));
             }
         });
-        llShopOrder = (LinearLayout) view.findViewById(R.id.shop_order);
+        llShopOrder=view.findViewById(R.id.id_mall_order_layout);
         llShopOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyShopOrderActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
                 intent.putExtra("index", 0);
                 intent.putExtra("indexChild", 0);
-                getActivity().startActivity(intent);
+                mActivity.startActivity(intent);
             }
         });
         llwaitPay = (LinearLayout) view.findViewById(R.id.my_wait_pay);
         llwaitPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyShopOrderActivity.class);
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
                 intent.putExtra("index", 0);
                 intent.putExtra("indexChild", 1);
-                getActivity().startActivity(intent);
+                startActivity(intent);
             }
         });
         llwaitget = (LinearLayout) view.findViewById(R.id.my_wait_get);
         llwaitget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyShopOrderActivity.class);
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
                 intent.putExtra("index", 0);
                 intent.putExtra("indexChild", 3);
-                getActivity().startActivity(intent);
+                startActivity(intent);
             }
         });
         llwaitEveluate = (LinearLayout) view.findViewById(R.id.my_wait_eveluate);
         llwaitEveluate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyShopOrderActivity.class);
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
                 intent.putExtra("index", 0);
                 intent.putExtra("indexChild", 4);
-                getActivity().startActivity(intent);
+                startActivity(intent);
             }
         });
         llrefund = (LinearLayout) view.findViewById(R.id.my_refund);
         llrefund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyShopOrderActivity.class);
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
                 intent.putExtra("index", 1);
                 intent.putExtra("indexChild", 0);
-                getActivity().startActivity(intent);
+                startActivity(intent);
             }
         });
         tvWaitEvaluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
         tvWaitGet = (TextView) view.findViewById(R.id.wait_get_order_num);
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
-        tvAllOrder = (TextView) view.findViewById(R.id.shop_order_num);
         tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
-        tvRepair = (TextView)view.findViewById(R.id.repair_order_num);
-        tvRepairUnfinish = (TextView)view.findViewById(R.id.repair_unfinished_order_num);
-        tvRepairfinished = (TextView)view.findViewById(R.id.repair_finished_order_num);
-        tvWaitEveluateRepair = (TextView)view.findViewById(R.id.my_wait_eveluate_repair_order_num);
-        tvRefundRepair =(TextView)view.findViewById(R.id.my_refund_repair_order_num);
 
     }
 
@@ -425,75 +449,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             btnMessage.setUnReadCount(VariableUtil.messageNum);
         }
     }
-
-    private void initData() {
-        for (int i = 0; i < 6; i++) {
-            if (VariableUtil.BoolCode) {
-                if (i != 1 && i != 2) {
-                    HashMap<String, Integer> map = new HashMap<String, Integer>();
-                    map.put("code", i);
-                    mList.add(map);
-                }
-            } else {
-                HashMap<String, Integer> map = new HashMap<String, Integer>();
-                map.put("code", i);
-                mList.add(map);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void goActivity() {
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int code = mList.get(position).get("code");
-                switch (code) {
-                    case 0:
-                        if (isLoginState(mContext)) {
-                            goMyWallet();
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext, "");
-                        }
-                        break;
-                    case 1:
-                        if (isLoginState(mContext)) {
-                            goGasServer();
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext, "");
-                        }
-                        break;
-                    case 2:
-                        if (isLoginState(mContext)) {
-                            goCustomerNo();
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext, "");
-                        }
-                        break;
-                    case 3:
-                        if (isLoginState(mContext)) {
-                            goInvoice();
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext, "");
-                        }
-                        break;
-                    case 4:
-                        if (isLoginState(mContext)) {
-                            goManage();
-                        } else {
-                            AppActivityUtil.onStartLoginActivity(mContext, "");
-                        }
-                        break;
-                    case 5:
-                        goShare();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-    }
-
     private void initListeners() {
         ViewTreeObserver vto = layoutMySetting.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -527,72 +482,72 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             tvNavigation.setTextColor(Color.argb(255, 255, 255, 255));
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        OkHttpUtils.getInstance().cancelTag(this);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_re_gosetting:
+            case R.id.id_portrait_view:
                 if (isLoginState(mContext)) {
                     goSetting();
                 } else {
-                    AppActivityUtil.onStartLoginActivity(mContext, "");
+                    AppActivityUtil.onLoginActivity(mContext,"");
+                }
+                break;
+            case R.id.id_tv_nickname:
+                if (isLoginState(mContext)) {
+                    goSetting();
+                } else {
+                    AppActivityUtil.onLoginActivity(mContext,"");
                 }
                 break;
             case R.id.id_re_consult:
                 if (isLoginState(mContext)) {
                     goConsult();
                 } else {
-                    AppActivityUtil.onStartLoginActivity(mContext, "");
+                    AppActivityUtil.onLoginActivity(mContext,"");
                 }
                 break;
-            case R.id.id_re_hotline:
+            case R.id.id_hot_line_img:
                 hotLine();
                 break;
-            case R.id.id_re_setting:
+            case R.id.id_setting_img:
                 goMoreSetting();
                 break;
             case R.id.id_right_massage:
                 goMessageCenter();
                 break;
-            case R.id.repair_order:
+            case R.id.id_wallet_layout:
+                goMyWallet();
+                break;
+            case R.id.id_repair_order_layout:
                 onRepairOrder(0);
                 break;
-            case R.id.my_repair_wait_pay:
-                onRepairOrder(1);
+            case R.id.id_gas_order_layout:
+                goGasServer();
                 break;
-            case R.id.repair_finished:
-                onRepairOrder(2);
+            case R.id.id_invoice_layout:
+                goInvoice();
                 break;
-            case R.id.my_wait_repair_eveluate:
-                onRepairOrder(3);
+            case R.id.id_address_manage:
+                goManage();
                 break;
-            case R.id.my_repair_refund:
-                onRepairOrder(4);
+            case R.id.id_share_button:
+                goShare();
                 break;
             default:
                 break;
         }
     }
-
     private void onRepairOrder(int i) {
         Intent intent = new Intent(mContext, RepairOrderListActivity.class);
         intent.putExtra("status", i);
         startActivity(intent);
     }
-
     private void goMessageCenter() {
         // Intent intent = new Intent(mContext, MessageCenterActivity.class);
         Intent intent = new Intent(mContext, TotalMessageListActivity.class);
         startActivity(intent);
         btnMessage.setUnReadCount(0);
     }
-
     private void hotLine() {
         final String phone = "963666";
         new PromptDialog.Builder(mContext)
@@ -626,7 +581,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     }
 
     private void goManage() {
-        Intent intent = new Intent(mContext, AddressManageActivity.class);
+        Intent intent = new Intent(mContext, NewAddressManagerActivity.class);
         startActivity(intent);
     }
 
@@ -696,4 +651,11 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         super.onPause();
         MobclickAgent.onPageEnd(mPageName);
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        OkHttpUtils.getInstance().cancelTag(this);
+        OkHttpRequestManager.getInstance(getContext()).requestCancel(this);
+    }
+
 }

@@ -7,10 +7,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.Utils.MathUtil;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
@@ -20,9 +22,9 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
-import com.msht.minshengbao.ViewUI.widget.VerticalSwipeRefreshLayout;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout;
 import com.msht.minshengbao.adapter.WaterMealAdapter;
 
 import org.json.JSONArray;
@@ -45,6 +47,9 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
     private MyNoScrollGridView mGridView;
     private TextView tvTotalAmount;
     private TextView tvGiveAmount;
+    private TextView tvMassFlowName;
+    private TextView tvLimitDate;
+    private Button   btnPurchase;
     private WaterMealAdapter waterMealAdapter;
     private VerticalSwipeRefreshLayout mSwipeRefresh;
     private ArrayList<HashMap<String, String>> orderList = new ArrayList<HashMap<String, String>>();
@@ -103,7 +108,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         double payBalance=json.optDouble("payBalance");
         double giveBalance=json.optDouble("giveBalance");
         double totalBalance=payBalance+giveBalance;
-        totalBalance= VariableUtil.twoDecinmal2(totalBalance);
+        totalBalance=MathUtil.getDoubleDecimal(totalBalance,2);
         String totalAmount=String.valueOf(totalBalance);
         VariableUtil.waterAccount=accounts;
         tvGiveAmount.setText(giveAmount);
@@ -136,7 +141,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
                 intent.putExtra("amount",amount);
                 intent.putExtra("giveFee",giveFee);
                 intent.putExtra("packId",packId);
-                startActivityForResult(intent,1);
+               // startActivityForResult(intent,1);
             }
         });
     }
@@ -177,6 +182,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
                 String id = json.getString("id");
                 String type=json.getString("type");
                 String amount=json.getString("amount");
+                String waterQuantity=json.optString("waterQuantity");
                 String activityId="";
                 String title="";
                 String activityType="";
@@ -194,6 +200,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
                 map.put("id", id);
                 map.put("type",type);
                 map.put("amount",amount);
+                map.put("waterQuantity",waterQuantity);
                 map.put("activityId",activityId);
                 map.put("title",title);
                 map.put("activityType",activityType);
@@ -259,14 +266,18 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
     }
     private void initView() {
         View view=findViewById(R.id.id_re_layout);
-        view.setBackgroundResource(R.drawable.shape_change_blue_bg);
+        view.setBackgroundResource(R.color.transparent);
         mSwipeRefresh=(VerticalSwipeRefreshLayout)findViewById(R.id.id_swipe_refresh);
         rightImg=(ImageView)findViewById(R.id.id_right_img);
         mGridView=(MyNoScrollGridView)findViewById(R.id.id_recharge_view);
         tvGiveAmount =(TextView)findViewById(R.id.id_give_fee);
         tvTotalAmount =(TextView)findViewById(R.id.id_total_amount);
+        tvMassFlowName=(TextView)findViewById(R.id.id_card_type);
+        tvLimitDate=(TextView)findViewById(R.id.id_limit_date);
+        btnPurchase=(Button)findViewById(R.id.id_btn_purchase);
         findViewById(R.id.id_tv_detail).setOnClickListener(this);
         findViewById(R.id.id_forward_img).setOnClickListener(this);
+        btnPurchase.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -276,10 +287,18 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
             case R.id.id_tv_detail:
                 onRecharge();
                 break;
+            case R.id.id_btn_purchase:
+                onMassFlowCard();
+                break;
                 default:
                     break;
         }
     }
+    private void onMassFlowCard() {
+        Intent intent=new Intent(context,MassFlowWaterCardPurchaseActivity.class);
+        startActivityForResult(intent,1);
+    }
+
     private void onRecharge() {
         Intent intent=new Intent(context,WaterBalanceDetailActivity.class);
         startActivityForResult(intent,2);

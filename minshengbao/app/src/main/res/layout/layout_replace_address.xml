@@ -41,10 +41,10 @@
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
-    <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+    <com.msht.minshengbao.custom.widget.ListViewForScrollView
         android:id="@+id/id_address_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_width20">
-    </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+    </com.msht.minshengbao.custom.widget.ListViewForScrollView>
 </LinearLayout>

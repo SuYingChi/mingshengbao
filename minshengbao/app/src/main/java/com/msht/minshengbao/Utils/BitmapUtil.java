@@ -1,9 +1,11 @@
 package com.msht.minshengbao.Utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -12,8 +14,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.pdf.PdfRenderer;
 import android.media.ExifInterface;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
 
 import java.io.ByteArrayInputStream;
@@ -22,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by dell on 2016/6/9.
@@ -330,6 +335,40 @@ public class BitmapUtil {
         v.setWillNotCacheDrawing(willNotCache);
         v.setDrawingCacheBackgroundColor(color);
         return bitmap;
+    }
+
+    public static ArrayList<Bitmap> pdfToBitmap(Context context, File pdfFile) {
+        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                PdfRenderer renderer = new PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY));
+                Bitmap bitmap;
+                final int pageCount = renderer.getPageCount();
+                for (int i = 0; i < pageCount; i++) {
+                    PdfRenderer.Page page = renderer.openPage(i);
+                    /*int width = context.getResources().getDisplayMetrics().densityDpi / 72 * page.getWidth();
+                    int height = context.getResources().getDisplayMetrics().densityDpi / 72 * page.getHeight();*/
+                    int width =page.getWidth();
+                    int height =page.getHeight();
+                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    //todo 以下三行处理图片存储到本地出现黑屏的问题，这个涉及到背景问题
+                    Canvas canvas = new Canvas(bitmap);
+                    canvas.drawColor(Color.WHITE);
+                    canvas.drawBitmap(bitmap, 0, 0, null);
+                    Rect r = new Rect(0, 0, width, height);
+                    page.render(bitmap, r, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                    bitmaps.add(bitmap);
+                    // close the page
+                    page.close();
+                }
+                // close the renderer
+                renderer.close();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return bitmaps;
     }
 
 }

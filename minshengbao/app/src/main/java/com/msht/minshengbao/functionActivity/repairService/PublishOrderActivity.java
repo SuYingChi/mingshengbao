@@ -20,11 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
-import com.msht.minshengbao.ViewUI.Dialog.PublicEnsureInfoDialog;
-import com.msht.minshengbao.ViewUI.Dialog.QuestionDescribeDialog;
-import com.msht.minshengbao.ViewUI.Dialog.SelectDateDialog;
-import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.Dialog.PublicEnsureInfoDialog;
+import com.msht.minshengbao.custom.Dialog.QuestionDescribeDialog;
+import com.msht.minshengbao.custom.Dialog.SelectDateDialog;
+import com.msht.minshengbao.custom.Dialog.SelectDialog;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 
 import com.msht.minshengbao.base.BaseActivity;
@@ -37,10 +37,9 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.NoticeDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.MultiLineChooseLayout;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.NoticeDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 

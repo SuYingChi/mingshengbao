@@ -21,7 +21,7 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.adapter.CustomerNoAdapter;
 import com.msht.minshengbao.functionActivity.invoiceModule.InvoiceGasListActivity;
 

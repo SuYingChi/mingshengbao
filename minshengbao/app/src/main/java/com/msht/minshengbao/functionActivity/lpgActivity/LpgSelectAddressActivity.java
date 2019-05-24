@@ -17,10 +17,10 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.PullRefresh.ILoadMoreCallback;
-import com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.PullRefresh.ILoadMoreCallback;
+import com.msht.minshengbao.custom.PullRefresh.LoadMoreListView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;

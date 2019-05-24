@@ -73,13 +73,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"/>
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            <com.msht.minshengbao.custom.widget.ListViewForScrollView
                 android:id="@+id/id_logistics_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
                 android:layout_marginBottom="@dimen/margin_width10">
-            </com.msht.minshengbao.ViewUI.widget.ListViewForScrollView>
+            </com.msht.minshengbao.custom.widget.ListViewForScrollView>
         </LinearLayout>
 
     </ScrollView>

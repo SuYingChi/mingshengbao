@@ -66,13 +66,13 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/margin_width200"
             android:background="@color/white">
-            <com.msht.minshengbao.ViewUI.widget.MyNumberPicker
+            <com.msht.minshengbao.custom.widget.MyNumberPicker
                 android:id="@+id/id_number_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:layout_centerHorizontal="true">
-            </com.msht.minshengbao.ViewUI.widget.MyNumberPicker>
+            </com.msht.minshengbao.custom.widget.MyNumberPicker>
         </RelativeLayout>
         </LinearLayout>
 </LinearLayout>

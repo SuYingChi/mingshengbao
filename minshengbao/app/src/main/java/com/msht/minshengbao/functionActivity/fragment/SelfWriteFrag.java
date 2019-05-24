@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
-import com.msht.minshengbao.ViewUI.Dialog.SelectDialog;
+import com.msht.minshengbao.custom.Dialog.SelectDialog;
 import com.msht.minshengbao.functionActivity.gasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.functionActivity.gasService.SelectCustomerNo;
 import com.msht.minshengbao.R;
@@ -31,8 +31,8 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
@@ -266,12 +266,13 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
         OkHttpRequestUtil.getInstance(activity.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
     private void initView(View view) {
+        view.findViewById(R.id.id_tip_btn).setOnClickListener(this);
         mSelectTable =view.findViewById(R.id.id_select_table);
         mSelectAddress =view.findViewById(R.id.id_re_select);
         verifySend =(Button)view.findViewById(R.id.id_btn_verify);
         etSelectTable =(EditText) view.findViewById(R.id.id_tv_selecttable);
         tvSelectAddress =(TextView) view.findViewById(R.id.id_select_address);
-        etTableNum =(EditText)view.findViewById(R.id.id_reading_tble);
+        etTableNum =(EditText)view.findViewById(R.id.id_reading_table);
         etLast =(EditText)view.findViewById(R.id.id_last_table);
         etLast.setInputType(InputType.TYPE_NULL);
         etSelectTable.setInputType(InputType.TYPE_NULL);
@@ -313,10 +314,18 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
             case R.id.id_btn_verify:
                 onVerifySend();//提交抄表
                 break;
+            case R.id.id_tip_btn:
+                onIdentifyTableTip();
+                break;
             default:
                 break;
         }
     }
+
+    private void onIdentifyTableTip() {
+
+    }
+
     private void onSelectTable() {
         new SelectDialog(activity,tableList,mPosition).builder()
                 .setTitleText("选择表具")

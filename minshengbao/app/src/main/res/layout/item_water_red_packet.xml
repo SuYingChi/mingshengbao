@@ -106,7 +106,7 @@
                 android:textSize="@dimen/text_width14"
                 android:textColor="@color/app_text"
                 android:text="@string/default_text"/>
-            <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+            <com.msht.minshengbao.custom.ButtonUI.ButtonM
                 android:id="@+id/id_use_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

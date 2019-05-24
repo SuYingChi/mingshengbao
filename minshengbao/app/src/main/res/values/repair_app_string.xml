@@ -25,6 +25,7 @@
     <string name="refund_tip">退款提示：</string>
     <string name="refund_explain">退款说明</string>
     <string name="refund_text">退款</string>
+    <string name="repair_order_text">维修订单</string>
     <string name="reFixCard_text">报修卡</string>
     <string name="estimate_amount">预估费用</string>
     <string name="pay_way">支付方式</string>

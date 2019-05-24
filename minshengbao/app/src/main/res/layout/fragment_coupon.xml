@@ -7,12 +7,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+        <com.msht.minshengbao.custom.PullRefresh.XListView
             android:id="@+id/id_dicount_mlistview"
             android:divider="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+        </com.msht.minshengbao.custom.PullRefresh.XListView>
         <RelativeLayout
             android:id="@+id/id_re_nodata"
             android:layout_width="match_parent"

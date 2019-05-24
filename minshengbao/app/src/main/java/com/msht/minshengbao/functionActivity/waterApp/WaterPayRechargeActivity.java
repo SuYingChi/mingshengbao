@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.bestpay.app.PaymentTask;
 import com.google.gson.Gson;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.BuildConfig;
 import com.msht.minshengbao.Model.YiPayModel;
@@ -32,10 +32,10 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.Dialog.WaterRedPacketDialog;
-import com.msht.minshengbao.ViewUI.widget.ListViewForScrollView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.WaterRedPacketDialog;
+import com.msht.minshengbao.custom.widget.ListViewForScrollView;
 import com.msht.minshengbao.adapter.PayWayAdapter;
 import com.msht.minshengbao.functionActivity.htmlWeb.AgreeTreatyActivity;
 import com.msht.minshengbao.functionActivity.publicModule.PaySuccessActivity;
@@ -70,6 +70,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
     private String orderId;
     private String couponCode="";
     private String packId;
+    private String childType="0";
     private String channels;
     private int requestCode=0;
     private String charge,id;
@@ -358,10 +359,13 @@ public class WaterPayRechargeActivity extends BaseActivity {
         password=SharedPreferencesUtil.getPassword(this, SharedPreferencesUtil.Password,"");
         userPhone =SharedPreferencesUtil.getUserName(this, SharedPreferencesUtil.UserName,"");
         Intent data=getIntent();
-        amount=data.getStringExtra("amount");
-        realAmount=amount;
-        giveFee=data.getStringExtra("giveFee");
-        packId=data.getStringExtra("packId");
+        if (data!=null){
+            amount=data.getStringExtra("amount");
+            realAmount=amount;
+            giveFee=data.getStringExtra("giveFee");
+            packId=data.getStringExtra("packId");
+            childType=data.getStringExtra("childType");
+        }
         initFindViewId();
         mAdapter=new PayWayAdapter(context, mList);
         mListView.setAdapter(mAdapter);
@@ -565,7 +569,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
                         }
                     }
                 })
-                .show();;
+                .show();
     }
     private void onSendServiceShowTip() {
         customDialog.show();
@@ -602,6 +606,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
             object.put("recommendCode",recommendCode);
             object.put("packId",packId);
             object.put("couponCode",couponCode);
+            object.put("childType",childType);
             jsonResult=object.toString();
         }catch (JSONException e){
             e.printStackTrace();
@@ -627,6 +632,7 @@ public class WaterPayRechargeActivity extends BaseActivity {
         treeMap.put("recommendCode",recommendCode);
         treeMap.put("packId",packId);
         treeMap.put("couponCode",couponCode);
+        treeMap.put("childType",childType);
         return SecretKeyUtil.getKeySign(treeMap);
     }
 

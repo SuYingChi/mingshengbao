@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.ViewUI.CircleImageView;
+import com.msht.minshengbao.custom.CircleImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

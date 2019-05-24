@@ -75,6 +75,7 @@ public class UrlUtil {
     public static final String WATER_RED_PACKET_CANCEL=BuildConfig.URL_MSSB+"/coupon/cancelShare";
     public static final String WATER_RED_PACKET_CREATE=BuildConfig.URL_MSSB+"/coupon/create";
     public static final String WATER_RECHARGE_SUCCESS_PAGE=BuildConfig.URL_MSSB_APP+"/rw_front/recharge_result.html?";
+    public static final String WATER_NEED_KNOW_TREATY=BuildConfig.URL_MSSB_HTML+"/rwapi/resources/html/flow_buy_water_requirements.html";
     /**
      * 商城
      */
@@ -214,6 +215,11 @@ public class UrlUtil {
     public static final String BIND_WEI_CHAT_PHONE_URL=BuildConfig.URL_HEADS+"/api/weChat/weChatBindApp";
     public static final String BING_WEI_MY_PAGE_URL=BuildConfig.URL_HEADS+"/api/weChat/appBindWeChat";
     public static final String CHANGE_BIND_WEI_CHAT_URL=BuildConfig.URL_HEADS+"/api/weChat/changeWeChat";
+    public static final String NEW_ADDRESS_MANAGER_URL=BuildConfig.URL_HEADS+"/Gas/address/list";
+    public static final String NEW_ADD_ADDRESS_URL=BuildConfig.URL_HEADS+"/Gas/address/add_with_loc";
+    public static final String NEW_HOUSE_SEARCH_URL=BuildConfig.URL_HEADS+"/Gas/address/search";
+    public static final String NEW_ADD_CUSTOMER_NO_URL=BuildConfig.URL_HEADS+"/Gas/address/add_with_customerno";
+    public static final String ADDRESS_BIND_GAS_CUSTOMER_NO_URL=BuildConfig.URL_HEADS+"/Gas/address/bind";
     public static final String HouseSearch_Url= BuildConfig.URL_HEADS +"/Gas/usedHouse/search";
     public static final String Address_delectUrl= BuildConfig.URL_HEADS +"/Gas/usedHouse/delete";
     public static final String Evalute_workUrl= BuildConfig.URL_HEADS +"/Gas/workOrder/eval";
@@ -232,8 +238,10 @@ public class UrlUtil {
     public static final String ModifyAddress_Url=BuildConfig.URL_HEADS+"/Gas/address/modify";
     public static final String NewAddAddress_Url=BuildConfig.URL_HEADS+"/Gas/address/add_with_user_info";
     public static final String NewModifyAddress_Url=BuildConfig.URL_HEADS+"/Gas/address/modify_with_user_info";
-    public static final String DelectAddress_Url=BuildConfig.URL_HEADS +"/Gas/address/delete";
-    public static final String SetDefaultAddr_Url=BuildConfig.URL_HEADS +"/Gas/address/set_default_address";
+    public static final String NEW_MODIFY_ADDRESS_URL=BuildConfig.URL_HEADS+"/Gas/address/modify_with_loc";
+    public static final String DELETE_ADDRESS_URL =BuildConfig.URL_HEADS +"/Gas/address/delete";
+
+    public static final String SET_DEFAULT_ADDRESS_URL =BuildConfig.URL_HEADS +"/Gas/address/set_default_address";
     public static final String SetPassword_Url=BuildConfig.URL_HEADS+"/Gas/user/modifyPassword";
     /**
      *发票

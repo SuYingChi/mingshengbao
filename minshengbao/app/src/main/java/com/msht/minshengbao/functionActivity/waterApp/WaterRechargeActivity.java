@@ -1,6 +1,5 @@
 package com.msht.minshengbao.functionActivity.waterApp;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.adapter.WaterMealAdapter;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.functionActivity.htmlWeb.PrizesGiftsActivity;
@@ -18,9 +17,8 @@ import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;

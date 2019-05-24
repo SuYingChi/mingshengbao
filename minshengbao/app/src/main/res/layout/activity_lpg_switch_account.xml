@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:background="@color/background_gray"
         android:layout_height="0dp">
-    <com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView
+    <com.msht.minshengbao.custom.PullRefresh.LoadMoreListView
         android:id="@+id/id_user_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </com.msht.minshengbao.ViewUI.PullRefresh.LoadMoreListView>
+    </com.msht.minshengbao.custom.PullRefresh.LoadMoreListView>
     </RelativeLayout>
-   <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+   <com.msht.minshengbao.custom.ButtonUI.ButtonM
        android:id="@+id/id_btn_create"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
 
-    <com.msht.minshengbao.ViewUI.CardVMZBanner.ElasticCardView
+    <com.msht.minshengbao.custom.CardVMZBanner.ElasticCardView
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
-    </com.msht.minshengbao.ViewUI.CardVMZBanner.ElasticCardView>
+    </com.msht.minshengbao.custom.CardVMZBanner.ElasticCardView>
 
 
 </FrameLayout>

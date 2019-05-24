@@ -113,7 +113,7 @@
                 android:textColor="@color/title_tv"
                 android:text="@string/unit_one"/>
         </RelativeLayout>
-        <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+        <com.msht.minshengbao.custom.ButtonUI.ButtonM
             android:id="@+id/id_btn_send"
             android:layout_weight="0.35"
             android:layout_width="0dp"

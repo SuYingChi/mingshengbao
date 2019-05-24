@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".functionActivity.fragment.LpgOrderListFragment">
     <!-- TODO: Update blank fragment layout -->
-    <com.msht.minshengbao.ViewUI.PullRefresh.XListView
+    <com.msht.minshengbao.custom.PullRefresh.XListView
         android:id="@+id/id_order_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null">
-    </com.msht.minshengbao.ViewUI.PullRefresh.XListView>
+    </com.msht.minshengbao.custom.PullRefresh.XListView>
     <RelativeLayout
         android:id="@+id/id_not_data_view"
         android:layout_width="wrap_content"

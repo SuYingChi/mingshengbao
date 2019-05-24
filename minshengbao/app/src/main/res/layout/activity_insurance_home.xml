@@ -7,7 +7,7 @@
     android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.insurance.InsuranceHome">
-    <com.msht.minshengbao.ViewUI.widget.MyScrollview
+    <com.msht.minshengbao.custom.widget.MyScrollview
         android:id="@+id/id_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +24,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width12"/>
-            <com.msht.minshengbao.ViewUI.widget.CustomRadioGroup
+            <com.msht.minshengbao.custom.widget.CustomRadioGroup
                 android:id="@+id/radiogroup"
                 android:layout_width="match_parent"
                 android:layout_marginRight="@dimen/margin_width10"
@@ -32,7 +32,7 @@
                 android:layout_height="@dimen/margin_width70"
                 android:orientation="horizontal"
                 android:weightSum="4">
-                <com.msht.minshengbao.ViewUI.widget.MyRadioButton
+                <com.msht.minshengbao.custom.widget.MyRadioButton
                     android:id="@+id/radio_button_one"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
@@ -51,7 +51,7 @@
                     android:layout_width="@dimen/margin_width2"
                     android:layout_height="match_parent"
                     android:background="@color/white"/>
-                <com.msht.minshengbao.ViewUI.widget.MyRadioButton
+                <com.msht.minshengbao.custom.widget.MyRadioButton
                     android:id="@+id/radio_button_two"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
@@ -69,7 +69,7 @@
                     android:layout_width="@dimen/margin_width2"
                     android:layout_height="match_parent"
                     android:background="@color/white"/>
-                <com.msht.minshengbao.ViewUI.widget.MyRadioButton
+                <com.msht.minshengbao.custom.widget.MyRadioButton
                     android:id="@+id/radio_button_three"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
@@ -87,7 +87,7 @@
                     android:layout_width="@dimen/margin_width2"
                     android:layout_height="match_parent"
                     android:background="@color/white"/>
-                <com.msht.minshengbao.ViewUI.widget.MyRadioButton
+                <com.msht.minshengbao.custom.widget.MyRadioButton
                     android:id="@+id/radio_button_four"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
@@ -100,7 +100,7 @@
                     radioApp:text3="元"
                     radioApp:textColor2="@drawable/radio_public_textcolor"
                     radioApp:textSize2="@dimen/text_width12"/>
-            </com.msht.minshengbao.ViewUI.widget.CustomRadioGroup>
+            </com.msht.minshengbao.custom.widget.CustomRadioGroup>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width25"
@@ -393,6 +393,6 @@
                     android:text="立即投保"/>
             </RelativeLayout>
         </LinearLayout>
-    </com.msht.minshengbao.ViewUI.widget.MyScrollview>
+    </com.msht.minshengbao.custom.widget.MyScrollview>
     <include layout="@layout/layout_insurance_header" />
 </FrameLayout>

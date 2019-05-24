@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.functionActivity.publicModule.MoveSelectAddress;
 import com.msht.minshengbao.functionActivity.publicModule.SelectCityActivity;
 import com.msht.minshengbao.R;
@@ -19,8 +20,8 @@ import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
 
 import org.json.JSONObject;
 
@@ -36,8 +37,8 @@ import java.util.regex.Pattern;
  * @date 2018/7/2  
  */
 public class AddAddressActivity extends BaseActivity implements View.OnClickListener {
-    private View      layoutCity;
     private TextView  tvCity;
+    private TextView  tvAddress;
     private EditText  etAddress;
     private EditText  etName;
     private EditText  etPhone;
@@ -49,6 +50,8 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private String    mPhone;
     private String    longitude;
     private String    latitude;
+    private String    locAddress;
+    private String    doorAddress;
     private int       requestCode=0;
     private CustomDialog customDialog;
     /**
@@ -145,6 +148,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                         String title=data.getStringExtra("title");
                         longitude=data.getStringExtra("longitude");
                         latitude=data.getStringExtra("latitude");
+                        tvAddress.setText(addressInfo);
                     }
                 }
                 break;
@@ -158,17 +162,20 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         etName =(EditText)findViewById(R.id.id_et_name);
         etPhone =(EditText)findViewById(R.id.id_et_phone);
         etAddress =(EditText)findViewById(R.id.id_et_address);
+        tvAddress=(TextView)findViewById(R.id.id_map_address);
         findViewById(R.id.id_re_newaddress).setOnClickListener(this);
+        findViewById(R.id.id_map_address_layout).setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.id_re_newaddress:
-                mAddress= etAddress.getText().toString().trim();
+                locAddress=tvAddress.getText().toString().trim();
+                doorAddress= etAddress.getText().toString().trim();
+                mAddress=locAddress+doorAddress;
                 mName= etName.getText().toString().trim();
                 mPhone= etPhone.getText().toString().trim();
-                if (matchCity(tvCity.getText().toString())&& matchAddress(etAddress.getText().toString())
-                        &&matchName(mName)&& matchPhone(mPhone)&&isPhone(mPhone)){
+                if (matchCity(tvCity.getText().toString())&&matchName(mName)&& matchLocAddress(locAddress)&&isPhone(mPhone)){
                     requestService();
                 }
                 break;
@@ -177,17 +184,35 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(city, REQUEST_CODE);
                 break;
             case R.id.id_re_address:
-                if (TextUtils.isEmpty(tvCity.getText().toString())){
-                    ToastUtil.ToastText(context,"请选择城市");
+                Intent intent=new Intent(context, MoveSelectAddress.class);
+                intent.putExtra("city_name",mCity);
+                startActivityForResult(intent, ADDRESS_CODE);
+                break;
+            case R.id.id_map_address_layout:
+                if (!TextUtils.isEmpty(mCity)){
+                    onMapAddress();
                 }else {
-                    Intent intent=new Intent(context, MoveSelectAddress.class);
-                    intent.putExtra("city_name",mCity);
-                    startActivityForResult(intent, ADDRESS_CODE);
+                    CustomToast.showWarningLong("请选择城市");
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    private boolean matchLocAddress(String s) {
+        if (TextUtils.isEmpty(s)){
+            ToastUtil.ToastText(context,"请填写您的地址");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private void onMapAddress() {
+        Intent intent=new Intent(context, MoveSelectAddress.class);
+        intent.putExtra("city_name",mCity);
+        startActivityForResult(intent, ADDRESS_CODE);
     }
     private boolean matchPhone(String s) {
         if (TextUtils.isEmpty(s)){
@@ -239,7 +264,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private void requestService() {
         customDialog.show();
         requestCode=0;
-        String validateURL = UrlUtil.NewAddAddress_Url;
+        String validateURL = UrlUtil.NEW_ADD_ADDRESS_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
@@ -247,9 +272,12 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         textParams.put("address",mAddress);
         textParams.put("name",mName);
         textParams.put("phone",mPhone);
+        textParams.put("longitude",longitude);
+        textParams.put("latitude",latitude);
+        textParams.put("locAddress",locAddress);
+        textParams.put("doorAddress",doorAddress);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
 
     @Override
     protected void onDestroy() {

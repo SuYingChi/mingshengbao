@@ -19,6 +19,7 @@
     <string name="discount_Amount">优惠金额</string>
 
     <string name="gas_address">燃气地址</string>
+    <string name="gas_customerNo_text">燃气用户号</string>
     <string name="gas_fee_text">燃气费:</string>
     <string name="gas_last_fee_text">违约金:</string>
     <string name="gas_prestore_fee">燃气预存款余额</string>
@@ -35,6 +36,9 @@
 
     <string name="last_recharge_time">上次充值时间</string>
     <string name="last_recharge_amount">上次充值金额</string>
+    <string name="last_month_table_num">上月底表数</string>
+
+    <string name="current_month_table_num">本次读表数</string>
 
     <string name="near_icCard_equipment">附近IC卡充值机</string>
     <string name="new_add_customerNo">+ 新增</string>

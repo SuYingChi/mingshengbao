@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonExtendM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonExtendM
         android:id="@+id/bem_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:contentDescription="@string/order_gas"
         android:background="@drawable/icon_more"
         android:visibility="gone" />
-    <com.msht.minshengbao.ViewUI.ButtonUI.ButtonM
+    <com.msht.minshengbao.custom.ButtonUI.ButtonM
         android:id="@+id/btm_unread_count"
         android:layout_width="@dimen/margin_width14"
         android:layout_height="@dimen/margin_width14"

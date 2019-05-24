@@ -2,18 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_gray"
     tools:context="com.msht.minshengbao.functionActivity.fragment.SelfWriteFrag">
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
-
             <RelativeLayout
                 android:id="@+id/id_re_select"
                 android:layout_width="match_parent"
@@ -110,8 +109,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
-                    android:text="上次表底数"
-                    android:textColor="#ff363636"
+                    android:text="@string/last_month_table_num"
+                    android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16" />
 
                 <EditText
@@ -145,27 +144,22 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="@dimen/text_width18" />
             </RelativeLayout>
-
             <include layout="@layout/layout_line_gray" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
-
+                android:layout_height="@dimen/margin_width48">
                 <TextView
                     android:id="@+id/text3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
-                    android:text="本次表读数"
-                    android:textColor="#ff363636"
+                    android:text="@string/current_month_table_num"
+                    android:textColor="@color/color_383838"
                     android:textSize="@dimen/text_width16" />
                 <EditText
-                    android:id="@+id/id_reading_tble"
+                    android:id="@+id/id_reading_table"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -173,15 +167,29 @@
                     android:layout_marginStart="@dimen/margin_width15"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
-                    android:layout_toLeftOf="@+id/text5"
-                    android:layout_toStartOf="@+id/text5"
+                    android:gravity="start"
+                    android:layout_toStartOf="@+id/id_tip_btn"
+                    android:layout_toLeftOf="@+id/id_tip_btn"
                     android:layout_toEndOf="@+id/text3"
                     android:layout_toRightOf="@+id/text3"
                     android:background="@null"
                     android:ems="10"
                     android:inputType="number"
                     android:textSize="@dimen/text_width16" />
-
+                <TextView
+                    android:id="@+id/id_tip_btn"
+                    android:layout_width="@dimen/margin_width18"
+                    android:layout_height="@dimen/margin_width18"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:background="@drawable/shape_red_border_circle_bg"
+                    android:gravity="center"
+                    android:layout_toStartOf="@+id/text5"
+                    android:layout_toLeftOf="@+id/text5"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_width12"
+                    android:text="@string/question_symbol"/>
                 <TextView
                     android:id="@+id/text5"
                     android:layout_width="wrap_content"
@@ -201,7 +209,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_30">
+                android:layout_marginTop="@dimen/margin_width30">
 
                 <Button
                     android:id="@+id/id_btn_verify"
@@ -216,7 +224,6 @@
                     android:text="@string/ensure_text"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_width18" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

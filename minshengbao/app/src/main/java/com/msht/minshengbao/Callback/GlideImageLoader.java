@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.msht.minshengbao.ViewUI.widget.BannerLayout;
+import com.msht.minshengbao.custom.widget.BannerLayout;
 
 /**
  * Created by Administrator on 2016/12/21 0021.

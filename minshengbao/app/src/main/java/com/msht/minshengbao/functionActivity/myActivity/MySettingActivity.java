@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -23,25 +22,19 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.Gson;
-import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.Utils.ConstantUtil;
-import com.msht.minshengbao.ViewUI.widget.CustomToast;
-import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.FileUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
-import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PromptDialog;
-import com.msht.minshengbao.ViewUI.SelectPicPopupWindow;
-import com.msht.minshengbao.functionActivity.MainActivity;
-import com.umeng.analytics.MobclickAgent;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.custom.SelectPicPopupWindow;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
@@ -76,7 +69,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
     private SimpleDraweeView simpleDraweeView;
     private String avatarUrl;
     private String userId,password;
-    private static final File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getPath() + "/Livelihool/MsbCameraCache");
+    private static final File PHOTO_DIR = new File(Environment.getExternalStorageDirectory().getPath() + "/MsbApp/MsbCameraCache");
     private File mCacheFile;
     private SelectPicPopupWindow takePhotoPopWin;
     /** 
@@ -557,7 +550,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
          */
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            CustomToast.showSuccessLong("失败：" + t.getMessage());
+            CustomToast.showWarningLong("微信版本过低，请升级微信版本");
         }
         /**
          * @desc 授权取消的回调

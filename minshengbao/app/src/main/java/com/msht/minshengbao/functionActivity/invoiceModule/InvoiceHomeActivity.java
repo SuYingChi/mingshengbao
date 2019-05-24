@@ -2,26 +2,14 @@ package com.msht.minshengbao.functionActivity.invoiceModule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.msht.minshengbao.ViewUI.ViewPagerIndicator;
+import com.msht.minshengbao.custom.ViewPagerIndicator;
 import com.msht.minshengbao.adapter.uiadapter.InvoiceAllViewAdapter;
-import com.msht.minshengbao.adapter.uiadapter.RedPacketViewAdapter;
 import com.msht.minshengbao.base.BaseActivity;
-import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.R;
-import com.msht.minshengbao.Utils.SendRequestUtil;
-import com.msht.minshengbao.Utils.UrlUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Demo class

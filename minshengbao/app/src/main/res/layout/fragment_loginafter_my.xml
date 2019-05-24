@@ -3,856 +3,142 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_gray"
     tools:context="com.msht.minshengbao.functionActivity.fragment.LoginMyFrag">
-
-    <com.msht.minshengbao.ViewUI.widget.MyScrollview
+    <com.msht.minshengbao.custom.widget.MyScrollview
         android:id="@+id/id_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_gray"
             android:orientation="vertical">
-
+            <include layout="@layout/layout_personal_info_head"/>
             <RelativeLayout
-                android:id="@+id/id_re_gosetting"
+                android:id="@+id/id_mall_order_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width180"
-                android:background="@drawable/loginback_after_xh">
-
-                <RelativeLayout
-                    android:id="@+id/id_re_circle"
-                    android:layout_width="@dimen/margin_width80"
-                    android:layout_height="@dimen/margin_width80"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:background="@drawable/shape_circle_transparent">
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/id_portrait"
-                        android:layout_width="@dimen/margin_width70"
-                        android:layout_height="@dimen/margin_width70"
-                        android:layout_centerInParent="true"
-                        app:failureImage="@drawable/potrait"
-                        app:failureImageScaleType="centerInside"
-                        app:roundAsCircle="true"
-                        app:retryImage="@drawable/potrait"
-                        app:backgroundImage="@drawable/potrait"/>
-                </RelativeLayout>
-
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_touch_background"
+                android:minHeight="@dimen/margin_width48">
                 <TextView
-                    android:id="@+id/id_nickname"
+                    android:id="@+id/id_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/mall_order_text"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginBottom="@dimen/margin_width10"
+                    android:layout_marginTop="@dimen/margin_width10"
                     android:layout_centerVertical="true"
-                    android:gravity="start"
-                    android:layout_toRightOf="@+id/id_re_circle"
-                    android:layout_toEndOf="@+id/id_re_circle"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:layout_toStartOf="@+id/id_right_massage"
-                    android:layout_toLeftOf="@+id/id_right_massage"
                     android:textSize="@dimen/text_width18"
-                    android:textColor="@color/white"/>
-                <RelativeLayout
-                    android:id="@+id/id_right_massage"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/id_look_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:layout_toRightOf="@+id/id_text1"
+                    android:layout_toEndOf="@+id/id_text1"
+                    android:gravity="end"
+                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_toLeftOf="@+id/id_forward_img"
+                    android:layout_toStartOf="@+id/id_forward_img"
                     android:layout_marginRight="@dimen/margin_width10"
-                    android:layout_marginTop="@dimen/margin_width25">
-
-                    <com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM
-                        android:id="@+id/id_mim_message"
-                        android:layout_width="@dimen/margin_width30"
-                        android:layout_height="@dimen/margin_width30"
-                        android:layout_centerInParent="true"
-                        app:iconDrawable="@drawable/my_message">
-                    </com.msht.minshengbao.ViewUI.ButtonUI.MenuItemM>
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <include layout="@layout/layout_line_gray" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="@color/background_gray" />
-
-            <include layout="@layout/layout_line_gray" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/ll_collect"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:clickable="false"
-                    >
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-                    <TextView
-                        android:id="@+id/collection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_Modules"
-                        android:text="收藏夹"
-                        android:textColor="@color/title_tv"
-                        android:textSize="@dimen/text_width16" />
-                    <TextView
-                        android:id="@+id/collected_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_width16"
-                        android:visibility="gone" />
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/nc_bg" />
-                <LinearLayout
-                    android:id="@+id/ll_footprint"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:clickable="false"
-                    >
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-                <TextView
-                    android:id="@+id/footprint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_Modules"
-                    android:text="我的足迹"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_width16" />
-                    <TextView
-                        android:id="@+id/footprint_num"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_width16"
-                        android:visibility="gone" />
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-                </LinearLayout>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_Modules"
-                android:background="@color/nc_bg" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/margin_Modules"
-                android:paddingBottom="@dimen/margin_Modules"
-                >
-
-                <LinearLayout
-                    android:id="@+id/shop_order"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical"
-                    android:clickable="false"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_shop_order" />
-                        <TextView
-                            android:id="@+id/shop_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="商城订单"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_wait_pay"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical"
-                    android:clickable="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_wait_pay" />
-
-                        <TextView
-                            android:id="@+id/wait_pay_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="待付款"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_wait_get"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical"
-                    android:clickable="false"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_wait_get" />
-
-                        <TextView
-                            android:id="@+id/wait_get_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="待收货"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_wait_eveluate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical"
-                    android:clickable="false"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_wait_eveluate" />
-
-                        <TextView
-                            android:id="@+id/my_wait_eveluate_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="待评价"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_refund"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical"
-                    android:clickable="false"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/shop_refund" />
-
-                        <TextView
-                            android:id="@+id/my_refund_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="退款/退货"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_Modules"
-                android:background="@color/nc_bg" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/margin_Modules"
-                android:paddingBottom="@dimen/margin_Modules"
-                android:baselineAligned="true" >
-
-                <LinearLayout
-                    android:id="@+id/repair_order"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_repair_order" />
-
-                        <TextView
-                            android:id="@+id/repair_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="维修订单"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_repair_wait_pay"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/unfinish_repair" />
-
-                        <TextView
-                            android:id="@+id/repair_unfinished_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="未完成"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/repair_finished"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/repair_finished" />
-
-                        <TextView
-                            android:id="@+id/repair_finished_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="已完成"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_wait_repair_eveluate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_wait_eveluate" />
-
-                        <TextView
-                            android:id="@+id/my_wait_eveluate_repair_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="待评价"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/my_repair_refund"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="@dimen/dp4"
-                            android:src="@drawable/my_repair" />
-
-                        <TextView
-                            android:id="@+id/my_refund_repair_order_num"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shop_red_oval"
-                            android:gravity="center"
-                            android:text="3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_10"
-                            android:visibility="gone" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="退款/返修"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_Modules"
-                android:background="@color/nc_bg" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_width45">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:text="民生服务"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_width16" />
+                    android:text="@string/look_all_order"
+                    android:textSize="@dimen/text_width14"
+                    android:textColor="@color/color_9e9e9e"/>
+                <ImageView
+                    android:id="@+id/id_forward_img"
+                    android:layout_width="@dimen/margin_16"
+                    android:layout_height="@dimen/margin_16"
+                    android:contentDescription="@string/picture_text"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
+                    android:src="@drawable/forward_2x"/>
             </RelativeLayout>
-
-            <include layout="@layout/layout_line_gray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20"
-                android:paddingBottom="@dimen/margin_20">
-
-                <com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView
-                    android:id="@+id/id_function_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:numColumns="4"
-                    android:verticalSpacing="@dimen/margin_20"></com.msht.minshengbao.ViewUI.widget.MyNoScrollGridView>
-            </RelativeLayout>
-
-            <include layout="@layout/layout_line_gray" />
-
+            <include layout="@layout/layout_line_gray"/>
+            <include layout="@layout/layout_my_mall_order_view"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="@color/background_gray" />
-
-            <include layout="@layout/layout_line_gray" />
-
-            <RelativeLayout
+                android:layout_height="@dimen/margin_width15"
+                android:background="@color/background_gray"/>
+            <com.msht.minshengbao.custom.MyImageTextButton
+                android:id="@+id/id_repair_order_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_width45">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/margin_width15"
-                    android:layout_marginStart="@dimen/margin_width15"
-                    android:text="其他"
-                    android:textColor="@color/title_tv"
-                    android:textSize="@dimen/text_width16" />
-            </RelativeLayout>
-
-            <include layout="@layout/layout_line_gray" />
-
-            <LinearLayout
+                app:leftImage="@drawable/repair_order_mine_xh"
+                app:rightImage="@drawable/forward_2x"
+                app:leftText="@string/repair_order_text"
+                app:leftTextColor="@color/color_383838">
+            </com.msht.minshengbao.custom.MyImageTextButton>
+            <include layout="@layout/layout_line_gray"/>
+            <com.msht.minshengbao.custom.MyImageTextButton
+                android:id="@+id/id_gas_order_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/id_re_hotline"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:background="@drawable/selector_touch_background">
-
-                    <ImageView
-                        android:id="@+id/id_hotline_img"
-                        android:layout_width="@dimen/margin_width32"
-                        android:layout_height="@dimen/margin_width32"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_15"
-                        android:src="@drawable/hot_line" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_hotline_img"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/margin_15"
-                        android:layout_marginTop="@dimen/margin_8"
-                        android:text="客服热线"
-                        android:textColor="@color/title_tv"
-                        android:textSize="@dimen/text_width14" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/id_re_consult"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:background="@drawable/selector_touch_background">
-
-                    <ImageView
-                        android:id="@+id/id_consult_img"
-                        android:layout_width="@dimen/margin_width32"
-                        android:layout_height="@dimen/margin_width32"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_15"
-                        android:src="@drawable/consult_remmend_xh" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_consult_img"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/margin_15"
-                        android:layout_marginTop="@dimen/margin_8"
-                        android:text="咨询建议"
-                        android:textColor="@color/title_tv"
-                        android:textSize="@dimen/text_width14" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/id_re_setting"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:background="@drawable/selector_touch_background">
-
-                    <ImageView
-                        android:id="@+id/id_setting_img"
-                        android:layout_width="@dimen/margin_width32"
-                        android:layout_height="@dimen/margin_width32"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_15"
-                        android:src="@drawable/more_setting_xh" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/id_setting_img"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/margin_15"
-                        android:layout_marginTop="@dimen/margin_8"
-                        android:text="更多设置"
-                        android:textColor="@color/title_tv"
-                        android:textSize="@dimen/text_width14" />
-                </RelativeLayout>
-            </LinearLayout>
+                app:leftImage="@drawable/gas_order_mine_xh"
+                app:rightImage="@drawable/forward_2x"
+                app:leftText="@string/gas_order_text"
+                app:leftTextColor="@color/color_383838">
+            </com.msht.minshengbao.custom.MyImageTextButton>
+            <include layout="@layout/layout_line_gray"/>
+            <com.msht.minshengbao.custom.MyImageTextButton
+                android:id="@+id/id_invoice_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:leftImage="@drawable/invoice_xh"
+                app:rightImage="@drawable/forward_2x"
+                app:leftText="@string/invoice_apply"
+                app:leftTextColor="@color/color_383838">
+            </com.msht.minshengbao.custom.MyImageTextButton>
+            <include layout="@layout/layout_line_gray"/>
+            <com.msht.minshengbao.custom.MyImageTextButton
+                android:id="@+id/id_address_manage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:leftImage="@drawable/address_manage_xh"
+                app:rightImage="@drawable/forward_2x"
+                app:leftText="@string/address_manager"
+                app:leftTextColor="@color/color_383838">
+            </com.msht.minshengbao.custom.MyImageTextButton>
+            <include layout="@layout/layout_line_gray"/>
+            <com.msht.minshengbao.custom.MyImageTextButton
+                android:id="@+id/id_re_consult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:leftImage="@drawable/consult_recommend_xh"
+                app:rightImage="@drawable/forward_2x"
+                app:leftText="@string/consult_recommend"
+                app:leftTextColor="@color/color_383838">
+            </com.msht.minshengbao.custom.MyImageTextButton>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_width40"
+                android:background="@color/background_gray"/>
         </LinearLayout>
-    </com.msht.minshengbao.ViewUI.widget.MyScrollview>
-
+    </com.msht.minshengbao.custom.widget.MyScrollview>
     <LinearLayout
         android:id="@+id/id_li_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:minHeight="@dimen/margin_50"
+        android:minHeight="@dimen/margin_width70"
         android:orientation="vertical">
-
         <View
             android:id="@+id/id_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_20" />
-
+            android:layout_height="@dimen/margin_width20" />
         <RelativeLayout
             android:id="@+id/id_re_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:minHeight="@dimen/margin_50">
-
             <TextView
                 android:id="@+id/id_tv_naviga"
                 android:layout_width="wrap_content"
@@ -860,7 +146,7 @@
                 android:layout_centerInParent="true"
                 android:text="我的"
                 android:textColor="@android:color/transparent"
-                android:textSize="@dimen/text_18" />
+                android:textSize="@dimen/text_width16" />
         </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

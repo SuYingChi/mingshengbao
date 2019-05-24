@@ -24,7 +24,7 @@
             android:layout_marginStart="@dimen/margin_width15"
             android:contentDescription="@string/picture_text"
             android:src="@drawable/msb_headline_xh"/>
-        <com.msht.minshengbao.ViewUI.widget.MarqueeView
+        <com.msht.minshengbao.custom.widget.MarqueeView
             android:id="@+id/id_marqueeView"
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -39,7 +39,7 @@
             app:mvTextColor="@color/color_383838"
             app:mvTextSize="@dimen/text_width12"
             app:mvSingleLine="true">
-        </com.msht.minshengbao.ViewUI.widget.MarqueeView>
+        </com.msht.minshengbao.custom.widget.MarqueeView>
         <View
             android:id="@+id/id_view3"
             android:layout_width="@dimen/margin_width2"

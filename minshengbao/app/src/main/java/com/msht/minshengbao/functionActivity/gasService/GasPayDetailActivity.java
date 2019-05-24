@@ -11,7 +11,7 @@ import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.TypeConvertUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
 
 /**
  * Demo class

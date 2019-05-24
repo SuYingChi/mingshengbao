@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.myActivity.ModifyAddressActivity">
     <include layout="@layout/layout_header"/>
@@ -13,6 +15,55 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/id_customerNo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_touch_background"
+            android:minHeight="@dimen/margin_width48">
+            <TextView
+                android:id="@+id/id_customerNo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gas_customerNo_text"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/color_383838"/>
+            <EditText
+                android:id="@+id/id_customerNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/id_customerNo_text"
+                android:layout_toEndOf="@+id/id_customerNo_text"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:inputType="number"
+                android:layout_toLeftOf="@+id/id_ensure_btn"
+                android:layout_toStartOf="@+id/id_ensure_btn"
+                android:background="@null"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/color_383838"/>
+            <Button
+                android:id="@+id/id_ensure_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/margin_width70"
+                android:minHeight="@dimen/margin_width30"
+                android:contentDescription="@string/picture_text"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:background="@drawable/selector_touch_button_change"
+                android:text="@string/ensure_text"
+                android:textSize="@dimen/text_width14"
+                android:textColor="@color/white"/>
+        </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -120,7 +171,7 @@
             android:layout_toStartOf="@+id/id_forward_img"
             android:layout_marginRight="@dimen/margin_width10"
             android:layout_centerVertical="true"
-            android:hint="例：海口"
+            android:hint="@string/city_default_text"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
         <ImageView
@@ -136,6 +187,52 @@
             android:src="@drawable/forward_2x"/>
     </RelativeLayout>
         <include layout="@layout/layout_line_interval"/>
+        <RelativeLayout
+            android:id="@+id/id_map_address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_touch_background"
+            android:minHeight="@dimen/margin_width48">
+            <TextView
+                android:id="@+id/id_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer_address"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/title_tv"/>
+            <TextView
+                android:id="@+id/id_map_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/id_text2"
+                android:layout_toEndOf="@+id/id_text2"
+                android:gravity="end"
+                android:layout_marginLeft="@dimen/margin_width20"
+                android:layout_marginStart="@dimen/margin_width20"
+                android:layout_toStartOf="@+id/id_forward_map"
+                android:layout_toLeftOf="@+id/id_forward_map"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_width16"
+                android:textColor="@color/title_tv"
+                android:hint="@string/please_select_your_address"/>
+            <ImageView
+                android:id="@+id/id_forward_map"
+                android:layout_width="@dimen/margin_16"
+                android:layout_height="@dimen/margin_16"
+                android:contentDescription="@string/picture_text"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_width10"
+                android:src="@drawable/forward_2x"/>
+        </RelativeLayout>
+        <include layout="@layout/layout_line_interval"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -145,7 +242,7 @@
             android:id="@+id/id_text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/detail_address"
+            android:text="@string/doorplate"
             android:layout_marginLeft="@dimen/margin_width10"
             android:layout_marginStart="@dimen/margin_width10"
             android:layout_centerVertical="true"
@@ -165,7 +262,7 @@
             android:inputType="textPersonName"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:hint="@string/please_input_detail_address"
+            android:hint="@string/doorplate_default_text"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
     </RelativeLayout>

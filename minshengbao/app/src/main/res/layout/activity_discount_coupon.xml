@@ -7,12 +7,12 @@
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.myActivity.DiscountCouponActivity">
     <include layout="@layout/layout_header"/>
-    <com.msht.minshengbao.ViewUI.ViewPagerIndicator
+    <com.msht.minshengbao.custom.ViewPagerIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white">
-    </com.msht.minshengbao.ViewUI.ViewPagerIndicator>
+    </com.msht.minshengbao.custom.ViewPagerIndicator>
     <include layout="@layout/layout_line_gray"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

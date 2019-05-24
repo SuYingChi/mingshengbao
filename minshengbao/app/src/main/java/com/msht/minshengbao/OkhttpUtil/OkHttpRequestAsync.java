@@ -4,12 +4,15 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,6 +24,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.ForwardingSink;
+import okio.Okio;
+import okio.Sink;
 
 import static com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil.ERROR_SERVICE;
 
@@ -329,23 +337,299 @@ public class OkHttpRequestAsync {
      * @return
      */
     private Request.Builder addHeaders() {
-        Request.Builder builders = new Request.Builder()
+        return  new Request.Builder()
                 .addHeader("Connection", "keep-alive")
                 .addHeader("accept","*/*");
-        return builders;
     }
     private Request.Builder addHeaderMultipart(){
-        Request.Builder builderMultipart = new Request.Builder()
+        return new Request.Builder()
                 .addHeader("Charset", "UTF-8")
                 .addHeader("ser-Agent", "Fiddler")
                 .addHeader("Content-Type", "multipart/form-data");
-        return builderMultipart;
     }
     private Request.Builder addHeaderForm(){
-        Request.Builder builderForm = new Request.Builder()
+        return new Request.Builder()
                 .addHeader("Charset", "UTF-8")
                 .addHeader("ser-Agent", "Fiddler")
                 .addHeader("Content-Type", "application/x-www-form-urlencoded");
-        return builderForm;
+    }
+
+    private Request.Builder setRequestHeader(HashMap<String, String> mHeaderMap){
+        Request.Builder builder = new Request.Builder();
+        if(mHeaderMap != null){
+            for (String key: mHeaderMap.keySet()){
+                builder.addHeader(key,mHeaderMap.get(key));
+            }
+        }else {
+            builder.addHeader("Connection", "keep-alive");
+            builder.addHeader("accept","*/*");
+        }
+        return builder;
+    }
+
+    private Request.Builder setRequestBuilderHeader(HashMap<String, String> mHeaderMap){
+        Request.Builder builder = new Request.Builder();
+        if(mHeaderMap != null){
+            for (String key: mHeaderMap.keySet()){
+                builder.addHeader(key,mHeaderMap.get(key));
+            }
+        }
+        return builder;
+    }
+    public void okHttpGet( String url, HashMap<String, String> paramsMap, HashMap<String, String> headerMap,final AbstractCallBackUtil callBack){
+        StringBuilder tempParams = new StringBuilder();
+        String requestUrl;
+        try {
+            int pos = 0;
+            if (paramsMap!=null){
+                for (String key : paramsMap.keySet()) {
+                    if (pos > 0) {
+                        tempParams.append("&");
+                    }
+                    tempParams.append(String.format("%s=%s", key, URLEncoder.encode(paramsMap.get(key), "utf-8")));
+                    pos++;
+                }
+                requestUrl = String.format("%s?%s", url, tempParams.toString());
+            }else {
+                requestUrl = url;
+            }
+            final Request request = setRequestHeader(headerMap).url(requestUrl).build();
+            final Call call = mOkHttpClient.newCall(request);
+            //okhttp异步请求
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
+                    if(callBack != null){
+                        callBack.onError(call,e);
+                    }
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if(callBack != null){
+                        callBack.onSeccess(call,response);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    public void okHttpUploadFile(String requestUrl, File file, String fileKey,String fileType, HashMap<String, String> headerMap,final AbstractCallBackUtil callBack){
+        try {
+            MediaType mFileType = MediaType.parse(fileType);
+            //json数据，
+            RequestBody body = RequestBody.create(mFileType, file);
+
+            final Request request = setRequestBuilderHeader(headerMap).post(new ProgressRequestBody(body,callBack)).url(requestUrl).build();
+            final Call call = mOkHttpClient.newCall(request);
+            //okhttp异步请求
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
+                    if(callBack != null){
+                        callBack.onError(call,e);
+                    }
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if(callBack != null){
+                        callBack.onSeccess(call,response);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    /**
+     * post请求，上传单个文件
+     * @param requestUrl：url
+     * @param file：File对象
+     * @param fileKey：上传参数时file对应的键
+     * @param fileType：File类型，是image，video，audio，file
+     * @param paramsMap：map集合，封装键值对参数
+     * @param callBack：回调接口，onFailure方法在请求失败时调用，onResponse方法在请求成功后调用，这两个方法都执行在UI线程。还可以重写onProgress方法，得到上传进度
+     */
+    public void okHttpUploadFile(String requestUrl, File file, String fileKey,String fileType,HashMap<String, String> paramsMap, HashMap<String, String> headerMap,final AbstractCallBackUtil callBack){
+        try {
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
+            for (String key: paramsMap.keySet()){
+                builder.addFormDataPart(key,paramsMap.get(key));
+            }
+            builder.addFormDataPart(fileKey,file.getName(), RequestBody.create(MediaType.parse(fileType), file));
+            final Request request = setRequestBuilderHeader(headerMap).post(new ProgressRequestBody(builder.build(),callBack)).url(requestUrl).build();
+            final Call call = mOkHttpClient.newCall(request);
+            //okhttp异步请求
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
+                    if(callBack != null){
+                        callBack.onError(call,e);
+                    }
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if(callBack != null){
+                        callBack.onSeccess(call,response);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    /**
+     * post请求，上传多个文件，以list集合的形式,只有一个文件名
+     * @param requestUrl：url
+     * @param fileList：集合元素是File对象
+     * @param fileKey：上传参数时fileList对应的键
+     * @param fileType：File类型，是image，video，audio，file
+     * @param paramsMap：map集合，封装键值对参数
+     * @param headerMap：map集合，封装请求头键值对
+     * @param callBack：回调接口，onFailure方法在请求失败时调用，onResponse方法在请求成功后调用，这两个方法都执行在UI线程。
+     */
+    public void okHttpUploadListFile(String requestUrl, HashMap<String, String> paramsMap, List<File> fileList, String fileKey, String fileType, HashMap<String, String> headerMap, final AbstractCallBackUtil callBack){
+        try {
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
+            if(paramsMap != null) {
+                for (String key : paramsMap.keySet()) {
+                    builder.addFormDataPart(key, paramsMap.get(key));
+                }
+            }
+            for (File f : fileList){
+                builder.addFormDataPart(fileKey,f.getName(), RequestBody.create(MediaType.parse(fileType), f));
+            }
+            final Request request = setRequestBuilderHeader(headerMap).post(new ProgressRequestBody(builder.build(),callBack)).url(requestUrl).build();
+            final Call call = mOkHttpClient.newCall(request);
+            //okhttp异步请求
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
+                    if(callBack != null){
+                        callBack.onError(call,e);
+                    }
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if(callBack != null){
+                        callBack.onSeccess(call,response);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    public void okHttpUploadMapFile(String requestUrl, HashMap<String, String> paramsMap, HashMap<String, File> fileMap,String fileType, HashMap<String, String> headerMap,final AbstractCallBackUtil callBack){
+        try {
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
+            if(paramsMap != null) {
+                for (String key : paramsMap.keySet()) {
+                    builder.addFormDataPart(key, paramsMap.get(key));
+                }
+            }
+
+            for (String key : fileMap.keySet()){
+                builder.addFormDataPart(key,fileMap.get(key).getName(), RequestBody.create(MediaType.parse(fileType), fileMap.get(key)));
+            }
+            final Request request = setRequestBuilderHeader(headerMap).post(new ProgressRequestBody(builder.build(),callBack)).url(requestUrl).build();
+            final Call call = mOkHttpClient.newCall(request);
+            //okhttp异步请求
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull  final IOException e) {
+                    if(callBack != null){
+                        callBack.onError(call,e);
+                    }
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if(callBack != null){
+                        callBack.onSeccess(call,response);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+    /**
+     * 自定义RequestBody类，得到文件上传的进度
+     */
+    private static class ProgressRequestBody extends RequestBody {
+        //实际的待包装请求体
+        private final RequestBody requestBody;
+        //包装完成的BufferedSink
+        private BufferedSink bufferedSink;
+        private AbstractCallBackUtil callBack;
+
+        ProgressRequestBody(RequestBody requestBody, AbstractCallBackUtil callBack) {
+            this.requestBody = requestBody;
+            this.callBack = callBack;
+        }
+
+        /** 重写调用实际的响应体的contentType*/
+        @Override
+        public MediaType contentType() {
+            return requestBody.contentType();
+        }
+
+        /**重写调用实际的响应体的contentLength ，这个是文件的总字节数 */
+        @Override
+        public long contentLength() throws IOException {
+            return requestBody.contentLength();
+        }
+
+        /** 重写进行写入*/
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+            if (bufferedSink == null) {
+                bufferedSink = Okio.buffer(sink(sink));
+            }
+            requestBody.writeTo(bufferedSink);
+            //必须调用flush，否则最后一部分数据可能不会被写入
+            bufferedSink.flush();
+        }
+
+        /** 写入，回调进度接口*/
+        private Sink sink(BufferedSink sink) {
+            return new ForwardingSink(sink) {
+                //当前写入字节数
+                long bytesWritten = 0L;
+                //总字节长度，避免多次调用contentLength()方法
+                long contentLength = 0L;
+                @Override
+                public void write(Buffer source, long byteCount) throws IOException {
+                    super.write(source, byteCount);//这个方法会循环调用，byteCount是每次调用上传的字节数。
+                    if (contentLength == 0) {
+                        //获得总字节长度
+                        contentLength = contentLength();
+                    }
+                    //增加当前写入的字节数
+                    bytesWritten += byteCount;
+                    final float progress = bytesWritten*1.0f / contentLength;
+                    AbstractCallBackUtil.mMainHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callBack.onProgress(progress,contentLength);
+                        }
+                    });
+                }
+            };
+        }
     }
 }

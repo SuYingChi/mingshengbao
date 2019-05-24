@@ -51,7 +51,7 @@
                 android:text="搜索历史"
                 android:textColor="@color/black" />
 
-            <com.msht.minshengbao.ViewUI.widget.ListViewForScrollView
+            <com.msht.minshengbao.custom.widget.ListViewForScrollView
                 android:id="@+id/lv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

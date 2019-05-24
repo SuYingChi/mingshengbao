@@ -2,6 +2,7 @@ package com.msht.minshengbao.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
@@ -42,12 +43,37 @@ public class ConvertUtil {
         return (int) (pxValue / fontScale + 0.5f);
     }
 
-    // 将sp值转换为px值
+    /**
+     *  将sp值转换为px值
+     * @param context
+     * @param spValue
+     * @return
+     */
     public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
 
+    /**
+     * @param resources
+     * @param dp
+     * @return
+     */
+    public static float dp2px(Resources resources, float dp) {
+        final float scale = resources.getDisplayMetrics().density;
+        return  dp * scale + 0.5f;
+    }
+
+    /**
+     *  将sp值转换为px值
+     * @param resources
+     * @param sp
+     * @return
+     */
+    public static float sp2px(Resources resources, float sp){
+        final float scale = resources.getDisplayMetrics().scaledDensity;
+        return sp * scale;
+    }
     // 屏幕宽度（像素）
     public static int getWindowWidth(Activity context) {
         DisplayMetrics metric = new DisplayMetrics();

@@ -22,7 +22,7 @@
             android:textSize="@dimen/text_width16"
             android:text="WLAN环境下自动升级软件"
             android:textColor="@color/title_tv"/>
-        <com.msht.minshengbao.ViewUI.widget.SwitchView
+        <com.msht.minshengbao.custom.widget.SwitchView
             android:id="@+id/id_switch"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/margin_width30"

@@ -22,9 +22,9 @@ import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
-import com.msht.minshengbao.ViewUI.Dialog.CustomDialog;
-import com.msht.minshengbao.ViewUI.Dialog.InvoiceEnsureDialog;
-import com.msht.minshengbao.ViewUI.Dialog.PublicNoticeDialog;
+import com.msht.minshengbao.custom.Dialog.CustomDialog;
+import com.msht.minshengbao.custom.Dialog.InvoiceEnsureDialog;
+import com.msht.minshengbao.custom.Dialog.PublicNoticeDialog;
 import com.msht.minshengbao.functionActivity.htmlWeb.HtmlPageActivity;
 
 import org.json.JSONObject;

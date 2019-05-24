@@ -8,12 +8,12 @@
     tools:context="com.msht.minshengbao.functionActivity.gasService.AddCustomerNoActivity">
     <include layout="@layout/layout_header"/>
     <RelativeLayout
-        android:layout_marginTop="@dimen/margin_12"
+        android:layout_marginTop="@dimen/margin_width15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/margin_40"
-        android:layout_marginRight="@dimen/margin_10"
-        android:layout_marginLeft="@dimen/margin_10"
+        android:minHeight="@dimen/margin_width45"
+        android:layout_marginRight="@dimen/margin_width20"
+        android:layout_marginLeft="@dimen/margin_width20"
         android:background="@drawable/shape_gray_border_transparent">
         <ImageView
             android:id="@+id/id_img1"
@@ -37,8 +37,7 @@
             android:layout_toRightOf="@+id/id_img1"
             android:layout_toEndOf="@+id/id_img1"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_10"
-            />
+            android:layout_marginRight="@dimen/margin_10"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="@dimen/margin_30"
@@ -60,8 +59,8 @@
             android:id="@+id/id_btn_add_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_20"
-            android:layout_marginRight="@dimen/margin_20"
+            android:layout_marginLeft="@dimen/margin_width45"
+            android:layout_marginRight="@dimen/margin_width45"
             android:minHeight="@dimen/margin_width45"
             android:text="@string/ensure_text"
             android:textColor="@color/white"
