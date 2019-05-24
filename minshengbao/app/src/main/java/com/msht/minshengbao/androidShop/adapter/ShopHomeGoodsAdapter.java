@@ -33,7 +33,7 @@ public class ShopHomeGoodsAdapter extends MyBaseAdapter<ShopHomeGoodsBean.GoodsB
     public void convert(ViewHolder holder, ShopHomeGoodsBean.GoodsBean.ItemBean itemBean,int position) {
         holder.setText(R.id.tvGoodName, itemBean.getGoods_name());
         ImageView img = holder.getView(R.id.ivGoodPic);
-        GlideUtil.loadByImageView(context,img,itemBean.getGoods_image());
+        GlideUtil.loadRemoteImg(context,img,itemBean.getGoods_image());
         TextView tvGoodPrice = holder.getView(R.id.tvGoodPrice);
         tvGoodPrice.setText(StringUtil.getPriceSpannable12String(context, itemBean.getGoods_promotion_price(), R.style.small_money, R.style.big_money));
     }

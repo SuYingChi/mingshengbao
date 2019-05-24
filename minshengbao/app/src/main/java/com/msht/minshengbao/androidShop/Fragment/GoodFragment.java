@@ -276,7 +276,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
         Bundle arg = getArguments();
         if (arg != null) {
             goodsid = arg.getString("goodsid");
-            String type = arg.getString("type");
         }
         actionbarSizeTypedArray = getContext().obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
         toolbarHeight = (int) (actionbarSizeTypedArray.getDimension(0, 0) * 2);
