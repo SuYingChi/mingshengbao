@@ -103,7 +103,7 @@ public class VoucherAdapter extends HaveHeadRecyclerAdapter<VoucherBean>{
         id_title_name.setText(voucherBean.getVoucher_t_title());
         id_end_date.setText(voucherBean.getVoucher_t_end_date_text());
         id_amount.setText("¥" + voucherBean.getVoucher_t_price());
-        id_effective_text.setText(voucherBean.getVoucher_t_start_date_text()+" ~");
+        id_effective_text.setText(voucherBean.getVoucher_t_start_date_text()+"  ~");
         use_desc.setText(voucherBean.getVoucher_t_desc());
     }
 
