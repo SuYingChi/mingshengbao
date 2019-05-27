@@ -145,6 +145,7 @@ public class CouponFragment extends BaseFragment {
                                         }*/
                                         } else {
                                             reference.layoutNoData.setVisibility(View.GONE);
+                                            reference.processList();
                                             reference.mAdapter.notifyDataSetChanged();
                                         }
                                         break;
@@ -235,6 +236,28 @@ public class CouponFragment extends BaseFragment {
             }
             super.handleMessage(msg);
         }
+
+    }
+
+    private void processList() {
+        ArrayList<HashMap<String, String>> templist = new ArrayList<HashMap<String, String>>();
+        for(HashMap<String,String> map:couponList){
+           if("1".equals(map.get("type"))){
+               templist.add(map);
+           }
+        }
+        for(HashMap<String,String> map:couponList){
+            if("2".equals(map.get("type"))){
+                templist.add(map);
+            }
+        }
+        for(HashMap<String,String> map:couponList){
+            if("3".equals(map.get("type"))){
+                templist.add(map);
+            }
+        }
+        couponList.clear();
+        couponList.addAll(templist);
     }
 
     private void onGetCouponData() {
