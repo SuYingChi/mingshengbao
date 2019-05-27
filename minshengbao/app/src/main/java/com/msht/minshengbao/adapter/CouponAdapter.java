@@ -58,6 +58,8 @@ public class CouponAdapter extends BaseAdapter {
         void onGoShopHome();
 
         void onClikshowDesc(int position);
+
+        void onUseServiceCoupon(String direct_url);
     }
     @Override
     public int getCount() {
@@ -103,6 +105,12 @@ public class CouponAdapter extends BaseAdapter {
                 holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
                 holder.layoutBack.setBackgroundResource(R.drawable.left_kaqun);
                 holder.tvuse.setText("点击使用");
+                holder.tvuse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                     listener.onUseServiceCoupon(haveuseList.get(position).get("direct_url"));
+                    }
+                });
                 holder.tvuse.setClickable(true);
                 holder.tvuse.setTextColor(Color.WHITE);
                 holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
