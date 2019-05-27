@@ -365,6 +365,7 @@ public class CouponFragment extends BaseFragment {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     map.put("store_name", jsonObject.optString("store_name"));
                     map.put("voucher_end_date_text", jsonObject.optString("voucher_end_date_text"));
+                    map.put("voucher_start_date_text", jsonObject.optString("voucher_start_date_text"));
                     map.put("voucher_limit", jsonObject.optString("voucher_limit"));
                     map.put("voucher_price", jsonObject.optString("voucher_price"));
                     map.put("voucher_state", jsonObject.optString("voucher_state"));

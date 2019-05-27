@@ -156,7 +156,7 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnScope.setText(haveuseList.get(position).get("scope"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("amount"));
             holder.cnEndDate.setText(haveuseList.get(position).get("end_date"));
-            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+" ~");
+            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("desc"));
         }else if(tab==1){
             String rpacket_state = haveuseList.get(position).get("rpacket_state");
@@ -239,7 +239,7 @@ public class CouponAdapter extends BaseAdapter {
                     listener.onClikshowDesc(position);
                 }
             });
-            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+" ~");
+            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("rpacket_desc"));
         } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
@@ -315,7 +315,7 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnName.setText(haveuseList.get(position).get("store_name"));
             holder.cnEndDate.setText(haveuseList.get(position).get("voucher_end_date_text"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("voucher_price"));
-            holder.id_effective_text.setText("使用期限至");
+            holder.id_effective_text.setText(haveuseList.get(position).get("voucher_start_date_text")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("voucher_des"));
         }
             return convertView;
