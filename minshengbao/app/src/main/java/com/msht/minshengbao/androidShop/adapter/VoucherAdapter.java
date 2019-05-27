@@ -40,6 +40,7 @@ public class VoucherAdapter extends HaveHeadRecyclerAdapter<VoucherBean>{
         TextView below_amount= holder.getView(R.id.below_amount);
         TextView id_end_date = holder.getView(R.id.id_end_date);
         TextView id_effective_text = holder.getView(R.id.id_effective_text);
+        holder.getView(R.id.remain_time).setVisibility(View.INVISIBLE);
         switch (voucher_state){
             case "1":
                 id_amount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -67,7 +68,16 @@ public class VoucherAdapter extends HaveHeadRecyclerAdapter<VoucherBean>{
                 tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                 tvuse.setBackgroundResource(R.drawable.btn_cancle);
                 break;
-            default:break;
+            default:
+                id_amount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                id_title_name.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                layout_back.setBackgroundResource(R.drawable.left_used_kaqun);
+                tvuse.setText("已失效");
+                tvuse.setClickable(false);
+                tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                break;
         }
         if(voucherBean.isShowDesc()){
             use_desc.setVisibility(View.VISIBLE);
@@ -91,9 +101,9 @@ public class VoucherAdapter extends HaveHeadRecyclerAdapter<VoucherBean>{
         below_amount.setText("买满"+voucherBean.getVoucher_t_limit()+"可用");
         id_scope.setText(voucherBean.getVoucher_t_desc());
         id_title_name.setText(voucherBean.getVoucher_t_title());
-        id_end_date.setText(voucherBean.getVoucher_t_end_date());
+        id_end_date.setText(voucherBean.getVoucher_t_end_date_text());
         id_amount.setText("¥" + voucherBean.getVoucher_t_price());
-        id_effective_text.setText("使用期限至");
+        id_effective_text.setText(voucherBean.getVoucher_t_start_date_text()+" ~");
         use_desc.setText(voucherBean.getVoucher_t_desc());
     }
 

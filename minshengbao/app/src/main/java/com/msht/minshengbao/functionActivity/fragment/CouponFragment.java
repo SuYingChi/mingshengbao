@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.MyApplication;
@@ -18,14 +17,11 @@ import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
 import com.msht.minshengbao.androidShop.activity.GetRedPacketActivity;
 import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
-import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
 import com.msht.minshengbao.androidShop.activity.ShopVouchActivity;
 import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
-import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.functionActivity.MainActivity;
-import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
@@ -43,7 +39,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -145,7 +140,7 @@ public class CouponFragment extends BaseFragment {
                                         }*/
                                         } else {
                                             reference.layoutNoData.setVisibility(View.GONE);
-                                            reference.processList();
+                                            reference.arrangeList();
                                             reference.mAdapter.notifyDataSetChanged();
                                         }
                                         break;
@@ -161,7 +156,22 @@ public class CouponFragment extends BaseFragment {
                             int resultCode = object.optInt("code");
                             if (resultCode == 200) {
                                 reference.pageTotal = object.optInt("page_total");
-                                reference.jsonArray = object.optJSONObject("datas").optJSONArray("voucher_list");
+                                reference.jsonArray = object.optJSONObject("datas").optJSONObject("group_voucher_list").optJSONArray(unused);
+                                JSONArray usedArray = object.optJSONObject("datas").optJSONObject("group_voucher_list").optJSONArray(used);
+                                JSONArray expireArray = object.optJSONObject("datas").optJSONObject("group_voucher_list").optJSONArray(expire);
+                                if(reference.jsonArray==null){
+                                    reference.jsonArray = new JSONArray();
+                                }
+                                if (usedArray != null) {
+                                    for (int i = 0; i < usedArray.length(); i++) {
+                                        reference.jsonArray.put(usedArray.optJSONObject(i));
+                                    }
+                                }
+                                if (expireArray != null) {
+                                    for (int i = 0; i < expireArray.length(); i++) {
+                                        reference.jsonArray.put(expireArray.optJSONObject(i));
+                                    }
+                                }
                                 if (reference.refreshType == 0) {
                                     reference.xListView.stopRefresh(true);
                                 } else if (reference.refreshType == 1) {
@@ -178,6 +188,7 @@ public class CouponFragment extends BaseFragment {
                                     reference.layoutNoData.setVisibility(View.VISIBLE);
                                 } else {
                                     reference.layoutNoData.setVisibility(View.GONE);
+                                    reference.arrangeList();
                                     reference.mAdapter.notifyDataSetChanged();
                                 }
                             } else {
@@ -191,6 +202,9 @@ public class CouponFragment extends BaseFragment {
                                 reference.jsonArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(unused);
                                 JSONArray usedArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(used);
                                 JSONArray expireArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(expire);
+                                if(reference.jsonArray==null){
+                                    reference.jsonArray = new JSONArray();
+                                }
                                 if (usedArray != null) {
                                     for (int i = 0; i < usedArray.length(); i++) {
                                         reference.jsonArray.put(usedArray.optJSONObject(i));
@@ -217,6 +231,7 @@ public class CouponFragment extends BaseFragment {
                                     reference.layoutNoData.setVisibility(View.VISIBLE);
                                 } else {
                                     reference.layoutNoData.setVisibility(View.GONE);
+                                    reference.arrangeList();
                                     reference.mAdapter.notifyDataSetChanged();
                                 }
 
@@ -239,21 +254,51 @@ public class CouponFragment extends BaseFragment {
 
     }
 
-    private void processList() {
+    private void arrangeList() {
         ArrayList<HashMap<String, String>> templist = new ArrayList<HashMap<String, String>>();
         for(HashMap<String,String> map:couponList){
-           if("1".equals(map.get("type"))){
-               templist.add(map);
-           }
-        }
-        for(HashMap<String,String> map:couponList){
-            if("2".equals(map.get("type"))){
-                templist.add(map);
+            if(position==0) {
+                if ("1".equals(map.get("type"))) {
+                    templist.add(map);
+                }
+            }else if(position==1){
+                if ("1".equals(map.get("rpacket_state"))) {
+                    templist.add(map);
+                }
+            }else if(position==2){
+                if ("1".equals(map.get("voucher_state"))) {
+                    templist.add(map);
+                }
             }
         }
         for(HashMap<String,String> map:couponList){
-            if("3".equals(map.get("type"))){
-                templist.add(map);
+            if(position==0) {
+                if ("2".equals(map.get("type"))) {
+                    templist.add(map);
+                }
+            } else if(position==1){
+                if ("2".equals(map.get("rpacket_state"))) {
+                    templist.add(map);
+                }
+            }else if(position==2){
+                if ("2".equals(map.get("voucher_state"))) {
+                    templist.add(map);
+                }
+            }
+        }
+        for(HashMap<String,String> map:couponList){
+            if(position==0) {
+                if ("3".equals(map.get("type"))) {
+                    templist.add(map);
+                }
+            }else if(position==1){
+                if ("3".equals(map.get("rpacket_state"))) {
+                    templist.add(map);
+                }
+            }else if(position==2){
+                if ("3".equals(map.get("voucher_state"))) {
+                    templist.add(map);
+                }
             }
         }
         couponList.clear();
@@ -327,6 +372,8 @@ public class CouponFragment extends BaseFragment {
                     map.put("voucher_state_text", jsonObject.optString("voucher_state_text"));
                     map.put("voucher_id", jsonObject.optString("voucher_id"));
                     map.put("store_id", jsonObject.optString("store_id"));
+                    String left_days = jsonObject.getString("left_days");
+                    map.put("left_days", left_days);
                     map.put("show", "0");
                     couponList.add(map);
                 }

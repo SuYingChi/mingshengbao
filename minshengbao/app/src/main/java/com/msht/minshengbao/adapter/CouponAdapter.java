@@ -201,6 +201,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 case "3":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -211,6 +212,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 default:break;
             }
@@ -257,6 +259,13 @@ public class CouponAdapter extends BaseAdapter {
                          listener.onClickVoucher(haveuseList.get(position).get("store_id"));
                         }
                     });
+                    if ((!TextUtils.isEmpty(haveuseList.get(position).get("left_days"))) && !"0".equals(haveuseList.get(position).get("left_days"))) {
+                        String mDayText = "仅剩" + haveuseList.get(position).get("left_days") + "天";
+                        holder.remain_time.setVisibility(View.VISIBLE);
+                        holder.remain_time.setText(mDayText);
+                    } else {
+                        holder.remain_time.setVisibility(View.GONE);
+                    }
                     break;
                 case "2":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -267,6 +276,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 case "3":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -277,6 +287,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                     default:break;
             }
