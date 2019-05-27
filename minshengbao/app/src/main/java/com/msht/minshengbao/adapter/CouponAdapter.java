@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -77,7 +78,7 @@ public class CouponAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_dicount_coupon, null);
-            holder.layoutBack =(RelativeLayout)convertView.findViewById(R.id.id_layout_back);
+            holder.layoutBack =(LinearLayout)convertView.findViewById(R.id.id_layout_back);
             holder.cnName =(TextView)convertView.findViewById(R.id.id_title_name);
             holder.cnScope =(TextView) convertView.findViewById(R.id.id_scope);
             holder.cnAmount =(TextView) convertView.findViewById(R.id.id_amount);
@@ -184,7 +185,7 @@ public class CouponAdapter extends BaseAdapter {
                         }
                     });
                     if ((!TextUtils.isEmpty(haveuseList.get(position).get("left_days"))) && !"0".equals(haveuseList.get(position).get("left_days"))) {
-                        String mDayText = "剩" + haveuseList.get(position).get("left_days") + "天";
+                        String mDayText = "仅剩" + haveuseList.get(position).get("left_days") + "天";
                         holder.remain_time.setVisibility(View.VISIBLE);
                         holder.remain_time.setText(mDayText);
                     } else {
@@ -309,7 +310,7 @@ public class CouponAdapter extends BaseAdapter {
             return convertView;
     }
     class ViewHolder {
-        RelativeLayout layoutBack;
+        LinearLayout layoutBack;
         TextView cnName;
         TextView cnScope;
         TextView cnAmount;

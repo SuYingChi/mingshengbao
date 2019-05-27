@@ -165,7 +165,6 @@ public class ClassDetailRightBean {
             }
 
             private boolean if_pintuan;
-            private List<?> contractlist;
             private List<String> image;
 
             public String getGoods_id() {
@@ -416,13 +415,6 @@ public class ClassDetailRightBean {
                 this.goods_image_url = goods_image_url;
             }
 
-            public List<?> getContractlist() {
-                return contractlist;
-            }
-
-            public void setContractlist(List<?> contractlist) {
-                this.contractlist = contractlist;
-            }
 
             public List<String> getImage() {
                 return image;

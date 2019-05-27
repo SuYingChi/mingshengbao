@@ -302,6 +302,11 @@ public class ShopPresenter {
                                 goodbean.setGoods_jingle(goods_jingle);
                                 goodbean.setGoods_price(goods_price);
                                 goodbean.setGoods_id(goods_id);
+                                goodbean.setDelivery_desc(good.optString("delivery_desc"));
+                                goodbean.setGroup_flag(good.optBoolean("group_flag"));
+                                goodbean.setXianshi_flag(good.optBoolean("xianshi_flag"));
+                                goodbean.setSpike_flag(good.optBoolean("spike_flag"));
+                                goodbean.setIf_pintuan(good.optBoolean("if_pintuan"));
                                 list.add(goodbean);
                             }
                         } catch (JSONException e) {

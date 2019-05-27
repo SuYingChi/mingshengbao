@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class VoucherAdapter extends HaveHeadRecyclerAdapter<VoucherBean>{
     public void convert(RecyclerHolder holder, final VoucherBean voucherBean, final int position) {
         String voucher_state = voucherBean.getVoucher_t_state();
         TextView tvuse = holder.getView(R.id.use);
-        RelativeLayout layout_back =  holder.getView(R.id.id_layout_back);
+        LinearLayout layout_back =  holder.getView(R.id.id_layout_back);
         TextView id_amount =  holder.getView(R.id.id_amount);
         TextView id_title_name =  holder.getView(R.id.id_title_name);
         TextView use_desc = holder.getView(R.id.use_desc);
