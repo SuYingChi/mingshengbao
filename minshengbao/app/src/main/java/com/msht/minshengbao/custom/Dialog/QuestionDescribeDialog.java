@@ -2,6 +2,7 @@ package com.msht.minshengbao.custom.Dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -60,7 +61,6 @@ public class QuestionDescribeDialog {
     public QuestionDescribeDialog builder() {
         // 获取Dialog布局
         View view= LayoutInflater.from(context).inflate(R.layout.layout_repair_question_describe,null);
-        view.setMinimumWidth(display.getWidth());
         etDeScribe=(EditText)view.findViewById(R.id.id_et_info);
         multiLineChooseLayout=(MultiLineChooseLayout)view.findViewById(R.id.id_multiChoose);
         multiLineChooseLayout.setList(mDataList);
@@ -101,10 +101,12 @@ public class QuestionDescribeDialog {
         dialog = new Dialog(context, R.style.PromptDialogStyle);
         dialog.setContentView(view);
         Window dialogWindow = dialog.getWindow();
+        DisplayMetrics displayMetrics=new DisplayMetrics();
+        display.getMetrics(displayMetrics);
         if (dialogWindow!=null){
             dialogWindow.setGravity(Gravity.CENTER);
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.x = 0;
+            lp.width=displayMetrics.widthPixels;
             lp.y = 0;
             dialogWindow.setAttributes(lp);
         }

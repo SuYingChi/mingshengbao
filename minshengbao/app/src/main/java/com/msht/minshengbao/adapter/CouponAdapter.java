@@ -1,6 +1,7 @@
 package com.msht.minshengbao.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +18,9 @@ import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
+import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
+import com.msht.minshengbao.androidShop.customerview.RotateTextView;
+import com.msht.minshengbao.functionActivity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +53,10 @@ public class CouponAdapter extends BaseAdapter {
          * @param storeId
          */
         void onClickVoucher(String storeId);
+
+        void onGoShopHome();
+
+        void onClikshowDesc(int position);
     }
     @Override
     public int getCount() {
@@ -72,56 +81,176 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnName =(TextView)convertView.findViewById(R.id.id_title_name);
             holder.cnScope =(TextView) convertView.findViewById(R.id.id_scope);
             holder.cnAmount =(TextView) convertView.findViewById(R.id.id_amount);
-            holder.cnUseLimit =(TextView) convertView.findViewById(R.id.id_use_limit);
-            holder.cnTime =(TextView)convertView.findViewById(R.id.id_time);
+            holder.remain_time =(TextView)convertView.findViewById(R.id.remain_time);
             holder.cnEndDate =(TextView) convertView.findViewById(R.id.id_end_date);
+            holder.show_use_desc =(TextView) convertView.findViewById(R.id.show_use_desc);
+            holder.use_desc =(TextView) convertView.findViewById(R.id.use_desc);
+            holder.updown =(ImageView) convertView.findViewById(R.id.updown);
+            holder.tvuse =(TextView)convertView.findViewById(R.id.use);
+            holder.tvBelowAmount =(TextView)convertView.findViewById(R.id.below_amount);
+            holder.id_effective_text =(TextView)convertView.findViewById(R.id.id_effective_text);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         if(tab==0) {
+            holder.tvBelowAmount.setVisibility(View.GONE);
             final String type = haveuseList.get(position).get("type");
             String remainderDay = haveuseList.get(position).get("remainder_days");
             if (type.equals(VariableUtil.VALUE_ONE)) {
-                holder.cnAmount.setTextColor(Color.parseColor("#F5BC33"));
-                holder.cnName.setTextColor(Color.parseColor("#F5BC33"));
-                holder.layoutBack.setBackgroundResource(R.drawable.dicount_coupon_2xh);
+                holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
+                holder.layoutBack.setBackgroundResource(R.drawable.left_kaqun);
+                holder.tvuse.setText("点击使用");
+                holder.tvuse.setClickable(true);
+                holder.tvuse.setTextColor(Color.WHITE);
+                holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                holder.tvuse.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_yellow));
             } else if (type.equals(VariableUtil.VALUE_TWO)) {
-                holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
-                holder.cnName.setTextColor(Color.parseColor("#FF383838"));
-                holder.layoutBack.setBackgroundResource(R.mipmap.coupon_haveused_2xh);
+                holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                holder.tvuse.setText("已过期");
+                holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                holder.tvuse.setClickable(false);
+                holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
             } else if (type.equals(VariableUtil.VALUE_THREE)) {
-                holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
-                holder.cnName.setTextColor(Color.parseColor("#FF383838"));
-                holder.layoutBack.setBackgroundResource(R.mipmap.coupon_exceed_2xh);
+                holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                holder.tvuse.setText("已过期");
+                holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                holder.tvuse.setClickable(false);
+                holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
             }
             if ((!TextUtils.isEmpty(remainderDay)) && (!remainderDay.equals(ConstantUtil.VALUE_ZERO))) {
-                String mDayText = "剩" + remainderDay + "天";
-                holder.cnTime.setVisibility(View.VISIBLE);
-                holder.cnTime.setText(mDayText);
+                String mDayText = "仅剩" + remainderDay + "天";
+                holder.remain_time.setVisibility(View.VISIBLE);
+                holder.remain_time.setText(mDayText);
             } else {
-                holder.cnTime.setVisibility(View.GONE);
+                holder.remain_time.setVisibility(View.GONE);
             }
-            String limitUse = "买满" + haveuseList.get(position).get("use_limit") + "元可用";
+            if("1".equals(haveuseList.get(position).get("show"))){
+                holder.use_desc.setVisibility(View.VISIBLE);
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+            }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
+                holder.use_desc.setVisibility(View.GONE);
+            }
+            holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
+            holder.updown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
             holder.cnName.setText(haveuseList.get(position).get("name"));
             holder.cnScope.setText(haveuseList.get(position).get("scope"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("amount"));
-            holder.cnUseLimit.setText(limitUse);
             holder.cnEndDate.setText(haveuseList.get(position).get("end_date"));
+            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+" ~");
+            holder.use_desc.setText(haveuseList.get(position).get("desc"));
         }else if(tab==1){
+            String rpacket_state = haveuseList.get(position).get("rpacket_state");
+            holder.cnScope.setText("商城通用");
+            holder.tvBelowAmount.setVisibility(View.VISIBLE);
+            switch (rpacket_state){
+                case "1":
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_kaqun);
+                    holder.tvuse.setText("点击使用");
+                    holder.tvuse.setClickable(true);
+                    holder.tvuse.setTextColor(Color.WHITE);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_yellow));
+                    holder.tvuse.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                           listener.onGoShopHome();
+                        }
+                    });
+                    holder.updown.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            listener.onClikshowDesc(position);
+                        }
+                    });
+                    if ((!TextUtils.isEmpty(haveuseList.get(position).get("left_days"))) && !"0".equals(haveuseList.get(position).get("left_days"))) {
+                        String mDayText = "剩" + haveuseList.get(position).get("left_days") + "天";
+                        holder.remain_time.setVisibility(View.VISIBLE);
+                        holder.remain_time.setText(mDayText);
+                    } else {
+                        holder.remain_time.setVisibility(View.GONE);
+                    }
+                    break;
+                case "2":
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                    holder.tvuse.setText("已过期");
+                    holder.tvuse.setClickable(false);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    break;
+                case "3":
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                    holder.tvuse.setText("已过期");
+                    holder.tvuse.setClickable(false);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    break;
+                default:break;
+            }
+            holder.cnName.setText(haveuseList.get(position).get("rpacket_title"));
+            holder.cnEndDate.setText(haveuseList.get(position).get("rpacket_end_date_text"));
+            holder.cnAmount.setText("¥" + haveuseList.get(position).get("rpacket_price"));
+            holder.tvBelowAmount.setText("满"+ haveuseList.get(position).get("rpacket_limit")+"¥可用");
+            if("1".equals(haveuseList.get(position).get("show"))){
+                holder.use_desc.setVisibility(View.VISIBLE);
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+                  }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
+                holder.use_desc.setVisibility(View.GONE);
+            }
+            holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
+            holder.updown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
+            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+" ~");
+            holder.use_desc.setText(haveuseList.get(position).get("rpacket_desc"));
+        } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
-            holder.cnUseLimit.setVisibility(View.GONE);
             switch (voucher_state){
                 case "1":
-                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.msb_color));
-                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.msb_color));
-                    holder.layoutBack.setBackgroundResource(R.drawable.dicount_coupon_2xh);
-                    holder.cnTime.setVisibility(View.VISIBLE);
-                    holder.cnTime.setText("点击使用");
-                    holder.cnTime.setTextColor(Color.WHITE);
-                    holder.cnTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    holder.cnTime.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_red));
-                    holder.cnTime.setOnClickListener(new View.OnClickListener() {
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_kaqun);
+                    holder.tvuse.setClickable(true);
+                    holder.tvuse.setText("点击使用");
+                    holder.tvuse.setTextColor(Color.WHITE);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_yellow));
+                    holder.tvuse.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                          listener.onClickVoucher(haveuseList.get(position).get("store_id"));
@@ -129,24 +258,53 @@ public class CouponAdapter extends BaseAdapter {
                     });
                     break;
                 case "2":
-                    holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
-                    holder.cnName.setTextColor(Color.parseColor("#FF383838"));
-                    holder.layoutBack.setBackgroundResource(R.mipmap.coupon_haveused_2xh);
-                    holder.cnTime.setVisibility(View.GONE);
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                    holder.tvuse.setText("已过期");
+                    holder.tvuse.setClickable(false);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
                     break;
                 case "3":
-                    holder.cnAmount.setTextColor(Color.parseColor("#FF383838"));
-                    holder.cnName.setTextColor(Color.parseColor("#FF383838"));
-                    holder.layoutBack.setBackgroundResource(R.mipmap.coupon_exceed_2xh);
-                    holder.cnTime.setVisibility(View.GONE);
+                    holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+                    holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.layoutBack.setBackgroundResource(R.drawable.left_used_kaqun);
+                    holder.tvuse.setText("已过期");
+                    holder.tvuse.setClickable(false);
+                    holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
+                    holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
                     break;
                     default:break;
             }
+            if("1".equals(haveuseList.get(position).get("show"))){
+                holder.use_desc.setVisibility(View.VISIBLE);
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+            }else if("0".equals(haveuseList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
+                holder.use_desc.setVisibility(View.GONE);
+            }
+            holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
+            holder.updown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClikshowDesc(position);
+                }
+            });
+            holder.cnScope.setText("买满"+haveuseList.get(position).get("voucher_limit")+"可用");
+            holder.tvBelowAmount.setText("买满"+haveuseList.get(position).get("voucher_limit")+"可用");
             holder.cnName.setText(haveuseList.get(position).get("store_name"));
             holder.cnEndDate.setText(haveuseList.get(position).get("voucher_end_date_text"));
-            String limitUse = "买满" + haveuseList.get(position).get("voucher_limit") + "元可用";
-            holder.cnScope.setText(limitUse);
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("voucher_price"));
+            holder.id_effective_text.setText("使用期限至");
+            holder.use_desc.setText(haveuseList.get(position).get("voucher_des"));
         }
             return convertView;
     }
@@ -155,9 +313,15 @@ public class CouponAdapter extends BaseAdapter {
         TextView cnName;
         TextView cnScope;
         TextView cnAmount;
-        TextView cnUseLimit;
-        TextView cnTime;
+        TextView remain_time;
         TextView cnEndDate;
+        TextView use_desc;
+        TextView show_use_desc;
+        ImageView updown;
+        TextView tvuse;
+        TextView tvBelowAmount;
+        TextView id_effective_text;
+
     }
 
 

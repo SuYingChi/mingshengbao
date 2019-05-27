@@ -5,6 +5,7 @@
     android:id="@+id/activity_gas_payfee"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_gray"
     android:orientation="vertical"
     tools:context="com.msht.minshengbao.functionActivity.gasService.GasPayFeeActivity">
     <include layout="@layout/layout_header"/>
@@ -43,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/margin_width10"
-        android:background="@color/white">
+        android:background="@color/background_gray">
         <ListView
             android:id="@+id/id_address_dataList"
             android:layout_width="match_parent"

@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.msht.minshengbao.androidShop.util.LogUtils;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.Bean.MenuItem;
 import com.msht.minshengbao.downloadVersion.DownloadService;
@@ -65,6 +66,8 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.permissionManager.RuntimeRationale;
+import com.msht.minshengbao.receiver.NetBroadcastReceiver;
+import com.pingplusplus.android.Pingpp;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.yanzhenjie.permission.Action;

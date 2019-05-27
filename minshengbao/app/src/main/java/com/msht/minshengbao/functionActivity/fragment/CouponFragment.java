@@ -9,15 +9,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.adapter.CouponAdapter;
+import com.msht.minshengbao.androidShop.activity.GetRedPacketActivity;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
+import com.msht.minshengbao.androidShop.activity.ShopSuccessActivity;
+import com.msht.minshengbao.androidShop.activity.ShopVouchActivity;
 import com.msht.minshengbao.base.BaseFragment;
 import com.msht.minshengbao.androidShop.ShopConstants;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
+import com.msht.minshengbao.functionActivity.MainActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -36,6 +43,7 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +54,7 @@ public class CouponFragment extends BaseFragment {
     private String userId;
     private String password;
     private String status = "1";
-    private RelativeLayout layoutNoData;
+    private ImageView layoutNoData;
     private Button btnShare;
     private XListView xListView;
     private CouponAdapter mAdapter;
@@ -60,6 +68,11 @@ public class CouponFragment extends BaseFragment {
     private final RequestHandler requestHandler = new RequestHandler(this);
     private int position = 0;
     private int pageTotal;
+    private int voucherPageIndex = 1;
+    private int redPacketpageTotal;
+    private int redPacketpageIndex = 1;
+
+
     public CouponFragment() {
     }
 
@@ -68,6 +81,8 @@ public class CouponFragment extends BaseFragment {
         couponFragment.position = position;
         if (position == 0) {
             couponFragment.status = "1";
+        } else if (position == 2) {
+            couponFragment.status = "";
         } else if (position == 1) {
             couponFragment.status = "";
         }
@@ -123,6 +138,7 @@ public class CouponFragment extends BaseFragment {
                                         reference.status = "1";
                                         if (reference.couponList.size() == 0) {
                                             //  if (reference.status.equals(VariableUtil.VALUE_ONE)){
+                                            reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_get_voucher));
                                             reference.layoutNoData.setVisibility(View.VISIBLE);
                                        /* }else {
                                             reference.layoutNoData.setVisibility(View.GONE);
@@ -139,7 +155,7 @@ public class CouponFragment extends BaseFragment {
                             } else {
                                 reference.onFailure(error);
                             }
-                        } else if (reference.position == 1) {
+                        } else if (reference.position == 2) {
                             JSONObject object = new JSONObject(msg.obj.toString());
                             int resultCode = object.optInt("code");
                             if (resultCode == 200) {
@@ -151,17 +167,58 @@ public class CouponFragment extends BaseFragment {
                                     reference.xListView.stopLoadMore();
                                 }
                                 if (reference.jsonArray.length() > 0) {
-                                    if (reference.pageIndex == 1 && "1".equals(reference.status)) {
+                                    if (reference.voucherPageIndex == 1) {
                                         reference.couponList.clear();
                                     }
                                 }
                                 reference.onGetCouponData();
                                 if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_voucher));
                                     reference.layoutNoData.setVisibility(View.VISIBLE);
                                 } else {
                                     reference.layoutNoData.setVisibility(View.GONE);
                                     reference.mAdapter.notifyDataSetChanged();
                                 }
+                            } else {
+                                reference.onFailure(object.optJSONObject("datas").optString("error"));
+                            }
+                        } else if (reference.position == 1) {
+                            JSONObject object = new JSONObject(msg.obj.toString());
+                            int resultCode = object.optInt("code");
+                            if (resultCode == 200) {
+                                reference.redPacketpageTotal = object.optInt("page_total");
+                                reference.jsonArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(unused);
+                                JSONArray usedArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(used);
+                                JSONArray expireArray = object.optJSONObject("datas").optJSONObject("redpacket_list").optJSONArray(expire);
+                                if (usedArray != null) {
+                                    for (int i = 0; i < usedArray.length(); i++) {
+                                        reference.jsonArray.put(usedArray.optJSONObject(i));
+                                    }
+                                }
+                                if (expireArray != null) {
+                                    for (int i = 0; i < expireArray.length(); i++) {
+                                        reference.jsonArray.put(expireArray.optJSONObject(i));
+                                    }
+                                }
+                                if (reference.refreshType == 0) {
+                                    reference.xListView.stopRefresh(true);
+                                } else if (reference.refreshType == 1) {
+                                    reference.xListView.stopLoadMore();
+                                }
+                                if (reference.jsonArray.length() > 0) {
+                                    if (reference.redPacketpageIndex == 1) {
+                                        reference.couponList.clear();
+                                    }
+                                }
+                                reference.onGetCouponData();
+                                if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_voucher));
+                                    reference.layoutNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    reference.layoutNoData.setVisibility(View.GONE);
+                                    reference.mAdapter.notifyDataSetChanged();
+                                }
+
                             } else {
                                 reference.onFailure(object.optJSONObject("datas").optString("error"));
                             }
@@ -192,6 +249,7 @@ public class CouponFragment extends BaseFragment {
                     String useLimit = jsonObject.getString("use_limit");
                     String startDate = jsonObject.getString("start_date");
                     String endDate = jsonObject.getString("end_date");
+                    String desc = jsonObject.getString("desc");
                     String remainderDays = "";
                     if (jsonObject.has("remainder_days")) {
                         remainderDays = jsonObject.optString("remainder_days");
@@ -206,9 +264,34 @@ public class CouponFragment extends BaseFragment {
                     map.put("end_date", endDate);
                     map.put("remainder_days", remainderDays);
                     map.put("type", status);
+                    map.put("desc",desc);
+                    map.put("show", "0");
                     couponList.add(map);
                 }
             } else if (position == 1) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String rpacket_limit = jsonObject.optString("rpacket_limit");
+                    String rpacket_price = jsonObject.optString("rpacket_price");
+                    String rpacket_start_date_text = jsonObject.getString("rpacket_start_date_text");
+                    String rpacket_end_date_text = jsonObject.getString("rpacket_end_date_text");
+                    String rpacket_title = jsonObject.getString("rpacket_title");
+                    String rpacket_state = jsonObject.getString("rpacket_state");
+                    String rpacket_desc = jsonObject.getString("rpacket_desc");
+                    String left_days = jsonObject.getString("left_days");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("rpacket_limit", rpacket_limit);
+                    map.put("rpacket_price", rpacket_price);
+                    map.put("rpacket_start_date_text", rpacket_start_date_text);
+                    map.put("rpacket_end_date_text", rpacket_end_date_text);
+                    map.put("rpacket_title", rpacket_title);
+                    map.put("rpacket_state", rpacket_state);
+                    map.put("rpacket_desc",rpacket_desc);
+                    map.put("left_days", left_days);
+                    map.put("show", "0");
+                    couponList.add(map);
+                }
+            } else if (position == 2) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     HashMap<String, String> map = new HashMap<String, String>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -217,9 +300,11 @@ public class CouponFragment extends BaseFragment {
                     map.put("voucher_limit", jsonObject.optString("voucher_limit"));
                     map.put("voucher_price", jsonObject.optString("voucher_price"));
                     map.put("voucher_state", jsonObject.optString("voucher_state"));
+                    map.put("voucher_desc", jsonObject.optString("voucher_desc"));
                     map.put("voucher_state_text", jsonObject.optString("voucher_state_text"));
                     map.put("voucher_id", jsonObject.optString("voucher_id"));
-                    map.put("store_id",jsonObject.optString("store_id"));
+                    map.put("store_id", jsonObject.optString("store_id"));
+                    map.put("show", "0");
                     couponList.add(map);
                 }
             }
@@ -263,28 +348,61 @@ public class CouponFragment extends BaseFragment {
         userId = SharedPreferencesUtil.getUserId(getActivity(), SharedPreferencesUtil.UserId, "");
         password = SharedPreferencesUtil.getPassword(getActivity(), SharedPreferencesUtil.Password, "");
         initMyView(mRootView);
-        btnShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ShareMenuActivity.class);
-                startActivityForResult(intent, 1);
-            }
-        });
         return mRootView;
     }
 
     private void initMyView(View mRootView) {
-        layoutNoData = (RelativeLayout) mRootView.findViewById(R.id.id_re_nodata);
-        btnShare = (Button) mRootView.findViewById(R.id.id_btn_share);
+        layoutNoData = (ImageView) mRootView.findViewById(R.id.nodata);
         xListView = (XListView) mRootView.findViewById(R.id.id_dicount_mlistview);
+        TextView get_redpacket = (TextView) mRootView.findViewById(R.id.get_redpacket);
+        if (position == 1) {
+            get_redpacket.setText("领取购物红包");
+            get_redpacket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), GetRedPacketActivity.class));
+                }
+            });
+            get_redpacket.setVisibility(View.VISIBLE);
+        }else if(position == 2){
+            get_redpacket.setText("领更多商家好券");
+            get_redpacket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), ShopVouchActivity.class));
+                }
+            });
+            get_redpacket.setVisibility(View.VISIBLE);
+        }
+        else {
+            get_redpacket.setVisibility(View.GONE);
+        }
         xListView.setPullLoadEnable(true);
-        mAdapter = new CouponAdapter(getContext(), couponList,position);
+        mAdapter = new CouponAdapter(getContext(), couponList, position);
         mAdapter.setOnClickVoucherListener(new CouponAdapter.OnClickVoucherListener() {
             @Override
             public void onClickVoucher(String storeId) {
-                Intent intent = new Intent(getActivity(), ShopKeywordListActivity.class);
-                intent.putExtra("gcid",storeId);
+                Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
+                intent.putExtra("id", storeId);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onGoShopHome() {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("index", 1);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onClikshowDesc(int position) {
+                String show = couponList.get(position).get("show");
+                if("1".equals(show)){
+                    couponList.get(position).put("show","0");
+                }else if("0".equals(show)){
+                    couponList.get(position).put("show","1");
+                }
+                mAdapter.notifyDataSetChanged();
             }
         });
         xListView.setAdapter(mAdapter);
@@ -294,8 +412,10 @@ public class CouponFragment extends BaseFragment {
                 refreshType = 0;
                 if (position == 0) {
                     loadData(1, "1");
+                } else if (position == 2) {
+                    loadShopVoucherData(1);
                 } else if (position == 1) {
-                    loadShopVoucherData(1, "1");
+                    loadShopRedpacketData(1);
                 }
             }
 
@@ -304,10 +424,16 @@ public class CouponFragment extends BaseFragment {
                 refreshType = 1;
                 if (position == 0) {
                     loadData(pageIndex + 1, "1");
+                } else if (position == 2) {
+                    if (voucherPageIndex < pageTotal) {
+                        loadShopVoucherData(voucherPageIndex + 1);
+                    } else {
+                        xListView.stopLoadMore("无更多数据了哦");
+                    }
                 } else if (position == 1) {
-                    if(pageIndex<pageTotal){
-                      loadShopVoucherData(pageIndex + 1, "1");
-                    }else {
+                    if (redPacketpageIndex < redPacketpageTotal) {
+                        loadShopRedpacketData(redPacketpageIndex + 1);
+                    } else {
                         xListView.stopLoadMore("无更多数据了哦");
                     }
                 }
@@ -321,19 +447,35 @@ public class CouponFragment extends BaseFragment {
         if (position == 0) {
             customDialog.show();
             loadData(1, "1");
+        } else if (position == 2) {
+            customDialog.show();
+            loadShopVoucherData(1);
         } else if (position == 1) {
             customDialog.show();
-            loadShopVoucherData(1, "1");
+            loadShopRedpacketData(1);
         }
     }
 
-    private void loadShopVoucherData(int pageIndex, String status) {
-        this.pageIndex = pageIndex;
-        this.status = status;
+    private void loadShopVoucherData(int pageIndex) {
+        this.voucherPageIndex = pageIndex;
         String validateURL = ShopConstants.VOUCHER_LIST;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("key", ShopSharePreferenceUtil.getInstance().getKey());
         textParams.put("curpage", pageIndex + "");
+        textParams.put("page", "10");
+        OkHttpRequestUtil.getInstance(MyApplication.getMsbApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
+    }
+
+    private static final String unused = "unused";
+    private static final String used = "used";
+    private static final String expire = "expire";
+
+    private void loadShopRedpacketData(int redPacketpageIndex) {
+        this.redPacketpageIndex = redPacketpageIndex;
+        String validateURL = ShopConstants.GET_RED_PACKET_LIST;
+        HashMap<String, String> textParams = new HashMap<String, String>();
+        textParams.put("key", ShopSharePreferenceUtil.getInstance().getKey());
+        textParams.put("curpage", redPacketpageIndex + "");
         textParams.put("page", "10");
         OkHttpRequestUtil.getInstance(MyApplication.getMsbApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
     }

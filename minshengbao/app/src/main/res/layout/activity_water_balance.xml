@@ -18,7 +18,8 @@
             android:id="@+id/id_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ScrollView
+            <com.msht.minshengbao.custom.widget.MyScrollview
+                android:id="@+id/id_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
@@ -75,9 +76,10 @@
                         </com.msht.minshengbao.custom.widget.MyNoScrollGridView>
                     </RelativeLayout>
                 </LinearLayout>
-            </ScrollView>
+            </com.msht.minshengbao.custom.widget.MyScrollview>
         </com.msht.minshengbao.custom.widget.VerticalSwipeRefreshLayout>
         <include layout="@layout/layout_header"/>
     </FrameLayout>
-    <include layout="@layout/layout_water_buy_discount_purchase_view"/>
+    <include layout="@layout/layout_water_buy_discount_purchase_view"
+        android:id="@+id/id_pay_layout"/>
 </LinearLayout>

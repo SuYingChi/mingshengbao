@@ -132,7 +132,7 @@
             <TextView
                 android:id="@+id/tv_no_data"
                 style="@style/shopBlackTitleText"
-                android:text="该商品暂无评价"
+                android:text="居然一条评论都没有，你来写写吧！"
                 android:layout_below="@id/layoutEmpty"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_Modules"

@@ -45,8 +45,7 @@
         <com.jcodecraeer.xrecyclerview.XRecyclerView
             android:id="@+id/id_redPacket_data"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="@dimen/margin_width300">
+            android:layout_height="wrap_content">
         </com.jcodecraeer.xrecyclerview.XRecyclerView>
         <RelativeLayout
             android:id="@+id/id_noData_layout"

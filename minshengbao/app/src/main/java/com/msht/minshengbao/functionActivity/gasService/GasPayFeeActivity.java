@@ -109,11 +109,11 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
+                String address = jsonObject.getString("address");
                 String customerNo = jsonObject.getString("customerNo");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
-                map.put("name", name);
+                map.put("name", address);
                 map.put("customerNo", customerNo);
                 houseList.add(map);
             }
@@ -221,7 +221,7 @@ public class GasPayFeeActivity extends BaseActivity implements View.OnClickListe
         String validateURL = "";
         if (requestType == 0) {
             textParams.put("meterType", "11");
-            validateURL = UrlUtil.SELECT_ADDRESS_URL;
+            validateURL = UrlUtil.NEW_ADDRESS_MANAGER_URL;
         } else {
             validateURL = UrlUtil.SEARCH_BILL_GAS_URL;
             textParams.put("CustomerNo", customerNo);

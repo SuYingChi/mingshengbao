@@ -94,9 +94,11 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
                 VariableUtil.mPos=pos;
                 massFlowWaterCardTypeAdapter.notifyDataSetChanged();
                 amount= mList.get(pos).get("amount");
+                realAmount=amount;
                 giveFee = mList.get(pos).get("giveFee");
                 packId=mList.get(pos).get("id");
-                String activityType=mList.get(0).get("activityType");
+                couponCode ="";
+                String activityType=mList.get(pos).get("activityType");
                 if (!TextUtils.isEmpty(activityType)){
                     switch (activityType){
                         case ConstantUtil.VALUE_EIGHT:
@@ -112,17 +114,17 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
                 }else {
                     childType="0";
                 }
+                onGetCoupons(amount);
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case ConstantUtil.VALUE1:
-                if (resultCode==ConstantUtil.VALUE1){
-                    setResult(0x001);
+                if (resultCode==ConstantUtil.VALUE2){
+                    setResult(0x002);
                     finish();
                 }
                 break;
@@ -149,9 +151,11 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(context,WaterPayRechargeActivity.class);
                 intent.putExtra("amount",amount);
+                intent.putExtra("realAmount",realAmount);
                 intent.putExtra("giveFee",giveFee);
                 intent.putExtra("packId",packId);
                 intent.putExtra("childType",childType);
+                intent.putExtra("couponCode",couponCode);
                 startActivityForResult(intent,1);
             }
         });
@@ -287,6 +291,7 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
             amount= mList.get(0).get("amount");
             giveFee = mList.get(0).get("giveFee");
             packId=mList.get(0).get("id");
+            realAmount=amount;
             String activityType=mList.get(0).get("activityType");
             if (!TextUtils.isEmpty(activityType)){
                 switch (activityType){
@@ -303,7 +308,7 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
             }else {
                 childType="0";
             }
-            String amountText="实付"+amount+"元";
+            String amountText="实付"+realAmount+"元";
             tvRealAmount.setText(amountText);
             onGetCoupons(amount);
         }else {
@@ -363,11 +368,15 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
                     tvDiscount.setText(discountText);
                     couponLayout.setEnabled(true);
                 }else {
+                    couponCode = "";
+                    realAmount=amount;
                     couponLayout.setEnabled(false);
                     tvDescribeText.setText("无优惠券可用");
                     tvDiscount.setVisibility(View.GONE);
                     String discountText="已优惠0.0元";
                     tvDiscount.setText(discountText);
+                    String amountText="实付"+realAmount+"元";
+                    tvRealAmount.setText(amountText);
                 }
             }else {
                 CustomToast.showWarningLong(error);
@@ -397,5 +406,14 @@ public class MassFlowWaterCardPurchaseActivity extends BaseActivity {
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
             return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (customDialog!=null&&customDialog.isShowing()){
+            customDialog.dismiss();
+        }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

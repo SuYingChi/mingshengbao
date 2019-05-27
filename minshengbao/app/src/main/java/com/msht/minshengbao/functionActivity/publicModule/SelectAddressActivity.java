@@ -46,9 +46,7 @@ import java.util.HashMap;
  * @date 2017/7/2  
  */
 public class SelectAddressActivity extends BaseActivity {
-   // private ListView mListView;
     private XRecyclerView mRecyclerView;
-  //  private AddressAdapter mAdapter;
     private SelectAddressAdapter mAdapter;
     private View layoutView;
     private View layoutBtnNew;
@@ -257,87 +255,13 @@ public class SelectAddressActivity extends BaseActivity {
     }
     private void initData() {
         customDialog.show();
-        String validateURL = UrlUtil.AddressManage_Url;
+      //  String validateURL = UrlUtil.AddressManage_Url;
+        String validateURL = UrlUtil.NEW_ADDRESS_MANAGER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
         OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
-
-    private class AddressAdapter extends BaseAdapter {
-
-        private Context mContext = null;
-        public AddressAdapter(Context context) {
-            this.mContext = context;
-        }
-        @Override
-        public int getCount() {
-            if (addrList!=null){
-                return addrList.size();
-            }else {
-                return 0;
-            }
-        }
-        @Override
-        public Object getItem(int position) {
-            if (addrList!=null){
-                return addrList.get(position);
-            }else {
-                return null;
-            }
-        }
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final int thisposition=position;
-            Holder holder;
-            if(convertView==null){
-                holder = new Holder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address_manage, null);
-                holder.cnName =(TextView)convertView.findViewById(R.id.id_tv_name);
-                holder.cnPhone =(TextView)convertView.findViewById(R.id.id_tv_phone);
-                holder.cnAddress = (TextView) convertView.findViewById(R.id.id_tv_address);
-                holder.imgEdit =(ImageView)convertView.findViewById(R.id.id_edit_img);
-                holder.editLayout =convertView.findViewById(R.id.id_edit_layout);
-                convertView.setTag(holder);
-            }else{
-                holder = (Holder) convertView.getTag();
-            }
-            holder.cnPhone.setText(addrList.get(position).get("phone"));
-            holder.cnName.setText(addrList.get(position).get("name"));
-            holder.cnAddress.setText(addrList.get(position).get("address"));
-            holder.editLayout.setVisibility(View.GONE);
-            holder.imgEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String address=addrList.get(thisposition).get("address");
-                    String id = addrList.get(thisposition).get("id");
-                    String cityId=addrList.get(thisposition).get("city_id");
-                    String longitude = addrList.get(thisposition).get("longitude");
-                    String latitude =addrList.get(thisposition).get("latitude");
-                    Intent intent=new Intent(mContext,ModifyAddressActivity.class);
-                    intent.putExtra("id",id);
-                    intent.putExtra("address",address);
-                    intent.putExtra("city_id",cityId);
-                    intent.putExtra("longitude",longitude);
-                    intent.putExtra("latitude",latitude);
-                    startActivityForResult(intent,1);
-                }
-            });
-            return convertView;
-        }
-        class Holder{
-            View editLayout;
-            ImageView imgEdit;
-            TextView cnAddress;
-            TextView cnName;
-            TextView cnPhone;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

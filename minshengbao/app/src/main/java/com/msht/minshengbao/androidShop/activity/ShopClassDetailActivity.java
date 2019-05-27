@@ -175,8 +175,7 @@ public class ShopClassDetailActivity extends ShopBaseActivity implements IShopCl
         rclLeft.setAdapter(classDetailLeftAdapter);
 
         rclRight.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rclRight.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        classDetailRightAdapter = new ClassDetailRightAdapter(this);
+        classDetailRightAdapter = new ClassDetailRightAdapter(this,R.layout.item_class_detail_right);
         classDetailRightAdapter.setOnAddCarListener(this);
         classDetailRightAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override

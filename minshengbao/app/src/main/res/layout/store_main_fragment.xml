@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/margin_Modules"
         android:paddingBottom="@dimen/margin_Modules"
-        android:background="@color/white"
         android:layout_marginBottom="@dimen/margin_Modules"
         >
         <android.support.v7.widget.RecyclerView
@@ -35,7 +34,9 @@
         android:id="@+id/cycleView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_width200"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/margin_Modules"
+        />
     <LinearLayout
         android:id="@+id/ll_collect"
         android:layout_width="match_parent"
@@ -88,15 +89,14 @@
         android:id="@+id/ll_rec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_Modules"
-        android:paddingBottom="@dimen/margin_Modules"
-        android:background="@color/white"
         android:orientation="vertical"
         android:layout_marginBottom="@dimen/margin_Modules"
         >
         <TextView
             style="@style/shopBlackTitleText"
             android:text="店家推荐"
+            android:layout_width="match_parent"
+            android:background="@color/white"
             android:layout_gravity="left"
             />
         <android.support.v7.widget.RecyclerView
@@ -104,7 +104,6 @@
             style="@style/rcl"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/margin_Modules"
             />
     </LinearLayout>
 </LinearLayout>

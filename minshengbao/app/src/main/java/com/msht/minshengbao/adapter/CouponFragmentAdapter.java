@@ -12,7 +12,7 @@ import com.msht.minshengbao.functionActivity.fragment.CouponFragment;
  */
 
 public class CouponFragmentAdapter  extends FragmentPagerAdapter {
-    private String fragments[] = {"民生服务优惠券","民生商城优惠券"};
+    private String fragments[] = {"服务优惠券","商城红包","商城优惠券"};
     public CouponFragmentAdapter(FragmentManager fm, Context applicationContext) {
         super(fm);
     }

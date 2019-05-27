@@ -23,6 +23,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.msht.minshengbao.Bean.RepairNumBean;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IRepairOrderNumView;
@@ -44,11 +45,14 @@ import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.util.ShopSharePreferenceUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IOrderNumView;
 import com.msht.minshengbao.custom.widget.CustomToast;
+import com.msht.minshengbao.events.UpdateBalanceEvent;
+import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.gasService.GasServerOrderActivity;
 import com.msht.minshengbao.functionActivity.invoiceModule.InvoiceHomeActivity;
 import com.msht.minshengbao.functionActivity.myActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ConsultRecommendActivity;
 import com.msht.minshengbao.functionActivity.myActivity.CustomerNoManageActivity;
+import com.msht.minshengbao.functionActivity.myActivity.DiscountCouponActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MoreSettingActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MySettingActivity;
 import com.msht.minshengbao.functionActivity.myActivity.MyWalletActivity;
@@ -69,6 +73,9 @@ import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -112,6 +119,8 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private TextView tvWaitGet;
     private TextView tvWaitPay;
     private TextView tvBalance;
+    private TextView tvRedCard;
+    private TextView tvNickname;
 
     private TextView tvRefundOrder;
     private View llShopOrder;
@@ -272,6 +281,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         if (mRootView == null) {
             mRootView = LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my, null, false);
         }
+        EventBus.getDefault().register(this);
         String avatarUrl = SharedPreferencesUtil.getAvatarUrl(mContext, SharedPreferencesUtil.AvatarUrl, "");
         nickname = SharedPreferencesUtil.getNickName(mContext, SharedPreferencesUtil.NickName, "");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -295,7 +305,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private void getBalance() {
         String userId= SharedPreferencesUtil.getUserId(mActivity, SharedPreferencesUtil.UserId,"");
         String password=SharedPreferencesUtil.getPassword(mActivity, SharedPreferencesUtil.Password,"");
-        String validateURL = UrlUtil.Mywallet_balanceUrl;
+        String validateURL = UrlUtil.USER_INFO_GAS_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
@@ -315,18 +325,45 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private void onAnalysisData(String s) {
         try {
             JSONObject object = new JSONObject(s);
-            String results=object.optString("result");
+            String results = object.optString("result");
             String error = object.optString("error");
-            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                JSONObject data=object.getJSONObject("data");
-                String balance=data.optString("balance");
-                tvBalance.setText(balance);
-            }else {
-                CustomToast.showErrorLong(error);
+            JSONObject objectJson = object.getJSONObject("data");
+            if (results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                onPersonalInformation(objectJson);
+            } else {
+                CustomToast.showWarningLong(error);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void onPersonalInformation(JSONObject objectJson) {
+        String mNickname=objectJson.optString("nickname");
+        String phoneNo = objectJson.optString("phone");
+        String avatar=objectJson.optString("avatar");
+        String wallet=objectJson.optString("wallet");
+        String totalCouponNum=objectJson.optString("totalCouponNum");
+        tvBalance.setText(wallet);
+        tvRedCard.setText(totalCouponNum);
+        if (!TextUtils.isEmpty(mNickname)) {
+            tvNickname.setText(mNickname);
+        } else {
+            if (RegularExpressionUtil.isPhone(phoneNo)) {
+                phoneNo = phoneNo.substring(0, 3) + "****" + phoneNo.substring(7, phoneNo.length());
+            }
+            tvNickname.setText(phoneNo);
+
+        }
+        onSetPortraitImage(avatar);
+    }
+    private void onSetPortraitImage(String url) {
+        Uri uri = Uri.parse(url);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setAutoPlayAnimations(true)
+                //. 其他设置（如果有的话）
+                .build();
+        mPortrait.setController(controller);
     }
     private void initEvent(View view) {
         view.findViewById(R.id.id_repair_order_layout).setOnClickListener(this);
@@ -339,18 +376,83 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         view.findViewById(R.id.id_setting_img).setOnClickListener(this);
         view.findViewById(R.id.id_right_massage).setOnClickListener(this);
         view.findViewById(R.id.id_wallet_layout).setOnClickListener(this);
+        view.findViewById(R.id.id_red_packet_layout).setOnClickListener(this);
         mPortrait.setOnClickListener(this);
+        onUnReadMessage();
+        btnMessage.setOnClickListener(new MenuItemM.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goMessageCenter();
+            }
+        });
+        llCollect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ShopCollectionActivity.class));
+            }
+        });
 
+        llFootprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mActivity, ShopFootprintActivity.class));
+            }
+        });
+        llShopOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 0);
+                intent.putExtra("indexChild", 0);
+                startActivity(intent);
+            }
+        });
+        llwaitPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 0);
+                intent.putExtra("indexChild", 1);
+                startActivity(intent);
+            }
+        });
+        llwaitget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 0);
+                intent.putExtra("indexChild", 3);
+                startActivity(intent);
+            }
+        });
+        llwaitEveluate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 0);
+                intent.putExtra("indexChild", 4);
+                startActivity(intent);
+            }
+        });
+        llrefund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 1);
+                intent.putExtra("indexChild", 0);
+                startActivity(intent);
+            }
+        });
     }
-
     private void initView(View view) {
         myScrollview = (MyScrollview) view.findViewById(R.id.id_scrollview);
         layoutMySetting = (RelativeLayout) view.findViewById(R.id.id_my_setting);
         btnMessage = (MenuItemM) view.findViewById(R.id.id_mim_message);
         mPortrait = (SimpleDraweeView) view.findViewById(R.id.id_portrait_view);
         tvNavigation = (TextView) view.findViewById(R.id.id_tv_naviga);
-        TextView tvNickname = (TextView) view.findViewById(R.id.id_tv_nickname);
+        tvNickname = (TextView) view.findViewById(R.id.id_tv_nickname);
         tvBalance=(TextView)view.findViewById(R.id.id_wallet_value) ;
+        tvRedCard=(TextView)view.findViewById(R.id.id_red_card_num) ;
         tvNickname.setOnClickListener(this);
         if (!TextUtils.isEmpty(nickname)) {
             tvNickname.setText(nickname);
@@ -362,86 +464,20 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             tvNickname.setText(userName);
 
         }
-        onUnReadMessage();
-        btnMessage.setOnClickListener(new MenuItemM.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goMessageCenter();
-            }
-        });
-        llCollect =view.findViewById(R.id.id_collect_layout);
-        tvCollect = (TextView) view.findViewById(R.id.id_collect_value);
-        tvFootprint = (TextView) view.findViewById(R.id.id_footprint_num);
-        llCollect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ShopCollectionActivity.class));
-            }
-        });
-        llFootprint =view.findViewById(R.id.id_footprint_layout);
-        llFootprint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mActivity, ShopFootprintActivity.class));
-            }
-        });
-        llShopOrder=view.findViewById(R.id.id_mall_order_layout);
-        llShopOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
-                intent.putExtra("index", 0);
-                intent.putExtra("indexChild", 0);
-                mActivity.startActivity(intent);
-            }
-        });
-        llwaitPay = (LinearLayout) view.findViewById(R.id.my_wait_pay);
-        llwaitPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
-                intent.putExtra("index", 0);
-                intent.putExtra("indexChild", 1);
-                startActivity(intent);
-            }
-        });
-        llwaitget = (LinearLayout) view.findViewById(R.id.my_wait_get);
-        llwaitget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
-                intent.putExtra("index", 0);
-                intent.putExtra("indexChild", 3);
-                startActivity(intent);
-            }
-        });
-        llwaitEveluate = (LinearLayout) view.findViewById(R.id.my_wait_eveluate);
-        llwaitEveluate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
-                intent.putExtra("index", 0);
-                intent.putExtra("indexChild", 4);
-                startActivity(intent);
-            }
-        });
-        llrefund = (LinearLayout) view.findViewById(R.id.my_refund);
-        llrefund.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
-                intent.putExtra("index", 1);
-                intent.putExtra("indexChild", 0);
-                startActivity(intent);
-            }
-        });
         tvWaitEvaluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
         tvWaitGet = (TextView) view.findViewById(R.id.wait_get_order_num);
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
         tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
-
+        llCollect =view.findViewById(R.id.id_collect_layout);
+        tvCollect = (TextView) view.findViewById(R.id.id_collect_value);
+        tvFootprint = (TextView) view.findViewById(R.id.id_footprint_num);
+        llFootprint =view.findViewById(R.id.id_footprint_layout);
+        llShopOrder=view.findViewById(R.id.id_mall_order_layout);
+        llwaitPay = (LinearLayout) view.findViewById(R.id.my_wait_pay);
+        llwaitget = (LinearLayout) view.findViewById(R.id.my_wait_get);
+        llwaitEveluate = (LinearLayout) view.findViewById(R.id.my_wait_eveluate);
+        llrefund = (LinearLayout) view.findViewById(R.id.my_refund);
     }
-
     private void onUnReadMessage() {
         if (VariableUtil.messageNum >= MAX_MASSAGE) {
             btnMessage.setUnReadCount(MAX_MASSAGE);
@@ -460,11 +496,9 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             }
         });
     }
-
     private void initSetListener() {
         myScrollview.setScrollViewListener(this);
     }
-
     @Override
     public void onScrollChanged(MyScrollview scrollView, int l, int t, int oldl, int oldt) {
         if (t <= 0) {
@@ -533,9 +567,16 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             case R.id.id_share_button:
                 goShare();
                 break;
+            case R.id.id_red_packet_layout:
+                onRedCard();
+                break;
             default:
                 break;
         }
+    }
+    private void onRedCard() {
+        Intent discount=new Intent(mContext, DiscountCouponActivity.class);
+        startActivityForResult(discount,7);
     }
     private void onRepairOrder(int i) {
         Intent intent = new Intent(mContext, RepairOrderListActivity.class);
@@ -589,12 +630,10 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         Intent intent = new Intent(mContext, MyWalletActivity.class);
         startActivityForResult(intent, 0x004);
     }
-
     private void goInvoice() {
         Intent intent = new Intent(mContext, InvoiceHomeActivity.class);
         startActivity(intent);
     }
-
     private void goGasServer() {
         Intent intent = new Intent(mContext, GasServerOrderActivity.class);
         startActivity(intent);
@@ -609,7 +648,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         Intent intent = new Intent(mContext, CustomerNoManageActivity.class);
         startActivity(intent);
     }
-
     private void goMoreSetting() {
         Intent intent = new Intent(mContext, MoreSettingActivity.class);
         startActivityForResult(intent, 0x005);
@@ -639,6 +677,13 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UpdateBalanceEvent messageEvent) {
+       // tvBalance.setText(messageEvent.getMessage());
+        if (messageEvent.getMessage()){
+            getBalance();
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -656,6 +701,9 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(this);
         OkHttpRequestManager.getInstance(getContext()).requestCancel(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
 }

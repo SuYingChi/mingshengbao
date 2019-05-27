@@ -97,6 +97,12 @@ public class ShopConstants {
     public static final String STORE_PROMOTION_SHARE = BASE_URL+"index.php?act=store&op=store_promotion_share";
     public static final String PROMOTION_RULE = BASE_URL+"index.php?act=pintuan&op=pintuan_rules";
     public static final String PINGTUAN_DETAIL = BASE_URL+"index.php?act=pintuan&op=info";
+    public static final String CODE_KEY = BASE_URL+"index.php?act=seccode&op=makecodekey";
+    public static final String CODE_BITMAP = BASE_URL+"index.php?act=seccode&op=makecode";
+    public static final String GET_RED_PACKET = BASE_URL+"index.php?act=member_redpacket&op=rp_pwex";
+    public static final String GET_RED_PACKET_LIST = BASE_URL+"index.php?act=member_redpacket&op=redpacket_list";
+    public static final String GET_VOUCHER_CENTER_LIST = BASE_URL+"index.php?act=voucher&op=voucher_tpl_list";
+
     public static String getImChatUrl(String t_id, String key) {
         return IM_CHAT + "t_id=" + t_id + "&key=" + key;
     }

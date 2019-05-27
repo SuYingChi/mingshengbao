@@ -441,6 +441,8 @@
         <activity android:name=".functionActivity.myActivity.NewAddressManagerActivity" />
         <activity android:name=".functionActivity.myActivity.CorrelationGasCustomerNoActivity" />
         <activity android:name=".functionActivity.waterApp.MassFlowWaterCardPurchaseActivity"></activity>
+        <activity android:name=".androidShop.activity.GetRedPacketActivity" />
+        <activity android:name=".androidShop.activity.ShopVouchActivity" />
     </application>
 
 </manifest>

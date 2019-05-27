@@ -21,13 +21,20 @@ import android.widget.TextView;
 import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.androidShop.adapter.ClassDetailRightAdapter;
 import com.msht.minshengbao.androidShop.adapter.HaveHeadRecyclerAdapter;
+import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.adapter.StoreGoodListAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.AddCarBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.StoreGoodBean;
 import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
+import com.msht.minshengbao.androidShop.viewInterface.IShopAddCarView;
 import com.msht.minshengbao.androidShop.viewInterface.IStoreSearchGoodListView;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -43,7 +50,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class StoreSearchGoodListActivity extends ShopBaseActivity implements IStoreSearchGoodListView, OnRefreshListener, OnLoadMoreListener {
+public class StoreSearchGoodListActivity extends ShopBaseActivity implements IStoreSearchGoodListView, OnRefreshListener, OnLoadMoreListener, ClassDetailRightAdapter.AddCarListener, IShopAddCarView {
     @BindView(R.id.refreshlayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.rcl)
@@ -83,11 +90,10 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
     private Drawable grid2;
     private Drawable grid;
     private boolean isGrid = false;
-    private DividerItemDecoration dividerItemDecoration2;
-    private DividerItemDecoration dividerItemDecoration;
-    private StoreGoodListAdapter adapter;
-    private List<StoreGoodBean> goodlist=new ArrayList<>();
+    private ClassDetailRightAdapter adapter;
+    private List<ClassDetailRightBean.DatasBean.GoodsListBean> goodlist=new ArrayList<>();
     private String keyword;
+    private ClassDetailRightAdapter gridAdapter;
 
     @Override
     protected void setLayout() {
@@ -128,16 +134,17 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
         refreshLayout.setOnLoadMoreListener(this);
         linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        rcl.addItemDecoration(dividerItemDecoration);
-        adapter = new StoreGoodListAdapter(this,R.layout.item_keyword_search,goodlist);
-        adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
+        adapter = new ClassDetailRightAdapter(this,R.layout.item_class_detail_right);
+        adapter.setOnAddCarListener(this);
+        adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String id = goodlist.get(position).getGoods_id();
-                onShopItemViewClick("goods",id);
+                ClassDetailRightBean.DatasBean.GoodsListBean item = goodlist.get(position);
+                String goodsId = item.getGoods_id();
+                onShopItemViewClick("goods", goodsId);
             }
         });
+        adapter.setDatas(goodlist);
         rcl.setAdapter(adapter);
         upTriangle = getResources().getDrawable(R.drawable.shop_up_triangle);
         downTriangle = getResources().getDrawable(R.drawable.shop_down_triangle);
@@ -195,7 +202,7 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
             refreshLayout.setNoMoreData(false);
             JSONArray goodArray = obj.optJSONObject("datas").optJSONArray("goods_list");
             for(int i=0;i<goodArray.length();i++){
-                goodlist.add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),StoreGoodBean.class));
+                goodlist.add(JsonUtil.toBean(goodArray.optJSONObject(i).toString(),ClassDetailRightBean.DatasBean.GoodsListBean.class));
             }
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {
@@ -286,13 +293,6 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
             default:
                 break;
         }
-        if(isGrid){
-            rcl.setLayoutManager(linearLayoutManager);
-            isGrid = false;
-            iv.setImageDrawable(grid);
-            rcl.addItemDecoration(dividerItemDecoration);
-
-        }
         curPage = 1;
         ShopPresenter.getStoreSearchList(this);
     }
@@ -333,6 +333,19 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
                             }
                         };
                     }
+                    if(gridAdapter == null){
+                        gridAdapter = new ClassDetailRightAdapter(this,R.layout.item_grid_keyword_list);
+                        gridAdapter.setOnAddCarListener(this);
+                        gridAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                ClassDetailRightBean.DatasBean.GoodsListBean item = goodlist.get(position);
+                                String goodsId = item.getGoods_id();
+                                onShopItemViewClick("goods", goodsId);
+                            }
+                        });
+                        gridAdapter.setDatas(goodlist);
+                    }
                     rcl.setLayoutManager(gridLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -340,15 +353,8 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid2);
                     isGrid = true;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(gridAdapter);
                 }else {
-                    if (linearLayoutManager == null) {
-                        linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-                    }
                     rcl.setLayoutManager(linearLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -356,11 +362,7 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid);
                     isGrid = false;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(adapter);
                 }
                 break;
             default:
@@ -373,4 +375,28 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
+
+    @Override
+    public void addCar(ClassDetailRightBean.DatasBean.GoodsListBean goods) {
+        if (TextUtils.isEmpty(getKey())) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            if(1==goods.getCart()) {
+                ShopPresenter.addCar(this,goods.getGoods_id());
+            }else {
+                String goodsId = goods.getGoods_id();
+                onShopItemViewClick("goods", goodsId);
+            }
+        }
+    }
+
+
+    @Override
+    public void onAddCarSuccess(String s) {
+        AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
+        if (bean != null && TextUtils.equals(bean.getDatas(), "1")) {
+            PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100);
+        }
+    }
+
 }

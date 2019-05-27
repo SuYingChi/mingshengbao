@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -61,7 +61,9 @@
                     android:id="@+id/id_recharge_img"
                     android:layout_width="@dimen/margin_width40"
                     android:layout_height="@dimen/margin_width40"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:layout_marginTop="@dimen/margin_width15"
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:src="@drawable/mywallet_recharge_xh"/>
@@ -69,7 +71,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_recharge_img"
-                    android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_toEndOf="@+id/id_recharge_img"
+                    android:layout_toStartOf="@+id/id_forward1"
+                    android:layout_toLeftOf="@+id/id_forward1"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_centerVertical="true">
                     <TextView
                         android:id="@+id/id_text4"
@@ -87,12 +93,16 @@
                         android:text="@string/recharge_hint"/>
                 </RelativeLayout>
                 <ImageView
+                    android:id="@+id/id_forward1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/forward_2x"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_width10"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"/>
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
@@ -110,7 +120,9 @@
                     android:id="@+id/id_gaspayfee_img"
                     android:layout_width="@dimen/margin_width40"
                     android:layout_height="@dimen/margin_width40"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:layout_marginTop="@dimen/margin_width15"
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:src="@drawable/mywallet_payfee_xh"/>
@@ -118,7 +130,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_gaspayfee_img"
+                    android:layout_toEndOf="@+id/id_gaspayfee_img"
                     android:layout_marginLeft="@dimen/margin_width10"
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_toLeftOf="@+id/id_forward2"
+                    android:layout_toStartOf="@+id/id_forward2"
                     android:layout_centerVertical="true">
                     <TextView
                         android:id="@+id/id_text5"
@@ -136,30 +152,32 @@
                         android:text="@string/autopay_hint"/>
                 </RelativeLayout>
                 <ImageView
+                    android:id="@+id/id_forward2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/picture_text"
                     android:src="@drawable/forward_2x"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_width10"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"/>
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:background="@color/background_gray"
-                android:layout_marginRight="@dimen/margin_width10"
-                android:layout_marginLeft="@dimen/margin_width10"/>
+            <include layout="@layout/layout_line_gray"/>
             <RelativeLayout
                 android:id="@+id/id_layout_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/margin_width60"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
                 <ImageView
                     android:id="@+id/id_place_order"
                     android:layout_width="@dimen/margin_width40"
                     android:layout_height="@dimen/margin_width40"
+                    android:contentDescription="@string/picture_text"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:layout_marginTop="@dimen/margin_width15"
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:src="@drawable/mywallet_cardarch_xh"/>
@@ -167,8 +185,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/id_place_order"
+                    android:layout_toEndOf="@+id/id_place_order"
+                    android:layout_toLeftOf="@+id/id_forward"
+                    android:layout_toStartOf="@+id/id_forward"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10"
-                    android:layout_centerVertical="true">
+                    android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent">
                     <TextView
                         android:id="@+id/id_text6"
                         android:layout_width="wrap_content"
@@ -185,12 +209,16 @@
                         android:text="@string/card_hint"/>
                 </RelativeLayout>
                 <ImageView
+                    android:id="@+id/id_forward"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/forward_2x"
+                    android:contentDescription="@string/picture_text"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/margin_width10"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

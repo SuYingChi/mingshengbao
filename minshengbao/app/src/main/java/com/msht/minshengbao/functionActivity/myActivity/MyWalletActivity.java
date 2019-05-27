@@ -17,7 +17,10 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.custom.Dialog.SelfPayDialog;
+import com.msht.minshengbao.events.NetWorkEvent;
+import com.msht.minshengbao.events.UpdateBalanceEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -213,6 +216,7 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
                 //充值成功
                 if (resultCode==1){
                     initData();
+                    EventBus.getDefault().post(new UpdateBalanceEvent(true));
                 }
                 break;
             case 2:

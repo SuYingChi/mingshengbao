@@ -8,7 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.androidShop.adapter.CircleScrollerRecyclerAdapter;
@@ -28,11 +30,17 @@ public class SelectSiteAreaDialog extends Dialog {
     private final IGetInvContentView iGetInvContentView;
     @BindView(R.id.rcl)
     RecyclerView rcl;
-
+    @BindView(R.id.cancel)
+    TextView cancel;
+    @BindView(R.id.area)
+    TextView area;
+    @BindView(R.id.selected)
+    TextView selected;
     private Context context;
     private InvContentAdapter adapter;
 
     private List<InvContentItemBean> list;
+    private SelectSiteInterface selectSiteInterface;
 
 
     public SelectSiteAreaDialog(@NonNull Context context, IGetInvContentView iGetInvContentView, List<InvContentItemBean> list) {
@@ -60,7 +68,7 @@ public class SelectSiteAreaDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_inv_content_dialog);
+        setContentView(R.layout.select_site_dialog);
         ButterKnife.bind(this);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
@@ -79,9 +87,33 @@ public class SelectSiteAreaDialog extends Dialog {
             }
         });
         rcl.setAdapter(adapter);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectSiteInterface.onCanceled();
+            }
+        });
+        selected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectSiteInterface.onSelected();
+            }
+        });
     }
 
     public void notifyRcl() {
         adapter.notifyDataSetChanged();
+    }
+    public void  setiSelectSiteInterface(SelectSiteInterface selectSiteInterface){
+        this.selectSiteInterface =selectSiteInterface;
+    }
+
+    public void setAreaTitle(String invContent) {
+        area.setText(invContent);
+    }
+
+    public  interface SelectSiteInterface{
+      void   onCanceled();
+      void onSelected();
     }
 }

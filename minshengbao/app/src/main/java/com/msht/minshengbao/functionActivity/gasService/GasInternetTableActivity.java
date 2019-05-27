@@ -231,11 +231,11 @@ public class GasInternetTableActivity extends BaseActivity implements View.OnCli
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
+                String address = jsonObject.getString("address");
                 String customerNo = jsonObject.getString("customerNo");
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("id", id);
-                map.put("name", name);
+                map.put("name", address);
                 map.put("customerNo", customerNo);
                 houseList.add(map);
             }
@@ -341,7 +341,7 @@ public class GasInternetTableActivity extends BaseActivity implements View.OnCli
         textParams.put("password",password);
         textParams.put("category","1");
         textParams.put("meterType","17");
-        String validateURL= UrlUtil.SELECT_ADDRESS_URL;;
+        String validateURL= UrlUtil.NEW_ADDRESS_MANAGER_URL;
         SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
     }
     private void initFindViewId() {

@@ -66,6 +66,7 @@ public class ModifyAddressActivity extends BaseActivity implements View.OnClickL
     private String    customerNo;
     private String    mCustomerNo;
     private int       requestCode=0;
+    private boolean   isChangeCustomer=false;
     private CustomDialog customDialog;
     private Context context;
     private ModifyAddressActivity mActivity;
@@ -244,9 +245,16 @@ public class ModifyAddressActivity extends BaseActivity implements View.OnClickL
                     .setOnPositiveClickListener(new EnsureDialog.OnPositiveClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            isChangeCustomer = !TextUtils.isEmpty(mCustomerNo) && !mCustomerNo.equals(customerNo);
                         }
-                    }).show();
+                    })
+                    .setCancelClickListener(new EnsureDialog.OnCancelClickListener() {
+                        @Override
+                        public void onCancelClick(View v) {
+                            isChangeCustomer=false;
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -418,6 +426,9 @@ public class ModifyAddressActivity extends BaseActivity implements View.OnClickL
         textParams.put("id",id);
         textParams.put("city_id",cityId);
         textParams.put("address",mAddress);
+        if (isChangeCustomer){
+            textParams.put("customerNo",mCustomerNo);
+        }
         textParams.put("name",mName);
         textParams.put("phone",mPhone);
         textParams.put("longitude",longitude);

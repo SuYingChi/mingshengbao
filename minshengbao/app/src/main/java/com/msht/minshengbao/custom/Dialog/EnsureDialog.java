@@ -29,6 +29,7 @@ public class EnsureDialog {
     private Context context;
     private Dialog dialog;
     private OnPositiveClickListener callClickListener;
+    private OnCancelClickListener cancelClickListener;
     public interface OnPositiveClickListener {
         /**
          *  回调返回数据
@@ -41,6 +42,17 @@ public class EnsureDialog {
         return this;
     }
 
+    public interface OnCancelClickListener {
+        /**
+         *  回调返回数据
+         * @param v v
+         */
+        void onCancelClick(View v);
+    }
+    public EnsureDialog setCancelClickListener(OnCancelClickListener listener){
+        this.cancelClickListener=listener;
+        return this;
+    }
     public EnsureDialog(Context context) {
         this.context = context;
     }
@@ -56,6 +68,9 @@ public class EnsureDialog {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (cancelClickListener!=null){
+                    cancelClickListener.onCancelClick(view);
+                }
                 dialog.dismiss();
             }
         });

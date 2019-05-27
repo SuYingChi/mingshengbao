@@ -20,18 +20,28 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SharedPreferencesUtil;
 import com.msht.minshengbao.Utils.StatusBarCompat;
+import com.msht.minshengbao.androidShop.Fragment.GoodFragment;
+import com.msht.minshengbao.androidShop.adapter.ClassDetailRightAdapter;
 import com.msht.minshengbao.androidShop.adapter.KeywordListAdapter;
 import com.msht.minshengbao.androidShop.adapter.MyHaveHeadViewRecyclerAdapter;
 import com.msht.minshengbao.androidShop.baseActivity.ShopBaseActivity;
 import com.msht.minshengbao.androidShop.presenter.ShopPresenter;
+import com.msht.minshengbao.androidShop.shopBean.AddCarBean;
+import com.msht.minshengbao.androidShop.shopBean.ClassDetailRightBean;
 import com.msht.minshengbao.androidShop.shopBean.ShopkeywordBean;
+import com.msht.minshengbao.androidShop.shopBean.SimpleCarBean;
 import com.msht.minshengbao.androidShop.util.AppUtil;
+import com.msht.minshengbao.androidShop.util.JsonUtil;
+import com.msht.minshengbao.androidShop.util.PopUtil;
 import com.msht.minshengbao.androidShop.viewInterface.IKeyWordListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.msht.minshengbao.androidShop.viewInterface.IShopAddCarView;
 import com.msht.minshengbao.androidShop.viewInterface.IWarnMessageDetailView;
+import com.msht.minshengbao.androidShop.viewInterface.OnDissmissLisenter;
+import com.msht.minshengbao.functionActivity.myActivity.LoginActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -40,7 +50,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWordListView, OnRefreshLoadMoreListener, OnRefreshListener, IWarnMessageDetailView {
+public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWordListView, OnRefreshLoadMoreListener, OnRefreshListener, IWarnMessageDetailView, ClassDetailRightAdapter.AddCarListener,IShopAddCarView {
     private static final int KEYWORD = 1000;
     private String keyword;
     private int curPage = 1;
@@ -70,8 +80,8 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     ImageView ivNoData;
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
-    private List<ShopkeywordBean.DatasBean.GoodsListBean> datalist = new ArrayList<ShopkeywordBean.DatasBean.GoodsListBean>();
-    private KeywordListAdapter adapter;
+    private List<ClassDetailRightBean.DatasBean.GoodsListBean> datalist = new ArrayList<ClassDetailRightBean.DatasBean.GoodsListBean>();
+    private ClassDetailRightAdapter adapter;
     private String order1 = "2";
     private String order2 = "2";
     private String order3 = "2";
@@ -82,10 +92,10 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     private Drawable grid2;
     private Drawable grid;
     private boolean isGrid = false;
-    private DividerItemDecoration dividerItemDecoration2;
-    private DividerItemDecoration dividerItemDecoration;
     private String msgid;
     private String gcId="";
+    private  ClassDetailRightAdapter gridAdapter;
+
 
     @Override
     protected void setLayout() {
@@ -112,15 +122,14 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
         et.setHint(keyword);
         linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
-        dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        rcl.addItemDecoration(dividerItemDecoration);
-        adapter = new KeywordListAdapter(this);
+        adapter = new ClassDetailRightAdapter(this,R.layout.item_class_detail_right);
+        adapter.setOnAddCarListener(this);
         adapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                ShopkeywordBean.DatasBean.GoodsListBean item = datalist.get(position);
+                ClassDetailRightBean.DatasBean.GoodsListBean item = datalist.get(position);
                 String goodsId = item.getGoods_id();
-                onShopItemViewClick("goods",goodsId);
+                onShopItemViewClick("goods", goodsId);
             }
         });
         adapter.setDatas(datalist);
@@ -220,13 +229,6 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
             default:
                 break;
         }
-        if(isGrid){
-            rcl.setLayoutManager(linearLayoutManager);
-            isGrid = false;
-            iv.setImageDrawable(grid);
-            rcl.addItemDecoration(dividerItemDecoration);
-
-        }
         curPage = 1;
         ShopPresenter.getKeywordList(this);
     }
@@ -262,7 +264,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     }
 
     @Override
-    public void onSuccess(List<ShopkeywordBean.DatasBean.GoodsListBean> list, int pageTotal) {
+    public void onSuccess(List<ClassDetailRightBean.DatasBean.GoodsListBean> list, int pageTotal) {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
         if (pageTotal == 0) {
@@ -365,6 +367,19 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                             }
                         };
                     }
+                    if(gridAdapter == null){
+                        gridAdapter = new ClassDetailRightAdapter(this,R.layout.item_grid_keyword_list);
+                        gridAdapter.setOnAddCarListener(this);
+                        gridAdapter.setOnItemClickListener(new MyHaveHeadViewRecyclerAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                ClassDetailRightBean.DatasBean.GoodsListBean item = datalist.get(position);
+                                String goodsId = item.getGoods_id();
+                                onShopItemViewClick("goods", goodsId);
+                            }
+                        });
+                        gridAdapter.setDatas(datalist);
+                    }
                     rcl.setLayoutManager(gridLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -372,15 +387,8 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid2);
                     isGrid = true;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(gridAdapter);
                 }else {
-                    if (linearLayoutManager == null) {
-                        linearLayoutManager =  new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-                    }
                     rcl.setLayoutManager(linearLayoutManager);
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
@@ -388,11 +396,7 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
                     iv.setImageDrawable(grid);
                     isGrid = false;
-                    if(dividerItemDecoration2==null) {
-                        dividerItemDecoration2 = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
-                    }
-                    rcl.addItemDecoration(dividerItemDecoration2);
-                    adapter.notifyDataSetChanged();
+                    rcl.setAdapter(adapter);
                 }
               break;
             default:
@@ -403,5 +407,28 @@ public class ShopKeywordListActivity extends ShopBaseActivity implements IKeyWor
     @Override
     public void onGetDetailSuccess(String s) {
 
+    }
+
+    @Override
+    public void addCar(ClassDetailRightBean.DatasBean.GoodsListBean goods) {
+        if (TextUtils.isEmpty(getKey())) {
+            startActivity(new Intent(this, LoginActivity.class));
+        } else {
+            if(1==goods.getCart()) {
+                ShopPresenter.addCar(this,goods.getGoods_id());
+            }else {
+                String goodsId = goods.getGoods_id();
+                onShopItemViewClick("goods", goodsId);
+            }
+        }
+    }
+
+
+    @Override
+    public void onAddCarSuccess(String s) {
+        AddCarBean bean = JsonUtil.toBean(s, AddCarBean.class);
+        if (bean != null && TextUtils.equals(bean.getDatas(), "1")) {
+            PopUtil.showAutoDissHookDialog(this, "添加购物车成功", 100);
+        }
     }
 }

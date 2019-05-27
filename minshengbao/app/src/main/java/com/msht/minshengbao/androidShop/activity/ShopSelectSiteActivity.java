@@ -36,7 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteListView, IGetInvContentView {
+public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteListView, IGetInvContentView, SelectSiteAreaDialog.SelectSiteInterface {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.rcl)
@@ -49,26 +49,28 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
     RelativeLayout rlt;
     @BindView(R.id.total)
     TextView tvtatal;
-    private List<SiteBean.DatasBean.AddrListBean> dataList= new ArrayList<SiteBean.DatasBean.AddrListBean>();
-    private List<SiteBean.DatasBean.AddrListBean> allSiteList= new ArrayList<SiteBean.DatasBean.AddrListBean>();
+    private List<SiteBean.DatasBean.AddrListBean> dataList = new ArrayList<SiteBean.DatasBean.AddrListBean>();
+    private List<SiteBean.DatasBean.AddrListBean> allSiteList = new ArrayList<SiteBean.DatasBean.AddrListBean>();
     private SiteListAdapter adapter;
     private SelectSiteAreaDialog dialog;
-    private List<InvContentItemBean> areaList=new ArrayList<InvContentItemBean>();
+    private List<InvContentItemBean> areaList = new ArrayList<InvContentItemBean>();
+    private int selectedSiteIndex;
+
 
     @Override
     protected void setLayout() {
-      setContentView(R.layout.shop_selecte_site);
+        setContentView(R.layout.shop_selecte_site);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this),0,0);
-        adapter = new SiteListAdapter(this, R.layout.item_shop_site,dataList);
+        mToolbar.setPadding(0, StatusBarCompat.getStatusBarHeight(this), 0, 0);
+        adapter = new SiteListAdapter(this, R.layout.item_shop_site, dataList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcl.setLayoutManager(linearLayoutManager);
         rcl.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        if(getIntent().getBooleanExtra("onClick",true)) {
+        if (getIntent().getBooleanExtra("onClick", true)) {
             adapter.setOnItemClickListener(new HaveHeadRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
@@ -95,10 +97,11 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
         });
         ShopPresenter.getSiteList(this);
     }
+
     @Override
     public void onGetSiteListSuccess(String s) {
         SiteBean siteBean = JsonUtil.toBean(s, SiteBean.class);
-        if(siteBean!=null) {
+        if (siteBean != null) {
             dataList.addAll(siteBean.getDatas().getAddr_list());
             allSiteList.addAll(siteBean.getDatas().getAddr_list());
             tvtatal.setText(String.format("全部门店共%d家", allSiteList.size()));
@@ -114,10 +117,19 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
             }
         }
     }
+
     private void showInvDialog() {
         if (!isFinishing() && dialog == null) {
             dialog = new SelectSiteAreaDialog(this, this, areaList);
+            dialog.setiSelectSiteInterface(this);
             dialog.show();
+            for (int i = 0; i < areaList.size(); i++) {
+                if (areaList.get(i).getSelected()) {
+                    dialog.setAreaTitle(areaList.get(i).getContent());
+                    selectedSiteIndex = i;
+                    break;
+                }
+            }
         } else if (!isFinishing() && !dialog.isShowing()) {
             dialog.show();
         }
@@ -134,25 +146,53 @@ public class ShopSelectSiteActivity extends ShopBaseActivity implements ISiteLis
             if (i == position) {
                 areaList.get(i).setSelected(true);
                 String invContent = areaList.get(i).getContent();
-                tvSiteArea.setText(invContent);
-                String sitearea = (String) tvSiteArea.getText();
-                if(!"所有区域".equals(sitearea)) {
-                    dataList.clear();
-                    for (SiteBean.DatasBean.AddrListBean address : allSiteList) {
-                        if (address.getDlyp_area_name().equals(sitearea)) {
-                            dataList.add(address);
-                        }
-                    }
-                }else {
-                    dataList.clear();
-                    dataList.addAll(allSiteList);
-                }
-                adapter.notifyDataSetChanged();
+                dialog.setAreaTitle(invContent);
             } else {
                 areaList.get(i).setSelected(false);
             }
         }
         dialog.notifyRcl();
+    }
+
+    @Override
+    public void onCanceled() {
+        for (int i = 0; i < areaList.size(); i++) {
+            if (i == selectedSiteIndex) {
+                areaList.get(i).setSelected(true);
+                String invContent = areaList.get(i).getContent();
+                dialog.setAreaTitle(invContent);
+            } else {
+                areaList.get(i).setSelected(false);
+            }
+        }
+        dialog.notifyRcl();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onSelected() {
+        for (int i = 0; i < areaList.size(); i++) {
+            if (areaList.get(i).getSelected()) {
+                selectedSiteIndex = i;
+                break;
+            }
+        }
+        String invContent = areaList.get(selectedSiteIndex).getContent();
+        tvSiteArea.setText(invContent);
+        String sitearea = (String) tvSiteArea.getText();
+        if (!"所有区域".equals(sitearea)) {
+            dataList.clear();
+            for (SiteBean.DatasBean.AddrListBean address : allSiteList) {
+                if (address.getDlyp_area_name().equals(sitearea)) {
+                    dataList.add(address);
+                }
+            }
+        } else {
+            dataList.clear();
+            dataList.addAll(allSiteList);
+        }
+        adapter.notifyDataSetChanged();
+        dialog.dismiss();
     }
 
 }

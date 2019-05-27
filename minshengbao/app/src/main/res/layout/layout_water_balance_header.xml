@@ -5,6 +5,7 @@
     android:background="@color/background_gray"
     android:layout_height="wrap_content">
     <LinearLayout
+        android:id="@+id/id_head_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_width250"
         android:minHeight="@dimen/margin_width150"

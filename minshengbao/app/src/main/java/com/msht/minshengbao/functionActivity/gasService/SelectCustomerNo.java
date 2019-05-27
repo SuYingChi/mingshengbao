@@ -41,7 +41,6 @@ public class SelectCustomerNo extends BaseActivity {
     private XRecyclerView mRecyclerView;
     private String userId,password;
     private int pos=-1;
-    private JSONArray jsonArray;
     private static final int ADDRESS_CODE=1;
     private GetAddressAdapter adapter;
     private ArrayList<HashMap<String, String>> houseList = new ArrayList<HashMap<String, String>>();
@@ -63,9 +62,9 @@ public class SelectCustomerNo extends BaseActivity {
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results=object.optString("result");
                         String error = object.optString("error");
-                        activity.jsonArray =object.optJSONArray("data");
                         if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            activity.onReceiveData();
+                            JSONArray jsonArray =object.optJSONArray("data");
+                            activity.onReceiveData(jsonArray);
                         }else {
                             if (!activity.isFinishing()){
                                 activity.onFailure(error);
@@ -96,16 +95,16 @@ public class SelectCustomerNo extends BaseActivity {
                     }
                 }).show();
     }
-    private void onReceiveData() {
+    private void onReceiveData(JSONArray jsonArray) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONObject jsonObject =jsonArray.getJSONObject(i);
                 String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
+                String address = jsonObject.getString("address");
                 String customerNo = jsonObject.getString("customerNo");
                 HashMap<String, String> map = new HashMap<String, String>(3);
                 map.put("id", id);
-                map.put("name", name);
+                map.put("name", address);
                 map.put("customerNo", customerNo);
                 houseList.add(map);
             }
@@ -202,10 +201,12 @@ public class SelectCustomerNo extends BaseActivity {
         });
     }
     private void requestServer() {
-        String validateURL = UrlUtil.SELECT_ADDRESS_URL;
+       // String validateURL = UrlUtil.SELECT_ADDRESS_URL;
+        String validateURL= UrlUtil.NEW_ADDRESS_MANAGER_URL;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
+        textParams.put("category", "1");
         OkHttpRequestUtil.getInstance(context.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
     }
 }

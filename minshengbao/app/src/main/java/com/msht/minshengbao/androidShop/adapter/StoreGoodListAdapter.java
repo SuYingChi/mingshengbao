@@ -22,13 +22,7 @@ public class StoreGoodListAdapter extends HaveHeadRecyclerAdapter<StoreGoodBean>
 
     @Override
     public void convert(RecyclerHolder holder, StoreGoodBean storeGoodBean, final int position) {
-        final ImageView iv = holder.getView(R.id.iv);
-        ViewGroup.LayoutParams params = iv.getLayoutParams();
-        params.width = (int) (DimenUtil.getScreenWidth() * 0.25);
-        int vw = params.width - iv.getPaddingLeft() - iv.getPaddingRight();
-        params.height = vw + iv.getPaddingTop() + iv.getPaddingBottom();
-        iv.setLayoutParams(params);
-        GlideUtil.loadRemoteImg(context, iv, storeGoodBean.getGoods_image_url());
+        GlideUtil.loadRemoteImg(context, (ImageView) holder.getView(R.id.iv), storeGoodBean.getGoods_image_url());
         TextView tv = holder.getView(R.id.name);
         tv.setText(storeGoodBean.getGoods_name().trim());
         TextView tvPrice = holder.getView(R.id.price);

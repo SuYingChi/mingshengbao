@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -360,6 +361,7 @@ public class GlideUtil {/*
         return resizeBmp;
     }
 */
+    //以后recycleview 里不要再动态计算imageview的宽高再加载图片了 会出问题，宽高在oncreatViewHolder里写死就行了
     public static void loadRemoteImg(Context context, ImageView imageView, String imgUrl) {
         RequestOptions options = new RequestOptions()
                 .placeholder(R.drawable.icon_stub)
@@ -478,19 +480,19 @@ public class GlideUtil {/*
             if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             }
-            //在绘制时再获取宽高
+           /* //在绘制时再获取宽高
             ViewTreeObserver vto = imageView.getViewTreeObserver();
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @SuppressWarnings("deprecation")
                 @Override
                 public void onGlobalLayout() {
-                    removeOnGlobalLayoutListener(imageView, this);
+                    removeOnGlobalLayoutListener(imageView, this);*/
                     ViewGroup.LayoutParams params = imageView.getLayoutParams();
                         params.height = DimenUtil.getScreenWidth();
                         imageView.setLayoutParams(params);
-                        imageView.setImageDrawable(MyApplication.getInstance().getDrawable(R.drawable.icon_stub));
-                }
-            });
+                        imageView.setImageDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.icon_stub));
+          /*      }
+            });*/
         }else {
             RequestOptions options = new RequestOptions()
                     .fitCenter()
@@ -513,13 +515,13 @@ public class GlideUtil {/*
                             if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
                                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             }
-                            //在绘制时再获取宽高
+                          /*  //在绘制时再获取宽高
                             ViewTreeObserver vto = imageView.getViewTreeObserver();
                             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                                 @SuppressWarnings("deprecation")
                                 @Override
                                 public void onGlobalLayout() {
-                                    removeOnGlobalLayoutListener(imageView, this);
+                                    removeOnGlobalLayoutListener(imageView, this);*/
                                     ViewGroup.LayoutParams params = imageView.getLayoutParams();
                                     if (resource != null && resource.getIntrinsicWidth() > 0) {
                                         float scale = (float) imageView.getWidth() / (float) resource.getIntrinsicWidth();
@@ -531,11 +533,57 @@ public class GlideUtil {/*
                                 }
                             });
 
-                        }
-                    });
+                    /*    }
+                    });*/
         }
     }
 
+    /**
+     * 自适应imageview宽度加载图片。保持图片的长宽比例不变，通过修改imageView的高度来完全显示图片。
+     */
+    public static void loadByHeightFitWidth(Context context, final ImageView imageView, final String imageUrl) {
+            RequestOptions options = new RequestOptions()
+                    .fitCenter()
+                    .dontAnimate()
+                    .placeholder(R.drawable.icon_stub)
+                    .error(R.drawable.icon_stub)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .priority(Priority.HIGH);
+            Glide.with(context)
+                    .load(imageUrl)
+                    .thumbnail(0.5f)
+                    .apply(options)
+                    .into(new SimpleTarget<Drawable>() {
+
+                        @Override
+                        public void onResourceReady(@NonNull final Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            if (imageView == null) {
+                                return;
+                            }
+                            if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
+                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            }
+                         /*   //在绘制时再获取宽高 onGlobalLayout 在调用requestlayout之后触发 普通情况下只会触发一次
+                            ViewTreeObserver vto = imageView.getViewTreeObserver();
+                            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                @SuppressWarnings("deprecation")
+                                @Override
+                                public void onGlobalLayout() {
+                                    removeOnGlobalLayoutListener(imageView, this);*/
+                                    ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                                    if (resource != null && resource.getIntrinsicWidth() > 0) {
+                                        float scale = (float) imageView.getHeight() / (float) resource.getIntrinsicHeight();
+                                        int vw = (int) (resource.getIntrinsicWidth() * scale);
+                                        params.width = vw + imageView.getPaddingLeft() + imageView.getPaddingRight();
+                                        imageView.setLayoutParams(params);
+                                        imageView.setImageDrawable(resource);
+                                    }
+                           /*     }
+                            });*/
+
+                        }
+                    });
+    }
     public static void removeOnGlobalLayoutListener(View view, ViewTreeObserver.OnGlobalLayoutListener victim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
@@ -576,12 +624,12 @@ public class GlideUtil {/*
                         final float width = bitmap.getWidth();
                         final float heightOrigin = bitmap.getHeight();
                         final Matrix matrix = new Matrix();
-                        ViewTreeObserver vto = imageView.getViewTreeObserver();
+                       /* ViewTreeObserver vto = imageView.getViewTreeObserver();
                         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @SuppressWarnings("deprecation")
                             @Override
                             public void onGlobalLayout() {
-                                removeOnGlobalLayoutListener(imageView, this);
+                                removeOnGlobalLayoutListener(imageView, this);*/
                                 int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                                 int vh = imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
                                 int withHeighScale;
@@ -607,8 +655,8 @@ public class GlideUtil {/*
                                 imageView.setImageBitmap(resizeBmp);
                             }
                         });
-                    }
-                });
+               /*     }
+                });*/
 
     }
 
@@ -636,12 +684,12 @@ public class GlideUtil {/*
                         if (imageView.getScaleType() != ImageView.ScaleType.FIT_XY) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         }
-                        ViewTreeObserver vto = imageView.getViewTreeObserver();
+                       /* ViewTreeObserver vto = imageView.getViewTreeObserver();
                         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @SuppressWarnings("deprecation")
                             @Override
                             public void onGlobalLayout() {
-                                removeOnGlobalLayoutListener(imageView, this);
+                                removeOnGlobalLayoutListener(imageView, this);*/
                                 ViewGroup.LayoutParams params = imageView.getLayoutParams();
                                 int vw = imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
                                 params.height = vw + imageView.getPaddingTop() + imageView.getPaddingBottom();
@@ -649,8 +697,8 @@ public class GlideUtil {/*
                                 imageView.setImageDrawable(resource);
                             }
                         });
-                    }
-                });
+              /*      }
+                });*/
 
     }
 

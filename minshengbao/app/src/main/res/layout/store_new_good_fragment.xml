@@ -39,7 +39,6 @@
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcl"
-                    android:background="@color/white"
                     style="@style/rcl" />
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>

@@ -361,10 +361,11 @@ public class WaterPayRechargeActivity extends BaseActivity {
         Intent data=getIntent();
         if (data!=null){
             amount=data.getStringExtra("amount");
-            realAmount=amount;
+            realAmount=data.getStringExtra("realAmount");;
             giveFee=data.getStringExtra("giveFee");
             packId=data.getStringExtra("packId");
             childType=data.getStringExtra("childType");
+            couponCode=data.getStringExtra("couponCode");
         }
         initFindViewId();
         mAdapter=new PayWayAdapter(context, mList);
@@ -518,11 +519,12 @@ public class WaterPayRechargeActivity extends BaseActivity {
         btnSend =(Button)findViewById(R.id.id_btn_send);
         btnSend.setEnabled(false);
         String amountText="¥"+amount;
+        String realAmountText="¥"+realAmount;
         tvOriginAmount.setText(amountText);
         tvOriginAmount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         String mealTipText="充值"+amount+"元赠送"+giveFee+"元";
         tvMealTip.setText(mealTipText);
-        tvAmount.setText(amountText);
+        tvAmount.setText(realAmountText);
         mListView=(ListViewForScrollView)findViewById(R.id.id_payway_view);
         findViewById(R.id.id_back_agree).setOnClickListener(new View.OnClickListener() {
             @Override
