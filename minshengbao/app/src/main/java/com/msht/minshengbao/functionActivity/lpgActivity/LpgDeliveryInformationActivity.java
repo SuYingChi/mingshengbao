@@ -134,7 +134,7 @@ public class LpgDeliveryInformationActivity extends BaseActivity {
         tvDeliverySite.setText(siteName);
         tvOrderNo.setText(employeeCode);
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.error(R.drawable.potrait);
+        requestOptions.error(R.drawable.portrait_xh);
         requestOptions.diskCacheStrategy(DiskCacheStrategy.NONE);
         requestOptions.skipMemoryCache(true);
         Glide.with(context)

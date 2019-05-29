@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 
+import com.msht.minshengbao.custom.widget.CustomToast;
+
 /**
  * Demo class
  * 〈一句话功能简述〉
@@ -22,7 +24,17 @@ public class CallPhoneUtil {
             callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(callIntent);
         }else {
-            ToastUtil.ToastText(context,"请您允许使用拨打电话权限");
+            CustomToast.showWarningLong("请您允许使用拨打电话权限!");
+        }
+    }
+    public static void onCallPhone(final Context context, final String phone) {
+        try{
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phone));
+            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(callIntent);
+        }catch (SecurityException e){
+            e.printStackTrace();
         }
     }
 }

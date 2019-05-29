@@ -14,13 +14,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.base.BaseActivity;
 
 import java.util.ArrayList;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
+
 
 /**
  * Demo class
@@ -34,7 +35,6 @@ public class EnlargePicActivity extends BaseActivity {
     private ImageView ivPic, deleteImg,backimg;
     private ArrayList<String> imgPaths;
     private int position=0;
-    private TextView tvNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +62,12 @@ public class EnlargePicActivity extends BaseActivity {
 
     private void initView() {
         backimg=(ImageView)findViewById(R.id.id_back);
-        tvNum =(TextView)findViewById(R.id.id_text);
+        TextView tvNum =(TextView)findViewById(R.id.id_text);
         deleteImg =(ImageView)findViewById(R.id.id_delete_img);
         ivPic=(ImageView)findViewById(R.id.iv_pic);
         mAttacher = new PhotoViewAttacher(ivPic);
-        tvNum.setText((position+1)+"/"+imgPaths.size());
+        String numText=(position+1)+"/"+imgPaths.size();
+        tvNum.setText(numText);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.error(R.drawable.icon_stub);
         Glide.with(this).asBitmap().load(imgPaths.get(position)).apply(requestOptions).into(new SimpleTarget<Bitmap>(){
@@ -74,16 +75,6 @@ public class EnlargePicActivity extends BaseActivity {
             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                 ivPic.setImageBitmap(resource);
                 mAttacher.update();
-            }
-        });
-        mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                // hideOrShowToolBar();
-            }
-            @Override
-            public void onOutsidePhotoTap() {
-                // hideOrShowToolBar();
             }
         });
     }
@@ -105,6 +96,5 @@ public class EnlargePicActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAttacher.cleanup();
     }
 }

@@ -187,7 +187,7 @@
                     android:layout_marginBottom="@dimen/margin_width8"
                     android:textSize="@dimen/text_width16"
                     android:textColor="@color/color_383838"
-                    android:text="@string/overdue_fine"/>
+                    android:text="@string/penal_sum"/>
                 <TextView
                     android:id="@+id/id_overdue_fine"
                     android:layout_width="match_parent"

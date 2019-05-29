@@ -33,10 +33,10 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/text10"
             android:layout_toStartOf="@+id/text10"
-            android:layout_marginRight="@dimen/margin_width10"
-            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginRight="@dimen/margin_width5"
+            android:layout_marginEnd="@dimen/margin_width5"
             android:textColor="@color/colorOrange"
-            android:textSize="@dimen/text_16"/>
+            android:textSize="@dimen/text_width16"/>
         <TextView
             android:id="@+id/text10"
             android:layout_width="wrap_content"

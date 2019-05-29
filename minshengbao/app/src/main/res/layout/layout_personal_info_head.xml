@@ -237,10 +237,10 @@
             android:layout_width="@dimen/margin_width70"
             android:layout_height="@dimen/margin_width70"
             android:layout_centerInParent="true"
-            app:failureImage="@drawable/potrait"
+            app:failureImage="@drawable/portrait_xh"
             app:failureImageScaleType="centerInside"
             app:roundAsCircle="true"
-            app:retryImage="@drawable/potrait"
-            app:backgroundImage="@drawable/potrait"/>
+            app:retryImage="@drawable/portrait_xh"
+            app:backgroundImage="@drawable/portrait_xh"/>
     </RelativeLayout>
 </FrameLayout>

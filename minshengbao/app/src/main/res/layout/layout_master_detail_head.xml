@@ -15,7 +15,7 @@
             android:layout_marginTop="@dimen/margin_12"
             android:layout_marginBottom="@dimen/margin_12"
             android:layout_marginLeft="@dimen/margin_10"
-            android:src="@drawable/potrait"/>
+            android:src="@drawable/portrait_xh"/>
         <RelativeLayout
             android:id="@+id/id_re_title"
             android:layout_width="wrap_content"

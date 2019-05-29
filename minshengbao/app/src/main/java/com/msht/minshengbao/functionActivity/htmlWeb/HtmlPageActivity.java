@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JsResult;
@@ -47,6 +48,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.custom.Dialog.ActionShareDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.custom.Dialog.QrCodeDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.functionActivity.myActivity.AddressManageActivity;
 import com.msht.minshengbao.functionActivity.publicModule.PaySuccessActivity;
 import com.umeng.socialize.ShareAction;
@@ -89,6 +91,7 @@ public class HtmlPageActivity extends BaseActivity {
     private String  phone;
     private String  password;
     private String  backUrl;
+    private String  imageUrl;
     private Bitmap mBitmap;
     private static final String BTN_URL="add_address.html";
     private final  BackUrlHandler backUrlHandler=new BackUrlHandler(this);
@@ -171,7 +174,7 @@ public class HtmlPageActivity extends BaseActivity {
             shareTitle=data.getStringExtra("title");
             activityCode=data.getStringExtra("activityCode")+"_share";
             backUrl=data.getStringExtra("backUrl");
-
+            imageUrl=data.getStringExtra("imageUrl");
         }
         mPageName= mNavigation;
         userId= SharedPreferencesUtil.getUserId(this, SharedPreferencesUtil.UserId,"");
@@ -278,7 +281,11 @@ public class HtmlPageActivity extends BaseActivity {
                         UMWeb web = new UMWeb(shareUrl);
                         web.setTitle(shareTitle);
                         web.setDescription(desc);
-                        web.setThumb(new UMImage(HtmlPageActivity.this, R.mipmap.ic_launcher));
+                        if (!TextUtils.isEmpty(imageUrl)){
+                            web.setThumb(new UMImage(HtmlPageActivity.this, imageUrl));
+                        }else {
+                            web.setThumb(new UMImage(HtmlPageActivity.this, R.mipmap.ic_launcher));
+                        }
                         new ShareAction(HtmlPageActivity.this).withMedia(web)
                                 .setPlatform(shareMedia)
                                 .setCallback(umShareListener)
@@ -399,7 +406,7 @@ public class HtmlPageActivity extends BaseActivity {
                 onStartSuccess(url);
                 return true;
             }else if (url.startsWith(ConstantUtil.MSB_APP)){
-                AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"");
+                AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"","");
                 return true;
             }else {
                 view.loadUrl(url);
@@ -519,7 +526,7 @@ public class HtmlPageActivity extends BaseActivity {
         }
     }
     private void onWeiXin() {
-        String shareUrl=mUrl;
+        String shareUrl=mUrl.trim();
         try {
             if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
                 shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
@@ -532,14 +539,18 @@ public class HtmlPageActivity extends BaseActivity {
         UMWeb web = new UMWeb(shareUrl);
         web.setTitle(shareTitle);
         web.setDescription(desc);
-        web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
+        if (!TextUtils.isEmpty(imageUrl)){
+            web.setThumb(new UMImage(HtmlPageActivity.this, imageUrl));
+        }else {
+            web.setThumb(new UMImage(HtmlPageActivity.this, R.mipmap.ic_launcher));
+        }
         new ShareAction(HtmlPageActivity.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN)
                 .setCallback(umShareListener)
                 .share();
     }
     private void onFriendCircle() {
-        String shareUrl=mUrl;
+        String shareUrl=mUrl.trim();
         try {
             if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
                 shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
@@ -552,7 +563,11 @@ public class HtmlPageActivity extends BaseActivity {
         UMWeb web = new UMWeb(shareUrl);
         web.setTitle(desc);
         web.setDescription(desc);
-        web.setThumb(new UMImage(context, R.mipmap.ic_launcher));
+        if (!TextUtils.isEmpty(imageUrl)){
+            web.setThumb(new UMImage(HtmlPageActivity.this, imageUrl));
+        }else {
+            web.setThumb(new UMImage(HtmlPageActivity.this, R.mipmap.ic_launcher));
+        }
         new ShareAction(HtmlPageActivity.this).withMedia(web)
                 .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
                 .setCallback(umShareListener)
@@ -560,7 +575,7 @@ public class HtmlPageActivity extends BaseActivity {
     }
 
     private void onQrCode() {
-        String shareUrl=mUrl;
+        String shareUrl=mUrl.trim();
         try {
             if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
                 shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
@@ -601,7 +616,7 @@ public class HtmlPageActivity extends BaseActivity {
     }
 
     private void onLinkShare() {
-        String shareUrl=mUrl;
+        String shareUrl=mUrl.trim();
         try {
             if (!shareUrl.contains(ConstantUtil.MARK_QUESTION)){
                 shareUrl=shareUrl+"?isShow=1"+"&recommend_code="+phone+"&city_name="+URLEncoder.encode(VariableUtil.City, "UTF-8");
@@ -618,28 +633,27 @@ public class HtmlPageActivity extends BaseActivity {
             ToastUtil.ToastText(context,"已复制到剪切板");
         }
     }
-
-
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA shareMedia) {}
         @Override
         public void onResult(SHARE_MEDIA platform) {
             if(!platform.name().equals(ConstantUtil.WEI_XIN_PLATFORM)){
-                ToastUtil.ToastText(context, " 分享成功啦");
+                CustomToast.showSuccessDialog("分享成功啦");
                 onRequestShareSuccess();
                 onRequestShareSuccessAward();
             }else{
-                ToastUtil.ToastText(context, " 收藏成功啦");
+                CustomToast.showSuccessDialog("收藏成功啦");
             }
         }
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
             ToastUtil.ToastText(context,platform + " 分享失败啦");
+            CustomToast.showErrorDialog("分享失败啦");
         }
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            ToastUtil.ToastText(context,platform + " 分享取消了");
+            CustomToast.showWarningDialog("分享取消了");
         }
     };
 

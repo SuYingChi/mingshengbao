@@ -108,7 +108,7 @@ public class UrlUtil {
     public static final String READ_SEARCH_USER_HOUSE =BuildConfig. URL_HEADS +"/Gas/usedHouse/search";
     public static final String PRE_DEPOSIT_HISTORY = BuildConfig.URL_HEADS +"/Gas/payment/pre_deposit_history";
     public static final String SPECIAL_TOPIC_URL =BuildConfig.URL_HEADS+"/api/app/specail_topic_activity";
-    public static final String ADVERTISING_URL=BuildConfig.URL_HEADS+"/api/app/get_activity_by_code ";
+    public static final String ADVERTISING_URL=BuildConfig.URL_HEADS+"/api/app/get_activity_by_code";
     public static final String BADGE_COUNT_URL=BuildConfig.URL_HEADS+"/Gas/message/badgeCount";
     public static final String HOT_RECOMMEND_URL=BuildConfig.URL_HEADS+"/api/serve_city/hot_recommend";
     /**分享*/

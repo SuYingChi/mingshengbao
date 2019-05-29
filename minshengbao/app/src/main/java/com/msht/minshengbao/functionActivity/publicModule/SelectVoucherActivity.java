@@ -234,7 +234,7 @@ public class SelectVoucherActivity extends BaseActivity {
             }
             String remainderDay=voucherList.get(position).get("remainder_days");
             if ((!TextUtils.isEmpty(remainderDay))&&(!remainderDay.equals(ConstantUtil.VALUE_ZERO))){
-                remainderDay="剩"+remainderDay+"天";
+                remainderDay="仅剩"+remainderDay+"天";
                 holder.cnTime.setVisibility(View.VISIBLE);
                 holder.cnTime.setText(remainderDay);
             }else {

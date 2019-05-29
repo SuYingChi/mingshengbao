@@ -28,7 +28,7 @@
                     android:layout_marginTop="@dimen/margin_width15"
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/potrait"
+                    android:src="@drawable/portrait_xh"
                     android:layout_marginStart="@dimen/margin_width10"
                     android:layout_marginLeft="@dimen/margin_width10" />
                 <RelativeLayout

@@ -79,12 +79,12 @@ public class WaterMealAdapter extends BaseAdapter {
         holder.tvOriginAmount.setText(originAmount);
         holder.tvWaterVolume.setText(waterQuantity);
         holder.tvOriginAmount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        if ((!TextUtils.isEmpty(giveFee))&&(!giveFee.equals(ConstantUtil.VALUE_ZERO))){
+        if (!TextUtils.isEmpty(giveFee)&&!giveFee.equals(ConstantUtil.VALUE_ZERO)){
             holder.tvGiveFee.setVisibility(View.VISIBLE);
             holder.tvGiveFee.setText(giveFeeText);
         }else {
             holder.tvGiveFee.setText(giveFeeText);
-            holder.tvGiveFee.setVisibility(View.VISIBLE);
+            holder.tvGiveFee.setVisibility(View.INVISIBLE);
         }
         if (VariableUtil.MealPos==position){
             holder.layoutBack.setBackgroundResource(R.drawable.shape_orange_border_layout);

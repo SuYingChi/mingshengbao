@@ -14,16 +14,21 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.Utils.CallPhoneUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.adapter.RepairAdditionalInfoAdapter;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.events.UpdateDataEvent;
 import com.msht.minshengbao.functionActivity.publicModule.SelectVoucherActivity;
 import com.msht.minshengbao.R;
@@ -34,6 +39,8 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -44,6 +51,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Demo class
@@ -78,6 +86,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private View layoutCategoryButton;
     private View layoutCategory;
     private View layoutRefund;
+    private View layoutReworkTip;
     private String userId,password,id,cid;
     private String orderId, address,type;
     private String phone,title,orderNo, couponId="0";
@@ -85,7 +94,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private String repairmanName, repairmanPhone, guaranteeDay;
     private String serveTime,amount, realAmount;
     private String payMethod, finishTime, evaluateScore, evaluateInfo;
-    private String realMoney;
+    private String realMoney,afterSaleOrderId;
     private String phoneNo;
     private String parentCode;
     private String categoryDesc;
@@ -95,50 +104,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
     private RepairAdditionalInfoAdapter mAdditionalAdapter;
     private ArrayList<HashMap<String ,String>> additionalList=new ArrayList <HashMap<String ,String>>();
     private CustomDialog customDialog;
-    private static  final int MY_PERMISSIONS_REQUEST_CALL_PHONE=1;
-    private final DetailHandler requestHandler = new DetailHandler(this);
-    private static class DetailHandler extends Handler{
-        private WeakReference<MyOrderWorkDetailActivity> mWeakReference;
-        public DetailHandler(MyOrderWorkDetailActivity reference) {
-            mWeakReference = new WeakReference<MyOrderWorkDetailActivity>(reference);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final MyOrderWorkDetailActivity reference =mWeakReference.get();
-            if (reference == null||reference.isFinishing()) {
-                return;
-            }
-            if (reference.customDialog!=null&&reference.customDialog.isShowing()){
-                reference.customDialog.dismiss();
-            }
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String results=object.optString("result");
-                        String error = object.optString("error");
-                        if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
-                            if (reference. requestType==0){
-                                JSONObject  jsonObject =object.optJSONObject("data");
-                                reference.onReceiveData(jsonObject);
-                            }else if (reference. requestType==1){
-                                reference.success();
-                            }
-                        }else {
-                            reference.onFailure(error);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(reference.context,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
     private void success() {
         setResult(0x001);
         EventBus.getDefault().post(new UpdateDataEvent(true));
@@ -162,6 +127,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         orderNo= jsonObject.optString("orderNo");
         String createTime = jsonObject.optString("createTime");
         estimateAmount= jsonObject.optString("estimated_price");
+        afterSaleOrderId=jsonObject.optString("after_sale_order_id");
         tvStatus.setText(statusInfo);
         tvAddress.setText(address);
         tvPhone.setText(phone);
@@ -179,6 +145,11 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             layoutCategoryButton.setVisibility(View.VISIBLE);
         }else {
             layoutCategoryButton.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(afterSaleOrderId)&&!afterSaleOrderId.equals(ConstantUtil.NULL_VALUE)){
+            layoutReworkTip.setVisibility(View.VISIBLE);
+        }else {
+            layoutReworkTip.setVisibility(View.GONE);
         }
         onSetStatusView(jsonObject,status);
         onSetGuaranteeStopDayView(jsonObject);
@@ -273,6 +244,20 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 layoutRefund.setVisibility(View.GONE);
                 layoutButton.setVisibility(View.GONE);
                 layoutFixCard.setVisibility(View.GONE);
+                break;
+            case ConstantUtil.VALUE_TWELVE:
+                if (jsonObject.has("evaluate_score")){
+                    layoutEvaluate.setVisibility(View.VISIBLE);
+                    evaluateScore =jsonObject.optString("evaluate_score");
+                    evaluateInfo =jsonObject.optString("evaluate_info");
+                    onEvaluateImg(evaluateScore);
+                }else {
+                    layoutEvaluate.setVisibility(View.GONE);
+                }
+                layoutButton.setVisibility(View.VISIBLE);
+                btnEvaluate.setVisibility(View.GONE);
+                layoutRefund.setVisibility(View.GONE);
+                finishInfo(jsonObject);
                 break;
             case ConstantUtil.VALUE_FOURTEEN:
                 layoutRefund.setVisibility(View.GONE);
@@ -447,19 +432,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         tvMasterName.setText(repairmanName);
 
     }
-    private void onFailure(String error) {
-        new PromptDialog.Builder(context)
-                .setTitle("民生宝")
-                .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
-                .setMessage(error)
-                .setButton1("确定", new PromptDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog, int which) {
-                        finish();
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -600,6 +573,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutRealAmount =findViewById(R.id.id_re_realamount);
         layoutEvaluate =findViewById(R.id.id_li_evaluate);
         layoutCostDetail =findViewById(R.id.id_order_expense);
+        layoutReworkTip=findViewById(R.id.id_rework_tip);
         viewCoupon =findViewById(R.id.id_li_coupon);
         viewExpense =findViewById(R.id.id_li_expense);
         viewPayAmount =findViewById(R.id.id_li_pay);
@@ -621,6 +595,7 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         layoutEvaluate.setOnClickListener(this);
         layoutVoucher.setOnClickListener(this);
         layoutFixCard.setOnClickListener(this);
+        layoutReworkTip.setOnClickListener(this);
         layoutExpense.setTag(0);
         layoutCategoryButton.setTag(0);
         layoutExpense.setOnClickListener(new View.OnClickListener() {
@@ -697,10 +672,23 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
             case R.id.id_re_fixCard:
                 onFixCard();
                 break;
+            case R.id.id_rework_tip:
+                onNewOrderDetail();
+                break;
             default:
                 break;
         }
     }
+
+    private void onNewOrderDetail() {
+        Intent intent = new Intent(context, NewOrderWorkDetailActivity.class);
+        intent.putExtra("cid",cid);
+        intent.putExtra("id", afterSaleOrderId);
+        intent.putExtra("categoryDesc",categoryDesc);
+        intent.putExtra("parentCode",parentCode);
+        startActivityForResult(intent, 4);
+    }
+
     private void onFixCard() {
         Intent intent=new Intent(context,WarrantyCardActivity.class);
         intent.putExtra("title",title);
@@ -752,32 +740,15 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 .setViewStyle(PromptDialog.VIEW_STYLE_TITLEBAR_SKYBLUE)
                 .setMessage(repairmanPhone)
                 .setButton1("取消", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
                         dialog.dismiss();
                     }
                 })
                 .setButton2("呼叫", new PromptDialog.OnClickListener() {
-
                     @Override
                     public void onClick(Dialog dialog, int which) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (MyOrderWorkDetailActivity.this.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:" + repairmanPhone));
-                                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(callIntent);
-                            } else {
-                                phoneNo= repairmanPhone;
-                                ActivityCompat.requestPermissions(MyOrderWorkDetailActivity.this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                            }
-                        } else {
-                            Intent callIntent = new Intent(Intent.ACTION_CALL);
-                            callIntent.setData(Uri.parse("tel:" + repairmanPhone));
-                            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(callIntent);
-                        }
+                        onRequestLimit();
                         dialog.dismiss();
 
 
@@ -785,26 +756,30 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
                 })
                 .show();
     }
-    /*动态权限*/
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode==MY_PERMISSIONS_REQUEST_CALL_PHONE){
-            if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                try{
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + phoneNo));
-                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(callIntent);
-                }catch (SecurityException e){
-                    e.printStackTrace();
-                }
+    private void onRequestLimit() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ) {
+                AndPermission.with(this)
+                        .runtime()
+                        .permission(Manifest.permission.CALL_PHONE)
+                        .onGranted(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                CallPhoneUtil.onCallPhone(context,repairmanPhone);
+                            }
+                        })
+                        .onDenied(new Action<List<String>>() {
+                            @Override
+                            public void onAction(List<String> data) {
+                                CustomToast.showWarningLong("请您允许使用拨打电话权限!");
+                            }
+                        }).start();
             }else {
-                ToastUtil.ToastText(context,"授权失败");
+                CallPhoneUtil.onCallPhone(context,repairmanPhone);
             }
-            return;
+        }else {
+            CallPhoneUtil.onCallPhone(context,repairmanPhone);
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
     private void onMasterInfo() {
         Intent master=new Intent(context,MasterDetailActivity.class);
@@ -869,7 +844,43 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         textParams.put("userId",userId);
         textParams.put("password",password);
         textParams.put("id",id);
-        OkHttpRequestUtil.getInstance(getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                Log.d("RequestSuccess=",data.toString());
+                onAnalysisData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+    }
+
+    private void onAnalysisData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                if (requestType==0){
+                    JSONObject  jsonObject =object.optJSONObject("data");
+                    onReceiveData(jsonObject);
+                }else if (requestType==1){
+                    success();
+                }
+            }else {
+                CustomToast.showErrorLong(error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     private void onEvaluate() {
         Intent evaluate=new Intent(context,RepairEvaluateActivity.class);
@@ -896,5 +907,6 @@ public class MyOrderWorkDetailActivity extends BaseActivity implements View.OnCl
         if (customDialog!=null&&customDialog.isShowing()){
             customDialog.dismiss();
         }
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

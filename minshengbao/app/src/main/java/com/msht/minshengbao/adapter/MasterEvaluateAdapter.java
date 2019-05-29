@@ -77,7 +77,7 @@ public class MasterEvaluateAdapter extends BaseAdapter {
             holder.img_status.setImageResource(R.drawable.star_five_h);
         }
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.error(R.drawable.potrait);
+        requestOptions.error(R.drawable.portrait_xh);
         Glide.with(context).load(avatarurl).apply(requestOptions)
                 .into(holder.portrait);
        /* Glide

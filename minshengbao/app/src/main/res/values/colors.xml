@@ -28,6 +28,7 @@
     <color name="app_text">#ff656565</color>
     <color name="title_tv">#ff555555</color>
     <color name="transparent_black">#30000000</color>
+    <color name="black_transparent">#80000000</color>
     <color name="background_gray">#f2f1f1</color>
     <color name="gray_background">#FFE3E3E3</color>
     <color name="gray_black">#e2e2e2</color>

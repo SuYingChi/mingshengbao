@@ -47,6 +47,7 @@
     <string name="ordinary_table_pay">普表缴费</string>
     <string name="overdue_fine">滞纳金</string>
 
+
     <string name="pay_fee_customerNo_check">用户号查询缴费方式</string>
     <string name="pay_fee_customerNo">缴费户号</string>
     <string name="please_input_payFee_customerNo">请输入用户号</string>
@@ -56,6 +57,7 @@
     <string name="please_input_table_no">请输入表号</string>
     <string name="pay_time">缴费时间</string>
     <string name="pay_amount">缴费金额</string>
+    <string name="penal_sum">违约金</string>
 
     <string name="query_text">查询</string>
 

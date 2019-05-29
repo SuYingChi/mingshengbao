@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ToastUtil;
+import com.msht.minshengbao.custom.Dialog.MyImageDialog;
 import com.msht.minshengbao.custom.Dialog.SelectDialog;
 import com.msht.minshengbao.functionActivity.gasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.functionActivity.gasService.SelectCustomerNo;
@@ -323,7 +324,10 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
     }
 
     private void onIdentifyTableTip() {
-
+        new MyImageDialog(activity,R.drawable.read_table_xh).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(true)
+                .show();
     }
 
     private void onSelectTable() {

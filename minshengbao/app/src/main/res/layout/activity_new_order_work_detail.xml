@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_myorderwork_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:orientation="vertical"
-    tools:context="com.msht.minshengbao.functionActivity.repairService.MyOrderWorkDetailActivity">
+    tools:context=".functionActivity.repairService.NewOrderWorkDetailActivity">
     <include layout="@layout/layout_header"/>
     <ScrollView
         android:layout_weight="1"
@@ -17,8 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <include layout="@layout/layout_repair_rework_tip_view" android:id="@+id/id_rework_tip"
-                android:visibility="gone"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_width10"
@@ -56,16 +54,14 @@
                     android:layout_marginBottom="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"/>
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_width10"
-                android:background="@color/background_gray" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:minHeight="@dimen/margin_width48">
+                android:minHeight="@dimen/margin_width48"
+                android:layout_marginTop="@dimen/margin_width10">
                 <TextView
+                    android:id="@+id/appoint_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -78,9 +74,12 @@
                     android:id="@+id/id_tv_appoint_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/appoint_time_text"
+                    android:layout_toEndOf="@+id/appoint_time_text"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    android:gravity="end"
                     android:layout_marginRight="@dimen/margin_width10"
                     android:layout_marginEnd="@dimen/margin_width10"
                     android:textSize="@dimen/text_width16"/>
@@ -206,6 +205,7 @@
                         android:id="@+id/id_evaluate_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/picture_text"
                         android:layout_marginLeft="@dimen/margin_width10"
                         android:layout_marginStart="@dimen/margin_width10"
                         android:layout_centerVertical="true"
@@ -216,6 +216,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/picture_text"
                         android:layout_marginRight="@dimen/margin_width10"
                         android:layout_marginEnd="@dimen/margin_width10"
                         android:layout_centerVertical="true"
@@ -277,8 +278,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/text14"
                         android:layout_toStartOf="@+id/text14"
-                        android:layout_marginRight="@dimen/margin_width5"
-                        android:layout_marginEnd="@dimen/margin_width5"
+                        android:layout_marginRight="@dimen/margin_width3"
+                        android:layout_marginEnd="@dimen/margin_width3"
                         android:textSize="@dimen/text_width16"/>
                     <ImageView
                         android:id="@+id/id_img_forward4"
@@ -348,8 +349,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
-                    android:minHeight="@dimen/margin_width48">
+                    android:minHeight="@dimen/margin_width48"
+                    android:background="@color/white">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -422,13 +423,13 @@
                         android:id="@+id/id_img_forward3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/picture_text"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginRight="@dimen/margin_width6"
                         android:layout_marginEnd="@dimen/margin_width6"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/forward_m"
-                        />
+                        android:src="@drawable/forward_m"/>
                 </RelativeLayout>
             </LinearLayout>
             <LinearLayout
@@ -591,4 +592,5 @@
         android:visibility="gone"/>
     <include layout="@layout/layout_repair_pay_view" android:id="@+id/id_li_pay"
         android:visibility="gone"/>
+
 </LinearLayout>

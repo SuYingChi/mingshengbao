@@ -134,7 +134,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         mWebView=(WebView)findViewById(R.id.id_insurance_webView);
     }
-
     private void initHeader() {
 
         View mViewStatusBarPlace = findViewById(R.id.id_status_view);
@@ -405,7 +404,6 @@ public class HouseHoldCleanWeb extends BaseActivity {
                 break;
         }
     }
-
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -439,7 +437,7 @@ public class HouseHoldCleanWeb extends BaseActivity {
                 onStartSuccess(url);
                 return true;
             }else if (url.startsWith(ConstantUtil.MSB_APP)){
-                AppActivityUtil.onAppActivityType(context,url,"民生宝","0","","","");
+                AppActivityUtil.onAppActivityType(context,url,"民生宝","0","","","","");
                 return true;
             }else {
                 return false;

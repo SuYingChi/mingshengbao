@@ -285,7 +285,8 @@ public class GasServiceActivity extends BaseActivity {
             String title=info.getTitle();
             String share=info.getShare();
             String desc=info.getDesc();
-            AppActivityUtil.onAppActivityType(context,myUrl,title,share,desc,"gas_start_activity","");
+            String imageUrl=info.getImages();
+            AppActivityUtil.onAppActivityType(context,myUrl,title,share,desc,"gas_start_activity","",imageUrl);
         }
     }
     private void onPayFee(String name) {

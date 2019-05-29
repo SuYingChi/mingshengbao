@@ -148,7 +148,7 @@ public class PaySuccessActivity extends BaseActivity {
                    onGetGiftPrize();
                    return true;
                 }else {
-                    AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"");
+                    AppActivityUtil.onAppActivityType(context,url,"民生宝","0","",activityCode,"","");
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, url);

@@ -19,6 +19,7 @@
     <string name="send_order">提交订单</string>
     <string name="upload_most_four_picture">最多只能上传4张图片</string>
     <string name="reRepair_text">返修</string>
+    <string name="repair_reFix_new_orderNo_tip">该工单已返修，点击查看返修详情</string>
     <string name="no_server_order">无服务订单</string>
     <string name="refund_amount">退款金额</string>
     <string name="refund_amount_tip">退款提示：最多可退</string>

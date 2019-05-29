@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.msht.minshengbao.OkhttpUtil.BaseCallback;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -17,6 +20,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.custom.Dialog.SelfPayDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.events.NetWorkEvent;
 import com.msht.minshengbao.events.UpdateBalanceEvent;
 
@@ -174,11 +178,46 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
     private void initData() {
         customDialog.show();
         String validateURL = UrlUtil.Mywallet_balanceUrl;
-        Map<String, String> textParams = new HashMap<String, String>();
+        HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        SendRequestUtil.postDataFromService(validateURL,textParams,requestHandler);
+        OkHttpRequestManager.getInstance(getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+                onBalanceData(data.toString());
+            }
+
+            @Override
+            public void responseReqFailed(Object data) {
+                if (customDialog!=null&&customDialog.isShowing()){
+                    customDialog.dismiss();
+                }
+            }
+        });
+
     }
+
+    private void onBalanceData(String s) {
+
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error = object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                JSONObject data=object.getJSONObject("data");
+                String balance=data.optString("balance");
+                tvBalance.setText(balance);
+            }else {
+                displayDialog(error);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void initBinding() {
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
@@ -237,5 +276,6 @@ public class MyWalletActivity extends BaseActivity implements View.OnClickListen
             customDialog.dismiss();
         }
         super.onDestroy();
+        OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

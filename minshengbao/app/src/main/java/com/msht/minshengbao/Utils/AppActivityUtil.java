@@ -53,12 +53,12 @@ import com.msht.minshengbao.functionActivity.repairService.SanitaryWareActivity;
  * @date 2018/11/12  
  */
 public class AppActivityUtil {
-    public static void onAppActivityType(Context context, String url, String title, String share, String desc, String activityCode, String backUrl) {
+    public static void onAppActivityType(Context context, String url, String title, String share, String desc, String activityCode, String backUrl,String imageUrl) {
         if (context != null && (!TextUtils.isEmpty(url))) {
             switch (LinkUrlUtil.getDomain(url)) {
                 case ConstantUtil.SHOP_DOMAIN:
                 case ConstantUtil.DEBUG_SHOP_DOMAIN:
-                    onShopMallPage(context, url);
+                    onShopMallPage(context, url,  title,  share,  desc,  activityCode,  backUrl, imageUrl);
                     break;
                 case ConstantUtil.VEGETABLE_DOMAIN:
                     Intent intent = new Intent(context,ShopKeywordListActivity.class);
@@ -67,11 +67,11 @@ public class AppActivityUtil {
                     break;
                 default:
                     if (url.startsWith(ConstantUtil.MSB_APP)) {
-                        startActivityAdvertising(context, url, title, share, desc);
+                        startActivityAdvertising(context, url, title, share, desc,activityCode, backUrl,imageUrl);
                     } else {
                         if (!url.equals(VariableUtil.NULL_VALUE)) {
                             if (isLoginState(context)) {
-                                onStartHtmlActivity(context, url, title, share, desc, activityCode, backUrl);
+                                onStartHtmlActivity(context, url, title, share, desc, activityCode, backUrl,imageUrl);
                             } else {
                                 onStartLoginActivity(context, "");
                             }
@@ -83,13 +83,13 @@ public class AppActivityUtil {
         }
     }
 
-    private static void startActivityAdvertising(Context context, String url, String title, String share, String desc) {
+    private static void startActivityAdvertising(Context context, String url, String title, String share, String desc,String activityCode, String backUrl,String imageUrl) {
         String code = Uri.parse(url).getQueryParameter("code");
         String id;
         if (!TextUtils.isEmpty(code)){
             switch (code) {
                 case ConstantUtil.SHOP:
-                    onShopMallPage(context,url);
+                    onShopMallPage(context,url,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.WATER:
                     onDrinkingWater(context, "");
@@ -132,7 +132,7 @@ public class AppActivityUtil {
             }
         }else {
             if (url.startsWith(ConstantUtil.HTTP)) {
-                onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+                onStartHtmlActivity(context, url, title, share, desc, activityCode, backUrl,imageUrl);
             }
         }
 
@@ -331,22 +331,22 @@ public class AppActivityUtil {
         if (context != null) {
             switch (code) {
                 case ConstantUtil.SHOP_ELECTRIC_WATER_HEATER:
-                    onShopMallPage(context, UrlUtil.SHOP_HEATERCALORIFIER);
+                    onShopMallPage(context, UrlUtil.SHOP_HEATERCALORIFIER,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.SHOP_LAMPBLACK_MACHINE:
-                    onShopMallPage(context, UrlUtil.SHOP_LAMPBLACK);
+                    onShopMallPage(context, UrlUtil.SHOP_LAMPBLACK,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.SHOP_GAS_STOVE:
-                    onShopMallPage(context, UrlUtil.SHOP_GAS_STOVE);
+                    onShopMallPage(context, UrlUtil.SHOP_GAS_STOVE,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.SHOP_WATER_HEATER:
-                    onShopMallPage(context, UrlUtil.SHOP_GAS_HEATER);
+                    onShopMallPage(context, UrlUtil.SHOP_GAS_HEATER,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.SHOP_IMPORTED_RED_WINE:
-                    onShopMallPage(context, UrlUtil.SHOP_IMPORT_FOODSTUFF);
+                    onShopMallPage(context, UrlUtil.SHOP_IMPORT_FOODSTUFF,"民生宝", "0", "民生宝", code, "","");
                     break;
                 case ConstantUtil.SHOP_STERILIZER:
-                    onShopMallPage(context, UrlUtil.SHOP_DISINFECTIONCABINET);
+                    onShopMallPage(context, UrlUtil.SHOP_DISINFECTIONCABINET,"民生宝", "0", "民生宝", code, "","");
                     break;
                 default:
                     onShopMall(context);
@@ -424,13 +424,13 @@ public class AppActivityUtil {
                 default:
                     if (url.startsWith(ConstantUtil.HTTP)) {
                         url = LinkUrlUtil.containMark(context, url);
-                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+                        onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "","");
                     }
                     break;
             }
         }else if (url.startsWith(ConstantUtil.HTTP)){
            // url = LinkUrlUtil.containMark(context, url);
-            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", "", "","");
         }
     }
     private static void onPushGasIot(Context context, String code) {
@@ -460,7 +460,7 @@ public class AppActivityUtil {
             if (!TextUtils.isEmpty(code)){
                 switch (code) {
                     case ConstantUtil.SHOP:
-                        onShopMallPage(context,url);
+                        onShopMallPage(context,url,"民生宝", "0", "民生宝", code, "","");
                         break;
                     case ConstantUtil.WATER:
                         onDrinkingWater(context, url);
@@ -518,14 +518,14 @@ public class AppActivityUtil {
                     default:
                         if (url.startsWith(ConstantUtil.HTTP)) {
                            // url = LinkUrlUtil.containMark(context, url);
-                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+                            onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "","");
                         }
                         break;
                 }
             }else {
                 if (url.startsWith(ConstantUtil.HTTP)) {
                    // url = LinkUrlUtil.containMark(context, url);
-                    onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "");
+                    onStartHtmlActivity(context, url, "民生宝", "0", "民生宝", code, "","");
                 }
             }
         }
@@ -750,6 +750,7 @@ public class AppActivityUtil {
             } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.SHOP_DOMAIN) || NetUtil.getDomain(rightUrl).equals(ConstantUtil.DEBUG_SHOP_DOMAIN)) {
                 Intent intent = new Intent(context, HtmlPageActivity.class);
                 intent.putExtra("url", rightUrl);
+                intent.putExtra("navigate", "民生宝");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             } else {
@@ -793,12 +794,13 @@ public class AppActivityUtil {
                 } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                     Intent intent = new Intent(context, HtmlPageActivity.class);
                     intent.putExtra("url", rightUrl);
+                    intent.putExtra("navigate", "民生宝");
                     context.startActivity(intent);
                 }
         }else {
             if (!rightUrl.equals(VariableUtil.NULL_VALUE)) {
                // rightUrl = LinkUrlUtil.containMark(context, rightUrl);
-                onStartHtmlActivity(context, rightUrl, "民生宝", "", "", code, "");
+                onStartHtmlActivity(context, rightUrl, "民生宝", "", "", "", "","");
             }
         }
     }
@@ -829,7 +831,7 @@ public class AppActivityUtil {
             context.startActivity(intent);
         }
     }
-    private static void onShopMallPage(Context context, String rightUrl) {
+    private static void onShopMallPage(Context context, String rightUrl, String title, String share, String desc,String activityCode, String backUrl,String imageUrl) {
         if ((!TextUtils.isEmpty(rightUrl)) && (!rightUrl.equals(VariableUtil.NULL_VALUE))) {
             if (rightUrl.contains("keyword=")) {
                 int index = rightUrl.indexOf("keyword=");
@@ -850,9 +852,20 @@ public class AppActivityUtil {
                 intent.putExtra("data", rightUrl);
                 context.startActivity(intent);
             } else if (NetUtil.getDomain(rightUrl).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
-                Intent intent = new Intent(context, HtmlPageActivity.class);
-                intent.putExtra("url", rightUrl);
-                context.startActivity(intent);
+                if (isLoginState(context)){
+                    Intent intent = new Intent(context, HtmlPageActivity.class);
+                    intent.putExtra("url", rightUrl);
+                    intent.putExtra("navigate", "民生宝");
+                    intent.putExtra("title", title);
+                    intent.putExtra("share", share);
+                    intent.putExtra("desc", desc);
+                    intent.putExtra("activityCode", activityCode);
+                    intent.putExtra("backUrl", backUrl);
+                    intent.putExtra("imageUrl",imageUrl);
+                    context.startActivity(intent);
+                }else {
+                    onStartLoginActivity(context, rightUrl);
+                }
             }
         }
     }
@@ -1062,7 +1075,7 @@ public class AppActivityUtil {
         context.startActivity(intent);
     }
 
-    private static void onStartHtmlActivity(Context context, String url, String title, String share, String desc, String activityCode, String backUrl) {
+    private static void onStartHtmlActivity(Context context, String url, String title, String share, String desc, String activityCode, String backUrl,String imageUrl) {
         if (isLoginState(context)){
             Intent intent = new Intent(context, HtmlPageActivity.class);
             intent.putExtra("url", url);
@@ -1072,6 +1085,7 @@ public class AppActivityUtil {
             intent.putExtra("desc", desc);
             intent.putExtra("activityCode", activityCode);
             intent.putExtra("backUrl", backUrl);
+            intent.putExtra("imageUrl",imageUrl);
             context.startActivity(intent);
         }else {
             onStartLoginActivity(context, url);

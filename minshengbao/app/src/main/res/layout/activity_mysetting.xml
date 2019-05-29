@@ -42,16 +42,16 @@
                     android:layout_marginTop="@dimen/margin_width15"
                     android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/potrait"
+                    android:src="@drawable/portrait_xh"
                     android:layout_toLeftOf="@+id/id_img1"
                     android:layout_toStartOf="@+id/id_img1"
                     android:layout_marginRight="@dimen/margin_width15"
                     android:layout_marginEnd="@dimen/margin_width15"
-                    app:failureImage="@drawable/potrait"
+                    app:failureImage="@drawable/portrait_xh"
                     app:failureImageScaleType="centerInside"
                     app:roundAsCircle="true"
-                    app:retryImage="@drawable/potrait"
-                    app:backgroundImage="@drawable/potrait"/>
+                    app:retryImage="@drawable/portrait_xh"
+                    app:backgroundImage="@drawable/portrait_xh"/>
                 <ImageView
                     android:id="@+id/id_img1"
                     android:layout_width="wrap_content"

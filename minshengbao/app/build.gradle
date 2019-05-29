@@ -7,8 +7,8 @@ android {
         applicationId "com.msht.minshengbao"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2000059
-        versionName "v4.8.3"
+        versionCode 2000060
+        versionName "v4.8.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "arm64-v8a", "armeabi", "armeabi-v7a", "x86", "x86_64", "mips"
@@ -103,7 +103,9 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc11'
     implementation 'com.jaredrummler:material-spinner:1.1.0'
     implementation 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
-    implementation 'com.github.chrisbanes:PhotoView:1.3.1'
+   // implementation 'com.github.chrisbanes:PhotoView:1.3.1'
+   // implementation 'com.github.chrisbanes:PhotoView:1.3.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     //implementation 'top.zibin:Luban:1.1.2'
     implementation 'top.zibin:Luban:1.1.3'
     implementation 'io.reactivex:rxandroid:1.2.1'

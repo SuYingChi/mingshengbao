@@ -134,6 +134,7 @@
     <string name="add_symbol">+</string>
     <string name="fund_symbol">¥</string>
     <string name="question_symbol">\?</string>
+    <string name="exclamation_point">!</string>
     <!--单位 -->
     <string name="RMB_YUAN">元</string>
 

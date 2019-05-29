@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,8 @@ public class CouponAdapter extends BaseAdapter {
         void onGoShopHome();
 
         void onClikshowDesc(int position);
+
+        void onUseServiceCoupon(String direct_url);
     }
     @Override
     public int getCount() {
@@ -77,7 +80,7 @@ public class CouponAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_dicount_coupon, null);
-            holder.layoutBack =(RelativeLayout)convertView.findViewById(R.id.id_layout_back);
+            holder.layoutBack =(LinearLayout)convertView.findViewById(R.id.id_layout_back);
             holder.cnName =(TextView)convertView.findViewById(R.id.id_title_name);
             holder.cnScope =(TextView) convertView.findViewById(R.id.id_scope);
             holder.cnAmount =(TextView) convertView.findViewById(R.id.id_amount);
@@ -102,6 +105,12 @@ public class CouponAdapter extends BaseAdapter {
                 holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
                 holder.layoutBack.setBackgroundResource(R.drawable.left_kaqun);
                 holder.tvuse.setText("点击使用");
+                holder.tvuse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                     listener.onUseServiceCoupon(haveuseList.get(position).get("direct_url"));
+                    }
+                });
                 holder.tvuse.setClickable(true);
                 holder.tvuse.setTextColor(Color.WHITE);
                 holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -155,7 +164,7 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnScope.setText(haveuseList.get(position).get("scope"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("amount"));
             holder.cnEndDate.setText(haveuseList.get(position).get("end_date"));
-            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+" ~");
+            holder.id_effective_text.setText(haveuseList.get(position).get("start_date")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("desc"));
         }else if(tab==1){
             String rpacket_state = haveuseList.get(position).get("rpacket_state");
@@ -184,7 +193,7 @@ public class CouponAdapter extends BaseAdapter {
                         }
                     });
                     if ((!TextUtils.isEmpty(haveuseList.get(position).get("left_days"))) && !"0".equals(haveuseList.get(position).get("left_days"))) {
-                        String mDayText = "剩" + haveuseList.get(position).get("left_days") + "天";
+                        String mDayText = "仅剩" + haveuseList.get(position).get("left_days") + "天";
                         holder.remain_time.setVisibility(View.VISIBLE);
                         holder.remain_time.setText(mDayText);
                     } else {
@@ -200,6 +209,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 case "3":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -210,6 +220,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 default:break;
             }
@@ -236,7 +247,7 @@ public class CouponAdapter extends BaseAdapter {
                     listener.onClikshowDesc(position);
                 }
             });
-            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+" ~");
+            holder.id_effective_text.setText(haveuseList.get(position).get("rpacket_start_date_text")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("rpacket_desc"));
         } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
@@ -256,6 +267,13 @@ public class CouponAdapter extends BaseAdapter {
                          listener.onClickVoucher(haveuseList.get(position).get("store_id"));
                         }
                     });
+                    if ((!TextUtils.isEmpty(haveuseList.get(position).get("left_days"))) && !"0".equals(haveuseList.get(position).get("left_days"))) {
+                        String mDayText = "仅剩" + haveuseList.get(position).get("left_days") + "天";
+                        holder.remain_time.setVisibility(View.VISIBLE);
+                        holder.remain_time.setText(mDayText);
+                    } else {
+                        holder.remain_time.setVisibility(View.GONE);
+                    }
                     break;
                 case "2":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -266,6 +284,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                 case "3":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
@@ -276,6 +295,7 @@ public class CouponAdapter extends BaseAdapter {
                     holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                     holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                    holder.remain_time.setVisibility(View.GONE);
                     break;
                     default:break;
             }
@@ -303,13 +323,13 @@ public class CouponAdapter extends BaseAdapter {
             holder.cnName.setText(haveuseList.get(position).get("store_name"));
             holder.cnEndDate.setText(haveuseList.get(position).get("voucher_end_date_text"));
             holder.cnAmount.setText("¥" + haveuseList.get(position).get("voucher_price"));
-            holder.id_effective_text.setText("使用期限至");
+            holder.id_effective_text.setText(haveuseList.get(position).get("voucher_start_date_text")+"  ~");
             holder.use_desc.setText(haveuseList.get(position).get("voucher_des"));
         }
             return convertView;
     }
     class ViewHolder {
-        RelativeLayout layoutBack;
+        LinearLayout layoutBack;
         TextView cnName;
         TextView cnScope;
         TextView cnAmount;

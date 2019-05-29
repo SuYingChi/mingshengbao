@@ -14,6 +14,25 @@ public class VoucherBean {
     private String voucher_t_limit;
     private String voucher_t_end_date;
 
+    public String getVoucher_t_start_date_text() {
+        return voucher_t_start_date_text;
+    }
+
+    public void setVoucher_t_start_date_text(String voucher_t_start_date_text) {
+        this.voucher_t_start_date_text = voucher_t_start_date_text;
+    }
+
+    public String getVoucher_t_end_date_text() {
+        return voucher_t_end_date_text;
+    }
+
+    public void setVoucher_t_end_date_text(String voucher_t_end_date_text) {
+        this.voucher_t_end_date_text = voucher_t_end_date_text;
+    }
+
+    private String voucher_t_start_date_text;
+    private String voucher_t_end_date_text;
+
     public String getVoucher_t_state() {
         return voucher_t_state;
     }

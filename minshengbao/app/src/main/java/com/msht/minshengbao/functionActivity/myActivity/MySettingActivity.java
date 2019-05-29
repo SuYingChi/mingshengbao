@@ -35,6 +35,7 @@ import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
 import com.msht.minshengbao.custom.SelectPicPopupWindow;
+import com.msht.minshengbao.events.UpdateBalanceEvent;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
@@ -45,6 +46,7 @@ import com.yanzhenjie.permission.AndPermission;
 
 import android.view.View.OnClickListener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -523,7 +525,7 @@ public class MySettingActivity extends BaseActivity implements OnClickListener {
         }
     }
     private void onResetAvatar() {
-        setResult(4);
+        EventBus.getDefault().post(new UpdateBalanceEvent(true));
     }
     UMAuthListener umAuthListener = new UMAuthListener() {
         /**

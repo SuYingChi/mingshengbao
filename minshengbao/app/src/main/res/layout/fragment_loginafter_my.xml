@@ -140,7 +140,7 @@
             android:background="@android:color/transparent"
             android:minHeight="@dimen/margin_50">
             <TextView
-                android:id="@+id/id_tv_naviga"
+                android:id="@+id/id_tv_navigation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

@@ -25,6 +25,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -51,6 +52,7 @@ import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.GsonImpl;
 import com.msht.minshengbao.Utils.StatusBarCompat;
 import com.msht.minshengbao.custom.Dialog.HomeAdvertisingDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.custom.widget.DragImageView;
 import com.msht.minshengbao.custom.widget.MarqueeView;
 import com.msht.minshengbao.adapter.HomeFunctionAdapter;
@@ -133,6 +135,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private String title;
     private String desc;
     private String backUrl;
+    private String imageUrl;
     /**
      * bgHeight;上半身的高度
      */
@@ -159,13 +162,12 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     private final GetFunctionHandler getFunctionHandler=new GetFunctionHandler(this);
     private final SpecialTopicHandler specialTopicHandler =new SpecialTopicHandler(this);
     private final GetHotHandler getHotHandler=new GetHotHandler(this);
-    private final GetMsbHeadLineHandler headLineHandler=new GetMsbHeadLineHandler(this);
     private Toolbar hearLayout;
 
     public HomeFragment() {}
     private static class GetAdvertisingHandler extends Handler{
         private WeakReference<HomeFragment> mWeakReference;
-        public GetAdvertisingHandler(HomeFragment homeFragment) {
+        GetAdvertisingHandler(HomeFragment homeFragment) {
             mWeakReference = new WeakReference<HomeFragment>(homeFragment);
         }
         @Override
@@ -190,42 +192,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                             }else {
                                 reference.onFloatingAdvertisingData(array);
                             }
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    break;
-                case SendRequestUtil.FAILURE:
-                    ToastUtil.ToastText(reference.mContext,msg.obj.toString());
-                    break;
-                default:
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    }
-
-    private static class GetMsbHeadLineHandler extends Handler{
-        private WeakReference<HomeFragment> mWeakReference;
-        public GetMsbHeadLineHandler(HomeFragment homeFragment) {
-            mWeakReference = new WeakReference<HomeFragment>(homeFragment);
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            final HomeFragment reference =mWeakReference.get();
-            // the referenced object has been cleared
-            if (reference == null||reference.isDetached()) {
-                return;
-            }
-            reference.initAdvertisingData();
-            switch (msg.what) {
-                case SendRequestUtil.SUCCESS:
-                    try {
-                        JSONObject object = new JSONObject(msg.obj.toString());
-                        String code=object.optString("code");
-                        JSONArray jsonArray=object.optJSONArray("data");
-                        if (code.equals(ConstantUtil.VALUE_ZERO)){
-                            reference.onReceiveHeadLineData(jsonArray);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -390,11 +356,9 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             if (reference == null || reference.isDetached()) {
                 return;
             }
-            reference.initMarqueeViewData();
             switch (msg.what) {
                 case SendRequestUtil.SUCCESS:
                     try {
-
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String results = object.optString("result");
                         String error = object.optString("error");
@@ -446,7 +410,8 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                     String share=info.getShare();
                     String desc=info.getDesc();
                     String backUrl=info.getBackUrl();
-                    AppActivityUtil.onAppActivityType(mContext,myUrl,title,share,desc,"header_img",backUrl);
+                    String imageUrl=info.getImages();
+                    AppActivityUtil.onAppActivityType(mContext,myUrl,title,share,desc,"header_img",backUrl,imageUrl);
             }
         }
         @Override
@@ -514,13 +479,13 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
             dragImageView.setVisibility(View.VISIBLE);
         try {
             JSONObject jsonObject = array.getJSONObject(0);
-            String image = jsonObject.getString("image");
+            imageUrl = jsonObject.getString("image");
             share=jsonObject.getString("share");
             title=jsonObject.getString("title");
             desc=jsonObject.optString("desc");
             url=jsonObject.optString("url");
             backUrl=jsonObject.optString("back_url");
-            Uri uri = Uri.parse(image);
+            Uri uri = Uri.parse(imageUrl);
             DraweeController controller = Fresco.newDraweeControllerBuilder()
                     .setUri(uri)
                     .setAutoPlayAnimations(true)
@@ -561,6 +526,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         initCardBanner();
         initLocation();
         initData();
+        initMarqueeViewData();
         initEvent();
         initListeners();
         return mRootView;
@@ -573,8 +539,55 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(requestUrl, OkHttpRequestUtil.TYPE_GET,null,headLineHandler);
+        OkHttpRequestManager.getInstance(getContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_GET, null, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                onMarqueeViewData(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
     }
+
+    private void onMarqueeViewData(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String code=object.optString("code");
+            if (code.equals(ConstantUtil.VALUE_ZERO)){
+                headLineInfo.clear();
+                headLineList.clear();
+                JSONArray jsonArray=object.optJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String id = jsonObject.optString("id");
+                    String title="  热点    "+jsonObject.optString("title");
+                    String url=jsonObject.optString("url");
+                    String pic=jsonObject.optString("pic");
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("id", id);
+                    map.put("title",title);
+                    map.put("url",url);
+                    map.put("pic",pic);
+                    headLineList.add(map);
+                    SpannableString style = new SpannableString(title);
+                    style.setSpan(new BackgroundColorSpan(Color.RED),0,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    style.setSpan(new ForegroundColorSpan(Color.WHITE), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    headLineInfo.add(style);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if (headLineInfo.size()>0){
+            layoutHeadLine.setVisibility(View.VISIBLE);
+            marqueeView.startWithList(headLineInfo, R.anim.anim_bottom_in, R.anim.anim_top_out);
+        }else {
+            layoutHeadLine.setVisibility(View.GONE);
+        }
+    }
+
     private void initRefresh() {
         mSwipeRefresh.setProgressViewEndTarget(false, 100);
         mSwipeRefresh.setProgressViewOffset(false, 2, 45);
@@ -749,7 +762,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 String share=imageInfo.getShare();
                 String desc=imageInfo.getDesc();
                 String backUrl=imageInfo.getBackUrl();
-                AppActivityUtil.onAppActivityType(mContext,rightUrl,title,share,desc,"homepage_special_topic_activity",backUrl);
+                AppActivityUtil.onAppActivityType(mContext,rightUrl,title,share,desc,"homepage_special_topic_activity",backUrl,imageUrl);
             }
         });
         mMZBanner.addPageChangeLisnter(new ViewPager.OnPageChangeListener() {
@@ -849,7 +862,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 onMoreHeadLine();
                 break;
             case R.id.id_floating_view:
-                AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"float_activity",backUrl);
+                AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"float_activity",backUrl,imageUrl);
                 break;
             default:
                 break;
@@ -1097,7 +1110,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
         if (array!=null&&array.length()>0){
             try {
                 JSONObject jsonObject = array.getJSONObject(0);
-                String image = jsonObject.getString("image");
+                final String image = jsonObject.getString("image");
                 final String share=jsonObject.getString("share");
                 final String title=jsonObject.getString("title");
                 final String desc=jsonObject.optString("desc");
@@ -1108,7 +1121,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                             .setOnAdvertisingClickListener(new HomeAdvertisingDialog.OnAdvertisingClickListener() {
                                 @Override
                                 public void onClick(String url) {
-                                    AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"pop_up_activity",backUrl);
+                                    AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"pop_up_activity",backUrl,image);
                                 }
                             })
                             .show();
@@ -1146,9 +1159,6 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
     public void onDestroy() {
         LocationUtils.setonDestroy();//销毁定位客户端，同时销毁本地定位服务
         super.onDestroy();
-        /*if (mImmersionBar != null) {
-            mImmersionBar.destroy();
-        }*/
         OkHttpRequestManager.getInstance(mContext).requestCancel(this);
 
     }

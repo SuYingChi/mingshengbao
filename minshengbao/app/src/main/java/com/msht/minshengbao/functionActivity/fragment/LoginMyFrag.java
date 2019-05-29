@@ -3,17 +3,22 @@ package com.msht.minshengbao.functionActivity.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,8 +26,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.msht.minshengbao.Bean.RepairNumBean;
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.OkhttpUtil.BaseCallback;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestManager;
+import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.Utils.SendRequestUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
@@ -76,9 +83,13 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -110,7 +121,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
      * 最大显示消息数
      **/
     private static final int MAX_MASSAGE = 99;
-    private ArrayList<HashMap<String, Integer>> mList = new ArrayList<HashMap<String, Integer>>();
+
     private final String mPageName = "首页_个人中心";
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private LoadingDialog centerLoadingDialog;
@@ -144,9 +155,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         } else if (!isDetached() && !centerLoadingDialog.isShowing()) {
             centerLoadingDialog.show();
         }
-
     }
-
     @Override
     public void dismissLoading() {
         if (centerLoadingDialog != null && centerLoadingDialog.isShowing() && getActivity() != null && !getActivity().isFinishing()) {
@@ -281,11 +290,14 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         if (mRootView == null) {
             mRootView = LayoutInflater.from(mContext).inflate(R.layout.fragment_loginafter_my, null, false);
         }
-        EventBus.getDefault().register(this);
+
         String avatarUrl = SharedPreferencesUtil.getAvatarUrl(mContext, SharedPreferencesUtil.AvatarUrl, "");
         nickname = SharedPreferencesUtil.getNickName(mContext, SharedPreferencesUtil.NickName, "");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mRootView.findViewById(R.id.id_view).setVisibility(View.GONE);
+        }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
         initView(mRootView);
         Uri uri = Uri.parse(avatarUrl);
@@ -301,6 +313,63 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         getBalance();
         return mRootView;
     }
+    private void getShareAdvertiseData() {
+        String requestUrl=UrlUtil.ADVERTISING_URL;
+        try {
+            requestUrl =requestUrl +"?city_id="+ URLEncoder.encode(VariableUtil.cityId, "UTF-8")+"&code="+URLEncoder.encode("user_info_share", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        OkHttpRequestManager.getInstance(mContext.getApplicationContext()).postRequestAsync(requestUrl, OkHttpRequestManager.TYPE_GET, null, new BaseCallback() {
+            @Override
+            public void responseRequestSuccess(Object data) {
+                Log.d("RequestSuccess=",data.toString());
+                onAdvertiseDataAnalysis(data.toString());
+            }
+            @Override
+            public void responseReqFailed(Object data) {
+                CustomToast.showWarningLong(data.toString());
+            }
+        });
+    }
+    private void onAdvertiseDataAnalysis(String s) {
+        try {
+            JSONObject object = new JSONObject(s);
+            String results=object.optString("result");
+            String error=object.optString("error");
+            if(results.equals(SendRequestUtil.SUCCESS_VALUE)) {
+                JSONArray array =object.optJSONArray("data");
+                if (array!=null&&array.length()>0){
+                    JSONObject jsonObject = array.getJSONObject(0);
+                    String image = jsonObject.getString("image");
+                    String share=jsonObject.getString("share");
+                    String title=jsonObject.getString("title");
+                    String desc=jsonObject.optString("desc");
+                    String url=jsonObject.optString("url");
+                    String backUrl=jsonObject.optString("back_url");
+                    AppActivityUtil.onAppActivityType(mContext,url,title,share,desc,"user_info_share",backUrl,image);
+                }else {
+                    goShare();
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 0x006:
+                if (resultCode==0x006){
+                    getBalance();
+                }
+                break;
+                default:
+                    break;
+        }
+    }
 
     private void getBalance() {
         String userId= SharedPreferencesUtil.getUserId(mActivity, SharedPreferencesUtil.UserId,"");
@@ -309,7 +378,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId",userId);
         textParams.put("password",password);
-        OkHttpRequestManager.getInstance(mActivity.getApplicationContext()).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
+        OkHttpRequestManager.getInstance(mContext).postRequestAsync(validateURL, OkHttpRequestManager.TYPE_POST_MULTIPART, textParams, new BaseCallback() {
             @Override
             public void responseRequestSuccess(Object data) {
                 onAnalysisData(data.toString());
@@ -445,11 +514,12 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         });
     }
     private void initView(View view) {
+        layoutNavigation=view.findViewById(R.id.id_li_navigation);
         myScrollview = (MyScrollview) view.findViewById(R.id.id_scrollview);
         layoutMySetting = (RelativeLayout) view.findViewById(R.id.id_my_setting);
         btnMessage = (MenuItemM) view.findViewById(R.id.id_mim_message);
         mPortrait = (SimpleDraweeView) view.findViewById(R.id.id_portrait_view);
-        tvNavigation = (TextView) view.findViewById(R.id.id_tv_naviga);
+        tvNavigation = (TextView) view.findViewById(R.id.id_tv_navigation);
         tvNickname = (TextView) view.findViewById(R.id.id_tv_nickname);
         tvBalance=(TextView)view.findViewById(R.id.id_wallet_value) ;
         tvRedCard=(TextView)view.findViewById(R.id.id_red_card_num) ;
@@ -462,7 +532,6 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 userName = userName.substring(0, 3) + "****" + userName.substring(7, userName.length());
             }
             tvNickname.setText(userName);
-
         }
         tvWaitEvaluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
         tvWaitGet = (TextView) view.findViewById(R.id.wait_get_order_num);
@@ -565,7 +634,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 goManage();
                 break;
             case R.id.id_share_button:
-                goShare();
+                getShareAdvertiseData();
                 break;
             case R.id.id_red_packet_layout:
                 onRedCard();
@@ -628,7 +697,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     private void goMyWallet() {
         Intent intent = new Intent(mContext, MyWalletActivity.class);
-        startActivityForResult(intent, 0x004);
+        startActivity(intent);
     }
     private void goInvoice() {
         Intent intent = new Intent(mContext, InvoiceHomeActivity.class);
@@ -641,7 +710,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
 
     private void goSetting() {
         Intent intent = new Intent(mContext, MySettingActivity.class);
-        startActivityForResult(intent, 1);
+        startActivity(intent);
     }
 
     private void goCustomerNo() {
@@ -676,10 +745,8 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             CallPhoneUtil.callPhone(mContext, phone);
         }
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(UpdateBalanceEvent messageEvent) {
-       // tvBalance.setText(messageEvent.getMessage());
+    public void onUpdateEvent(UpdateBalanceEvent messageEvent) {
         if (messageEvent.getMessage()){
             getBalance();
         }

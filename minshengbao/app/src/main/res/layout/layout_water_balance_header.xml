@@ -47,7 +47,7 @@
                 android:id="@+id/id_btn_purchase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/margin_width25"
+                android:minHeight="@dimen/margin_width30"
                 android:minWidth="@dimen/margin_width60"
                 android:layout_below="@+id/id_card_type"
                 android:layout_marginTop="@dimen/margin_width25"
@@ -55,7 +55,7 @@
                 android:layout_marginRight="@dimen/margin_width15"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/selector_change_blue_corner_background"
+                android:background="@drawable/shape_change_blue_shadow_bg"
                 android:text="@string/purchase_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_width12"/>

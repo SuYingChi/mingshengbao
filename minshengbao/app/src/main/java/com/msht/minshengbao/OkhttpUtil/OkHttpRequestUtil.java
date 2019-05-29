@@ -57,6 +57,7 @@ public class OkHttpRequestUtil implements ReqCallBack{
                 .readTimeout(12, TimeUnit.SECONDS)
                 //设置写入超时时间
                 .writeTimeout(12, TimeUnit.SECONDS)
+                .addInterceptor(new MLoggerInterceptor("http", true))
                 .sslSocketFactory(SSLSocketClient.getSSLSocketFactory(),SSLSocketClient.getX509TrustManager())
                 .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                 .build();

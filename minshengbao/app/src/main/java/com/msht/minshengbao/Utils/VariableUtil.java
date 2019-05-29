@@ -26,6 +26,8 @@ public class VariableUtil {
     public static boolean isCurrent=false;
     public static String waterAccount="";
     public static String mDateString="";
+    public static String wallet;
+    public static String totalCouponNum;
     public static final  String NULL_VALUE="null";
     public static final  String VALUE_ZERO= "0";
     public static final  String VALUE_ONE=  "1";
@@ -41,9 +43,6 @@ public class VariableUtil {
     public static final  String VALUE_SEVENTEEN="17";
     public static final  String VALUE_ZERO1="0.0";
     public static final  String VALUE_ZERO2="0.00";
-    public static ArrayList<String> options1item=new ArrayList<String>();
-    public static ArrayList<ArrayList<String>> options2item=new ArrayList<ArrayList<String>>();
-    public static ArrayList<ArrayList<ArrayList<String>>> options3item=new ArrayList<>();
     public static ArrayList<HashMap<String,  String>> detailList = new ArrayList<HashMap<String,  String>>();
 
     public static String SECURITY_ENCRYPT_KEY="www.mssb.com2017!@#";
