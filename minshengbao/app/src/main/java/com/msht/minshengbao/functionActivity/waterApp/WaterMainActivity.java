@@ -31,6 +31,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.WaterShareRedPacketDialog;
 import com.msht.minshengbao.functionActivity.htmlWeb.HtmlPageActivity;
+import com.msht.minshengbao.functionActivity.htmlWeb.PrizesGiftsActivity;
 import com.msht.minshengbao.functionActivity.publicModule.QrCodeScanActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -62,15 +63,15 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
     private TextView  tvAccount;
     private TextView  tvBalance;
     private String    account="";
-    private String    waterAccount;
+    private String waterAccount;
     private String couponCode;
     private String orderNo;
-    private int       requestType=0;
+    private int    requestType=0;
     private CustomDialog customDialog;
     private final BalanceHandler balanceHandler=new BalanceHandler(this);
     private static class BalanceHandler extends Handler {
         private WeakReference<WaterMainActivity> mWeakReference;
-        public BalanceHandler(WaterMainActivity activity) {
+        BalanceHandler(WaterMainActivity activity) {
             mWeakReference=new WeakReference<WaterMainActivity>(activity);
         }
         @Override
@@ -325,10 +326,21 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
                 friendShare();
                 break;
             case R.id.id_tip_layout:
-                rechargeAmount();
+                onGetGift();
                 break;
                 default:
                     break;
+        }
+    }
+
+    private void onGetGift() {
+        if (!TextUtils.isEmpty(VariableUtil.waterAccount)){
+            String url=UrlUtil.WATER_PRIZES_GIFTS+"?phone="+VariableUtil.waterAccount;
+            Intent intent=new Intent(context, PrizesGiftsActivity.class);
+            intent.putExtra("url",url);
+            intent.putExtra("navigate","领取礼品");
+            intent.putExtra("flag",0);
+            startActivity(intent);
         }
     }
     private void onCancelShare() {

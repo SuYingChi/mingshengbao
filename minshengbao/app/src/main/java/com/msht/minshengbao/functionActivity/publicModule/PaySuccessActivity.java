@@ -157,7 +157,7 @@ public class PaySuccessActivity extends BaseActivity {
         });
     }
     private void onGetGiftPrize() {
-        String url=UrlUtil.WATER_PRIZES_GIFTS+"?phone="+userPhone;
+        String url=UrlUtil.WATER_PRIZES_GIFTS+"?phone="+VariableUtil.waterAccount;
         Intent intent=new Intent(context, PrizesGiftsActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("navigate","领取礼品");

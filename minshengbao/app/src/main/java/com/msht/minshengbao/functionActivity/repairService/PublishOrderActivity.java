@@ -20,10 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.RegularExpressionUtil;
 import com.msht.minshengbao.custom.Dialog.PublicEnsureInfoDialog;
 import com.msht.minshengbao.custom.Dialog.QuestionDescribeDialog;
 import com.msht.minshengbao.custom.Dialog.SelectDateDialog;
 import com.msht.minshengbao.custom.Dialog.SelectDialog;
+import com.msht.minshengbao.custom.widget.CustomToast;
 import com.msht.minshengbao.custom.widget.MyNoScrollGridView;
 import com.msht.minshengbao.adapter.PhotoPickerAdapter;
 
@@ -427,7 +429,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                     .onDenied(new Action<List<String>>() {
                         @Override
                         public void onAction(List<String> data) {
-                            ToastUtil.ToastText(context,"授权失败");
+                            CustomToast.showWarningDialog("授权失败");
                         }
                     }).start();
         }else {
@@ -578,6 +580,18 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
         startActivityForResult(intent,4);
     }
     private void onOrderSend() {
+        recommend= etRecommend.getText().toString().trim();
+        if (!TextUtils.isEmpty(recommend)){
+            if(RegularExpressionUtil.isPhone(recommend)){
+                onEnsureDialog();
+            }else {
+                CustomToast.showWarningLong("手机号格式不正确");
+            }
+        }else {
+            onEnsureDialog();
+        }
+    }
+    private void onEnsureDialog(){
         String date= appointmentData.getText().toString().trim();
         String time= appointmentTime.getText().toString().trim();
         username= ttvName.getText().toString().trim();
@@ -592,7 +606,7 @@ public class PublishOrderActivity extends BaseActivity implements View.OnClickLi
                 .setTitleText2("姓名:")
                 .setTitleText3("电话号码:")
                 .setTitleText4("推荐码:")
-                .setTitleText5("地址：")
+                .setTitleText5("地址:")
                 .setContentText1(mMainType)
                 .setContentText2(username)
                 .setContentText3(phone)

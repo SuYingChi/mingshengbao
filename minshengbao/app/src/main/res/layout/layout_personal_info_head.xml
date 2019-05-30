@@ -129,7 +129,7 @@
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"
-                    android:text="@string/subtract_symbol"/>
+                    android:text="@string/zero_value"/>
             </RelativeLayout>
            <RelativeLayout
                android:id="@+id/id_red_packet_layout"
@@ -158,7 +158,7 @@
                    android:layout_toEndOf="@+id/id_red_card_text"
                    android:textColor="@color/color_383838"
                    android:textSize="@dimen/text_width16"
-                   android:text="@string/subtract_symbol"/>
+                   android:text="@string/zero_value"/>
            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/id_collect_layout"
@@ -189,7 +189,7 @@
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"
-                    android:text="@string/subtract_symbol"/>
+                     android:text="@string/zero_value"/>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/id_footprint_layout"
@@ -220,7 +220,7 @@
                     android:layout_toEndOf="@+id/id_footprint_text"
                     android:layout_toRightOf="@+id/id_footprint_text"
                     android:textSize="@dimen/text_width16"
-                    android:text="@string/subtract_symbol"/>
+                     android:text="@string/zero_value"/>
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>

@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.msht.minshengbao.R;
 
@@ -31,7 +32,8 @@ import com.msht.minshengbao.R;
 public class MyImageDialog {
   //  private PhotoViewAttacher photoViewAttacher;
     private RequestOptions requestOptions;
-    private ImageView mImageView;
+   // private ImageView mImageView;
+    private PhotoView mImageView;
     private int resId;
     private Context context;
     private Dialog dialog;
@@ -70,7 +72,8 @@ public class MyImageDialog {
     public MyImageDialog builder() {
         // 获取Dialog布局
         View view= LayoutInflater.from(context).inflate(R.layout.dialog_image_view,null);
-        mImageView=(ImageView)view.findViewById(R.id.id_image);
+       // mImageView=(ImageView)view.findViewById(R.id.id_image);
+        mImageView=(PhotoView) view.findViewById(R.id.id_image);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

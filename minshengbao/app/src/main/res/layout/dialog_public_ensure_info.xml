@@ -40,23 +40,26 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/margin_width70"
                     android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:text="维修项目:"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
                 <TextView
                     android:id="@+id/id_content1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_toRightOf="@+id/id_text1"
                     android:layout_toEndOf="@+id/id_text1"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:text="00012345"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -66,23 +69,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/margin_width70"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_marginLeft="@dimen/margin_width15"
+                    android:layout_marginStart="@dimen/margin_width15"
                     android:text="姓名:"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
                 <TextView
                     android:id="@+id/id_content2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_toRightOf="@+id/id_text2"
                     android:layout_toEndOf="@+id/id_text2"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:text="00012345"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -92,24 +97,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/margin_width70"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:text="电话号码:"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
                 <TextView
                     android:id="@+id/id_content3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_toRightOf="@+id/id_text3"
                     android:layout_toEndOf="@+id/id_text3"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:text="000123459123456789"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -119,24 +125,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/margin_width70"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:text="地址:"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/id_content4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_width15"
+                    android:layout_marginBottom="@dimen/margin_width15"
                     android:layout_toRightOf="@+id/id_text4"
                     android:layout_toEndOf="@+id/id_text4"
                     android:layout_marginLeft="@dimen/margin_width10"
                     android:layout_marginStart="@dimen/margin_width10"
+                    android:layout_marginEnd="@dimen/margin_width10"
                     android:text="000123459123456789"
                     android:textSize="@dimen/text_width16"
-                    android:textColor="@color/title_tv"/>
+                    android:textColor="@color/color_383838"
+                    android:visibility="gone"/>
             </RelativeLayout>
            <RelativeLayout
                android:layout_width="match_parent"
@@ -146,26 +155,27 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:minWidth="@dimen/margin_width70"
-                   android:layout_marginTop="@dimen/margin_width15"
+                   android:layout_marginBottom="@dimen/margin_width15"
                    android:layout_marginLeft="@dimen/margin_width15"
                    android:layout_marginStart="@dimen/margin_width15"
-                   android:layout_marginBottom="@dimen/margin_width10"
                    android:text="地址:"
                    android:textSize="@dimen/text_width16"
-                   android:textColor="@color/title_tv"/>
+                   android:textColor="@color/color_383838"
+                   android:visibility="gone"/>
                <TextView
                    android:id="@+id/id_content5"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginTop="@dimen/margin_width15"
                    android:layout_toRightOf="@+id/id_text5"
                    android:layout_toEndOf="@+id/id_text5"
                    android:layout_marginLeft="@dimen/margin_width10"
                    android:layout_marginStart="@dimen/margin_width10"
-                   android:layout_marginBottom="@dimen/margin_width10"
+                   android:layout_marginEnd="@dimen/margin_width10"
+                   android:layout_marginBottom="@dimen/margin_width15"
                    android:text="000123459123456789"
                    android:textSize="@dimen/text_width16"
-                   android:textColor="@color/title_tv"/>
+                   android:textColor="@color/color_383838"
+                   android:visibility="gone"/>
            </RelativeLayout>
         </LinearLayout>
         <include layout="@layout/layout_line_gray"/>
@@ -186,7 +196,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="取消"
+                    android:text="@string/cancel_text"
                     android:textSize="@dimen/text_width18"
                     android:textColor="@color/title_tv"/>
             </RelativeLayout>

@@ -70,6 +70,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
     private View     couponLayout;
     private Button   btnPurchase;
     private View     layoutPay;
+    private View     layoutMassFlow;
     private MyScrollview myScrollview;
     private View  layoutNavigation;
     private WaterMealAdapter waterMealAdapter;
@@ -143,10 +144,12 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
             btnPurchase.setVisibility(View.GONE);
             tvMassFlowName.setText(massFlowName);
             tvLimitDate.setText(validateDays);
+            layoutMassFlow.setEnabled(false);
         }else {
             tvMassFlowName.setText("民生水宝大流量水卡");
             btnPurchase.setVisibility(View.VISIBLE);
             tvLimitDate.setText("买卡用水更划算");
+            layoutMassFlow.setEnabled(true);
         }
     }
     @Override
@@ -424,6 +427,8 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         btnPurchase=(Button)findViewById(R.id.id_btn_purchase);
         findViewById(R.id.id_tv_detail).setOnClickListener(this);
         findViewById(R.id.id_forward_img).setOnClickListener(this);
+        layoutMassFlow=findViewById(R.id.id_mass_flow_layout);
+        layoutMassFlow.setEnabled(false);
         headBgLayout=findViewById(R.id.id_head_bg);
         tvRealAmount=(TextView)findViewById(R.id.id_real_amount) ;
         tvDiscount=(TextView)findViewById(R.id.id_discount_text) ;

@@ -606,6 +606,7 @@ public class HomeFragment extends BaseHomeFragment implements View.OnClickListen
                 functionData();
                 initCardData();
                 initHotRecommend();
+                initMarqueeViewData();
             }
         });
     }

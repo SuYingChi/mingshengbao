@@ -252,6 +252,7 @@
                     android:gravity="end"
                     android:hint="@string/please_input_recommend_code"
                     android:inputType="phone"
+                    android:maxLength="11"
                     android:textColor="@color/title_tv"
                     android:textSize="@dimen/text_width16" />
             </RelativeLayout>

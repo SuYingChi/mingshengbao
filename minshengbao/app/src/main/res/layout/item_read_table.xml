@@ -14,15 +14,15 @@
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_centerHorizontal="true"
-            android:text="自助抄表提醒"
+            android:text="温馨提示"
             android:textStyle="bold"
-            android:textSize="@dimen/text_18"
+            android:textSize="@dimen/text_width16"
             android:textColor="#050505" />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#8d8d8d"></View>
+        android:background="#8d8d8d"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -30,12 +30,13 @@
             android:id="@+id/id_text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20"
-            android:layout_marginLeft="@dimen/margin_15"
-            android:layout_marginBottom="@dimen/margin_10"
-            android:text="抄表时间 :"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:layout_marginTop="@dimen/margin_width20"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
+            android:layout_marginBottom="@dimen/margin_width10"
+            android:text="抄表时间:"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
         <TextView
             android:id="@+id/id_read_time"
             android:layout_width="wrap_content"
@@ -43,9 +44,11 @@
             android:layout_marginTop="@dimen/margin_20"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_text1"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:layout_toEndOf="@+id/id_text1"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -55,11 +58,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:layout_marginBottom="@dimen/margin_10"
-            android:text="抄表地址 :"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:text="抄表地址:"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
         <TextView
             android:id="@+id/id_read_address"
             android:layout_width="wrap_content"
@@ -67,9 +71,12 @@
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_text2"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:layout_toEndOf="@+id/id_text2"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginEnd="@dimen/margin_width10"
+            android:layout_marginRight="@dimen/margin_width10"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -78,12 +85,13 @@
             android:id="@+id/id_text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:layout_marginBottom="@dimen/margin_10"
-            android:text="上月表底数 :"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:text="上月表底数:"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
         <TextView
             android:id="@+id/id_last_Num"
             android:layout_width="wrap_content"
@@ -91,17 +99,23 @@
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_text3"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:layout_toEndOf="@+id/id_text3"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_last_Num"
-            android:layout_marginLeft="@dimen/margin_30"
-            android:text="/NM³"/>
+            android:layout_toEndOf="@+id/id_last_Num"
+            android:layout_marginLeft="@dimen/margin_width25"
+            android:layout_marginStart="@dimen/margin_width25"
+            android:text="/NM³"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -110,12 +124,13 @@
             android:id="@+id/id_text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_marginLeft="@dimen/margin_15"
+            android:layout_marginTop="@dimen/margin_width10"
+            android:layout_marginLeft="@dimen/margin_width15"
+            android:layout_marginStart="@dimen/margin_width15"
             android:layout_marginBottom="@dimen/margin_10"
-            android:text="本月表读数 :"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"
+            android:text="本月表读数:"/>
         <TextView
             android:id="@+id/id_read_Num"
             android:layout_width="wrap_content"
@@ -123,17 +138,23 @@
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_text4"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:textColor="#FF606060"
-            android:textSize="@dimen/text_16"/>
+            android:layout_toEndOf="@+id/id_text4"
+            android:layout_marginLeft="@dimen/margin_width10"
+            android:layout_marginStart="@dimen/margin_width10"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
             android:layout_marginBottom="@dimen/margin_10"
             android:layout_toRightOf="@+id/id_read_Num"
-            android:layout_marginLeft="@dimen/margin_30"
-            android:text="/NM³"/>
+            android:layout_toEndOf="@+id/id_read_Num"
+            android:layout_marginLeft="@dimen/margin_width25"
+            android:layout_marginStart="@dimen/margin_width25"
+            android:text="/NM³"
+            android:textColor="@color/color_383838"
+            android:textSize="@dimen/text_width14"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="@dimen/margin_15"

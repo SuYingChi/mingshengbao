@@ -22,8 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
+import com.msht.minshengbao.Utils.DateUtils;
 import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.custom.Dialog.MyImageDialog;
+import com.msht.minshengbao.custom.Dialog.PublicEnsureInfoDialog;
 import com.msht.minshengbao.custom.Dialog.SelectDialog;
 import com.msht.minshengbao.functionActivity.gasService.GasExpenseQueryActivity;
 import com.msht.minshengbao.functionActivity.gasService.SelectCustomerNo;
@@ -355,12 +357,12 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
     }
     private void onVerifySend() {
         String etTable= etSelectTable.getText().toString().trim();
-        String mLast = etLast.getText().toString().trim();
+        String mLast = etLast.getText().toString().trim()+"   /NM³";
         mMeter2 = etTableNum.getText().toString().trim();
-        SimpleDateFormat format=new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
-        Date curData=new Date(System.currentTimeMillis());
-        String time=format.format(curData) ;
-        LayoutInflater inflater=LayoutInflater.from(activity);
+        String meter=etTableNum.getText().toString().trim()+"   /NM³";
+        String time=DateUtils.getCurrentDateString("yyyy年MM月dd日");
+        String address=tvSelectAddress.getText().toString();
+        /*LayoutInflater inflater=LayoutInflater.from(activity);
         LinearLayout layout=(LinearLayout)inflater.inflate(R.layout.item_read_table,null);
         final Dialog dialog=new AlertDialog.Builder(activity).create();
         dialog.show();
@@ -390,7 +392,28 @@ public class SelfWriteFrag extends Fragment implements View.OnClickListener {
                 onSendTableNum();
                 dialog.dismiss();
             }
-        });
+        });*/
+
+        new PublicEnsureInfoDialog(activity).builder()
+                .setCancelable(false)
+                .setCanceledOnTouchOutside(false)
+                .setTitleText("温馨提示")
+                .setTitleText1("抄表时间:")
+                .setTitleText2("抄表地址:")
+                .setTitleText3("上次表底数:")
+                .setTitleText4("本次表读数:")
+                .setContentText1(time)
+                .setContentText2(address)
+                .setContentText3(mLast)
+                .setContentText4(meter)
+                .setOnPositiveClickListener(new PublicEnsureInfoDialog.OnPositiveClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        customDialog.show();
+                        onSendTableNum();
+                    }
+                })
+                .show();
     }
     private void onSendTableNum() {
         requestType=2;

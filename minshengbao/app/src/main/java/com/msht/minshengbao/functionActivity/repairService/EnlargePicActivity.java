@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.StatusBarCompat;
@@ -31,8 +32,8 @@ import java.util.ArrayList;
  * @date 2017/9/2  
  */
 public class EnlargePicActivity extends BaseActivity {
-    private PhotoViewAttacher mAttacher;
-    private ImageView ivPic, deleteImg,backimg;
+    private ImageView  deleteImg,backImg;
+    private PhotoView ivPic;
     private ArrayList<String> imgPaths;
     private int position=0;
     @Override
@@ -61,11 +62,12 @@ public class EnlargePicActivity extends BaseActivity {
     }
 
     private void initView() {
-        backimg=(ImageView)findViewById(R.id.id_back);
+        backImg=(ImageView)findViewById(R.id.id_back);
         TextView tvNum =(TextView)findViewById(R.id.id_text);
         deleteImg =(ImageView)findViewById(R.id.id_delete_img);
-        ivPic=(ImageView)findViewById(R.id.iv_pic);
-        mAttacher = new PhotoViewAttacher(ivPic);
+        //ivPic=(ImageView)findViewById(R.id.iv_pic);
+        ivPic=(PhotoView) findViewById(R.id.iv_pic);
+       // mAttacher = new PhotoViewAttacher(ivPic);
         String numText=(position+1)+"/"+imgPaths.size();
         tvNum.setText(numText);
         RequestOptions requestOptions = new RequestOptions();
@@ -74,12 +76,12 @@ public class EnlargePicActivity extends BaseActivity {
             @Override
             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                 ivPic.setImageBitmap(resource);
-                mAttacher.update();
+                //mAttacher.update();
             }
         });
     }
     private void intEvent() {
-        backimg.setOnClickListener(new View.OnClickListener() {
+        backImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

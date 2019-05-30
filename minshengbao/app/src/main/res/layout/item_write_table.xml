@@ -18,39 +18,45 @@
                 android:layout_width="20dp"
                 android:layout_height="21dp"
                 android:src="@drawable/customer_xh"
-                android:layout_marginTop="@dimen/margin_10"
-                android:layout_marginLeft="@dimen/margin_10"/>
+                android:layout_marginTop="@dimen/margin_width10"
+                android:contentDescription="@string/picture_text"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"/>
             <TextView
                 android:id="@+id/id_customerNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_width10"
                 android:layout_toRightOf="@+id/id_customerimg"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:text="12132132"
-                android:textSize="16sp"
+                android:layout_toEndOf="@+id/id_customerimg"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:textSize="@dimen/text_width16"
                 android:textColor="@color/black1"/>
             <ImageView
                 android:id="@+id/id_addressimg"
-                android:layout_width="20dp"
-                android:layout_height="23dp"
-                android:layout_marginLeft="10dp"
+                android:layout_width="@dimen/margin_width20"
+                android:layout_height="@dimen/margin_width20"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:contentDescription="@string/picture_text"
                 android:layout_centerVertical="true"
                 android:src="@drawable/address_xh"
                 android:layout_below="@+id/id_customerimg"
-                android:layout_marginTop="@dimen/margin_6"
-                android:layout_marginBottom="@dimen/margin_10"/>
+                android:layout_marginTop="@dimen/margin_width6"
+                android:layout_marginBottom="@dimen/margin_width10"/>
             <TextView
                 android:id="@+id/id_address_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="地址"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_width16"
                 android:textColor="@color/black1"
                 android:layout_below="@+id/id_customerNo"
                 android:layout_marginTop="@dimen/margin_6"
                 android:layout_toRightOf="@+id/id_addressimg"
-                android:layout_marginLeft="@dimen/margin_10" />
+                android:layout_toEndOf="@+id/id_addressimg"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -63,33 +69,40 @@
                 android:id="@+id/id_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginTop="@dimen/margin_10"
-                android:text="抄表数据"
-                android:textSize="@dimen/text_20"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:layout_marginTop="@dimen/margin_width10"
+                android:text="自抄数据"
+                android:textSize="@dimen/text_width18"
                 android:textColor="@color/black1"/>
             <TextView
                 android:id="@+id/id_tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:layout_toEndOf="@+id/id_text1"
+                android:layout_toRightOf="@+id/id_text1"
+                android:layout_marginStart="@dimen/margin_width10"
+                android:layout_marginLeft="@dimen/margin_width10"
+                android:layout_marginRight="@dimen/margin_width10"
+                android:layout_marginEnd="@dimen/margin_width10"
                 android:layout_marginTop="@dimen/margin_10"
-                android:text="2017-01-10"
-                />
+                android:textSize="@dimen/text_width12"
+                android:textColor="@color/color_9e9e9e"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/id_table_data"
-                android:text="100.00"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_20"
+                android:textSize="@dimen/text_width20"
                 android:textStyle="bold"
                 android:layout_below="@+id/id_text1"
-                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_width5"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/margin_10"/>
+                android:layout_marginBottom="@dimen/margin_width10"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

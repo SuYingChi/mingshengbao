@@ -13,6 +13,7 @@
         android:gravity="bottom"
         android:background="@drawable/mass_flow_bg1_xh">
         <RelativeLayout
+            android:id="@+id/id_mass_flow_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@dimen/margin_width126"
