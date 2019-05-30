@@ -149,53 +149,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         intent.putExtra("pushUrl",pushUrl);
         startActivity(intent);
         finish();
-     /*   ShopPresenter.loginShop(username,mPassword, new ILoginShopView() {
-
-            @Override
-            public String getKey() {
-                return null;
-            }
-
-            @Override
-            public void onLoginShopSuccess(String s) {
-                LoginShopBean bean = JsonUtil.toBean(s, LoginShopBean.class);
-                if(bean!=null){
-                    ShopSharePreferenceUtil.setShopSpStringValue("key",bean.getDatas().getKey());
-                    ShopSharePreferenceUtil.setShopSpStringValue("username", bean.getDatas().getUsername());
-                    ShopSharePreferenceUtil.setShopSpStringValue("userId",bean.getDatas().getUserid());
-                    ShopSharePreferenceUtil.setShopSpStringValue("password",etPassword.getText().toString());
-                    String searchhis = ShopSharePreferenceUtil.getShopSpStringValue(ShopSharePreferenceUtil.getInstance().getUserId());
-                    ArrayList<String> list;
-                    if (TextUtils.isEmpty(searchhis) || searchhis.equals("null")) {
-                        list = new ArrayList<String>();
-                    } else {
-                        list = JsonUtil.stringsToList(searchhis);
-                    }
-                    MyApplication.getInstance().setList(list);
-                    EventBus.getDefault().postSticky(new LoginShopEvent(bean));
-                    Intent broadcast=new Intent();
-                    broadcast.setAction(MY_ACTION);
-                    broadcast.putExtra("broadcast", "1");
-                    sendBroadcast(broadcast);
-                    Intent intent=new Intent(context,MainActivity.class);
-                    intent.putExtra("index",0);
-                    intent.putExtra("pushUrl",pushUrl);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });*/
 
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_view);
-        /*if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT){
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
-        StatusBarCompat.setStatusBar(this);*/
         context=this;
         mPageName="登录页面";
         PushAgent.getInstance(context).onAppStart();

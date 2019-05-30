@@ -160,7 +160,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
      * @return the layout id
      */
     protected abstract int setLayoutId();
-
+/*    http://dev.msbapp.cn/wap/tmpl/class_list.html?gc_id=1059http://dev.msbapp.cn/wap/tmpl/class_list.html?gc_id=1060*/
     protected void doShopItemViewClick(String type, String data) {
         LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
         if (TextUtils.equals(type, "goods")) {
@@ -173,13 +173,17 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             intent.putExtra("keyword", data);
             startActivity(intent);
         } else if ("url".equals(type)) {
-            if (data.contains("gc_id=")) {
+            if (Uri.parse(data).getQueryParameterNames().contains("gc_id=")) {
                 Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-                int index = data.indexOf("gc_id=");
+                intent.putExtra("data",Uri.parse(data).getQueryParameter("gc_id"));
+                startActivity(intent);
+            }  else if (data.contains("gc_id=")) {
+                Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                int index = data.lastIndexOf("gc_id=");
                 data = data.substring(index + 6).trim();
                 intent.putExtra("data", data);
                 startActivity(intent);
-            } else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
+            }else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
                 intent.putExtra("url", data);
                 startActivity(intent);

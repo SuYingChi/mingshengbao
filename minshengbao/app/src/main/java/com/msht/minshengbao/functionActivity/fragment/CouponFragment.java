@@ -54,12 +54,10 @@ import java.util.Set;
 public class CouponFragment extends BaseFragment {
     private String userId;
     private String password;
-    private String status = "1";
     private ImageView layoutNoData;
     private Button btnShare;
     private XListView xListView;
     private CouponAdapter mAdapter;
-    //  private int pageNo=1;
     private int pageIndex = 0;
     private int refreshType;
     private JSONArray jsonArray;
@@ -80,13 +78,6 @@ public class CouponFragment extends BaseFragment {
     public static CouponFragment getinstance(int position) {
         CouponFragment couponFragment = new CouponFragment();
         couponFragment.position = position;
-        if (position == 0) {
-            couponFragment.status = "1";
-        } else if (position == 2) {
-            couponFragment.status = "";
-        } else if (position == 1) {
-            couponFragment.status = "";
-        }
         return couponFragment;
     }
 
@@ -123,12 +114,12 @@ public class CouponFragment extends BaseFragment {
                                     reference.xListView.stopLoadMore();
                                 }
                                 if (reference.jsonArray.length() > 0) {
-                                    if (reference.pageIndex == 1 && "1".equals(reference.status)) {
+                                    if (reference.pageIndex == 1) {
                                         reference.couponList.clear();
                                     }
                                 }
                                 reference.onGetCouponData();
-                                switch (reference.status) {
+                           /*     switch (reference.status) {
                                     case "1":
                                         reference.loadData(reference.pageIndex, "2");
                                         break;
@@ -138,22 +129,24 @@ public class CouponFragment extends BaseFragment {
                                     case "3":
                                         reference.status = "1";
                                         if (reference.couponList.size() == 0) {
-                                            //  if (reference.status.equals(VariableUtil.VALUE_ONE)){
                                             reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_get_voucher));
                                             reference.layoutNoData.setVisibility(View.VISIBLE);
-                                       /* }else {
-                                            reference.layoutNoData.setVisibility(View.GONE);
-                                        }*/
                                         } else {
                                             reference.layoutNoData.setVisibility(View.GONE);
-                                          //  reference.arrangeList();
+                                            reference.arrangeList();
                                             reference.mAdapter.notifyDataSetChanged();
                                         }
                                         break;
                                     default:
                                         break;
+                                }*/
+                                if (reference.couponList.size() == 0) {
+                                    reference.layoutNoData.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.no_get_voucher));
+                                    reference.layoutNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    reference.layoutNoData.setVisibility(View.GONE);
+                                    reference.mAdapter.notifyDataSetChanged();
                                 }
-
                             } else {
                                 reference.onFailure(error);
                             }
@@ -324,6 +317,7 @@ public class CouponFragment extends BaseFragment {
                     String startDate = jsonObject.getString("start_date");
                     String endDate = jsonObject.getString("end_date");
                     String desc = jsonObject.getString("desc");
+                    String status = jsonObject.getString("status");
                     String remainderDays = "";
                     if (jsonObject.has("remainder_days")) {
                         remainderDays = jsonObject.optString("remainder_days");
@@ -506,7 +500,7 @@ public class CouponFragment extends BaseFragment {
             public void onRefresh() {
                 refreshType = 0;
                 if (position == 0) {
-                    loadData(1, "1");
+                    loadData(1);
                 } else if (position == 2) {
                     loadShopVoucherData(1);
                 } else if (position == 1) {
@@ -518,7 +512,7 @@ public class CouponFragment extends BaseFragment {
             public void onLoadMore() {
                 refreshType = 1;
                 if (position == 0) {
-                    loadData(pageIndex + 1, "1");
+                    loadData(pageIndex + 1);
                 } else if (position == 2) {
                     if (voucherPageIndex < pageTotal) {
                         loadShopVoucherData(voucherPageIndex + 1);
@@ -541,7 +535,7 @@ public class CouponFragment extends BaseFragment {
     public void initData() {
         if (position == 0) {
             customDialog.show();
-            loadData(1, "1");
+            loadData(1);
         } else if (position == 2) {
             customDialog.show();
             loadShopVoucherData(1);
@@ -575,15 +569,13 @@ public class CouponFragment extends BaseFragment {
         OkHttpRequestUtil.getInstance(MyApplication.getMsbApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
     }
 
-    private void loadData(int pageIndex, String status) {
+    private void loadData(int pageIndex) {
         this.pageIndex = pageIndex;
-        this.status = status;
-        //   pageNo=i;
         String validateURL = UrlUtil.Counpon_Url;
         HashMap<String, String> textParams = new HashMap<String, String>();
         textParams.put("userId", userId);
         textParams.put("password", password);
-        textParams.put("status", status);
+        textParams.put("status", "0");
         textParams.put("page", pageIndex + "");
         OkHttpRequestUtil.getInstance(mContext.getApplicationContext()).requestAsyn(validateURL, OkHttpRequestUtil.TYPE_POST_MULTIPART, textParams, requestHandler);
     }

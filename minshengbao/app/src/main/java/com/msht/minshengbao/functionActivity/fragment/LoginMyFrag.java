@@ -143,6 +143,9 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
     private View llFootprint;
     private TextView tvCollect;
     private TextView tvFootprint;
+    private LinearLayout llwaitSend;
+    private TextView tvWaitSend;
+
     public LoginMyFrag() {
     }
 
@@ -281,6 +284,14 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
             tvWaitGet.setText(waitGetOrdersNum);
         }
         llwaitget.setClickable(true);
+        String waitDeliverOrdersNum = bean.getDatas().getMember_info().getOrder_nodeliver_count();
+        if (waitDeliverOrdersNum.equals("0")) {
+            tvWaitSend.setVisibility(View.GONE);
+        } else {
+            tvWaitSend.setVisibility(View.VISIBLE);
+            tvWaitSend.setText(waitDeliverOrdersNum);
+        }
+        llwaitSend.setClickable(true);
         llShopOrder.setClickable(true);
     }
 
@@ -485,6 +496,15 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 startActivity(intent);
             }
         });
+        llwaitSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, MyShopOrderActivity.class);
+                intent.putExtra("index", 0);
+                intent.putExtra("indexChild", 2);
+                startActivity(intent);
+            }
+        });
         llwaitget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -536,6 +556,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         tvWaitEvaluate = (TextView) view.findViewById(R.id.my_wait_eveluate_order_num);
         tvWaitGet = (TextView) view.findViewById(R.id.wait_get_order_num);
         tvWaitPay = (TextView) view.findViewById(R.id.wait_pay_order_num);
+        tvWaitSend = (TextView) view.findViewById(R.id.wait_send_order_num);
         tvRefundOrder = (TextView) view.findViewById(R.id.my_refund_order_num);
         llCollect =view.findViewById(R.id.id_collect_layout);
         tvCollect = (TextView) view.findViewById(R.id.id_collect_value);
@@ -543,6 +564,7 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
         llFootprint =view.findViewById(R.id.id_footprint_layout);
         llShopOrder=view.findViewById(R.id.id_mall_order_layout);
         llwaitPay = (LinearLayout) view.findViewById(R.id.my_wait_pay);
+        llwaitSend = (LinearLayout) view.findViewById(R.id.my_wait_send);
         llwaitget = (LinearLayout) view.findViewById(R.id.my_wait_get);
         llwaitEveluate = (LinearLayout) view.findViewById(R.id.my_wait_eveluate);
         llrefund = (LinearLayout) view.findViewById(R.id.my_refund);

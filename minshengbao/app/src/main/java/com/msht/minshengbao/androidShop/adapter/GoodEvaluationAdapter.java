@@ -31,6 +31,7 @@ public class GoodEvaluationAdapter extends MyHaveHeadViewRecyclerAdapter<Evaluat
 
     @Override
     public void convert(RecyclerHolder holder, final EvaluationBean.DatasBean.GoodsEvalListBean item, final int position) {
+        holder.setIsRecyclable(false);
         ImageView ivPic = holder.getView(R.id.head);
         GlideUtil.loadRemoteCircleImg(context,ivPic,item.getMember_avatar());
         TextView name = holder.getView(R.id.name);

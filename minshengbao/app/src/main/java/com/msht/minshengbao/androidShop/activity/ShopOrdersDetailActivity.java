@@ -321,7 +321,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 StringBuilder sb = new StringBuilder();
                 for (List<String> p : bean.getDatas().getOrder_info().getPromotion()) {
                     for (String pp : p) {
-                        sb.append(pp);
+                        sb.append(pp+"\n");
                     }
                 }
                 tvYouhui.setText(sb.toString());
