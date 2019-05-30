@@ -115,6 +115,13 @@ public class CouponAdapter extends BaseAdapter {
                 holder.tvuse.setTextColor(Color.WHITE);
                 holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 holder.tvuse.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_yellow));
+                if ((!TextUtils.isEmpty(remainderDay)) && (!remainderDay.equals(ConstantUtil.VALUE_ZERO))) {
+                    String mDayText = "仅剩" + remainderDay + "天";
+                    holder.remain_time.setVisibility(View.VISIBLE);
+                    holder.remain_time.setText(mDayText);
+                } else {
+                    holder.remain_time.setVisibility(View.GONE);
+                }
             } else if (type.equals(VariableUtil.VALUE_TWO)) {
                 holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
                 holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
@@ -124,6 +131,7 @@ public class CouponAdapter extends BaseAdapter {
                 holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                 holder.tvuse.setClickable(false);
                 holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
+                holder.remain_time.setVisibility(View.GONE);
             } else if (type.equals(VariableUtil.VALUE_THREE)) {
                 holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
                 holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
@@ -132,14 +140,8 @@ public class CouponAdapter extends BaseAdapter {
                 holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 holder.tvuse.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.shop_grey));
                 holder.tvuse.setClickable(false);
-                holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
-            }
-            if ((!TextUtils.isEmpty(remainderDay)) && (!remainderDay.equals(ConstantUtil.VALUE_ZERO))) {
-                String mDayText = "仅剩" + remainderDay + "天";
-                holder.remain_time.setVisibility(View.VISIBLE);
-                holder.remain_time.setText(mDayText);
-            } else {
                 holder.remain_time.setVisibility(View.GONE);
+                holder.tvuse.setBackgroundResource(R.drawable.btn_cancle);
             }
             if("1".equals(haveuseList.get(position).get("show"))){
                 holder.use_desc.setVisibility(View.VISIBLE);

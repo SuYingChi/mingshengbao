@@ -430,13 +430,7 @@ public class ShopMainFragment extends ShopBaseLazyFragment implements OnRefreshL
         mMZBanner.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
             @Override
             public void onPageClick(View view, int position) {
-              /*  ShopHomeGoods2Bean.Goods2Bean.ItemBean itemBean = shopHomeGoods2Bean.getGoods_2().getItem().get(position);
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("type", itemBean.getType());
-                map.put("data", itemBean.getData());
-                doNotAdClick(map);*/
                 ShopHomeGoods2Bean.Goods2Bean.ItemBean itemBean = shopHomeGoods2Bean.getGoods_2().getItem().get(position);
-                //onShopItemViewClick(view,itemBean.getType(), itemBean.getData(), true);
                 doShopItemViewClick(itemBean.getType(), itemBean.getData());
             }
         });

@@ -125,11 +125,12 @@
                     android:layout_toEndOf="@+id/id_wallet_text"
                     android:layout_toRightOf="@+id/id_wallet_text"
                     android:gravity="start"
-                    android:textColor="@color/color_383838"
+                    android:textColor="@color/blue"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"
                     android:text="@string/subtract_symbol"/>
+
             </RelativeLayout>
            <RelativeLayout
                android:id="@+id/id_red_packet_layout"
@@ -156,9 +157,10 @@
                    android:layout_height="wrap_content"
                    android:layout_toRightOf="@+id/id_red_card_text"
                    android:layout_toEndOf="@+id/id_red_card_text"
-                   android:textColor="@color/color_383838"
+                   android:textColor="@color/blue"
                    android:textSize="@dimen/text_width16"
                    android:text="@string/subtract_symbol"/>
+
            </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/id_collect_layout"
@@ -185,11 +187,12 @@
                     android:layout_toEndOf="@+id/id_collect_text"
                     android:layout_toRightOf="@+id/id_collect_text"
                     android:gravity="start"
-                    android:textColor="@color/color_383838"
+                    android:textColor="@color/blue"
                     android:layout_marginLeft="@dimen/margin_width15"
                     android:layout_marginStart="@dimen/margin_width15"
                     android:textSize="@dimen/text_width16"
                     android:text="@string/subtract_symbol"/>
+
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/id_footprint_layout"
@@ -216,7 +219,7 @@
                     android:id="@+id/id_footprint_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_383838"
+                    android:textColor="@color/blue"
                     android:layout_toEndOf="@+id/id_footprint_text"
                     android:layout_toRightOf="@+id/id_footprint_text"
                     android:textSize="@dimen/text_width16"
