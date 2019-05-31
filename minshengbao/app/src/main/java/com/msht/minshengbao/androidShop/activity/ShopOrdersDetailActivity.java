@@ -474,7 +474,7 @@ public class ShopOrdersDetailActivity extends ShopBaseActivity implements IShopO
                 });
                 llbtns.addView(tvAddEvaluation);
             }
-            if ((orderInfo.getOrder_state().equals("20") && orderInfo.isIf_receive()) && !orderInfo.isIf_lock()) {
+            if (/*(orderInfo.getOrder_state().equals("20") && orderInfo.isIf_receive()) && !orderInfo.isIf_lock()*/false) {
                 TextView tvQrReceive = new TextView(this);
                 LinearLayout.LayoutParams paramas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 paramas.gravity = Gravity.CENTER_VERTICAL;

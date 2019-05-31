@@ -166,7 +166,7 @@ public class ShopGoodDetailActivity extends ShopBaseActivity implements GoodDeta
         });
         initNoNetworkLayout();
         carListIntent = new Intent(this, NewShopCarActivity.class);
-        mToolbar.setAlpha(1);
+        mToolbar.setAlpha(0);
         RelativeLayout.LayoutParams blp = (RelativeLayout.LayoutParams) back.getLayoutParams();
         blp.setMargins(0, ImmersionBar.getStatusBarHeight(this), 0, 0);
         back.setLayoutParams(blp);

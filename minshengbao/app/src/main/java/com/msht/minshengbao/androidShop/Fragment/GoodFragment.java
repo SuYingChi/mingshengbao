@@ -647,7 +647,6 @@ public class GoodFragment extends ShopBaseLazyFragment implements IShopGoodDetai
             } else {
                 tvPickupself.setText("快递直达");
                 tvPickupself.setVisibility(View.VISIBLE);
-                tvPickupself.setVisibility(View.INVISIBLE);
                 tvZiti.setVisibility(View.INVISIBLE);
             }
             goods_name = goods_info.optString("goods_name");
