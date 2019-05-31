@@ -411,7 +411,6 @@ import com.msht.minshengbao.Utils.DialogUtil;
 					btnLeft.setText(button1Text);
 					btnLeft.setTextSize(button1Size);
 					btnLeft.setTextColor(button1TextColor);
-					
 					if(button1ColorStateList != null){
 						btnLeft.setTextColor(button1ColorStateList);
 					}

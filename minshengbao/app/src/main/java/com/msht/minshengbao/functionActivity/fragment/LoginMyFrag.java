@@ -656,7 +656,8 @@ public class LoginMyFrag extends BaseHomeFragment implements View.OnClickListene
                 goManage();
                 break;
             case R.id.id_share_button:
-                getShareAdvertiseData();
+               // getShareAdvertiseData();
+                goShare();
                 break;
             case R.id.id_red_packet_layout:
                 onRedCard();

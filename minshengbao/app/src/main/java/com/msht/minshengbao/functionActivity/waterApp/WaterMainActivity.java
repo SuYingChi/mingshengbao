@@ -265,8 +265,8 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
         }
     }
     private void initData() {
-        requestType=0;
         customDialog.show();
+        requestType=0;
         String validateURL= UrlUtil.WATER_ACCOUNT_URL;
         Map<String, String> textParams = new HashMap<String, String>();
         textParams.put("type","1");
@@ -484,7 +484,6 @@ public class WaterMainActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         OkHttpRequestManager.getInstance(getApplicationContext()).requestCancel(this);
     }
 }

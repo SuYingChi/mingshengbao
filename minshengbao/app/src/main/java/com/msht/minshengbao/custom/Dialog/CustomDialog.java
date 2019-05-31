@@ -43,10 +43,10 @@ public class CustomDialog extends Dialog{
         setContentView(R.layout.layout_refresh_dialog_view);
         tvContent=(TextView)findViewById(R.id.tv_content);
         tvContent.setText(content);
-        setCanceledOnTouchOutside(true);
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.alpha=0.9f;
         getWindow().setAttributes(attributes);
+        setCanceledOnTouchOutside(true);
         setCancelable(false);
     }
 }

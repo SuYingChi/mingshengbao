@@ -13,7 +13,7 @@
         <item name="android:activityCloseEnterAnimation">@anim/backward_enter</item>
         <item name="android:activityCloseExitAnimation">@anim/backward_exit</item>
     </style>
-    <style name="Loading_dialog">
+    <style name="Loading_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowIsTranslucent">true</item><!--半透明-->
@@ -22,14 +22,14 @@
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
-    <style name="full_screen_dialog">
+    <style name="full_screen_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item><!--无标题-->
         <item name="android:windowIsTranslucent">true</item><!--半透明-->
         <item name="android:windowBackground">@drawable/shape_dialog_custom_bg</item><!--背景透明-->
      <!--   <item name="android:backgroundDimEnabled">false</item>&lt;!&ndash;是否window变暗&ndash;&gt;-->
     </style>
-    <style name="share_qrcode_dialog">
+    <style name="share_qrcode_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item><!--无标题-->
         <item name="android:backgroundDimEnabled">false</item><!--是否window变暗-->
@@ -65,12 +65,12 @@
         <item name="android:windowFullscreen">true</item>
     </style>
     <!--加载 主题  -->
-    <style name="CustomDialog">
+    <style name="CustomDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowIsTranslucent">false</item><!--半透明-->
         <item name="android:windowNoTitle">true</item><!--无标题-->
-        <item name="android:windowBackground">@drawable/shape_dialog_custom_bg</item><!--背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
