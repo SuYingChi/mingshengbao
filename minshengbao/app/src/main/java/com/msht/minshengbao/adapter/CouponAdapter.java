@@ -253,6 +253,7 @@ public class CouponAdapter extends BaseAdapter {
             holder.use_desc.setText(haveuseList.get(position).get("rpacket_desc"));
         } else if(tab==2){
             String voucher_state = haveuseList.get(position).get("voucher_state");
+            holder.tvBelowAmount.setVisibility(View.VISIBLE);
             switch (voucher_state){
                 case "1":
                     holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
