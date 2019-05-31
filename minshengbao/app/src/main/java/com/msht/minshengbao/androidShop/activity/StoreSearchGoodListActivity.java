@@ -233,32 +233,32 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
                 }
                 order = "2";
                 break;
-            case "1":
-                if (!TextUtils.equals(orderKey, "1")) {
-                    tvDef.setTextColor(getResources().getColor(R.color.black));
-                    tvSell.setTextColor(getResources().getColor(R.color.msb_color));
-                    tvRen.setTextColor(getResources().getColor(R.color.black));
-                    tvPrice.setTextColor(getResources().getColor(R.color.black));
-                    orderKey = "1";
-                }
-                if (!TextUtils.equals(order1, "1")) {
-                    order1 = "1";
-                    upTriangle.setBounds(0, 0, upTriangle.getMinimumWidth(), upTriangle.getMinimumHeight());
-                    tvSell.setCompoundDrawables(null, null, upTriangle, null);
-                }else {
-                    order1 = "2";
-                    downTriangle.setBounds(0, 0, downTriangle.getMinimumWidth(), downTriangle.getMinimumHeight());
-                    tvSell.setCompoundDrawables(null, null, downTriangle, null);
-                }
-                order = order1;
-                break;
             case "2":
                 if (!TextUtils.equals(orderKey, "2")) {
                     tvDef.setTextColor(getResources().getColor(R.color.black));
                     tvSell.setTextColor(getResources().getColor(R.color.black));
+                    tvRen.setTextColor(getResources().getColor(R.color.black));
+                    tvPrice.setTextColor(getResources().getColor(R.color.msb_color));
+                    orderKey = "2";
+                }
+                if (!TextUtils.equals(order1, "1")) {
+                    order1 = "1";
+                    upTriangle.setBounds(0, 0, upTriangle.getMinimumWidth(), upTriangle.getMinimumHeight());
+                    tvPrice.setCompoundDrawables(null, null, upTriangle, null);
+                }else {
+                    order1 = "2";
+                    downTriangle.setBounds(0, 0, downTriangle.getMinimumWidth(), downTriangle.getMinimumHeight());
+                    tvPrice.setCompoundDrawables(null, null, downTriangle, null);
+                }
+                order = order1;
+                break;
+            case "4":
+                if (!TextUtils.equals(orderKey, "4")) {
+                    tvDef.setTextColor(getResources().getColor(R.color.black));
+                    tvSell.setTextColor(getResources().getColor(R.color.black));
                     tvRen.setTextColor(getResources().getColor(R.color.msb_color));
                     tvPrice.setTextColor(getResources().getColor(R.color.black));
-                    orderKey = "2";
+                    orderKey = "4";
                 }
                 if (!TextUtils.equals(order2, "1")) {
                     order2 = "1";
@@ -274,19 +274,19 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
             case "3":
                 if (!TextUtils.equals(orderKey, "3")) {
                     tvDef.setTextColor(getResources().getColor(R.color.black));
-                    tvSell.setTextColor(getResources().getColor(R.color.black));
+                    tvSell.setTextColor(getResources().getColor(R.color.msb_color));
                     tvRen.setTextColor(getResources().getColor(R.color.black));
-                    tvPrice.setTextColor(getResources().getColor(R.color.msb_color));
+                    tvPrice.setTextColor(getResources().getColor(R.color.black));
                     orderKey = "3";
                 }
                 if (!TextUtils.equals(order3, "1")) {
                     order3 = "1";
                     upTriangle.setBounds(0, 0, upTriangle.getMinimumWidth(), upTriangle.getMinimumHeight());
-                    tvPrice.setCompoundDrawables(null, null, upTriangle, null);
+                    tvSell.setCompoundDrawables(null, null, upTriangle, null);
                 } else {
                     order3 = "2";
                     downTriangle.setBounds(0, 0, downTriangle.getMinimumWidth(), downTriangle.getMinimumHeight());
-                    tvPrice.setCompoundDrawables(null, null, downTriangle, null);
+                    tvSell.setCompoundDrawables(null, null, downTriangle, null);
                 }
                 order = order3;
                 break;
@@ -315,13 +315,13 @@ public class StoreSearchGoodListActivity extends ShopBaseActivity implements ISt
                 initTab("");
                 break;
             case R.id.sell:
-                initTab("1");
+                initTab("3");
                 break;
             case R.id.ren:
-                initTab("2");
+                initTab("4");
                 break;
             case R.id.price:
-                initTab("3");
+                initTab("2");
                 break;
             case R.id.grid:
                 if (!isGrid) {
