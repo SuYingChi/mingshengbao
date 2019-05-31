@@ -183,7 +183,7 @@ public class StoreMainFragment extends ShopBaseLazyFragment implements IStoreVie
             JSONObject obj = new JSONObject(s);
             JSONObject datas = obj.optJSONObject("datas");
             JSONArray voucherArray = datas.optJSONArray("store_voucher_list");
-            if (voucherArray.length() > 1) {
+            if (voucherArray.length() >= 1) {
                 llvoucher.setVisibility(View.VISIBLE);
                 voucherList.clear();
                 for (int i = 0; i < voucherArray.length(); i++) {

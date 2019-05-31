@@ -162,7 +162,6 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
     protected abstract int setLayoutId();
 /*    http://dev.msbapp.cn/wap/tmpl/class_list.html?gc_id=1059http://dev.msbapp.cn/wap/tmpl/class_list.html?gc_id=1060*/
     protected void doShopItemViewClick(String type, String data) {
-        LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
         if (TextUtils.equals(type, "goods")) {
             Intent intent = new Intent(getActivity(), ShopGoodDetailActivity.class);
             intent.putExtra("type", "2");
@@ -173,7 +172,7 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             intent.putExtra("keyword", data);
             startActivity(intent);
         } else if ("url".equals(type)) {
-            if (Uri.parse(data).getQueryParameterNames().contains("gc_id=")) {
+            if (Uri.parse(data).getQueryParameterNames().contains("gc_id")) {
                 Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
                 intent.putExtra("data",Uri.parse(data).getQueryParameter("gc_id"));
                 startActivity(intent);
@@ -209,14 +208,23 @@ public abstract class ShopBaseFragment extends Fragment implements IBaseView {
             intent.putExtra("keyword", data);
             startActivity(intent);
         } else if (keys.contains("gc_id")) {
-            data = Uri.parse(url).getQueryParameter("gc_id");
-            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
-            intent.putExtra("data", data);
-            startActivity(intent);
-        }else if(keys.contains("store_id")){
+                Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+                intent.putExtra("data",Uri.parse(url).getQueryParameter("gc_id"));
+                startActivity(intent);
+        } else if(keys.contains("store_id")){
             data = Uri.parse(url).getQueryParameter("store_id");
             Intent intent = new Intent(getActivity(), ShopStoreMainActivity.class);
             intent.putExtra("id", data);
+            startActivity(intent);
+        } else if (url.contains("gc_id=")) {
+            Intent intent = new Intent(getActivity(), ShopClassDetailActivity.class);
+            int index = url.lastIndexOf("gc_id=");
+            data = url.substring(index + 6).trim();
+            intent.putExtra("data", data);
+            startActivity(intent);
+        }else if (NetUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
+            Intent intent = new Intent(getActivity(), HtmlPageActivity.class);
+            intent.putExtra("url", url);
             startActivity(intent);
         }
     }

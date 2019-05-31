@@ -3,22 +3,30 @@ package com.msht.minshengbao.functionActivity.publicModule;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.msht.minshengbao.MyApplication;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.Utils.ConstantUtil;
+import com.msht.minshengbao.functionActivity.MainActivity;
+import com.msht.minshengbao.functionActivity.gasService.GasPayFeeHomeActivity;
 import com.msht.minshengbao.functionActivity.myActivity.ShareMenuActivity;
 import com.msht.minshengbao.R;
 import com.msht.minshengbao.Utils.SendRequestUtil;
@@ -36,6 +44,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class SelectVoucherActivity extends BaseActivity {
     private ListView mListView;
@@ -109,6 +118,8 @@ public class SelectVoucherActivity extends BaseActivity {
                 String useLimit = jsonObject.getString("use_limit");
                 String startDate = jsonObject.getString("start_date");
                 String endDate= jsonObject.getString("end_date");
+                String desc = jsonObject.getString("desc");
+                String status = jsonObject.getString("status");
                 String remainderDays="";
                 if (jsonObject.has("remainder_days")){
                     remainderDays=jsonObject.optString("remainder_days");
@@ -121,7 +132,11 @@ public class SelectVoucherActivity extends BaseActivity {
                 map.put("use_limit", useLimit);
                 map.put("start_date",startDate);
                 map.put("end_date", endDate);
+                map.put("type", status);
+                map.put("desc",desc);
+                map.put("show", "0");
                 map.put("remainder_days",remainderDays);
+                map.put("direct_url",jsonObject.getString("direct_url"));
                 voucherList.add(map);
             }
         }catch (JSONException e){
@@ -217,17 +232,22 @@ public class SelectVoucherActivity extends BaseActivity {
             return position;
         }
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.item_dicount_coupon, null);
                 holder.cnName =(TextView)convertView.findViewById(R.id.id_title_name);
-                holder.cnTime =(TextView)convertView.findViewById(R.id.id_time);
+                holder.cnTime =(TextView)convertView.findViewById(R.id.remain_time);
                 holder.cnScope =(TextView) convertView.findViewById(R.id.id_scope);
                 holder.cnAmount =(TextView) convertView.findViewById(R.id.id_amount);
-                holder.cnUseLimit =(TextView) convertView.findViewById(R.id.id_use_limit);
+                holder.cnUseLimit =(TextView) convertView.findViewById(R.id.below_amount);
                 holder.cnEndDate =(TextView) convertView.findViewById(R.id.id_end_date);
+                holder.tvuse =(TextView)convertView.findViewById(R.id.use);
+                holder.show_use_desc =(TextView) convertView.findViewById(R.id.show_use_desc);
+                holder.use_desc =(TextView) convertView.findViewById(R.id.use_desc);
+                holder.updown =(ImageView) convertView.findViewById(R.id.updown);
+                holder.layoutBack =(LinearLayout)convertView.findViewById(R.id.id_layout_back);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -246,6 +266,62 @@ public class SelectVoucherActivity extends BaseActivity {
             holder.cnAmount.setText("¥"+voucherList.get(position).get("amount"));
             holder.cnUseLimit.setText(limitUse);
             holder.cnEndDate.setText(voucherList.get(position).get("end_date"));
+
+            holder.cnAmount.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.white));
+            holder.cnName.setTextColor(MyApplication.getInstance().getResources().getColor(R.color.black));
+            holder.tvuse.setText("点击使用");
+            holder.tvuse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Set<String> name = Uri.parse(voucherList.get(position).get("direct_url")).getQueryParameterNames();
+                    if(name.contains("code")) {
+                        String code = Uri.parse(voucherList.get(position).get("direct_url")).getQueryParameter("code");
+                            if ("gas_pay".equals(code)) {
+                                startActivity(new Intent(SelectVoucherActivity.this, GasPayFeeHomeActivity.class));
+                            } else if ("homepage".equals(code)) {
+                                Intent intent = new Intent(SelectVoucherActivity.this, MainActivity.class);
+                                intent.putExtra("index", 0);
+                                startActivity(intent);
+                            }
+                    }
+                }
+            });
+            holder.tvuse.setClickable(true);
+            holder.tvuse.setTextColor(Color.WHITE);
+            holder.tvuse.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            holder.tvuse.setBackgroundDrawable(MyApplication.getInstance().getResources().getDrawable(R.drawable.btn_yellow));
+            holder.use_desc.setText(voucherList.get(position).get("desc"));
+            if("1".equals(voucherList.get(position).get("show"))){
+                holder.use_desc.setVisibility(View.VISIBLE);
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_up_triangle));
+            }else if("0".equals(voucherList.get(position).get("show"))){
+                holder.updown.setImageDrawable(MyApplication.getMsbApplicationContext().getResources().getDrawable(R.drawable.shop_down_triangle));
+                holder.use_desc.setVisibility(View.GONE);
+            }
+            holder.show_use_desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String show = voucherList.get(position).get("show");
+                    if("1".equals(show)){
+                        voucherList.get(position).put("show","0");
+                    }else if("0".equals(show)){
+                        voucherList.get(position).put("show","1");
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+            holder.updown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String show = voucherList.get(position).get("show");
+                    if("1".equals(show)){
+                        voucherList.get(position).put("show","0");
+                    }else if("0".equals(show)){
+                        voucherList.get(position).put("show","1");
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
             return convertView;
         }
     }
@@ -256,5 +332,10 @@ public class SelectVoucherActivity extends BaseActivity {
         TextView cnUseLimit;
         TextView cnEndDate;
         TextView cnTime;
+        TextView tvuse;
+        LinearLayout layoutBack;
+        TextView show_use_desc;
+        ImageView updown;
+        TextView use_desc;
     }
 }

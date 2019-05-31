@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import com.msht.minshengbao.Utils.VariableUtil;
 import com.msht.minshengbao.androidShop.activity.ShopClassDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopGoodDetailActivity;
 import com.msht.minshengbao.androidShop.activity.ShopKeywordListActivity;
+import com.msht.minshengbao.androidShop.activity.ShopStoreMainActivity;
 import com.msht.minshengbao.androidShop.customerview.LoadingDialog;
 import com.msht.minshengbao.androidShop.util.AppUtil;
 import com.msht.minshengbao.androidShop.util.LogUtils;
@@ -46,6 +48,7 @@ import com.umeng.message.PushAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Locale;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -383,24 +386,27 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
 
 
     protected void onShopItemViewClick(String type, String data) {
-        LogUtils.e(ShopSharePreferenceUtil.getInstance().getKey());
-        if(TextUtils.equals(type,"goods")) {
+        if (TextUtils.equals(type, "goods")) {
             Intent intent = new Intent(this, ShopGoodDetailActivity.class);
             intent.putExtra("type", "2");
             intent.putExtra("goodsid", data);
             startActivity(intent);
-        }else if(TextUtils.equals(type,"keyword")){
+        } else if (TextUtils.equals(type, "keyword")) {
             Intent intent = new Intent(this, ShopKeywordListActivity.class);
             intent.putExtra("keyword", data);
             startActivity(intent);
-        }else if ("url".equals(type)) {
-            if (data.contains("gc_id=")) {
+        } else if ("url".equals(type)) {
+            if (Uri.parse(data).getQueryParameterNames().contains("gc_id")) {
                 Intent intent = new Intent(this, ShopClassDetailActivity.class);
-                int index = data.indexOf("gc_id=");
+                intent.putExtra("data",Uri.parse(data).getQueryParameter("gc_id"));
+                startActivity(intent);
+            }  else if (data.contains("gc_id=")) {
+                Intent intent = new Intent(this, ShopClassDetailActivity.class);
+                int index = data.lastIndexOf("gc_id=");
                 data = data.substring(index + 6).trim();
                 intent.putExtra("data", data);
                 startActivity(intent);
-            } else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
+            }else if (NetUtil.getDomain(data).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
                 Intent intent = new Intent(this, HtmlPageActivity.class);
                 intent.putExtra("url", data);
                 startActivity(intent);
@@ -428,6 +434,44 @@ public abstract class ShopBaseActivity extends AppCompatActivity implements IBas
             } else {
               snackBar.show();
             }
+        }
+    }
+    protected void doShopItemViewClickByUrl(String url) {
+        if(TextUtils.isEmpty(url)){
+            return;
+        }
+        Set<String> keys = Uri.parse(url).getQueryParameterNames();
+        String data;
+        if (keys.contains("goods")) {
+            data = Uri.parse(url).getQueryParameter("goods");
+            Intent intent = new Intent(this, ShopGoodDetailActivity.class);
+            intent.putExtra("type", "2");
+            intent.putExtra("goodsid", data);
+            startActivity(intent);
+        } else if (keys.contains("keyword")) {
+            data = Uri.parse(url).getQueryParameter("keyword");
+            Intent intent = new Intent(this, ShopKeywordListActivity.class);
+            intent.putExtra("keyword", data);
+            startActivity(intent);
+        } else if (keys.contains("gc_id")) {
+            Intent intent = new Intent(this, ShopClassDetailActivity.class);
+            intent.putExtra("data",Uri.parse(url).getQueryParameter("gc_id"));
+            startActivity(intent);
+        } else if(keys.contains("store_id")){
+            data = Uri.parse(url).getQueryParameter("store_id");
+            Intent intent = new Intent(this, ShopStoreMainActivity.class);
+            intent.putExtra("id", data);
+            startActivity(intent);
+        } else if (url.contains("gc_id=")) {
+            Intent intent = new Intent(this, ShopClassDetailActivity.class);
+            int index = url.lastIndexOf("gc_id=");
+            data = url.substring(index + 6).trim();
+            intent.putExtra("data", data);
+            startActivity(intent);
+        }else if (NetUtil.getDomain(url).equals(ConstantUtil.FIANL_SHOP_DOMAIN)) {
+            Intent intent = new Intent(this, HtmlPageActivity.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
         }
     }
 }
