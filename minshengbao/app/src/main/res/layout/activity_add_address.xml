@@ -209,7 +209,7 @@
             android:gravity="end"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:hint="@string/please_input_detail_address"
+            android:hint="@string/doorplate_default_text"
             android:textSize="@dimen/text_width16"
             android:textColor="@color/title_tv"/>
     </RelativeLayout>

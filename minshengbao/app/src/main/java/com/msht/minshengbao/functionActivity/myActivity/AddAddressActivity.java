@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.msht.minshengbao.Utils.ConstantUtil;
 import com.msht.minshengbao.base.BaseActivity;
 import com.msht.minshengbao.OkhttpUtil.OkHttpRequestUtil;
 import com.msht.minshengbao.custom.widget.CustomToast;
@@ -189,7 +190,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(intent, ADDRESS_CODE);
                 break;
             case R.id.id_map_address_layout:
-                if (!TextUtils.isEmpty(mCity)){
+                if (!TextUtils.isEmpty(mCity)&&!mCity.equals(ConstantUtil.NULL_VALUE)){
                     onMapAddress();
                 }else {
                     CustomToast.showWarningLong("请选择城市");
