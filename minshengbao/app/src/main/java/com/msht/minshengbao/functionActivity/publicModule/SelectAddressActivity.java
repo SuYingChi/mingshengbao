@@ -29,6 +29,7 @@ import com.msht.minshengbao.Utils.ToastUtil;
 import com.msht.minshengbao.Utils.UrlUtil;
 import com.msht.minshengbao.custom.Dialog.CustomDialog;
 import com.msht.minshengbao.custom.Dialog.PromptDialog;
+import com.msht.minshengbao.functionActivity.myActivity.NewAddressManagerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -231,7 +232,7 @@ public class SelectAddressActivity extends BaseActivity {
         tvRightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, AddressManageActivity.class);
+                Intent intent=new Intent(context, NewAddressManagerActivity.class);
                 startActivityForResult(intent,1);
             }
         });

@@ -164,11 +164,12 @@ public class NewAddressManagerAdapter extends RecyclerView.Adapter<NewAddressMan
 
     private void onBindDataView(MyViewHolder myViewHolder, int i) {
         String name=mList.get(i).get("name");
+        String phone=mList.get(i).get("phone");
         String customerNo=mList.get(i).get("customerNo");
         String address=mList.get(i).get("address");
         String flag=mList.get(i).get("flag");
         myViewHolder.tvAddress.setText(address);
-        myViewHolder.tvPhone.setText(mList.get(i).get("phone"));
+        myViewHolder.tvPhone.setText(phone);
         if (TextUtils.isEmpty(customerNo)||customerNo.equals(ConstantUtil.NULL_VALUE)){
             myViewHolder.tvCustomerNo.setTextColor(ContextCompat.getColor(context,R.color.color_9e9e9e));
             myViewHolder.tvCustomerNo.setText("未关联燃气用户号");
@@ -178,14 +179,16 @@ public class NewAddressManagerAdapter extends RecyclerView.Adapter<NewAddressMan
             myViewHolder.tvCustomerNo.setText(customerNo);
             myViewHolder.tvCustomerNo.setTextColor(ContextCompat.getColor(context,R.color.color_383838));
         }
-        if (TextUtils.isEmpty(name)||name.equals(ConstantUtil.NULL_VALUE)){
+        if (TextUtils.isEmpty(name)||name.equals(ConstantUtil.NULL_VALUE)||TextUtils.isEmpty(phone)||phone.equals(ConstantUtil.NULL_VALUE)){
             myViewHolder.tvName.setTextColor(ContextCompat.getColor(context,R.color.color_9e9e9e));
             myViewHolder.tvName.setText("没有联系人信息，无法进行其他业务哦");
-            myViewHolder.btnSupplement.setVisibility(View.VISIBLE);
+            myViewHolder.layoutTip.setVisibility(View.VISIBLE);
+            myViewHolder.layoutInfo.setVisibility(View.GONE);
         }else {
             myViewHolder.tvName.setTextColor(ContextCompat.getColor(context,R.color.color_383838));
             myViewHolder.tvName.setText(name);
-            myViewHolder.btnSupplement.setVisibility(View.GONE);
+            myViewHolder.layoutTip.setVisibility(View.GONE);
+            myViewHolder.layoutInfo.setVisibility(View.VISIBLE);
         }
         if (flag.equals(ConstantUtil.VALUE_ONE)){
             myViewHolder.boxSetDefault.setText("默认地址");
@@ -219,6 +222,8 @@ public class NewAddressManagerAdapter extends RecyclerView.Adapter<NewAddressMan
         TextView   tvEdit;
         TextView   tvDelete;
         CheckBox boxSetDefault;
+        View layoutInfo;
+        View layoutTip;
         View itemView;
         private MyViewHolder(View view){
             super(view);
@@ -233,6 +238,8 @@ public class NewAddressManagerAdapter extends RecyclerView.Adapter<NewAddressMan
             tvDelete=(TextView)view.findViewById(R.id.id_tv_delect);
             imgDelete=(ImageView)view.findViewById(R.id.id_delect_img);
             imgEdit=(ImageView)view.findViewById(R.id.id_edit_img);
+            layoutInfo=view.findViewById(R.id.id_personal_info);
+            layoutTip=view.findViewById(R.id.id_tip_name_layout);
             itemView=view.findViewById(R.id.item_layout);
         }
     }

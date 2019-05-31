@@ -83,7 +83,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
 
     private static class BalanceHandler extends Handler {
         private WeakReference< WaterBalanceActivity> mWeakReference;
-        public BalanceHandler( WaterBalanceActivity activity) {
+         BalanceHandler( WaterBalanceActivity activity) {
             mWeakReference=new WeakReference< WaterBalanceActivity>(activity);
         }
 
@@ -428,6 +428,7 @@ public class WaterBalanceActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.id_tv_detail).setOnClickListener(this);
         findViewById(R.id.id_forward_img).setOnClickListener(this);
         layoutMassFlow=findViewById(R.id.id_mass_flow_layout);
+        layoutMassFlow.setOnClickListener(this);
         layoutMassFlow.setEnabled(false);
         headBgLayout=findViewById(R.id.id_head_bg);
         tvRealAmount=(TextView)findViewById(R.id.id_real_amount) ;

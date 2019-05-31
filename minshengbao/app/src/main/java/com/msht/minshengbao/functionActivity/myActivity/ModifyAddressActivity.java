@@ -164,7 +164,7 @@ public class ModifyAddressActivity extends BaseActivity implements View.OnClickL
         initView();
         etName.setText(mName);
         etPhone.setText(mPhone);
-        if (!TextUtils.isEmpty(locAddress)&&!latitude.equals(ConstantUtil.NULL_VALUE)){
+        if (!TextUtils.isEmpty(locAddress)&&!locAddress.equals(ConstantUtil.NULL_VALUE)){
             tvAddress.setText(locAddress);
         }else {
             tvAddress.setHint("请选择您的地址");
