@@ -67,6 +67,6 @@
         android:gravity="center_horizontal"
         android:text="保存到手机"
         android:textColor="@color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 </LinearLayout>

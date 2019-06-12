@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -59,6 +61,10 @@ public class ImageListPagerDialog extends Dialog {
         ButterKnife.bind(this);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        getWindow().setAttributes(layoutParams);
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
