@@ -320,7 +320,7 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                 LinearLayout layout = (LinearLayout) inflaterDl.inflate(
                                                         R.layout.dialog_share_qrcode, null);
                                                 RecyclerHolder holder = new RecyclerHolder(PingtuanDetail.this, layout);
-                                                final AlertDialog dialog2 = new AlertDialog.Builder(PingtuanDetail.this, R.style.share_qrcode_dialog).create();
+                                                final AlertDialog dialog2 = new AlertDialog.Builder(PingtuanDetail.this, R.style.full_screen_dialog).create();
                                                 final ImageView ivQrcode = holder.getView(R.id.qrcode);
                                                 ViewGroup.LayoutParams layoutParams = ivQrcode.getLayoutParams();
                                                 layoutParams.width= DimenUtil.getScreenWidth()/3;
@@ -378,6 +378,10 @@ public class PingtuanDetail extends ShopBaseActivity implements IPingTuanDetailV
                                                 dialog2.setCanceledOnTouchOutside(true);
                                                 dialog2.show();
                                                 dialog2.getWindow().setContentView(layout);
+                                                WindowManager.LayoutParams attr = dialog2.getWindow().getAttributes();
+                                                attr.width=ViewGroup.LayoutParams.MATCH_PARENT;
+                                                attr.height=ViewGroup.LayoutParams.MATCH_PARENT;
+                                                dialog2.getWindow().setAttributes(attr);
                                                 dialog.dismiss();
 
                                             }
